@@ -1,0 +1,37 @@
+<script lang="ts">
+	import RegisterCard from './RegisterCard.svelte';
+	import LoginCard from './LoginCard.svelte';
+
+	import './index.css';
+
+	let selectedPage = 'Login';
+</script>
+
+<div class="flex flex-col items-center">
+	<div class="mt-14">
+		<img src="Logo.png" class="w-44" alt="flowback logo" />
+	</div>
+	<div class="bg-white w-1/2 mt-14 rounded shadow-lg">
+		<div class="flex justify-around mt-2 border-b">
+			<div
+				class="cursor-pointer border-blue-500 pb-2 w-24 text-center text-xl font-light text-gray-500"
+				class:border-b-2={selectedPage === 'Login'}
+				on:click={() => (selectedPage = 'Login')}
+			>
+				Login
+			</div>
+			<div
+				class="cursor-pointer border-blue-500 pb-2 w-24 text-center text-xl font-extralight text-gray-500"
+				class:border-b-2={selectedPage === 'Register'}
+				on:click={() => (selectedPage = 'Register')}
+			>
+				Register
+			</div>
+		</div>
+		{#if selectedPage === 'Login'}
+			<LoginCard />
+		{:else if selectedPage === 'Register'}
+			<RegisterCard />
+		{/if}
+	</div>
+</div>

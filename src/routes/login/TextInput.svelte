@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './index.css';
 
-	export let value: String;
+	export let value = "";
     export let label: String
 
 </script>
@@ -10,7 +10,7 @@
 				><p class="text-sm mb-1">{label}</p>
 				<input
 					type="text"
-					bind:value={value}
+					bind:value
 					class="border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none"
 				/></label
 			>

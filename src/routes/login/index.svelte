@@ -11,7 +11,7 @@
 	<div class="mt-14">
 		<img src="Logo.png" class="w-44" alt="flowback logo" />
 	</div>
-	<div class="bg-white w-1/2 mt-14 rounded shadow-lg">
+	<div class="bg-white w-4/5 sm:w-1/2 mt-14 rounded shadow-lg">
 		<div class="flex justify-around mt-2 border-b">
 			<div
 				class="cursor-pointer border-blue-500 pb-2 w-24 text-center text-xl font-light text-gray-500"

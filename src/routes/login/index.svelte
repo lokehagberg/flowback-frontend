@@ -1,8 +1,9 @@
 <script lang="ts">
 	import RegisterCard from '../../lib/Login/RegisterCard.svelte';
 	import LoginCard from '../../lib/Login/LoginCard.svelte';
-
+	import ForgotPasswordCard from '../../lib/Login/ForgotPasswordCard.svelte';
 	import './index.css';
+	import VerifyCard from '$lib/Login/VerifyCard.svelte';
 
 	let selectedPage = 'Login';
 </script>
@@ -29,9 +30,13 @@
 			</div>
 		</div>
 		{#if selectedPage === 'Login'}
-			<LoginCard />
+			<LoginCard bind:selectedPage />
 		{:else if selectedPage === 'Register'}
-			<RegisterCard />
+			<RegisterCard bind:selectedPage />
+		{:else if selectedPage === 'ForgotPassword'}
+			<ForgotPasswordCard bind:selectedPage />
+		{:else if selectedPage === 'Verify'}
+			<VerifyCard bind:selectedPage />
 		{/if}
 	</div>
 </div>

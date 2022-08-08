@@ -1,11 +1,11 @@
 <script lang="ts">
-	import TextInput from "../Generic/TextInput.svelte";
+	import TextInput from '../Generic/TextInput.svelte';
 
 	let username: string;
 	let email: string;
+	export let selectedPage: string;
 
 	async function registerAccount(e: any) {
-		
 		e.preventDefault();
 		const response = await fetch('https://v2.flowback.org/register', {
 			method: 'POST',
@@ -18,6 +18,8 @@
 				email
 			})
 		});
+
+		if (response) selectedPage = 'Verify';
 	}
 </script>
 

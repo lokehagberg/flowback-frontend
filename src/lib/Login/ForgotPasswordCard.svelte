@@ -16,6 +16,7 @@
 			})
 		});
 		console.log(response)
+        selectedPage = "NewPassword"
     }
 </script>
 

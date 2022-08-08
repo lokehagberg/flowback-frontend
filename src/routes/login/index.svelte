@@ -4,10 +4,16 @@
 	import ForgotPasswordCard from '../../lib/Login/ForgotPasswordCard.svelte';
 	import './index.css';
 	import VerifyCard from '$lib/Login/VerifyCard.svelte';
-import NewPasswordCard from '$lib/Login/NewPasswordCard.svelte';
+	import NewPasswordCard from '$lib/Login/NewPasswordCard.svelte';
 
 	let selectedPage = 'Login';
+
+	if (localStorage.getItem('token')) window.location.href = '/';
 </script>
+
+<svelte:head>
+	<title>Login to Flowback</title>
+</svelte:head>
 
 <div class="flex flex-col items-center">
 	<div class="mt-14">

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import RegisterCard from './RegisterCard.svelte';
-	import LoginCard from './LoginCard.svelte';
+	import RegisterCard from '../../lib/Login/RegisterCard.svelte';
+	import LoginCard from '../../lib/Login/LoginCard.svelte';
 
 	import './index.css';
 

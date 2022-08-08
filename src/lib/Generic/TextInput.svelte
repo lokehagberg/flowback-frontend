@@ -1,9 +1,6 @@
 <script lang="ts">
-	import './index.css';
-
 	export let value = "";
     export let label: String
-
 </script>
 
 <label class="mt-5 w-2/3"

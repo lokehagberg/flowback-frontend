@@ -1,7 +1,5 @@
 <script lang="ts">
-	import TextInput from './TextInput.svelte';
-
-	import './index.css';
+	import TextInput from "../Generic/TextInput.svelte";
 
 	let username: string;
 	let email: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TextInput from "./TextInput.svelte";
+    import TextInput from "../Generic/TextInput.svelte";
     
     let username:string
     let password:string

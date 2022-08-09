@@ -2,7 +2,6 @@
 	import RegisterCard from '../../lib/Login/RegisterCard.svelte';
 	import LoginCard from '../../lib/Login/LoginCard.svelte';
 	import ForgotPasswordCard from '../../lib/Login/ForgotPasswordCard.svelte';
-	import './index.css';
 	import VerifyCard from '$lib/Login/VerifyCard.svelte';
 	import NewPasswordCard from '$lib/Login/NewPasswordCard.svelte';
 

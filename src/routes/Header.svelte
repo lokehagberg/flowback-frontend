@@ -15,14 +15,14 @@
 </script>
 
 <div class="flex justify-between items-center p-4 bg-white">
-	<img src="Logo.png" class="w-44" alt="flowback logo" />
+	<img src="Logo.png" class="w-32" alt="flowback logo" />
 	<div class="flex gap-8">
 		<HeaderIcon icon={faHome} text="Home"/>
-		<HeaderIcon icon={faGlobeEurope} text="Glove"/>
-		<HeaderIcon icon={faUserFriends} text="Predictions"/>
+		<HeaderIcon icon={faGlobeEurope} text="Public"/>
+		<HeaderIcon icon={faUserFriends} text="Groups"/>
 		<HeaderIcon icon={faCalendarWeek} text="Schedule"/>
 		<HeaderIcon icon={faChartBar} text="Prediction"/>
-		<HeaderIcon icon={faList} text="Todo"/>
+		<HeaderIcon icon={faList} text="Kanban"/>
 
 	</div>
 	<div on:click={logOut}>Log Out</div>

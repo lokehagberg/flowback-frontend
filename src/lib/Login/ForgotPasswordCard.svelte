@@ -1,20 +1,13 @@
 <script lang="ts">
+import { fetchRequest } from "$lib/FetchRequest";
+
     import TextInput from "../Generic/TextInput.svelte";
     
     export let selectedPage:string;
     let email:string
     async function sendCode(e:any){
         e.preventDefault();
-		const response = await fetch('https://v2.flowback.org/forgot_password', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				email
-			})
-		});
+		const response = await fetchRequest({email}, "forgot_password", "POST")
 		console.log(response)
         selectedPage = "NewPassword"
     }

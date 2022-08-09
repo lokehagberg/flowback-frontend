@@ -1,4 +1,6 @@
 <script lang="ts">
+import { fetchRequest } from '$lib/FetchRequest';
+
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	export let selectedPage: string;
 	let password: string;
@@ -6,23 +8,12 @@
 
     async function registerAccount(e: any) {
 		e.preventDefault();
-		const response = await fetch('https://v2.flowback.org/forgot_password/verify', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				password,
-                verification_code
-			})
-		});
-
+		const response = await fetchRequest({verification_code, password}, "forgot_password/verify", "POST")
 		if (response) selectedPage = 'Verify';
 	}
 </script>
 
-<form class="flex flex-col items-center">
+<form class="flex flex-col items-center" on:submit={registerAccount}>
 	<TextInput label={'New Password'} bind:value={password} type="password" />
 	<TextInput label={'Verification Code'} bind:value={verification_code} />
 

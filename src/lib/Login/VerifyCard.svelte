@@ -1,4 +1,6 @@
 <script lang="ts">
+import { fetchRequest } from '$lib/FetchRequest';
+
 	import TextInput from '../Generic/TextInput.svelte';
 
 	let verification_code: string;
@@ -7,17 +9,7 @@
 
 	async function verifyAccount(e: any) {
 		e.preventDefault();
-		const response = await fetch('https://v2.flowback.org/register/verify', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				verification_code,
-				password
-			})
-		});
+		const response = await fetchRequest({verification_code, password}, "register/verify", "POST")
 		console.log(response);
 		selectedPage = 'Login';
 	}

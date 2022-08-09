@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TextInput from '../Generic/TextInput.svelte';
+	import { fetchRequest } from '../FetchRequest'
 
 	let username: string;
 	let password: string;
@@ -8,17 +9,7 @@
 
 	async function logIn(e: any) {
 		e.preventDefault();
-		const response = await fetch('https://v2.flowback.org/login', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				username,
-				password
-			})
-		});
+		const response = await fetchRequest({username, password}, "login", "POST")
 
 		response.json().then((data) => {
 			if (data.token) {

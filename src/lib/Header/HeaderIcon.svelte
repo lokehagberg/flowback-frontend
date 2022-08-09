@@ -1,29 +1,37 @@
 <script lang="ts">
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+	// import { onMount } from 'svelte/types/runtime/internal/lifecycle';
 	export let icon = faCircle;
 	export let text = 'icon';
 	export let href = '/';
 
 	let isHovering = false;
+	let selectedPage = false;
+	
+	function checkIfSelected() {
+		selectedPage = window.location.pathname === '/' + href;
+	};
 </script>
 
-<div
+<nav
 	on:mouseover={() => (isHovering = true)}
 	on:mouseleave={() => (isHovering = false)}
 	on:focus
-	on:click={() => (window.location.href = "/" + href)}
-	class="p-1 relative cursor-pointer"
+	on:click={() => (window.location.href = '/' + href)}
+	class="p-3 relative cursor-pointer"
 >
-	<div><Fa {icon} primaryColor={isHovering ? 'blue' : 'black'} /></div>
+	<div on:load={checkIfSelected}>
+		<Fa {icon} color={isHovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />
+	</div>
 	<div
-		class="pt-0.5 pb-0.5 bg-white mt-2 border border-gray-400 rounded text-sm header-icon"
+		class="p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon"
 		class:invisible={!isHovering}
 		style=""
 	>
 		{text}
 	</div>
-</div>
+</nav>
 
 <style>
 	.header-icon {

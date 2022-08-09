@@ -9,7 +9,7 @@
 
 	async function logIn(e: any) {
 		e.preventDefault();
-		const response = await fetchRequest({username, password}, "login", "POST")
+		const response = await fetchRequest("POST", "login", {username, password})
 
 		response.json().then((data) => {
 			if (data.token) {

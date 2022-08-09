@@ -17,14 +17,14 @@
 <div class="flex justify-between items-center p-4 bg-white">
 	<img src="Logo.png" class="w-32" alt="flowback logo" />
 	<div class="flex gap-8">
-		<HeaderIcon icon={faHome} text="Home"/>
-		<HeaderIcon icon={faGlobeEurope} text="Public"/>
-		<HeaderIcon icon={faUserFriends} text="Groups"/>
-		<HeaderIcon icon={faCalendarWeek} text="Schedule"/>
-		<HeaderIcon icon={faChartBar} text="Prediction"/>
-		<HeaderIcon icon={faList} text="Kanban"/>
+		<HeaderIcon icon={faHome} text="Home" href="home"/>
+		<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
+		<HeaderIcon icon={faUserFriends} text="Groups" href="groups"/>
+		<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule"/>
+		<HeaderIcon icon={faChartBar} text="Prediction" href="prediction"/>
+		<HeaderIcon icon={faList} text="Kanban" href="kanban"/>
 
 	</div>
-	<div on:click={logOut}>Log Out</div>
+	<div on:click={logOut} class="cursor-pointer hover:underline">Log Out</div>
 </div>
 

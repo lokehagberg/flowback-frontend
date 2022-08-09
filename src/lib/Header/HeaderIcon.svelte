@@ -3,6 +3,7 @@
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 	export let icon = faCircle;
 	export let text = 'icon';
+	export let href = '/';
 
 	let isHovering = false;
 </script>
@@ -11,6 +12,7 @@
 	on:mouseover={() => (isHovering = true)}
 	on:mouseleave={() => (isHovering = false)}
 	on:focus
+	on:click={() => (window.location.href = "/" + href)}
 	class="p-1 relative cursor-pointer"
 >
 	<div><Fa {icon} primaryColor={isHovering ? 'blue' : 'black'} /></div>
@@ -29,6 +31,6 @@
 		width: 100px;
 		left: calc(50% - 50px);
 		text-align: center;
-        filter: opacity(0.8);
+		filter: opacity(0.8);
 	}
 </style>

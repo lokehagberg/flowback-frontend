@@ -1,5 +1,5 @@
 <script lang="ts">
-import { fetchRequest } from '$lib/FetchRequest';
+	import { fetchRequest } from '$lib/FetchRequest';
 
 	import TextInput from '../Generic/TextInput.svelte';
 
@@ -9,8 +9,7 @@ import { fetchRequest } from '$lib/FetchRequest';
 
 	async function verifyAccount(e: any) {
 		e.preventDefault();
-		const response = await fetchRequest({verification_code, password}, "register/verify", "POST")
-		console.log(response);
+		const response = await fetchRequest('POST', 'register/verify', { verification_code, password });
 		selectedPage = 'Login';
 	}
 </script>

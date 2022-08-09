@@ -9,7 +9,7 @@ import { fetchRequest } from '$lib/FetchRequest';
 
 	async function registerAccount(e: any) {
 		e.preventDefault();
-		const response = await fetchRequest({username, email}, "register", "POST")
+		const response = await fetchRequest("POST", "register", {username, email})
 		if (response) selectedPage = 'Verify';
 	}
 </script>

@@ -7,8 +7,7 @@ import { fetchRequest } from "$lib/FetchRequest";
     let email:string
     async function sendCode(e:any){
         e.preventDefault();
-		const response = await fetchRequest({email}, "forgot_password", "POST")
-		console.log(response)
+		const response = await fetchRequest("POST", "forgot_password", {email})
         selectedPage = "NewPassword"
     }
 </script>

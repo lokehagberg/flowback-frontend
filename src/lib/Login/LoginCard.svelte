@@ -14,7 +14,7 @@
 		response.json().then((data) => {
 			if (data.token) {
 				localStorage.setItem('token', data.token);
-				window.location.href = '/';
+				window.location.href = '/home';
 			}
 		});
 	}

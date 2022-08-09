@@ -4,10 +4,13 @@
 	import ForgotPasswordCard from '../../lib/Login/ForgotPasswordCard.svelte';
 	import VerifyCard from '$lib/Login/VerifyCard.svelte';
 	import NewPasswordCard from '$lib/Login/NewPasswordCard.svelte';
+import { onMount } from 'svelte';
 
 	let selectedPage = 'Login';
 
-	if (localStorage.getItem('token')) window.location.href = '/';
+	onMount(() => {
+		if (localStorage.getItem('token')) window.location.href = '/home';
+	})
 </script>
 
 <svelte:head>

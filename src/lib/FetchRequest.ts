@@ -15,7 +15,7 @@ export function getRequest(api: string, Authorization: string) {
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
-			Authorization
+			Authorization: "Token " + Authorization
 		}
 	});
 }

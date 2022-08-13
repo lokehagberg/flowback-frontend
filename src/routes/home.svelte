@@ -5,8 +5,13 @@
 	import Header from '../lib/Header/Header.svelte';
 
 	onMount(async () => {
-		const response = await getRequest('users', localStorage.getItem('token') || '');
-		console.log(response.json());
+		const token = localStorage.getItem('token') || "";
+		console.log(token)
+		const response = await getRequest('user', token);
+		const users = await response.json()
+		console.log(users.results)
+
+
 	});
 </script>
 

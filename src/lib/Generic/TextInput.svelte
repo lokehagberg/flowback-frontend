@@ -8,7 +8,7 @@
 	}
 </script>
 
-<label class="mt-5 w-2/3"
+<label class=""
 				><p class="text-sm mb-1">{label}</p>
 				<input
 					use:typeAction

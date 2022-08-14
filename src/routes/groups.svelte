@@ -5,6 +5,9 @@
 
 <Header />
 
-<div class="flex flex-col items-center mt-10">
+<div class="flex flex-col items-center mt-10 gap-6">
+<GroupThumbnail />
+<GroupThumbnail />
+<GroupThumbnail />
 <GroupThumbnail />
 </div>

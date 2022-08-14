@@ -1,6 +1,7 @@
 <script>
 	import { getRequest } from '$lib/FetchRequest';
 	import PollThumbnail from '$lib/Poll/PollThumbnail.svelte';
+import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { onMount } from 'svelte';
 	import Header from '../lib/Header/Header.svelte';
 
@@ -17,9 +18,4 @@
 
 <Header />
 
-<div class="flex flex-col items-center">
-	<div class="w-3/4">
-		<div>Flow</div>
-		<PollThumbnail />
-	</div>
-</div>
+<PollThumbnails />

@@ -5,17 +5,10 @@ import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { onMount } from 'svelte';
 	import Header from '../lib/Header/Header.svelte';
 
-	onMount(async () => {
-		const token = localStorage.getItem('token') || "";
-		console.log(token)
-		const response = await getRequest('user', token);
-		const users = await response.json()
-		console.log(users.results)
 
-
-	});
 </script>
 
 <Header />
-
+<div class="w-3/4 flex  justify-center mt-10">
 <PollThumbnails />
+</div>

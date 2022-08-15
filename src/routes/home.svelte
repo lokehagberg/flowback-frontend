@@ -9,6 +9,6 @@ import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 </script>
 
 <Header />
-<div class="w-3/4 flex  justify-center mt-10">
-<PollThumbnails />
+<div class=" flex  justify-center mt-10">
+<PollThumbnails className="w-2/3 justify-center"/>
 </div>

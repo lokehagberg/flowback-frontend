@@ -1,8 +1,8 @@
 <div class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail">
-      <h1 class="text-left text-blue-500">Vote to destroy Lithuania</h1>
+      <h1 class="text-left text-blue-500 hover:underline">Vote to destroy Lithuania</h1>
       <p class="mt-2">I really think we should do it. Please click here to post ways to do it Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magnam nemo praesentium, dolore voluptatum adipisci quidem enim at animi cum alias omnis. A at reiciendis quasi repellendus laudantium pariatur reprehenderit eius?</p>
       <div class="flex justify-between text-sm text-gray-600 mt-4">
-        <p>We hate lithuania for no reason</p>
+        <p class="hover:underline">We hate lithuania for no reason</p>
         <p>Finishes at 2022-08-12</p>
         <p>5 proposals</p>
       </div>

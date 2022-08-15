@@ -1,4 +1,4 @@
-<div on:click={() => window.location.href = "/group1"} class="w-1/2 bg-white relative shadow-md hover:outline vote-thumbnail cursor-pointer">
+<div on:click={() => window.location.href = "/groups/1"} class="w-1/2 bg-white relative shadow-md hover:outline vote-thumbnail cursor-pointer">
 	<!-- <img class="h-2" src="./Logo.png" alt="profile-pic for we hate lithuania for no reason" />
         <img src="./Logo.png" alt="banner for We hate lithuania for no reason" /> -->
 	<div class="w-full h-32 bg-red-500" />

@@ -1,10 +1,11 @@
 <script>
 	import Header from '$lib/Header/Header.svelte';
-	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons/faPeopleGroup';
-import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { page } from '$app/stores';
+	console.log($page.params);
 </script>
 
 <Header />
@@ -14,11 +15,11 @@ import Fa from 'svelte-fa/src/fa.svelte';
 	<div class="bg-blue-500 h-36 w-36 absolute -bottom-8 left-8" />
 </div>
 <div class="bg-white pt-12 flex justify-between align-middle pl-4 pr-4 pb-4">
-    <h1 class="text-3xl">We hate lithuanians for no reason</h1>
-    <p class="text-xl">50 members</p>
+	<h1 class="text-3xl">We hate lithuanians for no reason</h1>
+	<p class="text-xl">50 members</p>
 </div>
 
-<div class="flex justify-center mt-16 ">
+<div class="flex justify-center mt-16 gap-16">
 	<div class="flex justify-center w-2/3">
 		<PollThumbnails />
 	</div>
@@ -47,7 +48,6 @@ import Fa from 'svelte-fa/src/fa.svelte';
 					Members
 				</div>
 			</div>
-			
 		</div>
 	</div>
 </div>

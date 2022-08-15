@@ -7,6 +7,7 @@
   import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons/faCalendarWeek"
   import { faChartBar } from "@fortawesome/free-solid-svg-icons/faChartBar"
   import { faList } from "@fortawesome/free-solid-svg-icons/faList"
+	import Logo from '$lib/assets/Logo.png'
 
   function logOut() {
 	localStorage.removeItem("token")
@@ -15,7 +16,7 @@
 </script>
 
 <header class="flex justify-between items-center p-4 bg-white shadow">
-	<a href="/home"><img src="Logo.png" class="w-32 cursor-pointer" alt="flowback logo" /></a>
+	<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
 	<div class="flex gap-8">
 		<HeaderIcon icon={faHome} text="Home" href="home"/>
 		<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />

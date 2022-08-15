@@ -1,0 +1,252 @@
+.schedule-flex-wrap{
+    display:flex;
+    flex-direction: row-reverse;
+}
+
+.schedule-flex-wrap>*{
+    margin:2vw;
+}
+
+@media (max-width: 750px) {
+    .schedule-flex-wrap{
+        display:block;
+    }
+}
+
+.calendar {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.calendar .dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    color: #1caff6;
+    text-align: center;
+    font-size: 14pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 160px;
+    left: 0px;
+    z-index: 2000;
+}
+
+.calendar .dropdown .dropdown-item {
+    cursor: pointer;
+    opacity: .7;
+    transition: .5s opacity;
+}
+
+.calendar .dropdown .dropdown-item:hover {
+    opacity: 1;
+}
+
+.calendar .years {
+    display: none;
+}
+
+.calendar .title {
+    text-align: center;
+    font-size: 20pt;
+}
+
+.calendar .calendar-btn {
+    float: left;
+    background-color: #24aeff;
+    color: white;
+    text-align: center;
+    font-size: 14pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: relative;
+    width: 20%;
+    cursor: pointer;
+    transition: .5s background-color;
+}
+
+.calendar .calendar-btn:hover {
+    background-color: #1f71a1;
+}
+
+.calendar .year-btn {
+    float: right;
+}
+
+.calendar .calendar-dates .days .day {
+    float: left;
+    width: 12%;
+    margin: 1%;
+    padding: 1%;
+    font-size: 13pt;
+    text-align: center;
+    border-radius: 10px;
+    border: solid 1px #ddd;
+}
+
+.calendar .calendar-dates .days .day.blank {
+    background-color: white;
+    border: none;
+}
+
+.calendar .calendar-dates .days .day.selected {
+    background-color: #1caff6;
+    color: white;
+    cursor: pointer;
+    opacity: .5;
+    transition: .5s opacity;
+}
+
+.calendar .calendar-dates .days .day.selected:hover {
+    opacity: 1;
+}
+
+.calendar .calendar-dates .days .day.label {
+    height: 40px;
+    background-color: white;
+    color: black;
+    border: none;
+    font-weight: bold;
+}
+
+.clear {
+    clear: both;
+}
+
+@media only screen and (max-width: 960px) {
+    .calendar {
+        width: 100%;
+        margin: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+        position: relative;
+        left: 0px;
+    }
+}
+
+.has-poll {
+    background-color: #9ae0ed !important;
+}
+
+.day-poll-list {
+    /* position: absolute; */
+    width: 70%;
+    display: flex;
+    /* margin: 0 auto; */
+    flex-direction: column;
+    /* border-radius: 10px; */
+    background:white;
+    box-shadow: 0rem 0rem 0.6rem rgb(0, 0, 0, 0.1);
+    padding: 1rem;
+    /* margin-top: 2rem; */
+}
+
+.day-poll-list>div {
+    margin-top: 10px;
+}
+
+.day-poll-list>div:first-child {
+    margin-top: 0px;
+}
+
+.day-poll-list>h1{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.poll-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.poll-in-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.time {
+    font-size: larger;
+
+}
+
+.calendar-day-labels {
+    display: grid;
+}
+
+.calendar-day-labels>* {
+    width: 100% !important;
+    text-align: center;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+
+}
+
+.all-calendar-days {
+    display: grid;
+    /* gap:2px; */
+}
+
+
+.all-calendar-days>* {
+    background-color: rgba(216, 216, 216, 0.074);
+    text-align: center;
+    padding: 20px;
+    /* margin: 5px; */
+    /* border: rgba(0, 0, 0, 0.05) solid; */
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    /* border-radius: 15px; */
+    font-size: larger;
+}
+
+.is-today{
+    background: #24aeff;
+}
+
+.selected-day{
+    /* background:#1caff6 !important */
+    box-shadow: inset 0px 0px 0px 4px #24aeff;
+    
+}
+
+.calendar-day-1 {
+    margin-left: 0;
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.calendar-day-2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.calendar-day-3 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.calendar-day-4 {
+    grid-column-start: 4;
+    grid-column-end: 5;
+}
+
+.calendar-day-5 {
+    grid-column-start: 5;
+    grid-column-end: 6;
+}
+
+.calendar-day-6 {
+    grid-column-start: 6;
+    grid-column-end: 7;
+}
+
+.calendar-day-7 {
+    grid-column-start: 7;
+    grid-column-end: 8;
+    margin-right: 0;
+}

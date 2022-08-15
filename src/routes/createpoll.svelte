@@ -2,7 +2,7 @@
 import ButtonPrimary from "$lib/Generic/ButtonPrimary.svelte";
 import TextInput from "$lib/Generic/TextInput.svelte";
 import Header from "$lib/Header/Header.svelte";
-
+let polltype = "ranking"
 
 
 const createPoll = () => {
@@ -27,11 +27,15 @@ const createPoll = () => {
     </div>
     <div class="w-1/3">
     <div class="bg-white p-6 shadow-xl flex flex-col gap-6">
-        <ButtonPrimary>Ranking</ButtonPrimary>
-        <ButtonPrimary>Time</ButtonPrimary>
+        <ButtonPrimary action={() => polltype = "ranking"} buttonType={polltype==="ranking" ? "primary" : "secondary"}>Ranking</ButtonPrimary>
+        <ButtonPrimary action={() => polltype = "time"} buttonType={polltype==="time" ? "primary" : "secondary"}>Time</ButtonPrimary>
     </div>
     <div class="bg-white p-6 shadow-xl mt-4">
+        {#if polltype === "ranking"}
         Ranking poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi itaque omnis eaque tempora quod maiores, dolores velit dolorem?
+        {:else if polltype === "time"}
+        Time poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi itaque omnis eaque tempora quod maiores, dolores velit dolorem?
+        {/if}
     </div>
 </div>
 </form>

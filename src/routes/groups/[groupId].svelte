@@ -1,11 +1,19 @@
-<script>
+<script lang="ts">
 	import Header from '$lib/Header/Header.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons/faPeopleGroup';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { page } from '$app/stores';
+	import Members from '$lib/Group/Members.svelte';
 	console.log($page.params);
+	enum selectablePages {
+		pollthumbnails = "pollthumbnails",
+		members = "members"
+	}
+
+	let selectedPage:selectablePages = selectablePages.pollthumbnails;
+
 </script>
 
 <Header />
@@ -15,13 +23,17 @@
 	<div class="bg-blue-500 h-36 w-36 absolute -bottom-8 left-8" />
 </div>
 <div class="bg-white pt-12 flex justify-between align-middle pl-4 pr-4 pb-4">
-	<h1 class="text-3xl">We hate lithuanians for no reason</h1>
+	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => selectedPage = selectablePages.pollthumbnails}>We hate lithuanians for no reason</h1>
 	<p class="text-xl">50 members</p>
 </div>
 
 <div class="flex justify-center mt-16 gap-16">
 	<div class="flex justify-center w-2/3">
-		<PollThumbnails />
+		{#if selectedPage === 'pollthumbnails'}
+			<PollThumbnails />
+		{:else if selectedPage === 'members'}
+			<Members />
+		{/if}
 	</div>
 
 	<div>
@@ -43,7 +55,7 @@
 				<Fa icon={faPeopleGroup} />
 				<div
 					class="ml-2 cursor-pointer hover:underline"
-					on:click={() => (window.location.href = '/pollmembers')}
+					on:click={() => (selectedPage = selectablePages.members)}
 				>
 					Members
 				</div>

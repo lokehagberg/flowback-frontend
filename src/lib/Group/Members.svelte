@@ -21,9 +21,7 @@
 	});
 </script>
 
-<Header />
-
-<div class="flex flex-col items-center gap-2 mt-10">
+<div class="flex flex-col items-center gap-2 mb-24">
 {#if users.length !== 0}
 	{#each users as user}
 		<div class="flex bg-white p-2">

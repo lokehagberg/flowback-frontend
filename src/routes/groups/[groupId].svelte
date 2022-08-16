@@ -4,8 +4,8 @@
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons/faPeopleGroup';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { page } from '$app/stores';
 	import Members from '$lib/Group/Members.svelte';
+	import { page } from '$app/stores';
 	console.log($page.params);
 	enum selectablePages {
 		pollthumbnails = "pollthumbnails",

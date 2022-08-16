@@ -9,7 +9,8 @@ export function fetchRequest(method: string, api: string, data: any) {
 	});
 }
 
-export function getRequest(api: string, Authorization: string) {
+//TODO: Make Authorization use session storage/svelte stores instead of local storage
+export function getRequest(api: string, Authorization: string = localStorage.getItem("token")||"") {
 	return fetch('https://v2.flowback.org/' + api, {
 		method: 'GET',
 		headers: {

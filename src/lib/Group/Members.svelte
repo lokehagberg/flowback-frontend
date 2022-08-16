@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { getRequest } from '$lib/FetchRequest';
-	import Header from '$lib/Header/Header.svelte';
-	// import { onMount } from "svelte/types/runtime/internal/lifecycle";
 	import { onMount } from 'svelte';
 
 	interface User {
@@ -22,12 +20,15 @@
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24">
-{#if users.length !== 0}
-	{#each users as user}
-		<div class="flex bg-white p-2">
-			<div class="bg-red-500 w-10 h-10" />
-			<div class="w-64 ml-10">{user.username}</div>
-		</div>
-	{/each}
-{/if}
-    </div>
+	{#if users.length !== 0}
+		{#each users as user}
+			<div
+				class="flex bg-white p-2 hover:outline cursor-pointer"
+				on:click={() => (window.location.href = `/user?id=${user.id}`)}
+			>
+				<div class="bg-red-500 w-10 h-10" />
+				<div class="w-64 ml-10 hover:underline">{user.username}</div>
+			</div>
+		{/each}
+	{/if}
+</div>

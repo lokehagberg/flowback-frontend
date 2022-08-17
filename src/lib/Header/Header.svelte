@@ -12,7 +12,7 @@
 	let sideHeaderOpen = false
 </script>
 
-<header class="flex justify-between items-center p-4 bg-white shadow">
+<header class="flex justify-between items-center p-4 bg-white shadow select-none">
 	<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
 	<div class="flex gap-8">
 		<HeaderIcon icon={faHome} text="Home" href="home" />

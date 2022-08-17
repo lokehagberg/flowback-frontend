@@ -1,23 +1,21 @@
 <script lang="ts">
+	import GroupSidebarButton from '../../lib/Group/GroupSidebarButton.svelte';
 	import GroupHeader from '../../lib/Group/GroupHeader.svelte';
 	import Header from '$lib/Header/Header.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
-	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
-	import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons/faPeopleGroup';
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import {selectablePages} from '$lib/Group/interface'
+	import { selectablePages } from '$lib/Group/interface';
 
-	let selectedPage: selectablePages = selectablePages.pollthumbnails;
+	let selectedPage: selectablePages = selectablePages.flow;
 </script>
 
 <Header />
 
-<GroupHeader bind:selectedPage/>
+<GroupHeader bind:selectedPage />
 
 <div class="flex justify-center mt-16 gap-16">
 	<div class="flex justify-center w-2/3">
-		{#if selectedPage === 'pollthumbnails'}
+		{#if selectedPage === 'flow'}
 			<PollThumbnails />
 		{:else if selectedPage === 'members'}
 			<Members />
@@ -26,24 +24,28 @@
 
 	<div>
 		<div class="bg-white p-4 shadow rounded flex flex-col gap-6">
-			<div class="flex item-center items-center">
-				<Fa icon={faPoll} />
-				<div
-					class="ml-2 cursor-pointer hover:underline"
-					on:click={() => (window.location.href = '/createpoll')}
-				>
-					Create a poll
-				</div>
-			</div>
-			<div class="flex item-center items-center">
-				<Fa icon={faPeopleGroup} />
-				<div
-					class="ml-2 cursor-pointer hover:underline"
-					on:click={() => (selectedPage = selectablePages.members)}
-				>
-					Members
-				</div>
-			</div>
+			<GroupSidebarButton action={() => (selectedPage = selectablePages.flow)} text="Flow" />
+			<GroupSidebarButton action={() => (selectedPage = selectablePages.about)} text="About" />
+			<GroupSidebarButton
+				action={() => (selectedPage = selectablePages.documents)}
+				text="Documents"
+			/>
+			<GroupSidebarButton action={() => (selectedPage = selectablePages.members)} text="Members" />
+			<GroupSidebarButton action={() => (selectedPage = selectablePages.email)} text="Send Email" />
+			<GroupSidebarButton
+				action={() => (selectedPage = selectablePages.stats)}
+				text="Group statistics"
+			/>
+		</div>
+		<div class="bg-white p-4 shadow rounded flex flex-col gap-6 mt-6">
+			<GroupSidebarButton
+				action={() => (window.location.href = '/createpoll')}
+				text="Create Poll"
+			/>
+			<GroupSidebarButton
+				action={() => (window.location.href = '/createpoll')}
+				text="Video Conference"
+			/>
 		</div>
 	</div>
 </div>

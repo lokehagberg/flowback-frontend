@@ -25,7 +25,7 @@
 		<Fa {icon} color={isHovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />
 	</div>
 	<div
-		class="p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon"
+		class="p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
 		class:invisible={!isHovering}
 		style=""
 	>

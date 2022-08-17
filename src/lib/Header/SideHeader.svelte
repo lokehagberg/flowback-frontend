@@ -24,7 +24,7 @@
 	let open_tools = false;
 </script>
 
-<div class="absolute right-0 bg-gray-500">
+<div class="absolute right-0 bg-gray-500 z-50 select-none">
 	{#each navs as nav}
 		<div class="cursor-pointer hover:underline" on:click={nav.action}>{nav.title}</div>
 	{/each}

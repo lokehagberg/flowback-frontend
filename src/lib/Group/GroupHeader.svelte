@@ -12,7 +12,7 @@
 <div class="bg-white pt-12 flex justify-between align-middle pl-4 pr-4 pb-4">
 	<h1
 		class="text-3xl hover:underline cursor-pointer"
-		on:click={() => (selectedPage = selectablePages.pollthumbnails)}
+		on:click={() => (selectedPage = selectablePages.flow)}
 	>
 		We hate lithuanians for no reason
 	</h1>

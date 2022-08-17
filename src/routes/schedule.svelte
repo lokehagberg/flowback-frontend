@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/Header/Header.svelte';
-
+	import './schedule.css';
 	const months = [
 		'Jan',
 		'Feb',
@@ -19,16 +19,29 @@
 	const currentDate = new Date();
 	let month = currentDate.getMonth();
 	let year = currentDate.getFullYear();
-	let selectedDate = currentDate;
+	let selectedDate = new Date(year, month, 0);
+
+	//A fix due to class struggle
+	let selectedDatePosition = '0-0';
+
+	$: month && year && deleteSelection();
+
+	function deleteSelection() {
+		document.getElementById(selectedDatePosition)?.classList.remove('selected');
+		// selectedDatePosition = `${0}-${0}`;
+	}
+
 	let polls = [];
 	let loading = false;
 	let pollList = [];
 
-	function firstDayInMonthWeekday() {
+	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
-	}
+	};
 
-	console.log(firstDayInMonthWeekday());
+	const lastDayInMonth = () => {
+		return new Date(year, month + 1, 0).getDate();
+	};
 </script>
 
 <Header />
@@ -42,19 +55,21 @@
 <div on:click={() => (month += 1)}>{'>'}</div>
 
 <div class="calendar">
+	<!-- {@debug selectedDate} -->
 	{#each [1, 2, 3, 4, 5, 6] as y}
 		{#each [1, 2, 3, 4, 5, 6, 7] as x}
-			{@debug selectedDate}
 			<div
 				class="calendar-day border border-xs border-gray-400"
+				id={`${x}-${y}`}
 				class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 					month === currentDate.getMonth() &&
 					year === currentDate.getFullYear()}
-				class:selected={-firstDayInMonthWeekday() + x + 7 * (y - 1) === selectedDate.getDate() &&
-					month === selectedDate.getMonth() &&
-					year === selectedDate.getFullYear()}
-				on:click={() =>
-					(selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)))}
+				on:click={() => {
+					document.getElementById(selectedDatePosition)?.classList.remove('selected');
+					document.getElementById(`${x}-${y}`)?.classList.add('selected');
+					selectedDatePosition = `${x}-${y}`;
+					selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+				}}
 			>
 				{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 			</div>
@@ -62,24 +77,8 @@
 	{/each}
 </div>
 
-<style>
-	.calendar {
-		display: grid;
-		grid-template-columns: repeat(7, clamp(40px, 8vw, 100px));
-		grid-template-rows: repeat(7, clamp(40px, 8vw, 100px));
-	}
-
-	.calendar-day {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.today {
-		background: blue;
-	}
-
-	.selected {
-		background: green;
-	}
-</style>
+<div>
+	Time polls at {selectedDate.getDate()}/{selectedDate.getMonth()}
+	{selectedDate.getFullYear()}
+	<div>13:00 Pump oil somewhere</div>
+</div>

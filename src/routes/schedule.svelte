@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Header from '$lib/Header/Header.svelte';
-import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import './schedule.css';
+	import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft';
+	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+	import Fa from 'svelte-fa/src/fa.svelte';
 	const months = [
 		'Jan',
 		'Feb',
@@ -24,17 +27,16 @@ import { onMount } from 'svelte';
 
 	//A fix due to class struggle
 	let selectedDatePosition = '0-0';
-	
+
 	$: month && year && deleteSelection();
 
-	let deleteSelection = () => {}
+	let deleteSelection = () => {};
 
 	onMount(() => {
 		deleteSelection = () => {
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
-		}
-	})
-
+		};
+	});
 
 	let polls = [];
 	let loading = false;
@@ -51,13 +53,17 @@ import { onMount } from 'svelte';
 
 <Header />
 
-<div on:click={() => (year -= 1)}>{'<'}</div>
-{year}
-<div on:click={() => (year += 1)}>{'>'}</div>
+<div class="flex items-center">
+	<div class="cursor-pointer bg-blue-500 rounded-lg" on:click={() => (year -= 1)}><Fa icon={faCaretLeft} color="white" size="2.5x"/></div>
+	<div class="text-xl">{year}</div>
+	<div class="cursor-pointer " on:click={() => (year += 1)}><Fa icon={faArrowRight}/></div>
+</div>
 
-<div on:click={() => (month -= 1)}>{'<'}</div>
-{months[month]}
-<div on:click={() => (month += 1)}>{'>'}</div>
+<div>
+	<div on:click={() => (month -= 1)}>{'<'}</div>
+	{months[month]}
+	<div on:click={() => (month += 1)}>{'>'}</div>
+</div>
 
 <div class="calendar">
 	<!-- {@debug selectedDate} -->

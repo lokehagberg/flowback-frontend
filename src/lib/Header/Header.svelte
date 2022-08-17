@@ -8,6 +8,7 @@
   import { faChartBar } from "@fortawesome/free-solid-svg-icons/faChartBar"
   import { faList } from "@fortawesome/free-solid-svg-icons/faList"
 	import Logo from '$lib/assets/Logo.png'
+import SideHeader from './SideHeader.svelte';
 
   function logOut() {
 	localStorage.removeItem("token")
@@ -27,5 +28,11 @@
 
 	</div>
 	<div on:click={logOut} class="cursor-pointer hover:underline">Log Out</div>
+
+	
+	
 </header>
+
+
+<SideHeader/>
 

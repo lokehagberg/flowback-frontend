@@ -6,8 +6,7 @@
 
 	onMount(async () => {
 		const userId = $page.url.searchParams.get("id");
-		console.log(userId)
-		const response = await getRequest(`user`);
+		const response = await getRequest(userId ? `user/${userId}` : "user");
 		console.log(response.json());
 	});
 	

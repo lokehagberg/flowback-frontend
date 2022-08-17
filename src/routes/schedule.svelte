@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/Header/Header.svelte';
+import { onMount } from 'svelte';
 	import './schedule.css';
 	const months = [
 		'Jan',
@@ -23,13 +24,17 @@
 
 	//A fix due to class struggle
 	let selectedDatePosition = '0-0';
-
+	
 	$: month && year && deleteSelection();
 
-	function deleteSelection() {
-		document.getElementById(selectedDatePosition)?.classList.remove('selected');
-		// selectedDatePosition = `${0}-${0}`;
-	}
+	let deleteSelection = () => {}
+
+	onMount(() => {
+		deleteSelection = () => {
+			document.getElementById(selectedDatePosition)?.classList.remove('selected');
+		}
+	})
+
 
 	let polls = [];
 	let loading = false;

@@ -4,7 +4,7 @@ export function fetchRequest(method: string, api: string, data: any, needs_autho
 	{
 		Accept: 'application/json',
 		'Content-Type': 'application/json',
-		Authorization: (localStorage.getItem('token') || '') 
+		Authorization: "Token " + (localStorage.getItem('token') || '') 
 	}:{
 		Accept: 'application/json',
 		'Content-Type': 'application/json',

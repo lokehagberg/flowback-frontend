@@ -9,7 +9,7 @@
 
 	async function verifyAccount(e: any) {
 		e.preventDefault();
-		const response = await fetchRequest('POST', 'register/verify', { verification_code, password });
+		const response = await fetchRequest('POST', 'register/verify', { verification_code, password }, false);
 		selectedPage = 'Login';
 	}
 </script>

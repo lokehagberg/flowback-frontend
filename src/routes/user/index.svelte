@@ -7,15 +7,10 @@
 	onMount(async () => {
 		const userId = $page.url.searchParams.get("id");
 		const response = await getRequest(userId ? `user/${userId}` : "user");
-		console.log(response.json());
 	});
 	
 	const updateName = async () => {
-		const userId = $page.url.searchParams.get("id");
-		console.log(userId)
 		const response = await fetchRequest('POST', `user/update`, {username:"b"});
-		console.log(response.json());
-
 	}
 </script>
 

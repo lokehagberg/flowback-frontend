@@ -23,10 +23,15 @@
 	let open_support = false;
 	let open_tools = false;
 </script>
-
-<div class="absolute right-0 bg-gray-500 z-50 select-none">
+<!-- TODO: Relative works great for phones -->
+<div class="absolute right-0 bg-white z-50 select-none shadow slide-animation">
 	{#each navs as nav}
-		<div class="cursor-pointer hover:underline" on:click={nav.action}>{nav.title}</div>
+		<div
+			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"
+			on:click={nav.action}
+		>
+			{nav.title}
+		</div>
 	{/each}
 </div>
 
@@ -62,3 +67,20 @@
 		</div>
 	</div>
 </Modal>
+
+<style>
+	@keyframes slide-animation {
+		from {
+			right: -100px;
+		}
+		to {
+			right: 0;
+		}
+	}
+
+	.slide-animation{
+		animation-name:slide-animation;
+		animation-duration: 300ms;
+	}
+
+</style>

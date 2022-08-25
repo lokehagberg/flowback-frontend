@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Proposal from '$lib/Poll/Proposal.svelte';
-	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
+	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
+
 	interface Proposal {
 		title: string;
 		description: string;
@@ -36,23 +37,29 @@
 	];
 
 	let ranked: Proposal[] = [];
-	let abstained: Proposal[] = proposals;
-	let rankedId: number[] = [];
+	let abstained: Proposal[] = [...proposals];
 
 	//Removes the proposal from its current container (be it abstain or rank) and move it to the other one
-	//Potential speedup can be done by using a dictionary with id's and rank placement
-	const switchProposalContainer = (proposalId1: number, proposalPosition:number) => {
-		const rankedIdIndex = rankedId.findIndex((proposal) => proposal === proposalId1);
-		const proposal = proposals.find((proposal) => proposal.id === proposalId1);
+	const switchProposalContainer = (proposalId: number, proposalPosition: number) => {
+		const proposalInRanked = ranked.find(proposal => proposal.id === proposalId)
+		
+		if (proposalInRanked !== undefined) {
+			abstained.push(proposalInRanked);
+			abstained = abstained;
+			
+			ranked.splice(proposalPosition, 1);
+			ranked = ranked;
+			return;
+		} 
+		
+		const proposalInAbstained = abstained.find(proposal => proposal.id === proposalId)
 
-		if (rankedIdIndex === -1 && proposal) {
-			ranked.push(proposal);
+		if (proposalInAbstained !== undefined){
+			ranked.push(proposalInAbstained);
 			ranked = ranked;
 
-			abstained.splice(proposalPosition, 1)
-			abstained = abstained
-		} else {
-			rankedId.splice(rankedIdIndex, 1);
+			abstained.splice(proposalPosition, 1);
+			abstained = abstained;
 		}
 	};
 
@@ -87,6 +94,7 @@
 				<div slot="right-icons" class="cursor-pointer">
 					<div on:click={() => swapProposalRanking(i, i - 1)}><Fa icon={faArrowUp} /></div>
 					<div on:click={() => swapProposalRanking(i, i + 1)}><Fa icon={faArrowDown} /></div>
+					<div on:click={() => switchProposalContainer(proposal.id, i)}><Fa icon={faMinus} /></div>
 				</div>
 			</Proposal>
 		</div>
@@ -103,6 +111,6 @@
 		display: grid;
 		grid-template-columns: 8fr 8fr 1fr;
 		align-items: center;
-		column-gap:2rem;
+		column-gap: 2rem;
 	}
 </style>

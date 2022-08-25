@@ -7,7 +7,7 @@ import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 <div>
 	Comments
 	<form>
-		<TextArea type="field" label="Comment" />
+		<!-- <TextArea type="field" label="Comment" /> -->
 		<ButtonPrimary>Submit</ButtonPrimary>
 	</form>
 

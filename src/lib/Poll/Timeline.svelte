@@ -14,13 +14,13 @@
 	});
 </script>
 
-<div class="relative">
+<div class="relative mt-6">
 	<div class="h-6">
 		{#each datePlacement as date}
 			<div class="absolute bg-gray-400 h-6 w-6 rounded-full" style:left={`calc(${date}% - 0.75rem)`} />
 		{/each}
 	</div>
-	<div class="h-10">
+	<div class="h-10 mt-2">
 		<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
 		<div class={`absolute bg-blue-400 left-0 h-6 rounded-full`} style:width={`${progress}%`} />
 	</div>

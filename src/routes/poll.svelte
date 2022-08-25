@@ -3,12 +3,18 @@
 	import Header from '$lib/Header/Header.svelte';
 	import Timeline from '$lib/Poll/Timeline.svelte';
 	import Comments from '$lib/Poll/Comments.svelte';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 </script>
 
 <Header />
-<div class="p-10 m-10 bg-gray-200">
-	<h1>Destroy Lithuania</h1>
-	<ProposalsRanked />
+<div class="p-10 m-10 bg-white">
+	<div class="flex gap-6">
+		<h1 class="text-left text-3xl mt-auto mb-auto">Do a little Trolling</h1>
+		<div class="mt-auto mb-auto"><HeaderIcon /></div>
+		<div class="mt-auto mb-auto"><HeaderIcon /></div>
+	</div>
+	<div class="italic">Group Name</div>
+	<!-- <ProposalsRanked /> -->
 	<Timeline />
 	<Comments />
 </div>

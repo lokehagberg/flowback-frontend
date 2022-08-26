@@ -17,7 +17,7 @@
 			title: 'Nuclear Option',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
 			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
-			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb`,
+			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb loremjkb loremjkb loremjkb loremjkb loremjkb`,
 			id: 1
 		},
 		{
@@ -41,6 +41,11 @@
 
 	//Removes the proposal from its current container (be it abstain or rank) and move it to the other one
 	const switchProposalContainer = (proposalId: number, proposalPosition: number) => {
+		
+		//It checks if the proposal is in ranked already. Ranked is checked first since it will the most often have the fewest members
+		//and won't meaningfully slow down the search if the proposal is in abstained.
+		//It then removes it from it's own container and tacks it to the new one.
+		//TODO (if needed): Generalise to any number of containers
 		const proposalInRanked = ranked.find(proposal => proposal.id === proposalId)
 		
 		if (proposalInRanked !== undefined) {

@@ -24,7 +24,9 @@
 	let month = currentDate.getMonth();
 	let year = currentDate.getFullYear();
 	let selectedDate = new Date(year, month, 0);
-
+	let polls = [];
+	let loading = false;
+	
 	//A fix due to class struggle
 	let selectedDatePosition = '0-0';
 
@@ -38,58 +40,58 @@
 		};
 	});
 
-	let polls = [];
-	let loading = false;
-	let pollList = [];
 
 	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
-	};
-
-	const lastDayInMonth = () => {
-		return new Date(year, month + 1, 0).getDate();
 	};
 </script>
 
 <Header />
 
-<div class="flex items-center">
-	<div class="cursor-pointer bg-blue-500 rounded-lg" on:click={() => (year -= 1)}><Fa icon={faCaretLeft} color="white" size="2.5x"/></div>
-	<div class="text-xl">{year}</div>
-	<div class="cursor-pointer " on:click={() => (year += 1)}><Fa icon={faArrowRight}/></div>
-</div>
+<div class="flex bg-white">
+	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
+		Time polls at {selectedDate.getDate()}/{selectedDate.getMonth()}
+		{selectedDate.getFullYear()}
+		<div>13:00 Pump oil somewhere</div>
+	</div>
 
-<div>
-	<div on:click={() => (month -= 1)}>{'<'}</div>
-	{months[month]}
-	<div on:click={() => (month += 1)}>{'>'}</div>
-</div>
-
-<div class="calendar">
-	<!-- {@debug selectedDate} -->
-	{#each [1, 2, 3, 4, 5, 6] as y}
-		{#each [1, 2, 3, 4, 5, 6, 7] as x}
-			<div
-				class="calendar-day border border-xs border-gray-400"
-				id={`${x}-${y}`}
-				class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
-					month === currentDate.getMonth() &&
-					year === currentDate.getFullYear()}
-				on:click={() => {
-					document.getElementById(selectedDatePosition)?.classList.remove('selected');
-					document.getElementById(`${x}-${y}`)?.classList.add('selected');
-					selectedDatePosition = `${x}-${y}`;
-					selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
-				}}
-			>
-				{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
+	<div class="w-full">
+		<div class="flex">
+			<div class="flex items-center">
+				<div class="cursor-pointer bg-blue-500 rounded-lg" on:click={() => (year -= 1)}>
+					<Fa icon={faCaretLeft} color="white" size="2.5x" />
+				</div>
+				<div class="text-xl">{year}</div>
+				<div class="cursor-pointer " on:click={() => (year += 1)}><Fa icon={faArrowRight} /></div>
 			</div>
-		{/each}
-	{/each}
-</div>
 
-<div>
-	Time polls at {selectedDate.getDate()}/{selectedDate.getMonth()}
-	{selectedDate.getFullYear()}
-	<div>13:00 Pump oil somewhere</div>
+			<div class="flex items-center">
+				<div on:click={() => (month -= 1)}>{'<'}</div>
+				{months[month]}
+				<div on:click={() => (month += 1)}>{'>'}</div>
+			</div>
+		</div>
+		<div class="calendar w-full">
+			<!-- {@debug selectedDate} -->
+			{#each [1, 2, 3, 4, 5, 6] as y}
+				{#each [1, 2, 3, 4, 5, 6, 7] as x}
+					<div
+						class="calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 "
+						id={`${x}-${y}`}
+						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
+							month === currentDate.getMonth() &&
+							year === currentDate.getFullYear()}
+						on:click={() => {
+							document.getElementById(selectedDatePosition)?.classList.remove('selected');
+							document.getElementById(`${x}-${y}`)?.classList.add('selected');
+							selectedDatePosition = `${x}-${y}`;
+							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+						}}
+					>
+						{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
+					</div>
+				{/each}
+			{/each}
+		</div>
+	</div>
 </div>

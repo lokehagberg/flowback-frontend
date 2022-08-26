@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import './schedule.css';
 	import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft';
+	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
+	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	const months = [
@@ -26,11 +28,24 @@
 	let selectedDate = new Date(year, month, 0);
 	let polls = [];
 	let loading = false;
-	
+
 	//A fix due to class struggle
 	let selectedDatePosition = '0-0';
 
 	$: month && year && deleteSelection();
+	$: month && test();
+
+	const test = () => {
+		if (month === 12) {
+			year += 1;
+			month = 0;
+			console.log('hi');
+		}
+		if (month === -1) {
+			year -= 1;
+			month = 11;
+		}
+	};
 
 	let deleteSelection = () => {};
 
@@ -39,7 +54,6 @@
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		};
 	});
-
 
 	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
@@ -57,18 +71,24 @@
 
 	<div class="w-full">
 		<div class="flex">
-			<div class="flex items-center">
-				<div class="cursor-pointer bg-blue-500 rounded-lg" on:click={() => (year -= 1)}>
-					<Fa icon={faCaretLeft} color="white" size="2.5x" />
+			<div class="flex items-center select-none">
+				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (year -= 1)}>
+					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
-				<div class="text-xl">{year}</div>
-				<div class="cursor-pointer " on:click={() => (year += 1)}><Fa icon={faArrowRight} /></div>
+				<div class="text-xl text-center w-16">{year}</div>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (year += 1)}>
+					<Fa icon={faChevronRight} size="1.5x" />
+				</div>
 			</div>
 
-			<div class="flex items-center">
-				<div on:click={() => (month -= 1)}>{'<'}</div>
-				{months[month]}
-				<div on:click={() => (month += 1)}>{'>'}</div>
+			<div class="flex items-center ml-6 select-none">
+				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month -= 1)}>
+					<Fa icon={faChevronLeft} size="1.5x" />
+				</div>
+				<div class="w-10 text-center">{months[month]}</div>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month += 1)}>
+					<Fa icon={faChevronRight} size="1.5x" />
+				</div>
 			</div>
 		</div>
 		<div class="calendar w-full">

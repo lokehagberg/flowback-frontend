@@ -4,11 +4,19 @@
 
 	export let text: string;
 	export let action = () => {};
+
+	let hovering = false;
 </script>
 
-<div class="flex item-center items-center">
-	<Fa icon={faPoll} />
-	<div class="ml-2 cursor-pointer hover:underline" on:click={action}>
+<div
+	on:mouseover={() => (hovering = true)}
+	on:focus
+	on:mouseleave={() => (hovering = false)}
+	class="flex item-center items-center  cursor-pointer hover:underline pt-3 pb-3"
+	on:click={action}
+>
+	<Fa icon={faPoll} color={hovering ? "#015BC0" : "black"} />
+	<div class="ml-2">
 		{text}
 	</div>
 </div>

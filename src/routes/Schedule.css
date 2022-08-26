@@ -4,8 +4,8 @@
     grid-template-rows: repeat(6, 1fr);
     /* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
     on the header, 40px from the height of each symbol/the logo on the header, and 
-    40 more px for the controlls on the calendar. This scuffed solution might need to be improved */
-    height: calc(100vh - 2rem - 40px - 40px);
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved */
+    height: calc(100vh - 2rem - 40px - 28px);
 }
 
 .calendar-day {

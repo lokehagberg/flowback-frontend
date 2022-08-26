@@ -78,8 +78,8 @@
 </script>
 
 <div class="poll border border-gray-700">
-	<div style="grid-column: 1 / 2; grid-row: 1 / 2">Abstain</div>
-	<div style="grid-column: 2 / 3; grid-row: 1 / 2">Rank</div>
+	<div style="grid-column: 1 / 2; grid-row: 1 / 2" class="text-2xl p-6">Abstain</div>
+	<div style="grid-column: 2 / 3; grid-row: 1 / 2" class="text-2xl p-6">Rank</div>
 	{#each abstained as proposal, i}
 		<div style={`grid-column: 1 / 2; grid-row:${i + 2} / ${i + 2 + 1}`}>
 			<Proposal title={proposal.title} description={proposal.description}>

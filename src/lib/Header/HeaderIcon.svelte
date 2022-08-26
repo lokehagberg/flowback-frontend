@@ -6,7 +6,7 @@
 	export let text = 'icon';
 	export let href = '/';
 
-	let isHovering = false;
+	let hovering = false;
 	let selectedPage = false;
 	
 	function checkIfSelected() {
@@ -15,18 +15,18 @@
 </script>
 
 <nav
-	on:mouseover={() => (isHovering = true)}
-	on:mouseleave={() => (isHovering = false)}
+	on:mouseover={() => (hovering = true)}
+	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={() => (window.location.href = '/' + href)}
 	class="p-3 relative cursor-pointer"
 >
 	<div on:load={checkIfSelected}>
-		<Fa {icon} color={isHovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />
+		<Fa {icon} color={hovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />
 	</div>
 	<div
 		class="p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
-		class:invisible={!isHovering}
+		class:invisible={!hovering}
 		style=""
 	>
 		{text}

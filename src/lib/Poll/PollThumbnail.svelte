@@ -27,7 +27,6 @@
 		>
 			We hate lithuania for no reason
 		</p>
-		<p>Finishes at 2022-08-12</p>
 		<p>5 proposals</p>
 	</div>
 </div>

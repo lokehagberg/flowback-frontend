@@ -23,7 +23,7 @@
 	</div>
 
 	<div>
-		<div class="bg-white p-4 shadow rounded flex flex-col">
+		<div class="bg-white shadow rounded flex flex-col">
 			<GroupSidebarButton action={() => (selectedPage = selectablePages.flow)} text="Flow" />
 			<GroupSidebarButton action={() => (selectedPage = selectablePages.about)} text="About" />
 			<GroupSidebarButton
@@ -37,7 +37,7 @@
 				text="Group statistics"
 			/>
 		</div>
-		<div class="bg-white p-4 shadow rounded flex flex-col mt-6">
+		<div class="bg-white shadow rounded flex flex-col mt-6">
 			<GroupSidebarButton
 				action={() => (window.location.href = '/createpoll')}
 				text="Create Poll"

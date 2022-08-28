@@ -8,7 +8,7 @@
 		onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll');
 	}}
 >
-	<h1 class="text-left text-blue-500 hover:underline text-3xl p-2 pl-0">
+	<h1 class="text-left text-blue-500 text-3xl p-2 pl-0">
 		Vote to destroy Lithuania
 	</h1>
 	<p class="mt-2">

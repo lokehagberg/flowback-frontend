@@ -13,7 +13,7 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class="select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-3"
+	class="select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4"
 >
 	<Fa icon={faPoll} color={hovering ? "#015BC0" : "black"} />
 	<div class="ml-2">

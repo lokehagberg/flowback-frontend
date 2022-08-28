@@ -11,12 +11,6 @@
 </script>
 
 <div
-	on:dragenter|preventDefault={() => (isHoveredOver = false)}
-	on:dragleave|preventDefault={() => (isHoveredOver = true)}
-	class:hidden={!isHoveredOver}
-	class="h-60 xl:h-40 p-4 bg-gray-200"
-/>
-<div
 	draggable="true"
 	class="proposal cursor-move flex items-center bg-white gap-8 p-4 border border-gray-200 lg:h-60 xl:h-40"
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}

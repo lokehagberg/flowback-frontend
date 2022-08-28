@@ -8,7 +8,7 @@
 </script>
 
 <Header />
-<TestDraggable />
+<!-- <TestDraggable /> -->
 <div class="p-10 m-10 bg-white rounded shadow pt-6">
 	<div class="flex gap-6">
 		<h1 class="text-left text-3xl mt-auto mb-auto">Do a little Trolling</h1>

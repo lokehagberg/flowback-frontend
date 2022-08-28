@@ -71,7 +71,7 @@
 
 	//When a proposal is in the ranking container, swap two proposals with eachother
 	const swapProposalRanking = (proposalIndex1: number, proposalIndex2: number) => {
-		 if (proposalIndex2 === -1 || proposalIndex2 >= ranked.length) return;
+		if (proposalIndex2 === -1 || proposalIndex2 >= ranked.length) return;
 
 		const b = ranked[proposalIndex1];
 		ranked[proposalIndex1] = ranked[proposalIndex2];
@@ -83,7 +83,7 @@
 		const abstainedContainer = document.querySelector('#container-abstained');
 		if (abstainedContainer === null) return;
 
-		const proposalsAbstained = Array.from(abstainedContainer.children);
+		const proposalsAbstained = Array.from(Array(abstainedContainer.children)[0]);
 		let idsAbstained = proposalsAbstained.map((element) => {
 			return element.id;
 		});
@@ -91,7 +91,8 @@
 		const rankedContainer = document.querySelector('#container-ranked');
 		if (rankedContainer === null) return;
 
-		const proposalsRanked = Array.from(rankedContainer.children);
+		const proposalsRanked = Array.from(Array(rankedContainer.children)[0]);
+		console.log(proposalsRanked);
 		let idsRanked = proposalsRanked.map((element) => {
 			return element.id;
 		});
@@ -101,11 +102,14 @@
 		if (idsAbstained[idsAbstained.length - 1] === '')
 			idsAbstained = idsAbstained.filter((id) => id !== idThatWasMoved && id !== '');
 		else idsRanked = idsRanked.filter((id) => id !== idThatWasMoved && id !== '');
-		
+
 		// abstained = proposals.filter((proposal) => idsAbstained.includes(proposal.id.toString()));
 		// ranked = proposals.filter((proposal) => idsRanked.includes(proposal.id.toString()));
-		
-		console.log(idsAbstained, idsRanked, ranked)
+
+		console.log(idsAbstained, idsRanked, ranked);
+		const rankedContainer2 = document.querySelector('#container-ranked');
+		if (rankedContainer2 === null) return;
+		console.log(Array(rankedContainer2.children)[0]);
 	};
 
 	onMount(async () => {

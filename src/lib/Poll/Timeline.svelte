@@ -1,4 +1,6 @@
 <script lang="ts">
+import HeaderIcon from "$lib/Header/HeaderIcon.svelte";
+
 	let dates = [new Date('2022-08-24'), new Date('2022-08-25'), new Date('2022-08-30')];
 	let date = new Date();
 
@@ -16,8 +18,10 @@
 
 <div class="relative mt-6">
 	<div class="h-6">
-		{#each datePlacement as date}
-			<div class="absolute bg-gray-400 h-6 w-6 rounded-full" style:left={`calc(${date}% - 0.75rem)`} />
+		{#each datePlacement as date,i}
+			<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
+				<HeaderIcon text={`${dates[i]}`} />
+			</div>
 		{/each}
 	</div>
 	<div class="h-10 mt-2">

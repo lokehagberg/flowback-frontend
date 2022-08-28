@@ -6,6 +6,7 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { onMount } from 'svelte';
+	import type { children } from 'svelte/internal';
 
 	interface Proposal {
 		title: string;
@@ -70,30 +71,72 @@
 
 	//When a proposal is in the ranking container, swap two proposals with eachother
 	const swapProposalRanking = (proposalIndex1: number, proposalIndex2: number) => {
+		 if (proposalIndex2 === -1 || proposalIndex2 >= ranked.length) return;
+
 		const b = ranked[proposalIndex1];
 		ranked[proposalIndex1] = ranked[proposalIndex2];
 		ranked[proposalIndex2] = b;
 		ranked = ranked;
 	};
 
+	const reRenderContainers = () => {
+		const abstainedContainer = document.querySelector('#container-abstained');
+		if (abstainedContainer === null) return;
+
+		const proposalsAbstained = Array.from(abstainedContainer.children);
+		let idsAbstained = proposalsAbstained.map((element) => {
+			return element.id;
+		});
+
+		const rankedContainer = document.querySelector('#container-ranked');
+		if (rankedContainer === null) return;
+
+		const proposalsRanked = Array.from(rankedContainer.children);
+		let idsRanked = proposalsRanked.map((element) => {
+			return element.id;
+		});
+
+		const idThatWasMoved = idsAbstained.filter((id) => idsRanked.includes(id))[0];
+
+		if (idsAbstained[idsAbstained.length - 1] === '')
+			idsAbstained = idsAbstained.filter((id) => id !== idThatWasMoved && id !== '');
+		else idsRanked = idsRanked.filter((id) => id !== idThatWasMoved && id !== '');
+		
+		// abstained = proposals.filter((proposal) => idsAbstained.includes(proposal.id.toString()));
+		// ranked = proposals.filter((proposal) => idsRanked.includes(proposal.id.toString()));
+		
+		console.log(idsAbstained, idsRanked, ranked)
+	};
+
 	onMount(async () => {
 		const { Sortable } = await import('@shopify/draggable');
 
-		new Sortable(document.querySelectorAll('#container'), {
-			draggable: 'li'
+		const containers = [
+			document.querySelector('#container-abstained'),
+			document.querySelector('#container-ranked')
+		];
+
+		const sortable = new Sortable(containers, {
+			draggable: 'li',
+			classes: {
+				mirror: ['draggable--over', 'bg-red-200', 'bg-opacity-25']
+			}
 		});
 
-		
+		sortable.on('drag:stop', reRenderContainers);
 	});
 </script>
 
 <div class="poll border border-gray-700">
-	<div style="grid-column: 1 / 2; grid-row: 1 / 2" class="text-2xl p-6">Abstain</div>
-	<div style="grid-column: 2 / 3; grid-row: 1 / 2" class="text-2xl p-6">Rank</div>
-	<ul style="grid-column: 1 / 2" id="container">
+	<div style="grid-column: 1 / 2; grid-row: 1 / 2" class="text-2xl p-6 select-none">Abstain</div>
+	<div style="grid-column: 2 / 3; grid-row: 1 / 2" class="text-2xl p-6 select-none">Rank</div>
+	<ul style="grid-column: 1 / 2" id="container-abstained" class="h-full">
 		{#each abstained as proposal, i}
-			<li style={`grid-column: 1 / 2; grid-row:${i + 2} / ${i + 2 + 1}`}>
-				<Proposal title={proposal.title} description={proposal.description}>
+			<li
+				style={`grid-column: 1 / 2; grid-row:${i + 2} / ${i + 2 + 1}`}
+				id={proposal.id.toString()}
+			>
+				<Proposal {...proposal}>
 					<div
 						slot="right-icons"
 						class="cursor-pointer"
@@ -105,10 +148,13 @@
 			</li>
 		{/each}
 	</ul>
-	<ul style="grid-column: 2 / 3" id="container">
+	<ul style="grid-column: 2 / 3" id="container-ranked" class="h-full">
 		{#each ranked as proposal, i}
-			<li style={`grid-column: 2 / 3; grid-row:${i + 2} / ${i + 2 + 1}`}>
-				<Proposal title={proposal.title} description={proposal.description}>
+			<li
+				style={`grid-column: 2 / 3; grid-row:${i + 2} / ${i + 2 + 1}`}
+				id={proposal.id.toString()}
+			>
+				<Proposal {...proposal}>
 					<div slot="right-icons" class="cursor-pointer">
 						<div on:click={() => swapProposalRanking(i, i - 1)}><Fa icon={faArrowUp} /></div>
 						<div on:click={() => swapProposalRanking(i, i + 1)}><Fa icon={faArrowDown} /></div>

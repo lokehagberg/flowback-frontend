@@ -4,6 +4,15 @@ export enum selectablePages {
 	documents = 'documents',
 	members = 'members',
 	email = 'email',
-	stats = 'stats'
+	stats = 'stats',
+	delegation = 'delegation'
 }
+
+export interface User {
+	username: string;
+	id: number;
+	profile_image: null;
+}
+
+
 

@@ -12,6 +12,7 @@
 	let sideHeaderOpen = false
 </script>
 
+<div class="fixed z-50 w-full top-0">
 <header class="flex justify-between items-center p-4 bg-white shadow select-none">
 	<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
 	<div class="flex gap-8">
@@ -28,7 +29,7 @@
 		<div class="">name</div>
 	</div>
 </header>
-
+</div>
 {#if sideHeaderOpen}
 <SideHeader />
 {/if}

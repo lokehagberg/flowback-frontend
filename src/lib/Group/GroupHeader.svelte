@@ -14,7 +14,7 @@
 		class="text-3xl hover:underline cursor-pointer"
 		on:click={() => (selectedPage = selectablePages.flow)}
 	>
-		We hate lithuanians for no reason
+		We hate Lithuania for no reason
 	</h1>
 	<p class="text-xl">50 members</p>
 </div>

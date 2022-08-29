@@ -9,27 +9,30 @@
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import Logo from '$lib/assets/Logo.png';
 	import SideHeader from './SideHeader.svelte';
-	let sideHeaderOpen = false
+	let sideHeaderOpen = false;
 </script>
 
 <div class="fixed z-50 w-full top-0">
-<header class="flex justify-between items-center p-4 bg-white shadow select-none">
-	<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
-	<div class="flex gap-8">
-		<HeaderIcon icon={faHome} text="Home" href="home" />
-		<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
-		<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
-		<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
-		<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
-		<HeaderIcon icon={faList} text="Kanban" href="kanban" />
-	</div>
+	<header class="flex justify-between items-center p-4 bg-white shadow select-none">
+		<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
+		<div class="flex gap-8">
+			<HeaderIcon icon={faHome} text="Home" href="home" />
+			<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
+			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
+			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
+			<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+			<HeaderIcon icon={faList} text="Kanban" href="kanban" />
+		</div>
 
-	<div class="flex gap-2 items-center cursor-pointer hover:bg-grey-800" on:click={() => sideHeaderOpen = !sideHeaderOpen}>
-		<div class="bg-red-500 w-5 h-5"></div>
-		<div class="">name</div>
-	</div>
-</header>
+		<div
+			class="flex gap-2 items-center cursor-pointer hover:bg-grey-800"
+			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
+		>
+			<div class="bg-red-500 w-5 h-5" />
+			<div class="">name</div>
+		</div>
+	</header>
+	{#if sideHeaderOpen}
+		<SideHeader />
+	{/if}
 </div>
-{#if sideHeaderOpen}
-<SideHeader />
-{/if}

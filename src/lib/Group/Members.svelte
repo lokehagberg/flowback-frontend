@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getRequest } from '$lib/FetchRequest';
+	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
 
 	interface User {
@@ -9,17 +10,19 @@
 	}
 
 	let users: User[] = [];
+	let loading = true
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		console.log(token);
 		const response = await getRequest('users?limit=100', token);
 		const responsejson = await response.json();
 		users = responsejson.results;
+		loading = false
 	});
 </script>
 
-<div class="flex flex-col items-center gap-2 mb-24">
+<Loader bind:loading={loading}/>
+<div class="flex flex-col items-center gap-2 mb-24 bg-white">
 	{#if users.length !== 0}
 		{#each users as user}
 			<div

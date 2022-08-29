@@ -1,6 +1,7 @@
 <script>
-	import Header from '$lib/Header/Header.svelte';
+	import Layout from '$lib/Generic/Layout.svelte';
 </script>
 
-<Header />
-<div>Under Construction</div>
+<Layout>
+	<div>Under Construction</div>
+</Layout>

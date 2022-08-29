@@ -1,9 +1,10 @@
 <script>
+	import Layout from '$lib/Generic/Layout.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
-	import Header from '../lib/Header/Header.svelte';
 </script>
 
-<Header />
-<div class=" flex  justify-center mt-10">
-	<PollThumbnails className="w-2/3 justify-center" />
-</div>
+<Layout>
+	<div class=" flex  justify-center mt-24">
+		<PollThumbnails className="w-2/3 justify-center" />
+	</div>
+</Layout>

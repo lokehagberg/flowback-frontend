@@ -1,14 +1,14 @@
 <script lang="ts">
 	import GroupHeader from '../../lib/Group/GroupHeader.svelte';
-	import Header from '$lib/Header/Header.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
 	import { selectablePages } from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+import Documents from '$lib/Group/Documents/Documents.svelte';
 
-	let selectedPage: selectablePages = selectablePages.delegation;
+	let selectedPage: selectablePages = selectablePages.documents;
 </script>
 
 <Layout>
@@ -22,6 +22,8 @@
 				<Delegation />
 			{:else if selectedPage === 'members'}
 				<Members />
+			{:else if selectedPage === 'documents'}
+				<Documents />
 			{/if}
 		</div>
 

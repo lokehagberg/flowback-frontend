@@ -1,0 +1,49 @@
+<script lang="ts">
+	import Folder from './Folder.svelte';
+
+	let root = [
+		{
+			name: 'Important work stuff',
+			files: [{ name: 'quarterly-results.xlsx' }]
+		},
+		{
+			name: 'Animal GIFs',
+			files: [
+				{
+					name: 'Dogs',
+					files: [{ name: 'treadmill.gif' }, { name: 'rope-jumping.gif' }]
+				},
+				{
+					name: 'Goats',
+					files: [{ name: 'parkour.gif' }, { name: 'rampage.gif' }]
+				},
+				{ name: 'cat-roomba.gif' },
+				{ name: 'duck-shuffle.gif' },
+				{ name: 'monkey-on-a-pig.gif' }
+			]
+		},
+		{ name: 'TODO.md' }
+	];
+</script>
+
+<div class="w-full bg-white flex items-center flex-col">
+	<div class="rounded-full border border-gray-500 p-2 w-1/2 text-center">+ Add Document</div>
+	<ul>
+		<li>
+			<Folder name="Home" files={root} expanded />
+		</li>
+	</ul>
+</div>
+
+<style>
+	ul {
+		padding: 0.2em 0 0 0.5em;
+		margin: 0 0 0 0.5em;
+		list-style: none;
+		border-left: 1px solid #eee;
+	}
+
+	li {
+		padding: 0.2em 0;
+	}
+</style>

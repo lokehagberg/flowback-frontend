@@ -2,13 +2,12 @@
 	let onHoverGroup = false;
 </script>
 
-<div
+<!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
+<a
 	class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail"
-	on:click={() => {
-		onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll');
-	}}
->
-	<h1 class="text-left text-blue-500 text-3xl p-2 pl-0">
+	href={onHoverGroup ? '/groups/1' : '/poll'}
+	>	
+	<h1 class="text-left text-3xl p-2 pl-0">
 		Vote to destroy Lithuania
 	</h1>
 	<p class="mt-2">
@@ -29,7 +28,7 @@
 		</p>
 		<p>5 proposals</p>
 	</div>
-</div>
+</a>
 
 <style>
 	.vote-thumbnail:hover {

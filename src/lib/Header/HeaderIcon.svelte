@@ -14,24 +14,24 @@
 	};
 </script>
 
-<nav
+<a
 	on:mouseover={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:focus
-	on:click={() => (window.location.href = '/' + href)}
+	href={"/" + href}
 	class="p-3 relative cursor-pointer"
 >
 	<div on:load={checkIfSelected}>
 		<Fa {icon} color={hovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />
 	</div>
 	<div
-		class="p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
+		class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
 		class:invisible={!hovering}
 		style=""
 	>
 		{text}
 	</div>
-</nav>
+</a>
 
 <style>
 	.header-icon {

@@ -4,7 +4,7 @@
 
 	export let title: string;
 	export let description: string;
-	export let id:number;
+	export const id:number = 0;
 	let isHoveredOver = false;
 </script>
 

@@ -6,7 +6,6 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { onMount } from 'svelte';
-	import type { children } from 'svelte/internal';
 
 	interface Proposal {
 		title: string;
@@ -47,6 +46,7 @@
 		//and won't meaningfully slow down the search if the proposal is in abstained.
 		//It then removes it from it's own container and tacks it to the new one.
 		//TODO (if needed): Generalise to any number of containers
+		console.log(proposalId, proposalPosition)
 		const proposalInRanked = ranked.find((proposal) => proposal.id === proposalId);
 
 		if (proposalInRanked !== undefined) {
@@ -79,37 +79,41 @@
 		ranked = ranked;
 	};
 
-	const reRenderContainers = () => {
-		const abstainedContainer = document.querySelector('#container-abstained');
-		if (abstainedContainer === null) return;
+	const reRenderContainers = (e:any) => {
+		console.log("EVENT", e)
+		// e.data.originalSource.remove()
+		// e.data.source.remove()
+		switchProposalContainer(1, 0)
+		// const abstainedContainer = document.querySelector('#container-abstained');
+		// if (abstainedContainer === null) return;
 
-		const proposalsAbstained = Array.from(Array(abstainedContainer.children)[0]);
-		let idsAbstained = proposalsAbstained.map((element) => {
-			return element.id;
-		});
+		// const proposalsAbstained = Array.from(Array(abstainedContainer.children)[0]);
+		// let idsAbstained = proposalsAbstained.map((element) => {
+		// 	return element.id;
+		// });
 
-		const rankedContainer = document.querySelector('#container-ranked');
-		if (rankedContainer === null) return;
+		// const rankedContainer = document.querySelector('#container-ranked');
+		// if (rankedContainer === null) return;
 
-		const proposalsRanked = Array.from(Array(rankedContainer.children)[0]);
-		console.log(proposalsRanked);
-		let idsRanked = proposalsRanked.map((element) => {
-			return element.id;
-		});
+		// const proposalsRanked = Array.from(Array(rankedContainer.children)[0]);
+		// // console.log(proposalsRanked);
+		// let idsRanked = proposalsRanked.map((element) => {
+		// 	return element.id;
+		// });
 
-		const idThatWasMoved = idsAbstained.filter((id) => idsRanked.includes(id))[0];
+		// const idThatWasMoved = idsAbstained.filter((id) => idsRanked.includes(id))[0];
 
-		if (idsAbstained[idsAbstained.length - 1] === '')
-			idsAbstained = idsAbstained.filter((id) => id !== idThatWasMoved && id !== '');
-		else idsRanked = idsRanked.filter((id) => id !== idThatWasMoved && id !== '');
+		// if (idsAbstained[idsAbstained.length - 1] === '')
+		// 	idsAbstained = idsAbstained.filter((id) => id !== idThatWasMoved && id !== '');
+		// else idsRanked = idsRanked.filter((id) => id !== idThatWasMoved && id !== '');
 
 		// abstained = proposals.filter((proposal) => idsAbstained.includes(proposal.id.toString()));
 		// ranked = proposals.filter((proposal) => idsRanked.includes(proposal.id.toString()));
 
-		console.log(idsAbstained, idsRanked, ranked);
-		const rankedContainer2 = document.querySelector('#container-ranked');
-		if (rankedContainer2 === null) return;
-		console.log(Array(rankedContainer2.children)[0]);
+		// console.log(idsAbstained, idsRanked, ranked);
+		// const rankedContainer2 = document.querySelector('#container-ranked');
+		// if (rankedContainer2 === null) return;
+		// console.log(Array(rankedContainer2.children)[0]);
 	};
 
 	onMount(async () => {

@@ -19,7 +19,7 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	href={"/" + href}
-	class="p-3 relative cursor-pointer"
+	class="p-5 relative cursor-pointer"
 >
 	<div on:load={checkIfSelected}>
 		<Fa {icon} color={hovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} />

@@ -8,7 +8,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 import Documents from '$lib/Group/Documents/Documents.svelte';
 
-	let selectedPage: selectablePages = selectablePages.documents;
+	let selectedPage: selectablePages = selectablePages.delegation;
 </script>
 
 <Layout>

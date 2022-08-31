@@ -1,14 +1,22 @@
 <script lang="ts">
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { User } from './interface';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	let users: User[] = [
 		{
 			id: 1,
 			profile_image: null,
-			username: 'hi'
+			username: 'Loukey'
+		},
+		{
+			id: 2,
+			profile_image: null,
+			username: 'Emil'
 		}
 	];
 
 	let tags = ['Economics', 'Math'];
+	let selected = 1;
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white">
@@ -24,6 +32,14 @@
 						{#each tags as tag}
 							<div class="bg-blue-500 p-2 ml-2 cursor-pointer">{tag}</div>
 						{/each}
+						<div class="relative">
+							<div on:click={() => (selected = user.id)}>
+								<Fa icon={faPlus} />
+							</div>
+							<div class="absolute bg-white" class:invisible={selected !== user.id}>
+								Search for tags
+							</div>
+						</div>
 					</div>
 				</li>
 			{/each}

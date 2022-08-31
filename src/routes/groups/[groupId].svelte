@@ -15,7 +15,7 @@
 	<GroupHeader bind:selectedPage />
 
 	<div class="flex justify-center mt-16 gap-16">
-		<div class="flex justify-center w-2/3">
+		<div class="w-2/3">
 			{#if selectedPage === 'flow'}
 				<PollThumbnails />
 			{:else if selectedPage === 'delegation'}

@@ -26,7 +26,7 @@
 	{#if users.length !== 0}
 		{#each users as user}
 			<div
-				class="flex bg-white p-2 hover:outline cursor-pointer"
+				class="flex bg-white p-2 hover:outline cursor-pointer w-full"
 				on:click={() => (window.location.href = `/user?id=${user.id}`)}
 			>
 				<div class="bg-red-500 w-10 h-10" />

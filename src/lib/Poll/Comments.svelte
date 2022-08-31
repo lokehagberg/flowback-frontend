@@ -1,12 +1,12 @@
 <script>
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 </script>
 
 <div>
-	Comments
-	<form>
+	<h1 class="text-left text-2xl">Comments</h1>
+	<form class="mt-4">
 		<!-- <TextArea type="field" label="Comment" /> -->
 		<ButtonPrimary>Submit</ButtonPrimary>
 	</form>
@@ -18,7 +18,7 @@ import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 				<div>Emil</div>
 			</div>
 			<div>I will tweet a racial slur</div>
-            <div class="flex"><HeaderIcon/> Reply</div>
+			<div class="flex"><HeaderIcon /> Reply</div>
 		</div>
 		<div class="border border-gray-400 p-4 ml-4">
 			<div>Nerd</div>

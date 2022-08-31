@@ -1,7 +1,7 @@
 <script lang="ts">
-import HeaderIcon from "$lib/Header/HeaderIcon.svelte";
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 
-	let dates = [new Date('2022-08-24'), new Date('2022-08-25'), new Date('2022-08-30')];
+	let dates = [new Date('2022-08-24'), new Date('2022-08-25'), new Date('2022-09-03')];
 	let date = new Date();
 
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
@@ -17,8 +17,9 @@ import HeaderIcon from "$lib/Header/HeaderIcon.svelte";
 </script>
 
 <div class="relative mt-6">
+	<h1 class="text-left text-2xl">Timeline</h1>
 	<div class="h-6">
-		{#each datePlacement as date,i}
+		{#each datePlacement as date, i}
 			<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
 				<HeaderIcon text={`${dates[i]}`} />
 			</div>
@@ -26,6 +27,9 @@ import HeaderIcon from "$lib/Header/HeaderIcon.svelte";
 	</div>
 	<div class="h-10 mt-2">
 		<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
-		<div class={`absolute bg-blue-400 left-0 h-6 rounded-full`} style:width={`${progress}%`} />
+		<div
+			class={`absolute bg-blue-400 left-0 h-6 rounded-full`}
+			style:width={`${progress < 100 ? progress : 100}%`}
+		/>
 	</div>
 </div>

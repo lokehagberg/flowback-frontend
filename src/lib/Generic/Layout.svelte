@@ -1,9 +1,11 @@
 <script>
 	import Header from '$lib/Header/Header.svelte';
+
+	export let centering = false;
 </script>
 
 <Header />
-<div class="positioning">
+<div class={`positioning ${centering ? "flex justify-center flex-col items-stretch" : ""}`}>
 	<slot />
 </div>
 

@@ -17,7 +17,7 @@
 			text="Documents"
 		/>
 		<GroupSidebarButton action={() => (selectedPage = selectablePages.members)} text="Members" />
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.stats)} text="Statistics" />
+		<GroupSidebarButton action={() => (selectedPage = selectablePages.statistics)} text="Statistics" />
 		<GroupSidebarButton action={() => (selectedPage = selectablePages.about)} text="About" />
 	</div>
 	<div class="bg-white shadow rounded flex flex-col mt-6">

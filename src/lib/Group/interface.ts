@@ -4,7 +4,7 @@ export enum selectablePages {
 	documents = 'documents',
 	members = 'members',
 	email = 'email',
-	stats = 'stats',
+	statistics = 'statistics',
 	delegation = 'delegation'
 }
 

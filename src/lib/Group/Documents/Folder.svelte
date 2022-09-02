@@ -18,7 +18,7 @@ import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
 
 <div class="flex text-blue-600">
     <Fa icon={faFolder}/>
-    <span class:expanded on:click={toggle} class="text-black">{name}</span>
+    <span on:click={toggle} class="text-black">{name}</span>
 </div>
 
 {#if expanded}
@@ -42,10 +42,6 @@ import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
 		background-size: 1em 1em;
 		font-weight: bold;
 		cursor: pointer;
-	}
-
-	.expanded {
-		background-image: url(/tutorial/icons/folder-open.svg);
 	}
 
 	ul {

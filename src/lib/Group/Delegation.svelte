@@ -21,7 +21,9 @@
 	];
 
 	let tags = ['Economics', 'Math', 'Gay', 'Adventures'];
-	let selected = 1;
+	
+	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
+	let selected = -1;
 
 	const changeDelegation = (delegate:delegate, tag: string) => {
 		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
@@ -39,7 +41,7 @@
 	};
 </script>
 
-<div class="flex flex-col items-center gap-2 mb-24 bg-white">
+<div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">
 	{#if delegates.length !== 0}
 		<ul class="w-full">
 			{#each delegates as delegate}

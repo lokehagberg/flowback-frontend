@@ -26,7 +26,7 @@
 	];
 </script>
 
-<div class="w-full bg-white flex items-center flex-col">
+<div class="w-full bg-white flex items-center flex-col shadow rounded">
 	<div class="rounded-full border border-gray-500 p-2 w-1/2 text-center">+ Add Document</div>
 	<ul>
 		<li>

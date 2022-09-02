@@ -22,7 +22,7 @@
 </script>
 
 <Loader bind:loading={loading}/>
-<div class="flex flex-col items-center gap-2 mb-24 bg-white">
+<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded">
 	{#if users.length !== 0}
 		{#each users as user}
 			<a

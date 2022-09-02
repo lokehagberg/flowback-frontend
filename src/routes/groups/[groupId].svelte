@@ -6,7 +6,10 @@
 	import Delegation from '$lib/Group/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
-import Documents from '$lib/Group/Documents/Documents.svelte';
+	import Documents from '$lib/Group/Documents/Documents.svelte';
+	import About from '$lib/Group/About.svelte';
+	import SendEmail from '$lib/Group/SendEmail.svelte';
+	import Statistics from '$lib/Group/Statistics.svelte';
 
 	let selectedPage: selectablePages = selectablePages.delegation;
 </script>
@@ -24,6 +27,12 @@ import Documents from '$lib/Group/Documents/Documents.svelte';
 				<Members />
 			{:else if selectedPage === 'documents'}
 				<Documents />
+			{:else if selectedPage === 'statistics'}
+				<Statistics />
+			{:else if selectedPage === 'email'}
+				<SendEmail />
+			{:else if selectedPage === 'about'}
+				<About />
 			{/if}
 		</div>
 

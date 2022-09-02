@@ -6,13 +6,9 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	interface Proposal {
-		title: string;
-		description: string;
-		id: number;
-	}
+	import type { proposal } from './interface';
 
-	let proposals: Proposal[] = [
+	let proposals: proposal[] = [
 		{
 			title: 'Nuclear Option',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
@@ -36,7 +32,8 @@
 		}
 	];
 
-	//The Draggable package does not like reactive states, so we use slightly different code in this file
+	/*The Draggable package does not like reactive states, 
+	so we use non-reactive code in this file.*/
 	onMount(async () => {
 		const { Sortable } = await import('@shopify/draggable');
 
@@ -55,9 +52,15 @@
 		sortable.on('drag:stop', (e: any) => {});
 	});
 
-	//Alot of the extra complexity in this code is due to Font Awesome's icon structure being several divs deep.
-	//Instead of directly selecting the proposal, a person's click can go to slightly different layers in the icon structure.
-	//To remedy it, there's a for loop on the path that will terminate when it finds the proposal div and then swap/move it.
+	/*Alot of the extra complexity in this code is due to Font Awesome's 
+	icon structure being several divs deep.
+	Instead of directly selecting a div with a plus elemnt in it, 
+	a person's click can instead go to slightly 
+	different layers in the icon structure.
+	To remedy it, there's a for loop on the path in the 
+	DOM on the div that was clicked
+	that will terminate when it finds the 
+	proposal div and then swap/move it.*/
 	const addToRanked = (e: any) => {
 		const proposal = e.path.find((element: HTMLObjectElement) =>
 			element.classList.contains('proposal')

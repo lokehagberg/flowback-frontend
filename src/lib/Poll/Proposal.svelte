@@ -21,7 +21,7 @@
 			{description}
 		</p>
 	</div>
-	<slot name="right-icons" />
+	<slot />
 </div>
 
 <style>

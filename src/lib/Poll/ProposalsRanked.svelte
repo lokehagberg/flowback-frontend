@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Proposal from './Proposal.svelte';
-
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
+	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
+	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	interface Proposal {
 		title: string;
 		description: string;
@@ -48,29 +53,33 @@
 			}
 		});
 
-		sortable.on('drag:stop', (e: any) => {
-		});
+		sortable.on('drag:stop', (e: any) => {});
 	});
 
+	//Alot of the extra complexity in this code is due to Font Awesome's icon structure being several divs deep.
+	//Instead of directly selecting the proposal, a person's click can go to slightly different layers in the icon structure.
+	//To remedy it, there's a for loop on the path that will terminate when it finds the proposal div and then swap/move it.
 	const addToRanked = (e: any) => {
-		const proposal = e.path[2];
-		document.querySelector('.container.ranked')?.appendChild(proposal);
+		const proposal = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
 	};
 
 	const addToAbstained = (e: any) => {
-		const proposal = e.path[2];
-		document.querySelector('.container.abstained')?.appendChild(proposal);
+		const proposal = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
 
 	const moveDown = (e: any) => {
-		swap(e.path[3], e.path[3].nextSibling)
+		const element = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		swap(element.parentElement, element.parentElement.nextSibling);
 	};
 
 	const moveUp = (e: any) => {
-		swap(e.path[3], e.path[3].previousSibling)
+		const element = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		swap(element.parentElement, element.parentElement.previousSibling);
 	};
 
-	const swap = (nodeA:HTMLObjectElement, nodeB:HTMLObjectElement) => {
+	const swap = (nodeA: HTMLObjectElement, nodeB: HTMLObjectElement) => {
 		const parentA = nodeA?.parentNode;
 		const siblingA = nodeA?.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
 
@@ -79,8 +88,7 @@
 
 		// Move `nodeB` to before the sibling of `nodeA`
 		parentA?.insertBefore(nodeB, siblingA);
-	}
-
+	};
 </script>
 
 <div class="poll border border-gray-700">
@@ -90,13 +98,15 @@
 
 	<ul class="container abstained">
 		{#each proposals as proposal}
-			<li id={`${proposal.id}`}>
+			<li id={`${proposal.id}`} class="proposal">
 				<Proposal {...proposal}>
-					<div class="abstained-plus" on:click={addToRanked}>+</div>
+					<div class="abstained-plus">
+						<div on:click={addToRanked}><Fa icon={faPlus} /></div>
+					</div>
 					<div class="ranking-arrows">
-						<div on:click={addToAbstained}>-</div>
-						<div on:click={moveUp}>^</div>
-						<div on:click={moveDown}>v</div>
+						<div on:click={addToAbstained}><Fa icon={faMinus} /></div>
+						<div on:click={moveUp}><Fa icon={faArrowUp} /></div>
+						<div on:click={moveDown}><Fa icon={faArrowDown} /></div>
 					</div>
 				</Proposal>
 			</li>

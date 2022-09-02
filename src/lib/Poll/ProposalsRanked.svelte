@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import Proposal from './Proposal.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
@@ -60,22 +59,30 @@
 	//Instead of directly selecting the proposal, a person's click can go to slightly different layers in the icon structure.
 	//To remedy it, there's a for loop on the path that will terminate when it finds the proposal div and then swap/move it.
 	const addToRanked = (e: any) => {
-		const proposal = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		const proposal = e.path.find((element: HTMLObjectElement) =>
+			element.classList.contains('proposal')
+		);
 		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
 	};
 
 	const addToAbstained = (e: any) => {
-		const proposal = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		const proposal = e.path.find((element: HTMLObjectElement) =>
+			element.classList.contains('proposal')
+		);
 		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
 
 	const moveDown = (e: any) => {
-		const element = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		const element = e.path.find((element: HTMLObjectElement) =>
+			element.classList.contains('proposal')
+		);
 		swap(element.parentElement, element.parentElement.nextSibling);
 	};
 
 	const moveUp = (e: any) => {
-		const element = e.path.find((element:HTMLObjectElement) => element.classList.contains("proposal"))
+		const element = e.path.find((element: HTMLObjectElement) =>
+			element.classList.contains('proposal')
+		);
 		swap(element.parentElement, element.parentElement.previousSibling);
 	};
 
@@ -91,27 +98,31 @@
 	};
 </script>
 
-<div class="poll border border-gray-700">
-	<div class="text-2xl p-6 select-none">Rank</div>
-	<ol class="container ranked" />
-	<div class="text-2xl p-6 select-none">Abstain</div>
+<div class="poll border border-gray-700 lg:flex">
+	<div class="lg:w-1/2">
+		<div class="text-2xl p-6 select-none">Rank</div>
+		<ol class="container ranked lg:h-full" />
+	</div>
+	<div class="lg:w-1/2">
+		<div class="text-2xl p-6 select-none">Abstain</div>
 
-	<ul class="container abstained">
-		{#each proposals as proposal}
-			<li id={`${proposal.id}`} class="proposal">
-				<Proposal {...proposal}>
-					<div class="abstained-plus">
-						<div on:click={addToRanked}><Fa icon={faPlus} /></div>
-					</div>
-					<div class="ranking-arrows">
-						<div on:click={addToAbstained}><Fa icon={faMinus} /></div>
-						<div on:click={moveUp}><Fa icon={faArrowUp} /></div>
-						<div on:click={moveDown}><Fa icon={faArrowDown} /></div>
-					</div>
-				</Proposal>
-			</li>
-		{/each}
-	</ul>
+		<ul class="container abstained lg:h-full">
+			{#each proposals as proposal}
+				<li id={`${proposal.id}`} class="proposal">
+					<Proposal {...proposal}>
+						<div class="abstained-plus">
+							<div on:click={addToRanked}><Fa icon={faPlus} /></div>
+						</div>
+						<div class="ranking-arrows">
+							<div on:click={addToAbstained}><Fa icon={faMinus} /></div>
+							<div on:click={moveUp}><Fa icon={faArrowUp} /></div>
+							<div on:click={moveDown}><Fa icon={faArrowDown} /></div>
+						</div>
+					</Proposal>
+				</li>
+			{/each}
+		</ul>
+	</div>
 </div>
 
 <style>

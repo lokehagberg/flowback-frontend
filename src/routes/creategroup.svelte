@@ -2,8 +2,8 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-import Fa from 'svelte-fa/src/fa.svelte';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	const createPoll = () => {
 		console.log('poll created!');
 	};
@@ -18,7 +18,11 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 			<h1 class="text-2xl">Create a Group</h1>
 			<TextInput label="Title" />
 			<TextInput label="Description" />
-			<ButtonPrimary><div class="flex justify-center gap-3 items-center"><Fa icon={faPaperPlane}/>Create Group</div></ButtonPrimary>
+			<ButtonPrimary
+				><div class="flex justify-center gap-3 items-center">
+					<Fa icon={faPaperPlane} />Create Group
+				</div>
+			</ButtonPrimary>
 		</div>
 	</form>
 </Layout>

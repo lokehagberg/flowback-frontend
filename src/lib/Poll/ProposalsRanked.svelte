@@ -156,7 +156,7 @@
 			</li>
 		{/each}
 	</ul>
-	<ul style="grid-column: 2 / 3" id="container-ranked" class="h-full">
+	<ol style="grid-column: 2 / 3" id="container-ranked" class="h-full">
 		{#each ranked as proposal, i}
 			<li
 				style={`grid-column: 2 / 3; grid-row:${i + 2} / ${i + 2 + 1}`}
@@ -173,7 +173,7 @@
 				</Proposal>
 			</li>
 		{/each}
-	</ul>
+	</ol>
 	<ul style="grid-column: 3 / 4">
 		{#each ranked as proposal, i}
 			<li style={`grid-column: 3 / 4; grid-row: ${i + 2} / ${i + 2 + 1}; text-align:center`}>

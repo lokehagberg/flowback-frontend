@@ -26,7 +26,7 @@
 	{#if users.length !== 0}
 		{#each users as user}
 			<a
-				class="text-black flex bg-white p-2 hover:outline cursor-pointer w-full"
+				class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 				href={`/user?id=${user.id}`}
 			>
 				<div class="bg-red-500 w-10 h-10" />

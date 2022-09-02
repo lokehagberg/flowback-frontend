@@ -20,8 +20,25 @@
 		}
 	];
 
-	let tags = ['Economics', 'Math', 'Gay'];
+	let tags = ['Economics', 'Math', 'Gay', 'Adventures'];
 	let selected = 1;
+
+	const changeDelegation = (id: number, tag: string) => {
+		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
+
+		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag) => _tag !== tag);
+
+		if (delegateOld?.id === id) {
+			delegates = delegates;
+			return;
+		}
+
+		delegates
+			.find((delegate) => delegate.id === id && !delegate.tags.includes(tag))
+			?.tags.push(tag);
+
+		delegates = delegates;
+	};
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white">
@@ -43,7 +60,9 @@
 								on:click={() =>
 									selected === delegate.id ? (selected = -1) : (selected = delegate.id)}
 							>
-								<Fa icon={faPlus} size="2x" />
+								<div class="faPlus" class:selected={selected === delegate.id}>
+									<Fa icon={faPlus} size="2x" />
+								</div>
 							</div>
 							<div
 								class="absolute bg-white p-6 w-64 shadow rounded border border-gray-200 z-50 right-5"
@@ -53,7 +72,7 @@
 								<TextInput label="Search" />
 								<ul class="mt-6 flex flex-col gap-6 items-center">
 									{#each tags as tag}
-										<li class="w-full">
+										<li class="w-full" on:click={() => changeDelegation(delegate.id, tag)}>
 											<Tag
 												{tag}
 												className={delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'}
@@ -69,3 +88,13 @@
 		</ul>
 	{/if}
 </div>
+
+<style>
+	.faPlus {
+		transition: transform 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+
+	.selected {
+		transform: rotate(45deg);
+	}
+</style>

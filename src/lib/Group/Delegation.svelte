@@ -23,19 +23,17 @@
 	let tags = ['Economics', 'Math', 'Gay', 'Adventures'];
 	let selected = 1;
 
-	const changeDelegation = (id: number, tag: string) => {
+	const changeDelegation = (delegate:delegate, tag: string) => {
 		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
 
 		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag) => _tag !== tag);
 
-		if (delegateOld?.id === id) {
+		if (delegateOld?.id === delegate.id) {
 			delegates = delegates;
 			return;
 		}
 
-		delegates
-			.find((delegate) => delegate.id === id && !delegate.tags.includes(tag))
-			?.tags.push(tag);
+		delegate.tags.push(tag);
 
 		delegates = delegates;
 	};
@@ -72,7 +70,7 @@
 								<TextInput label="Search" />
 								<ul class="mt-6 flex flex-col gap-6 items-center">
 									{#each tags as tag}
-										<li class="w-full" on:click={() => changeDelegation(delegate.id, tag)}>
+										<li class="w-full" on:click={() => changeDelegation(delegate, tag)}>
 											<Tag
 												{tag}
 												className={delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'}

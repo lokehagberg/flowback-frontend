@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Tag from './Tag.svelte';
+
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { User } from './interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
@@ -28,16 +30,21 @@
 						<div class="bg-red-500 w-10 h-10" />
 						<div class="w-64 ml-10">{user.username}</div>
 					</div>
-					<div class="flex">
+					<div class="flex gap-2">
 						{#each tags as tag}
-							<div class="bg-blue-500 p-2 ml-2 cursor-pointer">{tag}</div>
+							<Tag {tag}/>
 						{/each}
 						<div class="relative">
 							<div on:click={() => (selected = user.id)}>
 								<Fa icon={faPlus} />
 							</div>
-							<div class="absolute bg-white" class:invisible={selected !== user.id}>
-								Search for tags
+							<div class="absolute bg-white p-6" class:invisible={selected !== user.id}>
+								<h1 class="text-xl">Search for tags</h1>
+								<ul class="mt-6 flex flex-col gap-6 align-center">
+									{#each tags as tag}
+										<li><Tag {tag} /></li>
+									{/each}
+								</ul>
 							</div>
 						</div>
 					</div>

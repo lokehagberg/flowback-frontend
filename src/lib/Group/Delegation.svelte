@@ -21,7 +21,7 @@
 	];
 
 	let tags = ['Economics', 'Math', 'Gay', 'Adventures'];
-	
+
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
@@ -73,9 +73,9 @@
 								<ul class="mt-6 flex flex-col gap-6 items-center">
 									{#each tags as tag}
 										<li class="w-full" on:click={() => changeDelegation(delegate, tag)}>
-											<Tag
+											<Tag 
 												{tag}
-												className={delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'}
+												className={`cursor-pointer ${delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'}`}
 											/>
 										</li>
 									{/each}

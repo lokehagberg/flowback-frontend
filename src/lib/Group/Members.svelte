@@ -20,7 +20,7 @@
 		users = responsejson.results;
 		loading = false;
 	});
-	let selectedPage = 'members';
+	let selectedPage = 'Members';
 </script>
 
 <Loader bind:loading />

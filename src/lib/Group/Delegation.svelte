@@ -48,7 +48,7 @@
 				<li class="flex justify-between bg-white p-2 w-full">
 					<div class="flex">
 						<div class="bg-red-500 w-10 h-10" />
-						<div class="w-64 ml-10">{delegate.username}</div>
+						<a href={`/user?id=${delegate.id}`} class="hover:underline text-black w-64 ml-10">{delegate.username}</a>
 					</div>
 					<div class="flex gap-2 items-center">
 						{#each delegate.tags as tag}

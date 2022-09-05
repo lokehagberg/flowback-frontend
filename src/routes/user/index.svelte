@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '$lib/Header/Header.svelte';
 	import { page } from '$app/stores';
 	import { fetchRequest, getRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
@@ -28,7 +27,6 @@
 
 <Layout>
 	<UserHeader />
-	<!-- <UserHeader name={'hi'} /> -->
 
 	<div class="bg-white pt-12 flex justify-between align-middle pl-8 pr-4 pb-4">
 		<h1 class="text-3xl hover:underline cursor-pointer">{user.username}</h1>

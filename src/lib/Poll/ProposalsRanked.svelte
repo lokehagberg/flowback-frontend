@@ -13,7 +13,7 @@
 			title: 'Nuclear Option',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
 			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
-			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb loremjkb loremjkb loremjkb loremjkb loremjkb`,
+			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb loremjkb loremjkb loremjkb loremjkb loremjkb jksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lore HELLOOOOO`,
 			id: 1
 		},
 		{

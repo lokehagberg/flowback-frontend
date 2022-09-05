@@ -1,16 +1,16 @@
 <script lang="ts">
-	import RegisterCard from '../../lib/Login/RegisterCard.svelte';
-	import LoginCard from '../../lib/Login/LoginCard.svelte';
-	import ForgotPasswordCard from '../../lib/Login/ForgotPasswordCard.svelte';
-	import VerifyCard from '$lib/Login/VerifyCard.svelte';
-	import NewPasswordCard from '$lib/Login/NewPasswordCard.svelte';
-import { onMount } from 'svelte';
+	import RegisterCard from '../../lib/Login/Register.svelte';
+	import LoginCard from '../../lib/Login/Login.svelte';
+	import ForgotPasswordCard from '../../lib/Login/ForgotPassword.svelte';
+	import VerifyCard from '$lib/Login/Verify.svelte';
+	import NewPasswordCard from '$lib/Login/NewPassword.svelte';
+	import { onMount } from 'svelte';
 
 	let selectedPage = 'Login';
 
 	onMount(() => {
 		if (localStorage.getItem('token')) window.location.href = '/home';
-	})
+	});
 </script>
 
 <svelte:head>
@@ -38,17 +38,18 @@ import { onMount } from 'svelte';
 				Register
 			</div>
 		</div>
-		{#if selectedPage === 'Login'}
-			<LoginCard bind:selectedPage />
-		{:else if selectedPage === 'Register'}
-			<RegisterCard bind:selectedPage />
-		{:else if selectedPage === 'Verify'}
-			<VerifyCard bind:selectedPage />
-		{:else if selectedPage === 'ForgotPassword'}
-			<ForgotPasswordCard bind:selectedPage />
-		{:else if selectedPage === 'NewPassword'}
-			<NewPasswordCard bind:selectedPage />
-		{/if}
+		<div class="mt-6">
+			{#if selectedPage === 'Login'}
+				<LoginCard bind:selectedPage />
+			{:else if selectedPage === 'Register'}
+				<RegisterCard bind:selectedPage />
+			{:else if selectedPage === 'Verify'}
+				<VerifyCard bind:selectedPage />
+			{:else if selectedPage === 'ForgotPassword'}
+				<ForgotPasswordCard bind:selectedPage />
+			{:else if selectedPage === 'NewPassword'}
+				<NewPasswordCard bind:selectedPage />
+			{/if}
+		</div>
 	</div>
 </div>
-

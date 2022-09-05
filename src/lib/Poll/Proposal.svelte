@@ -17,7 +17,7 @@
 	<div><Fa icon={faBars} /></div>
 	<div class="h-full">
 		<h1 class="text-lg text-left">{title}</h1>
-		<p class="text-sm mt-2">
+		<p class="elipsis text-sm mt-2">
 			{description}
 		</p>
 	</div>
@@ -25,4 +25,13 @@
 </div>
 
 <style>
+	.elipsis{
+		text-overflow:ellipsis;
+		overflow:hidden;
+		/* // Addition lines for 2 line or multiline ellipsis */
+		display: -webkit-box !important;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		white-space: normal;
+	} 
 </style>

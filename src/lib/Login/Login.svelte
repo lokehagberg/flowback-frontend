@@ -20,7 +20,7 @@
 	}
 </script>
 
-<form class="flex flex-col items-center" on:submit|preventDefault={logIn}>
+<form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
 	<TextInput label={'Email'} bind:value={username} />
 	<TextInput label={'Password'} bind:value={password} type={'password'} />
 

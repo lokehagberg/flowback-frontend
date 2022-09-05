@@ -8,7 +8,7 @@
 	}
 </script>
 
-<label class=""
+<label class="w-full"
 				><p class="text-sm mb-1">{label}</p>
 				<input
 					use:typeAction

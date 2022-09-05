@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Tab from '$lib/Generic/Tab.svelte';
+
 	import RegisterCard from '../../lib/Login/Register.svelte';
 	import LoginCard from '../../lib/Login/Login.svelte';
 	import ForgotPasswordCard from '../../lib/Login/ForgotPassword.svelte';
@@ -11,6 +13,7 @@
 	onMount(() => {
 		if (localStorage.getItem('token')) window.location.href = '/home';
 	});
+
 </script>
 
 <svelte:head>
@@ -22,23 +25,8 @@
 		<img src="Logo.png" class="w-44" alt="flowback logo" />
 	</div>
 	<div class="bg-white w-4/5 sm:w-1/2 mt-14 rounded shadow-lg">
-		<div class="flex justify-around mt-2 border-b">
-			<div
-				class="cursor-pointer border-blue-500 pb-2 w-24 text-center text-xl font-light text-gray-500"
-				class:border-b-2={selectedPage === 'Login'}
-				on:click={() => (selectedPage = 'Login')}
-			>
-				Login
-			</div>
-			<div
-				class="cursor-pointer border-blue-500 pb-2 w-24 text-center text-xl font-extralight text-gray-500"
-				class:border-b-2={selectedPage === 'Register'}
-				on:click={() => (selectedPage = 'Register')}
-			>
-				Register
-			</div>
-		</div>
-		<div class="mt-6">
+		<Tab bind:selectedPage tabs={['Login', 'Register']}/>
+		<div class="">
 			{#if selectedPage === 'Login'}
 				<LoginCard bind:selectedPage />
 			{:else if selectedPage === 'Register'}

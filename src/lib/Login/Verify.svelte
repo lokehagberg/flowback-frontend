@@ -14,7 +14,7 @@
 	}
 </script>
 
-<form class="flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
+<form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
 	<TextInput label={'Verification Code'} bind:value={verification_code} />
 	<TextInput label={'Password'} bind:value={password} type={'password'} />
 

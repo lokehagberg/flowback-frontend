@@ -13,7 +13,7 @@ import { fetchRequest } from '$lib/FetchRequest';
 	}
 </script>
 
-<form class="flex flex-col items-center" on:submit={registerAccount}>
+<form class="gap-6 p-6 flex flex-col items-center" on:submit={registerAccount}>
 	<TextInput label={'New Password'} bind:value={password} type="password" />
 	<TextInput label={'Verification Code'} bind:value={verification_code} />
 

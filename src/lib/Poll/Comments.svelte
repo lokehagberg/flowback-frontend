@@ -2,13 +2,17 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+
+	const sendComment = () => {};
 </script>
 
-<div>
+<div class="mt-6">
 	<h1 class="text-left text-2xl">Comments</h1>
-	<form class="mt-4">
+	<form class="mt-4" on:submit|preventDefault={sendComment}>
+		<TextArea label="Comment" />
+		<!-- <textarea></textarea> -->
 		<!-- <TextArea type="field" label="Comment" /> -->
-		<ButtonPrimary>Submit</ButtonPrimary>
+		<ButtonPrimary className="mt-4" type="submit">Submit</ButtonPrimary>
 	</form>
 
 	<div class="flex flex-col gap-4 mt-6">

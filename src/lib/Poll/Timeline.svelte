@@ -22,7 +22,7 @@
 	<div class="h-6">
 		{#each datePlacement as date, i}
 			<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
-				<HeaderIcon size="1.5x" text={`${dates[i]}`} icon={faExclamationCircle} color={`${dates[i] <= new Date() ? "#015BC0" : ""}`}/>
+				<HeaderIcon size="1.5x" text={`${dateLabels[i]} date: ${dates[i]}`} icon={faExclamationCircle} color={`${dates[i] <= new Date() ? "#015BC0" : ""}`}/>
 			</div>
 		{/each}
 	</div>

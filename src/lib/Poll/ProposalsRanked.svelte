@@ -62,16 +62,12 @@
 	that will terminate when it finds the 
 	proposal div and then swap/move it.*/
 	const addToRanked = (e: any) => {
-		const proposal = e.path.find((element: HTMLObjectElement) =>
-			element.classList.contains('proposal')
-		);
+		const proposal = getProposal(e);
 		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
 	};
 
 	const addToAbstained = (e: any) => {
-		const proposal = e.path.find((element: HTMLObjectElement) =>
-			element.classList.contains('proposal')
-		);
+		const proposal = getProposal(e);
 		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
 
@@ -89,6 +85,13 @@
 		swap(element.parentElement, element.parentElement.previousSibling);
 	};
 
+	const doubleClick = (e: any) => {
+		const proposal = getProposal(e);
+
+		if (proposal.parentNode.parentNode.classList.contains('abstained')) addToRanked(e);
+		else addToAbstained(e);
+	};
+
 	const swap = (nodeA: HTMLObjectElement, nodeB: HTMLObjectElement) => {
 		const parentA = nodeA?.parentNode;
 		const siblingA = nodeA?.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
@@ -98,6 +101,10 @@
 
 		// Move `nodeB` to before the sibling of `nodeA`
 		parentA?.insertBefore(nodeB, siblingA);
+	};
+
+	const getProposal = (e: any) => {
+		return e.path.find((element: HTMLObjectElement) => element.classList.contains('proposal'));
 	};
 </script>
 
@@ -111,7 +118,7 @@
 
 		<ul class="container abstained lg:h-full">
 			{#each proposals as proposal}
-				<li id={`${proposal.id}`} class="proposal">
+				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
 					<Proposal {...proposal}>
 						<div class="abstained-plus">
 							<div on:click={addToRanked}><Fa icon={faPlus} /></div>

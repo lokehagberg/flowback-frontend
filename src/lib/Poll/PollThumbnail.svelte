@@ -29,7 +29,8 @@ import Timeline from "./Timeline.svelte";
 		>
 			We hate lithuania for no reason
 		</p>
-		<p>5 proposals</p>
+		<p>3 proposals</p>
+		<p>2 comments</p>
 	</div>
 </a>
 

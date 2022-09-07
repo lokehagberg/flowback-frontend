@@ -1,4 +1,6 @@
 <script lang="ts">
+import Timeline from "./Timeline.svelte";
+
 	let onHoverGroup = false;
 </script>
 
@@ -16,6 +18,7 @@
 		enim at animi cum alias omnis. A at reiciendis quasi repellendus laudantium pariatur
 		reprehenderit eius?
 	</p>
+	<Timeline displayDetails={false}/>
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p
 			class="hover:underline"

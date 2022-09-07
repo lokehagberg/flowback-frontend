@@ -2,6 +2,8 @@
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
 
+	export let displayDetails = true;
+
 	let dates = [new Date('2022-08-26'), new Date('2022-09-14'), new Date('2022-09-15'), new Date('2022-09-25')];
 	let date = new Date();
 	const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
@@ -17,7 +19,7 @@
 	});
 </script>
 
-<div class="relative mt-6">
+<div class="relative mt-6 text-black">
 	<h1 class="text-left text-2xl">Timeline</h1>
 	<div class="h-6">
 		{#each datePlacement as date, i}
@@ -33,6 +35,7 @@
 			style:width={`${progress < 100 ? progress : 100}%`}
 		/>
 	</div>
+	{#if displayDetails}
 	<div class="border border-gray-200 p-6">
 		<ul>
 			{#each dateLabels as label, i}
@@ -43,4 +46,5 @@
 			{/each}
 		</ul>
 	</div>
+	{/if}
 </div>

@@ -21,8 +21,8 @@
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
-	<TextInput label={'Email'} bind:value={username} />
-	<TextInput label={'Password'} bind:value={password} type={'password'} />
+	<TextInput label={'Email'} bind:value={username} required={true} />
+	<TextInput label={'Password'} bind:value={password} type={'password'} required={true}/>
 
 	<input
 		type="submit"

@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { fetchRequest, getRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
-	import UserHeader from '$lib/User/UserHeader.svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
 

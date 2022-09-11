@@ -9,7 +9,7 @@
 <div class="mt-6">
 	<h1 class="text-left text-2xl">Comments</h1>
 	<form class="mt-4" on:submit|preventDefault={sendComment}>
-		<TextArea label="Comment" />
+		<TextArea label="Comment" required={true}/>
 		<!-- <textarea></textarea> -->
 		<!-- <TextArea type="field" label="Comment" /> -->
 		<ButtonPrimary className="mt-4" type="submit">Submit</ButtonPrimary>

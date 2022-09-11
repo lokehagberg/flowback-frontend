@@ -14,8 +14,8 @@ import { fetchRequest } from '$lib/FetchRequest';
 </script>
 
 <form class="gap-6 p-6 flex flex-col items-center" on:submit={registerAccount}>
-	<TextInput label={'New Password'} bind:value={password} type="password" />
-	<TextInput label={'Verification Code'} bind:value={verification_code} />
+	<TextInput label={'New Password'} bind:value={password} type="password" required={true}/>
+	<TextInput label={'Verification Code'} bind:value={verification_code} required={true} />
 
 	<input
 		type="submit"

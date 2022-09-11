@@ -13,7 +13,7 @@ import { fetchRequest } from "$lib/FetchRequest";
 </script>
 
 <form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={sendCode}>
-	<TextInput label={'E-mail'} bind:value={email} />
+	<TextInput label={'E-mail'} bind:value={email} required={true}/>
 
     <input
     type="submit"

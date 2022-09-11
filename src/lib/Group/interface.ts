@@ -1,12 +1,11 @@
-export enum selectablePages {
-	flow = 'flow',
-	about = 'about',
-	documents = 'documents',
-	members = 'members',
-	email = 'email',
-	statistics = 'statistics',
-	delegation = 'delegation'
-}
+export type SelectablePage =
+	'flow'
+	| 'about'
+	| 'documents'
+	| 'members'
+	| 'email'
+	| 'statistics'
+	| 'delegation';
 
 export interface user {
 	username: string;

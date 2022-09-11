@@ -1,24 +1,18 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
-	import { selectablePages } from '$lib/Group/interface';
+	import type { SelectablePage } from '$lib/Group/interface';
 
-	export let selectedPage: selectablePages = selectablePages.delegation;
+	export let selectedPage: SelectablePage = 'flow';
 </script>
 
 <div>
 	<div class="bg-white shadow rounded flex flex-col">
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.flow)} text="Flow" />
-		<GroupSidebarButton
-			action={() => (selectedPage = selectablePages.delegation)}
-			text="Delegation"
-		/>
-		<GroupSidebarButton
-			action={() => (selectedPage = selectablePages.documents)}
-			text="Documents"
-		/>
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.members)} text="Members" />
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.statistics)} text="Statistics" />
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.about)} text="About" />
+		<GroupSidebarButton action={() => (selectedPage = 'flow')} text="Flow" />
+		<GroupSidebarButton action={() => (selectedPage = 'delegation')} text="Delegation" />
+		<GroupSidebarButton action={() => (selectedPage = 'documents')} text="Documents" />
+		<GroupSidebarButton action={() => (selectedPage = 'members')} text="Members" />
+		<GroupSidebarButton action={() => (selectedPage = 'statistics')} text="Statistics" />
+		<GroupSidebarButton action={() => (selectedPage = 'about')} text="About" />
 	</div>
 	<div class="bg-white shadow rounded flex flex-col mt-6">
 		<GroupSidebarButton action={() => (window.location.href = '/createpoll')} text="Create Poll" />
@@ -26,6 +20,6 @@
 			action={() => (window.location.href = '/createpoll')}
 			text="Video Conference"
 		/>
-		<GroupSidebarButton action={() => (selectedPage = selectablePages.email)} text="Send Email" />
+		<GroupSidebarButton action={() => (selectedPage = 'email')} text="Send Email" />
 	</div>
 </div>

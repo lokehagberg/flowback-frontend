@@ -2,7 +2,7 @@
 	import GroupHeader from '../../lib/Group/GroupHeader.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import { selectablePages } from '$lib/Group/interface';
+	import type { SelectablePage } from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -11,7 +11,7 @@
 	import SendEmail from '$lib/Group/SendEmail.svelte';
 	import Statistics from '$lib/Group/Statistics.svelte';
 
-	let selectedPage: selectablePages = selectablePages.delegation;
+	let selectedPage: SelectablePage = "delegation";
 </script>
 
 <Layout>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { selectablePages } from './interface';
+	import type { SelectablePage } from './interface';
 	console.log($page.params);
-	export let selectedPage: selectablePages;
+	export let selectedPage: SelectablePage;
 </script>
 
 <div class="relative">
@@ -12,7 +12,7 @@
 <div class="bg-white pt-12 flex justify-between align-middle pl-4 pr-4 pb-4">
 	<h1
 		class="text-3xl hover:underline cursor-pointer"
-		on:click={() => (selectedPage = selectablePages.flow)}
+		on:click={() => (selectedPage = "flow")}
 	>
 		We hate Lithuania for no reason
 	</h1>

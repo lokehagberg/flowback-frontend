@@ -3,7 +3,8 @@
     export let label: string
 	export let type = "text"
 
-	function typeAction(node:any){
+	//Wait what is this?!
+	function typeAction(node:{type:string}){
 		node.type = type
 	}
 </script>

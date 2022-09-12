@@ -8,8 +8,8 @@
 
 	let name = 'Default Name';
 	let description = 'Default Descritption';
-	let image = 'Default Image';
-	let cover_image = "Default Cover Image";
+	let image:any;
+	let cover_image:any;
 	let direct_join = false;
 
 	const createGroup = async () => {
@@ -33,8 +33,8 @@
 			<h1 class="text-2xl">Create a Group</h1>
 			<TextInput label="Title" />
 			<TextInput label="Description" />
-			<input type="file" alt="image" value={cover_image} />
-			<input type="file" alt="image" value={image} />
+			<!-- <input type="file" alt="image" value={cover_image} />
+			<input type="file" alt="image" value={image} /> -->
 			<ButtonPrimary type="submit"
 				><div class="flex justify-center gap-3 items-center">
 					<Fa icon={faPaperPlane} />Create Group

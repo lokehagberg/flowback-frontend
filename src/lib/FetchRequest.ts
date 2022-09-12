@@ -1,5 +1,3 @@
-// I HAVE YOUR IP ADRESS: http://213.89.153.94:8000/
-
 export function fetchRequest(method: string, api: string, data: any, needs_authorization: boolean = true) {
 	
 	let headers:HeadersInit = needs_authorization ?
@@ -12,7 +10,7 @@ export function fetchRequest(method: string, api: string, data: any, needs_autho
 		'Content-Type': 'application/json',
 	}
 
-	return fetch('http://213.89.153.94:8000/' + api, {
+	return fetch('https://v2.flowback.org/' + api, {
 		method,
 		headers,
 		body: JSON.stringify(data)
@@ -23,7 +21,7 @@ export function fetchRequest(method: string, api: string, data: any, needs_autho
 
 //TODO: Make Authorization use session storage/svelte stores instead of local storage
 export function getRequest(api: string, Authorization: string = localStorage.getItem("token")||"") {
-	return fetch('http://213.89.153.94:8000/' + api, {
+	return fetch('https://v2.flowback.org/' + api, {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',

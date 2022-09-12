@@ -24,11 +24,11 @@
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
 				<ButtonPrimary
 					action={() => (polltype = 'ranking')}
-					buttonType={polltype === 'ranking' ? 'primary' : 'secondary'}>Ranking</ButtonPrimary
+					buttonStyle={polltype === 'ranking' ? 'primary' : 'secondary'}>Ranking</ButtonPrimary
 				>
 				<ButtonPrimary
 					action={() => (polltype = 'time')}
-					buttonType={polltype === 'time' ? 'primary' : 'secondary'}>Time</ButtonPrimary
+					buttonStyle={polltype === 'time' ? 'primary' : 'secondary'}>Time</ButtonPrimary
 				>
 			</div>
 			<div class="bg-white p-6 shadow-xl mt-4">

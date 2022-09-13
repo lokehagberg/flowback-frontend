@@ -5,11 +5,12 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { fetchRequest } from '$lib/FetchRequest';
+import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 
 	let name = 'Default Name';
 	let description = 'Default Descritption';
-	let image:any;
-	let cover_image:any;
+	let image: FileReader['result'];
+	let cover_image: FileReader['result'];
 	let direct_join = false;
 
 	const createGroup = async () => {
@@ -20,7 +21,18 @@
 			cover_image,
 			direct_join
 		});
-		console.log(res)
+		console.log(res);
+	};
+
+	const onFileSelected = (e: any) => {
+		console.log(typeof e);
+		let file = e.target.files[0];
+		let reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = (e) => {
+			if (e.target) image = e.target?.result;
+			console.log(e.target?.result);
+		};
 	};
 </script>
 
@@ -31,9 +43,10 @@
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a Group</h1>
+			<ImageUpload />
 			<TextInput label="Title" />
 			<TextInput label="Description" />
-			<input type="file" accept=".jpg, .jpeg, .png">
+			<input type="file" accept=".jpg, .jpeg, .png"  on:change={onFileSelected} />
 			<ButtonPrimary type="submit"
 				><div class="flex justify-center gap-3 items-center">
 					<Fa icon={faPaperPlane} />Create Group

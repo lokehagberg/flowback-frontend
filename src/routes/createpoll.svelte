@@ -38,6 +38,8 @@
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
 	};
 
+	const disabled: (polltypes | timetypes)[] = ['For Against', 'Cardinal', 'Quadratic', 'Scheduled', 'Dynamic'];
+
 	const createPoll = () => {
 		console.log('poll created!');
 	};
@@ -45,14 +47,23 @@
 
 <Layout>
 	<form
-		on:submit|preventDefault={createPoll}
+		on:submit|preventDefault={() =>
+			!disabled.includes(polltype) && !disabled.includes(timetype) ? createPoll() : null}
 		class="flex items-start justify-center gap-8 mt-24 ml-8 mr-8"
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a poll</h1>
 			<TextInput label="Title" />
 			<TextInput label="Description" />
-			<ButtonPrimary>Create Poll</ButtonPrimary>
+			{#if disabled.includes(polltype) || disabled.includes(timetype)}
+				This polltype is not implemented yet
+			{/if}
+			<ButtonPrimary
+				type="submit"
+				className={disabled.includes(polltype) || disabled.includes(timetype)
+					? 'bg-gray-400'
+					: 'bg-blue-600'}>Create Poll</ButtonPrimary
+			>
 		</div>
 		<div class="w-1/3">
 			<div class="bg-white p-6 shadow-xl">

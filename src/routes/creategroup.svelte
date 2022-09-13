@@ -10,18 +10,22 @@
 
 	let name = 'Default Name',
 		description = 'Default Descritption',
-		image: string,
-		cover_image: string,
+		image: File,
+		cover_image: File,
 		direct_join = true;
 
 	const createGroup = async () => {
-		const res = await fetchRequest('POST', 'group/create', {
-			name,
-			description,
-			image,
-			cover_image,
-			direct_join
-		});
+		const formData = new FormData();
+		formData.append('name', name);
+		formData.append('description', description);
+		formData.append('image', image);
+		formData.append('cover_image', cover_image);
+		formData.append('direct_join', direct_join.toString());
+
+		var object:any = {};
+		formData.forEach((value:any, key:any) => (object[key] = value));
+
+		const res = await fetchRequest('POST', 'group/create', object);
 		console.log(res);
 	};
 </script>
@@ -35,8 +39,8 @@
 			<h1 class="text-2xl">Create a Group</h1>
 			<TextInput label="Title" />
 			<TextArea label="Description" />
-			<ImageUpload bind:avatar={image} label="Upload Image" />
-			<ImageUpload bind:avatar={cover_image} label="Upload Cover Image" isCover={true} />
+			<ImageUpload bind:image label="Upload Image" />
+			<ImageUpload bind:image={cover_image} label="Upload Cover Image" isCover={true} />
 			<fieldset>
 				<h1 class="text-left text-sm">Allow direct join?</h1>
 				<div class="mt-2">
@@ -47,11 +51,11 @@
 							name="direct_join"
 							checked={!direct_join}
 							on:change={() => (direct_join = false)}
-							/>
-						</label>
-						<label class="ml-4">
-							Yes
-							<input
+						/>
+					</label>
+					<label class="ml-4">
+						Yes
+						<input
 							type="radio"
 							name="direct_join"
 							checked={direct_join}
@@ -60,7 +64,7 @@
 					</label>
 				</div>
 			</fieldset>
-			<ButtonPrimary type="submit" 
+			<ButtonPrimary type="submit"
 				><div class="flex justify-center gap-3 items-center">
 					<Fa icon={faPaperPlane} />Create Group
 				</div>

@@ -1,23 +1,32 @@
 <script lang="ts">
-	export let avatar:string = "", label:string, isCover = false
-	let fileinput:HTMLInputElement;
+	export let image: File | null = null,
+		label: string,
+		isCover = false;
+	let fileinput: HTMLInputElement;
 
-	const onFileSelected = (e:any) => {
-		let image = e.target.files[0];
-		let reader = new FileReader();
-		reader.readAsDataURL(image);
-		reader.onload = (e) => {
-			if (typeof e.target?.result === "string")
-            avatar = e.target.result;
-		};
+	const onFileSelected = (e: any) => {
+		const files: File[] = Array.from(e.target.files);
+		image = files[0];
 	};
 </script>
 
+			<!-- on:change={() => {
+				const imgtag = document.getElementById("image");
+				const fr = new FileReader();
+				fr.onload = () => {
+					if (imgtag)
+					imgtag?.src = event.target.result;
+				};
+			}} -->
 <div class="image-upload">
 	<h1 class="text-left text-sm w-full">{label}</h1>
 
-	{#if avatar}
-		<img class={`${isCover ? "cover" : ""} avatar`} src={avatar} alt="d" />
+	{#if image}
+		<img
+			id="image"
+			class={`${isCover ? 'cover' : ''} avatar`}
+			alt={label}
+		/>
 	{:else}
 		<img
 			class="avatar"
@@ -71,7 +80,7 @@
 		width: 10rem;
 	}
 
-	.cover{
-		width:100%;
+	.cover {
+		width: 100%;
 	}
 </style>

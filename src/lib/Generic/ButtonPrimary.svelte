@@ -1,15 +1,11 @@
 <script lang="ts">
-	export let action = () => {};
-	export let className = '';
-	export let buttonStyle: buttonstyles = 'primary';
-	export let type: buttontypes = 'default';
+	export let action = () => {},
+		className = '',
+		buttonStyle: buttonstyles = 'primary',
+		type: buttontypes = 'default';
 
 	type buttonstyles = 'primary' | 'secondary';
 	type buttontypes = 'default' | 'submit';
-	//TODO have a series of if statements for different types of buttons like secondary or inputs etc
-	//className = "text-cecnter"
-	//if (secondary) className += "bg-blue-300"
-	//if (primary) className += "bg-blue-600"
 </script>
 
 {#if type === 'default'}

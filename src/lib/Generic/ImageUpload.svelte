@@ -1,5 +1,6 @@
 <script lang="ts">
-	let avatar:string, fileinput:any;
+	export let avatar:string = "", label:string, isCover = false
+	let fileinput:HTMLInputElement;
 
 	const onFileSelected = (e:any) => {
 		let image = e.target.files[0];
@@ -13,10 +14,10 @@
 </script>
 
 <div class="image-upload">
-	<h1>Upload Image</h1>
+	<h1 class="text-left text-sm w-full">{label}</h1>
 
 	{#if avatar}
-		<img class="avatar" src={avatar} alt="d" />
+		<img class={`${isCover ? "cover" : ""} avatar`} src={avatar} alt="d" />
 	{:else}
 		<img
 			class="avatar"
@@ -63,9 +64,14 @@
 		width: 50px;
 		cursor: pointer;
 	}
+
 	.avatar {
 		display: flex;
-		height: 200px;
-		width: 200px;
+		height: 10rem;
+		width: 10rem;
+	}
+
+	.cover{
+		width:100%;
 	}
 </style>

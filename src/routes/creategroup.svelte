@@ -16,16 +16,14 @@
 
 	const createGroup = async () => {
 		const formData = new FormData();
+		
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('image', image);
 		formData.append('cover_image', cover_image);
 		formData.append('direct_join', direct_join.toString());
 
-		var object:any = {};
-		formData.forEach((value:any, key:any) => (object[key] = value));
-
-		const res = await fetchRequest('POST', 'group/create', object);
+		const res = await fetchRequest('POST', 'group/create', formData, true, false);
 		console.log(res);
 	};
 </script>

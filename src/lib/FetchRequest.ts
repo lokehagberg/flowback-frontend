@@ -2,21 +2,21 @@ export function fetchRequest(
 	method: string,
 	api: string,
 	data: any,
-	needs_authorization: boolean = true
+	needs_authorization: boolean = true,
+	needs_json: boolean = true
 ) {
 	console.log(data);
-	console.log(JSON.stringify(data));
+	let headers: any = {};
 
-	let headers: HeadersInit = needs_authorization
-		? {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				Authorization: 'Token ' + (localStorage.getItem('token') || '')
-		  }
-		: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-		  };
+	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+
+	if (needs_json) {
+		headers.Accept = 'application/json';
+		headers['Content-Type'] = 'application/json';
+		data = JSON.stringify(data);
+	}
+
+	console.log(headers);
 
 	return fetch(`${import.meta.env.VITE_API}/${api}`, {
 		method,

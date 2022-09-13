@@ -41,6 +41,7 @@
 		"@fortawesome/free-solid-svg-icons": "^6.1.2",
 		"@shopify/draggable": "^1.0.0-beta.8",
 		"cookie": "^0.4.1",
+		"dotenv": "^16.0.2",
 		"svelte-fa": "^3.0.3"
 	}
 }

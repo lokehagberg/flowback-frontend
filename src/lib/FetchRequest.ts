@@ -1,5 +1,6 @@
 export function fetchRequest(method: string, api: string, data: any, needs_authorization: boolean = true) {
 	
+	console.log(import.meta.env.VITE_API)
 	let headers:HeadersInit = needs_authorization ?
 	{
 		Accept: 'application/json',
@@ -10,7 +11,7 @@ export function fetchRequest(method: string, api: string, data: any, needs_autho
 		'Content-Type': 'application/json',
 	}
 
-	return fetch('https://v2.flowback.org/' + api, {
+	return fetch(`${import.meta.env.VITE_API}/${api}`, {
 		method,
 		headers,
 		body: JSON.stringify(data)
@@ -21,7 +22,8 @@ export function fetchRequest(method: string, api: string, data: any, needs_autho
 
 //TODO: Make Authorization use session storage/svelte stores instead of local storage
 export function getRequest(api: string, Authorization: string = localStorage.getItem("token")||"") {
-	return fetch('https://v2.flowback.org/' + api, {
+	console.log(import.meta.env.VITE_API)
+	return fetch(`${import.meta.env.VITE_API}/${api}`, {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',

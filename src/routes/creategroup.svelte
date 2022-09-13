@@ -12,7 +12,7 @@
 		description = 'Default Descritption',
 		image: string,
 		cover_image: string,
-		direct_join = false;
+		direct_join = true;
 
 	const createGroup = async () => {
 		const res = await fetchRequest('POST', 'group/create', {

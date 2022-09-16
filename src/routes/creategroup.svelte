@@ -22,6 +22,7 @@
 		formData.append('image', image);
 		formData.append('cover_image', cover_image);
 		formData.append('direct_join', direct_join.toString());
+		formData.append('public', true)
 
 		const res = await fetchRequest('POST', 'group/create', formData, true, false);
 		console.log(res);

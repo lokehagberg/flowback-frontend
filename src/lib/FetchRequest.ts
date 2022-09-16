@@ -1,4 +1,4 @@
-export function fetchRequest(
+export async function fetchRequest(
 	method: string,
 	api: string,
 	data: any,
@@ -18,7 +18,7 @@ export function fetchRequest(
 
 	console.log(headers);
 
-	return fetch(`${import.meta.env.VITE_API}/${api}`, {
+	return await fetch(`${import.meta.env.VITE_API}/${api}`, {
 		method,
 		headers,
 		body: data

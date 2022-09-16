@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fetchRequest } from '$lib/FetchRequest';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { Group } from 'src/routes/groups/interfaces';
 
@@ -18,11 +19,12 @@
 			{group.description}
 		</p>
 		<ButtonPrimary
-			action={() => {
-				console.log('hi');
+			action={async () => {
+				const res = await fetchRequest('POST', `group/${group.id}/${group.joined ? "leave" : "join"}`, {})
+				if (res.ok) group.joined = !group.joined
 			}}
 			className="hover:bg-blue-800"
-			disabled={!group.joined}>{group.joined ? 'Joined' : 'Join'}</ButtonPrimary
+			>{group.joined ? 'Leave' : 'Join'}</ButtonPrimary
 		>
 	</div>
 </div>

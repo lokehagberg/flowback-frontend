@@ -4,8 +4,7 @@
 	export let required = false;
 
 	const expandTextArea = (e:any) => {
-		console.log(e.dataset)
-		e.parentNode.dataset.replicatedValue = e.value
+		value = e.target.value
 	}
 </script>
 

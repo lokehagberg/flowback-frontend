@@ -35,8 +35,8 @@
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a Group</h1>
-			<TextInput label="Title" />
-			<TextArea label="Description" />
+			<TextInput label="Title" bind:value={name} />
+			<TextArea label="Description" bind:value={description}/>
 			<ImageUpload bind:image label="Upload Image" />
 			<ImageUpload bind:image={cover_image} label="Upload Cover Image" isCover={true} />
 			<fieldset>

@@ -3,20 +3,9 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import GroupThumbnail from '$lib/Group/GroupThumbnail.svelte';
 	import { onMount } from 'svelte';
+	import type { Group } from './interfaces'
 
-	let groupList: GroupThumbnail[] = [];
-
-	interface GroupThumbnail {
-		active: boolean;
-		cover_image: string;
-		created_by: number;
-		description: string;
-		direct_join: boolean;
-		id: number;
-		image: string;
-		joined: boolean;
-		name: string;
-	}
+	let groupList: Group[] = [];
 
 	onMount(async () => {
 		const response = await getRequest('group/list?limit=100');
@@ -34,7 +23,7 @@
 		>
 
 		{#each groupList as group}
-			<GroupThumbnail {...group} />
+			<GroupThumbnail {group} />
 		{/each}
 	</div>
 </Layout>

@@ -23,9 +23,9 @@ export async function fetchRequest(
 	return await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
 }
 
-//(localStorage.getItem('token') || '')
-
-//TODO: Make Authorization use session storage/svelte stores instead of local storage
+/**
+ * @deprecated The method should not be used
+ */
 export function getRequest(
 	api: string,
 	Authorization: string = localStorage.getItem('token') || ''

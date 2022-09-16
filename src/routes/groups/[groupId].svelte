@@ -11,12 +11,12 @@
 	import SendEmail from '$lib/Group/SendEmail.svelte';
 	import Statistics from '$lib/Group/Statistics.svelte';
 	import { onMount } from 'svelte';
-	import { getRequest } from '$lib/FetchRequest';
+	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 
-	let selectedPage: SelectablePage = 'delegation';
+	let selectedPage: SelectablePage = 'flow';
 	onMount(async () => {
-		const res = await getRequest(`group/${$page.params.groupId}/detail`);
+		const res = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		console.log(res);
 	});
 </script>

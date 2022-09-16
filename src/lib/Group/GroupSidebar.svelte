@@ -20,6 +20,9 @@
 			action={() => (window.location.href = '/createpoll')}
 			text="Video Conference"
 		/>
+	</div>
+	<div class="bg-white shadow rounded flex flex-col mt-6">
 		<GroupSidebarButton action={() => (selectedPage = 'email')} text="Send Email" />
+		<GroupSidebarButton action={() => (window.location.href = `/creategroup?group=${7}`)} text="Edit Group" />
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getRequest } from '$lib/FetchRequest';
+	import { fetchRequest, getRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { onMount } from 'svelte';
@@ -15,7 +15,8 @@
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		const response = await getRequest('users?limit=100', token);
+		// const response = await getRequest('users?limit=100', token);
+		const response = await fetchRequest('GET', `group/${6}/users?limit=100`);
 		const responsejson = await response.json();
 		users = responsejson.results;
 		loading = false;

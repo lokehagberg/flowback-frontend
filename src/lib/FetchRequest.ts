@@ -1,7 +1,7 @@
 export async function fetchRequest(
-	method: string,
+	method: 'GET' | 'POST' | 'EDIT' | 'DELETE' | 'PUT',
 	api: string,
-	data: any,
+	data: any = {},
 	needs_authorization: boolean = true,
 	needs_json: boolean = true
 ) {
@@ -16,13 +16,11 @@ export async function fetchRequest(
 		data = JSON.stringify(data);
 	}
 
-	console.log(headers);
+	let toSend:RequestInit = {method, headers}
 
-	return await fetch(`${import.meta.env.VITE_API}/${api}`, {
-		method,
-		headers,
-		body: data
-	});
+	if (method !== "GET") toSend.body = data
+
+	return await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
 }
 
 //(localStorage.getItem('token') || '')

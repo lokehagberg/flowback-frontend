@@ -1,4 +1,6 @@
 <script lang="ts">
+  import RadioButtons from './RadioButtons.svelte';
+
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -11,8 +13,9 @@
 	let name = 'Default Name',
 		description = 'Default Descritption',
 		image: File,
-		cover_image: File,
-		direct_join = true;
+		coverImage: File,
+		directJoin = true,
+		publicGroup = true
 
 	const createGroup = async () => {
 		const formData = new FormData();
@@ -20,9 +23,9 @@
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('image', image);
-		formData.append('cover_image', cover_image);
-		formData.append('direct_join', direct_join.toString());
-		formData.append('public', true)
+		formData.append('cover_image', coverImage);
+		formData.append('direct_join', directJoin.toString());
+		formData.append('public', publicGroup.toString());
 
 		const res = await fetchRequest('POST', 'group/create', formData, true, false);
 		console.log(res);
@@ -39,30 +42,9 @@
 			<TextInput label="Title" bind:value={name} />
 			<TextArea label="Description" bind:value={description}/>
 			<ImageUpload bind:image label="Upload Image" />
-			<ImageUpload bind:image={cover_image} label="Upload Cover Image" isCover={true} />
-			<fieldset>
-				<h1 class="text-left text-sm">Allow direct join?</h1>
-				<div class="mt-2">
-					<label>
-						No
-						<input
-							type="radio"
-							name="direct_join"
-							checked={!direct_join}
-							on:change={() => (direct_join = false)}
-						/>
-					</label>
-					<label class="ml-4">
-						Yes
-						<input
-							type="radio"
-							name="direct_join"
-							checked={direct_join}
-							on:change={() => (direct_join = true)}
-						/>
-					</label>
-				</div>
-			</fieldset>
+			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover={true} />
+			<RadioButtons bind:Yes={directJoin} label={"Direct Join"}/>
+			<RadioButtons bind:Yes={publicGroup} label={"Public"}/>
 			<ButtonPrimary type="submit"
 				><div class="flex justify-center gap-3 items-center">
 					<Fa icon={faPaperPlane} />Create Group

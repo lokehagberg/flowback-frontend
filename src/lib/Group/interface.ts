@@ -5,7 +5,8 @@ export type SelectablePage =
 	| 'members'
 	| 'email'
 	| 'statistics'
-	| 'delegation';
+	| 'delegation'
+	| 'tags';
 
 export interface user {
 	username: string;

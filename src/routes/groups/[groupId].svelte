@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import Tags from '$lib/Group/Tags.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	onMount(async () => {
@@ -40,6 +41,8 @@
 				<SendEmail />
 			{:else if selectedPage === 'about'}
 				<About />
+			{:else if selectedPage === 'tags'}
+				<Tags />
 			{/if}
 		</div>
 

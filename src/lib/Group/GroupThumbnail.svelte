@@ -33,6 +33,7 @@
 	</div>
 </div>
 
+
 <style>
 	.vote-thumbnail:hover {
 		outline: 2px #ccc solid;

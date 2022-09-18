@@ -41,6 +41,7 @@
 	{/if}
 </div>
 
+<!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>
 	header:nth-child(1) {
 		align-self: stretch;

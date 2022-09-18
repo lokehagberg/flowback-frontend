@@ -21,7 +21,7 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	href={'/' + href}
-	class={`p-5 relative cursor-pointer ${className}`}
+	class={`p-4 relative cursor-pointer ${className}`}
 >
 	<div on:load={checkIfSelected}>
 		<Fa

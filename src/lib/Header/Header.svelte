@@ -13,9 +13,13 @@
 </script>
 
 <div class="sticky z-50 w-full top-0">
-	<header class="flex justify-between items-center p-1.5 bg-white shadow select-none">
-		<a href="/home"><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a>
-		<div class="flex gap-8">
+	<header
+		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 bg-white shadow select-none"
+	>
+		<a href="/home" class="md:w-auto"
+			><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a
+		>
+		<div class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
 			<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
@@ -25,14 +29,43 @@
 		</div>
 
 		<div
-			class="flex gap-2 items-center cursor-pointer hover:bg-grey-800"
+			class="inline-block float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-			<div class="bg-red-500 w-5 h-5" />
-			<div class="">name</div>
+		<div class="bg-red-500 w-8 h-8 rounded-full" />
+			<!-- <div class="">name</div> -->
 		</div>
 	</header>
 	{#if sideHeaderOpen}
 		<SideHeader />
 	{/if}
 </div>
+
+<style>
+	header:nth-child(1) {
+		align-self: stretch;
+	}
+
+	header > .inline-flex {
+		gap: calc(12vw - 70px);
+	}
+
+	header {
+		flex-wrap: wrap-reverse;
+	}
+
+	@media only screen and (max-width: 768px) {
+		header > .inline-flex {
+			gap: calc(15vw - 70px);
+		}
+	}
+
+	@media only screen and (max-width: 400px) {
+		header > div:last-child  {
+			float: none;
+			display:block;
+			
+		}
+	}
+
+</style>

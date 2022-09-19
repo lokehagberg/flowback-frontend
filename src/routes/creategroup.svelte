@@ -28,20 +28,25 @@
 		formData.append('direct_join', directJoin.toString());
 		formData.append('public', publicGroup.toString());
 
-		const res = await fetchRequest('POST', 'group/create', formData, true, false);
-		console.log(res);
+		if (groupToEdit === null) {
+			const res = await fetchRequest('POST', 'group/create', formData, true, false);
+			console.log(res);
+		}
+		if (groupToEdit !== null) {
+			const res = await fetchRequest('POST', `group/${groupToEdit}/update`, formData, true, false);
+			console.log(res);
+		}
 	};
 
 	//This page also supports the edit of groups
-	const groupToEdit = $page.url.searchParams.get("group")
+	const groupToEdit = $page.url.searchParams.get('group');
 
 	const deleteGroup = () => {
-		fetchRequest('POST', `group/${groupToEdit}/delete`)
-	}
+		fetchRequest('POST', `group/${groupToEdit}/delete`);
+	};
 
 	onMount(() => {
-		if (groupToEdit !== null){
-
+		if (groupToEdit !== null) {
 		}
 	});
 </script>
@@ -59,8 +64,8 @@
 			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover={true} />
 			<RadioButtons bind:Yes={directJoin} label={'Direct Join'} />
 			<RadioButtons bind:Yes={publicGroup} label={'Public'} />
-			
-			{#if groupToEdit!==null}
+
+			{#if groupToEdit !== null}
 				<ButtonPrimary action={deleteGroup}>Delete Group</ButtonPrimary>
 			{/if}
 			<ButtonPrimary type="submit"

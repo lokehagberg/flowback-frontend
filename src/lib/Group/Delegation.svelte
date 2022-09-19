@@ -4,23 +4,34 @@
 	import type { delegate } from './interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import { onMount } from 'svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { page } from '$app/stores';
 
 	let delegates: delegate[] = [
 		{
 			id: 1,
 			profile_image: null,
-			username: 'Loukey',
-			tags: ['Math', 'Economics']
-		},
-		{
-			id: 2,
-			profile_image: null,
-			username: 'Emil',
-			tags: ['Gay']
+			username: '',
+			tags: []
 		}
 	];
 
-	let tags = ['Economics', 'Math', 'Gay', 'Adventures'];
+	let tags: any[] = [];
+
+	onMount(async () => {
+		const res = await fetchRequest('GET', `group/${$page.params.groupId}/tags`);
+		const json = await res.json();
+		tags = json.results;
+		console.log(json.results);
+
+		const res1 = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=50`);
+		const json1 = await res1.json();
+		delegates = json1.results;
+
+		// fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {delegate:false});
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {delegate:1, tags:[1]});
+	});
 
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
@@ -53,21 +64,21 @@
 						>
 					</div>
 					<div class="flex items-center">
-					<div class="flex gap-2 flex-wrap mt-4">
-						{#each delegate.tags as tag}
-							<Tag {tag} />
-						{/each}
+						<div class="flex gap-2 flex-wrap mt-4">
+							{#each delegate.tags as tag}
+								<Tag {tag} />
+							{/each}
+						</div>
+						<div
+							class:selected={selected === delegate.id}
+							class="faPlus ml-auto cursor-pointer"
+							on:click={() =>
+								selected === delegate.id ? (selected = -1) : (selected = delegate.id)}
+						>
+							<Fa icon={faPlus} size="2x" />
+						</div>
 					</div>
-					<div
-						class:selected={selected === delegate.id}
-						class="faPlus ml-auto cursor-pointer"
-						on:click={() =>
-							selected === delegate.id ? (selected = -1) : (selected = delegate.id)}
-					>
-						<Fa icon={faPlus} size="2x" />
-					</div>
-					</div>
-					
+
 					<div
 						class="absolute bg-white p-6 w-64 shadow rounded border border-gray-200 z-50 right-5"
 						class:invisible={selected !== delegate.id}

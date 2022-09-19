@@ -3,6 +3,7 @@
 	import type { SelectablePage } from './interface';
 	console.log($page.params);
 	export let selectedPage: SelectablePage;
+	// export let group:Group;
 </script>
 
 <div class="relative">
@@ -14,7 +15,7 @@
 		class="text-3xl hover:underline cursor-pointer"
 		on:click={() => (selectedPage = "flow")}
 	>
-		We hate Lithuania for no reason
+		<!-- {group.name} -->
 	</h1>
-	<p class="text-xl">50 members</p>
+	<p class="text-xl">50</p>
 </div>

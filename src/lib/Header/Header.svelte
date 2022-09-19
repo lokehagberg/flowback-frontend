@@ -48,7 +48,7 @@
 	}
 
 	header > .inline-flex {
-		gap: calc(12vw - 70px);
+		gap: calc(8vw - 60px);
 	}
 
 	header {
@@ -61,7 +61,7 @@
 		}
 	}
 
-	@media only screen and (max-width: 400px) {
+	@media only screen and (max-width: 500px) {
 		header > div:last-child  {
 			float: none;
 			display:block;

@@ -15,10 +15,26 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 
+	interface GroupDetails {
+		active: boolean,
+		cover_image: string,
+		created_by: number,
+		default_permission: number | null,
+		description: string,
+		direct_join: boolean,
+		image: string,
+		jitsi_room: string,
+		name: string,
+		public: boolean
+	}
+
 	let selectedPage: SelectablePage = 'flow';
+	let group: GroupDetails | {} = {};
+
 	onMount(async () => {
 		const res = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
-		console.log(res);
+		const json = await res.json();
+		group = json.results;
 	});
 </script>
 

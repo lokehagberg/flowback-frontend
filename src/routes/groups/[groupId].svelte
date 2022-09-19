@@ -32,9 +32,8 @@
 	let group: GroupDetails | {} = {};
 
 	onMount(async () => {
-		const res = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
-		const json = await res.json();
-		group = json.results;
+		const json = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
+		group = json;
 	});
 </script>
 

@@ -6,14 +6,13 @@ import { fetchRequest } from '$lib/FetchRequest';
 	let password: string;
 	let verification_code: string;
 
-    async function registerAccount(e: any) {
-		e.preventDefault();
-		const response = await fetchRequest("POST", "forgot_password/verify", {verification_code, password}, false )
-		if (response) selectedPage = 'Verify';
+    async function registerAccount() {
+		const {res} = await fetchRequest("POST", "forgot_password/verify", {verification_code, password}, false )
+		if (res.ok) selectedPage = 'Verify';
 	}
 </script>
 
-<form class="gap-6 p-6 flex flex-col items-center" on:submit={registerAccount}>
+<form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={registerAccount}>
 	<TextInput label={'New Password'} bind:value={password} type="password" required={true}/>
 	<TextInput label={'Verification Code'} bind:value={verification_code} required={true} />
 

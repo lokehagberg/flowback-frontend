@@ -20,17 +20,18 @@
 	let tags: any[] = [];
 
 	onMount(async () => {
-		const res = await fetchRequest('GET', `group/${$page.params.groupId}/tags`);
-		const json = await res.json();
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags`);
 		tags = json.results;
 		console.log(json.results);
 
-		const res1 = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=50`);
-		const json1 = await res1.json();
-		delegates = json1.results;
+		// const {json} = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=50`);
+		// delegates = json.results;
 
 		// fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {delegate:false});
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {delegate:1, tags:[1]});
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
+			delegate: 1,
+			tags: [1]
+		});
 	});
 
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate

@@ -9,7 +9,7 @@
 	interface Tag {
 		id: number;
 		tag_name: string;
-        active:boolean
+		active: boolean;
 	}
 
 	let tags: Tag[] = [];
@@ -20,27 +20,26 @@
 	});
 
 	const getTags = async () => {
-		const res = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		const json = await res.json();
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
 		tags = json.results;
 	};
 
 	const addTag = async () => {
-		const res = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
 			tag_name: tagToAdd
 		});
 		if (res.ok) getTags();
 	};
 
 	const removeTag = async (tag: Tag) => {
-		const res = await fetchRequest('POST', `group/${$page.params.groupId}/tag/delete`, {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/delete`, {
 			tag: tag.id
 		});
 		if (res.ok) getTags();
 	};
 
 	const editTag = async (tag: Tag) => {
-		const res = await fetchRequest('POST', `group/${$page.params.groupId}/tag/update`, {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/update`, {
 			tag: tag.id,
 			active: !tag.active
 		});
@@ -58,9 +57,11 @@
 			<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
 				<Tag tag={tag.tag_name} className={tag.active ? '' : 'bg-blue-200'} />
 				<div class="mt-2 w-full">
-					<ButtonPrimary className="bg-rose-500 w-1/2" action={() => removeTag(tag)}>Delete</ButtonPrimary>
+					<ButtonPrimary className="bg-rose-500 w-1/2" action={() => removeTag(tag)}
+						>Delete</ButtonPrimary
+					>
 					<ButtonPrimary className="bg-purple-500 w-1/2" action={() => editTag(tag)}
-						>{tag.active ? "Disable" : "Activate"}</ButtonPrimary
+						>{tag.active ? 'Disable' : 'Activate'}</ButtonPrimary
 					>
 				</div>
 			</div>

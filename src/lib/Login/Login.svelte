@@ -7,17 +7,15 @@
 
 	export let selectedPage: string;
 
-	async function logIn(e: any) {
+	const logIn = async (e: any) => {
 		e.preventDefault();
-		const response = await fetchRequest("POST", "login", {username, password}, false)
-
-		response.json().then((data) => {
-			if (data.token) {
-				localStorage.setItem('token', data.token);
+		const {json} = await fetchRequest("POST", "login", {username, password}, false)
+			if (json.token) {
+				localStorage.setItem('token', json.token);
 				window.location.href = '/home';
 			}
-		});
-	}
+		}
+	
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>

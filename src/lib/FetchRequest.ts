@@ -20,22 +20,8 @@ export async function fetchRequest(
 
 	if (method !== "GET") toSend.body = data
 
-	return await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
-}
+	const res = await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
+	const json = await res.json()
 
-/**
- * @deprecated The method should not be used
- */
-export function getRequest(
-	api: string,
-	Authorization: string = localStorage.getItem('token') || ''
-) {
-	return fetch(`${import.meta.env.VITE_API}/${api}`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: 'Token ' + Authorization
-		}
-	});
+	return {res, json}
 }

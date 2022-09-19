@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { fetchRequest, getRequest } from '$lib/FetchRequest';
+	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -16,11 +16,11 @@
 
 	onMount(async () => {
 		const userId = $page.url.searchParams.get('id');
-		const response = await getRequest(userId ? `user/${userId}` : 'user');
+		const {res} = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
 	});
 
 	const updateName = async () => {
-		const response = await fetchRequest('POST', `user/update`, { username: 'b' });
+		const {res} = await fetchRequest('POST', `user/update`, { username: 'b' });
 	};
 
 	console.log($page.url.searchParams.get('id'));

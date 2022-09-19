@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchRequest, getRequest } from '$lib/FetchRequest';
+	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { onMount } from 'svelte';
@@ -16,10 +16,8 @@
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		// const response = await getRequest('users?limit=100', token);
-		const response = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
-		const responsejson = await response.json();
-		users = responsejson.results;
+		const {json} = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
+		users = json.results;
 		loading = false;
 	});
 	let selectedPage = 'Members';

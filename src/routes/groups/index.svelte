@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getRequest } from '$lib/FetchRequest';
+	import { fetchRequest } from '$lib/FetchRequest';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import GroupThumbnail from '$lib/Group/GroupThumbnail.svelte';
 	import { onMount } from 'svelte';
@@ -8,8 +8,7 @@
 	let groupList: Group[] = [];
 
 	onMount(async () => {
-		const response = await getRequest('group/list?limit=100');
-		const json = await response.json();
+		const {json} = await fetchRequest('GET', 'group/list?limit=100');
 		groupList = json.results;
 	});
 </script>

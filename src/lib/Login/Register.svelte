@@ -1,22 +1,21 @@
 <script lang="ts">
-import { fetchRequest } from '$lib/FetchRequest';
-
+	import { fetchRequest } from '$lib/FetchRequest';
 	import TextInput from '../Generic/TextInput.svelte';
 
 	let username: string;
 	let email: string;
+
 	export let selectedPage: string;
 
-	async function registerAccount(e: any) {
-		e.preventDefault();
-		const response = await fetchRequest("POST", "register", {username, email}, false)
-		if (response) selectedPage = 'Verify';
+	async function registerAccount() {
+		const { res } = await fetchRequest('POST', 'register', { username, email }, false);
+		if (res.ok) selectedPage = 'Verify';
 	}
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={registerAccount}>
-	<TextInput label={'Username'} bind:value={username} required={true}/>
-	<TextInput label={'Email'} bind:value={email} required={true}/>
+	<TextInput label={'Username'} bind:value={username} required={true} />
+	<TextInput label={'Email'} bind:value={email} required={true} />
 
 	<input
 		type="submit"

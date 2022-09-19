@@ -7,16 +7,20 @@
 	let password: string;
 	export let selectedPage: string;
 
-	async function verifyAccount(e: any) {
-		e.preventDefault();
-		const response = await fetchRequest('POST', 'register/verify', { verification_code, password }, false);
-		selectedPage = 'Login';
+	async function verifyAccount() {
+		const { res } = await fetchRequest(
+			'POST',
+			'register/verify',
+			{ verification_code, password },
+			false
+		);
+		if (res.ok) selectedPage = 'Login';
 	}
 </script>
 
 <form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
-	<TextInput label={'Verification Code'} bind:value={verification_code} required={true}/>
-	<TextInput label={'Password'} bind:value={password} type={'password'} required={true}/>
+	<TextInput label={'Verification Code'} bind:value={verification_code} required={true} />
+	<TextInput label={'Password'} bind:value={password} type={'password'} required={true} />
 
 	<input
 		type="submit"

@@ -1,5 +1,5 @@
 export async function fetchRequest(
-	method: 'GET' | 'POST' | 'EDIT' | 'DELETE' | 'PUT',
+	method: 'GET' | 'POST',
 	api: string,
 	data: any = {},
 	needs_authorization: boolean = true,

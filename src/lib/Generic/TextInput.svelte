@@ -11,7 +11,7 @@
 </script>
 
 <label class="w-full"
-				><p class="text-sm mb-1">{label}</p>
+				><p class="text-md mb-1">{label}</p>
 				<input
 					required={required}
 					use:typeAction

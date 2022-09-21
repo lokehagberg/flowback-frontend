@@ -12,7 +12,13 @@
 		{
 			id: 1,
 			profile_image: null,
-			username: '',
+			username: 'Loke',
+			tags: []
+		},
+		{
+			id: 2,
+			profile_image: null,
+			username: 'Emil',
 			tags: []
 		}
 	];
@@ -20,7 +26,7 @@
 	let tags: any[] = [];
 
 	onMount(async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
 		tags = json.results;
 		console.log(json.results);
 
@@ -50,6 +56,7 @@
 		delegate.tags.push(tag);
 
 		delegates = delegates;
+
 	};
 </script>
 
@@ -81,8 +88,8 @@
 					</div>
 
 					<div
-						class="absolute bg-white p-6 w-64 shadow rounded border border-gray-200 z-50 right-5"
-						class:invisible={selected !== delegate.id}
+						class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
+						class:hidden={selected !== delegate.id}
 					>
 						<h1 class="text-xl">Edit tags for {delegate.username}</h1>
 						<TextInput label="Search" />
@@ -90,7 +97,7 @@
 							{#each tags as tag}
 								<li class="w-full" on:click={() => changeDelegation(delegate, tag)}>
 									<Tag
-										{tag}
+										tag={tag.tag_name}
 										className={`cursor-pointer ${
 											delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'
 										}`}

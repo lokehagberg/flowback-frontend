@@ -27,5 +27,5 @@
 		class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
 	/>
 
-	<div class="mb-4 cursor-pointer hover:underline" on:click={() => (selectedPage = 'ForgotPassword')}>Forgor 💀 password?</div>
+	<div class="mb-4 cursor-pointer hover:underline" on:click={() => (selectedPage = 'ForgotPassword')}>Forgot password?</div>
 </form>

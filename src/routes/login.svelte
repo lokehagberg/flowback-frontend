@@ -6,6 +6,7 @@
 	import VerifyCard from '$lib/Login/Verify.svelte';
 	import NewPasswordCard from '$lib/Login/NewPassword.svelte';
 	import { onMount } from 'svelte';
+	import Logo from '$lib/assets/Logo.png';
 
 	let selectedPage = 'Login';
 
@@ -19,10 +20,10 @@
 </svelte:head>
 
 <div class="flex flex-col items-center">
-	<div class="mt-14">
-		<img src="Logo.png" class="w-44" alt="flowback logo" />
+	<div class="mt-6">
+		<img src={Logo} class="w-44" alt="flowback logo" />
 	</div>
-	<div class="bg-white w-4/5 sm:w-1/2 mt-14 rounded shadow-lg">
+	<div class="bg-white w-4/5 sm:w-1/2 mt-6 rounded shadow-lg">
 		<Tab bind:selectedPage tabs={['Login', 'Register']} />
 		<div class="">
 			{#if selectedPage === 'Login'}

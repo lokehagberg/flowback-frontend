@@ -20,6 +20,7 @@
 	});
 
 	const getTags = async () => {
+		console.log("here")
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
 		tags = json.results;
 	};

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
-	import type { Group } from 'src/routes/groups/interfaces';
+	import type { Group } from './interface';
 
 	export let group: Group;
 

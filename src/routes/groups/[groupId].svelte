@@ -2,7 +2,7 @@
 	import GroupHeader from '../../lib/Group/GroupHeader.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import type { SelectablePage } from '$lib/Group/interface';
+	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -15,30 +15,28 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 
-	interface GroupDetails {
-		active: boolean,
-		cover_image: string,
-		created_by: number,
-		default_permission: number | null,
-		description: string,
-		direct_join: boolean,
-		image: string,
-		jitsi_room: string,
-		name: string,
-		public: boolean
-	}
-
 	let selectedPage: SelectablePage = 'flow';
-	let group: GroupDetails | {} = {};
+	let group: GroupDetails = {
+		active: false,
+		cover_image: '',
+		created_by: 0,
+		default_permission: null,
+		description: '',
+		direct_join: false,
+		image: '',
+		jitsi_room: '',
+		name: '',
+		public: true
+	};
 
 	onMount(async () => {
-		const json = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
 	});
 </script>
 
 <Layout>
-	<GroupHeader bind:selectedPage />
+	<GroupHeader bind:selectedPage {group} />
 
 	<div class="flex justify-center mt-2 md:mt-16 gap-2 md:gap-16 mb-16">
 		<div class="w-2/3">
@@ -55,12 +53,12 @@
 			{:else if selectedPage === 'email'}
 				<SendEmail />
 			{:else if selectedPage === 'about'}
-				<About />
+				<About description={group.description} />
 			{:else if selectedPage === 'tags'}
 				<Tags />
 			{/if}
 		</div>
 
-		<GroupSidebar bind:selectedPage />
+		<GroupSidebar {group} bind:selectedPage />
 	</div>
 </Layout>

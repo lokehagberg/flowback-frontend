@@ -8,6 +8,7 @@
 	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import Logo from '$lib/assets/Logo.png';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
 	let sideHeaderOpen = false;
 </script>
@@ -32,9 +33,7 @@
 			class="inline-block float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-		<div class="bg-red-500 w-8 h-8 rounded-full" />
-			<!-- <div class="">name</div> -->
-		</div>
+		<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp"/>
 	</header>
 	{#if sideHeaderOpen}
 		<SideHeader />

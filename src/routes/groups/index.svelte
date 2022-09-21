@@ -2,8 +2,8 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import GroupThumbnail from '$lib/Group/GroupThumbnail.svelte';
+	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
-	import type { Group } from './interfaces'
 
 	let groupList: Group[] = [];
 

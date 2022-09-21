@@ -56,7 +56,6 @@
 		delegate.tags.push(tag);
 
 		delegates = delegates;
-
 	};
 </script>
 
@@ -86,7 +85,6 @@
 							<Fa icon={faPlus} size="2x" />
 						</div>
 					</div>
-
 					<div
 						class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 						class:hidden={selected !== delegate.id}
@@ -95,11 +93,11 @@
 						<TextInput label="Search" />
 						<ul class="mt-6 flex flex-col gap-6 items-center">
 							{#each tags as tag}
-								<li class="w-full" on:click={() => changeDelegation(delegate, tag)}>
+								<li class="w-full" on:click={() => changeDelegation(delegate, tag.tag_name)}>
 									<Tag
 										tag={tag.tag_name}
 										className={`cursor-pointer ${
-											delegate.tags.includes(tag) ? 'bg-blue-300' : 'bg-blue-600'
+											delegate.tags.includes(tag.tag_name) ? 'bg-blue-300' : 'bg-blue-600'
 										}`}
 									/>
 								</li>

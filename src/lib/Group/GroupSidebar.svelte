@@ -1,9 +1,10 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
-	import type { SelectablePage } from '$lib/Group/interface';
+	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
 	import { page } from '$app/stores';
 
 	export let selectedPage: SelectablePage = 'flow';
+	export let group:GroupDetails
 </script>
 
 <div>
@@ -18,7 +19,7 @@
 	<div class="bg-white shadow rounded flex flex-col mt-6">
 		<GroupSidebarButton action={() => (window.location.href = '/createpoll')} text="Create Poll" />
 		<GroupSidebarButton
-			action={() => (window.location.href = '/createpoll')}
+			action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}
 			text="Video Conference"
 		/>
 	</div>

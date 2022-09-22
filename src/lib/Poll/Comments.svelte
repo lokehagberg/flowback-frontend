@@ -2,6 +2,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	const sendComment = () => {};
 </script>
@@ -18,19 +19,18 @@
 	<div class="flex flex-col gap-4 mt-6">
 		<div class="border border-gray-400 p-4">
 			<div class="flex gap-3">
-				<div class="w-6 h-6 bg-red-600" />
+				<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp"/>
 				<div>Emil</div>
 			</div>
-			<div>I will tweet a racial slur</div>
-			<div class="flex"><HeaderIcon /> Reply</div>
+			<div>Bike paths are cool, based and epic!</div>
+			<!-- <div class="flex"><HeaderIcon /> Reply</div> -->
 		</div>
 		<div class="border border-gray-400 p-4 ml-4">
-			<div>Nerd</div>
-			<div>
-				Nooo don't do it you have a family and you're so sexy haha Lorem ipsum dolor sit amet
-				consectetur adipisicing elit. Unde quisquam minus vel non eaque, exercitationem, sapiente
-				animi cumque et officiis eveniet sequi hic velit excepturi ratione laudantium recusandae
-				reprehenderit consequatur?
+			<div class="flex gap-3">
+				<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp"/>
+				<div>Nerd</div>
+			</div>			<div>
+				I disagree
 			</div>
 		</div>
 	</div>

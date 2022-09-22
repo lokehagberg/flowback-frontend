@@ -6,7 +6,7 @@
 	export let group: GroupDetails;
 </script>
 
-<div class="relative">
+<div class="relative flex justify-center">
 	<img
 		class="h-56 cover"
 		src={`${import.meta.env.VITE_API}${group.cover_image}`}
@@ -28,7 +28,7 @@
 <style>
 	img.cover {
 		aspect-ratio: 4;
-		width: 100%;
+		/* width: 100%; */
 	}
 
 	img.profile {

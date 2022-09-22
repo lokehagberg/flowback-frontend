@@ -10,21 +10,21 @@
 
 	let proposals: proposal[] = [
 		{
-			title: 'Nuclear Option',
+			title: 'Massive Space Mirrors',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
 			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
 			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb loremjkb loremjkb loremjkb loremjkb loremjkb jksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lore HELLOOOOO`,
 			id: 1
 		},
 		{
-			title: 'Geothermal Power explosion',
+			title: 'A new Park',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
 			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
 			ut modi id iure minus amet.`,
 			id: 2
 		},
 		{
-			title: 'Evil Pollen',
+			title: 'A new bike path',
 			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
 			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
 			ut modi id iure minus amet.`,
@@ -121,12 +121,12 @@
 				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
 					<Proposal {...proposal}>
 						<div class="abstained-plus">
-							<div on:click={addToRanked}><Fa icon={faPlus} /></div>
+							<div on:click={addToRanked} class="cursor-pointer" ><Fa icon={faPlus} /></div>
 						</div>
 						<div class="ranking-arrows">
-							<div on:click={addToAbstained}><Fa icon={faMinus} /></div>
-							<div on:click={moveUp}><Fa icon={faArrowUp} /></div>
-							<div on:click={moveDown}><Fa icon={faArrowDown} /></div>
+							<div on:click={addToAbstained} class="cursor-pointer"><Fa icon={faMinus} /></div>
+							<div on:click={moveUp} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
+							<div on:click={moveDown} class="cursor-pointer"><Fa icon={faArrowDown} /></div>
 						</div>
 					</Proposal>
 				</li>

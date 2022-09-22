@@ -91,9 +91,9 @@
 					>
 						<h1 class="text-xl">Edit tags for {delegate.username}</h1>
 						<TextInput label="Search" />
-						<ul class="mt-6 flex flex-col gap-6 items-center">
+						<ul class="mt-6 flex flex-wrap items-center">
 							{#each tags as tag}
-								<li class="w-full" on:click={() => changeDelegation(delegate, tag.tag_name)}>
+								<li class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4" on:click={() => changeDelegation(delegate, tag.tag_name)}>
 									<Tag
 										tag={tag.tag_name}
 										className={`cursor-pointer ${

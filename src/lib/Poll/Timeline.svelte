@@ -4,7 +4,7 @@
 
 	export let displayDetails = true;
 
-	let dates = [new Date('2022-08-26'), new Date('2022-09-14'), new Date('2022-09-15'), new Date('2022-09-25')];
+	let dates = [new Date('2022-09-21'), new Date('2022-09-23'), new Date('2022-09-25'), new Date('2022-09-30')];
 	let date = new Date();
 	const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();

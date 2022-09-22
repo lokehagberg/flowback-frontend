@@ -10,13 +10,10 @@ import Timeline from "./Timeline.svelte";
 	href={onHoverGroup ? '/groups/1' : '/poll'}
 	>	
 	<h1 class="text-left text-3xl p-2 pl-0">
-		Vote to destroy Lithuania
+		How to prevent Co2 emissions in our county?
 	</h1>
 	<p class="mt-2">
-		I really think we should do it. Please click here to post ways to do it Lorem, ipsum dolor sit
-		amet consectetur adipisicing elit. Magnam nemo praesentium, dolore voluptatum adipisci quidem
-		enim at animi cum alias omnis. A at reiciendis quasi repellendus laudantium pariatur
-		reprehenderit eius?
+		It has come to our attention that global warming is getting worse and we need solutions now.
 	</p>
 	<Timeline displayDetails={false}/>
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
@@ -27,7 +24,7 @@ import Timeline from "./Timeline.svelte";
 			on:click={() => (window.location.href = '/groups/1')}
 			on:focus
 		>
-			We hate lithuania for no reason
+			Sigtuna County
 		</p>
 		<p>3 proposals</p>
 		<p>2 comments</p>

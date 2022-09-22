@@ -16,12 +16,16 @@ export async function fetchRequest(
 		data = JSON.stringify(data);
 	}
 
-	let toSend:RequestInit = {method, headers}
+	let toSend: RequestInit = { method, headers };
 
-	if (method !== "GET") toSend.body = data
+	if (method !== 'GET') toSend.body = data;
 
 	const res = await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
-	const json = await res.json()
 
-	return {res, json}
+	try {
+		const json = await res.json();
+		return { res, json };
+	} catch {
+		return { res };
+	}
 }

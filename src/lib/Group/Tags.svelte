@@ -22,7 +22,7 @@
 	const getTags = async () => {
 		console.log("here")
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		tags = json.results;
+		tags = json.results.sort((tag1:Tag, tag2:Tag) => tag1.tag_name.localeCompare(tag2.tag_name));
 	};
 
 	const addTag = async () => {
@@ -57,7 +57,7 @@
 		{#each tags as tag}
 			<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
 				<Tag tag={tag.tag_name} className={tag.active ? '' : 'bg-blue-200'} />
-				<div class="mt-2 w-full">
+				<div class="mt-2 w-full flex">
 					<ButtonPrimary className="bg-rose-500 w-1/2" action={() => removeTag(tag)}
 						>Delete</ButtonPrimary
 					>

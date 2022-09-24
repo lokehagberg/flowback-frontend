@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let delegates: Delegate[] = [];
 	let tags: any[] = [];
@@ -15,13 +16,48 @@
 		// createDelegationPool()
 		getDelegationPools();
 		getDelegators();
+		getTagList();
+		getDelegateRelations();
+
+		// const { json } = await fetchRequest(
+		// 	'POST',
+		// 	`group/${$page.params.groupId}/delegates/create`,
+		// 	{}
+		// );
 	});
+
+	const getDelegateRelations = async () => {
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
+		return json.results
+	};
+
+	const createDelegateRelations = async () => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
+			delegate_pool_id: 7,
+			tags: [1, 2]
+		});
+	};
+
+	const editDelegateRelations = async () => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/update`, {
+			delegate_pool_id: 7,
+			tags: [1,2]
+		});
+	};
+
+	const getTagList = async () => {
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
+
+		tags = json.results;
+	};
 
 	const getDelegationPools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?limit=100`
 		);
+
+		return json.results;
 		// delegates = json.results
 	};
 
@@ -30,19 +66,27 @@
 			'GET',
 			`group/${$page.params.groupId}/users?limit=100&delegate=true`
 		);
-		
+
+		const delegatePools = await getDelegationPools();
+		const delegateRelations = await getDelegateRelations();
 		const _delegates: any = [];
 
 		for (let i = 0; i < json.results.length; i++) {
 			const delegate = json.results[i];
-			_delegates[i] = {
-				id: delegate.id,
-				profile_image: delegate.profile_image,
-				username: delegate.username,
-				tags: []
-			};
+
+			const tags = delegateRelations.find((delegateRelation:any) => delegateRelation.delegates[0].user_id === delegate.id)?.tags
+			console.log(tags, "TAGS")
+			// const tags = delegateRelations.find(element => )
+
+			if (delegate.delegate)
+				_delegates[i] = {
+					id: delegate.id,
+					profile_image: delegate.profile_image,
+					username: delegate.username || '',
+					tags:tags || []
+				};
 		}
-		delegates = _delegates;
+		delegates = _delegates.filter((element: any) => Object.keys(element).length !== 0);
 	};
 
 	const createDelegationPool = async () => {
@@ -56,7 +100,7 @@
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
-	const changeDelegation = (delegate: any, tag: string) => {
+	const changeDelegation = (delegate: any, tag: {tag_name:string, id:number}) => {
 		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
 
 		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag !== tag);
@@ -66,12 +110,12 @@
 		}
 
 		delegate.tags.push(tag);
-
 		delegates = delegates;
 	};
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">
+	<ButtonPrimary action={editDelegateRelations}>Save Changes</ButtonPrimary>
 	{#if delegates.length !== 0}
 		<ul class="w-full">
 			{#each delegates as delegate}
@@ -85,7 +129,7 @@
 					<div class="flex items-center">
 						<div class="flex gap-2 flex-wrap mt-4">
 							{#each delegate.tags as tag}
-								<Tag {tag} />
+								<Tag tag={tag.tag_name} />
 							{/each}
 						</div>
 						<div
@@ -126,7 +170,6 @@
 </div>
 
 <!-- Reminder: Delegate by searching for their ID in the user list and then use that ID to search for it in the delegate pool list -->
-
 <style>
 	.faPlus {
 		transition: transform 400ms cubic-bezier(0.075, 0.82, 0.165, 1);

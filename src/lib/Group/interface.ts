@@ -31,7 +31,7 @@ export interface Delegate {
 	id: number;
 	profile_image: File;
 	username: string;
-	tags: string[];
+	tags: {id:number, tag_name:string}[];
 }
 
 export interface Group {

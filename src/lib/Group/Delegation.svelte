@@ -1,6 +1,7 @@
 <script lang="ts">
 	//Code is not very good in this file, refactoring from scratch needed
-	//that also incorporates new feature such as delegation pools.
+	//that incorporates new feature such as delegation pools.
+	//Design in Figma should be done first
 
 	import Tag from './Tag.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -13,14 +14,15 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let delegates: Delegate[] = [];
+	let oldDelegation: Delegate[] = [];
 	let tags: any[] = [];
 
 	onMount(async () => {
 		// createDelegationPool()
-		getDelegationPools();
-		getDelegators();
-		getTagList();
-		getDelegateRelations();
+		// getDelegationPools();
+		setDelegators();
+		setTagList();
+		// getDelegateRelations();
 
 		// const { json } = await fetchRequest(
 		// 	'POST',
@@ -29,29 +31,35 @@
 		// );
 	});
 
-	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
-		return json.results
+	const saveDelegation = async () => {
+		console.log(delegates, 'NEW DELEGATIONS');
+		console.log(oldDelegation, 'OLD DELEGATIONS');
+		editDelegateRelations();
 	};
 
-	const createDelegateRelations = async () => {
+	const getDelegateRelations = async () => {
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
+		return json.results;
+	};
+
+	const createDelegateRelation = async () => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
-			delegate_pool_id: 7,
-			tags: [1, 2]
+			delegate_pool_id: 2,
+			tags: [1]
 		});
 	};
 
 	const editDelegateRelations = async () => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/update`, {
-			delegate_pool_id: 7,
-			tags: [1,2]
+			delegate_pool_id: 1,
+			tags: [2]
 		});
 	};
 
-	const getTagList = async () => {
+	const setTagList = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-
-		tags = json.results;
+		tags = json.results.map(({ active, ...args }: any) => args);
+		console.log(tags);
 	};
 
 	const getDelegationPools = async () => {
@@ -64,32 +72,38 @@
 		// delegates = json.results
 	};
 
-	const getDelegators = async () => {
+	const setDelegators = async () => {
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/users?limit=100&delegate=true`
 		);
 
-		const delegatePools = await getDelegationPools();
+		// const delegatePools = await getDelegationPools();
 		const delegateRelations = await getDelegateRelations();
 		const _delegates: any = [];
 
+		console.log(delegateRelations);
+		// console.log(delegateRelations[1].delegates[0].user_id, "TAGS")
 		for (let i = 0; i < json.results.length; i++) {
 			const delegate = json.results[i];
 
-			const tags = delegateRelations.find((delegateRelation:any) => delegateRelation.delegates[0].user_id === delegate.id)?.tags
-			console.log(tags, "TAGS")
+			const tags = delegateRelations.find(
+				(delegateRelation: any) => delegateRelation.delegates[0].group_user_id === delegate.id
+			)?.tags;
 			// const tags = delegateRelations.find(element => )
-
 			if (delegate.delegate)
 				_delegates[i] = {
 					id: delegate.id,
 					profile_image: delegate.profile_image,
 					username: delegate.username || '',
-					tags:tags || []
+					tags: tags || []
 				};
 		}
+
+		//If a user is not a delegate it will be empty in _delegates, this clears those empty delegates
 		delegates = _delegates.filter((element: any) => Object.keys(element).length !== 0);
+
+
 	};
 
 	const createDelegationPool = async () => {
@@ -103,10 +117,13 @@
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
-	const changeDelegation = (delegate: any, tag: {tag_name:string, id:number}) => {
-		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
+	const changeDelegation = (delegate: any, tag: { tag_name: string; id: number }) => {
+		const delegateOld = delegates.find((delegate) =>
+			delegate.tags.find((_tag) => _tag.id === tag.id)
+		);
 
-		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag !== tag);
+		console.log(delegates);
+		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag.id !== tag.id);
 		if (delegateOld?.id === delegate.id) {
 			delegates = delegates;
 			return;
@@ -118,7 +135,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">
-	<ButtonPrimary action={editDelegateRelations}>Save Changes</ButtonPrimary>
+	<ButtonPrimary action={saveDelegation}>Save Changes</ButtonPrimary>
 	{#if delegates.length !== 0}
 		<ul class="w-full">
 			{#each delegates as delegate}
@@ -154,12 +171,14 @@
 							{#each tags as tag}
 								<li
 									class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4"
-									on:click={() => changeDelegation(delegate, tag.tag_name)}
+									on:click={() => changeDelegation(delegate, tag)}
 								>
 									<Tag
 										tag={tag.tag_name}
 										className={`cursor-pointer ${
-											delegate.tags.includes(tag.tag_name) ? 'bg-blue-300' : 'bg-blue-600'
+											delegate.tags.find((_tag) => _tag.id === tag.id)
+												? 'bg-blue-300'
+												: 'bg-blue-600'
 										}`}
 									/>
 								</li>

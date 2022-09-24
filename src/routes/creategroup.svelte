@@ -41,8 +41,14 @@
 	//This page also supports the edit of groups
 	const groupToEdit = $page.url.searchParams.get('group');
 
-	const deleteGroup = () => {
-		fetchRequest('POST', `group/${groupToEdit}/delete`);
+	const deleteGroup = async () => {
+		const {res} = await fetchRequest('POST', `group/${groupToEdit}/delete`);
+		
+		//Rederict to group
+		console.log(res)
+		if (res.ok){
+			// window.location.href = ''
+		}
 	};
 
 	onMount(() => {

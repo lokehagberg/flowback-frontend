@@ -1,52 +1,65 @@
 <script lang="ts">
 	import Tag from './Tag.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { Delegate } from './interface';
+	import type { Delegate, DelegatePools } from './interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 
-	let delegates: Delegate[] = [
-		{
-			id: 1,
-			profile_image: null,
-			username: 'Loke',
-			tags: []
-		},
-		{
-			id: 2,
-			profile_image: null,
-			username: 'Emil',
-			tags: []
-		}
-	];
-
+	let delegates: Delegate[] = [];
 	let tags: any[] = [];
 
 	onMount(async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		tags = json.results;
-		console.log(json.results);
-
-		// const {json} = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=50`);
-		// delegates = json.results;
-
-		// fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {delegate:false});
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
-			delegate: 1,
-			tags: [1]
-		});
+		// createDelegationPool()
+		getDelegationPools();
+		getDelegators();
 	});
+
+	const getDelegationPools = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?limit=100`
+		);
+		// delegates = json.results
+	};
+
+	const getDelegators = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=100&delegate=true`
+		);
+		
+		const _delegates: any = [];
+
+		for (let i = 0; i < json.results.length; i++) {
+			const delegate = json.results[i];
+			_delegates[i] = {
+				id: delegate.id,
+				profile_image: delegate.profile_image,
+				username: delegate.username,
+				tags: []
+			};
+		}
+		delegates = _delegates;
+	};
+
+	const createDelegationPool = async () => {
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`, {});
+	};
+
+	const deleteDelegationPool = async () => {
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/delete`, {});
+	};
 
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
-	const changeDelegation = (delegate: Delegate, tag: string) => {
+	const changeDelegation = (delegate: any, tag: string) => {
 		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
 
-		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag) => _tag !== tag);
+		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag !== tag);
 		if (delegateOld?.id === delegate.id) {
 			delegates = delegates;
 			return;
@@ -111,6 +124,8 @@
 		</ul>
 	{/if}
 </div>
+
+<!-- Reminder: Delegate by searching for their ID in the user list and then use that ID to search for it in the delegate pool list -->
 
 <style>
 	.faPlus {

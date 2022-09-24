@@ -15,7 +15,7 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 
-	let selectedPage: SelectablePage = 'members';
+	let selectedPage: SelectablePage = 'delegation';
 	let group: GroupDetails = {
 		active: false,
 		cover_image: '',

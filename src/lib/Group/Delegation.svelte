@@ -1,4 +1,7 @@
 <script lang="ts">
+	//Code is not very good in this file, refactoring from scratch needed
+	//that also incorporates new feature such as delegation pools.
+
 	import Tag from './Tag.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Delegate, DelegatePools } from './interface';

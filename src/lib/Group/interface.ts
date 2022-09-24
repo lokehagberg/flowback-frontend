@@ -8,13 +8,13 @@ export type SelectablePage =
 	| 'delegation'
 	| 'tags';
 
-export interface user {
+export interface User {
 	username: string;
 	id: number;
 	profile_image: null;
 }
 
-export interface delegate extends user {
+export interface Delegate extends User {
 	tags: string[];
 }
 
@@ -42,3 +42,5 @@ export 	interface GroupDetails {
     name: string,
     public: boolean
 }
+
+export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite'

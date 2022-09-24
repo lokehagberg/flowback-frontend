@@ -3,6 +3,7 @@
     export let label: string
 	export let type = "text"
 	export let required = false;
+	export let onInput = () => {}
 
 	//Wait what is this?!
 	function typeAction(node:{type:string}){
@@ -17,5 +18,6 @@
 					use:typeAction
 					bind:value
 					class="border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none"
+					on:input={onInput}
 				/></label
 			>

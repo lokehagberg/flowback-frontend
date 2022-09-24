@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Tag from './Tag.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { delegate } from './interface';
+	import type { Delegate } from './interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 
-	let delegates: delegate[] = [
+	let delegates: Delegate[] = [
 		{
 			id: 1,
 			profile_image: null,
@@ -43,11 +43,10 @@
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
-	const changeDelegation = (delegate: delegate, tag: string) => {
+	const changeDelegation = (delegate: Delegate, tag: string) => {
 		const delegateOld = delegates.find((delegate) => delegate.tags.includes(tag));
 
 		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag) => _tag !== tag);
-
 		if (delegateOld?.id === delegate.id) {
 			delegates = delegates;
 			return;
@@ -93,7 +92,10 @@
 						<TextInput label="Search" />
 						<ul class="mt-6 flex flex-wrap items-center">
 							{#each tags as tag}
-								<li class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4" on:click={() => changeDelegation(delegate, tag.tag_name)}>
+								<li
+									class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4"
+									on:click={() => changeDelegation(delegate, tag.tag_name)}
+								>
 									<Tag
 										tag={tag.tag_name}
 										className={`cursor-pointer ${

@@ -11,7 +11,7 @@
 	import All from './All.svelte';
 	import { onMount } from 'svelte';
 
-	let selectedPage: 'All' | 'Selected' = 'All';
+	let selectedPage: 'All' | 'Selected' = 'Selected';
 
 	const createDelegationPool = async () => {
 		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`, {});

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ButtonPrimary from "$lib/Generic/ButtonPrimary.svelte";
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
@@ -32,14 +32,14 @@
 		searchedUsers = json.results;
 	};
 
-	$: if (selectedPage === "Invite") searchUsers("")
+	$: if (selectedPage === 'Invite') searchUsers('');
 </script>
 
 <Loader bind:loading />
 <div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded">
 	<Tab bind:selectedPage tabs={['Members', 'Invite']} />
-	{#if selectedPage === 'Members'}
-		{#if users.length !== 0}
+	{#if selectedPage === 'Members' && users.length > 0}
+		<div class="w-full p-6 flex flex-col gap-6">
 			{#each users as user}
 				<a
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
@@ -49,35 +49,33 @@
 					<div class="w-64 ml-10 hover:underline">{user.username}</div>
 				</a>
 			{/each}
-		{/if}
-	{:else if selectedPage === 'Pending Invites'}
-		{#if users.length !== 0}
-			{#each users as user}
-				<a
-					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
-					href={`/user?id=${user.id}`}
-				>
-					<div class="bg-red-500 w-10 h-10" />
-					<div class="w-64 ml-10 hover">{user.username}</div>
-					<div class="w-64 ml-10 hover:underline">ACCEPT</div>
-				</a>
-			{/each}
-		{/if}
+		</div>
+	{:else if selectedPage === 'Pending Invites' && users.length > 0}
+		{#each users as user}
+			<a
+				class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
+				href={`/user?id=${user.id}`}
+			>
+				<div class="bg-red-500 w-10 h-10" />
+				<div class="w-64 ml-10 hover">{user.username}</div>
+				<div class="w-64 ml-10 hover:underline">ACCEPT</div>
+			</a>
+		{/each}
 	{:else if selectedPage === 'Invite'}
 		<div class="w-full p-6">
 			<TextInput
 				onInput={() => searchUsers(searchUser)}
 				bind:value={searchUser}
-				label="user to invite"
+				label="User to invite"
 			/>
 			<ul>
 				{#each searchedUsers as searchedUser}
-					<li
-						class="text-black flex bg-white p-2 w-full mt-6"
-					>
+					<li class="text-black flex bg-white p-2 w-full mt-6">
 						<div class="bg-red-500 w-10 h-10" />
 						<div class="w-64 ml-10">{searchedUser.username}</div>
-						<ButtonPrimary className={"w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800"}>INVITE</ButtonPrimary>
+						<ButtonPrimary className={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
+							>INVITE</ButtonPrimary
+						>
 					</li>
 				{/each}
 			</ul>

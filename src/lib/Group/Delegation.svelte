@@ -41,10 +41,11 @@
 
 			const delegateTagIds = delegate.tags.map((tag) => tag.id);
 
-			if (delegateTagIds.length === 0) return;
+			if (lastSavedRelation && lastSavedRelation.tags.length > 0 && delegateTagIds.length === 0)
+				deleteDelegateRelation(delegate.pool_id);
 
-			console.log(lastSavedRelation)
-			if (lastSavedRelation === undefined)
+			console.log(lastSavedRelation, 'LAST SAVED');
+			if (lastSavedRelation?.tags.length === 0 && delegateTagIds.length > 0)
 				createDelegateRelation(delegate.pool_id, delegateTagIds);
 			else editDelegateRelation(delegate.pool_id, delegateTagIds);
 		});
@@ -66,6 +67,12 @@
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/update`, {
 			delegate_pool_id,
 			tags
+		});
+	};
+
+	const deleteDelegateRelation = async (id: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/delete`, {
+			id
 		});
 	};
 
@@ -93,9 +100,9 @@
 
 		// const delegatePools = await getDelegationPools();
 		const delegateRelations = await getDelegateRelations();
+		const delegatePools = await getDelegationPools();
 		const _delegates: any = [];
 
-		console.log(delegateRelations);
 		// console.log(delegateRelations[1].delegates[0].user_id, "TAGS")
 		for (let i = 0; i < json.results.length; i++) {
 			const delegate = json.results[i];
@@ -103,8 +110,10 @@
 			const delegateRelation = delegateRelations.find(
 				(delegateRelation: any) => delegateRelation.delegates[0].group_user_id === delegate.id
 			);
-			const tags = delegateRelation?.tags
-			const pool_id = delegateRelation?.delegate_pool_id
+			const tags = delegateRelation?.tags;
+			const pool_id = delegatePools.find(
+				(pool: any) => pool.delegates[0].user_id === delegate.user_id
+			).id;
 			// const tags = delegateRelations.find(element => )
 			if (delegate.delegate)
 				_delegates[i] = {

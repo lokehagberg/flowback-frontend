@@ -12,6 +12,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import { copyObject } from '$lib/Generic/GenericFunctions';
 
 	let delegates: Delegate[] = [];
 	let oldDelegation: Delegate[] = [];
@@ -34,7 +35,19 @@
 	const saveDelegation = async () => {
 		console.log(delegates, 'NEW DELEGATIONS');
 		console.log(oldDelegation, 'OLD DELEGATIONS');
-		editDelegateRelations();
+
+		delegates.forEach((delegate) => {
+			const lastSavedRelation = oldDelegation.find((oldDelegate) => oldDelegate.id === delegate.id);
+
+			const delegateTagIds = delegate.tags.map((tag) => tag.id);
+
+			if (delegateTagIds.length === 0) return;
+
+			console.log(lastSavedRelation)
+			if (lastSavedRelation === undefined)
+				createDelegateRelation(delegate.pool_id, delegateTagIds);
+			else editDelegateRelation(delegate.pool_id, delegateTagIds);
+		});
 	};
 
 	const getDelegateRelations = async () => {
@@ -42,17 +55,17 @@
 		return json.results;
 	};
 
-	const createDelegateRelation = async () => {
+	const createDelegateRelation = async (delegate_pool_id: number, tags: number[]) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
-			delegate_pool_id: 2,
-			tags: [1]
+			delegate_pool_id,
+			tags
 		});
 	};
 
-	const editDelegateRelations = async () => {
+	const editDelegateRelation = async (delegate_pool_id: number, tags: number[]) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/update`, {
-			delegate_pool_id: 1,
-			tags: [2]
+			delegate_pool_id,
+			tags
 		});
 	};
 
@@ -87,13 +100,16 @@
 		for (let i = 0; i < json.results.length; i++) {
 			const delegate = json.results[i];
 
-			const tags = delegateRelations.find(
+			const delegateRelation = delegateRelations.find(
 				(delegateRelation: any) => delegateRelation.delegates[0].group_user_id === delegate.id
-			)?.tags;
+			);
+			const tags = delegateRelation?.tags
+			const pool_id = delegateRelation?.delegate_pool_id
 			// const tags = delegateRelations.find(element => )
 			if (delegate.delegate)
 				_delegates[i] = {
 					id: delegate.id,
+					pool_id,
 					profile_image: delegate.profile_image,
 					username: delegate.username || '',
 					tags: tags || []
@@ -102,8 +118,7 @@
 
 		//If a user is not a delegate it will be empty in _delegates, this clears those empty delegates
 		delegates = _delegates.filter((element: any) => Object.keys(element).length !== 0);
-
-
+		if (oldDelegation.length === 0) oldDelegation = copyObject(delegates);
 	};
 
 	const createDelegationPool = async () => {

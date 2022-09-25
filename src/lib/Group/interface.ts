@@ -29,6 +29,7 @@ export interface DelegatePools {
 
 export interface Delegate {
 	id: number;
+	pool_id:number;
 	profile_image: File;
 	username: string;
 	tags: {id:number, tag_name:string}[];

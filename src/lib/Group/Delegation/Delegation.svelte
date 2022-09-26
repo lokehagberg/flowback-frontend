@@ -5,21 +5,11 @@
 	//that incorporates new feature such as delegation pools.
 	//Design in Figma should be done first
 
-	import { fetchRequest } from '$lib/FetchRequest';
-	import { page } from '$app/stores';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';
 	import { onMount } from 'svelte';
 
 	let selectedPage: 'All' | 'Selected' = 'Selected';
-
-	const createDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`, {});
-	};
-
-	const deleteDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/delete`, {});
-	};
 
 	onMount(() => {
 		// createDelegationPool()

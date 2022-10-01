@@ -1,16 +1,19 @@
 <script lang="ts">
-	let error: string | null = null;
-	export let status: number;
-    export let Class:string = ""
+	export let Class: string = '';
 
-	$: {
-		if (status === 400) error = 'Unable to Login with provided credentials';
-		else if (status === 500) error = 'Server Error';
-	}
+	let error: string | null;
+	export let status: number = 0;
+	export let statusMessages: Record<number, string | null> = {
+		0: null,
+		400: 'You sent the wrong data',
+		500: 'Server Error'
+	};
+
+	$: error = statusMessages[status];
 </script>
 
-{#if error !== null}
-	<div class={`border border-red-500 w-full pt-2 pb-2 text-center rounded${Class}`}>
+{#if error !== null && error !== undefined}
+	<div class={`border border-red-500 w-full pt-2 pb-2 text-center rounded ${Class}`}>
 		{error}
 	</div>
 {/if}

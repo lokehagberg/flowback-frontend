@@ -5,7 +5,7 @@
 
 	let username: string;
 	let password: string;
-	let status:number;
+	let status: number;
 
 	export let selectedPage: string;
 
@@ -13,7 +13,7 @@
 		e.preventDefault();
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 
-		status = res.status
+		status = res.status;
 
 		if (json.token) {
 			localStorage.setItem('token', json.token);
@@ -23,9 +23,8 @@
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
+	<Error bind:status />
 
-	<Error bind:status={status}/>
-	
 	<TextInput label={'Email'} bind:value={username} required={true} />
 	<TextInput label={'Password'} bind:value={password} type={'password'} required={true} />
 

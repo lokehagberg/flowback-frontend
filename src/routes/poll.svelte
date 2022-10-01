@@ -18,7 +18,7 @@
 		It has come to our attention that global warming is getting worse and we need solutions now.
 
 		<div class="italic mt-4">Sigtuna County</div>
-		<Tag className="w-32 mb-4 mt-4" tag={"Environment"}/>
+		<Tag Class="w-32 mb-4 mt-4" tag={"Environment"}/>
 		<ProposalsRanked />
 		<Timeline />
 		<Comments />

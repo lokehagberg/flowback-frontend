@@ -13,7 +13,7 @@
 		<TextArea label="Comment" required={true}/>
 		<!-- <textarea></textarea> -->
 		<!-- <TextArea type="field" label="Comment" /> -->
-		<ButtonPrimary className="mt-4" type="submit">Submit</ButtonPrimary>
+		<ButtonPrimary Class="mt-4" type="submit">Submit</ButtonPrimary>
 	</form>
 
 	<div class="flex flex-col gap-4 mt-6">

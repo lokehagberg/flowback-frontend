@@ -7,6 +7,6 @@ import TextInput from "$lib/Generic/TextInput.svelte";
     <form on:submit|preventDefault={() => {console.log("test")}} class="flex flex-col gap-4">
         <TextInput label="Title" />
         <TextInput label="Post" />
-        <ButtonPrimary type="submit" className="mt-4"/>
+        <ButtonPrimary type="submit" Class="mt-4"/>
     </form>
 </div>

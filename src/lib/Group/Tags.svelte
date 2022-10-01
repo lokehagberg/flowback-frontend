@@ -51,17 +51,17 @@
 <div class="bg-white rounded shadow p-6">
 	<form on:submit|preventDefault={addTag} class="p-3">
 		<TextInput label="Add tag" bind:value={tagToAdd} />
-		<ButtonPrimary type="submit" className="mt-2" />
+		<ButtonPrimary type="submit" Class="mt-2" />
 	</form>
 	<div class="flex flex-wrap mt-2">
 		{#each tags as tag}
 			<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
-				<Tag tag={tag.tag_name} className={tag.active ? '' : 'bg-blue-200'} />
+				<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
 				<div class="mt-2 w-full flex">
-					<ButtonPrimary className="bg-rose-500 w-1/2" action={() => removeTag(tag)}
+					<ButtonPrimary Class="bg-rose-500 w-1/2" action={() => removeTag(tag)}
 						>Delete</ButtonPrimary
 					>
-					<ButtonPrimary className="bg-purple-500 w-1/2" action={() => editTag(tag)}
+					<ButtonPrimary Class="bg-purple-500 w-1/2" action={() => editTag(tag)}
 						>{tag.active ? 'Disable' : 'Activate'}</ButtonPrimary
 					>
 				</div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let action = () => {},
-		className = '',
+		Class = '',
 		buttonStyle: buttonstyles = 'primary',
 		type: buttontypes = 'default',
 		disabled = false;
@@ -12,7 +12,7 @@
 {#if type === 'default'}
 	<div
 		on:click|preventDefault={action}
-		class={`text-center bg-blue-600 inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${className}`}
+		class={`text-center bg-blue-600 inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
 		class:bg-gray-300={disabled}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
@@ -22,7 +22,7 @@
 {:else if type === 'submit'}
 	<input
 		type="submit"
-		class={`text-center inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${className}`}
+		class={`text-center inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
 	/>

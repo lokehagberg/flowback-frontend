@@ -73,7 +73,7 @@
 					<li class="text-black flex bg-white p-2 w-full mt-6">
 						<div class="bg-red-500 w-10 h-10" />
 						<div class="w-64 ml-10">{searchedUser.username}</div>
-						<ButtonPrimary className={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
+						<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
 							>INVITE</ButtonPrimary
 						>
 					</li>

@@ -148,7 +148,7 @@
 							>
 								<Tag
 									tag={tag.tag_name}
-									className={`cursor-pointer ${
+									Class={`cursor-pointer ${
 										delegate.tags.find((_tag) => _tag.id === tag.id) ? 'bg-blue-300' : 'bg-blue-600'
 									}`}
 								/>
@@ -159,7 +159,7 @@
 			</li>
 		{/each}
 	</ul>
-	<ButtonPrimary className="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}>Save Changes</ButtonPrimary>
+	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}>Save Changes</ButtonPrimary>
 {:else}
 <div>No Delegates selected</div>
 {/if}

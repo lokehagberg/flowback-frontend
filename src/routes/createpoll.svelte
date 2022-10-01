@@ -60,7 +60,7 @@
 			{/if}
 			<ButtonPrimary
 				type="submit"
-				className={disabled.includes(polltype) || disabled.includes(timetype)
+				Class={disabled.includes(polltype) || disabled.includes(timetype)
 					? 'bg-gray-400'
 					: 'bg-blue-600'}>Create Poll</ButtonPrimary
 			>
@@ -78,7 +78,7 @@
 				<div class="flex flex-col gap-6 mt-12">
 					{#each timeTypes as timetype_type}
 						<ButtonPrimary
-							className={timetype === timetype_type ? 'bg-purple-600' : 'bg-purple-300'}
+							Class={timetype === timetype_type ? 'bg-purple-600' : 'bg-purple-300'}
 							action={() => (timetype = timetype_type)}>{timetype_type}</ButtonPrimary
 						>
 					{/each}

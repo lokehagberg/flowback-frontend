@@ -4,7 +4,7 @@
 	export let icon = faCircle;
 	export let text = 'icon';
 	export let href = '/';
-	export let className = '';
+	export let Class = '';
 	export let color = '';
 	export let size = 'xl';
 
@@ -21,7 +21,7 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	href={'/' + href}
-	class={`p-4 relative cursor-pointer ${className}`}
+	class={`p-4 relative cursor-pointer ${Class}`}
 >
 	<div on:load={checkIfSelected}>
 		<Fa

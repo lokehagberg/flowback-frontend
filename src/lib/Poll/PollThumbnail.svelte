@@ -1,6 +1,13 @@
 <script lang="ts">
-import Timeline from "./Timeline.svelte";
+	import Timeline from './Timeline.svelte';
+	import type {poll} from './interface'
+	import { onMount } from 'svelte';
+	import About from '$lib/Group/About.svelte';
 
+	export let poll:poll;
+	onMount(() => {
+		console.log(poll)
+	})
 	let onHoverGroup = false;
 </script>
 
@@ -8,14 +15,12 @@ import Timeline from "./Timeline.svelte";
 <a
 	class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail"
 	href={onHoverGroup ? '/groups/1' : '/poll'}
-	>	
-	<h1 class="text-left text-3xl p-2 pl-0">
-		How to prevent Co2 emissions in our county?
-	</h1>
+>
+	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<p class="mt-2">
-		It has come to our attention that global warming is getting worse and we need solutions now.
+		{poll.description}
 	</p>
-	<Timeline displayDetails={false}/>
+	<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayDetails={false} />
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p
 			class="hover:underline"
@@ -24,10 +29,7 @@ import Timeline from "./Timeline.svelte";
 			on:click={() => (window.location.href = '/groups/1')}
 			on:focus
 		>
-			Sigtuna County
 		</p>
-		<p>3 proposals</p>
-		<p>2 comments</p>
 	</div>
 </a>
 

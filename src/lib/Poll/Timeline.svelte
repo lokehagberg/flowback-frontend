@@ -3,8 +3,8 @@
 	import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
 
 	export let displayDetails = true;
-
-	let dates = [new Date('2022-09-21'), new Date('2022-09-23'), new Date('2022-09-25'), new Date('2022-09-30')];
+	export let dates = [new Date('2022-09-21'), new Date('2022-09-23'), new Date('2022-09-25'), new Date('2022-09-30')];
+	
 	let date = new Date();
 	const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();

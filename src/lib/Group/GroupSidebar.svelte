@@ -17,7 +17,7 @@
 		<GroupSidebarButton action={() => (selectedPage = 'about')} text="About" />
 	</div>
 	<div class="bg-white shadow rounded flex flex-col mt-6">
-		<GroupSidebarButton action={() => (window.location.href = '/createpoll')} text="Create Poll" />
+		<GroupSidebarButton action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)} text="Create Poll" />
 		<GroupSidebarButton
 			action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}
 			text="Video Conference"

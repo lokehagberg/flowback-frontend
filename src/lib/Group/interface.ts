@@ -58,6 +58,7 @@ export interface GroupDetails {
 	jitsi_room: string;
 	name: string;
 	public: boolean;
+	id:number
 }
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';

@@ -26,7 +26,8 @@
 		image: '',
 		jitsi_room: '',
 		name: '',
-		public: true
+		public: true,
+		id: 0
 	};
 
 	onMount(async () => {

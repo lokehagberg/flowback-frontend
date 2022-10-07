@@ -1,5 +1,5 @@
 <script lang="ts">
-	import GroupHeader from '../../lib/Group/GroupHeader.svelte';
+	import GroupHeader from '$lib/Group/GroupHeader.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
 	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';

@@ -1,20 +1,20 @@
 <script lang="ts">
 	import Timeline from './Timeline.svelte';
-	import type {poll} from './interface'
+	import type { poll } from './interface';
 	import { onMount } from 'svelte';
-	import About from '$lib/Group/About.svelte';
+	import {page} from '$app/stores'
 
-	export let poll:poll;
+	export let poll: poll;
 	onMount(() => {
-		console.log(poll)
-	})
+		console.log(poll);
+	});
 	let onHoverGroup = false;
 </script>
 
 <!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
 <a
 	class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail"
-	href={onHoverGroup ? '/groups/1' : '/poll'}
+	href={onHoverGroup ? '/groups/1' : `${$page.params.groupId}/polls/${poll.id}`}
 >
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<p class="mt-2">
@@ -28,8 +28,7 @@
 			on:mouseleave={() => (onHoverGroup = false)}
 			on:click={() => (window.location.href = '/groups/1')}
 			on:focus
-		>
-		</p>
+		/>
 	</div>
 </a>
 

@@ -48,9 +48,9 @@
 	let description = ""
 	let title = ""
 
-	const createPoll = () => {
+	const createPoll = async () => {
 		console.log('poll created!');
-		fetchRequest('POST', `group/${groupId}/poll/create`, {
+		const { res, json} = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
 			start_date: new Date(),
@@ -59,6 +59,8 @@
 			tag: 1,
 			dynamic:false
 		})
+		console.log(res)
+		console.log(json)
 	};
 
 

@@ -9,13 +9,13 @@
 </script>
 
 <div
-	class="select-none hover:shadow-2xl proposal cursor-move flex items-center bg-white gap-8 p-4 border border-gray-200 lg:h-60 xl:h-40"
+	class="select-none hover:shadow-2xl proposal cursor-move flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 lg:h-60 xl:h-40"
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
 >
 	<div><Fa icon={faBars} /></div>
-	<div class="h-full">
+	<div class="h-full w-2/3">
 		<h1 class="text-lg text-left">{title}</h1>
 		<p class="elipsis text-sm mt-2">
 			{description}

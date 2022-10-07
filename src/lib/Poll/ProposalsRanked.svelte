@@ -11,6 +11,7 @@
 	import { page } from '$app/stores';
 
 	let proposals: proposal[] = [];
+	export let votings:number[];
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/

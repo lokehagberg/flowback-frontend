@@ -22,7 +22,7 @@
 
 <form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">Create a Proposal</h1>
-	<TextInput label="Title" />
-	<TextArea Class="mt-4" label="Description" />
+	<TextInput label="Title" bind:value={title}/>
+	<TextArea Class="mt-4" label="Description" bind:value={description}/>
 	<ButtonPrimary type="submit" />
 </form>

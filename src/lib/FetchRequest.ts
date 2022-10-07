@@ -5,7 +5,7 @@ export async function fetchRequest(
 	needs_authorization: boolean = true,
 	needs_json: boolean = true
 ) {
-	console.log(data);
+	// console.log(data);
 	let headers: any = {};
 
 	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');

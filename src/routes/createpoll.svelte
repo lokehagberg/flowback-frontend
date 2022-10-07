@@ -4,6 +4,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
@@ -72,7 +73,7 @@
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a poll</h1>
 			<TextInput label="Title" bind:value={title}/>
-			<TextInput label="Description" bind:value={description}/>
+			<TextArea label="Description" bind:value={description}/>
 			{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 				This polltype is not implemented yet
 			{/if}

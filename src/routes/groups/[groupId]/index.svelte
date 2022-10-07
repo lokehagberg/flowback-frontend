@@ -15,7 +15,7 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 
-	let selectedPage: SelectablePage = 'delegation';
+	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
 		active: false,
 		cover_image: '',

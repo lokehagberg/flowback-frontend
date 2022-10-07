@@ -3,11 +3,16 @@
 	import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
 
 	export let displayDetails = true;
-	export let dates = [new Date('2022-09-21'), new Date('2022-09-23'), new Date('2022-09-25'), new Date('2022-09-30')];
-	
+	export let dates = [
+		new Date('2022-09-21'),
+		new Date('2022-09-23'),
+		new Date('2022-09-25'),
+		new Date('2022-09-30')
+	];
+
 	let date = new Date();
 	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
-	const dateLabels = ["Start", "End"]
+	const dateLabels = ['Start', 'End'];
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	const toNowTime = date.getTime() - dates[0].getTime();
@@ -25,7 +30,12 @@
 	<div class="h-6">
 		{#each datePlacement as date, i}
 			<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
-				<HeaderIcon size="1.5x" text={`${dateLabels[i]} date: ${dates[i]}`} icon={faExclamationCircle} color={`${dates[i] <= new Date() ? "#015BC0" : ""}`}/>
+				<HeaderIcon
+					size="1.5x"
+					text={`${dateLabels[i]} date: ${dates[i]}`}
+					icon={faExclamationCircle}
+					color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
+				/>
 			</div>
 		{/each}
 	</div>
@@ -37,15 +47,15 @@
 		/>
 	</div>
 	{#if displayDetails}
-	<div class="border border-gray-200 p-6">
-		<ul>
-			{#each dateLabels as label, i}
-				<li class="flex justify-between">
-					<div>{label} date:</div> 
-					<div>{dates[i]}</div>
-				</li>
-			{/each}
-		</ul>
-	</div>
+		<div class="border border-gray-200 p-6">
+			<ul>
+				{#each dateLabels as label, i}
+					<li class="flex justify-between">
+						<div>{label} date:</div>
+						<div>{dates[i]}</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/if}
 </div>

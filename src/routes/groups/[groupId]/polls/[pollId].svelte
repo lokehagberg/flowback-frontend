@@ -22,17 +22,17 @@
 	});
 
 	const deletePoll = () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`)
-	}
+		fetchRequest('POST', `group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`);
+	};
 </script>
 
 {#if poll}
-	<Layout>
+	<Layout centering={true}>
 		<!-- <TestDraggable /> -->
-		<div class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8">
+		<div class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 xl:w-2/3">
+			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
 			<div class="border border-gray-200 rounded p-4">
 				<div class="flex gap-6">
-					<h1 class="text-left text-3xl mt-auto mb-auto">{poll.title}</h1>
 					<!-- TODO: Icons for type of poll and time -->
 					<!-- <div class="mt-auto mb-auto"><HeaderIcon /></div>
 				<div class="mt-auto mb-auto"><HeaderIcon /></div> -->

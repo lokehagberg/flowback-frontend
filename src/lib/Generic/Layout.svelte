@@ -5,6 +5,6 @@
 </script>
 
 <Header />
-<div class={`${centering ? "flex justify-center flex-col items-stretch" : ""}`}>
+<div class={`${centering ? "flex justify-center flex-col items-center" : ""}`}>
 	<slot />
 </div>

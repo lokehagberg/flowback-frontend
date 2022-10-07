@@ -13,10 +13,12 @@
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { copyObject } from '$lib/Generic/GenericFunctions';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	let delegates: Delegate[] = [];
 	let oldDelegation: Delegate[] = [];
 	let tags: any[] = [];
+	let status: number;
 
 	onMount(async () => {
 		setDelegators();
@@ -28,7 +30,13 @@
 			delegate_pool_id: pool_id,
 			tags: tags.map(({ id }) => id)
 		}));
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/update`, toSendDelegates);
+
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/delegate/update`,
+			toSendDelegates
+		);
+		status = res.status
 	};
 
 	const getDelegateRelations = async () => {
@@ -159,9 +167,12 @@
 			</li>
 		{/each}
 	</ul>
-	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}>Save Changes</ButtonPrimary>
+	<StatusMessage bind:status />
+	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}
+		>Save Changes</ButtonPrimary
+	>
 {:else}
-<div>No Delegates selected</div>
+	<div>No Delegates selected</div>
 {/if}
 
 <style>

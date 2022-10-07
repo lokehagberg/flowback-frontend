@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Selected from './Selected.svelte';
+	import Selected from './Selected.svelte';
 
 	//Code is not very good in this folder, refactoring from scratch needed
 	//that incorporates new feature such as delegation pools.
@@ -14,15 +14,14 @@
 	onMount(() => {
 		// createDelegationPool()
 		// deleteDelegationPool()
-	})
+	});
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">
-	<Tab tabs={['All', 'Selected']} bind:selectedPage={selectedPage} />
-	{#if selectedPage === "Selected"}
+	<Tab tabs={['All', 'Selected']} bind:selectedPage />
+	{#if selectedPage === 'Selected'}
 		<Selected />
-		{:else if selectedPage==="All"}
+	{:else if selectedPage === 'All'}
 		<All />
 	{/if}
 </div>
-

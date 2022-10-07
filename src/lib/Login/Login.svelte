@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TextInput from '../Generic/TextInput.svelte';
 	import { fetchRequest } from '../FetchRequest';
-	import Error from '$lib/Generic/Error.svelte';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	let username: string;
 	let password: string;
@@ -23,7 +23,7 @@
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
-	<Error bind:status />
+	<StatusMessage bind:status />
 
 	<TextInput label={'Email'} bind:value={username} required={true} />
 	<TextInput label={'Password'} bind:value={password} type={'password'} required={true} />

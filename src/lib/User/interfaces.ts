@@ -5,4 +5,5 @@ export interface User {
 	profile_image: string;
 	username: string;
 	website: string;
+	id: number
 }

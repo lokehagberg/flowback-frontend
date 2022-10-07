@@ -11,16 +11,17 @@
 		email: '',
 		profile_image: '',
 		username: '',
-		website: ''
+		website: '',
+		id: 0
 	};
 
 	onMount(async () => {
 		const userId = $page.url.searchParams.get('id');
-		const {res} = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
+		const { res } = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
 	});
 
 	const updateName = async () => {
-		const {res} = await fetchRequest('POST', `user/update`, { username: 'b' });
+		const { res } = await fetchRequest('POST', `user/update`, { username: 'b' });
 	};
 
 	console.log($page.url.searchParams.get('id'));

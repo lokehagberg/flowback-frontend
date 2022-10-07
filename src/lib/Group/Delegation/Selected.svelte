@@ -36,6 +36,7 @@
 			`group/${$page.params.groupId}/delegate/update`,
 			toSendDelegates
 		);
+		
 		status = res.status
 	};
 

@@ -8,7 +8,7 @@
 
 <div class="relative flex justify-center">
 	<img
-		class="h-56 cover"
+		class="cover"
 		src={`${import.meta.env.VITE_API}${group.cover_image}`}
 		alt="cover"
 	/>

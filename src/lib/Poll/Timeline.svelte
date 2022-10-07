@@ -20,7 +20,7 @@
 	});
 </script>
 
-<div class="relative mt-6 text-black p-4 border border-gray-200 rounded">
+<div class="relative text-black p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">Timeline</h1>
 	<div class="h-6">
 		{#each datePlacement as date, i}

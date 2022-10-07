@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ProposalSubmition from './ProposalSubmition.svelte';
+	import ProposalSubmition from '../../../../lib/Poll/ProposalSubmition.svelte';
 	import ProposalsRanked from '$lib/Poll/ProposalsRanked.svelte';
 	import Timeline from '$lib/Poll/Timeline.svelte';
 	import Comments from '$lib/Poll/Comments.svelte';
@@ -9,6 +9,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import type { poll } from '$lib/Poll/interface';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let poll: poll;
 
@@ -19,25 +20,32 @@
 
 		poll = json.results[0];
 	});
+
+	const deletePoll = () => {
+		fetchRequest('POST', `group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`)
+	}
 </script>
 
 {#if poll}
 	<Layout>
 		<!-- <TestDraggable /> -->
-		<div class="p-10 m-10 bg-white rounded shadow pt-6">
-			<div class="flex gap-6">
-				<h1 class="text-left text-3xl mt-auto mb-auto">{poll.title}</h1>
-				<!-- TODO: Icons for type of poll and time -->
-				<!-- <div class="mt-auto mb-auto"><HeaderIcon /></div>
+		<div class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8">
+			<div class="border border-gray-200 rounded p-4">
+				<div class="flex gap-6">
+					<h1 class="text-left text-3xl mt-auto mb-auto">{poll.title}</h1>
+					<!-- TODO: Icons for type of poll and time -->
+					<!-- <div class="mt-auto mb-auto"><HeaderIcon /></div>
 				<div class="mt-auto mb-auto"><HeaderIcon /></div> -->
+				</div>
+				{poll.description}
+				<Tag Class="w-32 mb-4" tag={poll.tag_name} />
 			</div>
-			{poll.description}
 			<!-- <div class="italic mt-4">Group name</div> -->
-			<Tag Class="w-32 mb-4 mt-4" tag={poll.tag_name} />
 			<ProposalsRanked />
 			<ProposalSubmition />
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			<Comments />
+			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">Delete Poll</ButtonPrimary>
 		</div>
 	</Layout>
 {/if}

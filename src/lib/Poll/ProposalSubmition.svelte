@@ -20,8 +20,8 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 rounded mt-4">
-	<h1 class="text-left text-2xl mb-4">Create a Proposal</h1>
+<form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 rounded">
+	<h1 class="text-left text-2xl">Create a Proposal</h1>
 	<TextInput label="Title" />
 	<TextArea Class="mt-4" label="Description" />
 	<ButtonPrimary type="submit" />

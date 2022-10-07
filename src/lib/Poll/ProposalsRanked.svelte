@@ -7,34 +7,27 @@
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import type { proposal } from './interface';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { page } from '$app/stores';
 
-	let proposals: proposal[] = [
-		{
-			title: 'Massive Space Mirrors',
-			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
-			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
-			ut modi id iure minus amet. HJSHF jas jhjs hdjksah djkxwhua jdbca jkb loremjkb loremjkb loremjkb loremjkb loremjkb jksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lorejksah djkxwhua jdbca jkb loremjkb lore HELLOOOOO`,
-			id: 1
-		},
-		{
-			title: 'A new Park',
-			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
-			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
-			ut modi id iure minus amet.`,
-			id: 2
-		},
-		{
-			title: 'A new bike path',
-			description: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia repudiandae nesciunt ipsam quo
-			earum, nemo error necessitatibus minima eligendi voluptatem vel? Praesentium dicta reiciendis
-			ut modi id iure minus amet.`,
-			id: 3
-		}
-	];
+	let proposals: proposal[] = [];
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
+		setUpSortable();
+		getProposals();
+	});
+
+	const getProposals = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
+		);
+		proposals = json.results;
+	};
+
+	const setUpSortable = async () => {
 		const { Sortable } = await import('@shopify/draggable');
 
 		const containers = [
@@ -50,17 +43,8 @@
 		});
 
 		sortable.on('drag:stop', (e: any) => {});
-	});
+	};
 
-	/*Alot of the extra complexity in this code is due to Font Awesome's 
-	icon structure being several divs deep.
-	Instead of directly selecting a div with a plus elemnt in it, 
-	a person's click can instead go to slightly 
-	different layers in the icon structure.
-	To remedy it, there's a for loop on the path in the 
-	DOM on the div that was clicked
-	that will terminate when it finds the 
-	proposal div and then swap/move it.*/
 	const addToRanked = (e: any) => {
 		const proposal = getProposal(e);
 		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
@@ -71,6 +55,16 @@
 		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
 
+	/*Alot of the "extra complexity" (it's not that complex) 
+	in this code is due to Font Awesome's 
+	icon structure being several divs deep.
+	Instead of directly selecting a div with a plus element in it, 
+	a person's click can instead go to slightly 
+	different layers in the icon structure.
+	To remedy it, there's a for loop on the path in the 
+	DOM on the div that was clicked
+	that will terminate when it finds the 
+	proposal div and then swap/move it.*/
 	const moveDown = (e: any) => {
 		const element = e.path.find((element: HTMLObjectElement) =>
 			element.classList.contains('proposal')
@@ -108,7 +102,7 @@
 	};
 </script>
 
-<div class="poll border border-gray-700 lg:flex">
+<div class="poll border border-gray-500 lg:flex rounded">
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Rank</div>
 		<ol class="container ranked lg:h-full" />
@@ -121,7 +115,7 @@
 				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
 					<Proposal {...proposal}>
 						<div class="abstained-plus">
-							<div on:click={addToRanked} class="cursor-pointer" ><Fa icon={faPlus} /></div>
+							<div on:click={addToRanked} class="cursor-pointer"><Fa icon={faPlus} /></div>
 						</div>
 						<div class="ranking-arrows">
 							<div on:click={addToAbstained} class="cursor-pointer"><Fa icon={faMinus} /></div>

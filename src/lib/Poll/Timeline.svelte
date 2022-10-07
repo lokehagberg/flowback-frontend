@@ -6,7 +6,8 @@
 	export let dates = [new Date('2022-09-21'), new Date('2022-09-23'), new Date('2022-09-25'), new Date('2022-09-30')];
 	
 	let date = new Date();
-	const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
+	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
+	const dateLabels = ["Start", "End"]
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	const toNowTime = date.getTime() - dates[0].getTime();
@@ -19,7 +20,7 @@
 	});
 </script>
 
-<div class="relative mt-6 text-black">
+<div class="relative mt-6 text-black p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">Timeline</h1>
 	<div class="h-6">
 		{#each datePlacement as date, i}

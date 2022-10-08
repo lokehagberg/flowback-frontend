@@ -53,6 +53,10 @@
 			}
 		});
 
+		/*
+			Whenever the user stops dragging it updates the state of ranked or abstained based 
+			on where the user dragged it too.	
+		*/
 		sortable.on('sortable:stop', (e: any) => {
 			unsaved = true;
 			const element: HTMLElement = e.data.dragEvent.data.originalSource;
@@ -68,9 +72,9 @@
 	};
 
 	/*
-	Every voting has a priority, larger number means higher up in the ranking.
-	We find whether or not a proposal has been ranked, and then put it in the right slot
-	in "ranked", otherwise it's put in "abstained"
+		Every voting has a priority, larger number means higher up in the ranking.
+		We find whether or not a proposal has been ranked, and then put it in the right slot
+		in "ranked", otherwise it's put in "abstained"
 	*/
 	const setOrdering = () => {
 		if (!votings) return;
@@ -86,20 +90,8 @@
 
 		console.log(ranked, abstained, votings);
 
-		// clearContainer('abstained');
-		// clearContainer('ranked');
-
 		ranked = ranked;
 		abstained = abstained;
-	};
-
-	const clearContainer = (container: 'ranked' | 'abstained') => {
-		const htmlContainer = document.querySelector(`.${container}.ranked`);
-
-		if (htmlContainer)
-			while (htmlContainer.firstChild) {
-				htmlContainer.removeChild(htmlContainer.firstChild);
-			}
 	};
 
 	const addToRanked = (e: any) => {
@@ -115,16 +107,16 @@
 	};
 
 	/*
-	Alot of the "extra complexity" (it's not that complex) 
-	in this code is due to Font Awesome's 
-	icon structure being several divs deep.
-	Instead of directly selecting a div with a plus element in it, 
-	a person's click can instead go to slightly 
-	different layers in the icon structure.
-	To remedy it, there's a for loop on the path in the 
-	DOM on the div that was clicked
-	that will terminate when it finds the 
-	proposal div and then swap/move it.
+		Alot of the "extra complexity" (it's not that complex) 
+		in this code is due to Font Awesome's 
+		icon structure being several divs deep.
+		Instead of directly selecting a div with a plus element in it, 
+		a person's click can instead go to slightly 
+		different layers in the icon structure.
+		To remedy it, there's a for loop on the path in the 
+		DOM on the div that was clicked
+		that will terminate when it finds the 
+		proposal div and then swap/move it.
 	*/
 	const moveDown = (e: any) => {
 		unsaved = true;

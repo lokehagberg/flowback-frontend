@@ -50,13 +50,13 @@
 			}
 		});
 
-		sortable.on('drag:stop', (e: any) => {
-			const element = e.data.originalSource;
+		sortable.on('sortable:stop', (e: any) => {
 
-			const index = Array.from(element.parentElement.children).indexOf(element);
+			const element = e.data.dragEvent.data.originalSource;
+			// const index = Array.from(element.parentElement.children).indexOf(element);
+			const index = e.data.newIndex
 
-			console.log(element)
-			console.log(index)
+			console.log(e, element, index)
 		});
 	};
 

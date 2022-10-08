@@ -24,6 +24,7 @@
 	onMount(async () => {
 		setUpSortable();
 		await getProposals();
+		await getVotings();
 		setOrdering();
 	});
 
@@ -51,12 +52,18 @@
 		});
 
 		sortable.on('sortable:stop', (e: any) => {
+			const element: HTMLElement = e.data.dragEvent.data.originalSource;
+			const index: number = e.data.newIndex;
 
-			const element = e.data.dragEvent.data.originalSource;
-			// const index = Array.from(element.parentElement.children).indexOf(element);
-			const index = e.data.newIndex
 
-			console.log(e, element, index)
+			const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
+			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
+			if (!proposal) return;
+
+			if (parent === 'ranked') ranked[index] = proposal;
+			else abstained.push(proposal);
+
+			console.log(e, element, index, parent);
 		});
 	};
 
@@ -187,12 +194,27 @@
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Rank</div>
-		<ol class="container ranked lg:h-full" />
+		<ol class="container ranked lg:h-full">
+			{#each ranked as proposal}
+				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
+					<Proposal {...proposal}>
+						<div class="abstained-plus">
+							<div on:click={addToRanked} class="cursor-pointer"><Fa icon={faPlus} /></div>
+						</div>
+						<div class="ranking-arrows">
+							<div on:click={addToAbstained} class="cursor-pointer"><Fa icon={faMinus} /></div>
+							<div on:click={moveUp} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
+							<div on:click={moveDown} class="cursor-pointer"><Fa icon={faArrowDown} /></div>
+						</div>
+					</Proposal>
+				</li>
+			{/each}
+		</ol>
 	</div>
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Abstain</div>
 		<ul class="container abstained lg:h-full">
-			{#each proposals as proposal}
+			{#each abstained as proposal}
 				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
 					<Proposal {...proposal}>
 						<div class="abstained-plus">

@@ -55,12 +55,11 @@
 			const element: HTMLElement = e.data.dragEvent.data.originalSource;
 			const index: number = e.data.newIndex;
 
-
 			const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
 			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
 			if (!proposal) return;
 
-			if (parent === 'ranked') ranked[index] = proposal;
+			if (parent === 'ranked') ranked.splice(index, 0, proposal);
 			else abstained.push(proposal);
 
 			console.log(e, element, index, parent);

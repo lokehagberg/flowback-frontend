@@ -62,3 +62,6 @@ export interface GroupDetails {
 }
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
+
+import { writable } from 'svelte/store';
+export const userGroupInfo = writable({})

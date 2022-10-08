@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Selected from './Selected.svelte';
 
-	//Code is not very good in this folder, refactoring from scratch needed
-	//that incorporates new feature such as delegation pools.
-	//Design in Figma should be done first
+	/*
+		Code is not very good in this folder, refactoring almost from scratch needed
+		that incorporates new feature such as delegation pools.
+		Design in Figma should be done first 
+	*/
 
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';

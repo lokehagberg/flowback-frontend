@@ -12,7 +12,6 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
-	//
 	export let votings: votings[];
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
@@ -99,7 +98,7 @@
 		const proposal = getProposal(e);
 		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
 	};
-	
+
 	const addToAbstained = (e: any) => {
 		unsaved = true;
 		const proposal = getProposal(e);
@@ -174,6 +173,21 @@
 				votes
 			}
 		);
+
+		const userId = (await fetchRequest('GET', 'user')).json.id;
+
+		const isDelegate = (
+			await fetchRequest('GET', `group/${$page.params.groupId}/users?user_id=${userId}`)
+		).json.results[0].delegate;
+
+		if (isDelegate)
+			fetchRequest(
+				'POST',
+				`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
+				{
+					votes
+				}
+			);
 
 		unsaved = false;
 		status = res.status;

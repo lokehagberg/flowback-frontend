@@ -2,6 +2,7 @@
 	import TextInput from '../Generic/TextInput.svelte';
 	import { fetchRequest } from '../FetchRequest';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string;
 	let password: string;
@@ -10,13 +11,19 @@
 	export let selectedPage: string;
 
 	const logIn = async (e: any) => {
-		e.preventDefault();
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 
 		status = res.status;
+		console.log(json);
 
 		if (json.token) {
 			localStorage.setItem('token', json.token);
+			
+			{
+				const { json } = await fetchRequest('GET', 'user');
+				userInfo.set(json);
+			}
+			
 			window.location.href = '/home';
 		}
 	};

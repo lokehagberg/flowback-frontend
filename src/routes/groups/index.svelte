@@ -7,10 +7,14 @@
 
 	let groupList: Group[] = [];
 
-	onMount(async () => {
-		const {json} = await fetchRequest('GET', 'group/list?limit=100');
-		groupList = json.results;
+	onMount(() => {
+		getGroups();
 	});
+
+	const getGroups = async () => {
+		const { json } = await fetchRequest('GET', 'group/list?limit=100');
+		groupList = json.results;
+	};
 </script>
 
 <Layout>

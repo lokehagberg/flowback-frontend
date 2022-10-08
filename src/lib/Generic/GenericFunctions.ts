@@ -2,3 +2,6 @@
 export const copyObject = (object:object) => {
     return JSON.parse(JSON.stringify(object))
 }
+
+import { writable } from 'svelte/store';
+export const userInfo = writable({})

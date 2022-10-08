@@ -10,6 +10,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	//
 	export let votings: votings[];
@@ -18,6 +19,7 @@
 	let abstained: proposal[] = [];
 
 	let unsaved = false;
+	let status: number;
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -52,17 +54,16 @@
 		});
 
 		sortable.on('sortable:stop', (e: any) => {
+			unsaved = true;
 			const element: HTMLElement = e.data.dragEvent.data.originalSource;
 			const index: number = e.data.newIndex;
-
 			const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
+
 			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
 			if (!proposal) return;
 
 			if (parent === 'ranked') ranked.splice(index, 0, proposal);
 			else abstained.push(proposal);
-
-			console.log(e, element, index, parent);
 		});
 	};
 
@@ -102,11 +103,13 @@
 	};
 
 	const addToRanked = (e: any) => {
+		unsaved = true;
 		const proposal = getProposal(e);
 		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
 	};
-
+	
 	const addToAbstained = (e: any) => {
+		unsaved = true;
 		const proposal = getProposal(e);
 		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
@@ -124,6 +127,7 @@
 	proposal div and then swap/move it.
 	*/
 	const moveDown = (e: any) => {
+		unsaved = true;
 		const element = e.path.find((element: HTMLObjectElement) =>
 			element.classList.contains('proposal')
 		);
@@ -131,6 +135,7 @@
 	};
 
 	const moveUp = (e: any) => {
+		unsaved = true;
 		const element = e.path.find((element: HTMLObjectElement) =>
 			element.classList.contains('proposal')
 		);
@@ -138,6 +143,7 @@
 	};
 
 	const doubleClick = (e: any) => {
+		unsaved = true;
 		const proposal = getProposal(e);
 
 		if (proposal.parentNode.parentNode.classList.contains('abstained')) addToRanked(e);
@@ -169,7 +175,7 @@
 			votes.push(Number(proposals[i].id));
 		}
 
-		await fetchRequest(
+		const { res } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
@@ -177,8 +183,8 @@
 			}
 		);
 
-		await getVotings();
-		setOrdering();
+		unsaved = false;
+		status = res.status;
 	};
 
 	const getVotings = async () => {
@@ -230,6 +236,7 @@
 		</ul>
 	</div>
 </div>
+<StatusMessage bind:status />
 <ButtonPrimary action={saveVotings}>Save votings</ButtonPrimary>
 
 <style>

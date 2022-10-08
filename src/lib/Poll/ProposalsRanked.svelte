@@ -6,18 +6,25 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import type { proposal } from './interface';
+	import type { proposal, votings } from './interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
+	//
+	export let votings: votings[];
 	let proposals: proposal[] = [];
-	export let votings:number[];
+	let ranked: proposal[] = [];
+	let abstained: proposal[] = [];
+
+	let unsaved = false;
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
 		setUpSortable();
-		getProposals();
+		await getProposals();
+		setOrdering();
 	});
 
 	const getProposals = async () => {
@@ -43,7 +50,49 @@
 			}
 		});
 
-		sortable.on('drag:stop', (e: any) => {});
+		sortable.on('drag:stop', (e: any) => {
+			const element = e.data.originalSource;
+
+			const index = Array.from(element.parentElement.children).indexOf(element);
+
+			console.log(element)
+			console.log(index)
+		});
+	};
+
+	/*
+	Every voting has a priority, larger number means higher up in the ranking.
+	We find whether or not a proposal has been ranked, and then put it in the right slot
+	in "ranked", otherwise it's put in "abstained"
+	*/
+	const setOrdering = () => {
+		if (!votings) return;
+
+		ranked = new Array(votings.length);
+		abstained = [];
+
+		proposals.forEach((proposal) => {
+			const vote = votings.find((vote) => proposal.id === vote.proposal);
+			if (vote) ranked[proposals.length - vote?.priority] = proposal;
+			else abstained.push(proposal);
+		});
+
+		console.log(ranked, abstained, votings);
+
+		// clearContainer('abstained');
+		// clearContainer('ranked');
+
+		ranked = ranked;
+		abstained = abstained;
+	};
+
+	const clearContainer = (container: 'ranked' | 'abstained') => {
+		const htmlContainer = document.querySelector(`.${container}.ranked`);
+
+		if (htmlContainer)
+			while (htmlContainer.firstChild) {
+				htmlContainer.removeChild(htmlContainer.firstChild);
+			}
 	};
 
 	const addToRanked = (e: any) => {
@@ -56,7 +105,8 @@
 		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
 	};
 
-	/*Alot of the "extra complexity" (it's not that complex) 
+	/*
+	Alot of the "extra complexity" (it's not that complex) 
 	in this code is due to Font Awesome's 
 	icon structure being several divs deep.
 	Instead of directly selecting a div with a plus element in it, 
@@ -65,7 +115,8 @@
 	To remedy it, there's a for loop on the path in the 
 	DOM on the div that was clicked
 	that will terminate when it finds the 
-	proposal div and then swap/move it.*/
+	proposal div and then swap/move it.
+	*/
 	const moveDown = (e: any) => {
 		const element = e.path.find((element: HTMLObjectElement) =>
 			element.classList.contains('proposal')
@@ -101,16 +152,45 @@
 	const getProposal = (e: any) => {
 		return e.path.find((element: HTMLObjectElement) => element.classList.contains('proposal'));
 	};
+
+	const saveVotings = async () => {
+		const proposals = document.querySelector('.container.ranked')?.children;
+		let votes: number[] = [];
+
+		if (!proposals) return;
+
+		for (let i = 0; i < proposals?.length; i++) {
+			votes.push(Number(proposals[i].id));
+		}
+
+		await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
+			{
+				votes
+			}
+		);
+
+		await getVotings();
+		setOrdering();
+	};
+
+	const getVotings = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?limit=100`
+		);
+		votings = json.results;
+	};
 </script>
 
-<div class="poll border border-gray-500 lg:flex rounded">
+<div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Rank</div>
 		<ol class="container ranked lg:h-full" />
 	</div>
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Abstain</div>
-
 		<ul class="container abstained lg:h-full">
 			{#each proposals as proposal}
 				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
@@ -129,6 +209,7 @@
 		</ul>
 	</div>
 </div>
+<ButtonPrimary action={saveVotings}>Save votings</ButtonPrimary>
 
 <style>
 	.abstained > li .ranking-arrows {

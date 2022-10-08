@@ -19,3 +19,11 @@ export interface poll {
 	tag_name: string;
 	title: string;
 }
+
+export interface votings {
+	author: number;
+	author_delegate: number | null;
+	priority: number;
+	proposal: number;
+	score: number;
+}

@@ -8,51 +8,28 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { poll } from '$lib/Poll/interface';
+	import type { poll, votings } from '$lib/Poll/interface';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let poll: poll;
-	let votings:number[];
+	let votings: votings[];
 
 	onMount(async () => {
+		getPollData();
+	});
+
+	const getPollData = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/list`, {
 			id: $page.params.pollId
 		});
 
 		poll = json.results[0];
-	});
+	};
 
 	const deletePoll = () => {
 		fetchRequest('POST', `group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`);
 	};
 
-	const saveVotings = async () => {
-		const proposals = document.querySelector('.container.ranked')?.children;
-		let votes: number[] = [];
-
-		if (proposals)
-			for (let i = 0; i < proposals?.length; i++) {
-				votes.push(Number(proposals[i].id));
-			}
-
-		await fetchRequest(
-			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
-			{
-				votes
-			}
-		);
-
-		getVotings();
-	};
-
-	const getVotings = async () => {
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?limit=100`
-		);
-		votings = json.results
-	};
 </script>
 
 {#if poll}
@@ -70,8 +47,7 @@
 				<Tag Class="w-32 mb-4" tag={poll.tag_name} />
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
-			<ProposalsRanked bind:votings/>
-			<ButtonPrimary action={saveVotings}>Save votings</ButtonPrimary>
+			<ProposalsRanked bind:votings />
 			<ProposalSubmition />
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			<Comments />

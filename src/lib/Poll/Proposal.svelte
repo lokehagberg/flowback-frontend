@@ -34,4 +34,8 @@
 		-webkit-box-orient: vertical;
 		white-space: normal;
 	} 
+
+	.proposal{
+		transition: box-shadow 0.15s ease-in;
+	}
 </style>

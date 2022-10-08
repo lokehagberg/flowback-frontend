@@ -17,7 +17,8 @@
 
 	onMount(async () => {
 		const userId = $page.url.searchParams.get('id');
-		const { res } = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
+		const { res, json } = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
+		user = json
 	});
 
 	const updateName = async () => {
@@ -32,7 +33,7 @@
 	<div>
 		<div class="bg-blue-500 h-36 w-36" />
 		<div class="w-1/2 ">
-			<h1 class="inline">Name</h1>
+			<h1 class="inline">{user.username}</h1>
 			<h2 class="inline">Website: Github.com</h2>
 		</div>
 	</div>

@@ -13,6 +13,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	export let votings: votings[];
+	export let selectedPage: 'You' | 'Delegate';
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
 	let abstained: proposal[] = [];
@@ -20,14 +21,22 @@
 	let unsaved = false;
 	let status: number;
 
+	$: selectedPage && setUpVotings();
+
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
 		setUpSortable();
 		await getProposals();
-		await getVotings();
-		setOrdering();
+		setUpVotings();
 	});
+
+	const setUpVotings = async () => {
+		if (selectedPage === 'You') await getVotings();
+		else if (selectedPage === 'Delegate') await getDelegateVotings();
+		setOrdering();
+		console.log(ranked, 'PRANKEDS');
+	};
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
@@ -56,17 +65,86 @@
 			Whenever the user stops dragging it updates the state of ranked or abstained based 
 			on where the user dragged it too.	
 		*/
-		sortable.on('sortable:stop', (e: any) => {
+		sortable.on('sortable:stop', async (e: any) => {
 			unsaved = true;
 			const element: HTMLElement = e.data.dragEvent.data.originalSource;
 			const index: number = e.data.newIndex;
 			const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
+			element.classList.add('remove-after-placed');
 
 			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
-			if (!proposal) return;
+			
+			
+			// if (!proposal) return;
 
-			if (parent === 'ranked') ranked.splice(index, 0, proposal);
-			else abstained.push(proposal);
+			// if (parent === 'ranked') {
+			// 	// const oldRanked = ranked;
+			// 	// ranked = [];
+				
+			// 	// const ee = document.querySelector('.container.ranked');
+				
+			// 	// var first = ee?.firstElementChild;
+				
+			// 	// while (first) {
+			// 	// 	console.log(first)
+			// 	// 	first.remove();
+			// 	// 	first = ee?.firstElementChild;
+			// 	// }
+				
+			// 	await waitForElm('.remove-after-placed');
+				
+			// 	ranked.splice(index, 0, proposal);
+			// 	ranked = ranked;
+				
+			// 	// sortable.destroy()
+			// 	// console.log(document.querySelector("."))
+			// 	// console.log(elementLater.parentNode?.removeChild(document.querySelector(".remove-after-placed")))
+			// } else {
+			// 	abstained.push(proposal);
+			// 	abstained = abstained;
+			// }
+
+			// const elementLater = await waitForElm('.remove-after-placed');
+			// elementLater.parentNode?.removeChild(elementLater);
+			// setTimeout(() => {
+			// 	element.parentNode?.removeChild(element)
+			// }, 1000)
+			// console.log(element.parentNode)
+			// console.log(e.data.dragEvent)
+			// element.parentNode?.removeChild(element)
+			// console.log(e.data.dragEvent.data.originalSource.parent.removeChild(e.data.dragEvent.data.originalSource))
+		});
+
+		function waitForElm(selector: string): Promise<Element> {
+			return new Promise((resolve) => {
+				const obj = document.querySelector(selector);
+				if (obj) {
+					return resolve(obj);
+				}
+
+				const observer = new MutationObserver((mutations) => {
+					const objLater = document.querySelector(selector);
+					if (objLater) {
+						resolve(objLater);
+						observer.disconnect();
+					}
+				});
+
+				observer.observe(document.body, {
+					childList: true,
+					subtree: true
+				});
+			});
+		}
+
+		sortable.on('sortable:start', (e: any) => {
+			if (selectedPage === 'Delegate') {
+				e.cancel();
+			}
+		});
+
+		sortable.on('drag:stopped', (e: any) => {
+			console.log(e);
 		});
 	};
 
@@ -83,77 +161,54 @@
 
 		proposals.forEach((proposal) => {
 			const vote = votings.find((vote) => proposal.id === vote.proposal);
-			if (vote) ranked[proposals.length - vote?.priority] = proposal;
+			if (vote) ranked[votings.length - vote?.priority] = proposal;
 			else abstained.push(proposal);
 		});
 
 		console.log(ranked, abstained, votings);
 
-		ranked = ranked;
+		if (ranked[0] !== undefined) ranked = ranked;
+		else ranked = [];
 		abstained = abstained;
 	};
 
-	const addToRanked = (e: any) => {
+	const addToRanked = (proposal: proposal) => {
 		unsaved = true;
-		const proposal = getProposal(e);
-		document.querySelector('.container.ranked')?.appendChild(proposal.parentElement);
+
+		ranked.push(proposal);
+		ranked = ranked;
+
+		abstained = abstained.filter((prop) => prop !== proposal);
 	};
 
-	const addToAbstained = (e: any) => {
+	const addToAbstained = (proposal: proposal) => {
 		unsaved = true;
-		const proposal = getProposal(e);
-		document.querySelector('.container.abstained')?.appendChild(proposal.parentElement);
+
+		abstained.push(proposal);
+		abstained = abstained;
+
+		ranked = ranked.filter((prop) => prop !== proposal);
 	};
 
-	/*
-		Alot of the "extra complexity" (it's not that complex) 
-		in this code is due to Font Awesome's 
-		icon structure being several divs deep.
-		Instead of directly selecting a div with a plus element in it, 
-		a person's click can instead go to slightly 
-		different layers in the icon structure.
-		To remedy it, there's a for loop on the path in the 
-		DOM on the div that was clicked
-		that will terminate when it finds the 
-		proposal div and then swap/move it.
-	*/
-	const moveDown = (e: any) => {
+	const moveDown = (index: number) => {
 		unsaved = true;
-		const element = e.path.find((element: HTMLObjectElement) =>
-			element.classList.contains('proposal')
-		);
-		swap(element.parentElement, element.parentElement.nextSibling);
+		if (index === ranked.length - 1) return;
+		//ES6 notation for swapping two elements in an array
+		[ranked[index], ranked[index + 1]] = [ranked[index + 1], ranked[index]];
 	};
 
-	const moveUp = (e: any) => {
+	const moveUp = (index: number) => {
 		unsaved = true;
-		const element = e.path.find((element: HTMLObjectElement) =>
-			element.classList.contains('proposal')
-		);
-		swap(element.parentElement, element.parentElement.previousSibling);
+		if (index === 0) return;
+		//ES6 notation for swapping two elements in an array
+		[ranked[index], ranked[index - 1]] = [ranked[index - 1], ranked[index]];
 	};
 
-	const doubleClick = (e: any) => {
+	const doubleClick = (proposal: proposal, container: string) => {
 		unsaved = true;
-		const proposal = getProposal(e);
 
-		if (proposal.parentNode.parentNode.classList.contains('abstained')) addToRanked(e);
-		else addToAbstained(e);
-	};
-
-	const swap = (nodeA: HTMLObjectElement, nodeB: HTMLObjectElement) => {
-		const parentA = nodeA?.parentNode;
-		const siblingA = nodeA?.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
-
-		// Move `nodeA` to before the `nodeB`
-		nodeB?.parentNode?.insertBefore(nodeA, nodeB);
-
-		// Move `nodeB` to before the sibling of `nodeA`
-		parentA?.insertBefore(nodeB, siblingA);
-	};
-
-	const getProposal = (e: any) => {
-		return e.path.find((element: HTMLObjectElement) => element.classList.contains('proposal'));
+		if (container === 'abstained') addToRanked(proposal);
+		else addToAbstained(proposal);
 	};
 
 	const saveVotings = async () => {
@@ -200,22 +255,38 @@
 		);
 		votings = json.results;
 	};
+
+	const getDelegateVotings = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=true&delegate_user_id=2`,
+			{
+				delegate_user_id: 1
+			}
+		);
+		votings = json.results;
+	};
 </script>
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
 		<div class="text-2xl p-6 select-none">Rank</div>
 		<ol class="container ranked lg:h-full">
-			{#each ranked as proposal}
-				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
-					<Proposal {...proposal}>
-						<div class="abstained-plus">
-							<div on:click={addToRanked} class="cursor-pointer"><Fa icon={faPlus} /></div>
-						</div>
-						<div class="ranking-arrows">
-							<div on:click={addToAbstained} class="cursor-pointer"><Fa icon={faMinus} /></div>
-							<div on:click={moveUp} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
-							<div on:click={moveDown} class="cursor-pointer"><Fa icon={faArrowDown} /></div>
+			{#each ranked as proposal, i}
+				<li
+					id={`${proposal.id}`}
+					class="proposal"
+					on:dblclick={() => doubleClick(proposal, 'ranked')}
+				>
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
+						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
+							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
+								<Fa icon={faMinus} />
+							</div>
+							<div on:click={() => moveUp(i)} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
+							<div on:click={() => moveDown(i)} class="cursor-pointer">
+								<Fa icon={faArrowDown} />
+							</div>
 						</div>
 					</Proposal>
 				</li>
@@ -226,15 +297,16 @@
 		<div class="text-2xl p-6 select-none">Abstain</div>
 		<ul class="container abstained lg:h-full">
 			{#each abstained as proposal}
-				<li id={`${proposal.id}`} class="proposal" on:dblclick={doubleClick}>
-					<Proposal {...proposal}>
-						<div class="abstained-plus">
-							<div on:click={addToRanked} class="cursor-pointer"><Fa icon={faPlus} /></div>
-						</div>
-						<div class="ranking-arrows">
-							<div on:click={addToAbstained} class="cursor-pointer"><Fa icon={faMinus} /></div>
-							<div on:click={moveUp} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
-							<div on:click={moveDown} class="cursor-pointer"><Fa icon={faArrowDown} /></div>
+				<li
+					id={`${proposal.id}`}
+					class="proposal"
+					on:dblclick={() => doubleClick(proposal, 'abstained')}
+				>
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
+						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
+							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
+								<Fa icon={faPlus} />
+							</div>
 						</div>
 					</Proposal>
 				</li>
@@ -243,17 +315,12 @@
 	</div>
 </div>
 <StatusMessage bind:status />
-<ButtonPrimary action={saveVotings}>Save votings</ButtonPrimary>
+<ButtonPrimary action={saveVotings}
+	>{(selectedPage === 'You' && 'Save Votings') ||
+		(selectedPage === 'Delegate' && 'Sync with Delegate')}</ButtonPrimary
+>
 
 <style>
-	.abstained > li .ranking-arrows {
-		display: none;
-	}
-
-	.ranked > li .abstained-plus {
-		display: none;
-	}
-
 	.container {
 		min-height: 100px;
 	}

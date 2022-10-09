@@ -21,9 +21,10 @@
 	});
 
 	const getPollData = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/list`, {
-			id: $page.params.pollId
-		});
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/list?limit=100&id=${$page.params.pollId}`
+		);
 
 		poll = json.results[0];
 	};
@@ -49,7 +50,7 @@
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-			<ProposalsRanked bind:votings bind:selectedPage/>
+			<ProposalsRanked bind:votings bind:selectedPage />
 			<ProposalSubmition />
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			<Comments />

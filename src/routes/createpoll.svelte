@@ -55,24 +55,29 @@
 	];
 	const groupId = $page.url.searchParams.get('id');
 
-	let description = '';
-	let title = '';
+	let title = '',
+		description = '';
 	let tags: TagType[] = [];
 	let selectedTag: TagType;
-	let status:number;
+	let status: number;
+	let end_date = '';
 
 	const createPoll = async () => {
+		if (selectedTag === null) status = 400;
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
 			start_date: new Date(),
-			end_date: new Date(new Date().setMonth(12)),
+			end_date: new Date(end_date),
 			poll_type: 1,
 			tag: selectedTag.id,
 			dynamic: false
 		});
 
-		status = res.status
+		status = res.status;
+
+		if (res.ok)
+		window.location.href = `groups/${groupId}/polls/${json}`
 	};
 
 	const getGroupTags = async () => {
@@ -99,6 +104,7 @@
 				<h1 class="text-2xl">Create a poll</h1>
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
+				<TextInput required={true} label="End Date" bind:value={end_date} />
 				<h2>Select Tag</h2>
 				<div class="flex gap-4">
 					{#each tags as tag}
@@ -112,7 +118,7 @@
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					This polltype is not implemented yet
 				{/if}
-				<StatusMessage {status}/>
+				<StatusMessage {status} />
 				<ButtonPrimary
 					type="submit"
 					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
@@ -135,7 +141,9 @@
 				<div class="flex flex-col gap-6 mt-12">
 					{#each times as time}
 						<ButtonPrimary
-							Class={selected_time === time ? 'bg-purple-600' : 'bg-purple-300'}
+							Class={`transition transition-colors ${
+								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
+							}`}
 							action={() => (selected_time = time)}>{time}</ButtonPrimary
 						>
 					{/each}

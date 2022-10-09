@@ -50,9 +50,9 @@
 		<div class="border border-gray-200 p-6">
 			<ul>
 				{#each dateLabels as label, i}
-					<li class="flex justify-between">
-						<div>{label} date:</div>
-						<div>{dates[i]}</div>
+					<li class="flex justify-between flex-col md:flex-row">
+						<div class="mb-4">{label} date:</div>
+						<div class="mb-4">{dates[i]}</div>
 					</li>
 				{/each}
 			</ul>

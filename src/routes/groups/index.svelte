@@ -13,7 +13,7 @@
 
 	const getGroups = async () => {
 		const { json } = await fetchRequest('GET', 'group/list?limit=100');
-		groupList = json.results;
+		groupList = json.results.reverse();
 	};
 </script>
 

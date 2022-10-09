@@ -5,14 +5,9 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tag from './Tag.svelte';
+	import type {Tag as TagType} from '$lib/Group/interface'
 
-	interface Tag {
-		id: number;
-		tag_name: string;
-		active: boolean;
-	}
-
-	let tags: Tag[] = [];
+	let tags: TagType[] = [];
 	let tagToAdd = '';
 
 	onMount(async () => {
@@ -22,24 +17,27 @@
 	const getTags = async () => {
 		console.log("here")
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		tags = json.results.sort((tag1:Tag, tag2:Tag) => tag1.tag_name.localeCompare(tag2.tag_name));
+		tags = json.results.sort((tag1:TagType, tag2:TagType) => tag1.tag_name.localeCompare(tag2.tag_name));
 	};
 
 	const addTag = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
 			tag_name: tagToAdd
 		});
-		if (res.ok) getTags();
+		if (res.ok) {
+			getTags();
+			tagToAdd = ""
+		}
 	};
 
-	const removeTag = async (tag: Tag) => {
+	const removeTag = async (tag: TagType) => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/delete`, {
 			tag: tag.id
 		});
 		if (res.ok) getTags();
 	};
 
-	const editTag = async (tag: Tag) => {
+	const editTag = async (tag: TagType) => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/update`, {
 			tag: tag.id,
 			active: !tag.active

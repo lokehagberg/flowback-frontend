@@ -5,6 +5,9 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Tag from '$lib/Group/Tag.svelte';
+	import { onMount } from 'svelte';
+	import type {Tag as TagType} from '$lib/Group/interface'
 
 	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
@@ -42,40 +45,56 @@
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
 	};
 
-	const disabled: (polltypes | timetypes)[] = ['For Against', 'Cardinal', 'Quadratic', 'Scheduled', 'Dynamic'];
-	const groupId = $page.url.searchParams.get("id")
+	const disabled: (polltypes | timetypes)[] = [
+		'For Against',
+		'Cardinal',
+		'Quadratic',
+		'Scheduled',
+		'Dynamic'
+	];
+	const groupId = $page.url.searchParams.get('id');
 
-	let description = ""
-	let title = ""
+	let description = '';
+	let title = '';
+	let tags: TagType[] = [];
 
 	const createPoll = async () => {
-		console.log('poll created!');
-		const { res, json} = await fetchRequest('POST', `group/${groupId}/poll/create`, {
+		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
 			start_date: new Date(),
 			end_date: new Date(new Date().setMonth(12)),
 			poll_type: 1,
 			tag: 1,
-			dynamic:false
-		})
-		console.log(res)
-		console.log(json)
+			dynamic: false
+		});
 	};
 
+	const getGroupTags = async () => {
+		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=100`);
+		tags = json.results;
+	};
 
+	onMount(() => {
+		getGroupTags();
+	});
 </script>
 
 <Layout>
 	<form
 		on:submit|preventDefault={() =>
 			!disabled.includes(selected_poll) && !disabled.includes(selected_time) ? createPoll() : null}
-		class="flex items-start justify-center gap-8 mt-24 ml-8 mr-8"
+		class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8"
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a poll</h1>
-			<TextInput label="Title" bind:value={title}/>
-			<TextArea label="Description" bind:value={description}/>
+			<TextInput label="Title" bind:value={title} />
+			<TextArea label="Description" bind:value={description} />
+			<div class="flex gap-4">
+				{#each tags as tag}
+					<Tag tag={tag.tag_name} />
+				{/each}
+			</div>
 			{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 				This polltype is not implemented yet
 			{/if}

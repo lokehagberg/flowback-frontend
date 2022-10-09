@@ -22,7 +22,7 @@
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}
 	</h1>
-	<p class="text-xl">50 members</p>
+	<p class="text-xl">3 members</p>
 </div>
 
 <style>

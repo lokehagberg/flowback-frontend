@@ -60,7 +60,7 @@
 <Layout centering={true}>
 	<form
 		on:submit|preventDefault={createGroup}
-		class="flex items-start justify-center gap-8 mt-24 ml-8 mr-8"
+		class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8 w-full"
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">Create a Group</h1>

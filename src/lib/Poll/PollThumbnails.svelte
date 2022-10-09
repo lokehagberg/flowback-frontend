@@ -9,7 +9,7 @@
 
 	const getPolls = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/list?limit=100`);
-		polls = json.results;
+		polls = json.results.reverse();
 	};
 
 	onMount(() => {

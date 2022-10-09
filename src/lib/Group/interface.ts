@@ -61,6 +61,12 @@ export interface GroupDetails {
 	id:number
 }
 
+export interface Tag {
+	id: number;
+	tag_name: string;
+	active: boolean;
+}
+
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
 import { writable } from 'svelte/store';

@@ -55,11 +55,11 @@
 		{#each tags as tag}
 			<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
 				<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
-				<div class="mt-2 w-full flex">
-					<ButtonPrimary Class="bg-rose-500 w-1/2" action={() => removeTag(tag)}
+				<div class="mt-2 w-full flex flex-col gap-2">
+					<ButtonPrimary Class="bg-rose-500" action={() => removeTag(tag)}
 						>Delete</ButtonPrimary
 					>
-					<ButtonPrimary Class="bg-purple-500 w-1/2" action={() => editTag(tag)}
+					<ButtonPrimary Class="bg-purple-500" action={() => editTag(tag)}
 						>{tag.active ? 'Disable' : 'Activate'}</ButtonPrimary
 					>
 				</div>

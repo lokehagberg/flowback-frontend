@@ -66,7 +66,7 @@
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 			Time polls at {selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
-			<div>13:00 Pump oil somewhere</div>
+			<div>13:00 Meeting</div>
 		</div>
 
 		<div class="w-full">

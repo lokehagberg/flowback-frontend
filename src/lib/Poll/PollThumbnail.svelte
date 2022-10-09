@@ -3,6 +3,7 @@
 	import type { poll } from './interface';
 	import { onMount } from 'svelte';
 	import {page} from '$app/stores'
+	import Tag from '$lib/Group/Tag.svelte';
 
 	export let poll: poll;
 	onMount(() => {
@@ -20,6 +21,7 @@
 	<p class="mt-2">
 		{poll.description}
 	</p>
+	<Tag tag={poll.tag_name} Class="w-1/3 mb-4 mt-2"/>
 	<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayDetails={false} />
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p

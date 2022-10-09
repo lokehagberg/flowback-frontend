@@ -1,34 +1,69 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
 	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
+	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+	import { faPeopleArrows } from '@fortawesome/free-solid-svg-icons/faPeopleArrows';
+	import { faUserGroup } from '@fortawesome/free-solid-svg-icons/faUserGroup';
+	import { faChartColumn } from '@fortawesome/free-solid-svg-icons/faChartColumn';
+	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
+	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
+	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
+	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { page } from '$app/stores';
 
 	export let selectedPage: SelectablePage = 'flow';
-	export let group:GroupDetails
+	export let group: GroupDetails;
 </script>
 
 <div>
 	<div class="bg-white shadow rounded flex flex-col">
 		<GroupSidebarButton action={() => (selectedPage = 'flow')} text="Flow" />
-		<GroupSidebarButton action={() => (selectedPage = 'delegation')} text="Delegation" />
-		<GroupSidebarButton action={() => (selectedPage = 'documents')} text="Documents" />
-		<GroupSidebarButton action={() => (selectedPage = 'members')} text="Members" />
-		<GroupSidebarButton action={() => (selectedPage = 'statistics')} text="Statistics" />
-		<GroupSidebarButton action={() => (selectedPage = 'about')} text="About" />
+		<GroupSidebarButton
+			action={() => (selectedPage = 'delegation')}
+			text="Delegation"
+			icon={faPeopleArrows}
+		/>
+		<GroupSidebarButton
+			action={() => (selectedPage = 'documents')}
+			text="Documents"
+			icon={faFile}
+		/>
+		<GroupSidebarButton
+			action={() => (selectedPage = 'members')}
+			text="Members"
+			icon={faUserGroup}
+		/>
+		<GroupSidebarButton
+			action={() => (selectedPage = 'statistics')}
+			text="Statistics"
+			icon={faChartColumn}
+		/>
+		<GroupSidebarButton action={() => (selectedPage = 'about')} text="About" icon={faCircleInfo} />
 	</div>
 	<div class="bg-white shadow rounded flex flex-col mt-6">
-		<GroupSidebarButton action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)} text="Create Poll" />
+		<GroupSidebarButton
+			action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)}
+			text="Create Poll"
+			icon={faPlus}
+		/>
 		<GroupSidebarButton
 			action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}
 			text="Video Conference"
+			icon={faVideoCamera}
 		/>
 	</div>
 	<div class="bg-white shadow rounded flex flex-col mt-6">
-		<GroupSidebarButton action={() => (selectedPage = 'email')} text="Send Email" />
-		<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" />
+		<GroupSidebarButton
+			action={() => (selectedPage = 'email')}
+			text="Send Email"
+			icon={faMailReplyAll}
+		/>
+		<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} />
 		<GroupSidebarButton
 			action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
 			text="Edit Group"
+			icon={faCog}
 		/>
 	</div>
 </div>

@@ -4,6 +4,7 @@
 
 	export let text: string;
 	export let action = () => {};
+	export let icon = faPoll
 
 	let hovering = false;
 </script>
@@ -15,7 +16,7 @@
 	on:click={action}
 	class="select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4"
 >
-	<Fa icon={faPoll} color={hovering ? "#015BC0" : "black"} />
+	<Fa {icon} color={hovering ? "#015BC0" : "black"} />
 	<div class="ml-2">
 		{text}
 	</div>

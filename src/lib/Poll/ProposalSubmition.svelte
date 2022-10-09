@@ -4,12 +4,14 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { page } from '$app/stores';
+	import type { proposal } from '$lib/typescriptexperiments';
 
 	let title: string;
 	let description: string;
+	export let abstained:proposal[];
 
-	const addProposal = () => {
-		fetchRequest(
+	const addProposal = async () => {
+		const { json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/create`,
 			{
@@ -17,6 +19,15 @@
 				description
 			}
 		);
+
+		abstained.push({
+			title,
+			description,
+			id:json
+		})
+
+		abstained = abstained
+
 	};
 </script>
 

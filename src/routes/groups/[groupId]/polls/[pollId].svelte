@@ -8,13 +8,16 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { poll, votings } from '$lib/Poll/interface';
+	import type { poll, proposal, votings } from '$lib/Poll/interface';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 
 	let poll: poll;
 	let votings: votings[];
 	let selectedPage: 'You' | 'Delegate' = 'You';
+	let abstained:proposal[]
+
+	$: console.log(abstained, "ABS")
 
 	onMount(async () => {
 		getPollData();
@@ -50,8 +53,8 @@
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-			<ProposalsRanked bind:votings bind:selectedPage />
-			<ProposalSubmition />
+			<ProposalsRanked bind:votings bind:selectedPage bind:abstained/>
+			<ProposalSubmition bind:abstained/>
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			<Comments />
 			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">Delete Poll</ButtonPrimary>

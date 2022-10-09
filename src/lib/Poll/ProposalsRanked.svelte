@@ -16,12 +16,13 @@
 	export let selectedPage: 'You' | 'Delegate';
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
-	let abstained: proposal[] = [];
+	export let abstained: proposal[] = [];
 
 	let unsaved = false;
 	let status: number;
 
 	$: selectedPage && setUpVotings();
+	$: console.log(abstained)
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -73,29 +74,28 @@
 			element.classList.add('remove-after-placed');
 
 			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
-			
-			
+
 			// if (!proposal) return;
 
 			// if (parent === 'ranked') {
 			// 	// const oldRanked = ranked;
 			// 	// ranked = [];
-				
+
 			// 	// const ee = document.querySelector('.container.ranked');
-				
+
 			// 	// var first = ee?.firstElementChild;
-				
+
 			// 	// while (first) {
 			// 	// 	console.log(first)
 			// 	// 	first.remove();
 			// 	// 	first = ee?.firstElementChild;
 			// 	// }
-				
+
 			// 	await waitForElm('.remove-after-placed');
-				
+
 			// 	ranked.splice(index, 0, proposal);
 			// 	ranked = ranked;
-				
+
 			// 	// sortable.destroy()
 			// 	// console.log(document.querySelector("."))
 			// 	// console.log(elementLater.parentNode?.removeChild(document.querySelector(".remove-after-placed")))

@@ -7,7 +7,8 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Tag from '$lib/Group/Tag.svelte';
 	import { onMount } from 'svelte';
-	import type {Tag as TagType} from '$lib/Group/interface'
+	import type { Tag as TagType } from '$lib/Group/interface';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
@@ -57,6 +58,8 @@
 	let description = '';
 	let title = '';
 	let tags: TagType[] = [];
+	let selectedTag: TagType;
+	let status:number;
 
 	const createPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
@@ -65,9 +68,11 @@
 			start_date: new Date(),
 			end_date: new Date(new Date().setMonth(12)),
 			poll_type: 1,
-			tag: 1,
+			tag: selectedTag.id,
 			dynamic: false
 		});
+
+		status = res.status
 	};
 
 	const getGroupTags = async () => {
@@ -80,38 +85,50 @@
 	});
 </script>
 
-<Layout>
-	<form
-		on:submit|preventDefault={() =>
-			!disabled.includes(selected_poll) && !disabled.includes(selected_time) ? createPoll() : null}
-		class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8"
-	>
-		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
-			<h1 class="text-2xl">Create a poll</h1>
-			<TextInput label="Title" bind:value={title} />
-			<TextArea label="Description" bind:value={description} />
-			<div class="flex gap-4">
-				{#each tags as tag}
-					<Tag tag={tag.tag_name} />
-				{/each}
+<Layout centering={true}>
+	<!-- TODO: Fix for mobile -->
+	<div class="flex flex-col sm:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-3/4">
+		<form
+			on:submit|preventDefault={() =>
+				!disabled.includes(selected_poll) && !disabled.includes(selected_time)
+					? createPoll()
+					: null}
+			class="sm:w-2/3"
+		>
+			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
+				<h1 class="text-2xl">Create a poll</h1>
+				<TextInput required={true} label="Title" bind:value={title} />
+				<TextArea required={true} label="Description" bind:value={description} />
+				<h2>Select Tag</h2>
+				<div class="flex gap-4">
+					{#each tags as tag}
+						<Tag
+							onclick={() => (selectedTag = tag)}
+							tag={tag.tag_name}
+							Class={`cursor-pointer ${selectedTag === tag ? 'bg-blue-600' : 'bg-blue-200'}`}
+						/>
+					{/each}
+				</div>
+				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
+					This polltype is not implemented yet
+				{/if}
+				<StatusMessage {status}/>
+				<ButtonPrimary
+					type="submit"
+					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
+						? 'bg-gray-400'
+						: 'bg-blue-600'}>Create Poll</ButtonPrimary
+				>
 			</div>
-			{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-				This polltype is not implemented yet
-			{/if}
-			<ButtonPrimary
-				type="submit"
-				Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
-					? 'bg-gray-400'
-					: 'bg-blue-600'}>Create Poll</ButtonPrimary
-			>
-		</div>
-		<div class="w-1/3">
+		</form>
+		<div class="sm:w-1/3">
 			<div class="bg-white p-6 shadow-xl">
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}
 						<ButtonPrimary
 							action={() => (selected_poll = poll)}
-							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}>{poll}</ButtonPrimary
+							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
+							Class="transition transition-colors">{poll}</ButtonPrimary
 						>
 					{/each}
 				</div>
@@ -141,5 +158,5 @@
 				</div>
 			</div>
 		</div>
-	</form>
+	</div>
 </Layout>

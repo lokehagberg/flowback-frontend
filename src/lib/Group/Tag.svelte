@@ -2,10 +2,11 @@
 
     export let tag:string
     export let Class:string = ""
+    export let onclick = () => {}
 
 </script>
 
-<div class={"select-none tag text-center bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded " + Class}>{tag}</div>
+<div class={"select-none tag text-center bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded " + Class} on:click={onclick}>{tag}</div>
 
 <style>
     .tag{

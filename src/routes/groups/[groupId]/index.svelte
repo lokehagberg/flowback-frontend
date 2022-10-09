@@ -37,9 +37,9 @@
 	});
 
 	const setUserGroupInfo = async () => {
-		userInfo.subscribe(userInfo => {
-			console.log(userInfo, "HAIHISAH")
-		})
+		userInfo.subscribe((userInfo) => {
+			console.log(userInfo, 'HAIHISAH');
+		});
 
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
 		userGroupInfo.set(json.results[0]);
@@ -54,27 +54,29 @@
 <Layout>
 	<GroupHeader bind:selectedPage {group} />
 
-	<div class="flex justify-center mt-2 md:mt-16 gap-2 md:gap-16 mb-16">
-		<div class="w-2/3">
-			{#if selectedPage === 'flow'}
-				<PollThumbnails />
-			{:else if selectedPage === 'delegation'}
-				<Delegation />
-			{:else if selectedPage === 'members'}
-				<Members />
-			{:else if selectedPage === 'documents'}
-				<Documents />
-			{:else if selectedPage === 'statistics'}
-				<Statistics />
-			{:else if selectedPage === 'email'}
-				<SendEmail />
-			{:else if selectedPage === 'about'}
-				<About description={group.description} />
-			{:else if selectedPage === 'tags'}
-				<Tags />
-			{/if}
-		</div>
+	<div class="flex justify-center">
+		<div class="flex justify-center mt-2 md:mt-16 gap-2 md:gap-16 mb-16 lg:w-3/4">
+			<div class="w-2/3">
+				{#if selectedPage === 'flow'}
+					<PollThumbnails />
+				{:else if selectedPage === 'delegation'}
+					<Delegation />
+				{:else if selectedPage === 'members'}
+					<Members />
+				{:else if selectedPage === 'documents'}
+					<Documents />
+				{:else if selectedPage === 'statistics'}
+					<Statistics />
+				{:else if selectedPage === 'email'}
+					<SendEmail />
+				{:else if selectedPage === 'about'}
+					<About description={group.description} />
+				{:else if selectedPage === 'tags'}
+					<Tags />
+				{/if}
+			</div>
 
-		<GroupSidebar {group} bind:selectedPage />
+			<GroupSidebar {group} bind:selectedPage />
+		</div>
 	</div>
 </Layout>

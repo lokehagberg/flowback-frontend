@@ -1,11 +1,12 @@
 export async function fetchRequest(
 	method: 'GET' | 'POST',
 	api: string,
-	data: any = {},
+	data: any = null,
 	needs_authorization: boolean = true,
 	needs_json: boolean = true
 ) {
-	// console.log(data);
+	if (method === 'GET' && data !== null) console.warn("Method 'GET' does not take any data, use query parameters instead. For example: /api?id=5")
+
 	let headers: any = {};
 
 	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');

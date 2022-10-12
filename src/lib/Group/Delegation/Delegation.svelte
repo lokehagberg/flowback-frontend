@@ -11,7 +11,7 @@
 	import All from './All.svelte';
 	import { onMount } from 'svelte';
 
-	let selectedPage: 'All' | 'Selected' = 'Selected';
+	let selectedPage: 'All' | 'Selected' = 'All';
 
 	onMount(() => {
 		// createDelegationPool()

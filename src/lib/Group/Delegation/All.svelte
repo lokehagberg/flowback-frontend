@@ -18,19 +18,18 @@
 	const getDelegatePools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=100`,
-			{}
+			`group/${$page.params.groupId}/delegate/pools?limit=100`
 		);
-		console.log(json.results, "RESULTS")
 
+		/*
+			Temporary fix to make each delegate pool be associated with one user.
+			TODO: Implement delegate pool feature in the front end (Figma design first)
+		*/
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				console.log(await (
-					await fetchRequest('GET', `user`, { id: delegatePool.delegates[0].user_id })
-				).json)
 				return await (
-					await fetchRequest('GET', `user`, { id: delegatePool.delegates[0].user_id })
-				).json;
+					await fetchRequest('GET', `users?id=${delegatePool.delegates[0].user_id}`)
+				).json.results[0];
 			})
 		);
 	};
@@ -42,14 +41,15 @@
 
 <ul class="w-full">
 	{#each delegates as delegate}
-		<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex">
-			<div class="flex">
+		<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
+			<div
+				class="cursor-pointer hover:underline flex items-center"
+				on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
+			>
 				<div class="bg-red-500 w-10 h-10" />
-				<a href={`/user?id=${delegate.id}`} class="hover:underline text-black w-64 ml-10"
-					>{delegate.username}</a
-				>
+				<span class="text-black ml-4 mr-4">{delegate.username}</span>
 			</div>
-			<ButtonPrimary>Add as Delegate</ButtonPrimary> 
+			<ButtonPrimary>Add as Delegate</ButtonPrimary>
 		</li>
 	{/each}
 </ul>

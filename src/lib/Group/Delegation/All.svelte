@@ -4,15 +4,40 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import { userGroupInfo } from '$lib/Group/interface';
 
 	let delegates: User[] = [];
+	let userIsDelegate: boolean;
 
 	const createDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`);
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/delegate/pool/create`
+		);
+
+		if (!res.ok) return;
+
+		getDelegatePools();
+
+		userGroupInfo.subscribe(info => {
+			console.log(info);
+			if (!info.delegate) userGroupInfo.set({ ...info, delegate: true });
+		});
 	};
 
 	const deleteDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/delete`);
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/delegate/pool/delete`
+		);
+
+		if (!res.ok) return;
+		getDelegatePools();
+
+		userGroupInfo.subscribe(info => {
+			console.log(info);
+			if (info.delegate) userGroupInfo.set({ ...info, delegate: false });
+		});
 	};
 
 	const getDelegatePools = async () => {
@@ -36,7 +61,10 @@
 
 	onMount(() => {
 		getDelegatePools();
-		
+
+		userGroupInfo.subscribe(info => {
+			userIsDelegate = info.delegate;
+		});
 	});
 </script>
 
@@ -54,5 +82,11 @@
 		</li>
 	{/each}
 </ul>
-<ButtonPrimary Class="mt-3" action={createDelegationPool}>Become Delegate</ButtonPrimary>
-<ButtonPrimary Class="mt-3" action={deleteDelegationPool}>Stop being Delegate</ButtonPrimary>
+
+{#if userIsDelegate}
+	<ButtonPrimary Class="mt-3 bg-red-500" action={deleteDelegationPool}
+		>Stop being Delegate</ButtonPrimary
+	>
+{:else}
+	<ButtonPrimary Class="mt-3" action={createDelegationPool}>Become Delegate</ButtonPrimary>
+{/if}

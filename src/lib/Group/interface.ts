@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 export type SelectablePage =
 	| 'flow'
 	| 'about'
@@ -69,11 +71,15 @@ export interface Tag {
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
-import { writable, readable, get } from 'svelte/store';
 
-export let userGroupInfo:any;
-export const setUserInfo = (userGroupInfo:any) => {
-    userGroupInfo = readable(userGroupInfo)
-}
-
-export const grouInfo = readable(6666)
+export const userGroupInfo = writable({
+	banner_image: '',
+	delegate: false,
+	id: 0,
+	is_admin: false,
+	permission_id: null,
+	permission_name: '',
+	profile_image: null,
+	user_id: 0,
+	username: ''
+});

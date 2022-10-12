@@ -21,7 +21,7 @@
 	let innerWidth = 0;
 	let clickedExpandSidebar = false;
 
-	$: console.log(innerWidth);
+	// $: console.log(innerWidth);
 </script>
 
 <svelte:window bind:innerWidth />

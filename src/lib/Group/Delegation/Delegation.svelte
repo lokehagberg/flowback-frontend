@@ -9,14 +9,8 @@
 
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';
-	import { onMount } from 'svelte';
 
 	let selectedPage: 'All' | 'Selected' = 'All';
-
-	onMount(() => {
-		// createDelegationPool()
-		// deleteDelegationPool()
-	});
 </script>
 
 <div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">

@@ -9,7 +9,7 @@
 	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
 	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
-	import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
+	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { page } from '$app/stores';
 
 	export let selectedPage: SelectablePage = 'flow';
@@ -45,7 +45,7 @@
 		<GroupSidebarButton
 			action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)}
 			text="Create Poll"
-			icon={faPlusCircle}
+			icon={faPoll}
 		/>
 		<GroupSidebarButton
 			action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}

@@ -2,7 +2,7 @@
 	import GroupHeader from '$lib/Group/GroupHeader.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import { userGroupInfo, type GroupDetails, type SelectablePage } from '$lib/Group/interface';
+	import { grouInfo, userGroupInfo, type GroupDetails, type SelectablePage } from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -14,7 +14,8 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
-	import { userInfo } from '$lib/Generic/GenericFunctions';
+	// import { grouInfo } from '$lib/Generic/GenericFunctions';
+	import { get } from 'svelte/store';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -37,9 +38,19 @@
 	});
 
 	const setUserGroupInfo = async () => {
-		userInfo.subscribe((userInfo) => {
-			console.log(userInfo, 'HAIHISAH');
-		});
+		// userInfo.set(userInfo);
+
+		let test = 0
+
+		// userInfo.subscribe(value => {
+		// 	console.log(value, "SUBSCRIBE PLEASE")
+		// 	test = value.test
+		// });
+
+		test = get(grouInfo)
+		console.log(test, "TEST")
+
+		// const userGroupData = readable({ test: 4 });
 
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
 		userGroupInfo.set(json.results[0]);

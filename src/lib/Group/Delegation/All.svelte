@@ -8,11 +8,11 @@
 	let delegates: User[] = [];
 
 	const createDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`, {});
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/create`);
 	};
 
 	const deleteDelegationPool = async () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/delete`, {});
+		fetchRequest('POST', `group/${$page.params.groupId}/delegate/pool/delete`);
 	};
 
 	const getDelegatePools = async () => {
@@ -36,6 +36,7 @@
 
 	onMount(() => {
 		getDelegatePools();
+		
 	});
 </script>
 
@@ -53,4 +54,5 @@
 		</li>
 	{/each}
 </ul>
-<ButtonPrimary Class="mt-3">Become Delegate</ButtonPrimary>
+<ButtonPrimary Class="mt-3" action={createDelegationPool}>Become Delegate</ButtonPrimary>
+<ButtonPrimary Class="mt-3" action={deleteDelegationPool}>Stop being Delegate</ButtonPrimary>

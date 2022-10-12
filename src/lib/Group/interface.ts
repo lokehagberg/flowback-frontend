@@ -29,10 +29,10 @@ export interface DelegatePools {
 
 export interface Delegate {
 	id: number;
-	pool_id:number;
+	pool_id: number;
 	profile_image: File;
 	username: string;
-	tags: {id:number, tag_name:string}[];
+	tags: { id: number; tag_name: string }[];
 }
 
 export interface Group {
@@ -58,7 +58,7 @@ export interface GroupDetails {
 	jitsi_room: string;
 	name: string;
 	public: boolean;
-	id:number
+	id: number;
 }
 
 export interface Tag {
@@ -69,5 +69,11 @@ export interface Tag {
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
-import { writable } from 'svelte/store';
-export const userGroupInfo = writable({})
+import { writable, readable, get } from 'svelte/store';
+
+export let userGroupInfo:any;
+export const setUserInfo = (userGroupInfo:any) => {
+    userGroupInfo = readable(userGroupInfo)
+}
+
+export const grouInfo = readable(6666)

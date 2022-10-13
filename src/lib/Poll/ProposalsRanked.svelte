@@ -69,10 +69,6 @@
 			on where the user dragged it too.	
 		*/
 
-		sortable.on('sortable:start', (e:any) => {
-			e.cancel();
-		})
-
 		sortable.on('sortable:stop', async (e:any) => {
 			console.log(e, "STOPPED")
 		})
@@ -327,8 +323,7 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 				>
-				<!-- cursor-move -->
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}> 
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
 								<Fa icon={faPlus} />

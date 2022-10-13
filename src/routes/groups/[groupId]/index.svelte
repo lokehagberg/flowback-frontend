@@ -2,7 +2,11 @@
 	import GroupHeader from '$lib/Group/GroupHeader.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import  {userGroupInfo, type GroupDetails, type SelectablePage } from '$lib/Group/interface';
+	import {
+		userIsDelegateStore,
+		type GroupDetails,
+		type SelectablePage
+	} from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -37,7 +41,7 @@
 
 	const setUserGroupInfo = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
-		userGroupInfo.set(json.results[0]);
+		userIsDelegateStore.set(json.results[0].delegate);
 	};
 
 	const getGroupInfo = async () => {

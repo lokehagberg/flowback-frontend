@@ -7,6 +7,7 @@
 	import { userIsDelegateStore } from '$lib/Group/interface';
 
 	let delegates: User[] = [];
+	let delegateRelations:any[] = [];
 	let userIsDelegate: boolean;
 
 	const createDelegationPool = async () => {
@@ -52,8 +53,14 @@
 		);
 	};
 
+	const getDelegateRelations = async () => {
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
+		delegateRelations = json.results;
+	};
+
 	onMount(() => {
 		getDelegatePools();
+		getDelegateRelations();
 
 		userIsDelegateStore.subscribe((info) => {
 			userIsDelegate = info;

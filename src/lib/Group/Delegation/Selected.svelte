@@ -14,6 +14,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { copyObject } from '$lib/Generic/GenericFunctions';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	let delegates: Delegate[] = [];
 	let oldDelegation: Delegate[] = [];
@@ -36,8 +37,8 @@
 			`group/${$page.params.groupId}/delegate/update`,
 			toSendDelegates
 		);
-		
-		status = res.status
+
+		status = res.status;
 	};
 
 	const getDelegateRelations = async () => {
@@ -124,7 +125,7 @@
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
-					<div class="bg-red-500 w-10 h-10" />
+					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 					<a href={`/user?id=${delegate.id}`} class="hover:underline text-black w-64 ml-10"
 						>{delegate.username}</a
 					>

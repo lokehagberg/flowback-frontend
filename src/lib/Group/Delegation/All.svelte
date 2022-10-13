@@ -5,9 +5,10 @@
 	import type { User } from '$lib/User/interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { userIsDelegateStore } from '$lib/Group/interface';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	let delegates: User[] = [];
-	let delegateRelations:any[] = [];
+	let delegateRelations: any[] = [];
 	let userIsDelegate: boolean;
 
 	const createDelegationPool = async () => {
@@ -75,7 +76,7 @@
 				class="cursor-pointer hover:underline flex items-center"
 				on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
 			>
-				<div class="bg-red-500 w-10 h-10" />
+				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<span class="text-black ml-4 mr-4">{delegate.username}</span>
 			</div>
 			<ButtonPrimary>Add as Delegate</ButtonPrimary>

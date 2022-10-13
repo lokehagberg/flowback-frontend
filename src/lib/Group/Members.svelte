@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { SelectablePages, User } from './interface';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	let users: User[] = [];
 	let loading = true;
@@ -45,7 +46,7 @@
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 					href={`/user?id=${user.user_id}`}
 				>
-					<div class="bg-red-500 w-10 h-10" />
+					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 					<div class="w-64 ml-10 hover:underline">{user.username}</div>
 				</a>
 			{/each}
@@ -56,7 +57,7 @@
 				class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 				href={`/user?id=${user.id}`}
 			>
-				<div class="bg-red-500 w-10 h-10" />
+				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<div class="w-64 ml-10 hover">{user.username}</div>
 				<div class="w-64 ml-10 hover:underline">ACCEPT</div>
 			</a>
@@ -71,7 +72,7 @@
 			<ul>
 				{#each searchedUsers as searchedUser}
 					<li class="text-black flex bg-white p-2 w-full mt-6">
-						<div class="bg-red-500 w-10 h-10" />
+						<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 						<div class="w-64 ml-10">{searchedUser.username}</div>
 						<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
 							>INVITE</ButtonPrimary

@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	let user: User = {
 		banner_image: '',
@@ -18,8 +19,8 @@
 	onMount(async () => {
 		const userId = $page.url.searchParams.get('id');
 		const { res, json } = await fetchRequest('GET', userId ? `users?id=${userId}` : 'user');
-		console.log(json)
-		user = userId ? json.results[0] : json
+		console.log(json);
+		user = userId ? json.results[0] : json;
 	});
 
 	const updateName = async () => {
@@ -29,21 +30,16 @@
 	console.log($page.url.searchParams.get('id'));
 </script>
 
-<Layout>
-	<div class="bg-red-500 h-48 mb-6" />
-	<div>
-		<div class="bg-blue-500 h-36 w-36" />
-		<div class="w-1/2 ">
-			<h1 class="inline">{user.username}</h1>
-			<h2 class="inline">Website: Github.com</h2>
-		</div>
+<Layout centering={true}>
+	<div class="bg-red-500 h-48 w-full" />
+	<div class="w-full md:w-2/3 bg-white shadow rounded p-8">
+		<img src={DefaultPFP} class="h-36 w-36 inline" alt="avatar" />
+		<h1 class="inline ml-8">{user.username}</h1>
+		<!-- {#if user.website} -->
+		<!-- <h2 class="inline">Website: {user.website}</h2> -->
+		<!-- {/if} -->
+		<p class="mt-8">
+			{user.bio || 'This user has no bio'}
+		</p>
 	</div>
-
-	<p>
-		Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis assumenda ab dolores odit
-		eos sunt nihil consequatur obcaecati? Animi, inventore neque non nulla odio nisi nam et a
-		laborum quasi. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iusto, quam quod vitae
-		rerum nulla officia perferendis provident ipsa repellat temporibus libero sit sequi eum optio at
-		consequatur voluptatum porro natus!
-	</p>
 </Layout>

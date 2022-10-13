@@ -53,7 +53,7 @@
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-			<ProposalsRanked bind:votings bind:selectedPage bind:abstained/>
+			<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag}/>
 			<ProposalSubmition bind:abstained/>
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			<Comments />

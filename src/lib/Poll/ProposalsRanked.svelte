@@ -17,6 +17,8 @@
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
 	export let abstained: proposal[] = [];
+	
+	export let tag:number;
 
 	let unsaved = false;
 	let status: number;
@@ -66,6 +68,10 @@
 			Whenever the user stops dragging it updates the state of ranked or abstained based 
 			on where the user dragged it too.	
 		*/
+
+		sortable.on('sortable:start', (e:any) => {
+			e.cancel();
+		})
 
 		sortable.on('sortable:stop', async (e:any) => {
 			console.log(e, "STOPPED")
@@ -269,6 +275,11 @@
 	};
 
 	const getDelegateVotings = async () => {
+
+		const delegate_stuff = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?tag=${tag}`)
+
+		console.log(delegate_stuff.json.results[0])
+
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=true&delegate_user_id=2`,
@@ -277,7 +288,9 @@
 			}
 		);
 		votings = json.results;
+
 	};
+
 </script>
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
@@ -314,7 +327,8 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 				>
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
+				<!-- cursor-move -->
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}> 
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
 								<Fa icon={faPlus} />

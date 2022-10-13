@@ -59,6 +59,12 @@
 		delegateRelations = json.results;
 	};
 
+	const createDelegateRelation = async (delegate_pool_id: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
+			delegate_pool_id
+		});
+	};
+
 	onMount(() => {
 		getDelegatePools();
 		getDelegateRelations();
@@ -79,7 +85,7 @@
 				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<span class="text-black ml-4 mr-4">{delegate.username}</span>
 			</div>
-			<ButtonPrimary>Add as Delegate</ButtonPrimary>
+			<ButtonPrimary action={() => createDelegateRelation(delegate.id)}>Add as Delegate</ButtonPrimary>
 		</li>
 	{/each}
 </ul>

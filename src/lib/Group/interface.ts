@@ -83,3 +83,6 @@ export const userGroupInfo = writable({
 	user_id: 0,
 	username: ''
 });
+
+
+export const userIsDelegateStore = writable(false)

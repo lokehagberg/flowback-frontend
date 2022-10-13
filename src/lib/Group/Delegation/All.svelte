@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
-	import { userGroupInfo } from '$lib/Group/interface';
+	import { userIsDelegateStore } from '$lib/Group/interface';
 
 	let delegates: User[] = [];
 	let userIsDelegate: boolean;
@@ -18,11 +18,7 @@
 		if (!res.ok) return;
 
 		getDelegatePools();
-
-		userGroupInfo.subscribe(info => {
-			console.log(info);
-			if (!info.delegate) userGroupInfo.set({ ...info, delegate: true });
-		});
+		userIsDelegateStore.update((value) => (value = true));
 	};
 
 	const deleteDelegationPool = async () => {
@@ -32,12 +28,9 @@
 		);
 
 		if (!res.ok) return;
-		getDelegatePools();
 
-		userGroupInfo.subscribe(info => {
-			console.log(info);
-			if (info.delegate) userGroupInfo.set({ ...info, delegate: false });
-		});
+		getDelegatePools();
+		userIsDelegateStore.update((value) => (value = false));
 	};
 
 	const getDelegatePools = async () => {
@@ -62,8 +55,8 @@
 	onMount(() => {
 		getDelegatePools();
 
-		userGroupInfo.subscribe(info => {
-			userIsDelegate = info.delegate;
+		userIsDelegateStore.subscribe((info) => {
+			userIsDelegate = info;
 		});
 	});
 </script>

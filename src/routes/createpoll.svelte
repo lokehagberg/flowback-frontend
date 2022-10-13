@@ -105,6 +105,7 @@
 				<h1 class="text-2xl">Create a poll</h1>
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
+				<h2>End Date</h2>
 				<DateInput bind:value={end_date} />
 				<h2>Select Tag</h2>
 				<div class="flex gap-4">

@@ -14,6 +14,7 @@ export interface User {
 	username: string;
 	id: number;
 	profile_image: null;
+	user_id:number
 }
 
 export interface DelegatePools {

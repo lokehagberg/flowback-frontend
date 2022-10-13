@@ -43,7 +43,7 @@
 			{#each users as user}
 				<a
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
-					href={`/user?id=${user.id}`}
+					href={`/user?id=${user.user_id}`}
 				>
 					<div class="bg-red-500 w-10 h-10" />
 					<div class="w-64 ml-10 hover:underline">{user.username}</div>

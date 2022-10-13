@@ -17,8 +17,9 @@
 
 	onMount(async () => {
 		const userId = $page.url.searchParams.get('id');
-		const { res, json } = await fetchRequest('GET', userId ? `user/${userId}` : 'user');
-		user = json
+		const { res, json } = await fetchRequest('GET', userId ? `users?id=${userId}` : 'user');
+		console.log(json)
+		user = userId ? json.results[0] : json
 	});
 
 	const updateName = async () => {

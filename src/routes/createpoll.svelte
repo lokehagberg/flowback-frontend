@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import { DateInput } from 'date-picker-svelte'
 
 	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
@@ -60,7 +61,7 @@
 	let tags: TagType[] = [];
 	let selectedTag: TagType;
 	let status: number;
-	let end_date = '';
+	let end_date = new Date();
 
 	const createPoll = async () => {
 		if (selectedTag === null) status = 400;
@@ -104,7 +105,7 @@
 				<h1 class="text-2xl">Create a poll</h1>
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
-				<TextInput required={true} label="End Date" bind:value={end_date} />
+				<DateInput bind:value={end_date} />
 				<h2>Select Tag</h2>
 				<div class="flex gap-4">
 					{#each tags as tag}

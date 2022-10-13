@@ -66,14 +66,26 @@
 			Whenever the user stops dragging it updates the state of ranked or abstained based 
 			on where the user dragged it too.	
 		*/
-		sortable.on('sortable:stop', async (e: any) => {
-			unsaved = true;
-			const element: HTMLElement = e.data.dragEvent.data.originalSource;
-			const index: number = e.data.newIndex;
-			const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
-			element.classList.add('remove-after-placed');
 
-			const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
+		sortable.on('sortable:stop', async (e:any) => {
+			console.log(e, "STOPPED")
+		})
+
+		sortable.on('sortable:sorted', async (e: any) => {
+			unsaved = true;
+
+			console.log(e, "SORTED")
+
+			// const element: HTMLElement = e.data.dragEvent.data.originalSource;
+			// const index: number = e.data.newIndex;
+			// const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
+			// element.classList.add('remove-after-placed');
+
+			// const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
+
+
+
+
 
 			// if (!proposal) return;
 

@@ -280,7 +280,7 @@
 
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=true&delegate_user_id=2`,
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=true&delegate_user_id=35`,
 			{
 				delegate_user_id: 1
 			}

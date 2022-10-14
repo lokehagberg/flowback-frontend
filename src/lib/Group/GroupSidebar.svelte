@@ -40,11 +40,11 @@
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => (selectedPage = 'documents')}
 				text="Documents"
 				icon={faFile}
-			/>
+			/> -->
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
 				text="Members"

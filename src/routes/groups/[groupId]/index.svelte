@@ -52,9 +52,8 @@
 
 <Layout>
 	<GroupHeader bind:selectedPage {group} />
-
 	<div class="flex justify-center">
-		<div class="flex justify-center mt-2 md:mt-16 gap-2 md:gap-16 mb-16 w-3/4">
+		<div class="flex justify-center mt-2 md:mt-6 lg:mt-16 gap-2 md:gap-6 lg:gap-16 mb-16 w-3/4">
 			<div class="w-2/3">
 				{#if selectedPage === 'flow'}
 					<PollThumbnails />

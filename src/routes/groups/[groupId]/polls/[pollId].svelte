@@ -11,13 +11,14 @@
 	import type { poll, proposal, votings } from '$lib/Poll/interface';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
+	import { mode } from '$lib/Generic/configuration';
 
 	let poll: poll;
 	let votings: votings[];
 	let selectedPage: 'You' | 'Delegate' = 'You';
-	let abstained:proposal[]
+	let abstained: proposal[];
 
-	$: console.log(abstained, "ABS")
+	$: console.log(abstained, 'ABS');
 
 	onMount(async () => {
 		getPollData();
@@ -53,10 +54,12 @@
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-			<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag}/>
-			<ProposalSubmition bind:abstained/>
+			<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
+			<ProposalSubmition bind:abstained />
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
-			<!-- <Comments /> -->
+			{#if mode === 'Dev'}
+				<Comments />
+			{/if}
 			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">Delete Poll</ButtonPrimary>
 		</div>
 	</Layout>

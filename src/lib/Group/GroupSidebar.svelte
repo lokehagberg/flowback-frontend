@@ -14,6 +14,7 @@
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa/src/fa.svelte';
+	import { mode } from '$lib/Generic/configuration';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -40,11 +41,13 @@
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
-			<!-- <GroupSidebarButton
+			{#if mode === "Dev"}
+			<GroupSidebarButton
 				action={() => (selectedPage = 'documents')}
 				text="Documents"
 				icon={faFile}
-			/> -->
+			/>
+			{/if}
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
 				text="Members"

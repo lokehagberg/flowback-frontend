@@ -10,6 +10,7 @@
 	import Logo from '$lib/assets/Logo.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
+	import { mode } from '$lib/Generic/configuration';
 	let sideHeaderOpen = false;
 </script>
 
@@ -22,18 +23,25 @@
 		>
 		<div class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
-			<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
+			{#if mode === 'Dev'}
+				<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
+			{/if}
+
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
 			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
-			<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
-			<HeaderIcon icon={faList} text="Kanban" href="kanban" />
+
+			{#if mode === 'Dev'}
+				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+				<HeaderIcon icon={faList} text="Kanban" href="kanban" />
+			{/if}
 		</div>
 
 		<div
 			class="inline-block float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-		<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp"/>
+			<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp" />
+		</div>
 	</header>
 	{#if sideHeaderOpen}
 		<SideHeader />
@@ -61,11 +69,9 @@
 	}
 
 	@media only screen and (max-width: 500px) {
-		header > div:last-child  {
+		header > div:last-child {
 			float: none;
-			display:block;
-			
+			display: block;
 		}
 	}
-
 </style>

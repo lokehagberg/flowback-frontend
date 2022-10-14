@@ -11,6 +11,7 @@
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import { mode } from '$lib/Generic/configuration';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -70,7 +71,8 @@
 		*/
 
 		sortable.on('sortable:start', (e: any) => {
-			e.cancel();
+			if (mode === "Prod")
+				e.cancel();
 		});
 
 		sortable.on('sortable:stop', async (e: any) => {
@@ -283,7 +285,6 @@
 
 	const getDelegateVotings = async () => {
 		const delegateId = await getDelegateId()
-		// delegate_user_id=${delegateId}
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=True`
@@ -303,8 +304,7 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'ranked')}
 				>
-					<!-- for when drag and drop works cursor-move -->
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}>
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''} ${mode === "Dev" && 'cursor-move'}`}>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
 								<Fa icon={faMinus} />
@@ -328,8 +328,7 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 				>
-					<!-- for when drag and drop works cursor-move -->
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}>
+					<Proposal {...proposal} Class={`${selectedPage === 'You'} ${mode === "Dev" && 'cursor-move'}`}>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
 								<Fa icon={faPlus} />

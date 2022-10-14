@@ -17,14 +17,14 @@
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
 	export let abstained: proposal[] = [];
-	
-	export let tag:number;
+
+	export let tag: number;
 
 	let unsaved = false;
 	let status: number;
 
 	$: selectedPage && setUpVotings();
-	$: console.log(abstained)
+	$: console.log(abstained);
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -69,14 +69,18 @@
 			on where the user dragged it too.	
 		*/
 
-		sortable.on('sortable:stop', async (e:any) => {
-			console.log(e, "STOPPED")
-		})
+		sortable.on('sortable:start', (e: any) => {
+			e.cancel();
+		});
+
+		sortable.on('sortable:stop', async (e: any) => {
+			console.log(e, 'STOPPED');
+		});
 
 		sortable.on('sortable:sorted', async (e: any) => {
 			unsaved = true;
 
-			console.log(e, "SORTED")
+			console.log(e, 'SORTED');
 
 			// const element: HTMLElement = e.data.dragEvent.data.originalSource;
 			// const index: number = e.data.newIndex;
@@ -84,10 +88,6 @@
 			// element.classList.add('remove-after-placed');
 
 			// const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
-
-
-
-
 
 			// if (!proposal) return;
 
@@ -271,10 +271,12 @@
 	};
 
 	const getDelegateVotings = async () => {
+		const delegate_stuff = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegates?tag=${tag}`
+		);
 
-		const delegate_stuff = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?tag=${tag}`)
-
-		console.log(delegate_stuff.json.results[0])
+		console.log(delegate_stuff.json.results[0]);
 
 		const { json } = await fetchRequest(
 			'GET',
@@ -284,9 +286,7 @@
 			}
 		);
 		votings = json.results;
-
 	};
-
 </script>
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
@@ -299,7 +299,8 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'ranked')}
 				>
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
+					<!-- for when drag and drop works cursor-move -->
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
 								<Fa icon={faMinus} />
@@ -323,7 +324,8 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 				>
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && 'cursor-move'}`}>
+					<!-- for when drag and drop works cursor-move -->
+					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''}`}>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
 								<Fa icon={faPlus} />

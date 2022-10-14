@@ -283,10 +283,10 @@
 
 	const getDelegateVotings = async () => {
 		const delegateId = await getDelegateId()
-
+		// delegate_user_id=${delegateId}
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegate_user_id=${delegateId}`
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=True`
 		);
 
 		votings = json.results;

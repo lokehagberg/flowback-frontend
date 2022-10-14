@@ -12,12 +12,11 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
-	import { copyObject } from '$lib/Generic/GenericFunctions';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import Delegation from './Delegation.svelte';
 
 	let delegates: Delegate[] = [];
-	let oldDelegation: Delegate[] = [];
 	let tags: any[] = [];
 	let status: number;
 
@@ -52,6 +51,15 @@
 		console.log(tags);
 	};
 
+	const getDelegatesUserInfo = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=100&delegate=true`
+		);
+		console.log(json.results, 'JSON');
+		return json.results;
+	};
+
 	const getDelegationPools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
@@ -59,45 +67,28 @@
 		);
 
 		return json.results;
-		// delegates = json.results
 	};
 
 	const setDelegators = async () => {
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?limit=100&delegate=true`
-		);
+		const delegatesUserInfo: any[] = await getDelegatesUserInfo();
+		const delegateRelations: any[] = await getDelegateRelations();
+		const delegatePools: any[] = await getDelegationPools();
 
-		// const delegatePools = await getDelegationPools();
-		const delegateRelations = await getDelegateRelations();
-		const delegatePools = await getDelegationPools();
-		const _delegates: any = [];
+		delegateRelations.forEach((relation) => {
+			const info = delegatesUserInfo.find((user) => user.user_id === relation.delegates[0].user_id);
 
-		// console.log(delegateRelations[1].delegates[0].user_id, "TAGS")
-		for (let i = 0; i < json.results.length; i++) {
-			const delegate = json.results[i];
+			const delegate: Delegate = {
+				pool_id: relation.delegate_pool_id,
+				id: relation.id,
+				profile_image: info.profile_image,
+				username: info.username,
+				tags: relation.tags
+			};
 
-			const delegateRelation = delegateRelations.find(
-				(delegateRelation: any) => delegateRelation.delegates[0].group_user_id === delegate.id
-			);
-			const tags = delegateRelation?.tags;
-			const pool_id = delegatePools.find(
-				(pool: any) => pool.delegates[0].user_id === delegate.user_id
-			).id;
-			// const tags = delegateRelations.find(element => )
-			if (delegate.delegate)
-				_delegates[i] = {
-					id: delegate.id,
-					pool_id,
-					profile_image: delegate.profile_image,
-					username: delegate.username || '',
-					tags: tags || []
-				};
-		}
+			delegates.push(delegate)
+		});
 
-		//If a user is not a delegate it will be empty in _delegates, this clears those empty delegates
-		delegates = _delegates.filter((element: any) => Object.keys(element).length !== 0);
-		if (oldDelegation.length === 0) oldDelegation = copyObject(delegates);
+		delegates = delegates
 	};
 
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate

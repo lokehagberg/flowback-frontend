@@ -1,7 +1,8 @@
 <script lang="ts">
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
-
+	import { _ } from 'svelte-i18n';
+	
 	export let displayDetails = true;
 	export let dates = [
 		new Date('2022-09-21'),
@@ -26,7 +27,7 @@
 </script>
 
 <div class="relative text-black p-4 border border-gray-200 rounded">
-	<h1 class="text-left text-2xl">Timeline</h1>
+	<h1 class="text-left text-2xl">{$_("Timeline")}</h1>
 	<div class="h-6">
 		{#each datePlacement as date, i}
 			<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
@@ -51,7 +52,7 @@
 			<ul>
 				{#each dateLabels as label, i}
 					<li class="flex justify-between flex-col md:flex-row">
-						<div class="mb-4">{label} date:</div>
+						<div class="mb-4">{label} {$_("date")}:</div>
 						<div class="mb-4">{dates[i]}</div>
 					</li>
 				{/each}

@@ -10,7 +10,8 @@
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { DateInput } from 'date-picker-svelte'
-
+	import { _ } from 'svelte-i18n';
+	
 	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
 
@@ -102,12 +103,12 @@
 			class="sm:w-2/3"
 		>
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
-				<h1 class="text-2xl">Create a poll</h1>
+				<h1 class="text-2xl">{$_("Create a poll")}</h1>
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
-				<h2>End Date</h2>
+				<h2>{$_("End Date")}</h2>
 				<DateInput bind:value={end_date} />
-				<h2>Select Tag</h2>
+				<h2>{$_("Select Tag")}</h2>
 				<div class="flex gap-4">
 					{#each tags as tag}
 						<Tag
@@ -118,14 +119,14 @@
 					{/each}
 				</div>
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-					This polltype is not implemented yet
+					{$_("This polltype is not implemented yet")}
 				{/if}
 				<StatusMessage {status} />
 				<ButtonPrimary
 					type="submit"
 					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 						? 'bg-gray-400'
-						: 'bg-blue-600'}>Create Poll</ButtonPrimary
+						: 'bg-blue-600'}>{$_("Create Poll")}</ButtonPrimary
 				>
 			</div>
 		</form>

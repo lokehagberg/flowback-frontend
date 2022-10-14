@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
+
 	export let Class = '';
 
 	let message: string | null;
@@ -11,11 +13,15 @@
 	};
 
 	$: message = statusMessages[status];
-	$: console.log(status, "STATUS")
+	$: console.log(status, 'STATUS');
 </script>
 
 {#if message !== null && message !== undefined}
-	<div class={`border w-full pt-2 pb-2 text-center rounded ${Class} ${status === 200 ? "border-green-500" : "border-red-500"}`}>
-		{message}
+	<div
+		class={`border w-full pt-2 pb-2 text-center rounded ${Class} ${
+			status === 200 ? 'border-green-500' : 'border-red-500'
+		}`}
+	>
+		{$_(message)}
 	</div>
 {/if}

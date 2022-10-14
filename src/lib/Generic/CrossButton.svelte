@@ -1,5 +1,6 @@
 <script lang="ts">
     export let action = () => {}
+    import { _ } from 'svelte-i18n';
 </script>
 
 <button on:click={action}
@@ -19,5 +20,5 @@
             clip-rule="evenodd"
         /></svg
     >
-    <span class="sr-only">Close modal</span>
+    <span class="sr-only">{$_("Close modal")}</span>
 </button>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import Fa from 'svelte-fa/src/fa.svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let text: string;
 	export let action = () => {};
@@ -18,6 +19,6 @@
 >
 	<Fa {icon} color={hovering ? "#015BC0" : "black"} />
 	<div class="ml-2">
-		{text}
+		{$_(text)}
 	</div>
 </div>

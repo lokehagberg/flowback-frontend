@@ -6,6 +6,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tag from './Tag.svelte';
 	import type {Tag as TagType} from '$lib/Group/interface'
+	import { _ } from 'svelte-i18n';
 
 	let tags: TagType[] = [];
 	let tagToAdd = '';
@@ -57,10 +58,10 @@
 				<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
 				<div class="mt-2 w-full flex flex-col gap-2">
 					<ButtonPrimary Class="bg-rose-500" action={() => removeTag(tag)}
-						>Delete</ButtonPrimary
+						>{$_("Delete")}</ButtonPrimary
 					>
 					<ButtonPrimary Class="bg-purple-500" action={() => editTag(tag)}
-						>{tag.active ? 'Disable' : 'Activate'}</ButtonPrimary
+						>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
 					>
 				</div>
 			</div>

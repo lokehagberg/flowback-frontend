@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
-
+	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
 
 	const logOut = () => {
@@ -12,12 +12,12 @@
 
 	const navs = [
 		{
-			title: 'User profile',
+			title: 'User Profile',
 			action: () => (window.location.href = '/user')
 		},
 		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'Tools', action: () => (open_tools = true) },
-		{ title: 'Logout', action: logOut }
+		{ title: 'Log Out', action: logOut }
 	];
 
 	let open_support = false;
@@ -30,39 +30,38 @@
 			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"
 			on:click={nav.action}
 		>
-			{nav.title}
+			{$_(nav.title)}
 		</div>
 	{/each}
 </div>
 
 <Modal open={open_support}>
 	<div slot="header" class="p-4">
-		<h1 class="text-sm text-left p-0">Support</h1>
+		<h1 class="text-sm text-left p-0">{$_("Support")}</h1>
 		<CrossButton action={() => (open_support = false)} />
 	</div>
 
 	<div slot="body" class="text-left">
-		<div>Support between 12:00 and 17:00 CET</div>
-		<div>Number: +46737482562</div>
-		<div>Mail: flowbacktask@gmail.com</div>
-		<div>For questions about Metamask, contact the Metamask team.</div>
+		<div>{$_("Support between 12:00 and 17:00 CET")}</div>
+		<div>{$_("Number: +46737482562")}</div>
+		<div>{$_("Mail: flowbacktask@gmail.com")}</div>
+		<div>{$_("For questions about Metamask, contact the Metamask team.")}</div>
 	</div>
 </Modal>
 
 <Modal open={open_tools}>
 	<div slot="header" class="p-4">
-		<h1 class="text-sm text-left p-0">Tools</h1>
+		<h1 class="text-sm text-left p-0">{$_("Tools")}</h1>
 		<CrossButton action={() => (open_tools = false)} />
 	</div>
 
 	<div slot="body" class="text-left">
 		<div class="py-3 mb-2">
-			Click this button to create a co-document, share the link for others to edit it. Remember to
-			save the link.
+			{$_("Click this button to create a co-document, share the link for others to edit it. Remember to save the link.")}
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
-				<div on:click={handleCoDocumentCreation}>+ Create Co-Document</div>
+				<div on:click={handleCoDocumentCreation}>+ {$_("Create Co-Document")}</div>
 			</div>
 		</div>
 	</div>

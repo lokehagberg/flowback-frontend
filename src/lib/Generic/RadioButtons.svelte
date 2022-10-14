@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	export let Yes: boolean = true, label:string;
 </script>
 
@@ -6,11 +7,11 @@
 	<h1 class="text-left text-sm">{label}?</h1>
 	<div class="mt-2">
         <label class="ml-4">
-            Yes
+            {$_("Yes")}
             <input type="radio" name={label} checked={Yes} on:change={() => (Yes = true)} />
         </label>
 		<label>
-			No
+			{$_("No")}
 			<input type="radio" name={label} checked={!Yes} on:change={() => (Yes = false)} />
 		</label>
 	</div>

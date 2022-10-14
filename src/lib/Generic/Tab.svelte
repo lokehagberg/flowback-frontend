@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	export let selectedPage: string;
-	export let tabs:string[];
+	export let tabs: string[];
 </script>
 
 <div class="flex justify-around w-full mt-2 border-b">
@@ -10,7 +11,7 @@
 			class:border-b-2={selectedPage === tab}
 			on:click={() => (selectedPage = tab)}
 		>
-			{tab}
+			{$_(tab)}
 		</div>
 	{/each}
 </div>

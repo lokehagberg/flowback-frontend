@@ -14,6 +14,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import { _ } from 'svelte-i18n';
 
 	let delegates: Delegate[] = [];
 	let tags: any[] = [];
@@ -137,7 +138,7 @@
 					class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 					class:hidden={selected !== delegate.id}
 				>
-					<h1 class="text-xl">Edit tags for {delegate.username}</h1>
+					<h1 class="text-xl">{$_("Edit tags for")} {delegate.username}</h1>
 					<TextInput label="Search" />
 					<ul class="mt-6 flex flex-wrap items-center">
 						{#each tags as tag}
@@ -160,10 +161,10 @@
 	</ul>
 	<StatusMessage bind:status />
 	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}
-		>Save Changes</ButtonPrimary
+		>{$_("Save Changes")}</ButtonPrimary
 	>
 {:else}
-	<div>No Delegates selected</div>
+	<div>{$_("No Delegates selected")}</div>
 {/if}
 
 <style>

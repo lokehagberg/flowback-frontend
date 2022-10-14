@@ -5,6 +5,7 @@
 	export let required = false;
 	export let onInput = () => {}
 	export let Class = ""
+	import { _ } from 'svelte-i18n';
 
 	//Wait what is this?!
 	function typeAction(node:{type:string}){
@@ -13,7 +14,7 @@
 </script>
 
 <label class={`w-full ${Class}`}
-				><p class="text-md mb-1">{label}</p>
+				><p class="text-md mb-1">{$_(label)}</p>
 				<input
 					required={required}
 					use:typeAction

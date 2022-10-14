@@ -7,6 +7,7 @@
 	import NewPasswordCard from '$lib/Login/NewPassword.svelte';
 	import { onMount } from 'svelte';
 	import Logo from '$lib/assets/Logo.png';
+	import { _ } from 'svelte-i18n';
 
 	let selectedPage = 'Login';
 
@@ -16,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<title>Login to Flowback</title>
+	<title>{$_('Login to Flowback')}</title>
 </svelte:head>
 
 <div class="flex flex-col items-center">

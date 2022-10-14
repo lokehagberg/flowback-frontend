@@ -12,6 +12,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { mode } from '$lib/configuration';
+	import { _ } from 'svelte-i18n';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -296,7 +297,7 @@
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
-		<div class="text-2xl p-6 select-none">Rank</div>
+		<div class="text-2xl p-6 select-none">{$_("Rank")}</div>
 		<ol class="container ranked lg:h-full">
 			{#each ranked as proposal, i}
 				<li
@@ -320,7 +321,7 @@
 		</ol>
 	</div>
 	<div class="lg:w-1/2">
-		<div class="text-2xl p-6 select-none">Abstain</div>
+		<div class="text-2xl p-6 select-none">{$_("Abstain")}</div>
 		<ul class="container abstained lg:h-full">
 			{#each abstained as proposal}
 				<li

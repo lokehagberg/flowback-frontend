@@ -8,6 +8,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { SelectablePages, User } from './interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import { _ } from 'svelte-i18n';
 
 	let users: User[] = [];
 	let loading = true;
@@ -59,7 +60,7 @@
 			>
 				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<div class="w-64 ml-10 hover">{user.username}</div>
-				<div class="w-64 ml-10 hover:underline">ACCEPT</div>
+				<div class="w-64 ml-10 hover:underline">{$_("ACCEPT")}</div>
 			</a>
 		{/each}
 	{:else if selectedPage === 'Invite'}
@@ -75,7 +76,7 @@
 						<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 						<div class="w-64 ml-10">{searchedUser.username}</div>
 						<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
-							>INVITE</ButtonPrimary
+							>{$_("INVITE")}</ButtonPrimary
 						>
 					</li>
 				{/each}

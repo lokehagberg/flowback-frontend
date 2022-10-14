@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { GroupDetails, SelectablePage } from './interface';
+	import { _ } from 'svelte-i18n';
+
 	console.log($page.params);
+	
 	export let selectedPage: SelectablePage;
 	export let group: GroupDetails;
 </script>
@@ -22,7 +25,7 @@
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}
 	</h1>
-	<p class="text-xl">3 members</p>
+	<p class="text-xl">3 {$_("members")}</p>
 </div>
 
 <style>

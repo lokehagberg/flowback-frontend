@@ -7,6 +7,7 @@
 	import { userIsDelegateStore, userIdStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { get } from 'svelte/store';
+	import { _ } from 'svelte-i18n';
 
 	interface Delegate extends User {
 		delegate_pool_id: number;
@@ -137,11 +138,11 @@
 					<ButtonPrimary
 						Class={'bg-red-500'}
 						action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
-						>Remove as Delegate</ButtonPrimary
+						>{$_("Remove as Delegate")}</ButtonPrimary
 					>
 				{:else}
 					<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-						>Add as Delegate</ButtonPrimary
+						>{$_("Add as Delegate")}</ButtonPrimary
 					>
 				{/if}
 			{/if}

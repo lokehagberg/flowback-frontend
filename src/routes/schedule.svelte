@@ -8,6 +8,8 @@
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import { _ } from 'svelte-i18n';
+	
 	const months = [
 		'Jan',
 		'Feb',
@@ -64,7 +66,7 @@
 <Layout>
 	<div class="flex bg-white">
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
-			Time polls at {selectedDate.getDate()}/{selectedDate.getMonth()}
+			{$_("Time polls at")} {selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
 			<div>13:00 Meeting</div>
 		</div>
@@ -85,7 +87,7 @@
 					<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month -= 1)}>
 						<Fa icon={faChevronLeft} size="1.5x" />
 					</div>
-					<div class="w-10 text-center">{months[month]}</div>
+					<div class="w-10 text-center">{$_(months[month])}</div>
 					<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month += 1)}>
 						<Fa icon={faChevronRight} size="1.5x" />
 					</div>

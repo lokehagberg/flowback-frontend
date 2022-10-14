@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
+
 	export let value = '';
 	export let label: string;
 	export let required = false;
@@ -10,7 +12,7 @@
 </script>
 
 <label class={`${Class}`}
-	><p class="text-sm mb-1">{label}</p>
+	><p class="text-sm mb-1">{$_(label)}</p>
 	<textarea
 		{required}
 		on:input={expandTextArea}

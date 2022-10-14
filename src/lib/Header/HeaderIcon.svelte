@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+	import { _ } from 'svelte-i18n';
+
 	export let icon = faCircle;
 	export let text = 'icon';
 	export let href = '/';
@@ -35,7 +37,7 @@
 		class:invisible={!hovering}
 		style=""
 	>
-		{text}
+		{$_(text)}
 	</div>
 </a>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	export let image: File | null = null,
 		label: string,
 		isCover = false;
@@ -10,7 +11,7 @@
 	};
 </script>
 
-			<!-- on:change={() => {
+<!-- on:change={() => {
 				const imgtag = document.getElementById("image");
 				const fr = new FileReader();
 				fr.onload = () => {
@@ -19,14 +20,10 @@
 				};
 			}} -->
 <div class="image-upload">
-	<h1 class="text-left text-sm w-full">{label}</h1>
+	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
 	{#if image}
-		<img
-			id="image"
-			class={`${isCover ? 'cover' : ''} avatar`}
-			alt={label}
-		/>
+		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={label} />
 	{:else}
 		<img
 			class="avatar"
@@ -48,7 +45,7 @@
 			fileinput.click();
 		}}
 	>
-		Choose Image
+		{$_('Choose Image')}
 	</div>
 	<input
 		style="display:none"

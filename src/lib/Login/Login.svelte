@@ -2,6 +2,7 @@
 	import TextInput from '../Generic/TextInput.svelte';
 	import { fetchRequest } from '../FetchRequest';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import { _ } from 'svelte-i18n';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string;
@@ -44,6 +45,6 @@
 		class="mb-4 cursor-pointer hover:underline"
 		on:click={() => (selectedPage = 'ForgotPassword')}
 	>
-		Forgot password?
+		{$_("Forgot password?")}
 	</div>
 </form>

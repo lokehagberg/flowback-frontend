@@ -10,6 +10,9 @@
 
 <script>
 	import "../app.css";
+	
+	import {initializeLocalization} from '$lib/Localization/i18n'
+	initializeLocalization();
 </script>
 <main>
 	<slot />

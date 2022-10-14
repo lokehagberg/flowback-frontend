@@ -33,6 +33,7 @@
 		public: true,
 		id: 0
 	};
+	let userInGroup: boolean;
 
 	onMount(() => {
 		getGroupInfo();
@@ -45,36 +46,44 @@
 	};
 
 	const getGroupInfo = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
+		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
+
+		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 	};
 </script>
 
-<Layout>
-	<GroupHeader bind:selectedPage {group} />
-	<div class="flex justify-center">
-		<div class="flex justify-center mt-2 md:mt-6 lg:mt-16 gap-2 md:gap-6 lg:gap-16 mb-16 w-3/4">
-			<div class="w-2/3">
-				{#if selectedPage === 'flow'}
-					<PollThumbnails />
-				{:else if selectedPage === 'delegation'}
-					<Delegation />
-				{:else if selectedPage === 'members'}
-					<Members />
-				{:else if selectedPage === 'documents'}
-					<Documents />
-				{:else if selectedPage === 'statistics'}
-					<Statistics />
-				{:else if selectedPage === 'email'}
-					<SendEmail />
-				{:else if selectedPage === 'about'}
-					<About description={group.description} />
-				{:else if selectedPage === 'tags'}
-					<Tags />
-				{/if}
-			</div>
+{#if userInGroup}
+	<Layout>
+		<GroupHeader bind:selectedPage {group} />
+		<div class="flex justify-center">
+			<div class="flex justify-center mt-2 md:mt-6 lg:mt-16 gap-2 md:gap-6 lg:gap-16 mb-16 w-3/4">
+				<div class="w-2/3">
+					{#if selectedPage === 'flow'}
+						<PollThumbnails />
+					{:else if selectedPage === 'delegation'}
+						<Delegation />
+					{:else if selectedPage === 'members'}
+						<Members />
+					{:else if selectedPage === 'documents'}
+						<Documents />
+					{:else if selectedPage === 'statistics'}
+						<Statistics />
+					{:else if selectedPage === 'email'}
+						<SendEmail />
+					{:else if selectedPage === 'about'}
+						<About description={group.description} />
+					{:else if selectedPage === 'tags'}
+						<Tags />
+					{/if}
+				</div>
 
-			<GroupSidebar {group} bind:selectedPage />
+				<GroupSidebar {group} bind:selectedPage />
+			</div>
 		</div>
-	</div>
-</Layout>
+	</Layout>
+{:else}
+	<Layout centering={true}>
+		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">You are not a memeber of this group!</div>
+	</Layout>
+{/if}

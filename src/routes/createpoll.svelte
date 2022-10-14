@@ -96,13 +96,13 @@
 
 <Layout centering={true}>
 	<!-- TODO: Fix for mobile -->
-	<div class="flex flex-col sm:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-3/4">
+	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-3/4">
 		<form
 			on:submit|preventDefault={() =>
 				!disabled.includes(selected_poll) && !disabled.includes(selected_time)
 					? createPoll()
 					: null}
-			class="sm:w-2/3"
+			class="md:w-2/3"
 		>
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
 				<h1 class="text-2xl">{$_("Create a poll")}</h1>
@@ -111,7 +111,7 @@
 				<h2>{$_("End Date")}</h2>
 				<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
 				<h2>{$_("Select Tag")}</h2>
-				<div class="flex gap-4">
+				<div class="flex gap-4 flex-wrap">
 					{#each tags as tag}
 						<Tag
 							onclick={() => (selectedTag = tag)}
@@ -132,7 +132,7 @@
 				>
 			</div>
 		</form>
-		<div class="sm:w-1/3">
+		<div class="md:w-1/3">
 			<div class="bg-white p-6 shadow-xl">
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}

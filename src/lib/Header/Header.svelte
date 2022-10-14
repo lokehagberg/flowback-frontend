@@ -10,7 +10,7 @@
 	import Logo from '$lib/assets/Logo.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
-	import { mode } from '$lib/Generic/configuration';
+	import { mode } from '$lib/configuration';
 	let sideHeaderOpen = false;
 </script>
 

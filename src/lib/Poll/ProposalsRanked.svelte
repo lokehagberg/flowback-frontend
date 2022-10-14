@@ -11,7 +11,7 @@
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { mode } from '$lib/Generic/configuration';
+	import { mode } from '$lib/configuration';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';

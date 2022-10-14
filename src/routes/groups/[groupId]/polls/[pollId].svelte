@@ -11,7 +11,7 @@
 	import type { poll, proposal, votings } from '$lib/Poll/interface';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
-	import { mode } from '$lib/Generic/configuration';
+	import { mode } from '$lib/configuration';
 
 	let poll: poll;
 	let votings: votings[];

@@ -14,7 +14,7 @@
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { mode } from '$lib/Generic/configuration';
+	import { mode } from '$lib/configuration';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;

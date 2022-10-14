@@ -14,7 +14,6 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-	import Delegation from './Delegation.svelte';
 
 	let delegates: Delegate[] = [];
 	let tags: any[] = [];
@@ -72,7 +71,6 @@
 	const setDelegators = async () => {
 		const delegatesUserInfo: any[] = await getDelegatesUserInfo();
 		const delegateRelations: any[] = await getDelegateRelations();
-		const delegatePools: any[] = await getDelegationPools();
 
 		delegateRelations.forEach((relation) => {
 			const info = delegatesUserInfo.find((user) => user.user_id === relation.delegates[0].user_id);

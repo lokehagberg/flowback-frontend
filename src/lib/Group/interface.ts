@@ -93,4 +93,4 @@ export const userGroupInfo = writable({
 	This works though
 */
 export const userIsDelegateStore = writable(false);
-export const userId = writable(0);
+export const userIdStore = writable(0);

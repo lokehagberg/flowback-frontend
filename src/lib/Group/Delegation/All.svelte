@@ -4,8 +4,9 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
-	import { userIsDelegateStore } from '$lib/Group/interface';
+	import { userIsDelegateStore, userIdStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import { get } from 'svelte/store';
 
 	interface Delegate extends User {
 		delegate_pool_id: number;
@@ -15,8 +16,10 @@
 	let delegates: Delegate[] = [];
 	let delegateRelations: any[] = [];
 	let userIsDelegate: boolean;
+	let userId:number
 
 	onMount(async () => {
+		userId = (await fetchRequest('GET', 'user')).json.id
 		await getDelegateRelations();
 		getDelegatePools();
 
@@ -128,16 +131,19 @@
 				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<span class="text-black ml-4 mr-4">{delegate.username}</span>
 			</div>
-			{#if delegate.isInRelation}
-				<ButtonPrimary
-					Class={'bg-red-500'}
-					action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
-					>Remove as Delegate</ButtonPrimary
-				>
-			{:else}
-				<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-					>Add as Delegate</ButtonPrimary
-				>
+			{#if userId !== delegate.id}
+				<div />
+				{#if delegate.isInRelation}
+					<ButtonPrimary
+						Class={'bg-red-500'}
+						action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
+						>Remove as Delegate</ButtonPrimary
+					>
+				{:else}
+					<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
+						>Add as Delegate</ButtonPrimary
+					>
+				{/if}
 			{/if}
 		</li>
 	{/each}

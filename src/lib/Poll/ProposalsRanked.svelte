@@ -243,6 +243,7 @@
 			}
 		);
 
+		//TODO replace with svelte store
 		const userId = (await fetchRequest('GET', 'user')).json.id;
 
 		const isDelegate = (

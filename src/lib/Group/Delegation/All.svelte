@@ -7,17 +7,18 @@
 	import { userIsDelegateStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
-	interface Delegate extends User{
-		delegate_pool_id:number
+	interface Delegate extends User {
+		delegate_pool_id: number;
+		isInRelation: boolean;
 	}
 
 	let delegates: Delegate[] = [];
 	let delegateRelations: any[] = [];
 	let userIsDelegate: boolean;
 
-	onMount(() => {
+	onMount(async () => {
+		await getDelegateRelations();
 		getDelegatePools();
-		getDelegateRelations();
 
 		userIsDelegateStore.subscribe((info) => {
 			userIsDelegate = info;
@@ -34,6 +35,9 @@
 		getDelegatePools();
 	};
 
+	/*
+	 	Makes the currently logged in user into a delegate(pool)
+	 */
 	const createDelegationPool = async () => {
 		const { res } = await fetchRequest(
 			'POST',
@@ -45,6 +49,9 @@
 		userIsDelegateStore.update((value) => (value = true));
 	};
 
+	/*
+		Makes the currently logged in user no longer a delegate(pool)
+	*/
 	const deleteDelegationPool = async () => {
 		const { res } = await fetchRequest(
 			'POST',
@@ -56,28 +63,31 @@
 		userIsDelegateStore.update((value) => (value = false));
 	};
 
+	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
 	const getDelegatePools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?limit=100`
 		);
 
-		/*
-			Temporary fix to make each delegate pool be associated with one user.
-			TODO: Implement delegate pool feature in the front end (Figma design first)
-		*/
+		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
+
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegatePool.delegates[0].user_id}`)
 				).json.results[0];
 
-				return {...delegateUserData, delegate_pool_id:delegatePool.id}
+				const isInRelation = delegateRelationPoolIds.includes(delegatePool.id);
+
+				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
 
-		console.log(delegates, "DELEGADOS")
+		console.log(delegates, 'DELEGADOS');
 	};
 
 	const getDelegateRelations = async () => {
@@ -89,8 +99,23 @@
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
 			delegate_pool_id
 		});
+
+		if (res.ok)
+			delegates[
+				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
+			].isInRelation = true;
 	};
 
+	const deleteDelegateRelation = async (delegate_pool_id: number) => {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/delete`, {
+			delegate_pool_id
+		});
+
+		if (res.ok)
+			delegates[
+				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
+			].isInRelation = false;
+	};
 </script>
 
 <ul class="w-full">
@@ -103,9 +128,17 @@
 				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 				<span class="text-black ml-4 mr-4">{delegate.username}</span>
 			</div>
-			<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-				>Add as Delegate</ButtonPrimary
-			>
+			{#if delegate.isInRelation}
+				<ButtonPrimary
+					Class={'bg-red-500'}
+					action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
+					>Remove as Delegate</ButtonPrimary
+				>
+			{:else}
+				<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
+					>Add as Delegate</ButtonPrimary
+				>
+			{/if}
 		</li>
 	{/each}
 </ul>

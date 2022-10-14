@@ -2,6 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { Group } from './interface';
+	import { _ } from 'svelte-i18n';
 
 	export let group: Group;
 
@@ -36,7 +37,7 @@
 				if (res.ok) group.joined = !group.joined;
 			}}
 			Class="hover:bg-blue-800 2xl:pt-6 2xl:pb-6 "
-			>{group.joined ? 'Leave' : 'Join'}</ButtonPrimary
+			>{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
 		>
 	</div>
 </div>

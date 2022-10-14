@@ -5,7 +5,8 @@
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-
+	import { _ } from 'svelte-i18n';
+	
 	let user: User = {
 		banner_image: '',
 		bio: '',
@@ -39,7 +40,7 @@
 		<!-- <h2 class="inline">Website: {user.website}</h2> -->
 		<!-- {/if} -->
 		<p class="mt-8">
-			{user.bio || 'This user has no bio'}
+			{$_(user.bio || 'This user has no bio')}
 		</p>
 	</div>
 </Layout>

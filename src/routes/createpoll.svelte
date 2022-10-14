@@ -11,21 +11,21 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { DateInput } from 'date-picker-svelte'
 	import { _ } from 'svelte-i18n';
-	
-	type polltypes = 'Ranking' | 'For Against' | 'Quadratic' | 'Cardinal';
+
+	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
 
 	let selected_poll: polltypes = 'Ranking';
 	let selected_time: timetypes = 'Time';
 	//Something about this feels very scuffed
-	const polls: polltypes[] = ['Ranking', 'For Against', 'Quadratic', 'Cardinal'];
+	const polls: polltypes[] = ['Ranking', 'For/Against', 'Quadratic', 'Cardinal'];
 	const times: timetypes[] = ['Time', 'Dynamic', 'Scheduled'];
 
 	const pollDescriptions: Record<polltypes, string> = {
 		Ranking: `Ranking poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		'For Against': `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
+		'For/Against': `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
 		Quadratic: `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
@@ -49,7 +49,7 @@
 	};
 
 	const disabled: (polltypes | timetypes)[] = [
-		'For Against',
+		'For/Against',
 		'Cardinal',
 		'Quadratic',
 		'Scheduled',
@@ -63,6 +63,8 @@
 	let selectedTag: TagType;
 	let status: number;
 	let end_date = new Date();
+
+	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString())
 
 	const createPoll = async () => {
 		if (selectedTag === null) status = 400;
@@ -107,7 +109,7 @@
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
 				<h2>{$_("End Date")}</h2>
-				<DateInput bind:value={end_date} />
+				<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
 				<h2>{$_("Select Tag")}</h2>
 				<div class="flex gap-4">
 					{#each tags as tag}
@@ -137,7 +139,7 @@
 						<ButtonPrimary
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class="transition transition-colors">{poll}</ButtonPrimary
+							Class="transition transition-colors">{$_(poll)}</ButtonPrimary
 						>
 					{/each}
 				</div>
@@ -147,7 +149,7 @@
 							Class={`transition transition-colors ${
 								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
 							}`}
-							action={() => (selected_time = time)}>{time}</ButtonPrimary
+							action={() => (selected_time = time)}>{$_(time)}</ButtonPrimary
 						>
 					{/each}
 				</div>
@@ -156,14 +158,14 @@
 				<div>
 					{#each Object.entries(pollDescriptions) as [pollType, description]}
 						{#if selected_poll === pollType}
-							{description}
+							{$_(description)}
 						{/if}
 					{/each}
 				</div>
 				<div class="mt-6">
 					{#each Object.entries(timeDescriptions) as [timeType, description]}
 						{#if selected_time === timeType}
-							{description}
+							{$_(description)}
 						{/if}
 					{/each}
 				</div>

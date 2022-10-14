@@ -12,6 +12,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { mode } from '$lib/configuration';
+	import { _ } from 'svelte-i18n';
 
 	let poll: poll;
 	let votings: votings[];
@@ -60,7 +61,7 @@
 			{#if mode === 'Dev'}
 				<Comments />
 			{/if}
-			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">Delete Poll</ButtonPrimary>
+			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">{$_("Delete Poll")}</ButtonPrimary>
 		</div>
 	</Layout>
 {/if}

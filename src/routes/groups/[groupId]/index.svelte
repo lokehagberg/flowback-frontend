@@ -33,7 +33,7 @@
 		public: true,
 		id: 0
 	};
-	let userInGroup: boolean;
+	let userInGroup: boolean = true;
 
 	onMount(() => {
 		getGroupInfo();

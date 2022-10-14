@@ -270,21 +270,24 @@
 		votings = json.results;
 	};
 
-	const getDelegateVotings = async () => {
+	const getDelegateId = async () => {
 		const delegate_stuff = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegates?tag=${tag}`
 		);
-
+	
 		console.log(delegate_stuff.json.results[0]);
+		return 2;
+	}
+
+	const getDelegateVotings = async () => {
+		const delegateId = await getDelegateId()
 
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=true&delegate_user_id=35`,
-			{
-				delegate_user_id: 1
-			}
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegate_user_id=${delegateId}`
 		);
+
 		votings = json.results;
 	};
 </script>

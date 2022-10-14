@@ -56,7 +56,7 @@
 			<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag}/>
 			<ProposalSubmition bind:abstained/>
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
-			<Comments />
+			<!-- <Comments /> -->
 			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">Delete Poll</ButtonPrimary>
 		</div>
 	</Layout>

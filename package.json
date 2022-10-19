@@ -43,6 +43,7 @@
 		"cookie": "^0.4.1",
 		"date-picker-svelte": "^2.2.0",
 		"dotenv": "^16.0.2",
+		"sapper": "^0.29.3",
 		"svelte-fa": "^3.0.3",
 		"svelte-i18n": "^3.4.0"
 	}

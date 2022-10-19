@@ -10,3 +10,4 @@ node_modules
 .output
 src/lib/typescriptexperiments.ts
 .env
+src/lib/assets/Default_pfp.png

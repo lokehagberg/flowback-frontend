@@ -11,22 +11,32 @@
 	};
 </script>
 
-<div class="w-5/6 md:w-1/2 bg-white relative shadow-md hover:outline vote-thumbnail cursor-pointer">
+<div
+	class="w-5/6 md:w-1/2 bg-white relative shadow-md vote-thumbnail cursor-pointer rounded-2xl"
+>
 	<div on:click={goToGroup}>
-		<img src={`${import.meta.env.VITE_API}${group.cover_image}`} class="cover" alt="cover" />
+		<img
+			src={`${import.meta.env.VITE_API}${group.cover_image}`}
+			class="cover rounded-t-2xl"
+			alt="cover"
+		/>
 		<img
 			src={`${import.meta.env.VITE_API}${group.image}`}
 			class="absolute top-6 left-6 profile"
 			alt="profile"
 		/>
 	</div>
-	<div class="flex flex-col gap-6">
-		<h1 class="text-2xl p-4 pl-6 text-left" on:click={goToGroup}>
+
+	<div on:click={goToGroup} >
+		<h1 class="text-2xl p-4 pl-6 text-left">
 			{group.name}
 		</h1>
-		<p class="pb-6 pl-6 pr-6" on:click={goToGroup}>
+		<p class="pb-6 pl-6 pr-6">
 			{group.description}
 		</p>
+	</div>
+
+	<div class="flex justify-center mb-6">
 		<ButtonPrimary
 			action={async () => {
 				const { res } = await fetchRequest(

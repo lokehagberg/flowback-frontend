@@ -96,7 +96,7 @@
 
 <Layout centering={true}>
 	<!-- TODO: Fix for mobile -->
-	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-3/4">
+	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px]">
 		<form
 			on:submit|preventDefault={() =>
 				!disabled.includes(selected_poll) && !disabled.includes(selected_time)

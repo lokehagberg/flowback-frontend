@@ -1,13 +1,14 @@
 <script lang="ts">
 	import TextInput from '../Generic/TextInput.svelte';
 	import { fetchRequest } from '../FetchRequest';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { _ } from 'svelte-i18n';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string;
 	let password: string;
-	let status: { message: string | null; success: boolean };
+	let status: StatusMessageInfo;
 
 	export let selectedPage: string;
 
@@ -16,22 +17,22 @@
 
 		if (!res.ok) {
 			status =
-				res.status === 500
-					? { message: 'Server error', success: false }
-					: { message: 'Username or password is wrong', success: false };
+				res.status === 400
+					? { message: 'Username or password is wrong', success: false }
+					: { message: 'Server error', success: false };
 
 			return;
 		}
 
-		if (json.token) {			
+		if (json.token) {
 			status = { message: 'Successfully logged in', success: true };
 			localStorage.setItem('token', json.token);
-			
+
 			{
 				const { json } = await fetchRequest('GET', 'user');
 				// userInfo.set(json);
 			}
-			
+
 			window.location.href = '/home';
 		}
 	};

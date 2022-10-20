@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
+	import type { StatusMessageInfo } from './GenericFunctions';
 
 	export let Class = '';
-
-	export let status: {message: string | null, success:boolean};
+	export let status: StatusMessageInfo;
 </script>
 
 {#if status !== null && status !== undefined}

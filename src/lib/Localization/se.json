@@ -229,5 +229,8 @@
     "Deleting Poll": "Ta bort omröstning",
     "Are you sure you want to delete this poll?": "Är du säker på att du vill ta bort omröstningen?",
     "Yes": "Ja",
-    "Cancel": "Ångra"
+    "Cancel": "Ångra",
+    "at": "klockan",
+    "Start date": "Startdatum",
+    "End date": "Slutdatum"
 }

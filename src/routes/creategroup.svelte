@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	let name = 'Default Name',
 		description = 'Default Descritption',
@@ -21,7 +22,10 @@
 		directJoin = true,
 		publicGroup = true;
 
+	//This page also supports the edit of groups
+	const groupToEdit = $page.url.searchParams.get('group');
 	let status: StatusMessageInfo;
+	let DeleteGroupModalShow = false;
 
 	const createGroup = async () => {
 		const formData = new FormData();
@@ -33,24 +37,15 @@
 		formData.append('direct_join', directJoin.toString());
 		formData.append('public', publicGroup.toString());
 
-		if (groupToEdit === null) {
-			const res = await fetchRequest('POST', 'group/create', formData, true, false);
-			console.log(res);
-			status = res.res.ok
-				? { message: 'Group created', success: true }
-				: { message: "Couldn't create group", success: false };
-		}
-		if (groupToEdit !== null) {
-			const res = await fetchRequest('POST', `group/${groupToEdit}/update`, formData, true, false);
-			console.log(res);
-			status = res.res.ok
-				? { message: 'Group edited', success: true }
-				: { message: "Couldn't edit group", success: false };
+		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
+		const { res, json } = await fetchRequest('POST', api, formData, true, false);
+
+		if (res.ok) status = { message: 'Success', success: true };
+		else if (json.detail) {
+			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
+			if (errorMessage) status = { message: errorMessage, success: false };
 		}
 	};
-
-	//This page also supports the edit of groups
-	const groupToEdit = $page.url.searchParams.get('group');
 
 	const deleteGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${groupToEdit}/delete`);
@@ -58,7 +53,7 @@
 		//Rederict to group
 		console.log(res);
 		if (res.ok) {
-			// window.location.href = ''
+			window.location.href = '/groups'
 		}
 	};
 
@@ -75,15 +70,27 @@
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">{$_('Create a Group')}</h1>
-			<TextInput label="Title" bind:value={name} />
-			<TextArea label="Description" bind:value={description} />
+			<TextInput label="Title" bind:value={name} required={true} />
+			<TextArea label="Description" bind:value={description} required={true} />
 			<ImageUpload bind:image label="Upload Image" />
 			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover={true} />
 			<RadioButtons bind:Yes={directJoin} label={'Direct Join'} />
 			<RadioButtons bind:Yes={publicGroup} label={'Public'} />
 
 			{#if groupToEdit !== null}
-				<ButtonPrimary action={deleteGroup}>{$_('Delete Group')}</ButtonPrimary>
+				<Modal bind:open={DeleteGroupModalShow}>
+					<div slot="header">{$_('Deleting group')}</div>
+					<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
+					<div slot="footer">
+						<div class="flex justify-center gap-16">
+							<ButtonPrimary action={deleteGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
+							><ButtonPrimary action={() => (DeleteGroupModalShow = false)} Class="bg-gray-400 w-1/2"
+								>{$_('Cancel')}</ButtonPrimary
+							>
+						</div>
+					</div>
+				</Modal>
+				<ButtonPrimary action={() => DeleteGroupModalShow=true}>{$_('Delete Group')}</ButtonPrimary>
 			{/if}
 
 			<StatusMessage bind:status />

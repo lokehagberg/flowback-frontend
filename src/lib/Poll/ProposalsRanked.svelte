@@ -13,6 +13,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -23,7 +24,7 @@
 	export let tag: number;
 
 	let unsaved = false;
-	let status: number;
+	let status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
 	$: console.log(abstained);
@@ -72,8 +73,7 @@
 		*/
 
 		sortable.on('sortable:start', (e: any) => {
-			if (mode === "Prod")
-				e.cancel();
+			if (mode === 'Prod') e.cancel();
 		});
 
 		sortable.on('sortable:stop', async (e: any) => {
@@ -238,7 +238,7 @@
 			votes.push(Number(proposals[i].id));
 		}
 
-		const { res } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
@@ -254,7 +254,7 @@
 		).json.results[0].delegate;
 
 		if (isDelegate)
-			fetchRequest(
+			await fetchRequest(
 				'POST',
 				`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
 				{
@@ -263,7 +263,12 @@
 			);
 
 		unsaved = false;
-		status = res.status;
+
+		if (res.ok) status = { message: 'Success', success: true };
+		else if (json.detail) {
+			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
+			if (errorMessage) status = { message: errorMessage, success: false };
+		}
 	};
 
 	const getVotings = async () => {
@@ -279,13 +284,13 @@
 			'GET',
 			`group/${$page.params.groupId}/delegates?tag=${tag}`
 		);
-	
+
 		console.log(delegate_stuff.json.results[0]);
 		return 2;
-	}
+	};
 
 	const getDelegateVotings = async () => {
-		const delegateId = await getDelegateId()
+		const delegateId = await getDelegateId();
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=True`
@@ -297,7 +302,7 @@
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
-		<div class="text-2xl p-6 select-none">{$_("Rank")}</div>
+		<div class="text-2xl p-6 select-none">{$_('Rank')}</div>
 		<ol class="container ranked lg:h-full">
 			{#each ranked as proposal, i}
 				<li
@@ -305,7 +310,10 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'ranked')}
 				>
-					<Proposal {...proposal} Class={`${selectedPage === 'You' && ''} ${mode === "Dev" && 'cursor-move'}`}>
+					<Proposal
+						{...proposal}
+						Class={`${selectedPage === 'You' && ''} ${mode === 'Dev' && 'cursor-move'}`}
+					>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
 								<Fa icon={faMinus} />
@@ -321,7 +329,7 @@
 		</ol>
 	</div>
 	<div class="lg:w-1/2">
-		<div class="text-2xl p-6 select-none">{$_("Abstain")}</div>
+		<div class="text-2xl p-6 select-none">{$_('Abstain')}</div>
 		<ul class="container abstained lg:h-full">
 			{#each abstained as proposal}
 				<li
@@ -329,7 +337,10 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 				>
-					<Proposal {...proposal} Class={`${selectedPage === 'You'} ${mode === "Dev" && 'cursor-move'}`}>
+					<Proposal
+						{...proposal}
+						Class={`${selectedPage === 'You'} ${mode === 'Dev' && 'cursor-move'}`}
+					>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
 								<Fa icon={faPlus} />

@@ -9,10 +9,14 @@
 	type buttontypes = 'default' | 'submit';
 </script>
 
+<!-- 
+	The reason for the split between default and submit is that submit buttons
+	work differently in forms
+ -->
 {#if type === 'default'}
 	<div
 		on:click|preventDefault={action}
-		class={`text-center bg-blue-600 inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
+		class={`text-center ${Class.includes("bg-") ? "" : "bg-blue-600"} inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
 		class:bg-gray-300={disabled}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}

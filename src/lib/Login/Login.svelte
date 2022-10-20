@@ -15,6 +15,7 @@
 	const logIn = async (e: any) => {
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 
+		console.log(json)
 		if (!res.ok) {
 			status =
 				res.status === 400
@@ -27,6 +28,7 @@
 		if (json.token) {
 			status = { message: 'Successfully logged in', success: true };
 			localStorage.setItem('token', json.token);
+			// localStorage.setItem('userInfo', json)
 
 			{
 				const { json } = await fetchRequest('GET', 'user');

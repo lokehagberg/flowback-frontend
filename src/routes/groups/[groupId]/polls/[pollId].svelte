@@ -13,11 +13,13 @@
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	let poll: poll;
 	let votings: votings[];
 	let selectedPage: 'You' | 'Delegate' = 'You';
 	let abstained: proposal[];
+	let DeletePollModalShow = false;
 
 	$: console.log(abstained, 'ABS');
 
@@ -34,8 +36,12 @@
 		poll = json.results[0];
 	};
 
-	const deletePoll = () => {
-		fetchRequest('POST', `group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`);
+	const deletePoll = async () => {
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
+		);
+		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
 	};
 </script>
 
@@ -61,7 +67,21 @@
 			{#if mode === 'Dev'}
 				<Comments />
 			{/if}
-			<ButtonPrimary action={deletePoll} Class="bg-red-500 mt-6">{$_("Delete Poll")}</ButtonPrimary>
+			<Modal bind:open={DeletePollModalShow}>
+				<div slot="header">{$_("Deleting Poll")}</div>
+				<div slot="body">{$_("Are you sure you want to delete this poll?")}</div>
+				<div slot="footer">
+					<div class="flex justify-center gap-16">
+						<ButtonPrimary action={deletePoll} Class="bg-red-500">{$_("Yes")}</ButtonPrimary><ButtonPrimary
+							action={() => (DeletePollModalShow = false)}
+							Class="bg-gray-400 w-1/2">{$_("Cancel")}</ButtonPrimary
+						>
+					</div>
+				</div>
+			</Modal>
+			<ButtonPrimary action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
+				>{$_('Delete poll')}</ButtonPrimary
+			>
 		</div>
 	</Layout>
 {/if}

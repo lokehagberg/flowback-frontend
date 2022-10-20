@@ -123,6 +123,7 @@
 	};
 </script>
 
+{#if delegates.length > 0}
 <ul class="w-full">
 	{#each delegates as delegate}
 		<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
@@ -150,6 +151,10 @@
 		</li>
 	{/each}
 </ul>
+
+{:else}
+	<div>No delegates in group</div>
+{/if}
 
 {#if userIsDelegate}
 	<ButtonPrimary Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}

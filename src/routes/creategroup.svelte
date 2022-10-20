@@ -37,6 +37,8 @@
 			const res = await fetchRequest('POST', `group/${groupToEdit}/update`, formData, true, false);
 			console.log(res);
 		}
+
+
 	};
 
 	//This page also supports the edit of groups

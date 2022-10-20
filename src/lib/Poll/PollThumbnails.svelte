@@ -19,7 +19,11 @@
 
 <div class={`flex flex-col gap-6 ${Class}`}>
 	<!-- <h1 class="text-3xl text-left">Flow</h1> -->
+	{#if polls.length > 0}
 	{#each polls as poll}
 		<PollThumbnail {poll}/>
 	{/each}
+	{:else}
+	<div class="bg-white rounded shadow p-8">No polls currently here</div>
+	{/if}
 </div>

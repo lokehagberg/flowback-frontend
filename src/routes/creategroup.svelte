@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	let name = 'Default Name',
 		description = 'Default Descritption',
@@ -18,6 +19,8 @@
 		coverImage: File,
 		directJoin = true,
 		publicGroup = true;
+
+	let status:{}
 
 	const createGroup = async () => {
 		const formData = new FormData();
@@ -77,6 +80,8 @@
 			{#if groupToEdit !== null}
 				<ButtonPrimary action={deleteGroup}>{$_("Delete Group")}</ButtonPrimary>
 			{/if}
+
+			<StatusMessage bind:status />
 			<ButtonPrimary type="submit"
 				><div class="flex justify-center gap-3 items-center">
 					<Fa icon={faPaperPlane} />{$_("Create Group")}

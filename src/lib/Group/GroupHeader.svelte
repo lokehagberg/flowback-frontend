@@ -2,6 +2,9 @@
 	// import { page } from '$app/stores';
 	import type { GroupDetails, SelectablePage } from './interface';
 	import { _ } from 'svelte-i18n';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import {page} from '$app/stores'
 
 	// console.log($page.params);
 	
@@ -26,6 +29,13 @@
 		{group.name}
 	</h1>
 	<p class="text-xl">3 {$_("members")}</p>
+	<ButtonPrimary action={async () => {
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/leave`
+		);
+		if (res.ok) window.location.href = "/home"
+	}}>{$_("Leave Group")}</ButtonPrimary>
 </div>
 
 <style>

@@ -46,7 +46,7 @@
 				);
 				if (res.ok) group.joined = !group.joined;
 			}}
-			Class="hover:bg-blue-800 2xl:pt-6 2xl:pb-6 "
+			Class="hover:bg-blue-800 bg-blue-600 2xl:pt-6 2xl:pb-6 "
 			>{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
 		>
 	</div>

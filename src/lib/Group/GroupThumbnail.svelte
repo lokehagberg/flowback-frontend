@@ -11,7 +11,7 @@
 	};
 </script>
 
-<div
+<div on:click={goToGroup}
 	class="w-5/6 md:w-1/2 bg-white relative shadow-md vote-thumbnail cursor-pointer rounded-2xl"
 >
 	<div on:click={goToGroup}>
@@ -20,18 +20,18 @@
 			class="cover rounded-t-2xl"
 			alt="cover"
 		/>
-		<img
-			src={`${import.meta.env.VITE_API}${group.image}`}
-			class="absolute top-6 left-6 profile"
-			alt="profile"
-		/>
 	</div>
+	<img
+		src={`${import.meta.env.VITE_API}${group.image}`}
+		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+		alt="profile"
+	/>
 
 	<div on:click={goToGroup} >
-		<h1 class="text-2xl p-4 pl-6 text-left">
+		<h1 class="text-2xl p-4 text-left mt-10 text-center">
 			{group.name}
 		</h1>
-		<p class="pb-6 pl-6 pr-6">
+		<p class="pl-6 pr-6 pb-6">
 			{group.description}
 		</p>
 	</div>
@@ -60,10 +60,5 @@
 	img.cover {
 		aspect-ratio: 4;
 		width: 100%;
-	}
-
-	img.profile {
-		width: 100px;
-		height: 100px;
 	}
 </style>

@@ -53,6 +53,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>{group.name}</title>
+</svelte:head>
+
 {#if userInGroup}
 	<Layout>
 		<GroupHeader bind:selectedPage {group} />

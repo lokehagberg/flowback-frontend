@@ -81,6 +81,7 @@
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
+				console.log(delegatePool.delegates[0].user_id, "ID")
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegatePool.delegates[0].user_id}`)
 				).json.results[0];

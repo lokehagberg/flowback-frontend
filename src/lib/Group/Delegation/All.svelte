@@ -161,5 +161,5 @@
 		>Stop being Delegate</ButtonPrimary
 	>
 {:else}
-	<ButtonPrimary Class="mt-3" action={handleCreateDelegationButton}>Become Delegate</ButtonPrimary>
+	<ButtonPrimary Class="mt-3 bg-red-500" action={handleCreateDelegationButton}>Become Delegate</ButtonPrimary>
 {/if}

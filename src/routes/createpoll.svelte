@@ -12,15 +12,25 @@
 	import { DateInput } from 'date-picker-svelte';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
+	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
+	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+	import { faWallet } from '@fortawesome/free-solid-svg-icons/faWallet';
+	import { faSliders } from '@fortawesome/free-solid-svg-icons/faSliders';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
+	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 
-	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal';
-	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
+	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
+	type timetypes = 'Endtime' | 'Dynamic';
 
 	let selected_poll: polltypes = 'Ranking';
-	let selected_time: timetypes = 'Time';
+	let selected_time: timetypes = 'Endtime';
 	//Something about this feels very scuffed
-	const polls: polltypes[] = ['Ranking', 'For/Against', 'Quadratic', 'Cardinal'];
-	const times: timetypes[] = ['Time', 'Dynamic', 'Scheduled'];
+	const polls: polltypes[] = ['Ranking', 'For/Against', 'Quadratic', 'Cardinal', 'Scheduled'];
+	const times: timetypes[] = ['Endtime', 'Dynamic'];
 
 	const pollDescriptions: Record<polltypes, string> = {
 		Ranking: `Ranking poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
@@ -34,17 +44,17 @@
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
 		Cardinal: `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
+					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
+		Scheduled: `Sch poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
+					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
 	};
 
 	const timeDescriptions: Record<timetypes, string> = {
-		Time: `Time is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
+		'Endtime': `Time is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
 		Dynamic: `Dynamic is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		Scheduled: `Sch poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
 	};
@@ -56,6 +66,20 @@
 		'Scheduled',
 		'Dynamic'
 	];
+
+	const pollIcons: Record<polltypes, any[]> = {
+		Ranking: [faArrowUp, faArrowDown],
+		'For/Against': [faCheck, faX],
+		Cardinal: [faSliders],
+		Quadratic: [faWallet],
+		Scheduled: [faCalendarAlt]
+	};
+
+	const timeIcons: Record<timetypes, any[]> = {
+		'Endtime': [faHourglass],
+		Dynamic: [faClockRotateLeft]
+	};
+
 	const groupId = $page.url.searchParams.get('id');
 
 	let title = '',
@@ -68,7 +92,7 @@
 	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
-		console.log(selectedTag, "TAG")
+		console.log(selectedTag, 'TAG');
 		if (selectedTag === undefined) {
 			status = { message: 'Must select tag', success: false };
 			return;
@@ -144,8 +168,16 @@
 						<ButtonPrimary
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class="transition transition-colors">{$_(poll)}</ButtonPrimary
+							Class="transition transition-colors"
 						>
+							<div class="flex items-center text-center">
+								{#each pollIcons[poll] as icon}
+									<Fa {icon} />
+								{/each}
+
+								<span class="ml-10">{$_(poll)}</span>
+							</div>
+						</ButtonPrimary>
 					{/each}
 				</div>
 				<div class="flex flex-col gap-6 mt-12">
@@ -154,8 +186,15 @@
 							Class={`transition transition-colors ${
 								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
 							}`}
-							action={() => (selected_time = time)}>{$_(time)}</ButtonPrimary
+							action={() => (selected_time = time)}
 						>
+							<div class="flex items-center text-center">
+								{#each timeIcons[time] as icon}
+									<Fa {icon} />
+								{/each}
+								<span class="ml-10">{$_(time)}</span>
+							</div>
+						</ButtonPrimary>
 					{/each}
 				</div>
 			</div>

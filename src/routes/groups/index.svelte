@@ -22,7 +22,7 @@
 	<div class="flex flex-col items-center mt-6 gap-6 mb-6 lg:w-[1100px]">
 		<a
 			href="creategroup"
-			class="w-1/2 text-center inline bg-blue-600 text-white pl-24 pr-24 pt-2 pb-2 rounded cursor-pointer "
+			class="w-4/5 md:w-1/2 text-center inline bg-blue-600 text-white pl-6 pr-6 md:pl-24 md:pr-24 pt-2 pb-2 rounded cursor-pointer "
 			>+ {$_("Create Group")}</a
 		>
 

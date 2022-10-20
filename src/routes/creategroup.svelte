@@ -15,8 +15,8 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Modal from '$lib/Generic/Modal.svelte';
 
-	let name = 'Default Name',
-		description = 'Default Descritption',
+	let name:string,
+		description:string,
 		image: File,
 		coverImage: File,
 		directJoin = true,

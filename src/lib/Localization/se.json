@@ -229,8 +229,16 @@
     "Deleting Poll": "Ta bort omröstning",
     "Are you sure you want to delete this poll?": "Är du säker på att du vill ta bort omröstningen?",
     "Yes": "Ja",
+    "No": "Nej",
+    "Choose Image": "Välj bild",
+    "Upload Image": "Ladda upp bild",
+    "Create a Group": "Skapa grupp",
+    "Upload Cover Image": "Ladda upp banner",
     "Cancel": "Ångra",
     "at": "klockan",
     "Start date": "Startdatum",
-    "End date": "Slutdatum"
+    "End date": "Slutdatum",
+    "Deleting group": "Tar bort grupp",
+    "Are you sure you want to delete this group?": "Är du säker på att du vill ta bort gruppen?",
+    "Delete Group": "Ta bort grupp"
 }

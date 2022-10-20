@@ -7,17 +7,24 @@
 
 	let username: string;
 	let password: string;
-	let status: number;
+	let status: { message: string | null; success: boolean };
 
 	export let selectedPage: string;
 
 	const logIn = async (e: any) => {
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 
-		status = res.status;
-		console.log(json);
+		if (!res.ok) {
+			status =
+				res.status === 500
+					? { message: 'Server error', success: false }
+					: { message: 'Username or password is wrong', success: false };
 
-		if (json.token) {
+			return;
+		}
+
+		if (json.token) {			
+			status = { message: 'Successfully logged in', success: true };
 			localStorage.setItem('token', json.token);
 			
 			{
@@ -45,6 +52,6 @@
 		class="mb-4 cursor-pointer hover:underline"
 		on:click={() => (selectedPage = 'ForgotPassword')}
 	>
-		{$_("Forgot password?")}
+		{$_('Forgot password?')}
 	</div>
 </form>

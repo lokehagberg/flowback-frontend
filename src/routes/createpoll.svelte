@@ -9,8 +9,9 @@
 	import { onMount } from 'svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { DateInput } from 'date-picker-svelte'
+	import { DateInput } from 'date-picker-svelte';
 	import { _ } from 'svelte-i18n';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal';
 	type timetypes = 'Time' | 'Dynamic' | 'Scheduled';
@@ -61,13 +62,18 @@
 		description = '';
 	let tags: TagType[] = [];
 	let selectedTag: TagType;
-	let status: number;
+	let status: StatusMessageInfo;
 	let end_date = new Date();
 
-	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString())
+	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
-		if (selectedTag === null) status = 400;
+		console.log(selectedTag, "TAG")
+		if (selectedTag === undefined) {
+			status = { message: 'Must select tag', success: false };
+			return;
+		}
+
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
@@ -78,10 +84,10 @@
 			dynamic: false
 		});
 
-		status = res.status;
-
-		if (res.ok)
-		window.location.href = `groups/${groupId}/polls/${json}`
+		if (res.ok) {
+			status = { message: 'Success', success: true };
+			window.location.href = `groups/${groupId}/polls/${json}`;
+		} else status = { message: json.detail[0], success: false };
 	};
 
 	const getGroupTags = async () => {
@@ -104,12 +110,12 @@
 			class="md:w-2/3"
 		>
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
-				<h1 class="text-2xl">{$_("Create a poll")}</h1>
+				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required={true} label="Title" bind:value={title} />
 				<TextArea required={true} label="Description" bind:value={description} />
-				<h2>{$_("End Date")}</h2>
+				<h2>{$_('End Date')}</h2>
 				<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
-				<h2>{$_("Select Tag")}</h2>
+				<h2>{$_('Select Tag')}</h2>
 				<div class="flex gap-4 flex-wrap">
 					{#each tags as tag}
 						<Tag
@@ -120,14 +126,14 @@
 					{/each}
 				</div>
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-					{$_("This polltype is not implemented yet")}
+					{$_('This polltype is not implemented yet')}
 				{/if}
-				<StatusMessage {status} />
+				<StatusMessage bind:status />
 				<ButtonPrimary
 					type="submit"
 					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 						? 'bg-gray-400'
-						: 'bg-blue-600'}>{$_("Create Poll")}</ButtonPrimary
+						: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
 				>
 			</div>
 		</form>

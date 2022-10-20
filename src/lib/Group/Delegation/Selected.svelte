@@ -15,10 +15,11 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 
 	let delegates: Delegate[] = [];
 	let tags: any[] = [];
-	let status: number;
+	let status: StatusMessageInfo;
 
 	onMount(async () => {
 		setDelegators();
@@ -36,8 +37,6 @@
 			`group/${$page.params.groupId}/delegate/update`,
 			toSendDelegates
 		);
-
-		status = res.status;
 	};
 
 	const getDelegateRelations = async () => {
@@ -139,7 +138,7 @@
 					class:hidden={selected !== delegate.id}
 				>
 					<h1 class="text-xl">{$_("Edit tags for")} {delegate.username}</h1>
-					<TextInput label="Search" />
+					<!-- <TextInput label="Search" /> -->
 					<ul class="mt-6 flex flex-wrap items-center">
 						{#each tags as tag}
 							<li
@@ -161,10 +160,10 @@
 	</ul>
 	<StatusMessage bind:status />
 	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}
-		>{$_("Save Changes")}</ButtonPrimary
+		>{$_("Save changes")}</ButtonPrimary
 	>
 {:else}
-	<div>{$_("No Delegates selected")}</div>
+	<div>{$_("No delegates selected")}</div>
 {/if}
 
 <style>

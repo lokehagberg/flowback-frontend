@@ -3,6 +3,7 @@
 	import PollThumbnail from './PollThumbnail.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let Class = '';
 	let polls: any[] = [];
@@ -24,6 +25,6 @@
 		<PollThumbnail {poll}/>
 	{/each}
 	{:else}
-	<div class="bg-white rounded shadow p-8">No polls currently here</div>
+	<div class="bg-white rounded shadow p-8">{$_("No polls currently here")}</div>
 	{/if}
 </div>

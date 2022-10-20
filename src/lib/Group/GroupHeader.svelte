@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	// import { page } from '$app/stores';
 	import type { GroupDetails, SelectablePage } from './interface';
 	import { _ } from 'svelte-i18n';
 
-	console.log($page.params);
+	// console.log($page.params);
 	
 	export let selectedPage: SelectablePage;
 	export let group: GroupDetails;

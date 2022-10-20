@@ -140,11 +140,11 @@
 					<ButtonPrimary
 						Class={'bg-red-500'}
 						action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
-						>{$_("Remove as Delegate")}</ButtonPrimary
+						>{$_("Remove as delegate")}</ButtonPrimary
 					>
 				{:else}
 					<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-						>{$_("Add as Delegate")}</ButtonPrimary
+						>{$_("Add as delegate")}</ButtonPrimary
 					>
 				{/if}
 			{/if}
@@ -153,12 +153,12 @@
 </ul>
 
 {:else}
-	<div>No delegates in group</div>
+	<div>{$_("No delegates in group")}</div>
 {/if}
 
 {#if userIsDelegate}
 	<ButtonPrimary Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}
-		>Stop being Delegate</ButtonPrimary
+		>{$_("Stop being delegate")}</ButtonPrimary
 	>
 {:else}
 	<ButtonPrimary Class="mt-3 bg-red-500" action={handleCreateDelegationButton}>Become Delegate</ButtonPrimary>

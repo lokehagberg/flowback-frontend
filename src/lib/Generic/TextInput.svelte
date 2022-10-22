@@ -16,7 +16,7 @@
 <label class={`w-full ${Class}`}
 				><p class="text-md mb-1">{$_(label)}</p>
 				<input
-					required={required}
+					required
 					use:typeAction
 					bind:value
 					class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none`}

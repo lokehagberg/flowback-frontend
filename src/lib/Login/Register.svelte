@@ -24,8 +24,8 @@
 </script>
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={registerAccount}>
-	<TextInput label={'Username'} bind:value={username} required={true} />
-	<TextInput label={'Email'} bind:value={email} required={true} />
+	<TextInput label={'Username'} bind:value={username} required />
+	<TextInput label={'Email'} bind:value={email} required />
 
 	<StatusMessage bind:status />
 	<input

@@ -66,17 +66,17 @@
 	});
 </script>
 
-<Layout centering={true}>
+<Layout centering>
 	<form
 		on:submit|preventDefault={createGroup}
 		class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8 w-full"
 	>
 		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
 			<h1 class="text-2xl">{$_('Create a Group')}</h1>
-			<TextInput label="Title" bind:value={name} required={true} />
-			<TextArea label="Description" bind:value={description} required={true} />
+			<TextInput label="Title" bind:value={name} required />
+			<TextArea label="Description" bind:value={description} required />
 			<ImageUpload bind:image label="Upload Image" />
-			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover={true} />
+			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover />
 			<RadioButtons bind:Yes={directJoin} label={'Direct Join'} />
 			<RadioButtons bind:Yes={publicGroup} label={'Public'} />
 

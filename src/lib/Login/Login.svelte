@@ -42,13 +42,14 @@
 
 <form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
 	
-	<TextInput label={'Email'} bind:value={username} required={true} />
-	<TextInput label={'Password'} bind:value={password} type={'password'} required={true} />
+	<TextInput label={'Email'} bind:value={username} required />
+	<TextInput label={'Password'} bind:value={password} type={'password'} required />
 	
 	<input
 	type="submit"
+	value={$_("Login")}
 	class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-	/>
+	>
 	
 	<StatusMessage bind:status />
 	<div

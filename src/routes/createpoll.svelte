@@ -127,6 +127,7 @@
 
 	onMount(() => {
 		getGroupTags();
+		
 	});
 </script>
 
@@ -142,10 +143,10 @@
 			<Loader {loading}>
 				<div class="bg-white p-6 shadow-xl flex flex-col gap-6 rounded">
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
-					<TextInput required={true} label="Title" bind:value={title} />
-					<TextArea required={true} label="Description" bind:value={description} />
+					<TextInput required label="Title" bind:value={title} />
+					<TextArea required label="Description" bind:value={description} />
 					<h2>{$_('End Date')}</h2>
-					<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
+					<DateInput format="yyyy-MM-dd HH:mm" closeOnSelection bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
 					<h2>{$_('Select Tag')}</h2>
 					<div class="flex gap-4 flex-wrap">
 						{#each tags as tag}
@@ -226,3 +227,9 @@
 		</div>
 	</div>
 </Layout>
+
+<style>
+	.date-time-field > input{
+		width:100%
+	}
+</style>

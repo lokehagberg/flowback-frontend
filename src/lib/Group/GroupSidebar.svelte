@@ -15,24 +15,55 @@
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { mode } from '$lib/configuration';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { onMount } from 'svelte';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
 
 	let innerWidth = 0;
 	let clickedExpandSidebar = false;
+	let userIsOwner = false;
 
 	// $: console.log(innerWidth);
+
+	//TODO: More complicated system for this, aswell as storing user info in localstorage or svelte stores
+	const getUserIsOwner = async () => {
+		const userData = await fetchRequest('GET', 'user');
+		const groupAdmins = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?is_admin=true`
+		);
+
+		userIsOwner =
+			groupAdmins.json.results.find(
+				(user: any) => user.user_id === userData.json.id && user.is_admin
+			) !== undefined;
+	};
+
+	onMount(() => {
+		getUserIsOwner();
+	});
 </script>
 
 <svelte:window bind:innerWidth />
 
 <div>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
-		<div on:click={() => (clickedExpandSidebar = true)} class="bg-white p-6 cursor-pointer absolute shadow rounded"><Fa icon={faBars} /></div>
+		<div
+			on:click={() => (clickedExpandSidebar = true)}
+			class="bg-white p-6 cursor-pointer absolute shadow rounded"
+		>
+			<Fa icon={faBars} />
+		</div>
 	{:else}
 		{#if innerWidth < 700}
-			<div on:click={() => (clickedExpandSidebar = false)} class="bg-white p-6 cursor-pointer shadow rounded flex justify-around items-center"><Fa icon={faX} /><span class="ml-2">Close Menu</span></div>
+			<div
+				on:click={() => (clickedExpandSidebar = false)}
+				class="bg-white p-6 cursor-pointer shadow rounded flex justify-around items-center"
+			>
+				<Fa icon={faX} /><span class="ml-2">Close Menu</span>
+			</div>
 		{/if}
 		<div class="bg-white shadow rounded flex flex-col">
 			<GroupSidebarButton action={() => (selectedPage = 'flow')} text="Flow" />
@@ -41,12 +72,12 @@
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
-			{#if mode === "Dev"}
-			<GroupSidebarButton
-				action={() => (selectedPage = 'documents')}
-				text="Documents"
-				icon={faFile}
-			/>
+			{#if mode === 'Dev'}
+				<GroupSidebarButton
+					action={() => (selectedPage = 'documents')}
+					text="Documents"
+					icon={faFile}
+				/>
 			{/if}
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
@@ -76,18 +107,20 @@
 				icon={faVideoCamera}
 			/>
 		</div>
-		<div class="bg-white shadow rounded flex flex-col mt-6">
-			<GroupSidebarButton
-				action={() => (selectedPage = 'email')}
-				text="Send Email"
-				icon={faMailReplyAll}
-			/>
-			<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} />
-			<GroupSidebarButton
-				action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
-				text="Edit Group"
-				icon={faCog}
-			/>
-		</div>
+		{#if userIsOwner}
+			<div class="bg-white shadow rounded flex flex-col mt-6">
+				<GroupSidebarButton
+					action={() => (selectedPage = 'email')}
+					text="Send Email"
+					icon={faMailReplyAll}
+				/>
+				<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} />
+				<GroupSidebarButton
+					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
+					text="Edit Group"
+					icon={faCog}
+				/>
+			</div>
+		{/if}
 	{/if}
 </div>

@@ -24,7 +24,7 @@
 
 <Loader bind:loading>
 <form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={sendCode}>
-	<TextInput label={'E-mail'} bind:value={email} required={true} />
+	<TextInput label={'E-mail'} bind:value={email} required/>
 
 	<StatusMessage bind:status/>
 	<input

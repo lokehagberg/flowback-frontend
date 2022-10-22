@@ -10,7 +10,7 @@
 <div class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">{$_("Comments")}</h1>
 	<form class="mt-4" on:submit|preventDefault={sendComment}>
-		<TextArea label="Comment" required={true}/>
+		<TextArea label="Comment" required/>
 		<!-- <textarea></textarea> -->
 		<!-- <TextArea type="field" label="Comment" /> -->
 		<ButtonPrimary Class="mt-4" type="submit" />

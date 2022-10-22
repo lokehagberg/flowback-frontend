@@ -27,8 +27,8 @@
 </script>
 
 <form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={registerAccount}>
-	<TextInput label={'New Password'} bind:value={password} type="password" required={true} />
-	<TextInput label={'Verification Code'} bind:value={verification_code} required={true} />
+	<TextInput label={'New Password'} bind:value={password} type="password" required />
+	<TextInput label={'Verification Code'} bind:value={verification_code} required />
 
 	<StatusMessage bind:status />
 	<input

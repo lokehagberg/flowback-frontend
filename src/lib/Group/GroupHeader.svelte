@@ -10,6 +10,7 @@
 	
 	export let selectedPage: SelectablePage;
 	export let group: GroupDetails;
+	export let memberCount:number;
 </script>
 
 <div class="relative flex justify-center">
@@ -28,7 +29,7 @@
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}
 	</h1>
-	<p class="text-xl">3 {$_("members")}</p>
+	<p class="text-xl">{memberCount} {$_("members")}</p>
 	<ButtonPrimary action={async () => {
 		const { res } = await fetchRequest(
 			'POST',

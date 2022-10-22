@@ -40,7 +40,10 @@
 		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
 
-		if (res.ok) status = { message: 'Success', success: true };
+		if (res.ok){
+			 status = { message: 'Success', success: true };
+			window.location.href = `/groups/${json}`
+		}	
 		else if (json.detail) {
 			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
 			if (errorMessage) status = { message: errorMessage, success: false };

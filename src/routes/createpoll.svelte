@@ -22,6 +22,7 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
 	type timetypes = 'Endtime' | 'Dynamic';
@@ -51,7 +52,7 @@
 	};
 
 	const timeDescriptions: Record<timetypes, string> = {
-		'Endtime': `Time is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
+		Endtime: `Time is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
 					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
 					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
 		Dynamic: `Dynamic is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
@@ -76,7 +77,7 @@
 	};
 
 	const timeIcons: Record<timetypes, any[]> = {
-		'Endtime': [faHourglass],
+		Endtime: [faHourglass],
 		Dynamic: [faClockRotateLeft]
 	};
 
@@ -88,15 +89,17 @@
 	let selectedTag: TagType;
 	let status: StatusMessageInfo;
 	let end_date = new Date();
+	let loading = false;
 
 	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
-		console.log(selectedTag, 'TAG');
 		if (selectedTag === undefined) {
 			status = { message: 'Must select tag', success: false };
 			return;
 		}
+
+		loading = true;
 
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
@@ -108,6 +111,7 @@
 			dynamic: false
 		});
 
+		loading = false;
 		if (res.ok) {
 			status = { message: 'Success', success: true };
 			window.location.href = `groups/${groupId}/polls/${json}`;
@@ -115,7 +119,9 @@
 	};
 
 	const getGroupTags = async () => {
+		loading = true;
 		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=100`);
+		loading = false;
 		tags = json.results;
 	};
 
@@ -133,33 +139,36 @@
 					: null}
 			class="md:w-2/3"
 		>
-			<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
-				<h1 class="text-2xl">{$_('Create a poll')}</h1>
-				<TextInput required={true} label="Title" bind:value={title} />
-				<TextArea required={true} label="Description" bind:value={description} />
-				<h2>{$_('End Date')}</h2>
-				<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
-				<h2>{$_('Select Tag')}</h2>
-				<div class="flex gap-4 flex-wrap">
-					{#each tags as tag}
-						<Tag
-							onclick={() => (selectedTag = tag)}
-							tag={tag.tag_name}
-							Class={`cursor-pointer ${selectedTag === tag ? 'bg-blue-600' : 'bg-blue-200'}`}
-						/>
-					{/each}
+			<Loader {loading}>
+				<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
+					<h1 class="text-2xl">{$_('Create a poll')}</h1>
+					<TextInput required={true} label="Title" bind:value={title} />
+					<TextArea required={true} label="Description" bind:value={description} />
+					<h2>{$_('End Date')}</h2>
+					<DateInput bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
+					<h2>{$_('Select Tag')}</h2>
+					<div class="flex gap-4 flex-wrap">
+						{#each tags as tag}
+							<Tag
+								onclick={() => (selectedTag = tag)}
+								tag={tag.tag_name}
+								Class={`cursor-pointer ${selectedTag === tag ? 'bg-blue-600' : 'bg-blue-200'}`}
+							/>
+						{/each}
+					</div>
+					{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
+						{$_('This polltype is not implemented yet')}
+					{/if}
+					<StatusMessage bind:status />
+					<ButtonPrimary
+						type="submit"
+						disabled={disabled.includes(selected_poll) || disabled.includes(selected_time)}
+						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
+							? 'bg-gray-400'
+							: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
+					>
 				</div>
-				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-					{$_('This polltype is not implemented yet')}
-				{/if}
-				<StatusMessage bind:status />
-				<ButtonPrimary
-					type="submit"
-					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
-						? 'bg-gray-400'
-						: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
-				>
-			</div>
+			</Loader>
 		</form>
 		<div class="md:w-1/3">
 			<div class="bg-white p-6 shadow-xl">

@@ -14,12 +14,12 @@
 
 <div class="relative flex justify-center">
 	<img
-		class="cover"
+		class="cover "
 		src={`${import.meta.env.VITE_API}${group.cover_image}`}
 		alt="cover"
 	/>
 	<img
-		class="h-36 w-36 absolute -bottom-8 left-8 profile"
+		class="h-36 w-36 absolute -bottom-8 left-8 profile rounded-full"
 		src={`${import.meta.env.VITE_API}${group.image}`}
 		alt="profile"
 	/>

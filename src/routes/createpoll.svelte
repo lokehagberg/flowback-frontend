@@ -140,7 +140,7 @@
 			class="md:w-2/3"
 		>
 			<Loader {loading}>
-				<div class="bg-white p-6 shadow-xl flex flex-col gap-6">
+				<div class="bg-white p-6 shadow-xl flex flex-col gap-6 rounded">
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
 					<TextInput required={true} label="Title" bind:value={title} />
 					<TextArea required={true} label="Description" bind:value={description} />
@@ -171,7 +171,7 @@
 			</Loader>
 		</form>
 		<div class="md:w-1/3">
-			<div class="bg-white p-6 shadow-xl">
+			<div class="bg-white p-6 shadow-xl rounded">
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}
 						<ButtonPrimary
@@ -207,7 +207,7 @@
 					{/each}
 				</div>
 			</div>
-			<div class="bg-white p-6 shadow-xl mt-4">
+			<div class="bg-white p-6 shadow-xl mt-4 rounded">
 				<div>
 					{#each Object.entries(pollDescriptions) as [pollType, description]}
 						{#if selected_poll === pollType}

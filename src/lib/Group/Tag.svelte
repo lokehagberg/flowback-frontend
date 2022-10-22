@@ -6,7 +6,7 @@
 
 </script>
 
-<div class={"select-none tag text-center bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded " + Class} on:click={onclick}>{tag}</div>
+<div class={"select-none text-xs tag text-center bg-blue-600 text-white pl-4 pr-4 pt-1 pb-1 break-words rounded " + Class} on:click={onclick}>{tag}</div>
 
 <style>
     .tag{

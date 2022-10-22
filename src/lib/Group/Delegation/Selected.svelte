@@ -37,6 +37,8 @@
 			`group/${$page.params.groupId}/delegate/update`,
 			toSendDelegates
 		);
+
+		if (res.ok) status={message:"Success", success:true}
 	};
 
 	const getDelegateRelations = async () => {
@@ -159,7 +161,7 @@
 		{/each}
 	</ul>
 	<StatusMessage bind:status />
-	<ButtonPrimary Class="mt-4 mb-2 hover:bg-blue-800" action={saveDelegation}
+	<ButtonPrimary Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
 		>{$_("Save changes")}</ButtonPrimary
 	>
 {:else}

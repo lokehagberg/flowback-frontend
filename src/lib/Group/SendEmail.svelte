@@ -8,7 +8,7 @@
 	let title: string, message: string;
 
 	const sendEmail = async () => {
-		await fetchRequest('POST', `groups/${$page.params.groupId}/mail`);
+		await fetchRequest('POST', `group/${$page.params.groupId}/mail`, {title, message});
 	};
 </script>
 

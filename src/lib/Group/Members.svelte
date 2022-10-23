@@ -75,7 +75,7 @@
 						<li class="text-black flex bg-white p-2 w-full mt-6">
 							<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 							<div class="w-64 ml-10">{searchedUser.username}</div>
-							<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer hover:bg-blue-800'}
+							<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer bg-blue-600 hover:bg-blue-800'}
 								>{$_('INVITE')}</ButtonPrimary
 							>
 						</li>

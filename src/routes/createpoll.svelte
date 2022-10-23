@@ -34,30 +34,16 @@
 	const times: timetypes[] = ['Endtime', 'Dynamic'];
 
 	const pollDescriptions: Record<polltypes, string> = {
-		Ranking: `Ranking poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		'For/Against': `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		Quadratic: `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		Cardinal: `For Against is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		Scheduled: `Sch poll is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
+		Ranking: `Ranking is the method of preferential voting known as the borda count. The top proposal in Added always gets the number of points as there are proposals (it does not depend on there being proposals below it), and the one below that gets that number minus one, the one below that gets that number minus two and so on. Each proposal that are in abstain each get zero points. This is added over all voters and is divided by the total number of votes to get the result.`,
+		'For/Against': `For/Against is the method where each proposal that is voted for gets one point and each voted against gets minus one independently of order, all other proposals get zero points. The points are then added over all voters and is divided by the total number of votes to get the result.`,
+		Quadratic: `Quadratic is the method where each member can rank by writing any number for all polls, which are ranked accordingly and get the percentage compared to the total that the member gives, the percentages are added up over all members and divided by the total to get the result. This means that not only are the proposals ranked by order of preference, but the degree by which one proposal is better than another is reflected. Totals will not exceed 10^6.`,
+		Cardinal: `Cardinal currently has no description`,
+		Scheduled: `Scheduled is the method where dates and times are voted on to decide meetings or events for the members of the group. Time polls are always Private and can only be seen by group members. One can only vote for a time or vote to drop the proposal, a default proposal for every time poll. This is carried out by the ranking method.`
 	};
 
 	const timeDescriptions: Record<timetypes, string> = {
-		Endtime: `Time is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`,
-		Dynamic: `Dynamic is Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ipsam
-					incidunt consequuntur culpa facere cupiditate. Inventore eum tempore libero, natus animi
-					itaque omnis eaque tempora quod maiores, dolores velit dolorem?`
+		Endtime: `An poll with an end date has a specified time when the poll finishes and results are displayed.`,
+		Dynamic: `A dynamic poll is always on and lacks an end date, results are always on display as they change dynamically.`
 	};
 
 	const disabled: (polltypes | timetypes)[] = [
@@ -127,7 +113,6 @@
 
 	onMount(() => {
 		getGroupTags();
-		
 	});
 </script>
 
@@ -146,7 +131,13 @@
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
 					<h2>{$_('End Date')}</h2>
-					<DateInput format="yyyy-MM-dd HH:mm" closeOnSelection bind:value={end_date} min={new Date()} max={maxDatePickerYear} />
+					<DateInput
+						format="yyyy-MM-dd HH:mm"
+						closeOnSelection
+						bind:value={end_date}
+						min={new Date()}
+						max={maxDatePickerYear}
+					/>
 					<h2>{$_('Select Tag')}</h2>
 					<div class="flex gap-4 flex-wrap">
 						{#each tags as tag}
@@ -229,7 +220,7 @@
 </Layout>
 
 <style>
-	.date-time-field > input{
-		width:100%
+	.date-time-field > input {
+		width: 100%;
 	}
 </style>

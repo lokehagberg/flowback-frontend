@@ -24,17 +24,11 @@
 		>
 		<div class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
-			{#if mode === 'Dev'}
-				<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
-			{/if}
-
+			<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
 			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
-
-			{#if mode === 'Dev'}
-				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
-				<HeaderIcon icon={faList} text="Kanban" href="kanban" />
-			{/if}
+			<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+			<HeaderIcon icon={faList} text="Kanban" href="kanban" />
 		</div>
 
 		<div

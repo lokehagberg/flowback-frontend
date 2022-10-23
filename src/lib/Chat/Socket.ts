@@ -29,9 +29,9 @@ socket.onerror = (error) => {
 };
 
 const sendMessage = (message: string) => {
-	// if (socket.readyState <= 1) {
-	socket.send(JSON.stringify({ message, target: 2 }));
-	// }
+	if (socket.readyState <= 1) {
+		socket.send(JSON.stringify({ message, target: 1 }));
+	}
 };
 
 export default { subscribe: messageStore.subscribe, sendMessage };

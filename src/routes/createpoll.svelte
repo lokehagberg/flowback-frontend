@@ -23,6 +23,7 @@
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
 	type timetypes = 'Endtime' | 'Dynamic';
@@ -75,6 +76,8 @@
 	let selectedTag: TagType;
 	let status: StatusMessageInfo;
 	let end_date = new Date();
+	let isPublic = true;
+
 	let loading = false;
 
 	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
@@ -94,7 +97,8 @@
 			end_date: new Date(end_date),
 			poll_type: 1,
 			tag: selectedTag.id,
-			dynamic: false
+			dynamic: false,
+			public: isPublic
 		});
 
 		loading = false;
@@ -151,6 +155,7 @@
 					{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 						{$_('This polltype is not implemented yet')}
 					{/if}
+					<RadioButtons bind:Yes={isPublic} label="Public" />
 					<StatusMessage bind:status />
 					<ButtonPrimary
 						type="submit"

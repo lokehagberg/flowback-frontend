@@ -16,7 +16,7 @@
 		if (!textarea) return;
 
 		textarea.oninput = function () {
-			if (textarea.scrollHeight < 500){
+			if (textarea.scrollHeight < 500) {
 				textarea.style.height = ''; /* Reset the height*/
 				textarea.style.height = textarea.scrollHeight + 'px';
 			}

@@ -1,27 +1,33 @@
 <script lang="ts">
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import type { Writable } from 'svelte/store';
+	// import WebSocket from './Socket'
 
 	let messages: Message[] = [{ message: 'haii', time: new Date() }];
-	let socket: WebSocket;
+	let messageStore: Writable<string>;
 	let chatOpen = true;
-    let message:string;
+	let message: string;
+	let sendMessageA: (message: string) => void;
 
 	onMount(async () => {
-		socket = (await import('./Socket')).socket;
+		// const {} await import('./Socket')
+		const { subscribe, sendMessage } = (await import('./Socket')).default;
+		sendMessageA = sendMessage;
+		subscribe((e: any) => {
+			console.log(e);
+			messages = [...messages, e];
+		});
 	});
 
-	const sendMessage =async () => {
-		console.log('lol');
-        await setTimeout(() => {
-            
-        }, 1000);
-        message = ""
+	const SendAMessage = async () => {
+		await sendMessageA('haiiiiii');
+		message = '';
 	};
 </script>
 
@@ -33,15 +39,14 @@
 		{#each messages as message}
 			{message.message}
 		{/each}
-		<form on:submit|preventDefault={sendMessage}>
+		<form on:submit|preventDefault={SendAMessage}>
 			<textarea
 				on:keypress={(e) => {
-                    console.log(e)
-					if (e.key === 'Enter' && !e.shiftKey) sendMessage();
+					if (e.key === 'Enter' && !e.shiftKey) SendAMessage();
 				}}
 				label="write a message"
 				required
-                bind:value={message}
+				bind:value={message}
 			/>
 			<ButtonPrimary type="submit" />
 		</form>

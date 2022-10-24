@@ -34,6 +34,30 @@
 		searchedUsers = json.results;
 	};
 
+	const getInvitesList = async (userId: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+			to: userId
+		});
+	};
+
+	const inviteUser = async (userId: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+			to: userId
+		});
+	};
+
+	const acceptInviteUser = async (userId: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+			to: userId
+		});
+	};
+
+	const denyInviteUser = async (userId: number) => {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+			to: userId
+		});
+	};
+
 	$: if (selectedPage === 'Invite') searchUsers('');
 </script>
 
@@ -75,9 +99,13 @@
 						<li class="text-black flex bg-white p-2 w-full mt-6">
 							<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
 							<div class="w-64 ml-10">{searchedUser.username}</div>
-							<ButtonPrimary Class={'w-64 ml-10 hover:underline cursor-pointer bg-blue-600 hover:bg-blue-800'}
+							<ButtonPrimary
+								action={() => inviteUser(searchedUser.id)}
+								Class={'w-64 ml-10 hover:underline cursor-pointer bg-blue-600 hover:bg-blue-800'}
 								>{$_('INVITE')}</ButtonPrimary
 							>
+							<ButtonPrimary>V</ButtonPrimary>
+							<ButtonPrimary>X</ButtonPrimary>
 						</li>
 					{/each}
 				</ul>

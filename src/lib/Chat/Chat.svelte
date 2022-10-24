@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -13,10 +13,10 @@
 
 	onMount(async () => {
 		const { subscribe, sendMessage } = (await import('./Socket')).default;
-		sendMessageToSocket = sendMessage;
+		sendMessageToSocket = sendMessage(1);
 		subscribe((e: any) => {
-			const {message, user} = JSON.parse(e)
-			messages = [...messages, {message, user}];
+			const { message, user } = JSON.parse(e);
+			messages = [...messages, { message, user }];
 		});
 	});
 

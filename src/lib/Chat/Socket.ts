@@ -5,7 +5,7 @@ const messageStore = writable('');
 let socket: WebSocket;
 
 const token = localStorage.getItem('token') || '';
-socket = new WebSocket(`ws://213.89.138.133:8000/chat/ws/direct?token=${token}`);
+socket = new WebSocket(`ws://213.89.138.133:8000/chat/ws/group/4?token=${token}`);
 
 socket.onopen = (event) => {
 	console.log('[open] Connection established');
@@ -28,10 +28,13 @@ socket.onerror = (error) => {
 	console.error(`[error] ${error}`);
 };
 
-const sendMessage = (message: string) => {
-	if (socket.readyState <= 1) {
-		socket.send(JSON.stringify({ message, target: 1 }));
-	}
+const sendMessage = (target: number) => {
+	return (message: string) => {
+		
+		if (socket.readyState <= 1) {
+			socket.send(JSON.stringify({ message, target }));
+		}
+	};
 };
 
 export default { subscribe: messageStore.subscribe, sendMessage };

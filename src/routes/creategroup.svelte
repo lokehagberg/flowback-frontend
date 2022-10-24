@@ -75,8 +75,8 @@
 			<h1 class="text-2xl">{$_('Create a Group')}</h1>
 			<TextInput label="Title" bind:value={name} required />
 			<TextArea label="Description" bind:value={description} required />
-			<ImageUpload bind:image label="Upload Image" />
-			<ImageUpload bind:image={coverImage} label="Upload Cover Image" isCover />
+			<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
+			<ImageUpload bind:image={coverImage} label="Upload Cover Image, recomended ratio 4:1" isCover />
 			<RadioButtons bind:Yes={directJoin} label={'Direct Join'} />
 			<RadioButtons bind:Yes={publicGroup} label={'Public'} />
 

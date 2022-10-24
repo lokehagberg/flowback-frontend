@@ -7,7 +7,7 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let messages: Message[] = [];
-	let chatOpen = true;
+	let chatOpen = false;
 	let message: string;
 	let sendMessageToSocket: (message: string) => void;
 

@@ -66,15 +66,21 @@
 			</div>
 		{/if}
 		<div class="bg-white shadow rounded flex flex-col">
-			<GroupSidebarButton action={() => (selectedPage = 'flow')} text="Flow" />
+			<GroupSidebarButton
+				action={() => (selectedPage = 'flow')}
+				text="Flow"
+				isSelected={selectedPage === 'flow'}
+			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'delegation')}
+				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
 			{#if mode === 'Dev'}
 				<GroupSidebarButton
 					action={() => (selectedPage = 'documents')}
+					isSelected={selectedPage === 'documents'}
 					text="Documents"
 					icon={faFile}
 				/>
@@ -83,16 +89,19 @@
 				action={() => (selectedPage = 'members')}
 				text="Members"
 				icon={faUserGroup}
+				isSelected={selectedPage === 'members'}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'statistics')}
 				text="Statistics"
 				icon={faChartColumn}
+				isSelected={selectedPage === 'statistics'}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'about')}
 				text="About"
 				icon={faCircleInfo}
+				isSelected={selectedPage === 'about'}
 			/>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col mt-6">
@@ -100,11 +109,13 @@
 				action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)}
 				text="Create Poll"
 				icon={faPoll}
+				isSelected={false}
 			/>
 			<GroupSidebarButton
 				action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}
 				text="Video Conference"
 				icon={faVideoCamera}
+				isSelected={false}
 			/>
 		</div>
 		{#if userIsOwner}
@@ -113,12 +124,14 @@
 					action={() => (selectedPage = 'email')}
 					text="Send Email"
 					icon={faMailReplyAll}
+					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} />
 				<GroupSidebarButton
 					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
 					text="Edit Group"
 					icon={faCog}
+					isSelected={selectedPage === 'tags'}
 				/>
 			</div>
 		{/if}

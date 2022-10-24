@@ -6,6 +6,7 @@
 	export let text: string;
 	export let action = () => {};
 	export let icon = faPoll
+	export let isSelected = true;
 
 	let hovering = false;
 </script>
@@ -15,9 +16,9 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class="select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4"
+	class={`select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4 ${isSelected && "text-gray-300"}`}
 >
-	<Fa {icon} color={hovering ? "#015BC0" : "black"} />
+	<Fa {icon} color={isSelected ? "gray" : hovering ? "#015BC0" : "black"} />
 	<div class="ml-2">
 		{$_(text)}
 	</div>

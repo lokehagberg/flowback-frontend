@@ -2,6 +2,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 	import { _ } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 
 	export let icon = faCircle;
 	export let text = 'icon';
@@ -13,7 +14,12 @@
 	let hovering = false;
 	let selectedPage = false;
 
+	onMount(() => {
+		checkIfSelected()
+	})
+
 	function checkIfSelected() {
+		console.log(window.location.pathname, '/' + href)
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>
@@ -29,7 +35,7 @@
 		<Fa
 			{icon}
 			{size}
-			color={color !== '' ? color : hovering ? '#015BC0' : selectedPage ? 'lightgray' : 'black'} 
+			color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
 		/>
 	</div>
 	<div

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	export let Yes: boolean = true, label:string;
+	export let Yes: boolean = true, label:string, centering = false;
 </script>
 
 <fieldset>
 	<h1 class="text-left text-sm">{$_(label)}</h1>
-	<div class="mt-2">
-        <label class="ml-4">
+	<div class={`mt-2 ${centering && "flex justify-center gap-2"}`}>
+        <label>
             {$_("Yes")}
             <input type="radio" name={label} checked={Yes} on:change={() => (Yes = true)} />
         </label>

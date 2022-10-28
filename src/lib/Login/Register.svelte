@@ -43,7 +43,7 @@
 		<TextInput label={'Username'} bind:value={username} required />
 		<TextInput label={'Email'} bind:value={email} required />
 		<TermsOfService />
-		<RadioButtons label="Do you accept terms and conditions?" bind:Yes={acceptedToS} />
+		<RadioButtons label="Do you accept terms and conditions?" centering={true} bind:Yes={acceptedToS} />
 		<StatusMessage bind:status />
 		<input
 			type="submit"

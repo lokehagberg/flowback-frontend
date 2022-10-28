@@ -5,7 +5,7 @@ const messageStore = writable('');
 let socket: WebSocket;
 
 const token = localStorage.getItem('token') || '';
-socket = new WebSocket(`ws://213.89.138.133:8000/chat/ws/group/4?token=${token}`);
+socket = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_API}/chat/ws/group/14?token=${token}`);
 
 socket.onopen = (event) => {
 	console.log('[open] Connection established');

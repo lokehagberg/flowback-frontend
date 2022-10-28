@@ -12,6 +12,7 @@
 	let sendMessageToSocket: (message: string) => void;
 
 	onMount(async () => {
+		//Must be imported here to avoid "document not found" error
 		const { subscribe, sendMessage } = (await import('./Socket')).default;
 		sendMessageToSocket = sendMessage(1);
 		subscribe((e: any) => {
@@ -26,9 +27,10 @@
 	};
 </script>
 
-<div class="fixed bg-white shadow p-8 z-10">
+<div class="fixed z-10">
 	{#if chatOpen}
-		<div on:click={() => (chatOpen = false)}>
+	<div class="w-full bg-white shadow rounded p-8">
+		<div on:click={() => (chatOpen = false)} class="cursor-pointer p-2">
 			<Fa icon={faX} />
 		</div>
 		{#each messages as message}
@@ -45,8 +47,9 @@
 			/>
 			<ButtonPrimary type="submit" />
 		</form>
+	</div>
 	{:else}
-		<div on:click={() => (chatOpen = true)}>
+		<div on:click={() => (chatOpen = true)} class="bg-white shadow rounded p-10 cursor-pointer">
 			<Fa icon={faPlus} />
 		</div>
 	{/if}

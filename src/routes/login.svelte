@@ -32,7 +32,7 @@
 			{:else if selectedPage === 'Register'}
 				<RegisterCard bind:selectedPage />
 			{:else if selectedPage === 'Verify'}
-				<VerifyCard bind:selectedPage />
+				<VerifyCard />
 			{:else if selectedPage === 'ForgotPassword'}
 				<ForgotPasswordCard bind:selectedPage />
 			{:else if selectedPage === 'NewPassword'}

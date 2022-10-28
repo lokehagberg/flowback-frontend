@@ -14,6 +14,7 @@
     "Something went wrong": "Något gick fel",
     "Wrong username or password": "Fel användarnamn eller lösenord",
     "Username": "Användarnamn",
+    "Account was created but was unable to sign in": "Kontot skapades men kunde inte logga in",
     "Leave no field empty": "Fyll i alla fält",
     "Please choose a name, i.e. your real name or your nich name. This name will be shown to others to identify you": "Välj ett namn som kommer synas på forumet för andra",
     "Reset password by typing your account email below to receive verification code": "Återställ lösenordet genom att skriva ditt email nedan för att få verifikationskoden, stäng inte denna sida",

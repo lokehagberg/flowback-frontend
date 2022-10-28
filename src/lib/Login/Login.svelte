@@ -12,7 +12,7 @@
 
 	export let selectedPage: string;
 
-	const logIn = async (e: any) => {
+	const logIn = async () => {
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 
 		console.log(json)

@@ -77,8 +77,8 @@
 			<TextArea label="Description" bind:value={description} required />
 			<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
 			<ImageUpload bind:image={coverImage} label="Upload Cover Image, recomended ratio 4:1" isCover />
-			<RadioButtons bind:Yes={directJoin} label={'Direct Join'} />
-			<RadioButtons bind:Yes={publicGroup} label={'Public'} />
+			<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
+			<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 
 			{#if groupToEdit !== null}
 				<Modal bind:open={DeleteGroupModalShow}>

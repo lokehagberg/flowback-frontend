@@ -155,7 +155,7 @@
 					{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 						{$_('This polltype is not implemented yet')}
 					{/if}
-					<RadioButtons bind:Yes={isPublic} label="Public" />
+					<RadioButtons bind:Yes={isPublic} label="Public?" />
 					<StatusMessage bind:status />
 					<ButtonPrimary
 						type="submit"

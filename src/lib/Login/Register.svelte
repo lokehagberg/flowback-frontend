@@ -2,20 +2,27 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
 
 	import TextInput from '../Generic/TextInput.svelte';
 	import { mailStore } from './stores';
+	import TermsOfService from './TermsOfService.svelte';
 
 	let username: string;
 	let email: string;
 	let status: StatusMessageInfo;
 	let loading = false;
+	let acceptedToS = false;
 
 	export let selectedPage: string;
 
 	async function registerAccount() {
+		if (!acceptedToS) {
+			status = { message: 'You must accept rerms of service to register', success: false };
+			return;
+		}
 		loading = true;
 		const { res, json } = await fetchRequest('POST', 'register', { username, email }, false);
 		loading = false;
@@ -35,7 +42,8 @@
 	<form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={registerAccount}>
 		<TextInput label={'Username'} bind:value={username} required />
 		<TextInput label={'Email'} bind:value={email} required />
-
+		<TermsOfService />
+		<RadioButtons label="Do you accept terms and conditions?" bind:Yes={acceptedToS} />
 		<StatusMessage bind:status />
 		<input
 			type="submit"

@@ -4,7 +4,7 @@
 </script>
 
 <fieldset>
-	<h1 class="text-left text-sm">{$_(label)}?</h1>
+	<h1 class="text-left text-sm">{$_(label)}</h1>
 	<div class="mt-2">
         <label class="ml-4">
             {$_("Yes")}

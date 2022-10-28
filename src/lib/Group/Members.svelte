@@ -21,6 +21,8 @@
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
 		loading = false;
+
+		getInvitesList()
 	});
 
 	const searchUsers = async (username: string) => {
@@ -34,10 +36,8 @@
 		searchedUsers = json.results;
 	};
 
-	const getInvitesList = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
-			to: userId
-		});
+	const getInvitesList = async () => {
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	};
 
 	const inviteUser = async (userId: number) => {

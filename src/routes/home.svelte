@@ -1,7 +1,13 @@
 <script>
+	import { fetchRequest } from '$lib/FetchRequest';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
+	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+
+	onMount(async () => {
+		const {res, json}  = await fetchRequest('GET', 'group/invites')
+	})
 </script>
 
 <Layout centering={true}> 

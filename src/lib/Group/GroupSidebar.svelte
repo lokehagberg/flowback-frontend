@@ -126,12 +126,12 @@
 					icon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
-				<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} />
+				<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} isSelected={selectedPage === 'tags'}/>
 				<GroupSidebarButton
 					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
 					text="Edit Group"
 					icon={faCog}
-					isSelected={selectedPage === 'tags'}
+					isSelected={false}
 				/>
 			</div>
 		{/if}

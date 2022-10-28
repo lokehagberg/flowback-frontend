@@ -14,6 +14,7 @@
 	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import Results from '$lib/Poll/Results.svelte';
 
 	let poll: poll;
 	let votings: votings[];
@@ -30,7 +31,7 @@
 	const getPollData = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/list?limit=100&id=${$page.params.pollId}`
+			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
 		);
 
 		poll = json.results[0];
@@ -48,7 +49,9 @@
 {#if poll}
 	<Layout centering={true}>
 		<!-- <TestDraggable /> -->
-		<div class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3">
+		<div
+			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3"
+		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
 			<div class="border border-gray-200 rounded p-4">
 				<div class="flex gap-6">
@@ -60,21 +63,25 @@
 				<Tag Class="w-32 mb-4" tag={poll.tag_name} />
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
-			<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-			<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
-			<ProposalSubmition bind:abstained />
+			{#if !poll.finished}
+				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
+				<ProposalSubmition bind:abstained />
+			{:else}
+				<Results />
+			{/if}
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			{#if mode === 'Dev'}
 				<Comments />
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>
-				<div slot="header">{$_("Deleting Poll")}</div>
-				<div slot="body">{$_("Are you sure you want to delete this poll?")}</div>
+				<div slot="header">{$_('Deleting Poll')}</div>
+				<div slot="body">{$_('Are you sure you want to delete this poll?')}</div>
 				<div slot="footer">
 					<div class="flex justify-center gap-16">
-						<ButtonPrimary action={deletePoll} Class="bg-red-500">{$_("Yes")}</ButtonPrimary><ButtonPrimary
-							action={() => (DeletePollModalShow = false)}
-							Class="bg-gray-400 w-1/2">{$_("Cancel")}</ButtonPrimary
+						<ButtonPrimary action={deletePoll} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
+						><ButtonPrimary action={() => (DeletePollModalShow = false)} Class="bg-gray-400 w-1/2"
+							>{$_('Cancel')}</ButtonPrimary
 						>
 					</div>
 				</div>

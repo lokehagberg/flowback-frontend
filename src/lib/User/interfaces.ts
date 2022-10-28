@@ -5,5 +5,17 @@ export interface User {
 	profile_image: string;
 	username: string;
 	website: string;
-	id: number
+	id: number;
+}
+
+export interface GroupUser {
+	banner_image: File | null;
+	delegate: boolean;
+	id: number;
+	is_admin: boolean;
+	permission_id: number | null;
+	permission_name: string;
+	profile_image: null;
+	user_id: number;
+	username: string;
 }

@@ -76,7 +76,7 @@
 					{:else if selectedPage === 'email'}
 						<SendEmail />
 					{:else if selectedPage === 'about'}
-						<About description={group.description} />
+						<About description={group.description} creatorId={group.created_by} />
 					{:else if selectedPage === 'tags'}
 						<Tags />
 					{/if}

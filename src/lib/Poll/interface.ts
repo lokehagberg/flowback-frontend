@@ -27,3 +27,9 @@ export interface votings {
 	proposal: number;
 	score: number;
 }
+
+export interface Filter {
+	finished: boolean;
+	public: boolean;
+	search: string;
+}

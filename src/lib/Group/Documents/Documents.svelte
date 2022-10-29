@@ -27,9 +27,9 @@ import Folder from './Folder.svelte';
 	];
 </script>
 
-<div class="w-full">
-	<ButtonPrimary action={() => open("https://drive.google.com/drive/u/0/folders/1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-")}>Gå till huvudmappen</ButtonPrimary>
-	<iframe title="Documents" class="bg-white shadow rounded p-4 mt-6 w-full h-[500px]" src="https://drive.google.com/embeddedfolderview?id=1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-#list"></iframe>
+<div class="w-full bg-white shadow rounded p-4 pt-6">
+	<ButtonPrimary Class="p-6" action={() => open("https://drive.google.com/drive/u/0/folders/1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-")}>Gå till huvudmappen</ButtonPrimary>
+	<iframe title="Documents" class="w-full h-[500px] mt-4" src="https://drive.google.com/embeddedfolderview?id=1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-#list"></iframe>
 </div>
 
 

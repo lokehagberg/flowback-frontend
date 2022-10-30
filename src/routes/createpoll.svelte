@@ -68,18 +68,17 @@
 		Dynamic: [faClockRotateLeft]
 	};
 
-	const groupId = $page.url.searchParams.get('id');
-
 	let title = '',
-		description = '';
-	let tags: TagType[] = [];
-	let selectedTag: TagType;
-	let status: StatusMessageInfo;
-	let end_date = new Date();
-	let isPublic = true;
+		description = '',
+		tags: TagType[] = [],
+		selectedTag: TagType,
+		status: StatusMessageInfo,
+		end_date = new Date(),
+		isPublic = true,
+		loading = false;
 
-	let loading = false;
-
+	const groupId = $page.url.searchParams.get('id');
+	
 	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
@@ -95,7 +94,7 @@
 			description,
 			start_date: new Date(),
 			end_date: new Date(end_date),
-			poll_type: 1,
+			poll_type: 3,
 			tag: selectedTag.id,
 			dynamic: false,
 			public: isPublic

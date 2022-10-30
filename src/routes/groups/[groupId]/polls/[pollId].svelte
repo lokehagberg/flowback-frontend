@@ -15,12 +15,16 @@
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Results from '$lib/Poll/Results.svelte';
+	import { DateInput } from 'date-picker-svelte';
+	import ScheduledSubmission from '$lib/Poll/ScheduledSubmission.svelte';
 
 	let poll: poll;
 	let votings: votings[];
 	let selectedPage: 'You' | 'Delegate' = 'You';
 	let abstained: proposal[];
 	let DeletePollModalShow = false;
+	let pollType = 3;
+
 
 	$: console.log(abstained, 'ABS');
 
@@ -48,7 +52,6 @@
 
 {#if poll}
 	<Layout centering={true}>
-		<!-- <TestDraggable /> -->
 		<div
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3"
 		>
@@ -66,7 +69,14 @@
 			{#if !poll.finished}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
-				<ProposalSubmition bind:abstained />
+
+				{#if pollType === 1}
+					<!-- Ranked Poll -->
+					<ProposalSubmition bind:abstained />
+				{:else if pollType === 3}
+					<!-- Scheduled Poll -->
+					<ScheduledSubmission bind:abstained/>
+				{/if}
 			{:else}
 				<Results />
 			{/if}

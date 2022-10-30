@@ -49,7 +49,11 @@
 			'GET',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
 		);
-		proposals = json.results;
+		
+		// proposals = json.results;
+		// If polltype === 3
+		proposals = json.results.map((proposal:any) => { return {description:proposal.end_date, title:proposal.start_date, id:proposal.id} })
+
 	};
 
 	const setUpSortable = async () => {
@@ -173,16 +177,19 @@
 	const setOrdering = () => {
 		if (!votings) return;
 
-		ranked = new Array(votings.length);
+		// ranked = new Array(votings.length);
+		ranked = [];
 		abstained = [];
 
 		proposals.forEach((proposal) => {
 			const vote = votings.find((vote) => proposal.id === vote.proposal);
-			if (vote) ranked[votings.length - vote?.priority] = proposal;
+			console.log(vote, "VOTE")
+			// if (vote) ranked[votings.length - vote?.priority] = proposal;
+			if (vote) ranked.push(proposal);
 			else abstained.push(proposal);
 		});
 
-		console.log(ranked, abstained, votings);
+		console.log(ranked, abstained, votings, "ORDERING");
 
 		if (ranked[0] !== undefined) ranked = ranked;
 		else ranked = [];

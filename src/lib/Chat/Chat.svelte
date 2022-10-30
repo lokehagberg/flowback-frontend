@@ -9,7 +9,7 @@
 	import type { Group } from '$lib/Group/interface';
 
 	let messages: Message[] = [];
-	let chatOpen = true;
+	let chatOpen = false;
 	let message: string;
 	let groups: Group[] = [];
 	let socket: WebSocket;

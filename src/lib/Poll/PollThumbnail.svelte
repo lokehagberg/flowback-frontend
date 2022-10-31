@@ -2,12 +2,13 @@
 	import Timeline from './Timeline.svelte';
 	import type { poll } from './interface';
 	import { onMount } from 'svelte';
-	import {page} from '$app/stores'
+	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 
 	export let poll: poll;
+
 	onMount(() => {
-		console.log(poll);
+		console.log(poll, "POLL");
 	});
 	let onHoverGroup = false;
 </script>
@@ -15,13 +16,13 @@
 <!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
 <a
 	class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail"
-	href={onHoverGroup ? '/groups/1' : `${$page.params.groupId}/polls/${poll.id}`}
+	href={onHoverGroup ? '/groups/1' : `groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 >
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<p class="mt-2">
 		{poll.description}
 	</p>
-	<Tag tag={poll.tag_name} Class="w-1/3 mb-4 mt-2"/>
+	<Tag tag={poll.tag_name} Class="w-1/3 mb-4 mt-2" />
 	<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayDetails={false} />
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p

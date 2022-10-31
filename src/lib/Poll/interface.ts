@@ -18,6 +18,7 @@ export interface poll {
 	tag: number;
 	tag_name: string;
 	title: string;
+	group_id:number;
 }
 
 export interface votings {
@@ -33,3 +34,4 @@ export interface Filter {
 	public: boolean;
 	search: string;
 }
+

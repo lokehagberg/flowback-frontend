@@ -10,6 +10,8 @@
 
 	export let Class = '';
 	export let infoToGet: 'group' | 'home' | 'public';
+	export let groupId:string = $page.params.groupId
+
 	let polls: any[] = [];
 	let filter: Filter = { search: '', finished: false, public: false };
 	let loading = false;
@@ -49,7 +51,7 @@
 
 				{#if polls.length > 0}
 					{#each polls as poll}
-						<PollThumbnail {poll}  />
+						<PollThumbnail {poll} />
 					{/each}
 				{:else}
 					<div class="bg-white rounded shadow p-8">{$_('No polls currently here')}</div>

@@ -72,7 +72,8 @@
 
 	const getPeople = async (username: string) => {
 		const { json } = await fetchRequest('GET', `users?limit=100`);
-		return json.results
+		const self = (await fetchRequest('GET', `user`)).json;
+		return json.results.filter((user:any) => user.id !== self.id)
 	};
 </script>
 
@@ -82,7 +83,7 @@
 			on:click={() => (chatOpen = false)}
 			class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 hover:border-gray-600 cursor-pointer p-2 "
 		>
-			<div class="">Chat</div>
+			<div class="">Chatt</div>
 			<Fa icon={faX} />
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
@@ -92,17 +93,21 @@
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
 		>
 			{#each messages as message}
-				<li>{message.message}</li>
+				<li class="p-3 hover:bg-gray-200">
+					<span>{message.user?.username || message.username}</span>
+					<p>{message.message}</p>
+				</li>
 			{/each}
 		</ul>
-		<ul class="row-start-2 row-end-4 bg-white flex flex-col gap-3 ml-3 mt-3">
+		<ul class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3">
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
-				<li on:click={() => setUpMessageSending(chatter.id)}>
+				<li class="p-3 flex gap-2 hover:bg-gray-200 cursor-pointer" on:click={() => setUpMessageSending(chatter.id)}>
 					<img
 						class="w-10 h-10 rounded-full"
 						src={chatter.image ? `${import.meta.env.VITE_API}${chatter.image}` : DefaultPFP}
 						alt=""
 					/>
+					<span>{chatter.name || chatter.username}</span>
 				</li>
 			{/each}
 		</ul>
@@ -115,6 +120,7 @@
 					label="write a message"
 					required
 					bind:value={message}
+					class="border border-black w-full"
 				/>
 				<ButtonPrimary type="submit" />
 			</form>

@@ -10,6 +10,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import type { scheduledEvent } from '$lib/Schedule/interface';
 
 	const months = [
 		'Jan',
@@ -30,7 +31,7 @@
 	let month = currentDate.getMonth();
 	let year = currentDate.getFullYear();
 	let selectedDate = new Date(year, month, 0);
-	let polls = [];
+	let polls:scheduledEvent[] = [];
 	let loading = false;
 
 	//A fix due to class struggle

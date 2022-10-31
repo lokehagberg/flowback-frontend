@@ -9,6 +9,7 @@
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import type { Unsubscriber } from 'svelte/store';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
 
 	let messages: Message[] = [];
 	let chatOpen = false;
@@ -60,6 +61,7 @@
 
 	const HandleMessageSending = async () => {
 		await sendMessageToSocket(message);
+		// messages = [...messages, {message, user: {username:"Jag", id} }]
 		message = '';
 	};
 
@@ -70,7 +72,7 @@
 
 	const getPeople = async (username: string) => {
 		const { json } = await fetchRequest('GET', `users?limit=100`);
-		return json.results;
+		return json.results
 	};
 </script>
 
@@ -93,12 +95,12 @@
 				<li>{message.message}</li>
 			{/each}
 		</ul>
-		<ul class="row-start-2 row-end-4 bg-white">
+		<ul class="row-start-2 row-end-4 bg-white flex flex-col gap-3 ml-3 mt-3">
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li on:click={() => setUpMessageSending(chatter.id)}>
 					<img
-						class="w-10 h-10"
-						src={`${import.meta.env.VITE_API}${chatter.image || chatter.profile_image}`}
+						class="w-10 h-10 rounded-full"
+						src={chatter.image ? `${import.meta.env.VITE_API}${chatter.image}` : DefaultPFP}
 						alt=""
 					/>
 				</li>

@@ -3,6 +3,9 @@
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
+	import div from '$lib/Generic/ButtonPrimary.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	export let filter: Filter = { search: '', finished: false, public: false };
@@ -12,18 +15,27 @@
 </script>
 
 <form
-	class="bg-white shadow rounded p-6 flex flex-col gap-4"
+	class="bg-white shadow rounded p-6 flex flex gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();
 	}}
 >
-	<TextInput onInput={() => (searched = false)} label={$_('Search')} bind:value={filter.search} />
+	<TextInput
+		Class="w-4/5"
+		onInput={() => (searched = false)}
+		label={$_('Search')}
+		bind:value={filter.search}
+	/>
+
+	<ButtonPrimary
+		Class={`!p-1 flex justify-center items-center w-1/5 transition transition-colors ${
+			searched ? 'bg-blue-300' : 'bg-blue-600'
+		}`}
+		type="submit"
+	>
+		<Fa icon={faMagnifyingGlass} />
+	</ButtonPrimary>
 	<!-- <CheckboxButtons label={''} labels={[{label:'Finished', checked:true}, {label:'Not Finished', checked:true}]} />
 	<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
-	<ButtonPrimary
-		Class={`transition transition-colors ${searched && 'bg-blue-300'}`}
-		type="submit"
-		label="Söka">Search</ButtonPrimary
-	>
 </form>

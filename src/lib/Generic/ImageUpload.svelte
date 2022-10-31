@@ -23,7 +23,7 @@
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
 	{#if image}
-		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={label} />
+		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} />
 	{:else}
 		<img
 			class="avatar"

@@ -118,7 +118,7 @@
 				{#each [1, 2, 3, 4, 5, 6] as y}
 					{#each [1, 2, 3, 4, 5, 6, 7] as x}
 						<div
-							class="relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 "
+							class={` relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600`}
 							id={`${x}-${y}`}
 							class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 								month === currentDate.getMonth() &&

@@ -53,5 +53,5 @@
 		{/each}
 	</ul>
 
-	<PollThumbnails infoToGet="home" Class="sm:w-5/6 md:w-2/3 justify-center" />
+	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-4/5 xl:max-w-[800px] justify-center" />
 </Layout>

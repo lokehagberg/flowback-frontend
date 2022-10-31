@@ -15,7 +15,7 @@
 			action: () => (window.location.href = '/user')
 		},
 		{ title: 'Support', action: () => (open_support = true) },
-		{ title: 'Tools', action: () => (open_tools = true) },
+		// { title: 'Tools', action: () => (open_tools = true) },
 		{ title: 'Log Out', action: logOut }
 	];
 

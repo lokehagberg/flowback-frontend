@@ -83,11 +83,12 @@
 {#if chatOpen}
 	<div class="bg-white fixed z-10 w-full grid">
 		<div
-			on:click={() => (chatOpen = false)}
-			class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 hover:border-gray-600 cursor-pointer p-2 "
+			class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 "
 		>
 			<div class="">Chat</div>
-			<Fa icon={faX} />
+			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
+				<Fa size="1.5x" icon={faX} />
+			</div>
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
 			<Tab bind:selectedPage tabs={['Direkt', 'Grupper']} />
@@ -135,7 +136,7 @@
 {:else}
 	<div
 		on:click={() => (chatOpen = true)}
-		class="fixed z-30 bg-white shadow-md border rounded p-6 top-3/4 ml-6 rounded-full cursor-pointer"
+		class="fixed z-30 bg-white shadow-md border rounded p-6 top-3/4 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-black active:shadow-2xl active:p-7"
 	>
 		<Fa icon={faComment} />
 	</div>

@@ -7,13 +7,13 @@
 	export let group: Group;
 
 	const goToGroup = () => {
-		window.location.href = `/groups/${group.id}`;
+		if (group.joined) window.location.href = `/groups/${group.id}`;
 	};
 </script>
 
 <div
 	on:click={goToGroup}
-	class="w-5/6 md:w-1/2 bg-white relative shadow-md vote-thumbnail cursor-pointer rounded-2xl"
+	class={`w-5/6 md:w-1/2 bg-white relative shadow-md ${group.joined && "cursor-pointer hover:shadow-xl vote-thumbnail"} transition transition-shadow rounded-2xl`}
 >
 	<div on:click={goToGroup}>
 		<img
@@ -44,8 +44,7 @@
 					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
 					if (res.ok) group.joined = !group.joined;
 				}}
-				Class="hover:bg-blue-800 bg-blue-600 2xl:pt-6 2xl:pb-6 "
-				>{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
+				Class="hover:bg-blue-800 bg-blue-600">{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
 			>
 		{/if}
 	</div>

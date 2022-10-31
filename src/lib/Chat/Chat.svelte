@@ -24,13 +24,16 @@
 	onMount(async () => {
 		directs = await getPeople('');
 		groups = await getGroups();
-	}); 
+	});
 
 	const setUpMessageSending = async (selectedGroup: number) => {
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 
-		const { res, json } = await fetchRequest('GET', selectedPage === 'Grupper' ? `chat/group/${selectedGroup}` : `chat/direct/${selectedGroup}`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			selectedPage === 'Grupper' ? `chat/group/${selectedGroup}` : `chat/direct/${selectedGroup}`
+		);
 		messages = json.results;
 
 		//Resets last web socket connection
@@ -41,15 +44,18 @@
 		try {
 			sendMessageToSocket = sendMessage(selectedGroup, socket);
 			unsubscribe = subscribe((e: any) => {
+				console.log(e, 'EE');
 				const { message, user } = JSON.parse(e);
 				messages = [...messages, { message, user }];
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
 					document.querySelector('.overflow-y-scroll')?.scroll(0, 1000);
-				},100)
+				}, 100);
 			});
-		} catch (e) {}
+		} catch (e) {
+			console.error(e);
+		}
 	};
 
 	const HandleMessageSending = async () => {

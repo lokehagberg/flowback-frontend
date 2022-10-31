@@ -9,7 +9,8 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { _ } from 'svelte-i18n';
-	
+	import { fetchRequest } from '$lib/FetchRequest';
+
 	const months = [
 		'Jan',
 		'Feb',
@@ -52,10 +53,12 @@
 
 	let deleteSelection = () => {};
 
-	onMount(() => {
+	onMount(async () => {
 		deleteSelection = () => {
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		};
+
+		await fetchRequest('GET', 'poll/user/schedule');
 	});
 
 	const firstDayInMonthWeekday = () => {
@@ -66,9 +69,10 @@
 <Layout>
 	<div class="flex bg-white">
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
-			{$_("Time polls at")} {selectedDate.getDate()}/{selectedDate.getMonth()}
+			{$_('Time polls at')}
+			{selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
-			<div>{$_("Nothing this day")}</div>
+			<div>{$_('Nothing this day')}</div>
 		</div>
 
 		<div class="w-full">

@@ -33,7 +33,8 @@
 		public: true,
 		id: 0
 	};
-	let userInGroup: boolean = true, memberCount = 0;
+	let userInGroup: boolean = true,
+		memberCount = 0;
 
 	onMount(() => {
 		getGroupInfo();
@@ -48,7 +49,7 @@
 	const getGroupInfo = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
-		memberCount = json.member_count
+		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 	};
 </script>
@@ -64,7 +65,7 @@
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16 w-3/4">
 				<div class="w-2/3">
 					{#if selectedPage === 'flow'}
-						<PollThumbnails />
+						<PollThumbnails infoToGet="group" />
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}
@@ -72,7 +73,7 @@
 					{:else if selectedPage === 'documents'}
 						<Documents />
 					{:else if selectedPage === 'statistics'}
-						<Statistics {memberCount}/>
+						<Statistics {memberCount} />
 					{:else if selectedPage === 'email'}
 						<SendEmail />
 					{:else if selectedPage === 'about'}
@@ -88,6 +89,8 @@
 	</Layout>
 {:else}
 	<Layout centering={true}>
-		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">You are not a memeber of this group!</div>
+		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
+			You are not a memeber of this group!
+		</div>
 	</Layout>
 {/if}

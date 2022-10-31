@@ -4,7 +4,6 @@
 	import { _ } from 'svelte-i18n';
 </script>
 
-<Layout centering={true}> 
-		<div class="bg-white rounded shadow p-8 mt-6">{$_("No polls currently here")}</div>
-		<!-- <PollThumbnails Class="w-5/6 md:w-2/3 justify-center" /> -->
+<Layout centering={true}>
+	<PollThumbnails infoToGet="public" Class="w-full sm:w-4/5 md:w-2/3 justify-center" />
 </Layout>

@@ -15,8 +15,10 @@
 	let socket: WebSocket;
 	let sendMessageToSocket: (message: string) => void;
 
+	//TODO: Only render when chat opens up
 	onMount(async () => {
 		groups = await getGroups();
+
 		// setUpMessageSending();
 	});
 
@@ -24,6 +26,7 @@
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 
+		const { res, json } = await fetchRequest('GET', `chat/group/${selectedGroup}`);
 		if (socket) socket.close();
 		socket = createSocket(selectedGroup);
 		try {
@@ -47,20 +50,20 @@
 </script>
 
 {#if chatOpen}
-	<div class="bg-white fixed z-10 w-full">
+	<div class="bg-white fixed z-10 w-full grid">
 		<div
 			on:click={() => (chatOpen = false)}
-			class="flex justify-between bg-white border border-gray-300 hover:border-gray-600 cursor-pointer p-2 "
+			class="col-start-1 col-end-3 flex justify-between bg-white border border-gray-300 hover:border-gray-600 cursor-pointer p-2 "
 		>
 			<div class="">Chat</div>
 			<Fa icon={faX} />
 		</div>
-		<ul class="bg-white">
+		<ul class="col-start-2 col-end-3 bg-white h-[10vh] overflow-y-scroll overflow-x-hidden break-all">
 			{#each messages as message}
 				<li>{message.message}</li>
 			{/each}
 		</ul>
-		<ul class="bg-white">
+		<ul class="row-start-2 row-end-4 bg-white">
 			{#each groups as group}
 				<li on:click={() => setUpMessageSending(group.id)}>
 					<img
@@ -71,7 +74,7 @@
 				</li>
 			{/each}
 		</ul>
-		<div class="w-full bg-white shadow rounded p-8 w-full">
+		<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
 			<form on:submit|preventDefault={HandleMessageSending}>
 				<textarea
 					on:keypress={(e) => {

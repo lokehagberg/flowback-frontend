@@ -19,11 +19,11 @@
 
 		const API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=100&title=${filter.search || ''}`
+				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${filter.search || ''}`
 				: infoToGet === 'home'
-				? `home/polls?limit=30&title=${filter.search || ''}`
+				? `home/polls?limit=30&title__icontains=${filter.search || ''}`
 				: infoToGet === 'public'
-				? `home/polls?limit=30&public=true&title=${filter.search || ''}`
+				? `home/polls?limit=30&public=true&title__icontains=${filter.search || ''}`
 				: '';
 
 		const { json } = await fetchRequest('GET', API);

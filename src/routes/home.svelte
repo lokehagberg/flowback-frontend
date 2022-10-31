@@ -27,23 +27,23 @@
 		const { res, json } = await fetchRequest('GET', 'group/invites');
 		invitations = json.results;
 	};
-	
-	const acceptInvitation = async (id:number) => {
-		console.log(id)
-		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
-	}
 
-	const rejectInvitation = async (id:number) => {
+	const acceptInvitation = async (id: number) => {
+		console.log(id);
+		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
+	};
+
+	const rejectInvitation = async (id: number) => {
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/reject`);
-	}
+	};
 
 	const getPolls = async () => {
-		const { res, json } = await fetchRequest('GET', 'home/polls');
+		const { res, json } = await fetchRequest('GET', 'home/polls?limit=30');
 	};
 </script>
 
 <Layout centering={true}>
-	<ul>
+	<ul class="mt-6">
 		{#each invitations as invite}
 			<li class="bg-white p-6 shadow rounded">
 				<span>You have been invited to NAME</span>
@@ -52,8 +52,6 @@
 			</li>
 		{/each}
 	</ul>
-	<div class="bg-white rounded shadow p-8 mt-6">
-		{$_('No polls currently here, join a group to see more')}
-	</div>
-	<!-- <PollThumbnails Class="w-5/6 md:w-2/3 justify-center" /> -->
+
+	<PollThumbnails infoToGet="home" Class="sm:w-5/6 md:w-2/3 justify-center" />
 </Layout>

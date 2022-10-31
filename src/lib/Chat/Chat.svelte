@@ -4,6 +4,7 @@
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
@@ -85,7 +86,7 @@
 			on:click={() => (chatOpen = false)}
 			class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 hover:border-gray-600 cursor-pointer p-2 "
 		>
-			<div class="">Chatt</div>
+			<div class="">Chat</div>
 			<Fa icon={faX} />
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
@@ -134,8 +135,8 @@
 {:else}
 	<div
 		on:click={() => (chatOpen = true)}
-		class="fixed z-30 bg-white shadow rounded p-6 top-1/4 cursor-pointer"
+		class="fixed z-30 bg-white shadow-md border rounded p-6 top-3/4 ml-6 rounded-full cursor-pointer"
 	>
-		<Fa icon={faPlus} />
+		<Fa icon={faComment} />
 	</div>
 {/if}

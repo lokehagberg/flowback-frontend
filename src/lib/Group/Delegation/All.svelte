@@ -17,10 +17,10 @@
 	let delegates: Delegate[] = [];
 	let delegateRelations: any[] = [];
 	let userIsDelegate: boolean;
-	let userId:number
+	let userId: number;
 
 	onMount(async () => {
-		userId = (await fetchRequest('GET', 'user')).json.id
+		userId = (await fetchRequest('GET', 'user')).json.id;
 		await getDelegateRelations();
 		getDelegatePools();
 
@@ -81,7 +81,7 @@
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				console.log(delegatePool.delegates[0].user_id, "ID")
+				console.log(delegatePool.delegates[0].user_id, 'ID');
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegatePool.delegates[0].user_id}`)
 				).json.results[0];
@@ -124,42 +124,43 @@
 </script>
 
 {#if delegates.length > 0}
-<ul class="w-full">
-	{#each delegates as delegate}
-		<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
-			<div
-				class="cursor-pointer hover:underline flex items-center"
-				on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
-			>
-				<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
-				<span class="text-black ml-4 mr-4">{delegate.username}</span>
-			</div>
-			{#if userId !== delegate.id}
-				<div />
-				{#if delegate.isInRelation}
-					<ButtonPrimary
-						Class={'bg-red-500'}
-						action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
-						>{$_("Remove as delegate")}</ButtonPrimary
-					>
-				{:else}
-					<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-						>{$_("Add as delegate")}</ButtonPrimary
-					>
+	<ul class="w-full">
+		{#each delegates as delegate}
+			<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
+				<div
+					class="cursor-pointer hover:underline flex items-center"
+					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
+				>
+					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+					<span class="text-black ml-4 mr-4">{delegate.username}</span>
+				</div>
+				{#if userId !== delegate.id}
+					<div />
+					{#if delegate.isInRelation}
+						<ButtonPrimary
+							Class={'bg-red-500'}
+							action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
+							>{$_('Remove as delegate')}</ButtonPrimary
+						>
+					{:else}
+						<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
+							>{$_('Add as delegate')}</ButtonPrimary
+						>
+					{/if}
 				{/if}
-			{/if}
-		</li>
-	{/each}
-</ul>
-
+			</li>
+		{/each}
+	</ul>
 {:else}
-	<div>{$_("No delegates in group")}</div>
+	<div>{$_('No delegates in group')}</div>
 {/if}
 
 {#if userIsDelegate}
 	<ButtonPrimary Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}
-		>{$_("Stop being delegate")}</ButtonPrimary
+		>{$_('Stop being delegate')}</ButtonPrimary
 	>
 {:else}
-	<ButtonPrimary Class="mt-3 bg-red-500" action={handleCreateDelegationButton}>{$_("Become delegate")}</ButtonPrimary>
+	<ButtonPrimary Class="mt-3 bg-red-500" action={handleCreateDelegationButton}
+		>{$_('Become delegate')}</ButtonPrimary
+	>
 {/if}

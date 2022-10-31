@@ -27,18 +27,18 @@
 		const { res, json } = await fetchRequest('GET', 'group/invites');
 		invitations = json.results;
 	};
-
-	const acceptInvitation = async (id: number) => {
-		console.log(id);
+	
+	const acceptInvitation = async (id:number) => {
+		console.log(id)
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
-	};
+	}
 
-	const rejectInvitation = async (id: number) => {
+	const rejectInvitation = async (id:number) => {
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/reject`);
-	};
+	}
 
 	const getPolls = async () => {
-		const { res, json } = await fetchRequest('GET', 'home/polls?limit=30');
+		const { res, json } = await fetchRequest('GET', 'home/polls');
 	};
 </script>
 
@@ -52,6 +52,8 @@
 			</li>
 		{/each}
 	</ul>
-
-	<PollThumbnails infoToGet="home" Class="w-full sm:w-4/5 md:w-2/3 justify-center" />
+	<div class="bg-white rounded shadow p-8 mt-6">
+		{$_('No polls currently here, join a group to see more')}
+	</div>
+	<!-- <PollThumbnails Class="w-5/6 md:w-2/3 justify-center" /> -->
 </Layout>

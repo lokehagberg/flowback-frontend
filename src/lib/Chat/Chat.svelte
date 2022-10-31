@@ -21,6 +21,7 @@
 	let sendMessageToSocket: (message: string) => void;
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
 	let unsubscribe: Unsubscriber;
+	let chatSelected: number;
 
 	$: chatOpen && getChattable();
 
@@ -30,13 +31,15 @@
 		groups = await getGroups();
 	};
 
-	const setUpMessageSending = async (selectedGroup: number) => {
+	const setUpMessageSending = async (selectedChat: number) => {
+		chatSelected = selectedChat;
+
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			selectedPage === 'Grupper' ? `chat/group/${selectedGroup}` : `chat/direct/${selectedGroup}`
+			selectedPage === 'Grupper' ? `chat/group/${selectedChat}` : `chat/direct/${selectedChat}`
 		);
 		messages = json.results;
 
@@ -44,9 +47,10 @@
 		if (socket) socket.close();
 		if (unsubscribe) unsubscribe();
 
-		socket = createSocket(selectedGroup, selectedPage);
+		socket = createSocket(selectedChat, selectedPage);
+
 		try {
-			sendMessageToSocket = sendMessage(selectedGroup, socket);
+			sendMessageToSocket = sendMessage(selectedChat, socket);
 			unsubscribe = subscribe((e: any) => {
 				console.log(e, 'EE');
 				const { message, user } = JSON.parse(e);
@@ -81,10 +85,8 @@
 </script>
 
 {#if chatOpen}
-	<div class="bg-white fixed z-10 w-full grid">
-		<div
-			class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 "
-		>
+	<div class="bg-white fixed z-10 w-full grid grid-width-fix">
+		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 			<div class="">Chat</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
 				<Fa size="1.5x" icon={faX} />
@@ -103,10 +105,11 @@
 				</li>
 			{/each}
 		</ul>
-		<ul class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3">
+		<ul class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3 sm:h-[30-vh] md:h-[50vh] lg:h-[80vh] overflow-y-scroll">
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li
-					class="p-3 flex gap-2 hover:bg-gray-200 cursor-pointer"
+					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
+					class:bg-gray-100={chatSelected === chatter.id}
 					on:click={() => setUpMessageSending(chatter.id)}
 				>
 					<img
@@ -141,3 +144,10 @@
 		<Fa icon={faComment} />
 	</div>
 {/if}
+
+<style>
+	.grid-width-fix {
+		grid-template-columns: 30% 70%;
+		grid-template-rows: 3rem 50vh 50vh;
+	}
+</style>

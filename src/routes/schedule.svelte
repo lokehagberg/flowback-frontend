@@ -79,12 +79,15 @@
 			{selectedDate.getFullYear()}
 
 			<div>
-				{#each polls.filter((poll) => new Date(poll.start_date)
-							.toJSON()
-							.split('T')[0] === selectedDate.toJSON().split('T')[0]) as poll}
+				{#each polls.filter((poll) => {
+					//Fixes a one day off issue
+					const date = new Date(poll.start_date);
+					const fixedDate = new Date(date.setDate(date.getDate() - 1));
+					return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
+				}) as poll}
 					<a
 						class="bg-green-200 pl-2 pr-2 rounded-full overflow-hidden w-12 md:w-16 text-center"
-						href={`groups/${poll.group_id}/polls/${poll.id}`}
+						href={`groups/${poll.group_id}/polls/${poll.poll}`}
 					>
 						{poll.title}
 					</a>

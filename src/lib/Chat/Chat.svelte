@@ -14,6 +14,7 @@
 	let chatOpen = true;
 	let message: string;
 	let groups: Group[] = [];
+	let directs: any[] = [];
 	let socket: WebSocket;
 	let sendMessageToSocket: (message: string) => void;
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
@@ -21,29 +22,32 @@
 
 	//TODO: Only render when chat opens up
 	onMount(async () => {
+		directs = await getPeople('');
 		groups = await getGroups();
-
-		// setUpMessageSending();
-	});
+	}); 
 
 	const setUpMessageSending = async (selectedGroup: number) => {
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 
-		
-		const { res, json } = await fetchRequest('GET', `chat/group/${selectedGroup}`);
-		messages = json.results
+		const { res, json } = await fetchRequest('GET', selectedPage === 'Grupper' ? `chat/group/${selectedGroup}` : `chat/direct/${selectedGroup}`);
+		messages = json.results;
 
 		//Resets last web socket connection
 		if (socket) socket.close();
 		if (unsubscribe) unsubscribe();
 
-		socket = createSocket(selectedGroup);
+		socket = createSocket(selectedGroup, selectedPage);
 		try {
 			sendMessageToSocket = sendMessage(selectedGroup, socket);
 			unsubscribe = subscribe((e: any) => {
 				const { message, user } = JSON.parse(e);
 				messages = [...messages, { message, user }];
+
+				//TODO: make a better solution to scrolling down when sending/being sent message
+				setTimeout(() => {
+					document.querySelector('.overflow-y-scroll')?.scroll(0, 1000);
+				},100)
 			});
 		} catch (e) {}
 	};
@@ -55,6 +59,11 @@
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=100`);
+		return json.results;
+	};
+
+	const getPeople = async (username: string) => {
+		const { json } = await fetchRequest('GET', `users?limit=100`);
 		return json.results;
 	};
 </script>
@@ -79,12 +88,12 @@
 			{/each}
 		</ul>
 		<ul class="row-start-2 row-end-4 bg-white">
-			{#each groups as group}
-				<li on:click={() => setUpMessageSending(group.id)}>
+			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
+				<li on:click={() => setUpMessageSending(chatter.id)}>
 					<img
 						class="w-10 h-10"
-						src={`${import.meta.env.VITE_API}${group.image}`}
-						alt="group profile"
+						src={`${import.meta.env.VITE_API}${chatter.image || chatter.profile_image}`}
+						alt=""
 					/>
 				</li>
 			{/each}

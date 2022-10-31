@@ -21,11 +21,13 @@
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
 	let unsubscribe: Unsubscriber;
 
-	//TODO: Only render when chat opens up
-	onMount(async () => {
+	$: chatOpen && getChattable();
+
+	const getChattable = async () => {
+		if (directs.length + groups.length !== 0) return;
 		directs = await getPeople('');
 		groups = await getGroups();
-	});
+	};
 
 	const setUpMessageSending = async (selectedGroup: number) => {
 		//Must be imported here to avoid "document not found" error
@@ -73,7 +75,7 @@
 	const getPeople = async (username: string) => {
 		const { json } = await fetchRequest('GET', `users?limit=100`);
 		const self = (await fetchRequest('GET', `user`)).json;
-		return json.results.filter((user:any) => user.id !== self.id)
+		return json.results.filter((user: any) => user.id !== self.id);
 	};
 </script>
 
@@ -101,7 +103,10 @@
 		</ul>
 		<ul class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3">
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
-				<li class="p-3 flex gap-2 hover:bg-gray-200 cursor-pointer" on:click={() => setUpMessageSending(chatter.id)}>
+				<li
+					class="p-3 flex gap-2 hover:bg-gray-200 cursor-pointer"
+					on:click={() => setUpMessageSending(chatter.id)}
+				>
 					<img
 						class="w-10 h-10 rounded-full"
 						src={chatter.image ? `${import.meta.env.VITE_API}${chatter.image}` : DefaultPFP}

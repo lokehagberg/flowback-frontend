@@ -51,7 +51,6 @@
 		'For/Against',
 		'Cardinal',
 		'Quadratic',
-		'Scheduled',
 		'Dynamic'
 	];
 
@@ -88,13 +87,12 @@
 		}
 
 		loading = true;
-
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
 			start_date: new Date(),
 			end_date: new Date(end_date),
-			poll_type: 3,
+			poll_type: selected_poll === "Ranking" ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
 			public: isPublic

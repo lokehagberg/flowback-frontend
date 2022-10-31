@@ -11,7 +11,7 @@
 	import type { Unsubscriber } from 'svelte/store';
 
 	let messages: Message[] = [];
-	let chatOpen = true;
+	let chatOpen = false;
 	let message: string;
 	let groups: Group[] = [];
 	let directs: any[] = [];

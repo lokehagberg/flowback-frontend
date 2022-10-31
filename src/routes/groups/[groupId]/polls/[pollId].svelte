@@ -23,8 +23,7 @@
 	let selectedPage: 'You' | 'Delegate' = 'You';
 	let abstained: proposal[];
 	let DeletePollModalShow = false;
-	let pollType = 3;
-
+	let pollType = 1;
 
 	$: console.log(abstained, 'ABS');
 
@@ -39,6 +38,7 @@
 		);
 
 		poll = json.results[0];
+		pollType = json.results[0].poll_type
 	};
 
 	const deletePoll = async () => {
@@ -75,13 +75,13 @@
 					<ProposalSubmition bind:abstained />
 				{:else if pollType === 3}
 					<!-- Scheduled Poll -->
-					<ScheduledSubmission bind:abstained/>
+					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else}
 				<Results />
 			{/if}
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
-			{#if mode === 'Dev'}
+			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<Comments />
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>

@@ -77,14 +77,12 @@
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
-			{#if mode === 'Dev'}
-				<GroupSidebarButton
-					action={() => (selectedPage = 'documents')}
-					isSelected={selectedPage === 'documents'}
-					text="Documents"
-					icon={faFile}
-				/>
-			{/if}
+			<GroupSidebarButton
+				action={() => (selectedPage = 'documents')}
+				isSelected={selectedPage === 'documents'}
+				text="Documents"
+				icon={faFile}
+			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
 				text="Members"

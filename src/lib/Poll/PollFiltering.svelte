@@ -21,5 +21,9 @@
 	<TextInput onInput={() => (searched = false)} label={$_('Search')} bind:value={filter.search} />
 	<!-- <CheckboxButtons label={''} labels={[{label:'Finished', checked:true}, {label:'Not Finished', checked:true}]} />
 	<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
-	<ButtonPrimary Class={`transition transition-colors ${searched && 'bg-blue-300'}`} type="submit">Search</ButtonPrimary>
+	<ButtonPrimary
+		Class={`transition transition-colors ${searched && 'bg-blue-300'}`}
+		type="submit"
+		label="Söka">Search</ButtonPrimary
+	>
 </form>

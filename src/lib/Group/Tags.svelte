@@ -50,7 +50,7 @@
 <div class="bg-white rounded shadow p-6">
 	<form on:submit|preventDefault={addTag} class="p-3">
 		<TextInput label="Add tag" bind:value={tagToAdd} />
-		<ButtonPrimary type="submit" Class="mt-2" />
+		<ButtonPrimary type="submit" Class="mt-2" label="Lägg till Tagg"/>
 	</form>
 	<div class="flex flex-wrap mt-2">
 		{#each tags as tag}

@@ -10,7 +10,6 @@
 
 	export let Class = '';
 	export let infoToGet: 'group' | 'home' | 'public';
-	export let groupId:string = $page.params.groupId
 
 	let polls: any[] = [];
 	let filter: Filter = { search: '', finished: false, public: false };

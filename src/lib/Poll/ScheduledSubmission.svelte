@@ -32,21 +32,21 @@
 </script>
 
 <form on:submit|preventDefault={addProposal}>
-<DateInput
-	format="yyyy-MM-dd HH:mm"
-	closeOnSelection
-	bind:value={start_date}
-	min={new Date()}
-	max={maxDatePickerYear}
-/>
+	<DateInput
+		format="yyyy-MM-dd HH:mm"
+		closeOnSelection
+		bind:value={start_date}
+		min={new Date()}
+		max={maxDatePickerYear}
+	/>
 
-<DateInput
-	format="yyyy-MM-dd HH:mm"
-	closeOnSelection
-	bind:value={end_date}
-	min={new Date()}
-	max={maxDatePickerYear}
-/>
+	<DateInput
+		format="yyyy-MM-dd HH:mm"
+		closeOnSelection
+		bind:value={end_date}
+		min={new Date()}
+		max={maxDatePickerYear}
+	/>
 
-<ButtonPrimary type="submit" />
+	<ButtonPrimary type="submit" label="Lägg till" />
 </form>

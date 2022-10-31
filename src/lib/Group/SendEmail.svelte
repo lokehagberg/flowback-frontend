@@ -16,6 +16,6 @@
 	<form on:submit|preventDefault={sendEmail} class="flex flex-col gap-4">
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea required label="Message" bind:value={message} />
-		<ButtonPrimary type="submit" Class="mt-4" />
+		<ButtonPrimary type="submit" Class="mt-4" label="Skicka Mail"/>
 	</form>
 </div>

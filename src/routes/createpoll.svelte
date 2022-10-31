@@ -47,12 +47,7 @@
 		Dynamic: `A dynamic poll is always on and lacks an end date, results are always on display as they change dynamically.`
 	};
 
-	const disabled: (polltypes | timetypes)[] = [
-		'For/Against',
-		'Cardinal',
-		'Quadratic',
-		'Dynamic'
-	];
+	const disabled: (polltypes | timetypes)[] = ['For/Against', 'Cardinal', 'Quadratic', 'Dynamic'];
 
 	const pollIcons: Record<polltypes, any[]> = {
 		Ranking: [faArrowUp, faArrowDown],
@@ -77,7 +72,7 @@
 		loading = false;
 
 	const groupId = $page.url.searchParams.get('id');
-	
+
 	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
@@ -92,7 +87,7 @@
 			description,
 			start_date: new Date(),
 			end_date: new Date(end_date),
-			poll_type: selected_poll === "Ranking" ? 1 : 3,
+			poll_type: selected_poll === 'Ranking' ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
 			public: isPublic
@@ -155,6 +150,7 @@
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 					<StatusMessage bind:status />
 					<ButtonPrimary
+						label="Skapa"
 						type="submit"
 						disabled={disabled.includes(selected_poll) || disabled.includes(selected_time)}
 						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)

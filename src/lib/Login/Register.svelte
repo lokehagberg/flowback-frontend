@@ -43,12 +43,17 @@
 		<TextInput label={'Username'} bind:value={username} required />
 		<TextInput label={'Email'} bind:value={email} required />
 		<TermsOfService />
-		<RadioButtons label="Do you accept terms and conditions?" centering={true} bind:Yes={acceptedToS} />
+		<RadioButtons
+			label="Do you accept terms and conditions?"
+			centering={true}
+			bind:Yes={acceptedToS}
+		/>
 		<StatusMessage bind:status />
 		<input
 			type="submit"
 			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
 			value={$_('Send')}
+			label="Registrera"
 		/>
 	</form>
 </Loader>

@@ -31,7 +31,7 @@
 	let month = currentDate.getMonth();
 	let year = currentDate.getFullYear();
 	let selectedDate = new Date(year, month, 0);
-	let polls:scheduledEvent[] = [];
+	let polls: scheduledEvent[] = [];
 	let loading = false;
 
 	//A fix due to class struggle
@@ -44,7 +44,6 @@
 		if (month === 12) {
 			year += 1;
 			month = 0;
-			console.log('hi');
 		}
 		if (month === -1) {
 			year -= 1;
@@ -55,12 +54,18 @@
 	let deleteSelection = () => {};
 
 	onMount(async () => {
+		//Prevents "document not found" error
 		deleteSelection = () => {
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		};
 
-		await fetchRequest('GET', 'poll/user/schedule');
+		setUpScheduledPolls();
 	});
+
+	const setUpScheduledPolls = async () => {
+		const { json, res } = await fetchRequest('GET', 'poll/user/schedule?limit=100');
+		polls = json.results;
+	};
 
 	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
@@ -73,7 +78,16 @@
 			{$_('Time polls at')}
 			{selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
-			<div>{$_('Nothing this day')}</div>
+
+			<div>
+				{#each polls.filter((poll) => new Date(poll.start_date)
+							.toJSON()
+							.split('T')[0] === selectedDate.toJSON().split('T')[0]) as poll}
+					<a class="bg-green-200 pl-2 pr-2 rounded-full overflow-hidden w-12 md:w-16 text-center" href={`groups/${poll.group_id}/polls/${poll.id}`}>
+						{poll.title}
+					</a>
+				{/each}
+			</div>
 		</div>
 
 		<div class="w-full">
@@ -99,11 +113,10 @@
 				</div>
 			</div>
 			<div class="calendar w-full">
-				<!-- {@debug selectedDate} -->
 				{#each [1, 2, 3, 4, 5, 6] as y}
 					{#each [1, 2, 3, 4, 5, 6, 7] as x}
 						<div
-							class="calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 "
+							class="relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 "
 							id={`${x}-${y}`}
 							class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 								month === currentDate.getMonth() &&
@@ -115,7 +128,22 @@
 								selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 							}}
 						>
-							{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
+							<div class="absolute left-1/2 -translate-x-1/2">
+								<div class="text-center">
+									{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
+								</div>
+								{#each polls.filter((poll) => new Date(poll.start_date)
+											.toJSON()
+											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
+											.toJSON()
+											.split('T')[0]) as poll}
+									<div
+										class="bg-green-200 pl-2 pr-2 rounded-full overflow-hidden w-12 md:w-16 text-center"
+									>
+										{poll.title}
+									</div>
+								{/each}
+							</div>
 						</div>
 					{/each}
 				{/each}

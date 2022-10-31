@@ -7,4 +7,5 @@ poll: number;
 score: number | null;
 start_date: Date;
 title: string;
+group_id:number;
 }

@@ -30,6 +30,7 @@
 	<input
 		type="submit"
 		class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
+		label="Skicka"
 	/>
 </form>
 </Loader>

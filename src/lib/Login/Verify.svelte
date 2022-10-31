@@ -24,17 +24,20 @@
 			// Getting username which is stored in the store from Register.svelte
 			let email = '';
 			mailStore.subscribe((mail) => (email = mail));
-			const { json, res } = await fetchRequest('POST', 'login', { username:email, password }, false);
+			const { json, res } = await fetchRequest(
+				'POST',
+				'login',
+				{ username: email, password },
+				false
+			);
 
 			loading = false;
-			
+
 			if (res.ok && json.token) {
 				status = { message: 'Success', success: true };
 				localStorage.setItem('token', json.token);
-				window.location.href = "/home"
-			}
-			else status = { message: 'Account was created but was unable to sign in', success: true };
-
+				window.location.href = '/home';
+			} else status = { message: 'Account was created but was unable to sign in', success: true };
 		} else {
 			loading = false;
 			if (json.detail) status = { message: json.detail[0], success: false };
@@ -55,6 +58,7 @@
 		<input
 			type="submit"
 			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
+			label="Verifiera"
 		/>
 	</form>
 </Loader>

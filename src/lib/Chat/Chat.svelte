@@ -53,7 +53,7 @@
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
-					document.querySelector('.overflow-y-scroll')?.scroll(0, 1000);
+					document.querySelector('.overflow-y-scroll')?.scroll(0, 100000);
 				}, 100);
 			});
 		} catch (e) {
@@ -127,7 +127,7 @@
 					bind:value={message}
 					class="border border-black w-full"
 				/>
-				<ButtonPrimary type="submit" />
+				<ButtonPrimary type="submit" label="Skicka" />
 			</form>
 		</div>
 	</div>

@@ -3,7 +3,8 @@
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
 		type: buttontypes = 'default',
-		disabled = false;
+		disabled = false,
+		label:string = ""
 
 	type buttonstyles = 'primary' | 'secondary';
 	type buttontypes = 'default' | 'submit';
@@ -29,5 +30,6 @@
 		class={`text-center inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
+		value={label}
 	/>
 {/if}

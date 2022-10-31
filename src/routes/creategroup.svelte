@@ -14,13 +14,15 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	let name: string,
 		description: string,
 		image: File,
 		coverImage: File,
 		directJoin = true,
-		publicGroup = true;
+		publicGroup = true,
+		loading = false;
 
 	//This page also supports the edit of groups
 	const groupToEdit = $page.url.searchParams.get('group');
@@ -28,6 +30,7 @@
 	let DeleteGroupModalShow = false;
 
 	const createGroup = async () => {
+		loading = true;
 		const formData = new FormData();
 
 		formData.append('name', name);
@@ -41,12 +44,22 @@
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
 
 		if (res.ok) {
-			status = { message: 'Success', success: true };
-			window.location.href = `/groups/${json}`;
+			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
+				tag_name: 'Okategoriserad' //Default
+			});
+			if (res.ok) {
+				status = { message: 'Success', success: true };
+				window.location.href = `/groups/${json}`;
+			} else if (json.detail) {
+				const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
+				if (errorMessage) status = { message: errorMessage, success: false };
+			}
 		} else if (json.detail) {
 			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
 			if (errorMessage) status = { message: errorMessage, success: false };
 		}
+
+		loading = false;
 	};
 
 	const deleteGroup = async () => {
@@ -66,48 +79,50 @@
 </script>
 
 <Layout centering>
-	<form
-		on:submit|preventDefault={createGroup}
-		class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8 w-full"
-	>
-		<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
-			<h1 class="text-2xl">{$_('Create a Group')}</h1>
-			<TextInput label="Title" bind:value={name} required />
-			<TextArea label="Description" bind:value={description} required />
-			<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
-			<ImageUpload
-				bind:image={coverImage}
-				label="Upload Cover Image, recomended ratio 4:1"
-				isCover
-			/>
-			<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
-			<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
+	<Loader bind:loading>
+		<form
+			on:submit|preventDefault={createGroup}
+			class="flex items-start justify-center gap-8 mt-8 ml-8 mr-8 w-full"
+		>
+			<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3">
+				<h1 class="text-2xl">{$_('Create a Group')}</h1>
+				<TextInput label="Title" bind:value={name} required />
+				<TextArea label="Description" bind:value={description} required />
+				<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
+				<ImageUpload
+					bind:image={coverImage}
+					label="Upload Cover Image, recomended ratio 4:1"
+					isCover
+				/>
+				<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
+				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 
-			{#if groupToEdit !== null}
-				<Modal bind:open={DeleteGroupModalShow}>
-					<div slot="header">{$_('Deleting group')}</div>
-					<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
-					<div slot="footer">
-						<div class="flex justify-center gap-16">
-							<ButtonPrimary action={deleteGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
-							><ButtonPrimary
-								action={() => (DeleteGroupModalShow = false)}
-								Class="bg-gray-400 w-1/2">{$_('Cancel')}</ButtonPrimary
-							>
+				{#if groupToEdit !== null}
+					<Modal bind:open={DeleteGroupModalShow}>
+						<div slot="header">{$_('Deleting group')}</div>
+						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
+						<div slot="footer">
+							<div class="flex justify-center gap-16">
+								<ButtonPrimary action={deleteGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
+								><ButtonPrimary
+									action={() => (DeleteGroupModalShow = false)}
+									Class="bg-gray-400 w-1/2">{$_('Cancel')}</ButtonPrimary
+								>
+							</div>
 						</div>
-					</div>
-				</Modal>
-				<ButtonPrimary action={() => (DeleteGroupModalShow = true)}
-					>{$_('Delete Group')}</ButtonPrimary
-				>
-			{/if}
+					</Modal>
+					<ButtonPrimary action={() => (DeleteGroupModalShow = true)}
+						>{$_('Delete Group')}</ButtonPrimary
+					>
+				{/if}
 
-			<StatusMessage bind:status />
-			<ButtonPrimary type="submit" label="Skapa"
-				><div class="flex justify-center gap-3 items-center">
-					<Fa icon={faPaperPlane} />{$_('Create Group')}
-				</div>
-			</ButtonPrimary>
-		</div>
-	</form>
+				<StatusMessage bind:status />
+				<ButtonPrimary type="submit" label="Skapa"
+					><div class="flex justify-center gap-3 items-center">
+						<Fa icon={faPaperPlane} />{$_('Create Group')}
+					</div>
+				</ButtonPrimary>
+			</div>
+		</form>
+	</Loader>
 </Layout>

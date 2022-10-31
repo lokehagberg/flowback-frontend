@@ -11,7 +11,8 @@
 	};
 </script>
 
-<div on:click={goToGroup}
+<div
+	on:click={goToGroup}
 	class="w-5/6 md:w-1/2 bg-white relative shadow-md vote-thumbnail cursor-pointer rounded-2xl"
 >
 	<div on:click={goToGroup}>
@@ -27,7 +28,7 @@
 		alt="profile"
 	/>
 
-	<div on:click={goToGroup} >
+	<div on:click={goToGroup}>
 		<h1 class="text-2xl p-4 text-left mt-10 text-center">
 			{group.name}
 		</h1>
@@ -37,18 +38,16 @@
 	</div>
 
 	<div class="flex justify-center mb-6">
-		<ButtonPrimary
-			action={async () => {
-				const { res } = await fetchRequest(
-					'POST',
-					`group/${group.id}/${group.joined ? 'leave' : 'join'}`,
-					{}
-				);
-				if (res.ok) group.joined = !group.joined;
-			}}
-			Class="hover:bg-blue-800 bg-blue-600 2xl:pt-6 2xl:pb-6 "
-			>{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
-		>
+		{#if !group.joined}
+			<ButtonPrimary
+				action={async () => {
+					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
+					if (res.ok) group.joined = !group.joined;
+				}}
+				Class="hover:bg-blue-800 bg-blue-600 2xl:pt-6 2xl:pb-6 "
+				>{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
+			>
+		{/if}
 	</div>
 </div>
 

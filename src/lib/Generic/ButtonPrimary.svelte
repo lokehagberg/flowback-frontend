@@ -31,5 +31,5 @@
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
 		value={label}
-	><slot/> </button>
+	><slot/>{label} </button>
 {/if}

@@ -5,14 +5,12 @@
 	export let loading: boolean;
 </script>
 
-<div class="relative">
+<div class={`w-full relative ${loading && 'contrast-50'}`}>
 	<div
 		class:hidden={!loading}
-		class="z-10 text-blue-500 absolute hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+		class="conotrast-100 z-10 text-blue-500 absolute hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
 	>
 		<Fa icon={faSpinner} spin={true} size="4x" />
 	</div>
-	<div class={loading ? 'contrast-50' : ''}>
-		<slot />
-	</div>
+	<slot />
 </div>

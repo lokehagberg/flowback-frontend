@@ -9,10 +9,14 @@
 	import type { SelectablePages, User } from './interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 
 	let users: User[] = [];
 	let loading = true;
-	let selectedPage: SelectablePages = 'Members';
+	let selectedPage: SelectablePages = 'Invite';
 	let searchUser = '';
 	let searchedUsers: User[] = [];
 
@@ -22,7 +26,7 @@
 		users = json.results;
 		loading = false;
 
-		getInvitesList()
+		getInvitesList();
 	});
 
 	const searchUsers = async (username: string) => {
@@ -47,13 +51,13 @@
 	};
 
 	const acceptInviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
 			to: userId
 		});
 	};
 
 	const denyInviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/reject`, {
 			to: userId
 		});
 	};
@@ -96,16 +100,23 @@
 				/>
 				<ul>
 					{#each searchedUsers as searchedUser}
-						<li class="text-black flex bg-white p-2 w-full mt-6">
-							<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
-							<div class="w-64 ml-10">{searchedUser.username}</div>
-							<ButtonPrimary
-								action={() => inviteUser(searchedUser.id)}
-								Class={'w-64 ml-10 hover:underline cursor-pointer bg-blue-600 hover:bg-blue-800'}
-								>{$_('INVITE')}</ButtonPrimary
-							>
-							<ButtonPrimary>V</ButtonPrimary>
-							<ButtonPrimary>X</ButtonPrimary>
+						<li class="text-black flex justify-between bg-white p-2 w-full mt-6">
+							<div class="flex">
+								<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+								<div class="w-64 ml-10">{searchedUser.username}</div>
+							</div>
+
+							<div class="flex">
+								<div class="cursor-pointer" on:click={() => acceptInviteUser(searchedUser.id)}>
+									<Fa size="2x" color="blue" icon={faCheck} />
+								</div>
+								<div class="ml-2 cursor-pointer" on:click={() => denyInviteUser(searchedUser.id)}>
+									<Fa size="2x" color="#CC4444" icon={faX} />
+								</div>
+								<div class="ml-2 cursor-pointer" on:click={() => inviteUser(searchedUser.id)}>
+									<Fa size="2x" icon={faEnvelope} />
+								</div>
+							</div>
 						</li>
 					{/each}
 				</ul>

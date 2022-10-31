@@ -8,6 +8,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
+	import type { Unsubscriber } from 'svelte/store';
 
 	let messages: Message[] = [];
 	let chatOpen = true;
@@ -16,6 +17,7 @@
 	let socket: WebSocket;
 	let sendMessageToSocket: (message: string) => void;
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
+	let unsubscribe: Unsubscriber;
 
 	//TODO: Only render when chat opens up
 	onMount(async () => {
@@ -28,12 +30,18 @@
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 
+		
 		const { res, json } = await fetchRequest('GET', `chat/group/${selectedGroup}`);
-		if (socket) await socket.close();
+		messages = json.results
+
+		//Resets last web socket connection
+		if (socket) socket.close();
+		if (unsubscribe) unsubscribe();
+
 		socket = createSocket(selectedGroup);
 		try {
 			sendMessageToSocket = sendMessage(selectedGroup, socket);
-			subscribe((e: any) => {
+			unsubscribe = subscribe((e: any) => {
 				const { message, user } = JSON.parse(e);
 				messages = [...messages, { message, user }];
 			});
@@ -61,8 +69,8 @@
 			<Fa icon={faX} />
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
-		<Tab bind:selectedPage tabs={['Direkt', 'Grupper']} />
-	</div>
+			<Tab bind:selectedPage tabs={['Direkt', 'Grupper']} />
+		</div>
 		<ul
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
 		>

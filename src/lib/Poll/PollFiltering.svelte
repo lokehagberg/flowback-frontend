@@ -15,7 +15,7 @@
 </script>
 
 <form
-	class="bg-white shadow rounded p-6 flex flex gap-4"
+	class="bg-white shadow rounded p-6 flex flex gap-4 items-end"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();
@@ -29,7 +29,7 @@
 	/>
 
 	<ButtonPrimary
-		Class={`!p-1 flex justify-center items-center w-1/5 transition transition-colors ${
+		Class={`w-8 h-8 !p-1 flex justify-center items-center transition transition-colors ${
 			searched ? 'bg-blue-300' : 'bg-blue-600'
 		}`}
 		type="submit"

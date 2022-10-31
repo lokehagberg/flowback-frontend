@@ -5,5 +5,5 @@
 </script>
 
 <Layout centering={true}>
-	<PollThumbnails infoToGet="public" Class="mt-6 sm:w-full md:w-4/5 xl:max-w-[800px]  justify-center" />
+	<PollThumbnails infoToGet="public" Class="mt-6 sm:w-full md:w-4/5 md:max-w-[720px] justify-center" />
 </Layout>

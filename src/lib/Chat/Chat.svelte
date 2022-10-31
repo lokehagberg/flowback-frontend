@@ -32,21 +32,21 @@
 	};
 
 	const setUpMessageSending = async (selectedChat: number) => {
-		chatSelected = selectedChat;
+		//Resets last web socket connection
+		if (socket) socket.close();
+		if (unsubscribe) unsubscribe();
 
-		//Must be imported here to avoid "document not found" error
-		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
+		chatSelected = selectedChat;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			selectedPage === 'Grupper' ? `chat/group/${selectedChat}` : `chat/direct/${selectedChat}`
 		);
+
 		messages = json.results;
 
-		//Resets last web socket connection
-		if (socket) socket.close();
-		if (unsubscribe) unsubscribe();
-
+		//Must be imported here to avoid "document not found" error
+		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(selectedChat, selectedPage);
 
 		try {
@@ -105,7 +105,9 @@
 				</li>
 			{/each}
 		</ul>
-		<ul class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3 sm:h-[30-vh] md:h-[50vh] lg:h-[80vh] overflow-y-scroll">
+		<ul
+			class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3 sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
+		>
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li
 					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"

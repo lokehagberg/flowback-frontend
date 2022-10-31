@@ -78,7 +78,7 @@
 			{selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
 
-			<div>
+			<div class="hover:bg-gray-300 pt-3 pb-3">
 				{#each polls.filter((poll) => {
 					//Fixes a one day off issue
 					const date = new Date(poll.start_date);
@@ -86,10 +86,11 @@
 					return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
 				}) as poll}
 					<a
-						class="bg-green-200 pl-2 pr-2 rounded-full overflow-hidden w-12 md:w-16 text-center"
+						class="text-center color-black"
 						href={`groups/${poll.group_id}/polls/${poll.poll}`}
 					>
 						{poll.title}
+						{new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()}
 					</a>
 				{/each}
 			</div>
@@ -133,7 +134,7 @@
 								selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 							}}
 						>
-							<div class="absolute left-1/2 -translate-x-1/2">
+							<div class="w-full">
 								<div class="text-center">
 									{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 								</div>
@@ -142,11 +143,11 @@
 											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
 											.toJSON()
 											.split('T')[0]) as poll}
-									<div
-										class="bg-green-200 pl-2 pr-2 rounded-full overflow-hidden w-12 md:w-16 text-center"
+									<p
+										class="elipsis text-xs h-12 absolute w-full text-center max-h-[1rem] overflow-hidden"
 									>
 										{poll.title}
-									</div>
+									</p>
 								{/each}
 							</div>
 						</div>

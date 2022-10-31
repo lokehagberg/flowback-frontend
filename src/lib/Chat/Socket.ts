@@ -7,11 +7,11 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
 	let socket: WebSocket;
 
 	const token = localStorage.getItem('token') || '';
-
+	// ${import.meta.env.VITE_WEBSOCKET_API}
 	const link =
 		type === 'Grupper'
-			? `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws/group/${id}?token=${token}`
-			: `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws/direct?token=${token}`;
+			? `wss://api.positivapengar.flowback.org/chat/ws/group/${id}?token=${token}`
+			: `wss://api.positivapengar.flowback.org/chat/ws/direct?token=${token}`;
 
 	socket = new WebSocket(link);
 

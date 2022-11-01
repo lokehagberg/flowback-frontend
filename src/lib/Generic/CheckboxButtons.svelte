@@ -9,8 +9,8 @@
 	<div class={`mt-2`}>
 		{#each labels as label}
 			<label class="mr-5">
-				{$_(label.label)}
 				<input type="checkbox" name={label.label} value={label.checked} />
+				{$_(label.label)}
 			</label>
 		{/each}
 	</div>

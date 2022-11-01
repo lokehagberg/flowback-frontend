@@ -12,19 +12,30 @@
 	export let infoToGet: 'group' | 'home' | 'public';
 
 	let polls: any[] = [];
-	let filter: Filter = { search: '', finished: false, public: false };
+	let filter: Filter = { search: '', finishedSelection: 'all', public: false };
 	let loading = false;
 
 	const getPolls = async () => {
 		loading = true;
 
+		const finishedFilter =
+			filter.finishedSelection === 'all'
+				? ''
+				: filter.finishedSelection === 'finished'
+				? 'finished=true'
+				: 'finished=false';
+
 		const API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${filter.search || ''}`
+				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}`
 				: infoToGet === 'home'
-				? `home/polls?limit=30&title__icontains=${filter.search || ''}`
+				? `home/polls?limit=30&title__icontains=${filter.search || ''}&${finishedFilter}`
 				: infoToGet === 'public'
-				? `home/polls?limit=30&public=true&title__icontains=${filter.search || ''}`
+				? `home/polls?limit=30&public=true&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}`
 				: '';
 
 		const { json } = await fetchRequest('GET', API);

@@ -7,10 +7,15 @@
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
-	export let filter: Filter = { search: '', finished: false, public: false };
+	export let filter: Filter = { search: '', finishedSelection:"all", public: false };
 	export let handleSearch: () => {};
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
+
+	const handleFinishedSelection = (e:any) => {
+		filter.finishedSelection = e.target.value
+		handleSearch();
+	}
 </script>
 
 <form
@@ -38,13 +43,18 @@
 		</ButtonPrimary>
 	</div>
 	<div>
-		<CheckboxButtons
+		<select on:input={handleFinishedSelection}>
+			<option value="all">Alla</option>
+			<option value="finished">Färdiga</option>
+			<option value="unfinished">Igång</option>
+		</select>
+		<!-- <CheckboxButtons
 			label={''}
 			labels={[
-				{ label: 'Finished', checked: true },
-				{ label: 'Not Finished', checked: true }
+				{ label: 'Finished', checked: false },
+				{ label: 'Not Finished', checked: false }
 			]}
 		/>
-	</div>
+	</div> -->
 	<!--<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
 </form>

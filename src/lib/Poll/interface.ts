@@ -30,8 +30,8 @@ export interface votings {
 }
 
 export interface Filter {
-	finished: boolean;
 	public: boolean;
+	finishedSelection:'all'|'unfinished'|'finished'
 	search: string;
 }
 

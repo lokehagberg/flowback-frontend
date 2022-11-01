@@ -17,9 +17,9 @@
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
+	export let abstained: proposal[] = [];
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
-	export let abstained: proposal[] = [];
 
 	export let tag: number;
 
@@ -27,7 +27,7 @@
 	let status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
-	$: console.log(abstained);
+	$: console.log(abstained, 'ABSTAIN');
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -49,11 +49,12 @@
 			'GET',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
 		);
-		
+
 		// proposals = json.results;
 		// If polltype === 3
-		proposals = json.results.map((proposal:any) => { return {description:proposal.end_date, title:proposal.start_date, id:proposal.id} })
-
+		proposals = json.results.map((proposal: any) => {
+			return { description: proposal.end_date, title: proposal.start_date, id: proposal.id };
+		});
 	};
 
 	const setUpSortable = async () => {
@@ -183,13 +184,13 @@
 
 		proposals.forEach((proposal) => {
 			const vote = votings.find((vote) => proposal.id === vote.proposal);
-			console.log(vote, "VOTE")
+			console.log(vote, 'VOTE');
 			// if (vote) ranked[votings.length - vote?.priority] = proposal;
 			if (vote) ranked.push(proposal);
 			else abstained.push(proposal);
 		});
 
-		console.log(ranked, abstained, votings, "ORDERING");
+		console.log(ranked, abstained, votings, 'ORDERING');
 
 		if (ranked[0] !== undefined) ranked = ranked;
 		else ranked = [];

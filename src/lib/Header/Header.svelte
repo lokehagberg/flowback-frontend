@@ -10,7 +10,6 @@
 	import Logo from '$lib/assets/Logo.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
-	import { mode } from '$lib/configuration';
 
 	let sideHeaderOpen = false;
 </script>
@@ -24,7 +23,7 @@
 		>
 		<div class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
-			<HeaderIcon icon={faGlobeEurope} text="Public" href="public" />
+			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
 			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
 			<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />

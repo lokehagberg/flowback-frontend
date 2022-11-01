@@ -45,8 +45,8 @@
 	<div>
 		<select on:input={handleFinishedSelection}>
 			<option value="all">Alla</option>
-			<option value="finished">Färdiga</option>
 			<option value="unfinished">Igång</option>
+			<option value="finished">Färdiga</option>
 		</select>
 		<!-- <CheckboxButtons
 			label={''}

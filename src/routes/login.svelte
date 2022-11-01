@@ -24,7 +24,7 @@
 	<div class="mt-6">
 		<img src={Logo} class="w-44" alt="flowback logo" />
 	</div>
-	<div class="bg-white w-4/5 sm:w-1/2 mt-6 rounded shadow-lg">
+	<div class="bg-white mt-6 rounded shadow-lg w-full max-w-[600px]">
 		<Tab bind:selectedPage tabs={['Login', 'Register']} />
 		<div class="">
 			{#if selectedPage === 'Login'}

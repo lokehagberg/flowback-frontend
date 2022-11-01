@@ -141,7 +141,7 @@
 {:else}
 	<div
 		on:click={() => (chatOpen = true)}
-		class="transition transition-all fixed z-30 bg-white shadow-md border rounded p-6 top-3/4 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-black active:shadow-2xl active:p-7"
+		class="transition transition-all fixed z-30 bg-white shadow-md border rounded p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-black active:shadow-2xl active:p-7"
 	>
 		<Fa icon={faComment} />
 	</div>

@@ -68,7 +68,7 @@
 			<!-- <div class="italic mt-4">Group name</div> -->
 			{#if !poll.finished}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalsRanked bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
+				<ProposalsRanked pollType={poll.poll_type} bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
 
 				{#if pollType === 1}
 					<!-- Ranked Poll -->

@@ -18,6 +18,7 @@
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
 	export let abstained: proposal[] = [];
+	export let pollType: number = 1;
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
 
@@ -50,11 +51,11 @@
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
-		// proposals = json.results;
-		// If polltype === 3
-		proposals = json.results.map((proposal: any) => {
-			return { description: proposal.end_date, title: proposal.start_date, id: proposal.id };
-		});
+		if (pollType === 1) proposals = json.results;
+		else if (pollType === 3)
+			proposals = json.results.map((proposal: any) => {
+				return { description: proposal.end_date, title: proposal.start_date, id: proposal.id };
+			});
 	};
 
 	const setUpSortable = async () => {

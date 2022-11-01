@@ -68,7 +68,7 @@
 		selectedTag: TagType,
 		status: StatusMessageInfo,
 		end_date = new Date(),
-		isPublic = true,
+		isPublic = false,
 		loading = false;
 
 	const groupId = $page.url.searchParams.get('id');

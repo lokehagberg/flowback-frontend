@@ -5,66 +5,97 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tag from './Tag.svelte';
-	import type {Tag as TagType} from '$lib/Group/interface'
+	import type { Tag as TagType } from '$lib/Group/interface';
 	import { _ } from 'svelte-i18n';
+	import Loader from '$lib/Generic/Loader.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	let tags: TagType[] = [];
 	let tagToAdd = '';
+	let loading = false;
+	let areYouSureModal = false;
 
 	onMount(async () => {
 		getTags();
 	});
 
 	const getTags = async () => {
-		console.log("here")
+		loading = true;
+		console.log('here');
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		tags = json.results.sort((tag1:TagType, tag2:TagType) => tag1.tag_name.localeCompare(tag2.tag_name));
+		tags = json.results.sort((tag1: TagType, tag2: TagType) =>
+			tag1.tag_name.localeCompare(tag2.tag_name)
+		);
+		loading = false;
 	};
 
 	const addTag = async () => {
+		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
 			tag_name: tagToAdd
 		});
 		if (res.ok) {
 			getTags();
-			tagToAdd = ""
-		}
+			tagToAdd = '';
+		} else loading = false;
 	};
 
 	const removeTag = async (tag: TagType) => {
+		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/delete`, {
 			tag: tag.id
 		});
+		//TODO: Just update DOM instead of re-getting tags
 		if (res.ok) getTags();
+		else loading = false;
 	};
 
 	const editTag = async (tag: TagType) => {
+		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/update`, {
 			tag: tag.id,
 			active: !tag.active
 		});
 		if (res.ok) getTags();
+		else loading = false;
 	};
 </script>
 
 <div class="bg-white rounded shadow p-6">
-	<form on:submit|preventDefault={addTag} class="p-3">
-		<TextInput label="Add tag" bind:value={tagToAdd} />
-		<ButtonPrimary type="submit" Class="mt-2" label="Lägg till Tagg"/>
-	</form>
-	<div class="flex flex-wrap mt-2">
-		{#each tags as tag}
-			<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
-				<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
-				<div class="mt-2 w-full flex flex-col gap-2">
-					<ButtonPrimary Class="bg-rose-500" action={() => removeTag(tag)}
-						>{$_("Delete")}</ButtonPrimary
-					>
-					<ButtonPrimary Class="bg-purple-500" action={() => editTag(tag)}
-						>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
-					>
+	<Loader bind:loading>
+		<form on:submit|preventDefault={addTag} class="p-3">
+			<TextInput label="Add tag" bind:value={tagToAdd} />
+			<ButtonPrimary disabled={loading} type="submit" Class="mt-2" label="Lägg till Tagg" />
+		</form>
+		<div class="flex flex-wrap mt-2">
+			{#each tags as tag}
+				<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
+					<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
+					<div class="mt-2 w-full flex flex-col gap-2">
+						<ButtonPrimary
+							disabled={loading}
+							Class="bg-rose-500"
+							action={() => (areYouSureModal = true)}>{$_('Delete')}</ButtonPrimary
+						>
+						<ButtonPrimary disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
+							>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
+						>
+						<Modal bind:open={areYouSureModal}>
+							<div slot="header">Är du säker?</div>
+							<div slot="body">Att ta bort en tagg tar bort alla omröstningar med den taggen!</div>
+							<div slot="footer">
+								<ButtonPrimary
+									action={() => {
+										removeTag(tag);
+										areYouSureModal = false;
+									}} Class="bg-red-500">Ja</ButtonPrimary
+								>
+								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">Nej</ButtonPrimary>
+							</div>
+						</Modal>
+					</div>
 				</div>
-			</div>
-		{/each}
-	</div>
+			{/each}
+		</div>
+	</Loader>
 </div>

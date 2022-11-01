@@ -150,9 +150,9 @@
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 					<StatusMessage bind:status />
 					<ButtonPrimary
-						label="Skapa"
+						
 						type="submit"
-						disabled={disabled.includes(selected_poll) || disabled.includes(selected_time)}
+						disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
 						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 							? 'bg-gray-400'
 							: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
@@ -165,6 +165,7 @@
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}
 						<ButtonPrimary
+							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
 							Class="transition transition-colors"
@@ -182,6 +183,7 @@
 				<div class="flex flex-col gap-6 mt-12">
 					{#each times as time}
 						<ButtonPrimary
+							disabled={loading}
 							Class={`transition transition-colors ${
 								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
 							}`}

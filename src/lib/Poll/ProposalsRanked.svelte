@@ -33,7 +33,7 @@
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
-		setUpSortable();
+		if (import.meta.env.VITE_MODE === 'DEV') setUpSortable();
 		await getProposals();
 		setUpVotings();
 	});
@@ -321,7 +321,9 @@
 				>
 					<Proposal
 						{...proposal}
-						Class={`${selectedPage === 'You' && ''} ${mode === 'Dev' && 'cursor-move'}`}
+						Class={`${selectedPage === 'You' && ''} ${
+							import.meta.env.VITE_MODE === 'DEV' ? 'cursor-move' : ''
+						}`}
 					>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">

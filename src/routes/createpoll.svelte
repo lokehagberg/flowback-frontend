@@ -31,7 +31,7 @@
 	let selected_poll: polltypes = 'Ranking';
 	let selected_time: timetypes = 'Endtime';
 	//Something about this feels very scuffed
-	const polls: polltypes[] = ['Ranking', 'For/Against', 'Quadratic', 'Cardinal', 'Scheduled'];
+	const polls: polltypes[] = ['Ranking', 'Scheduled', 'For/Against', 'Quadratic', 'Cardinal'];
 	const times: timetypes[] = ['Endtime', 'Dynamic'];
 
 	const pollDescriptions: Record<polltypes, string> = {
@@ -150,11 +150,12 @@
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 					<StatusMessage bind:status />
 					<ButtonPrimary
-						
 						type="submit"
-						disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
+						disabled={loading ||
+							disabled.includes(selected_poll) ||
+							disabled.includes(selected_time)}
 						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
-							? 'bg-gray-400'
+							? 'bg-gray-200'
 							: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
 					>
 				</div>
@@ -168,9 +169,10 @@
 							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class="transition transition-colors"
+							Class={`transition transition-colors ${disabled.includes(poll) && 'bg-gray-200'}`}
 						>
 							<div class="flex items-center text-center">
+								<!-- Some buttons have multiple icons -->
 								{#each pollIcons[poll] as icon}
 									<Fa {icon} />
 								{/each}
@@ -184,8 +186,8 @@
 					{#each times as time}
 						<ButtonPrimary
 							disabled={loading}
-							Class={`transition transition-colors ${
-								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
+							Class={`transition transition-colors ${disabled.includes(time) && 'bg-gray-200'} ${
+								selected_time === time ? 'bg-purple-600' : 'bg-purple-300' 
 							}`}
 							action={() => (selected_time = time)}
 						>

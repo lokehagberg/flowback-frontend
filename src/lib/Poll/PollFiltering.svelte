@@ -3,7 +3,6 @@
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
-	import div from '$lib/Generic/ButtonPrimary.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
@@ -15,27 +14,37 @@
 </script>
 
 <form
-	class="bg-white shadow rounded p-6 flex flex gap-4 items-end"
+	class="bg-white shadow rounded p-6 flex flex-col w-full gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();
 	}}
 >
-	<TextInput
-		Class="w-4/5"
-		onInput={() => (searched = false)}
-		label={$_('Search')}
-		bind:value={filter.search}
-	/>
+	<div class="w-full flex items-end">
+		<TextInput
+			Class="w-4/5"
+			onInput={() => (searched = false)}
+			label={$_('Search')}
+			bind:value={filter.search}
+		/>
 
-	<ButtonPrimary
-		Class={`w-8 h-8 !p-1 flex justify-center items-center transition transition-colors ${
-			searched ? 'bg-blue-300' : 'bg-blue-600'
-		}`}
-		type="submit"
-	>
-		<Fa icon={faMagnifyingGlass} />
-	</ButtonPrimary>
-	<CheckboxButtons label={''} labels={[{label:'Finished', checked:true}, {label:'Not Finished', checked:true}]} />
+		<ButtonPrimary
+			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center transition transition-colors ${
+				searched ? 'bg-blue-300' : 'bg-blue-600'
+			}`}
+			type="submit"
+		>
+			<Fa icon={faMagnifyingGlass} />
+		</ButtonPrimary>
+	</div>
+	<div>
+		<CheckboxButtons
+			label={''}
+			labels={[
+				{ label: 'Finished', checked: true },
+				{ label: 'Not Finished', checked: true }
+			]}
+		/>
+	</div>
 	<!--<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
 </form>

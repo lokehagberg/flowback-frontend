@@ -31,15 +31,18 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal}>
+<form on:submit|preventDefault={addProposal} class="rounded border-gray-200 border p-4">
+	<div class="text-xl">Lägg till Datumförslag</div>
+	<div class="mt-4">Start Datum</div>
 	<DateInput
-		format="yyyy-MM-dd HH:mm"
-		closeOnSelection
-		bind:value={start_date}
-		min={new Date()}
-		max={maxDatePickerYear}
+	format="yyyy-MM-dd HH:mm"
+	closeOnSelection
+	bind:value={start_date}
+	min={new Date()}
+	max={maxDatePickerYear}
 	/>
-
+	
+	<div class="mt-4">Slut Datum</div>
 	<DateInput
 		format="yyyy-MM-dd HH:mm"
 		closeOnSelection
@@ -48,5 +51,5 @@
 		max={maxDatePickerYear}
 	/>
 
-	<ButtonPrimary type="submit" label="Lägg till" />
+	<ButtonPrimary Class="mt-4" type="submit" label="Lägg till" />
 </form>

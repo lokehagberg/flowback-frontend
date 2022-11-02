@@ -33,8 +33,8 @@
 
 	const setUpMessageSending = async (selectedChat: number) => {
 		//Resets last web socket connection
-		if (socket) socket.close();
-		if (unsubscribe) unsubscribe();
+		if (socket) await socket.close();
+		if (unsubscribe) await unsubscribe();
 
 		chatSelected = selectedChat;
 
@@ -52,7 +52,7 @@
 		try {
 			sendMessageToSocket = sendMessage(selectedChat, socket);
 			unsubscribe = subscribe((e: any) => {
-				console.log(e, 'EE');
+				console.log('EE');
 				const { message, user } = JSON.parse(e);
 				messages = [...messages, { message, user }];
 
@@ -106,7 +106,7 @@
 			{/each}
 		</ul>
 		<ul
-			class="row-start-2 row-end-4 bg-white flex flex-col ml-3 mt-3 sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
+			class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 		>
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li

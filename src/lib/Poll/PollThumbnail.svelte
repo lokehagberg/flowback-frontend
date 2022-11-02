@@ -19,11 +19,11 @@
 	href={onHoverGroup ? '/groups/1' : `groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 >
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
+	<Tag tag={poll.tag_name} Class="inline mt-2" />
 	<p class="mt-2">
 		{poll.description}
 	</p>
-	<Tag tag={poll.tag_name} Class="w-1/3 mb-4 mt-2" />
-	<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayDetails={false} />
+	<Timeline Class="mt-4 border-none" dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayTimeline={false} />
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p
 			class="hover:underline"

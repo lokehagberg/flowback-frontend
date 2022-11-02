@@ -25,7 +25,6 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
 	};
 
 	socket.onclose = (event) => {
-		messageStore.set('');
 		if (event.wasClean) {
 			console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
 		} else {

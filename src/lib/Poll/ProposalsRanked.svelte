@@ -322,7 +322,7 @@
 					<Proposal
 						{...proposal}
 						Class={`${selectedPage === 'You' && ''} ${
-							import.meta.env.VITE_MODE === 'DEV' ? 'cursor-move' : ''
+							import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
 						}`}
 					>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
@@ -350,7 +350,9 @@
 				>
 					<Proposal
 						{...proposal}
-						Class={`${selectedPage === 'You'} ${mode === 'Dev' && 'cursor-move'}`}
+						Class={`${selectedPage === 'You'} ${
+							import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
+						}`}
 					>
 						<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">

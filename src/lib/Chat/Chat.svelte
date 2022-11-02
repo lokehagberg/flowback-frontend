@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -11,6 +11,7 @@
 	import Tab from '$lib/Generic/Tab.svelte';
 	import type { Unsubscriber } from 'svelte/store';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import type { User } from '$lib/User/interfaces';
 
 	let messages: Message[] = [];
 	let chatOpen = false;
@@ -22,6 +23,8 @@
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
 	let unsubscribe: Unsubscriber;
 	let chatSelected: number;
+	let isChangingSocket = false;
+	let user: User;
 
 	$: chatOpen && getChattable();
 
@@ -29,11 +32,13 @@
 		if (directs.length + groups.length !== 0) return;
 		directs = await getPeople('');
 		groups = await getGroups();
+
+		const { json, res } = await fetchRequest('GET', 'user');
 	};
 
 	const setUpMessageSending = async (selectedChat: number) => {
 		//Resets last web socket connection
-		if (socket) await socket.close();
+		if (socket && socket) await socket.close();
 		if (unsubscribe) await unsubscribe();
 
 		chatSelected = selectedChat;
@@ -48,6 +53,7 @@
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(selectedChat, selectedPage);
+		isChangingSocket = true;
 
 		try {
 			sendMessageToSocket = sendMessage(selectedChat, socket);
@@ -58,7 +64,8 @@
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
-					document.querySelector('.overflow-y-scroll')?.scroll(0, 100000);
+					const d = document.querySelector('.overflow-y-scroll');
+					d?.scroll(0, 100000);
 				}, 100);
 			});
 		} catch (e) {
@@ -67,8 +74,11 @@
 	};
 
 	const HandleMessageSending = async () => {
-		await sendMessageToSocket(message);
-		// messages = [...messages, {message, user: {username:"Jag", id} }]
+		sendMessageToSocket(message);
+		messages.push({
+			message,
+			user: { username: user.username, id: user.id, profile_image: user.profile_image }
+		});
 		message = '';
 	};
 
@@ -82,6 +92,11 @@
 		const self = (await fetchRequest('GET', `user`)).json;
 		return json.results.filter((user: any) => user.id !== self.id);
 	};
+
+	onDestroy(() => {
+		if (unsubscribe) unsubscribe();
+		if (socket) socket.close();
+	});
 </script>
 
 {#if chatOpen}
@@ -112,7 +127,10 @@
 				<li
 					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-100={chatSelected === chatter.id}
-					on:click={() => setUpMessageSending(chatter.id)}
+					on:click={() => {
+						console.log(socket?.CLOSED);
+						if (socket?.CLOSED || socket === undefined) return setUpMessageSending(chatter.id);
+					}}
 				>
 					<img
 						class="w-10 h-10 rounded-full"

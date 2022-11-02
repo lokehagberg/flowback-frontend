@@ -307,6 +307,22 @@
 
 		votings = json.results;
 	};
+
+	$: pollType === 3 && proposals && formatAllDates();
+
+	const formatAllDates = () => {
+		proposals.map((proposal) => {
+			proposal.title = `${formatDate(proposal.title)}`;
+			proposal.description = formatDate(proposal.description).toString();
+		});
+	};
+
+	const formatDate = (dateInput: string) => {
+		const date = new Date(dateInput);
+		return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} ${$_('at')} ${
+			date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
+		}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
+	};
 </script>
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>

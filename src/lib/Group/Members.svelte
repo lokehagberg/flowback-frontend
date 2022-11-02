@@ -16,7 +16,7 @@
 
 	let users: User[] = [];
 	let loading = true;
-	let selectedPage: SelectablePages = 'Invite';
+	let selectedPage: SelectablePages = 'Members';
 	let searchUser = '';
 	let searchedUsers: User[] = [];
 
@@ -67,7 +67,10 @@
 
 <Loader bind:loading>
 	<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative">
-		<Tab bind:selectedPage tabs={['Members', 'Invite']} />
+		<Tab
+			bind:selectedPage
+			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members']}
+		/>
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}

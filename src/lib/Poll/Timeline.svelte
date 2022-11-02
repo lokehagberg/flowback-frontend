@@ -34,18 +34,20 @@
 <div class={`relative text-black p-4 border border-gray-200 rounded ${Class}`}>
 	{#if displayTimeline}
 		<h1 class="text-left text-2xl">{$_('Timeline')}</h1>
-		<div class="h-6">
-			{#each datePlacement as date, i}
-				<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
-					<HeaderIcon
-						size="1.5x"
-						text={`${$_(dateLabels[i])}: ${datesDiaplay[i]}`}
-						icon={faExclamationCircle}
-						color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
-					/>
-				</div>
-			{/each}
-		</div>
+		{#if import.meta.env.VITE_PROD === 'PROD'}
+			<div class="h-6">
+				{#each datePlacement as date, i}
+					<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
+						<HeaderIcon
+							size="1.5x"
+							text={`${$_(dateLabels[i])}: ${datesDiaplay[i]}`}
+							icon={faExclamationCircle}
+							color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
+						/>
+					</div>
+				{/each}
+			</div>
+		{/if}
 		<div class="h-10 mt-10">
 			<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
 			<div

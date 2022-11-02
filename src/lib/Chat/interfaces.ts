@@ -3,7 +3,7 @@ export interface Message {
 	user: {
 		id: number;
 		username: string;
-		profile_image: File;
+		profile_image: string | null;
 	};
 	username?: string;
 }

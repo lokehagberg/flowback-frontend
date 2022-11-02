@@ -16,14 +16,14 @@
 <!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
 <a
 	class="bg-white pt-3 pl-6 pr-6 pb-3 shadow-lg rounded cursor-pointer vote-thumbnail hover:shadow-xl hover:rounded-xl transition transition-all"
-	href={onHoverGroup ? '/groups/1' : `groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+	href={onHoverGroup ? '/groups/1' : `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 >
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<Tag tag={poll.tag_name} Class="inline mt-2" />
 	<p class="mt-2">
 		{poll.description}
 	</p>
-	<Timeline Class="mt-4 border-none" dates={[new Date(poll.start_date), new Date(poll.end_date)]} displayTimeline={false} />
+	<Timeline Class="mt-4 border-none" dates={[new Date(poll.start_date), new Date(poll.end_date)]}  />
 	<div class="flex justify-between text-sm text-gray-600 mt-4">
 		<p
 			class="hover:underline"

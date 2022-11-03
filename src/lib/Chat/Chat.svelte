@@ -34,6 +34,7 @@
 		groups = await getGroups();
 
 		const { json, res } = await fetchRequest('GET', 'user');
+		user = json;
 	};
 
 	const setUpMessageSending = async (selectedChat: number) => {
@@ -45,7 +46,7 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			selectedPage === 'Grupper' ? `chat/group/${selectedChat}` : `chat/direct/${selectedChat}`
+			selectedPage === 'Grupper' ? `chat/group/${selectedChat}` : `chat/direct/${selectedChat}?order_by=created_at_asc`
 		);
 
 		messages = json.results;
@@ -56,7 +57,7 @@
 		isChangingSocket = true;
 
 		try {
-			sendMessageToSocket = sendMessage(selectedChat, socket);
+			sendMessageToSocket = await sendMessage(selectedChat, socket);
 			unsubscribe = subscribe((e: any) => {
 				console.log('EE');
 				const { message, user } = JSON.parse(e);
@@ -74,12 +75,17 @@
 	};
 
 	const HandleMessageSending = async () => {
-		sendMessageToSocket(message);
+		await sendMessageToSocket(message);
 		messages.push({
 			message,
 			user: { username: user.username, id: user.id, profile_image: user.profile_image }
 		});
+		messages = messages;
 		message = '';
+		setTimeout(() => {
+			const d = document.querySelector('.overflow-y-scroll');
+			d?.scroll(0, 100000);
+		}, 100);
 	};
 
 	const getGroups = async () => {

@@ -39,10 +39,11 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
 	return socket;
 };
 
-const sendMessage = (target: number, socket: WebSocket) => {
-	return (message: string) => {
+const sendMessage =  (target: number, socket: WebSocket) => {
+	return async (message: string) => {
+		console.log(socket.readyState, "READT?")
 		if (socket.readyState <= 1) {
-			socket.send(JSON.stringify({ message, target }));
+			await socket.send(JSON.stringify({ message, target }));
 		}
 	};
 };

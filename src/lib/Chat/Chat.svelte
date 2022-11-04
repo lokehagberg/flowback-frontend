@@ -30,11 +30,12 @@
 
 	const getChattable = async () => {
 		if (directs.length + groups.length !== 0) return;
-		directs = await getPeople('');
-		groups = await getGroups();
 
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
+
+		directs = await getPeople('');
+		groups = await getGroups();
 	};
 
 	const setUpMessageSending = async (selectedChat: number) => {
@@ -46,14 +47,16 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			selectedPage === 'Grupper' ? `chat/group/${selectedChat}` : `chat/direct/${selectedChat}?order_by=created_at_asc`
+			selectedPage === 'Grupper'
+				? `chat/group/${selectedChat}`
+				: `chat/direct/${selectedChat}?order_by=created_at_asc`
 		);
 
 		messages = json.results;
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-		socket = createSocket(selectedChat, selectedPage);
+		socket = createSocket(selectedChat, selectedPage, user.id);
 		isChangingSocket = true;
 
 		try {
@@ -95,8 +98,8 @@
 
 	const getPeople = async (username: string) => {
 		const { json } = await fetchRequest('GET', `users?limit=100`);
-		const self = (await fetchRequest('GET', `user`)).json;
-		return json.results.filter((user: any) => user.id !== self.id);
+		// const self = (await fetchRequest('GET', `user`)).json;
+		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
 	onDestroy(() => {

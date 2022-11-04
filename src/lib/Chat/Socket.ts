@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 const messageStore = writable('');
 
 //Maybe TODO: Make this class based, maybe a "SocketManager" class.
-const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
+const createSocket = (id: number, type: 'Direkt' | 'Grupper', userId: number) => {
 	let socket: WebSocket;
 
 	const token = localStorage.getItem('token') || '';
@@ -20,7 +20,8 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
 	};
 
 	socket.onmessage = (event) => {
-		messageStore.set(event.data);
+		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
+		if (event.data.user.id !== userId) messageStore.set(event.data);
 		console.log(`[message] Data received from server: ${event.data}`);
 	};
 
@@ -39,9 +40,9 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper') => {
 	return socket;
 };
 
-const sendMessage =  (target: number, socket: WebSocket) => {
+const sendMessage = (target: number, socket: WebSocket) => {
 	return async (message: string) => {
-		console.log(socket.readyState, "READT?")
+		console.log(socket.readyState, 'READT?');
 		if (socket.readyState <= 1) {
 			await socket.send(JSON.stringify({ message, target }));
 		}

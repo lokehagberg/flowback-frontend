@@ -22,7 +22,7 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper', userId: number) =>
 	socket.onmessage = (event) => {
 		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
 		const messageId = JSON.parse(event.data).user.id
-		if (messageId) messageStore.set(event.data);
+		if (messageId !== userId) messageStore.set(event.data);
 		console.log(`[message] Data received from server: ${event.data}`);
 	};
 

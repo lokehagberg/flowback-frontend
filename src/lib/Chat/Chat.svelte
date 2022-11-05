@@ -25,6 +25,7 @@
 	let chatSelected: number;
 	let isChangingSocket = false;
 	let user: User;
+	let currentlyLoadedMessages = 6;
 
 	$: chatOpen && getChattable();
 
@@ -40,7 +41,7 @@
 
 	const setUpMessageSending = async (selectedChat: number) => {
 		//Resets last web socket connection
-		if (socket && socket) await socket.close();
+		if (socket) await socket.close();
 		if (unsubscribe) await unsubscribe();
 
 		chatSelected = selectedChat;
@@ -49,7 +50,7 @@
 			'GET',
 			selectedPage === 'Grupper'
 				? `chat/group/${selectedChat}`
-				: `chat/direct/${selectedChat}?order_by=created_at_asc`
+				: `chat/direct/${selectedChat}?order_by=created_at_asc&limit=${currentlyLoadedMessages}`
 		);
 
 		messages = json.results;
@@ -58,6 +59,12 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(selectedChat, selectedPage, user.id);
 		isChangingSocket = true;
+
+		//TODO: Remove timeouts
+		setTimeout(() => {
+			const d = document.querySelector('.overflow-y-scroll');
+			d?.scroll(0, 100000);
+		}, 100);
 
 		try {
 			sendMessageToSocket = await sendMessage(selectedChat, socket);
@@ -121,6 +128,20 @@
 		</div>
 		<ul
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
+			on:scroll={async (e) => {
+				const chatWindow = e.currentTarget;
+				if (chatWindow?.scrollTop < 30) {
+					currentlyLoadedMessages += 6;
+					// const { res, json } = await fetchRequest(
+					// 	'GET',
+					// 	selectedPage === 'Grupper'
+					// 		? `chat/group/${chatSelected}`
+					// 		: `chat/direct/${chatSelected}?order_by=created_at_asc&limit=${currentlyLoadedMessages}`
+					// );
+
+					// messages = json.results;
+				}
+			}}
 		>
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
@@ -137,7 +158,6 @@
 					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-100={chatSelected === chatter.id}
 					on:click={() => {
-						console.log(socket?.CLOSED);
 						if (socket?.CLOSED || socket === undefined) return setUpMessageSending(chatter.id);
 					}}
 				>

@@ -14,6 +14,7 @@
 	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { formatDate } from './functions';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -51,7 +52,9 @@
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
+		//Ranked
 		if (pollType === 1) proposals = json.results;
+		//Scheduled
 		else if (pollType === 3)
 			proposals = json.results.map((proposal: any) => {
 				return { description: proposal.end_date, title: proposal.start_date, id: proposal.id };
@@ -308,20 +311,17 @@
 		votings = json.results;
 	};
 
-	$: pollType === 3 && proposals && formatAllDates();
+	$: pollType === 3 && proposals && formatAllDates(proposals);
+	// $: pollType === 3 && abstained && formatAllDates(abstained);
+	// $: pollType === 3 && ranked && formatAllDates(ranked);
+	// $: pollType === 3 && abstained && formatAllDates(abstained);
 
-	const formatAllDates = () => {
+	const formatAllDates = (proposals:proposal[]) => {
+		console.log(proposals, "PROPS")
 		proposals.map((proposal) => {
 			proposal.title = `${formatDate(proposal.title)}`;
 			proposal.description = formatDate(proposal.description).toString();
 		});
-	};
-
-	const formatDate = (dateInput: string) => {
-		const date = new Date(dateInput);
-		return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} ${$_('at')} ${
-			date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
-		}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
 	};
 </script>
 

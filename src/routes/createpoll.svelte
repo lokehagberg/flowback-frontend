@@ -186,7 +186,7 @@
 					{#each times as time}
 						<ButtonPrimary
 							disabled={loading}
-							Class={`transition transition-colors ${disabled.includes(time) && 'bg-gray-200'} ${
+							Class={`transition transition-colors ${disabled.includes(time) && '!bg-gray-200'} ${
 								selected_time === time ? 'bg-purple-600' : 'bg-purple-300' 
 							}`}
 							action={() => (selected_time = time)}

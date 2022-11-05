@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { proposal } from './interface';
+	import { formatDate } from './functions';
 
 	let start_date: Date, end_date: Date;
 
@@ -22,13 +23,15 @@
 		);
 
 		abstained.push({
-			title: start_date.toString(),
-			description: end_date.toString(),
+			title: formatDate(start_date.toString()),
+			description: formatDate(end_date.toString()),
 			id: json
 		});
 
 		abstained = abstained;
 	};
+	
+
 </script>
 
 <form on:submit|preventDefault={addProposal} class="rounded border-gray-200 border p-4">

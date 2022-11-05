@@ -78,7 +78,7 @@
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else}
-				<Results />
+				<Results {pollType}/>
 			{/if}
 			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
 			{#if import.meta.env.VITE_MODE === 'DEV'}

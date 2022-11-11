@@ -25,7 +25,7 @@
 	let chatSelected: number;
 	let isChangingSocket = false;
 	let user: User;
-	let currentlyLoadedMessages = 6;
+	let nextMessagesAPI: string;
 
 	$: chatOpen && getChattable();
 
@@ -50,12 +50,17 @@
 			'GET',
 			selectedPage === 'Grupper'
 				? `chat/group/${selectedChat}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${6}`
-				// : `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${100}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}`
 		);
 
-		currentlyLoadedMessages = 6
 		messages = json.results.reverse();
+		// nextMessagesAPI = json.next;
+
+		//Temporary fix before json.next issue is fixed
+		nextMessagesAPI = selectedPage === 'Grupper'
+				? `chat/group/${selectedChat}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}&offset=${4}`;
+
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -115,12 +120,16 @@
 		if (unsubscribe) unsubscribe();
 		if (socket) socket.close();
 	});
+
+	$: messages && manamgeMessageScroll();
+
+	const manamgeMessageScroll = () => {};
 </script>
 
 {#if chatOpen}
 	<div class="bg-white fixed z-10 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-			<div class="">Chat</div>
+			<div class="">Chatt</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
 				<Fa size="1.5x" icon={faX} />
 			</div>
@@ -132,19 +141,39 @@
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
 			on:scroll={async (e) => {
 				const chatWindow = e.currentTarget;
+
+				//Loads messages when scrolled to far up.
 				if (chatWindow?.scrollTop < 30) {
-					currentlyLoadedMessages += 6;
+					// currentlyLoadedMessages += 6;
 					const { res, json } = await fetchRequest(
 						'GET',
 						selectedPage === 'Grupper'
 							? `chat/group/${chatSelected}`
-							: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${currentlyLoadedMessages}`
+							: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${6}`
 					);
 
-					messages = json.results.reverse();
+					// messages = json.results.reverse();
+					//Scrolls the window down to correct place after scrolling up to load more messages
+					// setTimeout(() => {
+					// 	loadedMessagesUpdates += 1;
+					// 	chatWindow.scroll(0, chatWindow.scrollHeight / loadedMessagesUpdates);
+					// 	console.log(chatWindow.scrollHeight / loadedMessagesUpdates);
+					// 	console.log(chatWindow.clientHeight, chatWindow.scrollHeight);
+					// }, 100);
 				}
 			}}
 		>
+			<li class="text-center mt-6 mb-6">
+				<ButtonPrimary Class="" action={async () => {
+					const {res, json} = await fetchRequest('GET', nextMessagesAPI)
+					
+					// nextMessagesAPI = json.next
+					nextMessagesAPI = json.next.replace("offset=X")
+					
+					messages = json.results.reverse()
+
+				}}>Ladda fler medelanden</ButtonPrimary>
+			</li>
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
 					<span>{message.user?.username || message.username}</span>

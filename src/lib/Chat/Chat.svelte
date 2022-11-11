@@ -50,10 +50,12 @@
 			'GET',
 			selectedPage === 'Grupper'
 				? `chat/group/${selectedChat}`
-				: `chat/direct/${selectedChat}?order_by=created_at_asc&limit=${currentlyLoadedMessages}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${6}`
+				// : `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${100}`
 		);
 
-		messages = json.results;
+		currentlyLoadedMessages = 6
+		messages = json.results.reverse();
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -132,14 +134,14 @@
 				const chatWindow = e.currentTarget;
 				if (chatWindow?.scrollTop < 30) {
 					currentlyLoadedMessages += 6;
-					// const { res, json } = await fetchRequest(
-					// 	'GET',
-					// 	selectedPage === 'Grupper'
-					// 		? `chat/group/${chatSelected}`
-					// 		: `chat/direct/${chatSelected}?order_by=created_at_asc&limit=${currentlyLoadedMessages}`
-					// );
+					const { res, json } = await fetchRequest(
+						'GET',
+						selectedPage === 'Grupper'
+							? `chat/group/${chatSelected}`
+							: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${currentlyLoadedMessages}`
+					);
 
-					// messages = json.results;
+					messages = json.results.reverse();
 				}
 			}}
 		>

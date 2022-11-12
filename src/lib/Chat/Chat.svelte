@@ -12,6 +12,7 @@
 	import type { Unsubscriber } from 'svelte/store';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import type { User } from '$lib/User/interfaces';
+	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	let messages: Message[] = [];
 	let chatOpen = false;
@@ -57,10 +58,10 @@
 		// nextMessagesAPI = json.next;
 
 		//Temporary fix before json.next issue is fixed
-		nextMessagesAPI = selectedPage === 'Grupper'
+		nextMessagesAPI =
+			selectedPage === 'Grupper'
 				? `chat/group/${selectedChat}`
 				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}&offset=${4}`;
-
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -78,7 +79,7 @@
 			unsubscribe = subscribe((e: any) => {
 				console.log('EE');
 				const { message, user } = JSON.parse(e);
-				messages = [...messages, { message, user }];
+				messages = [...messages, { message, user, created_at: new Date().toString() }];
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
@@ -143,40 +144,45 @@
 				const chatWindow = e.currentTarget;
 
 				//Loads messages when scrolled to far up.
-				if (chatWindow?.scrollTop < 30) {
-					// currentlyLoadedMessages += 6;
-					const { res, json } = await fetchRequest(
-						'GET',
-						selectedPage === 'Grupper'
-							? `chat/group/${chatSelected}`
-							: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${6}`
-					);
+				// if (chatWindow?.scrollTop < 30) {
+				// 	// currentlyLoadedMessages += 6;
+				// 	const { res, json } = await fetchRequest(
+				// 		'GET',
+				// 		selectedPage === 'Grupper'
+				// 			? `chat/group/${chatSelected}`
+				// 			: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${6}`
+				// 	);
 
-					// messages = json.results.reverse();
-					//Scrolls the window down to correct place after scrolling up to load more messages
-					// setTimeout(() => {
-					// 	loadedMessagesUpdates += 1;
-					// 	chatWindow.scroll(0, chatWindow.scrollHeight / loadedMessagesUpdates);
-					// 	console.log(chatWindow.scrollHeight / loadedMessagesUpdates);
-					// 	console.log(chatWindow.clientHeight, chatWindow.scrollHeight);
-					// }, 100);
-				}
+				// messages = json.results.reverse();
+				//Scrolls the window down to correct place after scrolling up to load more messages
+				// setTimeout(() => {
+				// 	loadedMessagesUpdates += 1;
+				// 	chatWindow.scroll(0, chatWindow.scrollHeight / loadedMessagesUpdates);
+				// 	console.log(chatWindow.scrollHeight / loadedMessagesUpdates);
+				// 	console.log(chatWindow.clientHeight, chatWindow.scrollHeight);
+				// }, 100);
+				// }
 			}}
 		>
-			<li class="text-center mt-6 mb-6">
-				<ButtonPrimary Class="" action={async () => {
-					const {res, json} = await fetchRequest('GET', nextMessagesAPI)
-					
-					// nextMessagesAPI = json.next
-					nextMessagesAPI = json.next.replace("offset=X")
-					
-					messages = json.results.reverse()
+			{#if socket}
+				<li class="text-center mt-6 mb-6">
+					<ButtonPrimary
+						Class=""
+						action={async () => {
+							const { res, json } = await fetchRequest('GET', nextMessagesAPI);
 
-				}}>Ladda fler medelanden</ButtonPrimary>
-			</li>
+							// nextMessagesAPI = json.next
+							nextMessagesAPI = json.next;
+
+							messages = json.results.reverse();
+						}}>Visa äldre medelanden</ButtonPrimary
+					>
+				</li>
+			{/if}
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
 					<span>{message.user?.username || message.username}</span>
+					<span class="text-[14px] text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 					<p>{message.message}</p>
 				</li>
 			{/each}

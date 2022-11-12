@@ -6,4 +6,5 @@ export interface Message {
 		profile_image: string | null;
 	};
 	username?: string;
+	created_at?: string;
 }

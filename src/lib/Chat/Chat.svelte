@@ -79,7 +79,7 @@
 			unsubscribe = subscribe((e: any) => {
 				console.log('EE');
 				const { message, user } = JSON.parse(e);
-				messages = [...messages, { message, user, created_at: new Date().toString() }];
+				messages = [...messages, { message, user, created_at: (new Date()).toString() }];
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {

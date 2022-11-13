@@ -20,6 +20,7 @@
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
+	export let Class:string;
 
 	let innerWidth = 0;
 	let clickedExpandSidebar = false;
@@ -48,7 +49,7 @@
 
 <svelte:window bind:innerWidth />
 
-<div>
+<div class={Class}> 
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}

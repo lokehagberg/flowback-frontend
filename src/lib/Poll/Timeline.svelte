@@ -48,7 +48,7 @@
 				{/each}
 			</div>
 		{/if}
-		<div class="h-10 mt-10">
+		<div class="h-10 mt-2">
 			<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
 			<div
 				class={`absolute bg-blue-400 left-0 h-6 rounded-full`}
@@ -57,15 +57,13 @@
 		</div>
 	{/if}
 	{#if displayDetails}
-		<div class="border border-gray-200 p-6">
-			<ul>
-				{#each dateLabels as label, i}
-					<li class="flex justify-between flex-col md:flex-row">
-						<div class="mb-4">{$_(label)}:</div>
-						<div class="mb-4">{datesDiaplay[i]} CET</div>
-					</li>
-				{/each}
-			</ul>
-		</div>
+		<ul class="border border-gray-200 p-4">
+			{#each dateLabels as label, i}
+				<li class="flex justify-between flex-col md:flex-row text-center">
+					<div class="mb-4 md:mb-0">{$_(label)}:</div>
+					<div class="mb-4 md:mb-0">{datesDiaplay[i]} CET</div>
+				</li>
+			{/each}
+		</ul>
 	{/if}
 </div>

@@ -193,7 +193,7 @@
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li
 					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
-					class:bg-gray-100={chatSelected === chatter.id}
+					class:bg-gray-200={chatSelected === chatter.id}
 					on:click={() => {
 						if (socket?.CLOSED || socket === undefined) return setUpMessageSending(chatter.id);
 					}}

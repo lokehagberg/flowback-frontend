@@ -82,10 +82,10 @@
 	<Loader bind:loading>
 		<form
 			on:submit|preventDefault={createGroup}
-			class="lg:absolute left-1/2 lg:-translate-x-1/2 lg:flex items-start lg:justify-center gap-8 md:mt-8 w-full lg:w-[1000px]"
+			class="lg:absolute left-1/2 lg:-translate-x-1/2 lg:flex items-start lg:justify-center gap-8 md:mt-8 w-full lg:w-[720px]"
 		>
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6 w-2/3 md:w-full">
-				<h1 class="text-2xl">{$_('Create a Group')}</h1>
+				<h1 class="text-2xl">{$_(groupToEdit ? 'Redigera Grupp' :'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />
 				<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
@@ -119,7 +119,7 @@
 				<StatusMessage bind:status />
 				<ButtonPrimary type="submit" disabled={loading}
 					><div class="flex justify-center gap-3 items-center">
-						<Fa icon={faPaperPlane} />{$_('Create Group')}
+						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Redigera Grupp'  : 'Create Group')}
 					</div>
 				</ButtonPrimary>
 			</div>

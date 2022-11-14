@@ -43,9 +43,8 @@ const createSocket = (id: number, type: 'Direkt' | 'Grupper', userId: number) =>
 
 const sendMessage = (target: number, socket: WebSocket) => {
 	return async (message: string) => {
-		console.log(socket.readyState, 'READT?');
-		if (socket.readyState <= 1) {
-			await socket.send(JSON.stringify({ message, target }));
+		if (socket.readyState <= 1 && message.length > 0) {
+			await socket.send(JSON.stringify({ message, target}));
 		}
 	};
 };

@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -19,6 +18,7 @@
 	let message: string;
 	let groups: Group[] = [];
 	let directs: any[] = [];
+	//TODO: Socket not closing properly
 	let socket: WebSocket;
 	let sendMessageToSocket: (message: string) => void;
 	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
@@ -37,7 +37,7 @@
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
 
-		directs = await getPeople('');
+		directs = await getPeople();
 		groups = await getGroups();
 	};
 
@@ -56,7 +56,6 @@
 		);
 
 		messages = json.results.reverse();
-		// nextMessagesAPI = json.next;
 
 		//Temporary fix before json.next issue is fixed
 		olderMessagesAPI = json.next;
@@ -74,15 +73,19 @@
 
 		try {
 			sendMessageToSocket = await sendMessage(selectedChat, socket);
+
+			//This function triggers every time a message arrives from the socket
 			unsubscribe = subscribe((e: any) => {
-				console.log('EE');
 				const { message, user } = JSON.parse(e);
 				messages = [...messages, { message, user, created_at: new Date().toString() }];
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
-					const d = document.querySelector('.overflow-y-scroll');
-					d?.scroll(0, 100000);
+					//If scrolled furtherst down, scroll whenever a message is recieved
+					if (!newerMessagesAPI) {
+						const d = document.querySelector('.overflow-y-scroll');
+						d?.scroll(0, 100000);
+					}
 				}, 100);
 			});
 		} catch (e) {
@@ -91,10 +94,12 @@
 	};
 
 	const HandleMessageSending = async () => {
+		if (message.length === 0) return;
 		await sendMessageToSocket(message);
 		messages.push({
 			message,
-			user: { username: user.username, id: user.id, profile_image: user.profile_image }
+			user: { username: user.username, id: user.id, profile_image: user.profile_image },
+			created_at: new Date().toString()
 		});
 		messages = messages;
 		message = '';
@@ -109,9 +114,8 @@
 		return json.results;
 	};
 
-	const getPeople = async (username: string) => {
+	const getPeople = async () => {
 		const { json } = await fetchRequest('GET', `users?limit=100`);
-		// const self = (await fetchRequest('GET', `user`)).json;
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
@@ -119,10 +123,6 @@
 		if (unsubscribe) unsubscribe();
 		if (socket) socket.close();
 	});
-
-	$: messages && manamgeMessageScroll();
-
-	const manamgeMessageScroll = () => {};
 </script>
 
 {#if chatOpen}
@@ -202,7 +202,10 @@
 			<form on:submit|preventDefault={HandleMessageSending}>
 				<textarea
 					on:keypress={(e) => {
-						if (e.key === 'Enter' && !e.shiftKey) HandleMessageSending();
+						if (e.key === 'Enter' && !e.shiftKey) {
+							HandleMessageSending();
+							e.preventDefault();
+						}
 					}}
 					label="write a message"
 					required

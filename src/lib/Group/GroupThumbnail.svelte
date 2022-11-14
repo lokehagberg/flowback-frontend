@@ -13,7 +13,9 @@
 
 <div
 	on:click={goToGroup}
-	class={`w-5/6 md:w-1/2 bg-white relative shadow-md ${group.joined && "cursor-pointer hover:shadow-xl vote-thumbnail"} transition transition-shadow rounded-2xl`}
+	class={`w-5/6 md:w-1/2 bg-white relative shadow-md ${
+		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
+	} transition transition-shadow rounded-2xl`}
 >
 	<div on:click={goToGroup}>
 		<img
@@ -42,7 +44,10 @@
 			<ButtonPrimary
 				action={async () => {
 					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
-					if (res.ok) group.joined = !group.joined;
+					if (res.ok) {
+						group.joined = !group.joined;
+						goToGroup();
+					}
 				}}
 				Class="hover:bg-blue-800 bg-blue-600">{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
 			>

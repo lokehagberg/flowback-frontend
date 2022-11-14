@@ -8,19 +8,19 @@
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
 	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
 	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
+	import { faPersonRunning } from '@fortawesome/free-solid-svg-icons/faPersonRunning';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { mode } from '$lib/configuration';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
-	export let Class:string;
+	export let Class: string;
 
 	let innerWidth = 0;
 	let clickedExpandSidebar = false;
@@ -49,7 +49,7 @@
 
 <svelte:window bind:innerWidth />
 
-<div class={Class}> 
+<div class={Class}>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}
@@ -116,6 +116,15 @@
 				icon={faVideoCamera}
 				isSelected={false}
 			/>
+			<GroupSidebarButton
+				action={async () => {
+					const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
+					if (res.ok) window.location.href = '/home';
+				}}
+				text="Leave group"
+				icon={faPersonRunning}
+				isSelected={false}
+			/>
 		</div>
 		{#if userIsOwner}
 			<div class="bg-white shadow rounded flex flex-col mt-6">
@@ -125,7 +134,12 @@
 					icon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
-				<GroupSidebarButton action={() => (selectedPage = 'tags')} text="Edit Tags" icon={faCog} isSelected={selectedPage === 'tags'}/>
+				<GroupSidebarButton
+					action={() => (selectedPage = 'tags')}
+					text="Edit Tags"
+					icon={faCog}
+					isSelected={selectedPage === 'tags'}
+				/>
 				<GroupSidebarButton
 					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
 					text="Edit Group"

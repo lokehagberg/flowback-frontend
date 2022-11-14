@@ -5,9 +5,6 @@
 
 </script>
 
-<!-- <Layout centering={true}>
+<Layout centering={true}>
 	<div class="bg-white p-6 shadow rounded mt-6">{$_("Under Construction")}</div>
-</Layout> -->
-
-<Layout />
-
+</Layout>

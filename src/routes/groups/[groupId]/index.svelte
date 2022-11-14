@@ -63,7 +63,7 @@
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
-				<div class="">
+				<div class="w-full md:w-2/3 lg:w-[500px] xl:w-[720px]">
 					{#if selectedPage === 'flow'}
 						<PollThumbnails infoToGet="group" />
 					{:else if selectedPage === 'delegation'}

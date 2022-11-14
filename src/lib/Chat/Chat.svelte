@@ -26,7 +26,8 @@
 	let chatSelected: number;
 	let isChangingSocket = false;
 	let user: User;
-	let nextMessagesAPI: string;
+	let olderMessagesAPI: string;
+	let newerMessagesAPI: string;
 
 	$: chatOpen && getChattable();
 
@@ -58,7 +59,7 @@
 		// nextMessagesAPI = json.next;
 
 		//Temporary fix before json.next issue is fixed
-		nextMessagesAPI = json.next
+		olderMessagesAPI = json.next;
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -76,7 +77,7 @@
 			unsubscribe = subscribe((e: any) => {
 				console.log('EE');
 				const { message, user } = JSON.parse(e);
-				messages = [...messages, { message, user, created_at: (new Date()).toString() }];
+				messages = [...messages, { message, user, created_at: new Date().toString() }];
 
 				//TODO: make a better solution to scrolling down when sending/being sent message
 				setTimeout(() => {
@@ -137,39 +138,17 @@
 		</div>
 		<ul
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
-			on:scroll={async (e) => {
-				const chatWindow = e.currentTarget;
-
-				//Loads messages when scrolled to far up.
-				// if (chatWindow?.scrollTop < 30) {
-				// 	// currentlyLoadedMessages += 6;
-				// 	const { res, json } = await fetchRequest(
-				// 		'GET',
-				// 		selectedPage === 'Grupper'
-				// 			? `chat/group/${chatSelected}`
-				// 			: `chat/direct/${chatSelected}?order_by=created_at_desc&limit=${6}`
-				// 	);
-
-				// messages = json.results.reverse();
-				//Scrolls the window down to correct place after scrolling up to load more messages
-				// setTimeout(() => {
-				// 	loadedMessagesUpdates += 1;
-				// 	chatWindow.scroll(0, chatWindow.scrollHeight / loadedMessagesUpdates);
-				// 	console.log(chatWindow.scrollHeight / loadedMessagesUpdates);
-				// 	console.log(chatWindow.clientHeight, chatWindow.scrollHeight);
-				// }, 100);
-				// }
-			}}
 		>
-			{#if socket}
+			{#if olderMessagesAPI}
 				<li class="text-center mt-6 mb-6">
 					<ButtonPrimary
 						Class=""
 						action={async () => {
-							const { res, json } = await fetchRequest('GET', nextMessagesAPI);
+							const { res, json } = await fetchRequest('GET', olderMessagesAPI);
 
 							// nextMessagesAPI = json.next
-							nextMessagesAPI = json.next;
+							newerMessagesAPI = json.previous;
+							olderMessagesAPI = json.next;
 
 							messages = json.results.reverse();
 						}}>Visa äldre medelanden</ButtonPrimary
@@ -183,6 +162,21 @@
 					<p>{message.message}</p>
 				</li>
 			{/each}
+			{#if newerMessagesAPI}
+				<li class="text-center mt-6 mb-6">
+					<ButtonPrimary
+						Class=""
+						action={async () => {
+							const { res, json } = await fetchRequest('GET', newerMessagesAPI);
+
+							olderMessagesAPI = json.next;
+							newerMessagesAPI = json.previous;
+
+							messages = json.results.reverse();
+						}}>Visa tidigare medelanden</ButtonPrimary
+					>
+				</li>
+			{/if}
 		</ul>
 		<ul
 			class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"

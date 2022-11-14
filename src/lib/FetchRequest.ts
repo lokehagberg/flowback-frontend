@@ -5,7 +5,10 @@ export async function fetchRequest(
 	needs_authorization: boolean = true,
 	needs_json: boolean = true
 ) {
-	if (method === 'GET' && data !== null) console.warn("Method 'GET' does not take any data, use query parameters instead. For example: /api?id=5")
+	if (method === 'GET' && data !== null)
+		console.warn(
+			"Method 'GET' does not take any data, use query parameters instead. For example: /api?id=5"
+		);
 
 	let headers: any = {};
 
@@ -21,7 +24,10 @@ export async function fetchRequest(
 
 	if (method !== 'GET') toSend.body = data;
 
-	const res = await fetch(`${import.meta.env.VITE_API}/${api}`, toSend);
+	const res = await fetch(
+		api.includes(import.meta.env.VITE_API) ? api : `${import.meta.env.VITE_API}/${api}`,
+		toSend
+	);
 
 	try {
 		const json = await res.json();

@@ -9,12 +9,12 @@
 <div class="relative flex justify-center">
 	<img class="cover " src={`${import.meta.env.VITE_API}${group.cover_image}`} alt="cover" />
 	<img
-		class="h-36 w-36 absolute -bottom-8 left-8 profile rounded-full"
+		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
 		src={`${import.meta.env.VITE_API}${group.image}`}
 		alt="profile"
 	/>
 </div>
-<div class="bg-white pt-12 flex justify-between align-middle pl-4 pr-4 pb-4">
+<div class="bg-white pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}
 	</h1>

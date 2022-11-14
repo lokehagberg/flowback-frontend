@@ -17,6 +17,8 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -25,6 +27,7 @@
 	let innerWidth = 0;
 	let clickedExpandSidebar = false;
 	let userIsOwner = false;
+	let areYouSureModal = false;
 
 	// $: console.log(innerWidth);
 
@@ -40,6 +43,11 @@
 			groupAdmins.json.results.find(
 				(user: any) => user.user_id === userData.json.id && user.is_admin
 			) !== undefined;
+	};
+
+	const leaveGroup = async () => {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
+		if (res.ok) window.location.href = '/home';
 	};
 
 	onMount(() => {
@@ -117,10 +125,7 @@
 				isSelected={false}
 			/>
 			<GroupSidebarButton
-				action={async () => {
-					const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
-					if (res.ok) window.location.href = '/home';
-				}}
+				action={() => (areYouSureModal = true)}
 				text="Leave group"
 				icon={faPersonRunning}
 				isSelected={false}
@@ -150,3 +155,14 @@
 		{/if}
 	{/if}
 </div>
+
+<Modal bind:open={areYouSureModal}>
+	<div slot="header">Är du säker?</div>
+	<div slot="body">Du är påväg att lämna gruppen!</div>
+	<div slot="footer">
+		<ButtonPrimary action={leaveGroup} Class="bg-red-500">Ja</ButtonPrimary>
+		<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+			>Nej</ButtonPrimary
+		>
+	</div>
+</Modal>

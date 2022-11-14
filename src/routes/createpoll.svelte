@@ -25,6 +25,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { handleMessage } from '$lib/Generic/StatusMessage';
+	import Proposal from '$lib/Poll/Proposal.svelte';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
 	type timetypes = 'Endtime' | 'Dynamic';
@@ -91,7 +92,7 @@
 			description,
 			start_date: new Date(),
 			delegate_vote_end_date,
-			prediction_end_date,
+			prediction_end_date: proposal_end_date,
 			proposal_end_date,
 			end_date,
 			poll_type: selected_poll === 'Ranking' ? 1 : 3,
@@ -127,35 +128,40 @@
 			class="md:w-2/3"
 		>
 			<Loader {loading}>
-				<div class="bg-white p-6 shadow-xl flex flex-col gap-6 rounded">
+				<div class="bg-white p-6 shadow-xl flex flex-col gap-3 rounded">
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
-					<h2>{$_('End Date')}</h2>
+					<h2>{$_('Proposal vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={proposal_end_date}
+						min={new Date()}
 						max={maxDatePickerYear}
 					/>
+					<!-- <h2>{$_('Prediction vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={prediction_end_date}
+						min={proposal_end_date}
 						max={maxDatePickerYear}
-					/>
+					/> -->
+					<h2>{$_('Delegate vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={delegate_vote_end_date}
-						min={new Date()}
+						min={proposal_end_date}
 						max={maxDatePickerYear}
 					/>
+					<h2>{$_('End date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={end_date}
-						min={new Date()}
+						min={delegate_vote_end_date}
 						max={maxDatePickerYear}
 					/>
 					<h2>{$_('Select Tag')}</h2>
@@ -193,7 +199,7 @@
 							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class={`transition transition-colors ${disabled.includes(poll) && 'bg-gray-200'}`}
+							Class={`transition transition-colors ${disabled.includes(poll) && (selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200')}`}
 						>
 							<div class="flex items-center text-center">
 								<!-- Some buttons have multiple icons -->
@@ -210,7 +216,7 @@
 					{#each times as time}
 						<ButtonPrimary
 							disabled={loading}
-							Class={`transition transition-colors ${disabled.includes(time) && '!bg-gray-200'} ${
+							Class={`transition transition-colors ${disabled.includes(time) && (selected_time === time ? '!bg-gray-400' : '!bg-gray-200')} ${
 								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
 							}`}
 							action={() => (selected_time = time)}

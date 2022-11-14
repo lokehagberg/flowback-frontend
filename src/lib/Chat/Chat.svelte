@@ -58,10 +58,7 @@
 		// nextMessagesAPI = json.next;
 
 		//Temporary fix before json.next issue is fixed
-		nextMessagesAPI =
-			selectedPage === 'Grupper'
-				? `chat/group/${selectedChat}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}&offset=${4}`;
+		nextMessagesAPI = json.next
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;

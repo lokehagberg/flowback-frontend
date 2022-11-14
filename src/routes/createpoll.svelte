@@ -24,6 +24,7 @@
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { handleMessage } from '$lib/Generic/StatusMessage';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
 	type timetypes = 'Endtime' | 'Dynamic';
@@ -67,6 +68,9 @@
 		tags: TagType[] = [],
 		selectedTag: TagType,
 		status: StatusMessageInfo,
+		delegate_vote_end_date = new Date(),
+		prediction_end_date = new Date(),
+		proposal_end_date = new Date(),
 		end_date = new Date(),
 		isPublic = false,
 		loading = false;
@@ -86,7 +90,10 @@
 			title,
 			description,
 			start_date: new Date(),
-			end_date: new Date(end_date),
+			delegate_vote_end_date,
+			prediction_end_date,
+			proposal_end_date,
+			end_date,
 			poll_type: selected_poll === 'Ranking' ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
@@ -94,10 +101,8 @@
 		});
 
 		loading = false;
-		if (res.ok) {
-			status = { message: 'Success', success: true };
-			window.location.href = `groups/${groupId}/polls/${json}`;
-		} else status = { message: json.detail[0], success: false };
+		status = handleMessage(res, json);
+		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 
 	const getGroupTags = async () => {
@@ -127,6 +132,25 @@
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
 					<h2>{$_('End Date')}</h2>
+					<DateInput
+						format="yyyy-MM-dd HH:mm"
+						closeOnSelection
+						bind:value={proposal_end_date}
+						max={maxDatePickerYear}
+					/>
+					<DateInput
+						format="yyyy-MM-dd HH:mm"
+						closeOnSelection
+						bind:value={prediction_end_date}
+						max={maxDatePickerYear}
+					/>
+					<DateInput
+						format="yyyy-MM-dd HH:mm"
+						closeOnSelection
+						bind:value={delegate_vote_end_date}
+						min={new Date()}
+						max={maxDatePickerYear}
+					/>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
@@ -187,7 +211,7 @@
 						<ButtonPrimary
 							disabled={loading}
 							Class={`transition transition-colors ${disabled.includes(time) && '!bg-gray-200'} ${
-								selected_time === time ? 'bg-purple-600' : 'bg-purple-300' 
+								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
 							}`}
 							action={() => (selected_time = time)}
 						>

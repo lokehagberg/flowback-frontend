@@ -34,7 +34,7 @@
 <div class={`relative text-black p-4 border border-gray-200 rounded ${Class}`}>
 	{#if displayTimeline}
 		<h1 class="text-left text-2xl">{$_('Timeline')}</h1>
-		{#if import.meta.env.VITE_PROD === 'PROD'}
+		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
 			<div class="h-6">
 				{#each datePlacement as date, i}
 					<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
@@ -47,7 +47,7 @@
 					</div>
 				{/each}
 			</div>
-		{/if}
+		<!-- {/if} -->
 		<div class="h-10 mt-2">
 			<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
 			<div

@@ -384,7 +384,7 @@
 <StatusMessage bind:status />
 <ButtonPrimary action={saveVotings}
 	>{(selectedPage === 'You' && 'Save Votings') ||
-		(selectedPage === 'Delegate' && 'Sync with Delegate')}</ButtonPrimary
+		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</ButtonPrimary
 >
 
 <style>

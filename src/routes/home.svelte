@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { poll } from '$lib/Poll/interface';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { onMount } from 'svelte';
@@ -16,7 +19,8 @@
 	}
 
 	let invitations: Invitation[] = [];
-	let polls: poll[] = [];
+	let polls: poll[] = [],
+		status: StatusMessageInfo;
 
 	onMount(async () => {
 		getInvitations();
@@ -39,12 +43,14 @@
 
 	const getPolls = async () => {
 		const { res, json } = await fetchRequest('GET', 'home/polls?limit=30');
+		status = statusMessageFormatter(res, json);
 	};
 </script>
 
 <Layout centering={true}>
+	<StatusMessage Class={`${status?.success && "invisible"}`} bind:status />
 	<ul class="mt-6">
-			{#if import.meta.env.MODE === 'DEV'}
+		{#if import.meta.env.MODE === 'DEV'}
 			{#each invitations as invite}
 				<li class="bg-white p-6 shadow rounded">
 					<span>You have been invited to NAME</span>
@@ -52,7 +58,7 @@
 					<ButtonPrimary action={() => rejectInvitation(invite.group)}>Reject</ButtonPrimary>
 				</li>
 			{/each}
-			{/if}
-		</ul>
+		{/if}
+	</ul>
 	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-4/5 md:max-w-[720px] justify-center" />
 </Layout>

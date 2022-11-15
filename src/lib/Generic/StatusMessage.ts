@@ -4,6 +4,11 @@ export const statusMessageFormatter = (res: any, json: any, successMessage: stri
 	} else if (res.status - 500 >= 0) {
 		return { message: 'Server Error', success: false };
 	} else if (json.detail) {
+		if (json.detail === 'Invalid token.' || json.detail === "Invalid token header. No credentials provided.") {
+			if (localStorage.getItem('token')) localStorage.removeItem('token');
+			window.location.href = '/login';
+			// return { message: 'Invalid token.', success: false };
+		}
 		const messages = json.detail;
 		if (messages[0]) return { message: messages[0], success: false };
 		else {

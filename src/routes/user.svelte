@@ -101,9 +101,11 @@
 				{user.bio || $_('This user has no bio')}
 			</p>
 			<StatusMessage Class="mt-6" bind:status />
-			<div class="mt-8">
-				<ButtonPrimary action={() => (isEditing = true)}>Redigera Profil</ButtonPrimary>
-			</div>
+			{#if isUser}
+				<div class="mt-8">
+					<ButtonPrimary action={() => (isEditing = true)}>Redigera Profil</ButtonPrimary>
+				</div>
+			{/if}
 		</div>
 	{:else}
 		<img src={bannerImagePreview} class="bg-red-500 h-48 w-full" alt="banner" />
@@ -111,11 +113,24 @@
 			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8"
 			on:submit|preventDefault={() => {}}
 		>
-		<label>Banner Image
-			<input type="file" id="file-ip-1" accept="image/*" on:change={handleBannerImageChange} /></label>
+			<label
+				>{$_('Banner Image')}
+				<input
+					type="file"
+					id="file-ip-1"
+					accept="image/*"
+					on:change={handleBannerImageChange}
+				/></label
+			>
 			<img src={profileImagePreview} class="mt-6 h-36 w-36 inline rounded-full" alt="avatar" />
 			<label>
-			<input type="file" id="file-ip-1" accept="image/*" on:change={handleProfileImageChange} /></label>
+				<input
+					type="file"
+					id="file-ip-1"
+					accept="image/*"
+					on:change={handleProfileImageChange}
+				/></label
+			>
 
 			{#if currentlyEditing === 'name'}
 				<TextInput
@@ -167,8 +182,9 @@
 			{/if}
 			<StatusMessage Class="mt-4" bind:status />
 			<div class="mt-6">
-				<ButtonPrimary Class="mt-4" action={updateProfile}>Spara Ändringar</ButtonPrimary>
-				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>Ångra</ButtonPrimary>
+				<ButtonPrimary Class="mt-4" action={updateProfile}>{$_('Save changes')}</ButtonPrimary>
+				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</ButtonPrimary
+				>
 			</div>
 		</form>
 	{/if}

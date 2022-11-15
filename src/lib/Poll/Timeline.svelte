@@ -2,6 +2,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
+	import { faSquareFull } from '@fortawesome/free-solid-svg-icons/faSquareFull';
 	import { _ } from 'svelte-i18n';
 
 	export let displayDetails = true,
@@ -38,7 +39,7 @@
 						<HeaderIcon
 							size="1.5x"
 							text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
-							icon={faSquareCheck}
+							icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
 							color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 						/>
 					</div>

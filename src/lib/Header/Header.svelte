@@ -26,7 +26,10 @@
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
 			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
-			<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+
+			{#if import.meta.env.VITE_MODE === 'DEV'}
+				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+			{/if}
 			<HeaderIcon icon={faList} text="Kanban" href="kanban" />
 		</div>
 

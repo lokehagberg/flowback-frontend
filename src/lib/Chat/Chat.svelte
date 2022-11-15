@@ -73,7 +73,7 @@
 				const { message, user } = JSON.parse(e);
 				//If scrolled at most recent, display new messages
 				if (selectedChat !== user.id) return;
-				
+
 				if (!newerMessagesAPI) {
 					messages = [...messages, { message, user, created_at: new Date().toString() }];
 					//TODO: make a better solution to scrolling down when sending/being sent message
@@ -140,7 +140,7 @@
 </script>
 
 {#if chatOpen}
-	<div class="bg-white fixed z-30 w-full grid grid-width-fix">
+	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 			<div class="">{$_("Chat")}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>

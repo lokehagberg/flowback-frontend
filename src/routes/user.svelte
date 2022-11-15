@@ -103,7 +103,7 @@
 			<StatusMessage Class="mt-6" bind:status />
 			{#if isUser}
 				<div class="mt-8">
-					<ButtonPrimary action={() => (isEditing = true)}>Redigera Profil</ButtonPrimary>
+					<ButtonPrimary action={() => (isEditing = true)}>{$_("Edit profile")}</ButtonPrimary>
 				</div>
 			{/if}
 		</div>

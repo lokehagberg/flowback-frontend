@@ -5,6 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
@@ -19,14 +20,7 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		if (!res.ok) {
-			status =
-				res.status === 400
-					? { message: 'Username or password is wrong', success: false }
-					: { message: 'Server error', success: false };
-
-			return;
-		}
+		status = statusMessageFormatter(res, json)
 
 		if (json.token) {
 			status = { message: 'Successfully logged in', success: true };

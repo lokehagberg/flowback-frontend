@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	export let action = () => {},
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
@@ -30,6 +31,6 @@
 		class={`text-center inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
-		value={label}
-	><slot/>{label} </button>
+		value={$_(label)}
+	><slot/>{$_(label)} </button>
 {/if}

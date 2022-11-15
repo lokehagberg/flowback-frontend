@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import TextInput from '../Generic/TextInput.svelte';
 
 	export let selectedPage: string;
-	let email: string;
+	export let email: string;
 	let status:StatusMessageInfo;
 	let loading = false;
 
@@ -15,10 +17,7 @@
 		const { res, json } = await fetchRequest('POST', 'forgot_password', { email }, false);
 		loading = false
 		if (res.ok) selectedPage = 'NewPassword';
-		else{
-			if (json.detail) status = {message:json.detail[0], success:false}
-			if (json.detail.email) status = {message:json.detail.email[0], success:false}
-		}
+		else status = statusMessageFormatter(res, json);
 	};
 </script>
 
@@ -27,10 +26,6 @@
 	<TextInput label={'E-mail'} bind:value={email} required/>
 
 	<StatusMessage bind:status/>
-	<input
-		type="submit"
-		class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-		label="Skicka"
-	/>
+	<ButtonPrimary type="submit" label="Send" />
 </form>
 </Loader>

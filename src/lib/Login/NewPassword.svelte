@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	export let selectedPage: string;
+	export let email: string;
 	let password: string;
 	let verification_code: string;
 	let status: StatusMessageInfo;
@@ -16,13 +18,20 @@
 			{ verification_code, password },
 			false
 		);
-		if (res.ok) selectedPage = 'Verify';
-		else {
-			if (json.detail) status = { message: json.detail[0], success: false };
-			if (json.detail.verification_code)
-				status = { message: json.detail.verification_code[0], success: false };
-			if (json.detail.password) status = { message: json.detail.password[0], success: false };
-		}
+		if (res.ok) {
+			const { json, res } = await fetchRequest(
+				'POST',
+				'login',
+				{ username: email, password },
+				false
+			);
+			status = statusMessageFormatter(res, json);
+
+			if (res.ok) {
+				localStorage.setItem('token', json.token);
+				window.location.href = '/home';
+			}
+		} else status = statusMessageFormatter(res, json);
 	};
 </script>
 
@@ -31,9 +40,5 @@
 	<TextInput label={'Verification Code'} bind:value={verification_code} required />
 
 	<StatusMessage bind:status />
-	<input
-		type="submit"
-		class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-		label="Skicka"
-	/>
+	<ButtonPrimary type="submit" label="Send" />
 </form>

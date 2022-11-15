@@ -11,6 +11,9 @@
 
 	let selectedPage = 'Login';
 
+	//Email is stored for automatic login when resetting password
+	let email = ''
+
 	onMount(() => {
 		if (localStorage.getItem('token')) window.location.href = '/home';
 	});
@@ -34,9 +37,9 @@
 			{:else if selectedPage === 'Verify'}
 				<VerifyCard />
 			{:else if selectedPage === 'ForgotPassword'}
-				<ForgotPasswordCard bind:selectedPage />
+				<ForgotPasswordCard bind:selectedPage bind:email />
 			{:else if selectedPage === 'NewPassword'}
-				<NewPasswordCard bind:selectedPage />
+				<NewPasswordCard bind:email/>
 			{/if}
 		</div>
 	</div>

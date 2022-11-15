@@ -47,8 +47,8 @@
 
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
-		if (socket) await socket.close();
-		if (unsubscribe) await unsubscribe();
+		if (socket) socket.close();
+		if (unsubscribe) unsubscribe();
 
 		chatSelected = selectedChat;
 
@@ -58,7 +58,7 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(selectedChat, selectedPage, user.id);
 		isChangingSocket = true;
-
+		
 		//TODO: Remove timeouts
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
@@ -69,13 +69,15 @@
 			sendMessageToSocket = await sendMessage(selectedChat, socket);
 
 			//This function triggers every time a message arrives from the socket
-			unsubscribe = subscribe((e: any) => {
+			unsubscribe = subscribe(async (e: any) => {
 				const { message, user } = JSON.parse(e);
 				//If scrolled at most recent, display new messages
+				if (selectedChat !== user.id) return;
+				
 				if (!newerMessagesAPI) {
 					messages = [...messages, { message, user, created_at: new Date().toString() }];
 					//TODO: make a better solution to scrolling down when sending/being sent message
-					setTimeout(() => {
+					await setTimeout(() => {
 						//If scrolled furtherst down, scroll whenever a message is recieved
 						const d = document.querySelector('.overflow-y-scroll');
 						d?.scroll(0, 100000);
@@ -138,7 +140,7 @@
 </script>
 
 {#if chatOpen}
-	<div class="bg-white fixed z-10 w-full grid grid-width-fix">
+	<div class="bg-white fixed z-30 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 			<div class="">{$_("Chat")}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>

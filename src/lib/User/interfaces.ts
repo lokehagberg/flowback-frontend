@@ -2,7 +2,9 @@ export interface User {
 	banner_image: string;
 	bio: string;
 	email: string;
-	profile_image: string;
+	profile_image?: string;
+	profile_image_file?:File;
+	banner_image_file?:File;
 	username: string;
 	website: string;
 	id: number;

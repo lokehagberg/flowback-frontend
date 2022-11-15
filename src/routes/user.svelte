@@ -34,8 +34,9 @@
 	};
 
 	let isUser = false,
-		isEditing = true,
-		profile_image_preview:File,
+		isEditing = false,
+		profileImagePreview = DefaultPFP,
+		bannerImagePreview = '',
 		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
 		status: StatusMessageInfo;
 
@@ -47,37 +48,57 @@
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
 		userEdit = user;
+		if (user.profile_image)
+			profileImagePreview = `${import.meta.env.VITE_API}${user.profile_image}`;
+		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
 	});
 
 	const updateProfile = async () => {
 		const formData = new FormData();
 		formData.append('username', userEdit.username);
-		formData.append('bio', userEdit.bio);
-		formData.append('website', userEdit.website);
-		formData.append('profile_image', profile_image_preview);
+		formData.append('bio', userEdit.bio || '');
+		formData.append('website', userEdit.website || '');
+		if (userEdit.banner_image_file) formData.append('banner_image', userEdit.banner_image_file);
+		if (userEdit.profile_image_file) formData.append('profile_image', userEdit.profile_image_file);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
-		if (res.ok) user = userEdit;
+		if (res.ok) {
+			user = userEdit;
+			isEditing = false;
+		}
 		status = statusMessageFormatter(res, json);
 	};
 
 	const handleProfileImageChange = (e: any) => {
+		//Type string, for preview image
+		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
+
+		//Type File, for sending to server
 		const files: File[] = Array.from(e.target.files);
-		profile_image_preview = files[0];
+		userEdit.profile_image_file = files[0];
+	};
+
+	const handleBannerImageChange = (e: any) => {
+		//Type string, for preview image
+		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
+
+		//Type File, for sending to server
+		const files: File[] = Array.from(e.target.files);
+		userEdit.banner_image_file = files[0];
 	};
 </script>
 
 <Layout centering={true}>
 	{#if !isEditing}
-		<div class="bg-red-500 h-48 w-full" />
+		<img src={bannerImagePreview} class="bg-red-500 h-48 w-full" alt="banner" />
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
-			<img src={user.profile_image} class="h-36 w-36 inline rounded-full" alt="avatar" />
+			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
-			<a class="block mt-6" href={user.website}>
-				{$_(user.website || '')}
+			<a class={`block mt-6`} href={user.website || ''}>
+				{user.website || ''}
 			</a>
 			<p class="mt-6 whitespace-pre-wrap">
-				{$_(user.bio || 'This user has no bio')}
+				{user.bio || $_('This user has no bio')}
 			</p>
 			<StatusMessage Class="mt-6" bind:status />
 			<div class="mt-8">
@@ -85,13 +106,16 @@
 			</div>
 		</div>
 	{:else}
-		<div class="bg-red-500 h-48 w-full" />
+		<img src={bannerImagePreview} class="bg-red-500 h-48 w-full" alt="banner" />
 		<form
 			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8"
 			on:submit|preventDefault={() => {}}
 		>
-			<img src={userEdit.profile_image.toString()} class="h-36 w-36 inline rounded-full" alt="avatar" />
-			<input type="file" id="file-ip-1" accept="image/*" on:change={handleProfileImageChange} />
+		<label>Banner Image
+			<input type="file" id="file-ip-1" accept="image/*" on:change={handleBannerImageChange} /></label>
+			<img src={profileImagePreview} class="mt-6 h-36 w-36 inline rounded-full" alt="avatar" />
+			<label>
+			<input type="file" id="file-ip-1" accept="image/*" on:change={handleProfileImageChange} /></label>
 
 			{#if currentlyEditing === 'name'}
 				<TextInput
@@ -99,12 +123,12 @@
 					onBlur={() => (currentlyEditing = null)}
 					label={'Name'}
 					bind:value={userEdit.username}
-					Class="pt-8 pb-8 "
+					Class="mt-6 pt-8 pb-8 "
 				/>
 			{:else}
 				<h1
 					on:click={() => (currentlyEditing = 'name')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
 				>
 					{$_(userEdit.username || 'Add Username')}
 				</h1>
@@ -122,7 +146,7 @@
 					on:click={() => (currentlyEditing = 'web')}
 					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
 				>
-					{$_(userEdit.website || 'Add Website')}
+					{userEdit.website || $_('Add Website')}
 				</p>
 			{/if}
 			{#if currentlyEditing === 'bio'}
@@ -138,18 +162,12 @@
 					on:click={() => (currentlyEditing = 'bio')}
 					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"
 				>
-					{$_(userEdit.bio || 'Add Bio')}
+					{userEdit.bio || $_('Add Bio')}
 				</p>
 			{/if}
 			<StatusMessage Class="mt-4" bind:status />
 			<div class="mt-6">
-				<ButtonPrimary
-					Class="mt-4"
-					action={() => {
-						updateProfile();
-						isEditing = false;
-					}}>Spara Ändringar</ButtonPrimary
-				>
+				<ButtonPrimary Class="mt-4" action={updateProfile}>Spara Ändringar</ButtonPrimary>
 				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>Ångra</ButtonPrimary>
 			</div>
 		</form>

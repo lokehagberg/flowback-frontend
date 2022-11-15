@@ -44,14 +44,15 @@
 
 <Layout centering={true}>
 	<ul class="mt-6">
-		{#each invitations as invite}
-			<li class="bg-white p-6 shadow rounded">
-				<span>You have been invited to NAME</span>
-				<ButtonPrimary action={() => acceptInvitation(invite.group)}>Accept</ButtonPrimary>
-				<ButtonPrimary action={() => rejectInvitation(invite.group)}>Reject</ButtonPrimary>
-			</li>
-		{/each}
-	</ul>
-
+			{#if import.meta.env.MODE === 'DEV'}
+			{#each invitations as invite}
+				<li class="bg-white p-6 shadow rounded">
+					<span>You have been invited to NAME</span>
+					<ButtonPrimary action={() => acceptInvitation(invite.group)}>Accept</ButtonPrimary>
+					<ButtonPrimary action={() => rejectInvitation(invite.group)}>Reject</ButtonPrimary>
+				</li>
+			{/each}
+			{/if}
+		</ul>
 	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-4/5 md:max-w-[720px] justify-center" />
 </Layout>

@@ -12,6 +12,7 @@
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
+	import { _ } from 'svelte-i18n';
 
 	let messages: Message[] = [];
 	let chatOpen = false;
@@ -77,7 +78,7 @@
 					setTimeout(() => {
 						//If scrolled furtherst down, scroll whenever a message is recieved
 						const d = document.querySelector('.overflow-y-scroll');
-						// d?.scroll(0, 100000);
+						d?.scroll(0, 100000);
 					}, 100);
 				}
 			});
@@ -90,8 +91,8 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			selectedPage === 'Grupper'
-				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${20}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${20}`
+				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${5}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
 
 		messages = json.results.reverse();
@@ -109,14 +110,14 @@
 		await sendMessageToSocket(message);
 		messages.push({
 			message,
-			user: { username: user.username, id: user.id, profile_image: user.profile_image },
+			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
 			created_at: new Date().toString()
 		});
 		messages = messages;
 		message = '';
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
-			// d?.scroll(0, 100000);
+			d?.scroll(0, 100000);
 		}, 100);
 	};
 
@@ -139,7 +140,7 @@
 {#if chatOpen}
 	<div class="bg-white fixed z-10 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-			<div class="">Chatt</div>
+			<div class="">{$_("Chat")}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
 				<Fa size="1.5x" icon={faX} />
 			</div>
@@ -162,11 +163,11 @@
 							olderMessagesAPI = json.next;
 
 							messages = json.results.reverse();
-						}}>Visa äldre medelanden</ButtonPrimary
+						}}>{$_("Show older messages")}</ButtonPrimary
 					>
 				</li>
 			{/if}
-			<div class="absolute bottom-0 right-0">Nya Medelanden</div>
+			<div class="absolute bottom-0 right-0">{$_("New messages")}</div>
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
 					<span>{message.user?.username || message.username}</span>
@@ -185,7 +186,7 @@
 							newerMessagesAPI = json.previous;
 
 							messages = json.results.reverse();
-						}}>Visa tidigare medelanden</ButtonPrimary
+						}}>{$_("Show earlier messages")}</ButtonPrimary
 					>
 				</li>
 			{/if}

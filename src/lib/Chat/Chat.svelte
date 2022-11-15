@@ -90,8 +90,8 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			selectedPage === 'Grupper'
-				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${4}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}`
+				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${20}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${20}`
 		);
 
 		messages = json.results.reverse();

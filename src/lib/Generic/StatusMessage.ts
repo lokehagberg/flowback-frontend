@@ -1,4 +1,4 @@
-export const handleMessage = (res: any, json: any, successMessage: string = 'Success') => {
+export const statusMessageFormatter = (res: any, json: any, successMessage: string = 'Success') => {
 	if (res.ok) {
 		return { message: successMessage, success: true };
 	} else if (res.status - 500 >= 0) {

@@ -24,7 +24,7 @@
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
-	import { handleMessage } from '$lib/Generic/StatusMessage';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Proposal from '$lib/Poll/Proposal.svelte';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
@@ -103,7 +103,7 @@
 		});
 
 		loading = false;
-		status = handleMessage(res, json);
+		status = statusMessageFormatter(res, json);
 		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 

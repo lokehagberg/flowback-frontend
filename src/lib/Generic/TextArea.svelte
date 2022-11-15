@@ -2,10 +2,12 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
-	export let value = '';
-	export let label: string;
-	export let required = false;
-	export let Class = '';
+	export let value = '',
+		label: string,
+		required = false,
+		Class = '',
+		onBlur = () => {},
+		autofocus = false;
 
 	const expandTextArea = (e: any) => {
 		value = e.target.value;
@@ -23,14 +25,23 @@
 		};
 	};
 
+	const focus = () => {
+		const textarea = document.getElementById('textarea');
+		if (!textarea) return;
+
+		textarea.focus();
+	}
+
 	onMount(() => {
 		expandableTextArea();
+		if (autofocus) focus();
 	});
 </script>
 
 <label class={`${Class}`}
 	><p class="text-sm mb-1">{$_(label)}</p>
 	<textarea
+		on:blur={onBlur}
 		id="textarea"
 		{required}
 		on:input={expandTextArea}

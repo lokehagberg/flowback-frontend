@@ -226,6 +226,7 @@
 					required
 					bind:value={message}
 					class="border border-black w-full"
+					max="2000"
 				/>
 				<ButtonPrimary type="submit" label="Skicka" />
 			</form>

@@ -33,5 +33,6 @@
 		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none`}
 		id = {`textinput-${label}`}
 		on:input={onInput}
+		max="100"
 	/></label
 >

@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
-	import { _ } from 'svelte-i18n';
+	import { getDateFormatter, _ } from 'svelte-i18n';
 
 	export let displayDetails = true,
 		displayTimeline = true,
 		Class = '';
 	export let dates: Date[] = [];
-	let datesDiaplay: string[] = [];
+	let datesDisplay: string[] = [];
 
 	let date = new Date();
 	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
@@ -25,9 +26,11 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 
 		// Date formating
-		datesDiaplay[i] = `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} ${$_('at')} ${
-			date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
-		}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
+		// datesDiaplay[i] = `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} ${$_('at')} ${
+		// 	date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
+		// }:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
+	
+		datesDisplay[i] = formatDate(date.toString())
 	});
 </script>
 
@@ -40,7 +43,7 @@
 					<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
 						<HeaderIcon
 							size="1.5x"
-							text={`${$_(dateLabels[i])}: ${datesDiaplay[i]}`}
+							text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
 							icon={faSquareCheck}
 							color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 						/>
@@ -61,7 +64,7 @@
 			{#each dateLabels as label, i}
 				<li class="flex justify-between flex-col md:flex-row text-center">
 					<div class="mb-4 md:mb-0">{$_(label)}:</div>
-					<div class="mb-4 md:mb-0">{datesDiaplay[i]} CET</div>
+					<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
 				</li>
 			{/each}
 		</ul>

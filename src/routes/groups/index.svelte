@@ -19,7 +19,7 @@
 </script>
 
 <Layout centering={true}>
-	<div class="flex flex-col items-center mt-6 gap-6 mb-6 lg:w-[1100px]">
+	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1100px]">
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
 			<a
 				href="creategroup"

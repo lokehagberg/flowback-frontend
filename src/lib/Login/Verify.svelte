@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-
+	import { _ } from 'svelte-i18n';
 	import TextInput from '../Generic/TextInput.svelte';
 	import { mailStore } from './stores';
 
@@ -55,10 +56,8 @@
 		<TextInput label={'Password'} bind:value={password} type={'password'} required />
 
 		<StatusMessage bind:status />
-		<input
-			type="submit"
-			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-			label="Verifiera"
-		/>
+		<ButtonPrimary type="submit" >
+			{$_('Send')}
+		</ButtonPrimary>
 	</form>
 </Loader>

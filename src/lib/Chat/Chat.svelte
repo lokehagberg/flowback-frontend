@@ -28,6 +28,7 @@
 	let user: User;
 	let olderMessagesAPI: string;
 	let newerMessagesAPI: string;
+	let selectedChat: number;
 
 	$: chatOpen && getChattable();
 
@@ -41,24 +42,16 @@
 		groups = await getGroups();
 	};
 
-	const setUpMessageSending = async (selectedChat: number) => {
+	$: selectedChat && setUpMessageSending();
+
+	const setUpMessageSending = async () => {
 		//Resets last web socket connection
 		if (socket) await socket.close();
 		if (unsubscribe) await unsubscribe();
 
 		chatSelected = selectedChat;
 
-		const { res, json } = await fetchRequest(
-			'GET',
-			selectedPage === 'Grupper'
-				? `chat/group/${selectedChat}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}`
-		);
-
-		messages = json.results.reverse();
-
-		//Temporary fix before json.next issue is fixed
-		olderMessagesAPI = json.next;
+		getRecentMesseges();
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -68,7 +61,7 @@
 		//TODO: Remove timeouts
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
-			d?.scroll(0, 100000);
+			// d?.scroll(0, 100000);
 		}, 100);
 
 		try {
@@ -77,24 +70,42 @@
 			//This function triggers every time a message arrives from the socket
 			unsubscribe = subscribe((e: any) => {
 				const { message, user } = JSON.parse(e);
-				messages = [...messages, { message, user, created_at: new Date().toString() }];
-
-				//TODO: make a better solution to scrolling down when sending/being sent message
-				setTimeout(() => {
-					//If scrolled furtherst down, scroll whenever a message is recieved
-					if (!newerMessagesAPI) {
+				//If scrolled at most recent, display new messages
+				if (!newerMessagesAPI) {
+					messages = [...messages, { message, user, created_at: new Date().toString() }];
+					//TODO: make a better solution to scrolling down when sending/being sent message
+					setTimeout(() => {
+						//If scrolled furtherst down, scroll whenever a message is recieved
 						const d = document.querySelector('.overflow-y-scroll');
-						d?.scroll(0, 100000);
-					}
-				}, 100);
+						// d?.scroll(0, 100000);
+					}, 100);
+				}
 			});
 		} catch (e) {
 			console.error(e);
 		}
 	};
 
+	const getRecentMesseges = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			selectedPage === 'Grupper'
+				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${4}`
+				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${4}`
+		);
+
+		messages = json.results.reverse();
+
+		//Temporary fix before json.next issue is fixed
+		olderMessagesAPI = json.next;
+		newerMessagesAPI = '';
+	};
+
 	const HandleMessageSending = async () => {
 		if (message.length === 0) return;
+
+		//When sending, go to most recent messages
+		if (newerMessagesAPI) getRecentMesseges();
 		await sendMessageToSocket(message);
 		messages.push({
 			message,
@@ -105,7 +116,7 @@
 		message = '';
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
-			d?.scroll(0, 100000);
+			// d?.scroll(0, 100000);
 		}, 100);
 	};
 
@@ -155,6 +166,7 @@
 					>
 				</li>
 			{/if}
+			<div class="absolute bottom-0 right-0">Nya Medelanden</div>
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
 					<span>{message.user?.username || message.username}</span>
@@ -183,10 +195,10 @@
 		>
 			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
 				<li
-					class="transition transition-color p-3 flex gap-2 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
+					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={chatSelected === chatter.id}
 					on:click={() => {
-						if (socket?.CLOSED || socket === undefined) return setUpMessageSending(chatter.id);
+						selectedChat = chatter.id;
 					}}
 				>
 					<img

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
@@ -49,11 +50,8 @@
 			bind:Yes={acceptedToS}
 		/>
 		<StatusMessage bind:status />
-		<input
-			type="submit"
-			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-			value={$_('Send')}
-			label="Registrera"
-		/>
+		<ButtonPrimary type="submit" >
+			{$_('Send')}
+		</ButtonPrimary>
 	</form>
 </Loader>

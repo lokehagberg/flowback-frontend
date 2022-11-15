@@ -69,6 +69,7 @@
 		tags: TagType[] = [],
 		selectedTag: TagType,
 		status: StatusMessageInfo,
+		start_date = new Date(),
 		delegate_vote_end_date = new Date(),
 		prediction_end_date = new Date(),
 		proposal_end_date = new Date(),
@@ -90,9 +91,9 @@
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
-			start_date: new Date(),
+			start_date,
 			delegate_vote_end_date,
-			prediction_end_date: proposal_end_date,
+			prediction_end_date,
 			proposal_end_date,
 			end_date,
 			poll_type: selected_poll === 'Ranking' ? 1 : 3,
@@ -132,30 +133,43 @@
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
+					
+					<h2>{$_('Poll Start')}</h2>
+					<DateInput
+						format="yyyy-MM-dd HH:mm"
+						closeOnSelection
+						bind:value={start_date}
+						min={new Date()}
+						max={maxDatePickerYear}
+					/>
+
 					<h2>{$_('Proposal vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={proposal_end_date}
-						min={new Date()}
+						min={start_date}
 						max={maxDatePickerYear}
 					/>
-					<!-- <h2>{$_('Prediction vote date')}</h2>
+
+					<h2>{$_('Prediction vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={prediction_end_date}
 						min={proposal_end_date}
 						max={maxDatePickerYear}
-					/> -->
+					/>
+
 					<h2>{$_('Delegate vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={delegate_vote_end_date}
-						min={proposal_end_date}
+						min={prediction_end_date}
 						max={maxDatePickerYear}
 					/>
+					
 					<h2>{$_('End date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
@@ -164,6 +178,7 @@
 						min={delegate_vote_end_date}
 						max={maxDatePickerYear}
 					/>
+
 					<h2>{$_('Select Tag')}</h2>
 					<div class="flex gap-4 flex-wrap">
 						{#each tags as tag}
@@ -199,7 +214,10 @@
 							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class={`transition transition-colors ${disabled.includes(poll) && (selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200')}`}
+							Class={`transition transition-colors ${
+								disabled.includes(poll) &&
+								(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200')
+							}`}
 						>
 							<div class="flex items-center text-center">
 								<!-- Some buttons have multiple icons -->
@@ -216,9 +234,10 @@
 					{#each times as time}
 						<ButtonPrimary
 							disabled={loading}
-							Class={`transition transition-colors ${disabled.includes(time) && (selected_time === time ? '!bg-gray-400' : '!bg-gray-200')} ${
-								selected_time === time ? 'bg-purple-600' : 'bg-purple-300'
-							}`}
+							Class={`transition transition-colors ${
+								disabled.includes(time) &&
+								(selected_time === time ? '!bg-gray-400' : '!bg-gray-200')
+							} ${selected_time === time ? 'bg-purple-600' : 'bg-purple-300'}`}
 							action={() => (selected_time = time)}
 						>
 							<div class="flex items-center text-center">

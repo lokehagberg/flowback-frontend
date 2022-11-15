@@ -85,7 +85,7 @@
 					tag={poll.tag}
 				/>
 
-				{#if new Date(poll.proposal_end_date) >= new Date()}
+				{#if new Date(poll.proposal_end_date) >= new Date() && new Date(poll.start_date) <= new Date()}
 					{#if pollType === 1}
 						<!-- Ranked Poll -->
 						<ProposalSubmition bind:abstained />

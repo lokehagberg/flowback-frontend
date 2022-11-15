@@ -93,7 +93,7 @@
 			description,
 			start_date,
 			delegate_vote_end_date,
-			prediction_end_date,
+			prediction_end_date: delegate_vote_end_date,
 			proposal_end_date,
 			end_date,
 			poll_type: selected_poll === 'Ranking' ? 1 : 3,
@@ -133,7 +133,7 @@
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
-					
+
 					<h2>{$_('Poll Start')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
@@ -152,24 +152,24 @@
 						max={maxDatePickerYear}
 					/>
 
-					<h2>{$_('Prediction vote date')}</h2>
+					<!-- <h2>{$_('Prediction vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={prediction_end_date}
 						min={proposal_end_date}
 						max={maxDatePickerYear}
-					/>
+					/> -->
 
 					<h2>{$_('Delegate vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
 						bind:value={delegate_vote_end_date}
-						min={prediction_end_date}
+						min={proposal_end_date}
 						max={maxDatePickerYear}
 					/>
-					
+
 					<h2>{$_('End date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"

@@ -19,6 +19,7 @@
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
 	export let abstained: proposal[] = [];
+	//1 is ranked, 3 is scheduled
 	export let pollType: number = 1;
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
@@ -316,8 +317,8 @@
 	// $: pollType === 3 && ranked && formatAllDates(ranked);
 	// $: pollType === 3 && abstained && formatAllDates(abstained);
 
-	const formatAllDates = (proposals:proposal[]) => {
-		console.log(proposals, "PROPS")
+	const formatAllDates = (proposals: proposal[]) => {
+		console.log(proposals, 'PROPS');
 		proposals.map((proposal) => {
 			proposal.title = `${formatDate(proposal.title)}`;
 			proposal.description = formatDate(proposal.description).toString();
@@ -327,7 +328,7 @@
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
 	<div class="lg:w-1/2">
-		<div class="text-2xl p-6 select-none">{$_('Rank')}</div>
+		<div class="text-2xl p-6 select-none">{$_(pollType === 1 ? 'Rank' : "Vote for")}</div>
 		<ol class="container ranked lg:h-full">
 			{#each ranked as proposal, i}
 				<li
@@ -345,10 +346,12 @@
 							<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
 								<Fa icon={faMinus} />
 							</div>
-							<div on:click={() => moveUp(i)} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
-							<div on:click={() => moveDown(i)} class="cursor-pointer">
-								<Fa icon={faArrowDown} />
-							</div>
+							{#if pollType !== 3}
+								<div on:click={() => moveUp(i)} class="cursor-pointer"><Fa icon={faArrowUp} /></div>
+								<div on:click={() => moveDown(i)} class="cursor-pointer">
+									<Fa icon={faArrowDown} />
+								</div>
+							{/if}
 						</div>
 					</Proposal>
 				</li>

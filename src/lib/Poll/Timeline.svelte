@@ -1,6 +1,6 @@
 <script lang="ts">
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
+	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
 	import { _ } from 'svelte-i18n';
 
 	export let displayDetails = true,
@@ -11,7 +11,7 @@
 
 	let date = new Date();
 	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
-	const dateLabels = ['Start date', 'End date'];
+	const dateLabels = ['Start date', 'Proposal vote date', 'Delegate vote date', 'End date'];
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	// Difference between now and start date
@@ -37,11 +37,11 @@
 		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
 			<div class="h-6">
 				{#each datePlacement as date, i}
-					<div class="absolute" style:left={`calc(${date}% - 0.75rem)`}>
+					<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
 						<HeaderIcon
 							size="1.5x"
 							text={`${$_(dateLabels[i])}: ${datesDiaplay[i]}`}
-							icon={faExclamationCircle}
+							icon={faSquareCheck}
 							color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 						/>
 					</div>

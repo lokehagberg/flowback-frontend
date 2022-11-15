@@ -11,11 +11,9 @@
 	import type { poll, proposal, votings } from '$lib/Poll/interface';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
-	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Results from '$lib/Poll/Results.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import ScheduledSubmission from '$lib/Poll/ScheduledSubmission.svelte';
 
 	let poll: poll;
@@ -38,7 +36,7 @@
 		);
 
 		poll = json.results[0];
-		pollType = json.results[0].poll_type
+		pollType = json.results[0].poll_type;
 	};
 
 	const deletePoll = async () => {
@@ -68,7 +66,13 @@
 			<!-- <div class="italic mt-4">Group name</div> -->
 			{#if !poll.finished}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalsRanked pollType={poll.poll_type} bind:votings bind:selectedPage bind:abstained tag={poll.tag} />
+				<ProposalsRanked
+					pollType={poll.poll_type}
+					bind:votings
+					bind:selectedPage
+					bind:abstained
+					tag={poll.tag}
+				/>
 
 				{#if pollType === 1}
 					<!-- Ranked Poll -->
@@ -78,9 +82,16 @@
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else}
-				<Results {pollType}/>
+				<Results {pollType} />
 			{/if}
-			<Timeline dates={[new Date(poll.start_date), new Date(poll.end_date)]} />
+			<Timeline
+				dates={[
+					new Date(poll.start_date),
+					new Date(poll.proposal_end_date),
+					new Date(poll.delegate_vote_end_date),
+					new Date(poll.end_date)
+				]}
+			/>
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<Comments />
 			{/if}

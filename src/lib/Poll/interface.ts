@@ -19,6 +19,9 @@ export interface poll {
 	tag_name: string;
 	title: string;
 	group_id:number;
+	proposal_end_date:string;
+	prediction_end_date:string;
+	delegate_vote_end_date:string;
 }
 
 export interface votings {

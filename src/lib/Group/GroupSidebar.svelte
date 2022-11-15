@@ -112,18 +112,17 @@
 			/>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col mt-6">
-			<GroupSidebarButton
-				action={() => (window.location.href = `/createpoll?id=${$page.params.groupId}`)}
+			<!-- These two are link tags so people are able to open them in new window/tab -->
+			<a class="text-black" href={`/createpoll?id=${$page.params.groupId}`}><GroupSidebarButton
 				text="Create Poll"
 				icon={faPoll}
 				isSelected={false}
-			/>
-			<GroupSidebarButton
-				action={() => (window.location.href = `https://meet.flowback.org/${group.jitsi_room}`)}
+			/></a>
+			<a class="text-black" href={`https://meet.flowback.org/${group.jitsi_room}`}> <GroupSidebarButton
 				text="Video Conference"
 				icon={faVideoCamera}
 				isSelected={false}
-			/>
+			/></a>
 			<GroupSidebarButton
 				action={() => (areYouSureModal = true)}
 				text="Leave group"

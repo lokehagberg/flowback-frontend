@@ -28,7 +28,7 @@ import Folder from './Folder.svelte';
 </script>
 
 <div class="w-full bg-white shadow rounded p-4 pt-6">
-	<ButtonPrimary Class="p-6" action={() => open("https://drive.google.com/drive/u/0/folders/1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-")}>Gå till huvudmappen</ButtonPrimary>
+	<a href="https://drive.google.com/drive/u/0/folders/1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-"><ButtonPrimary Class="p-6">Gå till huvudmappen</ButtonPrimary></a>
 	<iframe title="Documents" class="w-full h-[500px] mt-4" src="https://drive.google.com/embeddedfolderview?id=1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-#list"></iframe>
 </div>
 

@@ -25,7 +25,6 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import Proposal from '$lib/Poll/Proposal.svelte';
 
 	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
 	type timetypes = 'Endtime' | 'Dynamic';
@@ -112,10 +111,12 @@
 		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=100`);
 		loading = false;
 		tags = json.results;
+		selectedTag = tags[0]
 	};
 
 	onMount(() => {
 		getGroupTags();
+
 	});
 </script>
 

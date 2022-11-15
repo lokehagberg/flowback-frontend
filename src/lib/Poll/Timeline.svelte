@@ -2,7 +2,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
-	import { getDateFormatter, _ } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 
 	export let displayDetails = true,
 		displayTimeline = true,

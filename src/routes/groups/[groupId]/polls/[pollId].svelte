@@ -19,6 +19,7 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 
 	let poll: poll;
 	let votings: votings[];
@@ -58,11 +59,15 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<div class="border border-gray-200 rounded p-4">
+			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
 				<Tag Class="w-32 mb-4 mt-4" tag={poll.tag_name} />
 				<div class="flex">
+					{#if pollType === 1}
 					<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={"Ranking"}/>
+					{:else if pollType === 3}
+					<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={"Scheduled"}/>
+					{/if}
 					<HeaderIcon Class="p-2" icon={faHourglass} text={"End date"}/>
 				</div>
 			</div>

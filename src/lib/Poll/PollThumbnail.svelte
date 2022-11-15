@@ -4,6 +4,11 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
+	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
+	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 
 	export let poll: poll;
 
@@ -22,7 +27,15 @@
 >
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<Tag tag={poll.tag_name} Class="inline" />
-	<p class="mt-2">
+	<div class="flex inline">
+		{#if poll.poll_type === 1}
+			<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
+		{:else if poll.poll_type === 3}
+			<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={'Scheduled'} />
+		{/if}
+		<HeaderIcon Class="p-2" icon={faHourglass} text={'End date'} />
+	</div>
+	<p class="mt-2 whitespace-pre-wrap">
 		{poll.description}
 	</p>
 	<Timeline

@@ -64,17 +64,20 @@
 				<Tag Class="w-32 mb-4 mt-4" tag={poll.tag_name} />
 				<div class="flex">
 					{#if pollType === 1}
-					<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={"Ranking"}/>
+						<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
 					{:else if pollType === 3}
-					<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={"Scheduled"}/>
+						<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={'Scheduled'} />
 					{/if}
-					<HeaderIcon Class="p-2" icon={faHourglass} text={"End date"}/>
+					<HeaderIcon Class="p-2" icon={faHourglass} text={'End date'} />
 				</div>
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			{#if !poll.finished}
-				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				{#if new Date(poll.proposal_end_date) <= new Date()}
+					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				{/if}
 				<ProposalsRanked
+					votingStartTime={poll.proposal_end_date}
 					pollType={poll.poll_type}
 					bind:votings
 					bind:selectedPage
@@ -82,12 +85,14 @@
 					tag={poll.tag}
 				/>
 
-				{#if pollType === 1}
-					<!-- Ranked Poll -->
-					<ProposalSubmition bind:abstained />
-				{:else if pollType === 3}
-					<!-- Scheduled Poll -->
-					<ScheduledSubmission bind:abstained />
+				{#if new Date(poll.proposal_end_date) >= new Date()}
+					{#if pollType === 1}
+						<!-- Ranked Poll -->
+						<ProposalSubmition bind:abstained />
+					{:else if pollType === 3}
+						<!-- Scheduled Poll -->
+						<ScheduledSubmission bind:abstained />
+					{/if}
 				{/if}
 			{:else}
 				<Results {pollType} />

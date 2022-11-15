@@ -4,7 +4,8 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 
-	export let icon = faCircle;
+	export let icon = faCircle,
+	icons = [faCircle];
 	export let text = 'icon';
 	export let href = '/';
 	export let Class = '';
@@ -15,6 +16,7 @@
 	let selectedPage = false;
 
 	onMount(() => {
+		if (icons.length === 1) icons[0] = icon
 		checkIfSelected()
 	})
 
@@ -32,11 +34,14 @@
 	class={`p-4 relative cursor-pointer ${Class}`}
 >
 	<div on:load={checkIfSelected}>
+		{#each icons as icon}
 		<Fa
 			{icon}
 			{size}
+			class="inline"
 			color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
 		/>
+		{/each}
 	</div>
 	<div
 		class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"

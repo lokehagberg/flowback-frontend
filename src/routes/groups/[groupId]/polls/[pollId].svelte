@@ -15,6 +15,10 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Results from '$lib/Poll/Results.svelte';
 	import ScheduledSubmission from '$lib/Poll/ScheduledSubmission.svelte';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
+	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
+	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 
 	let poll: poll;
 	let votings: votings[];
@@ -55,13 +59,12 @@
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
 			<div class="border border-gray-200 rounded p-4">
-				<div class="flex gap-6">
-					<!-- TODO: Icons for type of poll and time -->
-					<!-- <div class="mt-auto mb-auto"><HeaderIcon /></div>
-				<div class="mt-auto mb-auto"><HeaderIcon /></div> -->
-				</div>
 				{poll.description}
-				<Tag Class="w-32 mb-4" tag={poll.tag_name} />
+				<Tag Class="w-32 mb-4 mt-4" tag={poll.tag_name} />
+				<div class="flex">
+					<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={"Ranking"}/>
+					<HeaderIcon Class="p-2" icon={faHourglass} text={"End date"}/>
+				</div>
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
 			{#if !poll.finished}

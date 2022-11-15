@@ -24,12 +24,6 @@
 		// Date placement on Timeline
 		const toDateTime = date.getTime() - dates[0].getTime();
 		datePlacement[i] = (100 * toDateTime) / totalTime;
-
-		// Date formating
-		// datesDiaplay[i] = `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} ${$_('at')} ${
-		// 	date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
-		// }:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
-	
 		datesDisplay[i] = formatDate(date.toString())
 	});
 </script>
@@ -38,7 +32,7 @@
 	{#if displayTimeline}
 		<h1 class="text-left text-2xl">{$_('Timeline')}</h1>
 		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
-			<div class="h-6">
+			<div class="h-4">
 				{#each datePlacement as date, i}
 					<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
 						<HeaderIcon

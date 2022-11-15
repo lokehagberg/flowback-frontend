@@ -48,7 +48,7 @@
 </script>
 
 <Layout centering={true}>
-	<StatusMessage Class={`${status?.success && "invisible"}`} bind:status />
+	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
 	<ul class="mt-6">
 		{#if import.meta.env.MODE === 'DEV'}
 			{#each invitations as invite}

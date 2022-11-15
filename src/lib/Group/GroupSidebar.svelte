@@ -57,7 +57,7 @@
 
 <svelte:window bind:innerWidth />
 
-<div class={Class}>
+<div class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`}`}>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}

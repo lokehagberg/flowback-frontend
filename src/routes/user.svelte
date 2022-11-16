@@ -89,8 +89,10 @@
 </script>
 
 <Layout centering={true}>
+	<!-- Viewing someone's profile -->
+
 	{#if !isEditing}
-		<img src={bannerImagePreview} class="cover" alt="banner" />
+		<img src={bannerImagePreview} class="bg-gray-200 w-full h-[40%] cover" alt="banner" />
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
 			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
@@ -107,11 +109,13 @@
 				</div>
 			{/if}
 		</div>
+
+		<!-- Editing your own profile -->
 	{:else}
-		<label for="file-ip-2" class="cover">
+		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
 				src={bannerImagePreview}
-				class="cover transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				class="w-full cover transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -191,7 +195,7 @@
 				</p>
 			{/if}
 			<StatusMessage Class="mt-4" bind:status />
-			<span>{$_("Recommended ratios for images: 1:1 for profile, 4:1 for banner")}</span>
+			<span>{$_('Recommended ratios for images: 1:1 for profile, 4:1 for banner')}</span>
 			<div class="mt-6">
 				<ButtonPrimary Class="mt-4" action={updateProfile}>{$_('Save changes')}</ButtonPrimary>
 				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</ButtonPrimary

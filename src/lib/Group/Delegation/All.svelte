@@ -26,6 +26,7 @@
 
 		userIsDelegateStore.subscribe((info) => {
 			userIsDelegate = info;
+			console.log(info, "INFO")
 		});
 	});
 

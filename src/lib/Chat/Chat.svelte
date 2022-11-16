@@ -13,6 +13,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let messages: Message[] = [];
 	let chatOpen = false;
@@ -58,7 +59,7 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(selectedChat, selectedPage, user.id);
 		isChangingSocket = true;
-		
+
 		//TODO: Remove timeouts
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
@@ -142,7 +143,7 @@
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-			<div class="text-xl font-light text-gray-500">{$_("Chat")}</div>
+			<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
 				<Fa size="1.5x" icon={faX} />
 			</div>
@@ -165,7 +166,7 @@
 							olderMessagesAPI = json.next;
 
 							messages = json.results.reverse();
-						}}>{$_("Show older messages")}</ButtonPrimary
+						}}>{$_('Show older messages')}</ButtonPrimary
 					>
 				</li>
 			{/if}
@@ -188,7 +189,7 @@
 							newerMessagesAPI = json.previous;
 
 							messages = json.results.reverse();
-						}}>{$_("Show earlier messages")}</ButtonPrimary
+						}}>{$_('Show earlier messages')}</ButtonPrimary
 					>
 				</li>
 			{/if}
@@ -204,11 +205,7 @@
 						selectedChat = chatter.id;
 					}}
 				>
-					<img
-						class="w-10 h-10 rounded-full"
-						src={chatter.image ? `${import.meta.env.VITE_API}${chatter.image}` : DefaultPFP}
-						alt=""
-					/>
+					<ProfilePicture user={chatter} />
 					<span>{chatter.name || chatter.username}</span>
 				</li>
 			{/each}
@@ -228,7 +225,7 @@
 					class="border border-black  w-full"
 					max="2000"
 				/>
-				<ButtonPrimary type="submit" label="Skicka" Class=""/>
+				<ButtonPrimary type="submit" label="Skicka" Class="" />
 			</form>
 		</div>
 	</div>

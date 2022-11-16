@@ -9,6 +9,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	let title: string,
 		description: string,
@@ -27,7 +28,7 @@
 			}
 		);
 
-		console.log(res, json, "RESJSON")
+		statusMessageFormatter(res, json)
 
 		if (res.ok) {
 			status = { message: 'Lyckades skapa förslag', success: true };
@@ -38,7 +39,9 @@
 			});
 
 			abstained = abstained;
-		} else status = { message: 'Misslyckades med att skapa förslag', success: true };
+			title = ''
+			description = ''
+		}
 
 		loading = false;
 	};
@@ -47,7 +50,7 @@
 <form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 rounded">
 	<Loader bind:loading>
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
-		<TextInput label="Title" bind:value={title} />
+		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		<StatusMessage bind:status />
 		<ButtonPrimary type="submit" label="Lägg till" />

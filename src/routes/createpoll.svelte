@@ -148,7 +148,7 @@
 
 					<div class="border border-gray-200 p-6 ">
 						<ButtonPrimary
-							Class="inline"
+							Class={`inline ${advancedTimeSettings ? '!bg-blue-600' : '!bg-blue-200'}`} 
 							action={() => (advancedTimeSettings = !advancedTimeSettings)}
 							>{$_('Advanced time settings')}</ButtonPrimary
 						>

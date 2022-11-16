@@ -40,19 +40,18 @@
 	</div>
 
 	<div class="flex justify-center mb-6">
-		{#if !group.direct_join}
-		<div>{$_("This group is only joinable by invitation")}</div>
-
-		{:else if !group.joined}
+		{#if !group.joined}
 			<ButtonPrimary
 				action={async () => {
+					if (!group.direct_join) return;
 					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
 					if (res.ok) {
 						group.joined = !group.joined;
 						goToGroup();
 					}
 				}}
-				Class="hover:bg-blue-800 bg-blue-600">{$_(group.joined ? 'Leave' : 'Join')}</ButtonPrimary
+				Class="hover:bg-blue-800 bg-blue-600"
+				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</ButtonPrimary
 			>
 		{/if}
 	</div>

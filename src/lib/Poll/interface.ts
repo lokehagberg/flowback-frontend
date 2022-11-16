@@ -22,6 +22,8 @@ export interface poll {
 	proposal_end_date:string;
 	prediction_end_date:string;
 	delegate_vote_end_date:string;
+	group_name?:string;
+	group_image?:string;
 }
 
 export interface votings {

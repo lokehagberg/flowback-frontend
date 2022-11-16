@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import { onMount } from 'svelte';
 	import Folder from './Folder.svelte';
 
 	let root = [
@@ -30,22 +31,24 @@
 	const groupId = Number($page.params.groupId);
 	let folderId: string;
 
-	switch (groupId) {
-		case 1:
-			folderId = '1RPO5L-jboVB_AfReTu-kV2Vy6gTfhr2P';
-			break;
-		case 2:
-			folderId = '1aAVp1GjYDTfx_w3FHmp3o1dHYA6AJniY';
-			break;
-		case 4:
-			folderId = '1nXWjUfbn7qvLUIwiNmPETIHuYISy8L3P';
-			break;
-		case 5:
-			folderId = '1FM_pMKZKRUbpL48szxmp2dGD-8xaTmVB';
-			break;
-		default:
-			break;
-	}
+	onMount(() => {
+		switch (groupId) {
+			case 1:
+				folderId = '1RPO5L-jboVB_AfReTu-kV2Vy6gTfhr2P';
+				break;
+			case 2:
+				folderId = '1aAVp1GjYDTfx_w3FHmp3o1dHYA6AJniY';
+				break;
+			case 4:
+				folderId = '1nXWjUfbn7qvLUIwiNmPETIHuYISy8L3P';
+				break;
+			case 5:
+				folderId = '1FM_pMKZKRUbpL48szxmp2dGD-8xaTmVB';
+				break;
+			default:
+				break;
+		}
+	});
 </script>
 
 <div class="w-full bg-white shadow rounded p-4 pt-6">

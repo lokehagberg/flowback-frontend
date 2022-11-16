@@ -40,7 +40,10 @@
 	</div>
 
 	<div class="flex justify-center mb-6">
-		{#if !group.joined}
+		{#if !group.direct_join}
+		<div>{$_("This group is only joinable by invitation")}</div>
+
+		{:else if !group.joined}
 			<ButtonPrimary
 				action={async () => {
 					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});

@@ -169,7 +169,7 @@
 					>
 				</li>
 			{/if}
-			<div class="absolute bottom-0 right-0">{$_("New messages")}</div>
+			<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
 			{#each messages as message}
 				<li class="p-3 hover:bg-gray-200">
 					<span>{message.user?.username || message.username}</span>
@@ -214,7 +214,7 @@
 			{/each}
 		</ul>
 		<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
-			<form on:submit|preventDefault={HandleMessageSending}>
+			<form class="flex gap-2" on:submit|preventDefault={HandleMessageSending}>
 				<textarea
 					on:keypress={(e) => {
 						if (e.key === 'Enter' && !e.shiftKey) {
@@ -225,10 +225,10 @@
 					label="write a message"
 					required
 					bind:value={message}
-					class="border border-black w-full"
+					class="border border-black  w-full"
 					max="2000"
 				/>
-				<ButtonPrimary type="submit" label="Skicka" />
+				<ButtonPrimary type="submit" label="Skicka" Class=""/>
 			</form>
 		</div>
 	</div>

@@ -4,7 +4,7 @@
     import {page} from '$app/stores'
 	import type { proposal } from "$lib/typescriptexperiments";
 	import { onMount } from "svelte";
-	import { formatDate } from "./functions";
+	import { formatDate } from "$lib/Generic/DateFormatter";
 
     let proposals : proposal[] = []
     export let pollType = 1;

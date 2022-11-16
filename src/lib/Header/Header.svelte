@@ -37,7 +37,7 @@
 			class="inline-block float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-			<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp" />
+			<img class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`} src={DefaultPFP} alt="default pfp" />
 		</div>
 	</header>
 	{#if sideHeaderOpen}

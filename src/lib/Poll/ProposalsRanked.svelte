@@ -328,42 +328,44 @@
 </script>
 
 <div class={`poll border border-gray-500 lg:flex rounded ${unsaved && 'ring-2'}`}>
-	<div class="lg:w-1/2">
-		{#if new Date(votingStartTime) <= new Date()}
-			<div class="text-2xl p-6 select-none">{$_(pollType === 1 ? 'Rank' : 'Vote for')}</div>
-			<ol class="container ranked lg:h-full">
-				{#each ranked as proposal, i}
-					<li
-						id={`${proposal.id}`}
-						class="proposal"
-						on:dblclick={() => doubleClick(proposal, 'ranked')}
-					>
-						<Proposal
-							{...proposal}
-							Class={`${selectedPage === 'You' && ''} ${
-								import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
-							}`}
+	{#if new Date(votingStartTime) <= new Date()}
+		<div class="lg:w-1/2">
+			{#if new Date(votingStartTime) <= new Date()}
+				<div class="text-2xl p-6 select-none">{$_(pollType === 1 ? 'Rank' : 'Vote for')}</div>
+				<ol class="container ranked lg:h-full">
+					{#each ranked as proposal, i}
+						<li
+							id={`${proposal.id}`}
+							class="proposal"
+							on:dblclick={() => doubleClick(proposal, 'ranked')}
 						>
-							<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
-								<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
-									<Fa icon={faMinus} />
+							<Proposal
+								{...proposal}
+								Class={`${selectedPage === 'You' && ''} ${
+									import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
+								}`}
+							>
+								<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
+									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
+										<Fa icon={faMinus} />
+									</div>
+									{#if pollType !== 3}
+										<div on:click={() => moveUp(i)} class="cursor-pointer">
+											<Fa icon={faArrowUp} />
+										</div>
+										<div on:click={() => moveDown(i)} class="cursor-pointer">
+											<Fa icon={faArrowDown} />
+										</div>
+									{/if}
 								</div>
-								{#if pollType !== 3}
-									<div on:click={() => moveUp(i)} class="cursor-pointer">
-										<Fa icon={faArrowUp} />
-									</div>
-									<div on:click={() => moveDown(i)} class="cursor-pointer">
-										<Fa icon={faArrowDown} />
-									</div>
-								{/if}
-							</div>
-						</Proposal>
-					</li>
-				{/each}
-			</ol>
-		{/if}
-	</div>
-	<div class="lg:w-1/2">
+							</Proposal>
+						</li>
+					{/each}
+				</ol>
+			{/if}
+		</div>
+	{/if}
+	<div class={`${new Date(votingStartTime) <= new Date() ? "lg:w-1/2" : "lg:w-full"}`}>
 		<div class="text-2xl p-6 select-none">
 			{$_(new Date(votingStartTime) <= new Date() ? 'Abstain' : 'Proposals')}
 		</div>

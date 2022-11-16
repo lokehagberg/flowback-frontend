@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
-import Folder from './Folder.svelte';
+	import Folder from './Folder.svelte';
 
 	let root = [
 		{
@@ -25,13 +26,38 @@ import Folder from './Folder.svelte';
 		},
 		{ name: 'TODO.md' }
 	];
+
+	const groupId = Number($page.params.groupId);
+	let folderId: string;
+
+	switch (groupId) {
+		case 1:
+			folderId = '1RPO5L-jboVB_AfReTu-kV2Vy6gTfhr2P';
+			break;
+		case 2:
+			folderId = '1aAVp1GjYDTfx_w3FHmp3o1dHYA6AJniY';
+			break;
+		case 4:
+			folderId = '1nXWjUfbn7qvLUIwiNmPETIHuYISy8L3P';
+			break;
+		case 5:
+			folderId = '1FM_pMKZKRUbpL48szxmp2dGD-8xaTmVB';
+			break;
+		default:
+			break;
+	}
 </script>
 
 <div class="w-full bg-white shadow rounded p-4 pt-6">
-	<a href="https://drive.google.com/drive/u/0/folders/1tNZW9-xdClz4KHLU7zWqHB7Rfi8YyUz-"><ButtonPrimary Class="p-6">Gå till huvudmappen</ButtonPrimary></a>
-	<iframe title="Documents" class="w-full h-[500px] mt-4" src="https://drive.google.com/embeddedfolderview?id=1nXWjUfbn7qvLUIwiNmPETIHuYISy8L3P#list"></iframe>
+	<a href={`https://drive.google.com/drive/u/0/folders/${folderId}`}
+		><ButtonPrimary Class="p-6">Gå till huvudmappen</ButtonPrimary></a
+	>
+	<iframe
+		title="Documents"
+		class="w-full h-[500px] mt-4"
+		src={`https://drive.google.com/embeddedfolderview?id=${folderId}#list`}
+	/>
 </div>
-
 
 <!-- <div class="w-full bg-white flex items-center flex-col shadow rounded">
 	<div class="rounded-full border border-gray-500 p-2 w-1/2 text-center">+ Add Document</div>

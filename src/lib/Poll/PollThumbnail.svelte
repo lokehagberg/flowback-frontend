@@ -28,14 +28,14 @@
 	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
 	<div class="border border-gray-200 p-4">
 		<div class="flex items-center justify-between">
-			<Tag tag={poll.tag_name} Class="inline" />
+			<Tag tag={poll.tag_name} Class="inline cursor-default" />
 			<div class="flex">
 				{#if poll.poll_type === 1}
-					<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
+					<HeaderIcon Class="p-2 pl-0 cursor-default" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
 				{:else if poll.poll_type === 3}
-					<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={'Scheduled'} />
+					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 				{/if}
-				<HeaderIcon Class="p-2" icon={faHourglass} text={'End date'} />
+				<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 			</div>
 			<a href={`groups/${poll.group_id}`} class="text-black hover:underline">
 				<img

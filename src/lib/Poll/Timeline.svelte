@@ -37,6 +37,7 @@
 				{#each datePlacement as date, i}
 					<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
 						<HeaderIcon
+							Class="cursor-default"
 							size="1.5x"
 							text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
 							icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}

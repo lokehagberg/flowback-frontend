@@ -396,11 +396,15 @@
 		</ul>
 	</div>
 </div>
+
 <StatusMessage bind:status />
-<ButtonPrimary action={saveVotings}
-	>{(selectedPage === 'You' && 'Save Votings') ||
-		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</ButtonPrimary
->
+
+{#if new Date(votingStartTime) <= new Date()}
+	<ButtonPrimary action={saveVotings}
+		>{(selectedPage === 'You' && $_('Save Votings')) ||
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</ButtonPrimary
+	>
+{/if}
 
 <style>
 	.container {

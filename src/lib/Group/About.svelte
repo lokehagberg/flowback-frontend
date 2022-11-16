@@ -2,7 +2,7 @@
 	import { onMount } from "svelte";
 	import {page} from '$app/stores'
 	import { fetchRequest } from "$lib/FetchRequest";
-	import type { GroupUser } from "$lib/User/interfaces";
+	import { _ } from 'svelte-i18n';
 
 	export let description:string
 	export let creatorId:number;
@@ -20,5 +20,5 @@
 
 <div class="bg-white p-6 text-xl rounded shadow p-6">
 	<p>{description}</p>
-	<span>Creator: {creator.username}</span>
+	<span>{$_("Creator")}: {creator.username}</span>
 </div>

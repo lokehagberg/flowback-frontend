@@ -64,11 +64,11 @@
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
 				<div class="flex h-8">
 					{#if pollType === 1}
-						<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
+						<HeaderIcon Class="p-2 pl-0 cursor-default" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
 					{:else if pollType === 3}
-						<HeaderIcon Class="p-2 pl-0" icon={faCalendarAlt} text={'Scheduled'} />
+						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 					{/if}
-					<HeaderIcon Class="p-2" icon={faHourglass} text={'End date'} />
+					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 				</div>
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->

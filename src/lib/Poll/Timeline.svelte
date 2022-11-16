@@ -3,6 +3,8 @@
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
 	import { faSquareFull } from '@fortawesome/free-solid-svg-icons/faSquareFull';
+	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 
 	export let displayDetails = true,
@@ -58,11 +60,15 @@
 	{#if displayDetails}
 		<ul class="border border-gray-200 p-4">
 			{#each dateLabels as label, i}
-				<li class="flex justify-between flex-col md:flex-row text-center">
-					<div class="mb-4 md:mb-0">{$_(label)}:</div>
-					<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
-				</li>
+			<li class="flex justify-between flex-col md:flex-row text-center">
+				<div class="mb-4 md:mb-0">{$_(label)}:</div>
+				<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
+			</li>
 			{/each}
 		</ul>
-	{/if}
+		{:else}
+		<ul class="hover:underline border border-gray-200 p-4" on:click={() => displayDetails = true }>
+			<Fa icon={faDownLong}/>
+		</ul>
+			{/if}
 </div>

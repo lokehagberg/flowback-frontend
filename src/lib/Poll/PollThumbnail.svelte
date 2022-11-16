@@ -50,7 +50,9 @@
 	<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-4">
 		{poll.description}
 	</p>
+
 	<Timeline
+	
 		Class="border-none"
 		dates={[
 			new Date(poll.start_date),

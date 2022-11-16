@@ -19,41 +19,48 @@
 </script>
 
 <!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
-<a
-	class="bg-white pt-2 pl-6 pr-6 pb-2 shadow-lg rounded cursor-pointer vote-thumbnail hover:shadow-xl hover:rounded-xl transition transition-all"
-	href={onHoverGroup
-		? '/groups/1'
-		: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+<div
+	class="bg-white pt-2 pl-6 pr-6 pb-2 shadow-lg rounded transition transition-all vote-thumbnail"
 >
-	<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
-	<div class="border border-gray-200 p-4">
-		<div class="flex items-center justify-between">
-			<Tag tag={poll.tag_name} Class="inline cursor-default" />
-			<div class="flex">
-				{#if poll.poll_type === 1}
-					<HeaderIcon Class="p-2 pl-0 cursor-default" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
-				{:else if poll.poll_type === 3}
-					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
-				{/if}
-				<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
+	<a
+	class="hover:shadow-xl hover:rounded-xl cursor-pointer "
+		href={onHoverGroup
+			? '/groups/1'
+			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+	>
+		<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
+		<div class="border border-gray-200 p-4">
+			<div class="flex items-center justify-between">
+				<Tag tag={poll.tag_name} Class="inline cursor-default" />
+				<div class="flex">
+					{#if poll.poll_type === 1}
+						<HeaderIcon
+							Class="p-2 pl-0 cursor-default"
+							icons={[faArrowUp, faArrowDown]}
+							text={'Ranking'}
+						/>
+					{:else if poll.poll_type === 3}
+						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
+					{/if}
+					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
+				</div>
+				<a href={`groups/${poll.group_id}`} class="text-black hover:underline">
+					<img
+						class="h-8 w-8 inline"
+						src={`${import.meta.env.VITE_API}${poll.group_image}`}
+						alt="group thumbnail"
+					/>
+					<span class="inline">{poll.group_name}</span>
+				</a>
 			</div>
-			<a href={`groups/${poll.group_id}`} class="text-black hover:underline">
-				<img
-					class="h-8 w-8 inline"
-					src={`${import.meta.env.VITE_API}${poll.group_image}`}
-					alt="group thumbnail"
-				/>
-				<span class="inline">{poll.group_name}</span>
-			</a>
 		</div>
-	</div>
-	<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-4">
-		{poll.description}
-	</p>
-
+		<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-4">
+			{poll.description}
+		</p>
+	</a>
 	<Timeline
-	
-		Class="border-none"
+		displayDetails={false}
+		Class="border-none pointer-default"
 		dates={[
 			new Date(poll.start_date),
 			new Date(poll.proposal_end_date),
@@ -61,7 +68,7 @@
 			new Date(poll.end_date)
 		]}
 	/>
-	<div class="flex justify-between text-sm text-gray-600 mt-2">
+	<div class="flex justify-between text-sm text-gray-600 mt-2 pointer-default">
 		<p
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
@@ -70,7 +77,7 @@
 			on:focus
 		/>
 	</div>
-</a>
+</div>
 
 <style>
 	.vote-thumbnail:hover {

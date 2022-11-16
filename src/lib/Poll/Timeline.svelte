@@ -27,7 +27,7 @@
 		// Date placement on Timeline
 		const toDateTime = date.getTime() - dates[0].getTime();
 		datePlacement[i] = (100 * toDateTime) / totalTime;
-		datesDisplay[i] = formatDate(date.toString())
+		datesDisplay[i] = formatDate(date.toString());
 	});
 </script>
 
@@ -35,19 +35,19 @@
 	{#if displayTimeline}
 		<h1 class="text-left text-2xl">{$_('Timeline')}</h1>
 		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
-			<div class="h-4">
-				{#each datePlacement as date, i}
-					<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
-						<HeaderIcon
-							Class="cursor-default"
-							size="1.5x"
-							text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
-							icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
-							color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
-						/>
-					</div>
-				{/each}
-			</div>
+		<div class="h-4">
+			{#each datePlacement as date, i}
+				<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
+					<HeaderIcon
+						Class="cursor-default"
+						size="1.5x"
+						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
+						icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
+						color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
+					/>
+				</div>
+			{/each}
+		</div>
 		<!-- {/if} -->
 		<div class="h-10 mt-2">
 			<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
@@ -59,16 +59,27 @@
 	{/if}
 	{#if displayDetails}
 		<ul class="border border-gray-200 p-4">
+			<div
+				class="hover:underline flex items-center gap-2 cursor-pointer"
+				on:click={() => (displayDetails = false)}
+			>
+				<Fa icon={faDownLong} flip />
+				{$_('Timeline details')}
+			</div>
 			{#each dateLabels as label, i}
-			<li class="flex justify-between flex-col md:flex-row text-center">
-				<div class="mb-4 md:mb-0">{$_(label)}:</div>
-				<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
-			</li>
+				<li class="flex justify-between flex-col md:flex-row text-center">
+					<div class="mb-4 md:mb-0">{$_(label)}:</div>
+					<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
+				</li>
 			{/each}
 		</ul>
-		{:else}
-		<ul class="hover:underline border border-gray-200 p-4" on:click={() => displayDetails = true }>
-			<Fa icon={faDownLong}/>
+	{:else}
+		<ul
+			class="hover:underline border border-gray-200 p-4 flex items-center gap-2 cursor-pointer"
+			on:click={() => (displayDetails = true)}
+		>
+			<Fa icon={faDownLong} />
+			{$_('Timeline details')}
 		</ul>
-			{/if}
+	{/if}
 </div>

@@ -74,7 +74,9 @@
 		proposal_end_date = new Date(),
 		end_date = new Date(),
 		isPublic = false,
-		loading = false;
+		loading = false,
+		advancedTimeSettings = false,
+		daysBetweenPhases = 1;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -111,12 +113,21 @@
 		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=100`);
 		loading = false;
 		tags = json.results;
-		selectedTag = tags[0]
+		selectedTag = tags[0];
+	};
+
+	$: daysBetweenPhases && changedate();
+
+	const changedate = () => {
+		const now = new Date();
+		start_date = new Date();
+		proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		delegate_vote_end_date = new Date(now.setDate(now.getDate() +  daysBetweenPhases));
+		end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 	};
 
 	onMount(() => {
 		getGroupTags();
-
 	});
 </script>
 
@@ -135,25 +146,35 @@
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
 
-					<h2>{$_('Poll Start')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={start_date}
-						min={new Date()}
-						max={maxDatePickerYear}
-					/>
+					<div class="border border-gray-200 p-6 ">
+						<ButtonPrimary
+							Class="inline"
+							action={() => (advancedTimeSettings = !advancedTimeSettings)}
+							>{$_('Advanced time settings')}</ButtonPrimary
+						>
+						<h2 class="mt-4">{$_('Days between phases')}</h2>
+						<input type="number" bind:value={daysBetweenPhases} min="1" max="1000" />
 
-					<h2>{$_('Proposal vote date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={proposal_end_date}
-						min={start_date}
-						max={maxDatePickerYear}
-					/>
+						{#if advancedTimeSettings}
+							<h2 class="mt-4">{$_('Poll Start')}</h2>
+							<DateInput
+								format="yyyy-MM-dd HH:mm"
+								closeOnSelection
+								bind:value={start_date}
+								min={new Date()}
+								max={maxDatePickerYear}
+							/>
 
-					<!-- <h2>{$_('Prediction vote date')}</h2>
+							<h2 class="mt-4">{$_('Proposal vote date')}</h2>
+							<DateInput
+								format="yyyy-MM-dd HH:mm"
+								closeOnSelection
+								bind:value={proposal_end_date}
+								min={start_date}
+								max={maxDatePickerYear}
+							/>
+
+							<!-- <h2 class="mt-4">{$_('Prediction vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
@@ -162,24 +183,25 @@
 						max={maxDatePickerYear}
 					/> -->
 
-					<h2>{$_('Delegate vote date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={delegate_vote_end_date}
-						min={proposal_end_date}
-						max={maxDatePickerYear}
-					/>
+							<h2 class="mt-4">{$_('Delegate vote date')}</h2>
+							<DateInput
+								format="yyyy-MM-dd HH:mm"
+								closeOnSelection
+								bind:value={delegate_vote_end_date}
+								min={proposal_end_date}
+								max={maxDatePickerYear}
+							/>
 
-					<h2>{$_('End date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={end_date}
-						min={delegate_vote_end_date}
-						max={maxDatePickerYear}
-					/>
-
+							<h2 class="mt-4">{$_('End date')}</h2>
+							<DateInput
+								format="yyyy-MM-dd HH:mm"
+								closeOnSelection
+								bind:value={end_date}
+								min={delegate_vote_end_date}
+								max={maxDatePickerYear}
+							/>
+						{/if}
+					</div>
 					<h2>{$_('Select Tag')}</h2>
 					<div class="flex gap-4 flex-wrap">
 						{#each tags as tag}

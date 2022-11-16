@@ -5,23 +5,24 @@
 	import { onMount } from 'svelte';
 
 	export let icon = faCircle,
-	icons = [faCircle];
-	export let text = 'icon';
-	export let href = '/';
-	export let Class = '';
-	export let color = '';
-	export let size = 'xl';
+		icons = [faCircle];
+	if (icons.length === 1) icons[0] = icon;
+
+	export let text = 'icon',
+		href = '/',
+		Class = '',
+		color = '',
+		size = 'xl';
 
 	let hovering = false;
 	let selectedPage = false;
 
 	onMount(() => {
-		if (icons.length === 1) icons[0] = icon
-		checkIfSelected()
-	})
+		checkIfSelected();
+	});
 
 	function checkIfSelected() {
-		console.log(window.location.pathname, '/' + href)
+		console.log(window.location.pathname, '/' + href);
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>
@@ -35,12 +36,12 @@
 >
 	<div on:load={checkIfSelected}>
 		{#each icons as icon}
-		<Fa
-			{icon}
-			{size}
-			class="inline"
-			color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
-		/>
+			<Fa
+				{icon}
+				{size}
+				class="inline"
+				color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
+			/>
 		{/each}
 	</div>
 	<div

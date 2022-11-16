@@ -61,8 +61,8 @@
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
-				<Tag Class="w-32 mb-4 mt-4" tag={poll.tag_name} />
-				<div class="flex">
+				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
+				<div class="flex h-8">
 					{#if pollType === 1}
 						<HeaderIcon Class="p-2 pl-0" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
 					{:else if pollType === 3}

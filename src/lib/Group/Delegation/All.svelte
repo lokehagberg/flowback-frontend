@@ -131,7 +131,7 @@
 					class="cursor-pointer hover:underline flex items-center"
 					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
 				>
-					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+					<img src={delegate.profile_image ? `${import.meta.env.VITE_API}${delegate.profile_image}` : DefaultPFP} alt="avatar" class="w-10 h-10 rounded-full" />
 					<span class="text-black ml-4 mr-4">{delegate.username}</span>
 				</div>
 				{#if userId !== delegate.id}

@@ -13,6 +13,7 @@
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let users: User[] = [];
 	let loading = true;
@@ -78,7 +79,7 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 						href={`/user?id=${user.user_id}`}
 					>
-						<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+						<ProfilePicture user={user}/>
 						<div class="w-64 ml-10 hover:underline">{user.username}</div>
 					</a>
 				{/each}
@@ -89,7 +90,7 @@
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 					href={`/user?id=${user.id}`}
 				>
-					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+					<ProfilePicture user={user}/>
 					<div class="w-64 ml-10 hover">{user.username}</div>
 					<div class="w-64 ml-10 hover:underline">{$_('ACCEPT')}</div>
 				</a>
@@ -105,7 +106,7 @@
 					{#each searchedUsers as searchedUser}
 						<li class="text-black flex justify-between bg-white p-2 w-full mt-6">
 							<div class="flex">
-								<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+								<ProfilePicture user={searchedUser}/>
 								<div class="w-64 ml-10">{searchedUser.username}</div>
 							</div>
 

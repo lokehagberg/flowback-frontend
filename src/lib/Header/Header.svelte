@@ -10,8 +10,20 @@
 	import Logo from '$lib/assets/Logo.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
+	import { onMount } from 'svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
 
-	let sideHeaderOpen = false;
+	let sideHeaderOpen = false, profileImage = DefaultPFP;
+
+	onMount(() => {
+		getProfileImage();
+	})
+
+	const getProfileImage = async () => {
+		const {res, json} = await fetchRequest('GET', 'user')
+
+		if (res.ok && json.profile_image) profileImage = `${import.meta.env.VITE_API}${json.profile_image}`
+	}
 </script>
 
 <div class="sticky z-50 w-full top-0">
@@ -37,7 +49,7 @@
 			class="inline-block float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-			<img class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`} src={DefaultPFP} alt="default pfp" />
+			<img class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`} src={profileImage} alt="default pfp" />
 		</div>
 	</header>
 	{#if sideHeaderOpen}

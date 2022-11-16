@@ -116,7 +116,7 @@
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
-					<img src={DefaultPFP} alt="avatar" class="w-10 h-10" />
+					<img src={`${import.meta.env.VITE_API}${delegate.profile_image}` || DefaultPFP} alt="avatar" class="w-10 h-10 rounded-full" />
 					<a href={`/user?id=${delegate.id}`} class="hover:underline text-black w-64 ml-10"
 						>{delegate.username}</a
 					>

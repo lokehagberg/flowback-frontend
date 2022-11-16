@@ -46,7 +46,7 @@
 				</div>
 				<a href={`groups/${poll.group_id}`} class="text-black hover:underline">
 					<img
-						class="h-8 w-8 inline"
+						class="h-8 w-8 inline rounded-full"
 						src={`${import.meta.env.VITE_API}${poll.group_image}`}
 						alt="group thumbnail"
 					/>

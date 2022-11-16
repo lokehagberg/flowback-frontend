@@ -90,9 +90,9 @@
 
 <Layout centering={true}>
 	{#if !isEditing}
-		<img src={bannerImagePreview} class="bg-red-500 h-48 w-full" alt="banner" />
+		<img src={bannerImagePreview} class="cover" alt="banner" />
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
-			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full" alt="avatar" />
+			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
 			<a class={`block mt-6`} href={user.website || ''}>
 				{user.website || ''}
@@ -108,10 +108,10 @@
 			{/if}
 		</div>
 	{:else}
-		<label for="file-ip-2" class="h-48 w-full">
+		<label for="file-ip-2" class="cover">
 			<img
 				src={bannerImagePreview}
-				class="bg-red-500 h-48 w-full transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				class="cover transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -191,6 +191,7 @@
 				</p>
 			{/if}
 			<StatusMessage Class="mt-4" bind:status />
+			<span>{$_("Recommended ratios for images: 1:1 for profile, 4:1 for banner")}</span>
 			<div class="mt-6">
 				<ButtonPrimary Class="mt-4" action={updateProfile}>{$_('Save changes')}</ButtonPrimary>
 				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</ButtonPrimary
@@ -199,3 +200,15 @@
 		</form>
 	{/if}
 </Layout>
+
+<style>
+	img.cover {
+		aspect-ratio: 4;
+		/* width: 100%; */
+	}
+
+	img.profile {
+		width: 100px;
+		height: 100px;
+	}
+</style>

@@ -103,29 +103,39 @@
 			<StatusMessage Class="mt-6" bind:status />
 			{#if isUser}
 				<div class="mt-8">
-					<ButtonPrimary action={() => (isEditing = true)}>{$_("Edit profile")}</ButtonPrimary>
+					<ButtonPrimary action={() => (isEditing = true)}>{$_('Edit profile')}</ButtonPrimary>
 				</div>
 			{/if}
 		</div>
 	{:else}
-		<img src={bannerImagePreview} class="bg-red-500 h-48 w-full" alt="banner" />
+		<label for="file-ip-2" class="h-48 w-full">
+			<img
+				src={bannerImagePreview}
+				class="bg-red-500 h-48 w-full transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				alt="banner"
+			/>
+			<input
+				class="hidden"
+				type="file"
+				id="file-ip-2"
+				accept="image/*"
+				on:change={handleBannerImageChange}
+			/>
+		</label>
 		<form
 			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8"
 			on:submit|preventDefault={() => {}}
 		>
-			<label
-				>{$_('Banner Image')}
+			<label for="file-ip-1" class="inline">
+				<img
+					src={profileImagePreview}
+					class="mt-6 h-36 w-36 inline rounded-full transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+					alt="avatar"
+				/>
 				<input
+					class="hidden"
 					type="file"
-					id="file-ip-1"
-					accept="image/*"
-					on:change={handleBannerImageChange}
-				/></label
-			>
-			<img src={profileImagePreview} class="mt-6 h-36 w-36 inline rounded-full" alt="avatar" />
-			<label>
-				<input
-					type="file"
+					name="file-ip-1"
 					id="file-ip-1"
 					accept="image/*"
 					on:change={handleProfileImageChange}
@@ -138,12 +148,12 @@
 					onBlur={() => (currentlyEditing = null)}
 					label={'Name'}
 					bind:value={userEdit.username}
-					Class="mt-6 pt-8 pb-8 "
+					Class="mt-6 pt-8 pb-8 inline"
 				/>
 			{:else}
 				<h1
 					on:click={() => (currentlyEditing = 'name')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
 				>
 					{$_(userEdit.username || 'Add Username')}
 				</h1>

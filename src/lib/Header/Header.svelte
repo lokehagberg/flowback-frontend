@@ -8,6 +8,7 @@
 	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import Logo from '$lib/assets/Logo.png';
+	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
@@ -31,7 +32,7 @@
 		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 bg-white shadow select-none"
 	>
 		<a href="/home" class="md:w-auto"
-			><img src={Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a
+			><img src={import.meta.env.VITE_LOGO === "REFORUM" ? Reforum : Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a
 		>
 		<div class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />

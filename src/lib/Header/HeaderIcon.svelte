@@ -31,7 +31,7 @@
 	on:mouseover={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:focus
-	href={'/' + href}
+	href={href === "/" ? window.location.href : '/' + href}
 	class={`p-4 relative cursor-pointer ${Class}`}
 >
 	<div on:load={checkIfSelected}>

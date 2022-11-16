@@ -5,6 +5,7 @@
 	import { _ } from 'svelte-i18n';
 
 	export let group: Group;
+	let pending = false;
 
 	const goToGroup = () => {
 		if (group.joined) window.location.href = `/groups/${group.id}`;
@@ -40,10 +41,14 @@
 	</div>
 
 	<div class="flex justify-center mb-6">
-		{#if !group.joined}
+		{#if !group.joined && pending === false}
 			<ButtonPrimary
 				action={async () => {
-					if (!group.direct_join) return;
+					if (!group.direct_join) {
+						pending = true;
+						return;
+					}
+
 					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
 					if (res.ok) {
 						group.joined = !group.joined;
@@ -53,6 +58,8 @@
 				Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</ButtonPrimary
 			>
+		{:else if pending === true}
+			<div>{$_('Pending invite')}</div>
 		{/if}
 	</div>
 </div>

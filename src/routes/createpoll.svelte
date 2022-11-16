@@ -76,7 +76,7 @@
 		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
-		daysBetweenPhases = 1;
+		daysBetweenPhases = 0;
 
 	const groupId = $page.url.searchParams.get('id');
 

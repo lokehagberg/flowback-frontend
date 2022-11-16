@@ -142,7 +142,7 @@
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-			<div class="">{$_("Chat")}</div>
+			<div class="text-xl font-light text-gray-500">{$_("Chat")}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
 				<Fa size="1.5x" icon={faX} />
 			</div>

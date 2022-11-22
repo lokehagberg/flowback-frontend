@@ -118,7 +118,7 @@
 				icon={faPoll}
 				isSelected={false}
 			/></a>
-			<a class="text-black" href={`https://meet.flowback.org/${group.jitsi_room}`}> <GroupSidebarButton
+			<a class="text-black" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}> <GroupSidebarButton
 				text="Video Conference"
 				icon={faVideoCamera}
 				isSelected={false}

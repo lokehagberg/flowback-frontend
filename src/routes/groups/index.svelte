@@ -1,24 +1,30 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import GroupThumbnail from '$lib/Group/GroupThumbnail.svelte';
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
-	let groupList: Group[] = [];
+	let groupList: Group[] = [],
+		status: StatusMessageInfo;
 
 	onMount(() => {
 		getGroups();
 	});
 
 	const getGroups = async () => {
-		const { json } = await fetchRequest('GET', 'group/list?limit=100');
-		groupList = json.results.reverse();
+		const { res, json } = await fetchRequest('GET', 'group/list?limit=100');
+		status = statusMessageFormatter(res, json);
+		if (res.ok) groupList = json.results.reverse();
 	};
 </script>
 
 <Layout centering={true}>
+	<StatusMessage bind:status />
 	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1100px]">
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
 			<a

@@ -15,6 +15,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { formatDate } from './functions';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -260,6 +261,7 @@
 			}
 		);
 
+		status = statusMessageFormatter(res, json);
 		//TODO replace with svelte store
 		const userId = (await fetchRequest('GET', 'user')).json.id;
 
@@ -277,12 +279,6 @@
 			);
 
 		unsaved = false;
-
-		if (res.ok) status = { message: 'Success', success: true };
-		else if (json.detail) {
-			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
-			if (errorMessage) status = { message: errorMessage, success: false };
-		}
 	};
 
 	const getVotings = async () => {
@@ -365,7 +361,7 @@
 			{/if}
 		</div>
 	{/if}
-	<div class={`${new Date(votingStartTime) <= new Date() ? "lg:w-1/2" : "lg:w-full"}`}>
+	<div class={`${new Date(votingStartTime) <= new Date() ? 'lg:w-1/2' : 'lg:w-full'}`}>
 		<div class="text-2xl p-6 select-none">
 			{$_(new Date(votingStartTime) <= new Date() ? 'Abstain' : 'Proposals')}
 		</div>

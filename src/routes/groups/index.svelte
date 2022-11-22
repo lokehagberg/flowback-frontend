@@ -24,6 +24,7 @@
 </script>
 
 <Layout centering={true}>
+	<!-- TODO: design of statusmessage is off -->
 	<StatusMessage bind:status />
 	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1100px]">
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}

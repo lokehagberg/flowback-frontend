@@ -4,14 +4,17 @@
 
 	export let Class = '';
 	export let status: StatusMessageInfo;
+	export let disableSuccess = false;
 </script>
 
 {#if status !== null && status !== undefined}
-	<div
-		class={`border w-full pt-2 pb-2 text-center rounded ${Class} ${
-			status.success ? 'border-green-500' : 'border-red-500'
-		}`}
-	>
-		{$_(status.message || (status.success ? "Success" :"Something went wrong"))}
-	</div>
+	{#if (disableSuccess && !status.success) || !disableSuccess}
+		<div
+			class={`border w-full pt-2 pb-2 text-center rounded ${Class} ${
+				status.success ? 'border-green-500' : 'border-red-500'
+			}`}
+		>
+			{$_(status.message || (status.success ? 'Success' : 'Something went wrong'))}
+		</div>
+	{/if}
 {/if}

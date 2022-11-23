@@ -166,8 +166,8 @@
 	</div>
 	<h1 class="mt-4 text-left">{$_('Create Task')}</h1>
 	<form on:submit|preventDefault={createKanbanEntry}>
-		<TextInput required label="title" bind:value={title} />
-		<TextArea required label="description" bind:value={description} />
+		<TextInput required label="Title" bind:value={title} />
+		<TextArea required label="Description" bind:value={description} />
 		<select on:input={handleChangeAssignee}>
 			{#each users as user}
 				<option value={user.user_id}>{user.username}</option>

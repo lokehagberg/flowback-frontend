@@ -24,7 +24,8 @@
 		title = '',
 		assignee = 0,
 		users: User[] = [],
-		status: StatusMessageInfo;
+		status: StatusMessageInfo,
+		selectedEntry: number;
 
 	onMount(() => {
 		getKanbanEntries();
@@ -47,7 +48,7 @@
 	};
 
 	const handleChangeAssignee = (e: any) => {
-		assignee = e.target.value;
+		assignee = Number(e.target.value);
 	};
 
 	const getGroupUsers = async () => {
@@ -67,15 +68,22 @@
 			}
 		);
 		status = statusMessageFormatter(res, json);
-		kanbanEntries.push({
-			assignee: {id:assignee, profile_image:"", username:"test"},
-			description,
-			tag: 1,
-			title,
-            id: json,
-            created_by: 1
-		});
-        kanbanEntries = kanbanEntries
+		const userAssigned = users.find((user) => assignee === user.user_id);
+		console.log(users, assignee);
+		if (userAssigned)
+			kanbanEntries.push({
+				assignee: {
+					id: assignee,
+					profile_image: userAssigned.profile_image || '',
+					username: userAssigned.username
+				},
+				description,
+				tag: 1,
+				title,
+				id: json,
+				created_by: 1
+			});
+		kanbanEntries = kanbanEntries;
 	};
 
 	//Untested
@@ -103,7 +111,13 @@
 					{#each kanbanEntries as kanban}
 						{#if kanban.tag === i}
 							<li class="border border-gray-200 hover:bg-gray-200 p-2" in:fade>
-								<div on:click={() => (openModal = true)} class="cursor-pointer hover:underline">
+								<div
+									on:click={() => {
+										openModal = true;
+										selectedEntry = kanban.id;
+									}}
+									class="cursor-pointer hover:underline"
+								>
 									<div class="text-xl">{kanban.title}</div>
 								</div>
 								<div class="mt-2 flex gap-2 items-center">
@@ -135,12 +149,14 @@
 									</div>
 								</div>
 							</li>
-							<Modal bind:open={openModal}>
-								<div slot="header">{kanban.title}</div>
-								<div slot="body">
-									{kanban.description}
-								</div>
-							</Modal>
+							{#if kanban.id === selectedEntry}
+								<Modal bind:open={openModal}>
+									<div slot="header" class="p-4">{kanban.title}</div>
+									<div slot="body" class="p-5">
+										{kanban.description}
+									</div>
+								</Modal>
+							{/if}
 						{/if}
 					{/each}
 				</ul>

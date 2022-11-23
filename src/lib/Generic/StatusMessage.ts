@@ -1,5 +1,4 @@
 export const statusMessageFormatter = (res: any, json: any, successMessage: string = 'Success') => {
-	console.log("LENGTH")
 	if (res.ok) {
 		return { message: successMessage, success: true };
 	} else if (res.status - 500 >= 0) {
@@ -11,7 +10,7 @@ export const statusMessageFormatter = (res: any, json: any, successMessage: stri
 			// return { message: 'Invalid token.', success: false };
 		}
 		const messages = json.detail;
-		if (messages[0].length > 1) return { message: messages[0], success: false };
+		if (messages[0] && messages[0].length > 1) return { message: messages[0], success: false };
 		else {
 			const errorMessage = json.detail[Object.keys(json.detail)[0]][0];
 			if (errorMessage) return { message: errorMessage, success: false };

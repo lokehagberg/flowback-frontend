@@ -27,6 +27,7 @@
 	let abstained: proposal[];
 	let DeletePollModalShow = false;
 	let pollType = 1;
+	let finished: boolean;
 
 	$: console.log(abstained, 'ABS');
 
@@ -42,6 +43,7 @@
 
 		poll = json.results[0];
 		pollType = json.results[0].poll_type;
+		finished = new Date(json.results[0].end_date) < new Date();
 	};
 
 	const deletePoll = async () => {
@@ -64,7 +66,11 @@
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
 				<div class="flex h-8">
 					{#if pollType === 1}
-						<HeaderIcon Class="p-2 pl-0 cursor-default" icons={[faArrowUp, faArrowDown]} text={'Ranking'} />
+						<HeaderIcon
+							Class="p-2 pl-0 cursor-default"
+							icons={[faArrowUp, faArrowDown]}
+							text={'Ranking'}
+						/>
 					{:else if pollType === 3}
 						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 					{/if}
@@ -72,7 +78,9 @@
 				</div>
 			</div>
 			<!-- <div class="italic mt-4">Group name</div> -->
-			{#if !poll.finished}
+			{#if finished}
+				<Results {pollType} />
+			{:else}
 				{#if new Date(poll.proposal_end_date) <= new Date()}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				{/if}
@@ -94,8 +102,6 @@
 						<ScheduledSubmission bind:abstained />
 					{/if}
 				{/if}
-			{:else}
-				<Results {pollType} />
 			{/if}
 			<Timeline
 				dates={[
@@ -110,7 +116,10 @@
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
-				<div slot="body">{$_('Are you sure you want to delete this poll?')} {$_('This will only work if you are an admin')}</div>
+				<div slot="body">
+					{$_('Are you sure you want to delete this poll?')}
+					{$_('This will only work if you are an admin')}
+				</div>
 				<div slot="footer">
 					<div class="flex justify-center gap-16">
 						<ButtonPrimary action={deletePoll} Class="bg-red-500">{$_('Yes')}</ButtonPrimary

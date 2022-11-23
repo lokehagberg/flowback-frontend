@@ -19,11 +19,10 @@
 		loading = true;
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
-
-		status = statusMessageFormatter(res, json)
-
+		
+		status = statusMessageFormatter(res, json, "Successfully logged in")
+		console.log(status, "STATS")
 		if (json.token) {
-			status = { message: 'Successfully logged in', success: true };
 			localStorage.setItem('token', json.token);
 			// localStorage.setItem('userInfo', json)
 

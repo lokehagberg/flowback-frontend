@@ -13,6 +13,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
+	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -95,8 +96,8 @@
 			<GroupSidebarButton
 				action={() => (selectedPage = 'kanban')}
 				isSelected={selectedPage === 'kanban'}
-				text="Kanban"
-				icon={faFile}
+				text="Group Kanban"
+				icon={faList}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}

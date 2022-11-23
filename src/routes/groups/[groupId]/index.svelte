@@ -19,6 +19,7 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 	import Kanban from '$lib/Group/Kanban.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -43,8 +44,9 @@
 	});
 
 	const setUserGroupInfo = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
 		userIsDelegateStore.set(json.results[0].delegate);
+		statusMessageFormatter(res, json)
 	};
 
 	const getGroupInfo = async () => {
@@ -52,6 +54,7 @@
 		group = json;
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
+		statusMessageFormatter(res, json)
 	};
 </script>
 

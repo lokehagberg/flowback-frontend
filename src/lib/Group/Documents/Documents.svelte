@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Folder from './Folder.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let root = [
 		{
@@ -49,8 +50,8 @@
 </script>
 
 <div class="w-full bg-white shadow rounded p-4 pt-6">
-	<a href={`https://drive.google.com/drive/u/0/folders/${folderId}`}
-		><ButtonPrimary Class="p-6">Gå till huvudmappen</ButtonPrimary></a
+	<a on:click={() => open(`https://drive.google.com/drive/u/0/folders/${folderId}`)} target="_blank" href={`https://drive.google.com/drive/u/0/folders/${folderId}`}
+		><ButtonPrimary Class="p-6">{$_("Go to main folder")}</ButtonPrimary></a
 	>
 	<iframe
 		title="Documents"

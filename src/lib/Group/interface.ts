@@ -97,7 +97,7 @@ export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
 
 export interface kanban {
-	assignee: number;
+	assignee: { id: number; profile_image: string; username: string };
 	created_by: number;
 	description: string;
 	id: number;

@@ -1,8 +1,10 @@
 <script lang="ts">
-	export let user: any;
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	
+	export let user: any;
 </script>
 
+<!-- TODO: Simplify this function to only take images as input or include name -->
 {#if user.profile_image}
 	<img
 		src={`${import.meta.env.VITE_API}${user.profile_image}`}

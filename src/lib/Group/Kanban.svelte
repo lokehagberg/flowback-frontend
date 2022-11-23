@@ -8,11 +8,13 @@
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import type { kanban } from './interface';
+	import { page } from '$app/stores';
+    import { fade } from 'svelte/transition';
 
 	onMount(() => {
-		getKanbanEntries();
+		// getKanbanEntries();
 		// createKanbanEntry();
-		updateKanbanEntry();
+		// updateKanbanEntry();
 		// deleteKanbanEntry();
 	});
 
@@ -46,12 +48,23 @@
 	const getKanbanEntries = async () => {
 		const { res, json } = await fetchRequest('GET', 'home/kanban');
 		statusMessageFormatter(res, json);
-		if (res.ok) kanbanEntries = json.results;
 		return json.results;
 	};
 
 	const tags = ['Backlog', 'To Do', 'In Progress', 'Evaluation', 'Done'];
-	let kanbanEntries: kanban[];
+    let kanbanEntries:kanban[] = [];
+
+	const handleUpdateKanban = async (kanban: Partial<kanban>) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
+			{
+				kanban
+			}
+		);
+		statusMessageFormatter(res, json);
+	};
+
 	let openModal = false;
 </script>
 
@@ -66,26 +79,32 @@
 					{:then kanbanEntries}
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<li class="border border-gray-200 hover:bg-gray-200 p-2">
+								<li class="border border-gray-200 hover:bg-gray-200 p-2" in:fade>
 									<div on:click={() => (openModal = true)} class="cursor-pointer hover:underline">
 										<div>{kanban.title}</div>
 									</div>
 									<div class="flex justify-between mt-2">
-										<div class="cursor-pointer">
+										<div
+											class="cursor-pointer"
+											on:click={() => kanban.tag -= 1}
+										>
 											<Fa icon={faArrowLeft} size="1.5x" />
 										</div>
-										<div class="cursor-pointer">
+										<div
+											class="cursor-pointer"
+											on:click|preventDefault={() => handleUpdateKanban({ id: kanban.id, tag: kanban.tag + 1 })}
+										>
 											<Fa icon={faArrowRight} size="1.5x" />
 										</div>
 									</div>
 								</li>
+								<Modal bind:open={openModal}>
+									<div slot="header">{kanban.title}</div>
+									<div slot="body">
+										{kanban.description}
+									</div>
+								</Modal>
 							{/if}
-                            <Modal bind:open={openModal}>
-                                <div slot="header">{kanban.title}</div>
-                                <div slot="body">
-                                    {kanban.description}
-                                </div>
-                            </Modal>
 						{/each}
 					{/await}
 				</ul>

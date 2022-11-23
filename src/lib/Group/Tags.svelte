@@ -81,16 +81,16 @@
 							>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
 						>
 						<Modal bind:open={areYouSureModal}>
-							<div slot="header">Är du säker?</div>
-							<div slot="body">Att ta bort en tagg tar bort alla omröstningar med den taggen!</div>
+							<div slot="header">{$_("Are you sure?")}</div>
+							<div slot="body">{$_("Removing a tagg removes all polls with that tag!")}</div>
 							<div slot="footer">
 								<ButtonPrimary
 									action={() => {
 										removeTag(tag);
 										areYouSureModal = false;
-									}} Class="bg-red-500">Ja</ButtonPrimary
+									}} Class="bg-red-500">{$_("Yes")}</ButtonPrimary
 								>
-								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">Nej</ButtonPrimary>
+								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_("No")}</ButtonPrimary>
 							</div>
 						</Modal>
 					</div>

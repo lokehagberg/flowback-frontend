@@ -8,13 +8,14 @@ export type SelectablePage =
 	| 'email'
 	| 'statistics'
 	| 'delegation'
-	| 'tags';
+	| 'tags'
+	| 'kanban';
 
 export interface User {
 	username: string;
 	id: number;
 	profile_image: null;
-	user_id:number
+	user_id: number;
 }
 
 export interface DelegatePools {
@@ -94,3 +95,12 @@ export const userGroupInfo = writable({
 */
 export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
+
+export interface kanban {
+	assignee: number;
+	created_by: number;
+	description: string;
+	id: number;
+	tag: number;
+	title: string;
+}

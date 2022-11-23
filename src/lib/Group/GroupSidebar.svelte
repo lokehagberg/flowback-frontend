@@ -93,6 +93,12 @@
 				icon={faFile}
 			/>
 			<GroupSidebarButton
+				action={() => (selectedPage = 'kanban')}
+				isSelected={selectedPage === 'kanban'}
+				text="Kanban"
+				icon={faFile}
+			/>
+			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
 				text="Members"
 				icon={faUserGroup}

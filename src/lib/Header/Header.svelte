@@ -43,7 +43,7 @@
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
 			{/if}
-			<HeaderIcon icon={faList} text="Kanban" href="kanban" />
+			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
 		</div>
 
 		<div

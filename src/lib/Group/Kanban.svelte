@@ -30,10 +30,12 @@
 	export let type: 'home' | 'group'
 
 	onMount(() => {
-		if (type === 'group') getKanbanEntries();
+		if (type === 'group'){
+			getKanbanEntries();
+			getGroupUsers();
+		} 
 		else if (type === 'home') getKanbanEntriesHome();
 
-		getGroupUsers();
 	});
 
 	const getKanbanEntries = async () => {
@@ -43,7 +45,8 @@
 	};
 	
 	const getKanbanEntriesHome = async () => {
-		const { res, json } = await fetchRequest('GET', 'home/kanban');
+		const user = await fetchRequest('GET', 'user');
+		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}`);
 		statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -109,7 +112,7 @@
 	};
 </script>
 
-<div class="bg-white p-2 rounded-2xl">
+<div class="mt-6 bg-white p-2 rounded-2xl">
 	<div class="flex justify-between">
 		<!-- {#await promise}
 			<div>Loading...</div>
@@ -132,7 +135,7 @@
 								>
 									<div class="text-sm break-all">{kanban.title}</div>
 								</div>
-								<div class="mt-2 flex gap-2 items-center text-sm">
+								<div class="mt-2 md:flex gap-2 items-center text-sm">
 									<ProfilePicture user={kanban.assignee} />
 									<div class="break-all">{kanban.assignee.username}</div>
 								</div>

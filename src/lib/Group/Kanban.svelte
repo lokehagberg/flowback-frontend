@@ -27,7 +27,7 @@
 		status: StatusMessageInfo,
 		selectedEntry: number;
 	
-	export let type: 'home' | 'group'
+	export let type: 'home' | 'group', Class=""
 
 	onMount(() => {
 		if (type === 'group'){
@@ -112,7 +112,7 @@
 	};
 </script>
 
-<div class="mt-6 bg-white p-2 rounded-2xl">
+<div class={"mt-6 bg-white p-2 rounded-2xl " + Class}>
 	<div class="flex justify-between">
 		<!-- {#await promise}
 			<div>Loading...</div>

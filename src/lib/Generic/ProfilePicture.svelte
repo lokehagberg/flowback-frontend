@@ -1,7 +1,9 @@
 <script lang="ts">
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	
-	export let user: any;
+	export let user: any,
+	//TODO: Always display username, replace all instance of username with this file
+	displayName = false;
 </script>
 
 <!-- TODO: Simplify this function to only take images as input or include name -->
@@ -19,4 +21,8 @@
 	/>
 {:else}
 	<img src={DefaultPFP} alt="avatar" class="w-10 h-10 rounded-full" />
+{/if}
+
+{#if displayName}
+{user.username}
 {/if}

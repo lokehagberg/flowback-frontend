@@ -16,6 +16,7 @@
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let delegates: Delegate[] = [];
 	let tags: any[] = [];
@@ -49,7 +50,6 @@
 	const setTagList = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
 		tags = json.results.map(({ active, ...args }: any) => args);
-		console.log(tags);
 	};
 
 	const getDelegatesUserInfo = async () => {
@@ -57,7 +57,6 @@
 			'GET',
 			`group/${$page.params.groupId}/users?limit=100&delegate=true`
 		);
-		console.log(json.results, 'JSON');
 		return json.results;
 	};
 
@@ -116,10 +115,7 @@
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
-					<img src={`${import.meta.env.VITE_API}${delegate.profile_image}` || DefaultPFP} alt="avatar" class="w-10 h-10 rounded-full" />
-					<a href={`/user?id=${delegate.id}`} class="hover:underline text-black w-64 ml-10"
-						>{delegate.username}</a
-					>
+					<ProfilePicture user={delegate}/>
 				</div>
 				<div class="flex items-center">
 					<div class="flex gap-2 flex-wrap mt-4">

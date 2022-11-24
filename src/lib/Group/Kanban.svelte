@@ -99,18 +99,19 @@
 	};
 </script>
 
-<div class="bg-white p-6">
+<div class="bg-white p-2 rounded-2xl">
 	<div class="flex justify-between">
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
-			<div class="flex-1">
-				<span class="font-bold text-xl">{tag}</span>
+			<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
+				<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
+				<span class="text-sm p-1">{tag}</span>
 				<ul class="flex flex-col mt-2">
 					{#each kanbanEntries as kanban}
 						{#if kanban.tag === i}
-							<li class="border border-gray-200 hover:bg-gray-200 p-2" in:fade>
+							<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
 								<div
 									on:click={() => {
 										openModal = true;
@@ -118,9 +119,9 @@
 									}}
 									class="cursor-pointer hover:underline"
 								>
-									<div class="text-xl">{kanban.title}</div>
+									<div class="text-sm">{kanban.title}</div>
 								</div>
-								<div class="mt-2 flex gap-2 items-center">
+								<div class="mt-2 flex gap-2 items-center text-sm">
 									<ProfilePicture user={kanban.assignee} />
 									<div>{kanban.assignee.username}</div>
 								</div>
@@ -164,16 +165,18 @@
 		{/each}
 		<!-- {/await} -->
 	</div>
-	<h1 class="mt-4 text-left">{$_('Create Task')}</h1>
-	<form on:submit|preventDefault={createKanbanEntry}>
-		<TextInput required label="Title" bind:value={title} />
-		<TextArea required label="Description" bind:value={description} />
-		<select on:input={handleChangeAssignee}>
-			{#each users as user}
-				<option value={user.user_id}>{user.username}</option>
-			{/each}
-		</select>
-		<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
-		<StatusMessage Class="mt-2" bind:status />
-	</form>
+	<div class="pl-4 pr-4 pb-4">
+		<h1 class="mt-4 text-left">{$_('Create task')}</h1>
+		<form on:submit|preventDefault={createKanbanEntry}>
+			<TextInput required label="Title" bind:value={title} />
+			<TextArea required label="Description" bind:value={description} />
+			<select on:input={handleChangeAssignee}>
+				{#each users as user}
+					<option value={user.user_id}>{user.username}</option>
+				{/each}
+			</select>
+			<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
+			<StatusMessage Class="mt-2" bind:status />
+		</form>
+	</div>
 </div>

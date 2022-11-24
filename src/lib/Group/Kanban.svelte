@@ -67,6 +67,7 @@
 	const getGroupUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
+		assignee = json.results[0].user_id
 	};
 
 	const createKanbanEntry = async () => {
@@ -81,6 +82,9 @@
 			}
 		);
 		status = statusMessageFormatter(res, json);
+		
+		if(!res.ok) return;
+
 		const userAssigned = users.find((user) => assignee === user.user_id);
 		console.log(users, assignee);
 		if (userAssigned)
@@ -96,7 +100,11 @@
 				id: json,
 				created_by: 1
 			});
+
 		kanbanEntries = kanbanEntries;
+
+		description = ''
+		title = ''
 	};
 
 	//Untested
@@ -139,6 +147,8 @@
 									<ProfilePicture user={kanban.assignee} />
 									<div class="break-all">{kanban.assignee.username}</div>
 								</div>
+								<!-- Arrows -->
+								{#if type === "group"}
 								<div class="flex justify-between mt-3">
 									<div
 										class="cursor-pointer hover:text-gray-500"
@@ -163,6 +173,7 @@
 										<Fa icon={faArrowRight} size="1.5x" />
 									</div>
 								</div>
+								 {/if}
 							</li>
 							{#if kanban.id === selectedEntry}
 								<Modal bind:open={openModal}>

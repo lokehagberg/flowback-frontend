@@ -98,6 +98,11 @@ export const userIdStore = writable(0);
 
 export interface kanban {
 	assignee: { id: number; profile_image: string; username: string };
+	group: {
+		id: number;
+		image: string;
+		name: string;
+	};
 	created_by: number;
 	description: string;
 	id: number;

@@ -26,16 +26,15 @@
 		users: User[] = [],
 		status: StatusMessageInfo,
 		selectedEntry: number;
-	
-	export let type: 'home' | 'group', Class=""
+
+	export let type: 'home' | 'group',
+		Class = '';
 
 	onMount(() => {
-		if (type === 'group'){
+		if (type === 'group') {
 			getKanbanEntries();
 			getGroupUsers();
-		} 
-		else if (type === 'home') getKanbanEntriesHome();
-
+		} else if (type === 'home') getKanbanEntriesHome();
 	});
 
 	const getKanbanEntries = async () => {
@@ -43,7 +42,7 @@
 		statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
-	
+
 	const getKanbanEntriesHome = async () => {
 		const user = await fetchRequest('GET', 'user');
 		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}`);
@@ -67,7 +66,7 @@
 	const getGroupUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
-		assignee = json.results[0].user_id
+		assignee = json.results[0].user_id;
 	};
 
 	const createKanbanEntry = async () => {
@@ -82,8 +81,8 @@
 			}
 		);
 		status = statusMessageFormatter(res, json);
-		
-		if(!res.ok) return;
+
+		if (!res.ok) return;
 
 		const userAssigned = users.find((user) => assignee === user.user_id);
 		console.log(users, assignee);
@@ -94,6 +93,7 @@
 					profile_image: userAssigned.profile_image || '',
 					username: userAssigned.username
 				},
+				group: { id: 0, image: '', name: '' },
 				description,
 				tag: 1,
 				title,
@@ -103,8 +103,8 @@
 
 		kanbanEntries = kanbanEntries;
 
-		description = ''
-		title = ''
+		description = '';
+		title = '';
 	};
 
 	//Untested
@@ -120,91 +120,93 @@
 	};
 </script>
 
-<div class={"mt-6 bg-white p-2 rounded-2xl " + Class}>
+<div class={'mt-6 bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex justify-between">
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
 			{#if i !== 0}
-			<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
-				<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
-				<span class="text-sm p-1">{$_(tag)}</span>
-				<ul class="flex flex-col mt-2">
-					{#each kanbanEntries as kanban}
-						{#if kanban.tag === i}
-							<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
-								<div
-									on:click={() => {
-										openModal = true;
-										selectedEntry = kanban.id;
-									}}
-									class="cursor-pointer hover:underline"
-								>
-									<div class="text-sm break-all">{kanban.title}</div>
-								</div>
-								<div class="mt-2 md:flex gap-2 items-center text-sm">
-									<ProfilePicture user={kanban.assignee} />
-									<div class="break-all">{kanban.assignee.username}</div>
-								</div>
-								<!-- Arrows -->
-								{#if type === "group"}
-								<div class="flex justify-between mt-3">
+				<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
+					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
+					<span class="text-sm p-1">{$_(tag)}</span>
+					<ul class="flex flex-col mt-2">
+						{#each kanbanEntries as kanban}
+							{#if kanban.tag === i}
+								<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
 									<div
-										class="cursor-pointer hover:text-gray-500"
 										on:click={() => {
-											if (kanban.tag > 0) {
-												handleUpdateKanban({ id: kanban.id, tag: kanban.tag - 1 });
-												kanban.tag -= 1;
-											}
+											openModal = true;
+											selectedEntry = kanban.id;
 										}}
+										class="cursor-pointer hover:underline"
 									>
-										<Fa icon={faArrowLeft} size="1.5x" />
+										<div class="text-sm break-all">{kanban.title}</div>
 									</div>
-									<div
-										class="cursor-pointer hover:text-gray-500"
-										on:click={() => {
-											if (kanban.tag < tags.length) {
-												handleUpdateKanban({ id: kanban.id, tag: kanban.tag + 1 });
-												kanban.tag += 1;
-											}
-										}}
-									>
-										<Fa icon={faArrowRight} size="1.5x" />
+									<div class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline" on:click={() => window.location.href = type === 'group' ? `/user?id=${kanban.assignee.id}` :`groups/${kanban.group.id}`}>
+										<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} />
+										<div class="break-all">
+											{type === 'group' ? kanban.assignee.username : kanban.group.name}
+										</div>
 									</div>
-								</div>
-								 {/if}
-							</li>
-							{#if kanban.id === selectedEntry}
-								<Modal bind:open={openModal}>
-									<div slot="header" class="p-4">{kanban.title}</div>
-									<div slot="body" class="p-5">
-										{kanban.description}
-									</div>
-								</Modal>
+									<!-- Arrows -->
+									{#if type === 'group'}
+										<div class="flex justify-between mt-3">
+											<div
+												class="cursor-pointer hover:text-gray-500"
+												on:click={() => {
+													if (kanban.tag > 0) {
+														handleUpdateKanban({ id: kanban.id, tag: kanban.tag - 1 });
+														kanban.tag -= 1;
+													}
+												}}
+											>
+												<Fa icon={faArrowLeft} size="1.5x" />
+											</div>
+											<div
+												class="cursor-pointer hover:text-gray-500"
+												on:click={() => {
+													if (kanban.tag < tags.length) {
+														handleUpdateKanban({ id: kanban.id, tag: kanban.tag + 1 });
+														kanban.tag += 1;
+													}
+												}}
+											>
+												<Fa icon={faArrowRight} size="1.5x" />
+											</div>
+										</div>
+									{/if}
+								</li>
+								{#if kanban.id === selectedEntry}
+									<Modal bind:open={openModal}>
+										<div slot="header" class="p-4">{kanban.title}</div>
+										<div slot="body" class="p-5">
+											{kanban.description}
+										</div>
+									</Modal>
+								{/if}
 							{/if}
-						{/if}
-					{/each}
-				</ul>
-			</div>
+						{/each}
+					</ul>
+				</div>
 			{/if}
 		{/each}
 		<!-- {/await} -->
 	</div>
-	{#if type === "group"}
-	<div class="pl-4 pr-4 pb-4">
-		<h1 class="mt-4 text-left">{$_('Create task')}</h1>
-		<form on:submit|preventDefault={createKanbanEntry}>
-			<TextInput required label="Title" bind:value={title} />
-			<TextArea required label="Description" bind:value={description} />
-			<select on:input={handleChangeAssignee}>
-				{#each users as user}
-					<option value={user.user_id}>{user.username}</option>
-				{/each}
-			</select>
-			<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
-			<StatusMessage Class="mt-2" bind:status />
-		</form>
-	</div>
+	{#if type === 'group'}
+		<div class="pl-4 pr-4 pb-4">
+			<h1 class="mt-4 text-left">{$_('Create task')}</h1>
+			<form on:submit|preventDefault={createKanbanEntry}>
+				<TextInput required label="Title" bind:value={title} />
+				<TextArea required label="Description" bind:value={description} />
+				<select on:input={handleChangeAssignee}>
+					{#each users as user}
+						<option value={user.user_id}>{user.username}</option>
+					{/each}
+				</select>
+				<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
+				<StatusMessage Class="mt-2" bind:status />
+			</form>
+		</div>
 	{/if}
 </div>

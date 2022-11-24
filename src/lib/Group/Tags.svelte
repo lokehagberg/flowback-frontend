@@ -72,25 +72,28 @@
 				<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
 					<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
 					<div class="mt-2 w-full flex flex-col gap-2">
+						<ButtonPrimary disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
+							>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
+						>
 						<ButtonPrimary
 							disabled={loading}
 							Class="bg-rose-500"
 							action={() => (areYouSureModal = true)}>{$_('Delete')}</ButtonPrimary
 						>
-						<ButtonPrimary disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
-							>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
-						>
 						<Modal bind:open={areYouSureModal}>
-							<div slot="header">{$_("Are you sure?")}</div>
-							<div slot="body">{$_("Removing a tagg removes all polls with that tag!")}</div>
+							<div slot="header">{$_('Are you sure?')}</div>
+							<div slot="body">{$_('Removing a tagg removes all polls with that tag!')}</div>
 							<div slot="footer">
 								<ButtonPrimary
 									action={() => {
 										removeTag(tag);
 										areYouSureModal = false;
-									}} Class="bg-red-500">{$_("Yes")}</ButtonPrimary
+									}}
+									Class="bg-red-500">{$_('Yes')}</ButtonPrimary
 								>
-								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_("No")}</ButtonPrimary>
+								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+									>{$_('No')}</ButtonPrimary
+								>
 							</div>
 						</Modal>
 					</div>

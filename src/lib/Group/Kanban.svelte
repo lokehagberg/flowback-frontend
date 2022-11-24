@@ -17,7 +17,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
-	const tags = ['Backlog', 'To Do', 'In Progress', 'Evaluation', 'Done'];
+	const tags = ['', 'Backlog', 'To Do', 'In Progress', 'Evaluation', 'Done'];
 	let kanbanEntries: kanban[] = [];
 	let openModal = false;
 	let description = '',
@@ -26,14 +26,24 @@
 		users: User[] = [],
 		status: StatusMessageInfo,
 		selectedEntry: number;
+	
+	export let type: 'home' | 'group'
 
 	onMount(() => {
-		getKanbanEntries();
+		if (type === 'group') getKanbanEntries();
+		else if (type === 'home') getKanbanEntriesHome();
+
 		getGroupUsers();
 	});
 
 	const getKanbanEntries = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban`);
+		statusMessageFormatter(res, json);
+		kanbanEntries = json.results;
+	};
+	
+	const getKanbanEntriesHome = async () => {
+		const { res, json } = await fetchRequest('GET', 'home/kanban');
 		statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -105,6 +115,7 @@
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
+			{#if i !== 0}
 			<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
 				<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 				<span class="text-sm p-1">{tag}</span>
@@ -119,11 +130,11 @@
 									}}
 									class="cursor-pointer hover:underline"
 								>
-									<div class="text-sm">{kanban.title}</div>
+									<div class="text-sm break-all">{kanban.title}</div>
 								</div>
 								<div class="mt-2 flex gap-2 items-center text-sm">
 									<ProfilePicture user={kanban.assignee} />
-									<div>{kanban.assignee.username}</div>
+									<div class="break-all">{kanban.assignee.username}</div>
 								</div>
 								<div class="flex justify-between mt-3">
 									<div
@@ -162,9 +173,11 @@
 					{/each}
 				</ul>
 			</div>
+			{/if}
 		{/each}
 		<!-- {/await} -->
 	</div>
+	{#if type === "group"}
 	<div class="pl-4 pr-4 pb-4">
 		<h1 class="mt-4 text-left">{$_('Create task')}</h1>
 		<form on:submit|preventDefault={createKanbanEntry}>
@@ -179,4 +192,5 @@
 			<StatusMessage Class="mt-2" bind:status />
 		</form>
 	</div>
+	{/if}
 </div>

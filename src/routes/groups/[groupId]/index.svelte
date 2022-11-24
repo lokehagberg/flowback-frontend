@@ -46,7 +46,7 @@
 	const setUserGroupInfo = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
 		userIsDelegateStore.set(json.results[0].delegate);
-		statusMessageFormatter(res, json)
+		statusMessageFormatter(res, json);
 	};
 
 	const getGroupInfo = async () => {
@@ -54,7 +54,7 @@
 		group = json;
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
-		statusMessageFormatter(res, json)
+		statusMessageFormatter(res, json);
 	};
 </script>
 
@@ -67,7 +67,11 @@
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
-				<div class={`w-full sm:w-[300px] md:w-[500px] ${selectedPage === 'kanban' ? "xl:w-[1000px]" :"xl:w-[720px]"}`}>
+				<div
+					class={`w-full sm:w-[300px] md:w-[500px] ${
+						selectedPage === 'kanban' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
+					}`}
+				>
 					{#if selectedPage === 'flow'}
 						<PollThumbnails infoToGet="group" />
 					{:else if selectedPage === 'delegation'}
@@ -85,7 +89,7 @@
 					{:else if selectedPage === 'tags'}
 						<Tags />
 					{:else if selectedPage === 'kanban'}
-						<Kanban />
+						<Kanban type='group' />
 					{/if}
 				</div>
 

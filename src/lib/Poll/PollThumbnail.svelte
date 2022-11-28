@@ -13,7 +13,7 @@
 	export let poll: poll;
 
 	onMount(() => {
-		console.log(poll, 'POLL');
+		// console.log(poll, 'POLL');
 	});
 	let onHoverGroup = false;
 </script>

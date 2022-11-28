@@ -258,6 +258,7 @@
     "Delete poll": "Ta bort omröstning",
     "Delete": "Ta Bort",
     "Disable": "Inaktivera",
+    "Unable to log in with provided credentials.": "Kunde inte logga in med given information",
     "Successfully logged in": "Lyckades logga in",
     "User is not in group": "Användare är ej i gruppen",
     "To do": "Att göra",

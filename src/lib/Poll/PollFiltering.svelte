@@ -1,6 +1,5 @@
 <script lang="ts">
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa/src/fa.svelte';

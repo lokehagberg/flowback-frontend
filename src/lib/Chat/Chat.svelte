@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -23,7 +23,7 @@
 	//TODO: Socket not closing properly
 	let socket: WebSocket;
 	let sendMessageToSocket: (message: string) => void;
-	let selectedPage: 'Direkt' | 'Grupper' = 'Direkt';
+	let selectedPage: 'direct' | 'group' = 'direct';
 	let unsubscribe: Unsubscriber;
 	let chatSelected: number;
 	let isChangingSocket = false;
@@ -57,7 +57,7 @@
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-		socket = createSocket(selectedChat, selectedPage, user.id);
+		socket = createSocket(user.id);
 		isChangingSocket = true;
 
 		//TODO: Remove timeouts
@@ -67,7 +67,7 @@
 		}, 100);
 
 		try {
-			sendMessageToSocket = await sendMessage(selectedChat, socket);
+			sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
 
 			//This function triggers every time a message arrives from the socket
 			unsubscribe = subscribe(async (e: any) => {
@@ -93,7 +93,7 @@
 	const getRecentMesseges = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			selectedPage === 'Grupper'
+			selectedPage === 'group'
 				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${5}`
 				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
@@ -133,8 +133,9 @@
 		const { json } = await fetchRequest('GET', `users?limit=100`);
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
-
+	
 	onDestroy(() => {
+		//TODO: This does nothing!
 		if (unsubscribe) unsubscribe();
 		if (socket) socket.close();
 	});
@@ -149,7 +150,7 @@
 			</div>
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
-			<Tab bind:selectedPage tabs={['Direkt', 'Grupper']} />
+			<Tab bind:selectedPage tabs={['direct', 'group']} displayNames={["Direct", "Groups"]} />
 		</div>
 		<ul
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
@@ -197,7 +198,7 @@
 		<ul
 			class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 		>
-			{#each selectedPage === 'Grupper' ? groups : directs as chatter}
+			{#each selectedPage === 'group' ? groups : directs as chatter}
 				<li
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={chatSelected === chatter.id}

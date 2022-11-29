@@ -9,7 +9,8 @@ export type SelectablePage =
 	| 'statistics'
 	| 'delegation'
 	| 'tags'
-	| 'kanban';
+	| 'kanban'
+	| 'perms';
 
 export interface User {
 	username: string;

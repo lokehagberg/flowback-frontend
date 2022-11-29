@@ -20,6 +20,7 @@
 	import { onMount } from 'svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -58,6 +59,7 @@
 
 <svelte:window bind:innerWidth />
 
+<!-- TODO: Make it easier to add a sidebarbutton -->
 <div class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`}`}>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
@@ -152,6 +154,12 @@
 					isSelected={selectedPage === 'tags'}
 				/>
 				<GroupSidebarButton
+					action={() => (selectedPage = 'perms')}
+					text="Permissions"
+					icon={faCog}
+					isSelected={selectedPage === 'perms'}
+				/>
+				<GroupSidebarButton
 					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
 					text="Edit Group"
 					icon={faCog}
@@ -163,12 +171,12 @@
 </div>
 
 <Modal bind:open={areYouSureModal}>
-	<div slot="header">Är du säker?</div>
-	<div slot="body">Du är påväg att lämna gruppen!</div>
+	<div slot="header">{$_("Are you sure?")}</div>
+	<div slot="body">{$_("You are about to leave the group!")}</div>
 	<div slot="footer">
-		<ButtonPrimary action={leaveGroup} Class="bg-red-500">Ja</ButtonPrimary>
+		<ButtonPrimary action={leaveGroup} Class="bg-red-500">{$_("Yes")}</ButtonPrimary>
 		<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-			>Nej</ButtonPrimary
+			>{$_("No")}</ButtonPrimary
 		>
 	</div>
 </Modal>

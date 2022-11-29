@@ -20,6 +20,7 @@
 	import Tags from '$lib/Group/Tags.svelte';
 	import Kanban from '$lib/Group/Kanban.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import Permissions from '$lib/Group/Permissions.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -72,6 +73,7 @@
 						selectedPage === 'kanban' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
 					}`}
 				>
+					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 					{#if selectedPage === 'flow'}
 						<PollThumbnails infoToGet="group" />
 					{:else if selectedPage === 'delegation'}
@@ -89,7 +91,9 @@
 					{:else if selectedPage === 'tags'}
 						<Tags />
 					{:else if selectedPage === 'kanban'}
-						<Kanban type='group' />
+						<Kanban type="group" />
+					{:else if selectedPage === 'perms'}
+						<Permissions />
 					{/if}
 				</div>
 

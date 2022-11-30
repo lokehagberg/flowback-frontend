@@ -20,6 +20,7 @@
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import Statistics from '$lib/Poll/Statistics.svelte';
 
 	let poll: poll;
 	let votings: votings[];
@@ -133,5 +134,6 @@
 				>{$_('Delete poll')}</ButtonPrimary
 			>
 		</div>
+		<Statistics />
 	</Layout>
 {/if}

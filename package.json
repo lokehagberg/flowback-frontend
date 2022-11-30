@@ -40,10 +40,12 @@
         "@fontsource/fira-mono": "^4.5.0",
         "@fortawesome/free-solid-svg-icons": "^6.1.2",
         "@shopify/draggable": "^1.0.0-beta.8",
+        "chart.js": "^4.0.1",
         "cookie": "^0.4.1",
         "date-picker-svelte": "^2.2.0",
         "dotenv": "^16.0.2",
         "sapper": "^0.29.3",
+        "svelte-chartjs": "^3.1.0",
         "svelte-fa": "^3.0.3",
         "svelte-i18n": "^3.4.0"
     }

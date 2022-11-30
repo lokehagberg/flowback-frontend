@@ -153,7 +153,7 @@
 							>{$_('Advanced time settings')}</ButtonPrimary
 						>
 						<h2 class="mt-4">{$_('Days between phases')}</h2>
-						<input type="number" bind:value={daysBetweenPhases} min="0" max="1000" />
+						<input type="number" bind:value={daysBetweenPhases} min="1" max="1000" />
 
 						{#if advancedTimeSettings}
 							<h2 class="mt-4">{$_('Poll Start')}</h2>

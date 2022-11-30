@@ -20,7 +20,6 @@
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import Statistics from '$lib/Poll/Statistics.svelte';
 
 	let poll: poll;
 	let votings: votings[];
@@ -78,7 +77,6 @@
 					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 				</div>
 			</div>
-			<!-- <div class="italic mt-4">Group name</div> -->
 			{#if finished}
 				<Results {pollType} />
 			{:else}
@@ -134,6 +132,5 @@
 				>{$_('Delete poll')}</ButtonPrimary
 			>
 		</div>
-		<Statistics />
 	</Layout>
 {/if}

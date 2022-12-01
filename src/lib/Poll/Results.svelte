@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { proposal } from '$lib/typescriptexperiments';
 	import { onMount } from 'svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -9,28 +9,31 @@
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import type { Unsubscriber } from 'svelte/store';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
-	let messages: Message[] = [];
-	let chatOpen = false;
-	let message: string;
-	let groups: Group[] = [];
-	let directs: any[] = [];
-	//TODO: Socket not closing properly
-	let socket: WebSocket;
-	let sendMessageToSocket: (message: string) => void;
-	let selectedPage: 'direct' | 'group' = 'direct';
-	let unsubscribe: Unsubscriber;
-	let chatSelected: number;
-	let isChangingSocket = false;
-	let user: User;
-	let olderMessagesAPI: string;
-	let newerMessagesAPI: string;
-	let selectedChat: number;
+	// User Action variables
+	let messages: Message[] = [],
+		chatOpen = false,
+		message: string,
+		user: User,
+		// Specifies which chat window is open
+		groups: Group[] = [],
+		directs: any[] = [],
+		chatSelected: number,
+		selectedPage: 'direct' | 'group' = 'direct',
+		selectedChat: number,
+		notified: number[] = [],
+		//Websocket utility functions and variables
+		socket: WebSocket,
+		sendMessageToSocket: (message: string) => void,
+		unsubscribe: Unsubscriber,
+		isChangingSocket = false,
+		//Chat history
+		olderMessagesAPI: string,
+		newerMessagesAPI: string;
 
 	$: chatOpen && getChattable();
 
@@ -72,9 +75,11 @@
 			//This function triggers every time a message arrives from the socket
 			unsubscribe = subscribe(async (e: any) => {
 				const { message, user } = JSON.parse(e);
-				//If scrolled at most recent, display new messages
+				if (!notified.includes(user.id)) notified.push(user.id);
+
 				if (selectedChat !== user.id) return;
 
+				//If scrolled at most recent, display new messages
 				if (!newerMessagesAPI) {
 					messages = [...messages, { message, user, created_at: new Date().toString() }];
 					//TODO: make a better solution to scrolling down when sending/being sent message
@@ -133,7 +138,7 @@
 		const { json } = await fetchRequest('GET', `users?limit=100`);
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
-	
+
 	onDestroy(() => {
 		//TODO: This does nothing!
 		if (unsubscribe) unsubscribe();
@@ -150,7 +155,7 @@
 			</div>
 		</div>
 		<div class="col-start-1 col-end-2 row-start-1 row-end-2">
-			<Tab bind:selectedPage tabs={['direct', 'group']} displayNames={["Direct", "Groups"]} />
+			<Tab bind:selectedPage tabs={['direct', 'group']} displayNames={['Direct', 'Groups']} />
 		</div>
 		<ul
 			class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
@@ -203,10 +208,13 @@
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={chatSelected === chatter.id}
 					on:click={() => {
+						if (!notified.includes(chatter.id)) notified = notified.filter((notis) => notis !== chatter.id);
 						selectedChat = chatter.id;
 					}}
 				>
-					<ProfilePicture user={chatter} />
+					{#key notified}
+						<ProfilePicture user={chatter} notification={notified.includes(chatter.id)} />
+					{/key}
 					<span>{chatter.name || chatter.username}</span>
 				</li>
 			{/each}

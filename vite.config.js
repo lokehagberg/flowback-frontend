@@ -1,6 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 
-
 /** @type {import('vite').UserConfig} */
 const config = {
     plugins: [sveltekit()],
@@ -8,7 +7,8 @@ const config = {
         exclude: ['chart.js']
     },
     server: {
-        port: import.meta.env.PORT
+        //Insert port here, TODO: Make it easier for backend to add port
+        port: 1000
     }
 };
 

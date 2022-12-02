@@ -20,6 +20,7 @@
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	let poll: poll;
 	let votings: votings[];
@@ -36,11 +37,12 @@
 	});
 
 	const getPollData = async () => {
-		const { json } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
 		);
 
+		statusMessageFormatter(res, json)
 		poll = json.results[0];
 		pollType = json.results[0].poll_type;
 		finished = new Date(json.results[0].end_date) < new Date();

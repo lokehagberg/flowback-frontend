@@ -4,6 +4,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
 
@@ -29,13 +30,9 @@
 		loading = false;
 		if (res.ok) {
 			mailStore.set(email);
-			status = { message: 'Success', success: true };
+			status = statusMessageFormatter(res, json);
 			selectedPage = 'Verify';
-		} else {
-			if (json.detail) status = { message: json.detail[0], success: false };
-			if (json.detail.email) status = { message: json.detail.email[0], success: false };
-			if (json.detail.username) status = { message: json.detail.username[0], success: false };
-		}
+		} else status = statusMessageFormatter(res, json);
 	}
 </script>
 
@@ -50,7 +47,7 @@
 			bind:Yes={acceptedToS}
 		/>
 		<StatusMessage bind:status />
-		<ButtonPrimary type="submit" >
+		<ButtonPrimary type="submit">
 			{$_('Send')}
 		</ButtonPrimary>
 	</form>

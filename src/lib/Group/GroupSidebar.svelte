@@ -60,7 +60,7 @@
 <svelte:window bind:innerWidth />
 
 <!-- TODO: Make it easier to add a sidebarbutton -->
-<div class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`}`}>
+<nav class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`}`}>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}
@@ -168,7 +168,7 @@
 			</div>
 		{/if}
 	{/if}
-</div>
+</nav>
 
 <Modal bind:open={areYouSureModal}>
 	<div slot="header">{$_("Are you sure?")}</div>

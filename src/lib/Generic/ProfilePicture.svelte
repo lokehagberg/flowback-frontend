@@ -2,13 +2,8 @@
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	export let user: any,
 		//TODO: Always display username, replace all instance of username with this file
-		displayName = false,
-		notification:boolean|undefined = false;
+		displayName = false;
 </script>
-
-{#if notification}
-	<div class="bg-purple-400 p-1 rounded-full" />
-{/if}
 
 <!-- TODO: Simplify this function to only take images as input or include name -->
 {#if user.profile_image}

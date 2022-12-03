@@ -208,13 +208,15 @@
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={chatSelected === chatter.id}
 					on:click={() => {
-						if (!notified.includes(chatter.id)) notified = notified.filter((notis) => notis !== chatter.id);
+						if (notified.includes(chatter.id))
+							notified = notified.filter((notis) => notis !== chatter.id);
 						selectedChat = chatter.id;
 					}}
 				>
-					{#key notified}
-						<ProfilePicture user={chatter} notification={notified.includes(chatter.id)} />
-					{/key}
+					{#if notified.includes(chatter.id)}
+						<div class="bg-purple-400 p-1 rounded-full" />
+					{/if}
+					<ProfilePicture user={chatter} />
 					<span>{chatter.name || chatter.username}</span>
 				</li>
 			{/each}

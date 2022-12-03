@@ -47,7 +47,7 @@
 		<div class="border p-4 mt-4">
 			<h1 class="text-xl">{pollType === 3 ? $_('Start') + ':' : ''} {proposal.title}</h1>
 			<div>{pollType === 3 ? $_('End') + ':' : ''} {proposal.description}</div>
-			<div class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</div>
+			<b class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</b>
 		</div>
 	{/each}
 </div>

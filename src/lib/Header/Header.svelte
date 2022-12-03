@@ -34,7 +34,7 @@
 		<a href="/home" class="md:w-auto"
 			><img src={import.meta.env.VITE_LOGO === "REFORUM" ? Reforum : Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a
 		>
-		<div class="inline-flex">
+		<nav class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
@@ -44,7 +44,7 @@
 				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
 			{/if}
 			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
-		</div>
+		</nav>
 
 		<div
 			class="inline-block float-right cursor-pointer hover:bg-grey-800"

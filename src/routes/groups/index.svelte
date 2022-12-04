@@ -23,6 +23,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Flowback Groups</title>
+</svelte:head>
+
 <Layout centering={true}>
 	<!-- TODO: design of statusmessage is off -->
 	<StatusMessage bind:status disableSuccess/>

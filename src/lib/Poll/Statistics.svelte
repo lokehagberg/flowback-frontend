@@ -22,7 +22,7 @@
 		]
 	};
 
-	console.log(data, 'datadadfffssfsfstadatfsdgadtadata');
+	console.log(data, 'datadfsasfzfdsdasfstadatfsdgadtadata');
 
 	onMount(() => {
 		data = {

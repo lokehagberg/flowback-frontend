@@ -51,7 +51,8 @@
 
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
-		if (socket) socket.close();
+		// if (socket) socket.close();
+		// if (socket) socket.close();
 		if (unsubscribe) unsubscribe();
 
 		chatSelected = selectedChat;
@@ -60,7 +61,7 @@
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-		socket = createSocket(user.id);
+		if (!socket) socket = createSocket(user.id);
 		isChangingSocket = true;
 
 		//TODO: Remove timeouts
@@ -75,11 +76,15 @@
 			//This function triggers every time a message arrives from the socket
 			unsubscribe = subscribe(async (e: any) => {
 				const { message, user } = JSON.parse(e);
-				if (!notified.includes(user.id)) notified.push(user.id);
+
+				if (!notified.includes(user.id)) {
+					notified.push(user.id);
+					notified = notified;
+				}
 
 				if (selectedChat !== user.id) return;
 
-				//If scrolled at most recent, display new messages
+				//If scrolled at most recent, display new message
 				if (!newerMessagesAPI) {
 					messages = [...messages, { message, user, created_at: new Date().toString() }];
 					//TODO: make a better solution to scrolling down when sending/being sent message
@@ -208,8 +213,11 @@
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={chatSelected === chatter.id}
 					on:click={() => {
-						if (notified.includes(chatter.id))
-							notified = notified.filter((notis) => notis !== chatter.id);
+						//Gets rid of existing notification when clicked on new chat
+						notified = notified.filter(notis => notis !== chatter.id);
+						notified = notified;
+						console.log(notified, chatter)
+
 						selectedChat = chatter.id;
 					}}
 				>
@@ -222,6 +230,7 @@
 			{/each}
 		</ul>
 		<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
+			<!-- Here the user writes a message to be sent -->
 			<form class="flex gap-2" on:submit|preventDefault={HandleMessageSending}>
 				<textarea
 					on:keypress={(e) => {

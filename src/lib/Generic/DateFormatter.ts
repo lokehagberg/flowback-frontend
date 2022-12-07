@@ -1,3 +1,5 @@
+//DEPRICATED
+//TODO: Apparently there's built in javascript functions for formatting dates, use that instead.
 export const formatDate = (dateInput: string | undefined) => {
 	if (dateInput === undefined) return '';
 	const date = new Date(dateInput);

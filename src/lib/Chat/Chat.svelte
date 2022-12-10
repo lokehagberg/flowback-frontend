@@ -50,8 +50,8 @@
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
 		// if (socket) socket.close();
-		// if (socket) socket.close();
 		// if (unsubscribe) unsubscribe();
+		if (!user) return;
 
 		getRecentMesseges();
 
@@ -62,16 +62,20 @@
 		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
 
 		//This function triggers every time a message arrives from the socket
+		//Bug: This happends even when switching chats
 		unsubscribe = subscribe(async (e: any) => {
+			
+			//Try-catch to prevent error end at JSON string
 			try {
 				var {message, user} = JSON.parse(e)
 			} catch(err) { return; }
 
+			//Messages from other chats are not put in chat
 			if (selectedChat !== user.id) return;
 
 			//New message recieved, add to list of notifications to show to user
-			console.log(notified, e, 'NOTES');
-			if (!notified.includes(user.id)) {
+			// console.log(notified, message, 'NOTES');
+			if (user.id && !notified.includes(user.id)) {
 				notified.push(user.id);
 				notified = notified;
 			}
@@ -223,7 +227,8 @@
 						notified = notified;
 
 						//Switches chat shown to the right of the screen to chatter
-						selectedChat = chatter.id;
+						if (selectedChat !== chatter.id)
+							selectedChat = chatter.id;
 					}}
 				>
 					{#if notified.includes(chatter.id)}

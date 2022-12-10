@@ -63,16 +63,18 @@
 
 		//This function triggers every time a message arrives from the socket
 		unsubscribe = subscribe(async (e: any) => {
-			const { message, user } = JSON.parse(e);
+			try {
+				var {message, user} = JSON.parse(e)
+			} catch(err) { return; }
+
+			if (selectedChat !== user.id) return;
 
 			//New message recieved, add to list of notifications to show to user
-			console.log(notified, e, "NOTES")
+			console.log(notified, e, 'NOTES');
 			if (!notified.includes(user.id)) {
 				notified.push(user.id);
 				notified = notified;
 			}
-
-			if (selectedChat !== user.id) return;
 
 			//If scrolled at most recent, display new message
 			if (!newerMessagesAPI) {
@@ -217,7 +219,7 @@
 					on:click={() => {
 						//Gets rid of existing notification when clicked on new chat
 						notified = notified.filter((notis) => notis !== chatter.id);
-						console.log(notified)
+						console.log(notified);
 						notified = notified;
 
 						//Switches chat shown to the right of the screen to chatter

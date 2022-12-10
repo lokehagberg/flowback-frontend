@@ -2,21 +2,12 @@ import { writable } from 'svelte/store';
 
 const messageStore = writable('');
 
-//Maybe TODO: Make this class based, maybe a "SocketManager" class.
 const createSocket = (userId: number) => {
 	let socket: WebSocket;
 
 	const token = localStorage.getItem('token') || '';
 
-	const link = `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws?token=${token}`
-	//TODO: Remove this redundancy later
-		// type === 'Grupper'
-		// 	? `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws/group/${id}?token=${token}`
-		// 	: type === 'Notifications'
-		// 	? `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws?token=${token}`
-		// 	: type === 'Direkt'
-		// 	? `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws/direct?token=${token}`
-		// 	: '';
+	const link = `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 
@@ -46,8 +37,8 @@ const createSocket = (userId: number) => {
 	return socket;
 };
 
-const sendMessage = (target: number, socket: WebSocket, target_type:'direct'|'group') => {
-	console.log(target_type)
+const sendMessage = (target: number, socket: WebSocket, target_type: 'direct' | 'group') => {
+	console.log(target_type);
 	return async (message: string) => {
 		if (socket.readyState <= 1 && message.length > 0) {
 			await socket.send(JSON.stringify({ message, target, target_type }));

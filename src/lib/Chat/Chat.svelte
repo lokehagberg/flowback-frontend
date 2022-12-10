@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -22,7 +22,6 @@
 		// Specifies which chat window is open
 		groups: Group[] = [],
 		directs: any[] = [],
-		chatSelected: number,
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
 		notified: number[] = [],
@@ -30,7 +29,6 @@
 		socket: WebSocket,
 		sendMessageToSocket: (message: string) => void,
 		unsubscribe: Unsubscriber,
-		isChangingSocket = false,
 		//Chat history
 		olderMessagesAPI: string,
 		newerMessagesAPI: string;
@@ -47,57 +45,47 @@
 		groups = await getGroups();
 	};
 
-	$: selectedChat && setUpMessageSending();
+	$: (selectedChat || selectedPage) && setUpMessageSending();
 
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
 		// if (socket) socket.close();
 		// if (socket) socket.close();
-		if (unsubscribe) unsubscribe();
-
-		chatSelected = selectedChat;
+		// if (unsubscribe) unsubscribe();
 
 		getRecentMesseges();
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		if (!socket) socket = createSocket(user.id);
-		isChangingSocket = true;
 
-		//TODO: Remove timeouts
-		setTimeout(() => {
-			const d = document.querySelector('.overflow-y-scroll');
-			// d?.scroll(0, 100000);
-		}, 100);
+		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
 
-		try {
-			sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
+		//This function triggers every time a message arrives from the socket
+		unsubscribe = subscribe(async (e: any) => {
+			const { message, user } = JSON.parse(e);
 
-			//This function triggers every time a message arrives from the socket
-			unsubscribe = subscribe(async (e: any) => {
-				const { message, user } = JSON.parse(e);
+			//New message recieved, add to list of notifications to show to user
+			console.log(notified, e, "NOTES")
+			if (!notified.includes(user.id)) {
+				notified.push(user.id);
+				notified = notified;
+			}
 
-				if (!notified.includes(user.id)) {
-					notified.push(user.id);
-					notified = notified;
-				}
+			if (selectedChat !== user.id) return;
 
-				if (selectedChat !== user.id) return;
+			//If scrolled at most recent, display new message
+			if (!newerMessagesAPI) {
+				messages = [...messages, { message, user, created_at: new Date().toString() }];
 
-				//If scrolled at most recent, display new message
-				if (!newerMessagesAPI) {
-					messages = [...messages, { message, user, created_at: new Date().toString() }];
-					//TODO: make a better solution to scrolling down when sending/being sent message
-					await setTimeout(() => {
-						//If scrolled furtherst down, scroll whenever a message is recieved
-						const d = document.querySelector('.overflow-y-scroll');
-						d?.scroll(0, 100000);
-					}, 100);
-				}
-			});
-		} catch (e) {
-			console.error(e);
-		}
+				//TODO: make a better solution to scrolling down when sending/being sent message
+				await setTimeout(() => {
+					//If scrolled furtherst down, scroll whenever a message is recieved
+					const d = document.querySelector('.overflow-y-scroll');
+					d?.scroll(0, 100000);
+				}, 100);
+			}
+		});
 	};
 
 	const getRecentMesseges = async () => {
@@ -144,12 +132,26 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
+	onMount(() => {
+		// setUpMessageSending();
+		// fetchRequest('GET', 'chat/direct/preview')
+		// fetchRequest('POST', 'chat/direct/2/timestamp', {
+	});
+
 	onDestroy(() => {
 		//TODO: This does nothing!
 		if (unsubscribe) unsubscribe();
 		if (socket) socket.close();
 	});
 </script>
+
+<!-- <ButtonPrimary action={() => {
+	
+	fetchRequest('GET', 'chat/group/preview')
+	fetchRequest('POST', 'chat/group/2/timestamp', {
+		timestamp :new Date()
+	})
+}}/> -->
 
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
@@ -211,13 +213,14 @@
 			{#each selectedPage === 'group' ? groups : directs as chatter}
 				<li
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
-					class:bg-gray-200={chatSelected === chatter.id}
+					class:bg-gray-200={selectedChat === chatter.id}
 					on:click={() => {
 						//Gets rid of existing notification when clicked on new chat
-						notified = notified.filter(notis => notis !== chatter.id);
+						notified = notified.filter((notis) => notis !== chatter.id);
+						console.log(notified)
 						notified = notified;
-						console.log(notified, chatter)
 
+						//Switches chat shown to the right of the screen to chatter
 						selectedChat = chatter.id;
 					}}
 				>

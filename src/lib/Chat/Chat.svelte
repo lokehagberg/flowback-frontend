@@ -25,6 +25,7 @@
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
 		notified: number[] = [],
+		preview:any[] = [],
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (message: string) => void,
@@ -46,6 +47,7 @@
 	};
 
 	$: (selectedChat || selectedPage) && setUpMessageSending();
+	$: selectedPage && getPreview();
 
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
@@ -64,11 +66,12 @@
 		//This function triggers every time a message arrives from the socket
 		//Bug: This happends even when switching chats
 		unsubscribe = subscribe(async (e: any) => {
-			
 			//Try-catch to prevent error end at JSON string
 			try {
-				var {message, user} = JSON.parse(e)
-			} catch(err) { return; }
+				var { message, user } = JSON.parse(e);
+			} catch (err) {
+				return;
+			}
 
 			//Messages from other chats are not put in chat
 			if (selectedChat !== user.id) return;
@@ -138,9 +141,20 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
-	onMount(() => {
-		// setUpMessageSending();
-		// fetchRequest('GET', 'chat/direct/preview')
+	const getPreview = async () => {
+		const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
+		preview = json.results
+	};
+
+	onMount(async () => {
+		getPreview();
+
+		fetchRequest('GET', 'notification')
+		fetchRequest('POST', 'notification/subscriptions')
+		fetchRequest('POST', 'notification/read')
+		fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
+
+
 		// fetchRequest('POST', 'chat/direct/2/timestamp', {
 	});
 
@@ -227,15 +241,17 @@
 						notified = notified;
 
 						//Switches chat shown to the right of the screen to chatter
-						if (selectedChat !== chatter.id)
-							selectedChat = chatter.id;
+						if (selectedChat !== chatter.id) selectedChat = chatter.id;
 					}}
 				>
 					{#if notified.includes(chatter.id)}
 						<div class="bg-purple-400 p-1 rounded-full" />
 					{/if}
 					<ProfilePicture user={chatter} />
-					<span>{chatter.name || chatter.username}</span>
+					<div class="flex flex-col">
+						<span>{chatter.name || chatter.username}</span>
+						<!-- <span class="text-gray-400 text-sm truncate h-[20px]">{preview.find(message => message.user_id === chatter.id).message}</span> -->
+					</div>
 				</li>
 			{/each}
 		</ul>

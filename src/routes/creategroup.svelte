@@ -44,13 +44,16 @@
 		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
 
-		if (res.ok) {
-			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
-				tag_name: 'Okategoriserad' //Default
-			});
-			if (res.ok) window.location.href = `/groups/${json}`;
-			else status = statusMessageFormatter(res, json);
-		} else status = statusMessageFormatter(res, json);
+		if (!res.ok) return;
+		else status = statusMessageFormatter(res, json);
+
+			if (groupToEdit === null) {
+				const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
+					tag_name: 'Okategoriserad' //Default
+				});
+				if (res.ok) window.location.href = `/groups/${json}`;
+				else status = statusMessageFormatter(res, json);
+			}
 
 		loading = false;
 	};

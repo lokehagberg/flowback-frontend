@@ -12,7 +12,8 @@ export async function fetchRequest(
 
 	let headers: any = {};
 
-	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+	if (needs_authorization) headers.Authorization = 'Token ' + "3b22b2980ef1c98956de18d6f2df0677bfa8abfb";
+	// if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 
 	if (needs_json) {
 		headers.Accept = 'application/json';

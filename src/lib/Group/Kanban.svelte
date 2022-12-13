@@ -1,23 +1,19 @@
 <script lang="ts">
+	import KanbanEntry from './KanbanEntry.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
-	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import type { kanban, User } from './interface';
 	import { page } from '$app/stores';
-	import { fade } from 'svelte/transition';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
-	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
+	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	let kanbanEntries: kanban[] = [];
 	let openModal = false;
 	let description = '',
@@ -133,58 +129,7 @@
 					<ul class="flex flex-col mt-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
-									<div
-										on:click={() => {
-											openModal = true;
-											selectedEntry = kanban.id;
-										}}
-										class="cursor-pointer hover:underline"
-									>
-										<div class="text-sm break-all">{kanban.title}</div>
-									</div>
-									<div class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline" on:click={() => window.location.href = type === 'group' ? `/user?id=${kanban.assignee.id}` :`groups/${kanban.group.id}`}>
-										<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} />
-										<div class="break-all">
-											{type === 'group' ? kanban.assignee.username : kanban.group.name}
-										</div>
-									</div>
-									<!-- Arrows -->
-									{#if type === 'group'}
-										<div class="flex justify-between mt-3">
-											<div
-												class="cursor-pointer hover:text-gray-500"
-												on:click={() => {
-													if (kanban.tag > 0) {
-														handleUpdateKanban({ id: kanban.id, tag: kanban.tag - 1 });
-														kanban.tag -= 1;
-													}
-												}}
-											>
-												<Fa icon={faArrowLeft} size="1.5x" />
-											</div>
-											<div
-												class="cursor-pointer hover:text-gray-500"
-												on:click={() => {
-													if (kanban.tag < tags.length) {
-														handleUpdateKanban({ id: kanban.id, tag: kanban.tag + 1 });
-														kanban.tag += 1;
-													}
-												}}
-											>
-												<Fa icon={faArrowRight} size="1.5x" />
-											</div>
-										</div>
-									{/if}
-								</li>
-								{#if kanban.id === selectedEntry}
-									<Modal bind:open={openModal}>
-										<div slot="header" class="p-4">{kanban.title}</div>
-										<div slot="body" class="p-5">
-											{kanban.description}
-										</div>
-									</Modal>
-								{/if}
+								<KanbanEntry bind:kanban {type} {handleUpdateKanban} />
 							{/if}
 						{/each}
 					</ul>

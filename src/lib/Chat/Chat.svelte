@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
+	// @ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -47,7 +48,7 @@
 	};
 
 	$: (selectedChat || selectedPage) && setUpMessageSending();
-	$: selectedPage && getPreview();
+	// $: selectedPage && getPreview();
 
 	const setUpMessageSending = async () => {
 		//Resets last web socket connection
@@ -141,22 +142,22 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
-	const getPreview = async () => {
-		const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
-		preview = json.results
-	};
+	// const getPreview = async () => {
+	// 	const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
+	// 	preview = json.results
+	// };
 
-	onMount(async () => {
-		getPreview();
+	// onMount(async () => {
+	// 	getPreview();
 
-		fetchRequest('GET', 'notification')
-		fetchRequest('POST', 'notification/subscriptions')
-		fetchRequest('POST', 'notification/read')
-		fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
+	// 	fetchRequest('GET', 'notification')
+	// 	fetchRequest('POST', 'notification/subscriptions')
+	// 	fetchRequest('POST', 'notification/read')
+	// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
 
 
-		// fetchRequest('POST', 'chat/direct/2/timestamp', {
-	});
+	// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
+	// });
 
 	onDestroy(() => {
 		//TODO: This does nothing!

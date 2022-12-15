@@ -21,6 +21,7 @@
 	import Kanban from '$lib/Group/Kanban.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions.svelte';
+	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -42,6 +43,7 @@
 	onMount(() => {
 		getGroupInfo();
 		setUserGroupInfo();
+
 	});
 
 	const setUserGroupInfo = async () => {
@@ -64,6 +66,13 @@
 </svelte:head>
 
 {#if userInGroup}
+<ButtonPrimary action={() => {
+	
+	// fetchRequest('GET', 'notification/subscriptions')
+		fetchRequest('POST', 'notification/read', {notification_ids:[3]})
+		fetchRequest('GET', 'notification')
+		// fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
+}}/>
 	<Layout>
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">

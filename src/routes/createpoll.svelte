@@ -38,8 +38,8 @@
 	const pollDescriptions: Record<polltypes, string> = {
 		Ranking: `Ranking is the method of preferential voting known as the borda count. The top proposal in Added always gets the number of points as there are proposals (it does not depend on there being proposals below it), and the one below that gets that number minus one, the one below that gets that number minus two and so on. Each proposal that are in abstain each get zero points. This is added over all voters and is divided by the total number of votes to get the result.`,
 		'For/Against': `For/Against is the method where each proposal that is voted for gets one point and each voted against gets minus one independently of order, all other proposals get zero points. The points are then added over all voters and is divided by the total number of votes to get the result.`,
-		Cardinal: `Quadratic is the method where each member can rank by writing any number for all polls, which are ranked accordingly and get the percentage compared to the total that the member gives, the percentages are added up over all members and divided by the total to get the result. This means that not only are the proposals ranked by order of preference, but the degree by which one proposal is better than another is reflected. Totals will not exceed 10^6.`,
-		Quadratic: `Cardinal currently has no description`,
+		Cardinal: `Cardinal currently has no description`,
+		Quadratic: `Quadratic is the method where each member can rank by writing any number for all polls, which are ranked accordingly and get the percentage compared to the total that the member gives, the percentages are added up over all members and divided by the total to get the result. This means that not only are the proposals ranked by order of preference, but the degree by which one proposal is better than another is reflected. Totals will not exceed 10^6.`,
 		Scheduled: `Scheduled is the method where dates and times are voted on to decide meetings or events for the members of the group. Time polls are always Private and can only be seen by group members. One can only vote for a time or vote to drop the proposal, a default proposal for every time poll. This is carried out by the ranking method.`
 	};
 
@@ -122,7 +122,7 @@
 		const now = new Date();
 		start_date = new Date();
 		proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		delegate_vote_end_date = new Date(now.setDate(now.getDate() +  daysBetweenPhases));
+		delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 	};
 
@@ -148,7 +148,7 @@
 
 					<div class="border border-gray-200 p-6 ">
 						<ButtonPrimary
-							Class={`inline ${advancedTimeSettings ? '!bg-blue-600' : '!bg-blue-200'}`} 
+							Class={`inline ${advancedTimeSettings ? '!bg-blue-600' : '!bg-blue-200'}`}
 							action={() => (advancedTimeSettings = !advancedTimeSettings)}
 							>{$_('Advanced time settings')}</ButtonPrimary
 						>

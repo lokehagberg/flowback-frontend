@@ -1,7 +1,6 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import { Pie } from 'svelte-chartjs';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
-	import { onMount } from 'svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, CategoryScale, ArcElement);
 
@@ -22,7 +21,7 @@
 		]
 	};
 
-	console.log(data, 'datadfsafsfsfsassfzfdsdasfddatfsdgadtadata');
+	console.log(data, 'datadfsafsfsfsassfzfdsdaddsssfddatfsdgadtadata');
 
 	// onMount(() => {
 	// 	data = {
@@ -41,7 +40,7 @@
 	// });
 </script>
 
-<Pie {data} options={{ responsive: true }} /> -->
+<Pie {data} options={{ responsive: true }} />
 
 
 <!-- <script>

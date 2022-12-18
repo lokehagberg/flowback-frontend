@@ -26,7 +26,7 @@
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
 		notified: number[] = [],
-		preview:any[] = [],
+		preview: any[] = [],
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (message: string) => void,
@@ -101,9 +101,7 @@
 	const getRecentMesseges = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			selectedPage === 'group'
-				? `chat/group/${selectedChat}?order_by=created_at_desc&limit=${5}`
-				: `chat/direct/${selectedChat}?order_by=created_at_desc&limit=${5}`
+			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
 
 		messages = json.results.reverse();
@@ -142,37 +140,38 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
-	// const getPreview = async () => {
-	// 	const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
-	// 	preview = json.results
-	// };
+	const getPreview = async () => {
+		const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
+		preview = json.results;
+	};
 
+	onMount(() => {
+		getPreview();
+	});
+	
 	// onMount(async () => {
-	// 	getPreview();
+		// 	getPreview();
 
-	// 	fetchRequest('GET', 'notification')
+		// fetchRequest('GET', 'notification')
 	// 	fetchRequest('POST', 'notification/subscriptions')
 	// 	fetchRequest('POST', 'notification/read')
 	// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
 
-
 	// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
 	// });
-
-	onDestroy(() => {
-		//TODO: This does nothing!
-		if (unsubscribe) unsubscribe();
-		if (socket) socket.close();
-	});
 </script>
 
 <!-- <ButtonPrimary action={() => {
-	
-	fetchRequest('GET', 'chat/group/preview')
-	fetchRequest('POST', 'chat/group/2/timestamp', {
-		timestamp :new Date()
-	})
-}}/> -->
+	fetchRequest('GET', 'notification')
+	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
+	// fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
+	// fetchRequest('GET', 'chat/group/preview')
+	fetchRequest('POST', 'group/2/poll/24/subscribe', {categories:['timeline', 'poll']})
+	// fetchRequest('POST', 'chat/group/2/timestamp', {
+	// 	timestamp :new Date()
+	// })
+}}
+/> -->
 
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
@@ -251,7 +250,9 @@
 					<ProfilePicture user={chatter} />
 					<div class="flex flex-col">
 						<span>{chatter.name || chatter.username}</span>
-						<!-- <span class="text-gray-400 text-sm truncate h-[20px]">{preview.find(message => message.user_id === chatter.id).message}</span> -->
+						<span class="text-gray-400 text-sm truncate h-[20px]"
+							>{preview.find((message) => message.user_id === chatter.id)?.message || ''}</span
+						>
 					</div>
 				</li>
 			{/each}

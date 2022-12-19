@@ -164,9 +164,9 @@
 <!-- <ButtonPrimary action={() => {
 	fetchRequest('GET', 'notification')
 	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
-	// fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
+	fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
 	// fetchRequest('GET', 'chat/group/preview')
-	fetchRequest('POST', 'group/2/poll/24/subscribe', {categories:['timeline', 'poll']})
+	// fetchRequest('POST', 'group/2/poll/28/subscribe', {categories:['timeline', 'poll']})
 	// fetchRequest('POST', 'chat/group/2/timestamp', {
 	// 	timestamp :new Date()
 	// })

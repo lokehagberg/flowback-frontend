@@ -13,9 +13,10 @@
 	interface Invitation {
 		external: boolean;
 		group: number;
-		profile_image: File | null;
 		user: number;
 		username: string;
+		group_name:string;
+		profile_image:string;
 	}
 
 	let invitations: Invitation[] = [];
@@ -49,16 +50,16 @@
 
 <Layout centering={true}>
 	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
-	<ul class="mt-6">
-		{#if import.meta.env.MODE === 'DEV'}
+	<ul class="mt-6 flex flex-col gap-6">
+		<!-- {#if import.meta.env.MODE === 'DEV'} -->
 			{#each invitations as invite}
 				<li class="bg-white p-6 shadow rounded">
-					<span>You have been invited to NAME</span>
+					<span>You have been invited to {invite.group_name}</span>
 					<ButtonPrimary action={() => acceptInvitation(invite.group)}>Accept</ButtonPrimary>
 					<ButtonPrimary action={() => rejectInvitation(invite.group)}>Reject</ButtonPrimary>
 				</li>
 			{/each}
-		{/if}
+		<!-- {/if} -->
 	</ul>
-	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-4/5 md:max-w-[720px] justify-center" />
+	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-4/5 md:max-w-[720px] justify-center mt-6" />
 </Layout>

@@ -17,7 +17,7 @@
 
 	let users: User[] = [];
 	let loading = true;
-	let selectedPage: SelectablePages = 'Members';
+	let selectedPage: SelectablePages = 'Invite';
 	let searchUser = '';
 	let searchedUsers: User[] = [];
 
@@ -28,6 +28,8 @@
 		loading = false;
 
 		getInvitesList();
+
+		fetchRequest('GET', `group/${$page.params.groupId}/invites`)
 	});
 
 	const searchUsers = async (username: string) => {
@@ -70,7 +72,7 @@
 	<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative">
 		<Tab
 			bind:selectedPage
-			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members']}
+			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members', 'Invite']}
 		/>
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">

@@ -39,8 +39,8 @@
 		// 	return;
 		// }
 
-		const { json } = await fetchRequest('GET', `users?limit=100&username=${username}`);
-		searchedUsers = json.results;
+		// const { json } = await fetchRequest('GET', `users?limit=100&username=${username}`);
+		// searchedUsers = json.results;
 	};
 
 	const getInvitesList = async () => {

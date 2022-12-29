@@ -141,7 +141,7 @@
 	};
 
 	const getPreview = async () => {
-		const { res, json } = await fetchRequest('GET', 'chat/direct/preview');
+		const { res, json } = await fetchRequest('GET', 'chat/group/preview?created_at__gt=true');
 		preview = json.results;
 	};
 
@@ -267,11 +267,10 @@
 							e.preventDefault();
 						}
 					}}
-					label="write a message"
 					required
 					bind:value={message}
 					class="border border-black  w-full"
-					max="2000"
+					maxlength="2000"
 				/>
 				<ButtonPrimary type="submit" label="Skicka" Class="" />
 			</form>

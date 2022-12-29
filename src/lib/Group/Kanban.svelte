@@ -3,7 +3,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import Modal from '$lib/Generic/Modal.svelte';
 	import type { kanban, User } from './interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -15,13 +14,11 @@
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	let kanbanEntries: kanban[] = [];
-	let openModal = false;
 	let description = '',
 		title = '',
 		assignee = 0,
 		users: User[] = [],
-		status: StatusMessageInfo,
-		selectedEntry: number;
+		status: StatusMessageInfo;
 
 	export let type: 'home' | 'group',
 		Class = '';

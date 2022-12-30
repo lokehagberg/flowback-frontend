@@ -26,9 +26,9 @@
 	let roleName = '';
     let rolePerms = [false, false, false, false, false]
 
-	const createPermission = () => {
+	const createRole = () => {
 		fetchRequest('POST', `group/${$page.params.groupId}/permission/create`, {
-			role_name: roleName,
+            role_name: roleName,
 			invite_user: rolePerms[0],
 			create_poll: rolePerms[1],
 			allow_vote: rolePerms[2],
@@ -36,12 +36,16 @@
 			ban_members: rolePerms[4]
 		});
 	};
+    
+    const getRoleList = () => {
+        fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`) 
+    }
 
 	$: console.log(rolePerms);
 </script>
 
 <div class="bg-white p-6 rounded">
-	<ButtonPrimary action={createPermission}>hi</ButtonPrimary>
+	<ButtonPrimary action={getRoleList}>hi</ButtonPrimary>
 	<form class="flex flex-col gap-4">
 		<h1 class="text-xl">User Permissions</h1>
 		<TextInput label="Role name" bind:value={roleName} />

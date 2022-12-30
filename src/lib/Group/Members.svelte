@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
@@ -7,7 +6,6 @@
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { SelectablePages, User } from './interface';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
@@ -17,7 +15,7 @@
 
 	let users: User[] = [];
 	let loading = true;
-	let selectedPage: SelectablePages = 'Invite';
+	let selectedPage: SelectablePages = 'Members';
 	let searchUser = '';
 	let searchedUsers: User[] = [];
 

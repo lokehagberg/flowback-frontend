@@ -14,6 +14,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import TestToggle from '$lib/Generic/TestToggle.svelte';
 
 	// User Action variables
 	let messages: Message[] = [],
@@ -51,6 +52,7 @@
 	// $: selectedPage && getPreview();
 
 	const setUpMessageSending = async () => {
+		selectedPage === 'direct' ? getPreviewDirect() : getPreviewGroup();
 		//Resets last web socket connection
 		// if (socket) socket.close();
 		// if (unsubscribe) unsubscribe();
@@ -99,6 +101,7 @@
 	};
 
 	const getRecentMesseges = async () => {
+		if (!selectedChat) return;
 		const { res, json } = await fetchRequest(
 			'GET',
 			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
@@ -140,19 +143,24 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
-	const getPreview = async () => {
-		const { res, json } = await fetchRequest('GET', 'chat/group/preview?created_at__gt=true');
-		preview = json.results;
+	const getPreviewGroup = async () => {
+		const { res, json } = await fetchRequest('GET', 'chat/group/preview?order_by=created_at_desc');
+		// preview = json.results;
+	};
+
+	const getPreviewDirect = async () => {
+		const { res, json } = await fetchRequest('GET', 'chat/direct/preview?order_by=created_at_desc');
+		// preview = json.results;
 	};
 
 	onMount(() => {
-		getPreview();
+		getPreviewGroup();
 	});
-	
-	// onMount(async () => {
-		// 	getPreview();
 
-		// fetchRequest('GET', 'notification')
+	// onMount(async () => {
+	// 	getPreview();
+
+	// fetchRequest('GET', 'notification')
 	// 	fetchRequest('POST', 'notification/subscriptions')
 	// 	fetchRequest('POST', 'notification/read')
 	// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
@@ -175,6 +183,15 @@
 
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
+		<TestToggle
+			action={async () => {
+				const { res, json } = await fetchRequest(
+					'GET',
+					'chat/direct/preview?order_by=created_at_desc'
+				);
+			}}
+		/>
+
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 			<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
 			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>

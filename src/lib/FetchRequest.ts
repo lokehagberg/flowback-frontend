@@ -13,8 +13,8 @@ export async function fetchRequest(
 	let headers: any = {};
 
 	// if (needs_authorization) headers.Authorization = 'Token ' + "3627a0e3d15cddcecc6cebc88ac5bad2a7d55f9d";
-	if (needs_authorization) headers.Authorization = 'Token ' + "3b22b2980ef1c98956de18d6f2df0677bfa8abfb";
-	// if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+	// if (needs_authorization) headers.Authorization = 'Token ' + "3b22b2980ef1c98956de18d6f2df0677bfa8abfb";
+	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 
 	if (needs_json) {
 		headers.Accept = 'application/json';

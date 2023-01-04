@@ -7,6 +7,7 @@
 		toggled = false;
 
 	const repeatAction = () => {
+        action();
 		interval = setInterval(() => {
 			action();
 		}, loopTime);

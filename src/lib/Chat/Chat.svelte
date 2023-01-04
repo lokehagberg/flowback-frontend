@@ -48,15 +48,14 @@
 		groups = await getGroups();
 	};
 
-	$: (selectedChat || selectedPage) && setUpMessageSending();
+	$: selectedPage && setUpMessageSending();
+	$: selectedChat && setUpMessageSending();
 	// $: selectedPage && getPreview();
 
 	const setUpMessageSending = async () => {
-		selectedPage === 'direct' ? getPreviewDirect() : getPreviewGroup();
-		//Resets last web socket connection
-		// if (socket) socket.close();
-		// if (unsubscribe) unsubscribe();
 		if (!user) return;
+		
+		selectedPage === 'direct' ? getPreviewDirect() : getPreviewGroup();
 
 		getRecentMesseges();
 
@@ -102,12 +101,13 @@
 
 	const getRecentMesseges = async () => {
 		if (!selectedChat) return;
+
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
+			`chat/${selectedPage}/${selectedChat}?limit=${5}`
 		);
 
-		messages = json.results.reverse();
+		messages = json.results;
 
 		//Temporary fix before json.next issue is fixed
 		olderMessagesAPI = json.next;
@@ -145,16 +145,15 @@
 
 	const getPreviewGroup = async () => {
 		const { res, json } = await fetchRequest('GET', 'chat/group/preview?order_by=created_at_desc');
-		// preview = json.results;
+		preview = json.results;
 	};
 
 	const getPreviewDirect = async () => {
 		const { res, json } = await fetchRequest('GET', 'chat/direct/preview?order_by=created_at_desc');
-		// preview = json.results;
+		preview = json.results;
 	};
 
 	onMount(() => {
-		getPreviewGroup();
 	});
 
 	// onMount(async () => {
@@ -183,14 +182,15 @@
 
 {#if chatOpen}
 	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
-		<TestToggle
+		<!-- <TestToggle
 			action={async () => {
 				const { res, json } = await fetchRequest(
 					'GET',
 					'chat/direct/preview?order_by=created_at_desc'
 				);
 			}}
-		/>
+			loopTime={5000}
+		/> -->
 
 		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 			<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
@@ -268,12 +268,18 @@
 					<div class="flex flex-col">
 						<span>{chatter.name || chatter.username}</span>
 						<span class="text-gray-400 text-sm truncate h-[20px]"
-							>{preview.find((message) => message.user_id === chatter.id)?.message || ''}</span
+						>
+
+						{preview.find(
+							(message) =>
+							(user.id !== message.user_id && message.user_id === chatter.id) ||
+							(user.id !== message.target_id && message.target_id === chatter.id)
+							)?.message || ''}</span
 						>
 					</div>
 				</li>
-			{/each}
-		</ul>
+				{/each}
+			</ul>
 		<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
 			<!-- Here the user writes a message to be sent -->
 			<form class="flex gap-2" on:submit|preventDefault={HandleMessageSending}>

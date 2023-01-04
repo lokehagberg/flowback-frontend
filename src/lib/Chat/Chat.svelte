@@ -104,10 +104,10 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/${selectedPage}/${selectedChat}?limit=${5}`
+			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
 
-		messages = json.results;
+		messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
 		olderMessagesAPI = json.next;
@@ -166,6 +166,8 @@
 
 	// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
 	// });
+
+	$: console.log(preview)
 </script>
 
 <!-- <ButtonPrimary action={() => {

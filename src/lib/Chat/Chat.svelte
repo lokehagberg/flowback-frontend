@@ -285,10 +285,14 @@
 						<span>{chatter.name || chatter.username}</span>
 						<span class="text-gray-400 text-sm truncate h-[20px]">
 							{preview.find(
-								(message) =>
-									(user.id !== message.user_id && message.user_id === chatter.id) ||
+								(message) => {
+									const messageId = message.user_id || message.group_id
+									return (user.id !== messageId && messageId === chatter.id) ||
 									(user.id !== message.target_id && message.target_id === chatter.id)
-							)?.message || ''}</span
+								}
+							)?.message || ''}
+							
+							</span
 						>
 					</div>
 				</li>

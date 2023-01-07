@@ -154,6 +154,8 @@
 	const getPreview = async () => {
 		const { res, json } = await fetchRequest('GET', `chat/${selectedPage}/preview?order_by=created_at_desc`);
 		preview = json.results;
+
+		notified = json.results.filter((message:any) => message.timestamp < message.created_at).map((message:any) => message.target_id === user.id ? message.user_id : message.target_id)
 	};
 
 	const clickedChatter = (chatter: any) => {

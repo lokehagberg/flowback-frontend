@@ -31,14 +31,21 @@
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (message: string) => void,
-		unsubscribe: Unsubscriber,
+		unsubscribe: Unsubscriber = () => {},
 		//Chat history
 		olderMessagesAPI: string,
 		newerMessagesAPI: string;
 
-	$: chatOpen && getChattable();
+	$: chatOpen && openFirstTime()
+
+	const openFirstTime = async () => {
+		await getChattable();
+		setUpMessageSending();
+	}
 
 	const getChattable = async () => {
+		if (user) return;
+		
 		if (directs.length + groups.length !== 0) return;
 
 		const { json, res } = await fetchRequest('GET', 'user');
@@ -48,16 +55,16 @@
 		groups = await getGroups();
 	};
 
-	$: selectedPage && setUpMessageSending();
-	$: selectedChat && setUpMessageSending();
-	// $: selectedPage && getPreview();
+	$: (selectedPage || selectedChat) && setUpMessageSending();
 
 	const setUpMessageSending = async () => {
 		if (!user) return;
-		
-		selectedPage === 'direct' ? getPreviewDirect() : getPreviewGroup();
+
+		getPreview();
 
 		getRecentMesseges();
+
+		// await unsubscribe();
 
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
@@ -67,36 +74,37 @@
 
 		//This function triggers every time a message arrives from the socket
 		//Bug: This happends even when switching chats
-		unsubscribe = subscribe(async (e: any) => {
-			//Try-catch to prevent error end at JSON string
-			try {
-				var { message, user } = JSON.parse(e);
-			} catch (err) {
-				return;
-			}
+		unsubscribe = subscribe(handleNewChatMessage);
+	};
 
-			//Messages from other chats are not put in chat
-			if (selectedChat !== user.id) return;
+	const handleNewChatMessage = async (e: any) => {
+		//Try-catch to prevent error end at JSON string
+		try {
+			var { message, user } = JSON.parse(e);
+		} catch (err) {
+			return;
+		}
 
-			//New message recieved, add to list of notifications to show to user
-			// console.log(notified, message, 'NOTES');
-			if (user.id && !notified.includes(user.id)) {
-				notified.push(user.id);
-				notified = notified;
-			}
+		//Messages from other chats are not put in chat
+		if (selectedChat !== user.id) return;
 
-			//If scrolled at most recent, display new message
-			if (!newerMessagesAPI) {
-				messages = [...messages, { message, user, created_at: new Date().toString() }];
+		//New message recieved, add to list of notifications to show to user
+		// if (user.id && !notified.includes(user.id)) {
+		// 	notified.push(user.id);
+		// 	notified = notified;
+		// }
 
-				//TODO: make a better solution to scrolling down when sending/being sent message
-				await setTimeout(() => {
-					//If scrolled furtherst down, scroll whenever a message is recieved
-					const d = document.querySelector('.overflow-y-scroll');
-					d?.scroll(0, 100000);
-				}, 100);
-			}
-		});
+		//If scrolled at most recent, display new message
+		if (!newerMessagesAPI) {
+			messages = [...messages, { message, user, created_at: new Date().toString() }];
+
+			//TODO: make a better solution to scrolling down when sending/being sent message
+			await setTimeout(() => {
+				//If scrolled furtherst down, scroll whenever a message is recieved
+				const d = document.querySelector('.overflow-y-scroll');
+				d?.scroll(0, 100000);
+			}, 100);
+		}
 	};
 
 	const getRecentMesseges = async () => {
@@ -143,18 +151,30 @@
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
-	const getPreviewGroup = async () => {
-		const { res, json } = await fetchRequest('GET', 'chat/group/preview?order_by=created_at_desc');
+	const getPreview = async () => {
+		const { res, json } = await fetchRequest('GET', `chat/${selectedPage}/preview?order_by=created_at_desc`);
 		preview = json.results;
 	};
 
-	const getPreviewDirect = async () => {
-		const { res, json } = await fetchRequest('GET', 'chat/direct/preview?order_by=created_at_desc');
-		preview = json.results;
+	const clickedChatter = (chatter: any) => {
+		//Gets rid of existing notification when clicked on new chat
+		notified = notified.filter((notis) => notis !== chatter.id);
+		notified = notified;
+
+		//Switches chat shown to the right of the screen to chatter
+		if (selectedChat !== chatter.id) selectedChat = chatter.id;
+
+		setTimeStamp(chatter.id);
 	};
 
-	onMount(() => {
-	});
+	//User has looked at a message, affects /preview primarily.
+	const setTimeStamp = async (chatterId: number) => {
+		fetchRequest('POST', `chat/${selectedPage}/${chatterId}/timestamp`, {
+			timestamp: new Date()
+		});
+	};
+
+	onMount(() => {});
 
 	// onMount(async () => {
 	// 	getPreview();
@@ -167,7 +187,7 @@
 	// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
 	// });
 
-	$: console.log(preview)
+	$: console.log(preview);
 </script>
 
 <!-- <ButtonPrimary action={() => {
@@ -253,15 +273,7 @@
 				<li
 					class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 					class:bg-gray-200={selectedChat === chatter.id}
-					on:click={() => {
-						//Gets rid of existing notification when clicked on new chat
-						notified = notified.filter((notis) => notis !== chatter.id);
-						console.log(notified);
-						notified = notified;
-
-						//Switches chat shown to the right of the screen to chatter
-						if (selectedChat !== chatter.id) selectedChat = chatter.id;
-					}}
+					on:click={() => clickedChatter(chatter)}
 				>
 					{#if notified.includes(chatter.id)}
 						<div class="bg-purple-400 p-1 rounded-full" />
@@ -269,19 +281,17 @@
 					<ProfilePicture user={chatter} />
 					<div class="flex flex-col">
 						<span>{chatter.name || chatter.username}</span>
-						<span class="text-gray-400 text-sm truncate h-[20px]"
-						>
-
-						{preview.find(
-							(message) =>
-							(user.id !== message.user_id && message.user_id === chatter.id) ||
-							(user.id !== message.target_id && message.target_id === chatter.id)
+						<span class="text-gray-400 text-sm truncate h-[20px]">
+							{preview.find(
+								(message) =>
+									(user.id !== message.user_id && message.user_id === chatter.id) ||
+									(user.id !== message.target_id && message.target_id === chatter.id)
 							)?.message || ''}</span
 						>
 					</div>
 				</li>
-				{/each}
-			</ul>
+			{/each}
+		</ul>
 		<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
 			<!-- Here the user writes a message to be sent -->
 			<form class="flex gap-2" on:submit|preventDefault={HandleMessageSending}>

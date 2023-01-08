@@ -36,16 +36,16 @@
 		olderMessagesAPI: string,
 		newerMessagesAPI: string;
 
-	$: chatOpen && openFirstTime()
+	$: chatOpen && openFirstTime();
 
 	const openFirstTime = async () => {
 		await getChattable();
 		setUpMessageSending();
-	}
+	};
 
 	const getChattable = async () => {
 		if (user) return;
-		
+
 		if (directs.length + groups.length !== 0) return;
 
 		const { json, res } = await fetchRequest('GET', 'user');
@@ -60,6 +60,7 @@
 	const setUpMessageSending = async () => {
 		if (!user) return;
 
+		preview = []
 		getPreview();
 
 		getRecentMesseges();
@@ -152,10 +153,15 @@
 	};
 
 	const getPreview = async () => {
-		const { res, json } = await fetchRequest('GET', `chat/${selectedPage}/preview?order_by=created_at_desc`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/${selectedPage}/preview?order_by=created_at_desc`
+		);
 		preview = json.results;
 
-		notified = json.results.filter((message:any) => message.timestamp < message.created_at).map((message:any) => message.target_id === user.id ? message.user_id : message.target_id)
+		notified = json.results
+			.filter((message: any) => message.timestamp < message.created_at)
+			.map((message: any) => (message.target_id === user.id ? message.user_id : message.target_id));
 	};
 
 	const clickedChatter = (chatter: any) => {
@@ -285,15 +291,12 @@
 						<span>{chatter.name || chatter.username}</span>
 						<span class="text-gray-400 text-sm truncate h-[20px]">
 							{preview.find(
-								(message) => {
-									const messageId = message.user_id || message.group_id
-									return (user.id !== messageId && messageId === chatter.id) ||
-									(user.id !== message.target_id && message.target_id === chatter.id)
-								}
+								(message) =>
+									(user.id !== message.target_id && message.target_id === chatter.id) ||
+									(user.id !== message.user_id && message.user_id === chatter.id) ||
+									message.group_id === chatter.id
 							)?.message || ''}
-							
-							</span
-						>
+						</span>
 					</div>
 				</li>
 			{/each}

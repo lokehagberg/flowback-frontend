@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Tab from '$lib/Generic/Tab.svelte';
-	import RegisterCard from '$lib/Login/Register.svelte';
-	import LoginCard from '$lib/Login/Login.svelte';
-	import ForgotPasswordCard from '$lib/Login/ForgotPassword.svelte';
-	import VerifyCard from '$lib/Login/Verify.svelte';
-	import NewPasswordCard from '$lib/Login/NewPassword.svelte';
+	import Register from '$lib/Login/Register.svelte';
+	import Login from '$lib/Login/Login.svelte';
+	import ForgotPassword from '$lib/Login/ForgotPassword.svelte';
+	import Verify from '$lib/Login/Verify.svelte';
+	import NewPassword from '$lib/Login/NewPassword.svelte';
 	import { onMount } from 'svelte';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
@@ -32,15 +32,15 @@
 		<Tab bind:selectedPage tabs={['Login', 'Register']} />
 		<div class="">
 			{#if selectedPage === 'Login'}
-				<LoginCard bind:selectedPage />
+				<Login bind:selectedPage />
 			{:else if selectedPage === 'Register'}
-				<RegisterCard bind:selectedPage />
+				<Register bind:selectedPage />
 			{:else if selectedPage === 'Verify'}
-				<VerifyCard />
+				<Verify />
 			{:else if selectedPage === 'ForgotPassword'}
-				<ForgotPasswordCard bind:selectedPage bind:email />
+				<ForgotPassword bind:selectedPage bind:email />
 			{:else if selectedPage === 'NewPassword'}
-				<NewPasswordCard bind:email/>
+				<NewPassword bind:email/>
 			{/if}
 		</div>
 	</div>

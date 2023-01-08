@@ -72,6 +72,14 @@ export interface Tag {
 	active: boolean;
 }
 
+export interface groupUser extends User {
+	user_id: number;
+	delegate: boolean;
+	is_admin: boolean;
+	permission_id: number;
+	permission_name: string;
+}
+
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
 /*

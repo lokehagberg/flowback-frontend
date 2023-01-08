@@ -115,7 +115,7 @@
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
-					<ProfilePicture user={delegate}/>
+					<ProfilePicture user={delegate} displayName/>
 				</div>
 				<div class="flex items-center">
 					<div class="flex gap-2 flex-wrap mt-4">

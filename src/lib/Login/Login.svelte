@@ -28,6 +28,7 @@
 
 			{
 				const { json } = await fetchRequest('GET', 'user');
+				localStorage.setItem('userInfo', json.results)
 				// userInfo.set(json);
 			}
 
@@ -45,7 +46,7 @@
 			type="submit"
 			value={$_('Login')}
 			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-			label="Logga in"
+			label="Login"
 		/>
 
 		<StatusMessage bind:status />

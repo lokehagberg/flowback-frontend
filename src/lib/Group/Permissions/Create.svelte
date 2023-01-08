@@ -40,12 +40,9 @@
 	const getRoleList = () => {
 		fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`);
 	};
-
 </script>
 
 <div class="bg-white p-6 rounded">
-	
-
 	<ButtonPrimary action={getRoleList}>hi</ButtonPrimary>
 	<form class="flex flex-col gap-4">
 		<h1 class="text-xl">User Permissions</h1>
@@ -60,6 +57,4 @@
 			</div>
 		{/each}
 	</form>
-
-
 </div>

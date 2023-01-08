@@ -4,7 +4,6 @@
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Tab from '$lib/Generic/Tab.svelte';
 
 	const perms = [
 		{
@@ -36,17 +35,12 @@
 			ban_members: rolePerms[4]
 		});
 	};
-
-	const getRoleList = () => {
-		fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`);
-	};
 </script>
 
 <div class="bg-white p-6 rounded">
-	<ButtonPrimary action={getRoleList}>hi</ButtonPrimary>
-	<form class="flex flex-col gap-4">
-		<h1 class="text-xl">User Permissions</h1>
+	<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
 		<TextInput label="Role name" bind:value={roleName} />
+		<h1 class="text-xl">Permissions</h1>
 		{#each perms as perm, i}
 			<div class="flex justify-between">
 				<details>
@@ -56,5 +50,6 @@
 				<Toggle bind:checked={rolePerms[i]} />
 			</div>
 		{/each}
+		<ButtonPrimary type="submit">Create Role</ButtonPrimary>
 	</form>
 </div>

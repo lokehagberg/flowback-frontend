@@ -20,10 +20,10 @@
 	import Tags from '$lib/Group/Tags.svelte';
 	import Kanban from '$lib/Group/Kanban.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import Permissions from '$lib/Group/Permissions.svelte';
+	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
-	let selectedPage: SelectablePage = 'flow';
+	let selectedPage: SelectablePage = 'perms';
 	let group: GroupDetails = {
 		active: false,
 		cover_image: '',

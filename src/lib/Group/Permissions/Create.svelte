@@ -2,9 +2,9 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
-	import groupId from './GroupId';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import Tab from '$lib/Generic/Tab.svelte';
 
 	const perms = [
 		{
@@ -24,11 +24,11 @@
 	];
 
 	let roleName = '';
-    let rolePerms = [false, false, false, false, false]
+	let rolePerms = [false, false, false, false, false];
 
 	const createRole = () => {
 		fetchRequest('POST', `group/${$page.params.groupId}/permission/create`, {
-            role_name: roleName,
+			role_name: roleName,
 			invite_user: rolePerms[0],
 			create_poll: rolePerms[1],
 			allow_vote: rolePerms[2],
@@ -36,15 +36,16 @@
 			ban_members: rolePerms[4]
 		});
 	};
-    
-    const getRoleList = () => {
-        fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`) 
-    }
 
-	$: console.log(rolePerms);
+	const getRoleList = () => {
+		fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`);
+	};
+
 </script>
 
 <div class="bg-white p-6 rounded">
+	
+
 	<ButtonPrimary action={getRoleList}>hi</ButtonPrimary>
 	<form class="flex flex-col gap-4">
 		<h1 class="text-xl">User Permissions</h1>
@@ -59,4 +60,6 @@
 			</div>
 		{/each}
 	</form>
+
+
 </div>

@@ -14,22 +14,24 @@
 	let users: groupUser[] = [];
 
 	const getRoleList = async () => {
-		const {res, json} = await fetchRequest('GET', `group/${$page.params.groupId}/permissions?limit=100`);
-        roles = json.results
-    };
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/permissions?limit=100`
+		);
+		roles = json.results;
+	};
 
 	const getUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
 	};
 
-    const updateUserRoles = async () => {
+	const updateUserRoles = async (roleId:number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
-            user:''
-        });
+			user: localStorage.getItem('userId'),
+			permission: roleId
+		});
 	};
-
-	const changeRoles = async () => {};
 
 	onMount(() => {
 		getUsers();
@@ -64,16 +66,14 @@
 				<h1 class="text-xl">{user.username}</h1>
 				<!-- <TextInput label="Search" /> -->
 				<ul class="mt-6 flex flex-wrap items-center">
-                    {#each roles as role}
+					{#each roles as role}
 						<li
 							class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4"
-							on:click={() => changeRoles()}
+							on:click={() => updateUserRoles(role.id)}
 						>
 							<Tag
-								tag={role.role_name} 
-                                Class={`cursor-pointer ${
-                                    user.id === role.id  ? 'bg-blue-300' : 'bg-blue-600'
-                                }`}
+								tag={role.role_name}
+								Class={`cursor-pointer ${user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
 							/>
 						</li>
 					{/each}

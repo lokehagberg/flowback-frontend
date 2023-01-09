@@ -201,6 +201,7 @@
 	$: console.log(preview);
 </script>
 
+
 <!-- <ButtonPrimary action={() => {
 	fetchRequest('GET', 'notification')
 	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
@@ -214,7 +215,8 @@
 /> -->
 
 {#if chatOpen}
-	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
+<div class="bg-white fixed z-40 w-full grid grid-width-fix">
+		<!-- <TestToggle action={getPreview} loopTime={7000}/> -->
 		<!-- <TestToggle
 			action={async () => {
 				const { res, json } = await fetchRequest(

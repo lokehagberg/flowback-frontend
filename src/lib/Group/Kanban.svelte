@@ -91,16 +91,8 @@
 		title = '';
 	};
 
-	//Untested
-	const deleteKanbanEntry = async (id: number) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/${$page.params.groupId}/kanban/${id}/delete`,
-			{
-				kanban_entry_id: id
-			}
-		);
-		statusMessageFormatter(res, json);
+	const removeKanbanEntry = (id: number) => {
+		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 </script>
 
@@ -117,7 +109,7 @@
 					<ul class="flex flex-col mt-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users}/>
+								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} />
 							{/if}
 						{/each}
 					</ul>

@@ -17,7 +17,7 @@
 	let openModal = false,
 		selectedEntry: number;
 
-	export let kanban: any, type: 'group' | 'home', users: any[];
+	export let kanban: any, type: 'group' | 'home', users: any[], removeKanbanEntry : (id:number) => void;
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
@@ -51,12 +51,15 @@
 		kanbanEdited.assignee = Number(e.target.value);
 	};
 
+	// Delete kanban removes it from the database, 
+	// remove kanban removes the displaying of the kanban.
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/kanban/${kanban.id}/delete`
 		);
 		statusMessageFormatter(res, json);
+		removeKanbanEntry(kanban.id)
 	};
 </script>
 
@@ -122,8 +125,8 @@
 			</select>
 		</div>
 		<div slot="footer">
-			<ButtonPrimary action={updateKanbanContent}>Update Kanban Entry</ButtonPrimary>
-			<ButtonPrimary action={deleteKanbanEntry} Class="bg-red-500">Delete Kanban Entry</ButtonPrimary>
+			<ButtonPrimary action={updateKanbanContent}>Update</ButtonPrimary>
+			<ButtonPrimary action={deleteKanbanEntry} Class="bg-red-500">Delete</ButtonPrimary>
 		</div>
 	</Modal>
 {/if}

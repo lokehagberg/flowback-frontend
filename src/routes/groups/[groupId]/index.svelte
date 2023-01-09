@@ -23,7 +23,7 @@
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 
-	let selectedPage: SelectablePage = 'flow';
+	let selectedPage: SelectablePage = 'kanban';
 	let group: GroupDetails = {
 		active: false,
 		cover_image: '',

@@ -1,13 +1,15 @@
 <script lang="ts">
 	import CrossButton from './CrossButton.svelte';
-	export let open = false;
+	export let open = false, Class = '', onClose = () => {};
+
+	$: if (!open) onClose()
 </script>
 
 <div
 	class:hidden={!open}
 	id="popup-modal"
 	tabindex="-1"
-	class="bg-transparent overflow-y-auto overflow-x-hidden fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal"
+	class={`bg-transparent overflow-y-auto overflow-x-hidden fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal ${Class}`}
 >
 	<div class="shadow-xl border border-gray-300 rounded bg-white relative p-4 w-full max-w-md h-full">
 		<div class="text-xl border-b-2 border-gray-300 border-solid">

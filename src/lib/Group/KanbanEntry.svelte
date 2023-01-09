@@ -50,6 +50,14 @@
 	const changeAssignee = (e: any) => {
 		kanbanEdited.assignee = Number(e.target.value);
 	};
+
+	const deleteKanbanEntry = async () => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/kanban/${kanban.id}/delete`
+		);
+		statusMessageFormatter(res, json);
+	};
 </script>
 
 <li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
@@ -113,6 +121,9 @@
 				{/each}
 			</select>
 		</div>
-		<ButtonPrimary slot="footer" action={updateKanbanContent}>Update Kanban Entry</ButtonPrimary>
+		<div slot="footer">
+			<ButtonPrimary action={updateKanbanContent}>Update Kanban Entry</ButtonPrimary>
+			<ButtonPrimary action={deleteKanbanEntry} Class="bg-red-500">Delete Kanban Entry</ButtonPrimary>
+		</div>
 	</Modal>
 {/if}

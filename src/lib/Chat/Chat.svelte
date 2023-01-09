@@ -31,7 +31,7 @@
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (message: string) => void,
-		unsubscribe: Unsubscriber = () => {},
+		unsubscribe: Unsubscriber,
 		//Chat history
 		olderMessagesAPI: string,
 		newerMessagesAPI: string;
@@ -60,7 +60,10 @@
 	const setUpMessageSending = async () => {
 		if (!user) return;
 
+		if (unsubscribe) unsubscribe();
+
 		preview = []
+		
 		getPreview();
 
 		getRecentMesseges();

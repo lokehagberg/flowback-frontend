@@ -43,15 +43,6 @@
 		kanbanEntries = json.results;
 	};
 
-	const handleUpdateKanban = async (kanban: any) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
-			kanban
-		);
-		statusMessageFormatter(res, json);
-	};
-
 	const handleChangeAssignee = (e: any) => {
 		assignee = Number(e.target.value);
 	};
@@ -126,7 +117,7 @@
 					<ul class="flex flex-col mt-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {handleUpdateKanban} />
+								<KanbanEntry bind:kanban {type} {users}/>
 							{/if}
 						{/each}
 					</ul>

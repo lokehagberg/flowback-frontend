@@ -17,22 +17,39 @@
 	let openModal = false,
 		selectedEntry: number;
 
-	export let kanban: any,
-		type: 'group' | 'home',
-		handleUpdateKanban = (kanban: any) => {};
+	export let kanban: any, type: 'group' | 'home', users: any[];
 
-	let kanbanEdited = kanban
-	
-	const updateKanban = async () => {
+	// initializes the kanban to be edited when modal is opened
+	let kanbanEdited = {
+		id: kanban.id,
+		description: kanban.description,
+		title: kanban.title,
+		assignee: kanban.assignee.id
+	};
+
+	const updateKanbanContent = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
-			{...kanbanEdited, assignee:kanban.assignee.id}
+			kanbanEdited
 		);
-		kanban = kanbanEdited
+		kanban.title = kanbanEdited.title;
+		kanban.description = kanbanEdited.description;
 		statusMessageFormatter(res, json);
-	}
-	
+	};
+
+	const updateKanbanTag = async (kanban: any) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
+			kanban
+		);
+		statusMessageFormatter(res, json);
+	};
+
+	const changeAssignee = (e: any) => {
+		kanbanEdited.assignee = Number(e.target.value);
+	};
 </script>
 
 <li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
@@ -63,7 +80,7 @@
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag > 0) {
-						handleUpdateKanban({ id: kanban.id, tag: kanban.tag - 1 });
+						updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
 						kanban.tag -= 1;
 					}
 				}}
@@ -74,7 +91,7 @@
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag < tags.length) {
-						handleUpdateKanban({ id: kanban.id, tag: kanban.tag + 1 });
+						updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
 						kanban.tag += 1;
 					}
 				}}
@@ -87,12 +104,15 @@
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal}>
-		<TextInput slot="header" bind:value={kanbanEdited.title} label=''/>
-		<TextArea slot="body" bind:value={kanbanEdited.description} label=''/>
-		<ButtonPrimary slot="footer" action={updateKanban}>Update Kanban Entry</ButtonPrimary>
-		<!-- <div slot="header" class="p-4 w-[800px]">{kanban.title}</div> -->
-		<!-- <div slot="body" class="p-5 ">
-			{kanban.description}
-		</div> -->
+		<TextInput slot="header" bind:value={kanbanEdited.title} label="" />
+		<div slot="body">
+			<TextArea bind:value={kanbanEdited.description} label="" />
+			<select on:input={changeAssignee}>
+				{#each users as user}
+					<option value={user.user_id}>{user.username}</option>
+				{/each}
+			</select>
+		</div>
+		<ButtonPrimary slot="footer" action={updateKanbanContent}>Update Kanban Entry</ButtonPrimary>
 	</Modal>
 {/if}

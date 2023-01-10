@@ -22,7 +22,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 
-	let selectedPage: SelectablePage = 'flow';
+	let selectedPage: SelectablePage = 'perms';
 	let group: GroupDetails = {
 		active: false,
 		cover_image: '',

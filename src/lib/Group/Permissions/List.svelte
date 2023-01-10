@@ -20,21 +20,23 @@
 	});
 </script>
 
-<div>
-    <div class="flex justify-around">
-        <div>Invite</div>
-        <div>Poll creation</div>
-        <div>Voting</div>
-        <div>Kick</div>
-        <div>Ban</div>
-    </div>
+<table class="w-full">
+    <tr class="">
+        <th>Name</th>
+        <th>Invite</th>
+        <th>Poll creation</th>
+        <th>Voting</th>
+        <th>Kick</th>
+        <th>Ban</th>
+    </tr>
 	{#each roles as role}
-		<div class="flex justify-around">
+		<tr class="">
+            <th>{role.role_name}</th>
             <Role role={role.invite_user}/>
             <Role role={role.create_poll}/>
             <Role role={role.allow_vote}/>
             <Role role={role.kick_members}/>
             <Role role={role.ban_members}/>
-		</div>
+		</tr>
 	{/each}
-</div>
+</table>

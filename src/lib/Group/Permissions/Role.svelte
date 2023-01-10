@@ -5,6 +5,6 @@
 
 </script>
 
-<div>
+<th>
     {role}
-</div>
+</th>

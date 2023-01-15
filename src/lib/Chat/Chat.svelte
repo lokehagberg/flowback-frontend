@@ -62,8 +62,8 @@
 
 		if (unsubscribe) unsubscribe();
 
-		preview = []
-		
+		preview = [];
+
 		getPreview();
 
 		getRecentMesseges();
@@ -98,7 +98,7 @@
 		// 	notified = notified;
 		// }
 
-		//If scrolled at most recent, display new message
+		//If most recent messeges are shown, display new message and scroll
 		if (!newerMessagesAPI) {
 			messages = [...messages, { message, user, created_at: new Date().toString() }];
 
@@ -124,6 +124,12 @@
 		//Temporary fix before json.next issue is fixed
 		olderMessagesAPI = json.next;
 		newerMessagesAPI = '';
+
+		//TODO: Replace this with something better
+		await setTimeout(() => {
+			const d = document.querySelector('.overflow-y-scroll');
+			d?.scroll(0, 100000);
+		}, 100);
 	};
 
 	const HandleMessageSending = async () => {
@@ -201,7 +207,6 @@
 	$: console.log(preview);
 </script>
 
-
 <!-- <ButtonPrimary action={() => {
 	fetchRequest('GET', 'notification')
 	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
@@ -215,7 +220,7 @@
 /> -->
 
 {#if chatOpen}
-<div class="bg-white fixed z-40 w-full grid grid-width-fix">
+	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
 		<!-- <TestToggle action={getPreview} loopTime={7000}/> -->
 		<!-- <TestToggle
 			action={async () => {

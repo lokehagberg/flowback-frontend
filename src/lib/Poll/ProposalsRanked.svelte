@@ -409,6 +409,8 @@
 	</div>
 </div>
 
+<!-- TODO: Remove this and replace by allowing drag-drop
+and buttons at the same time without a toggle both. -->
 Enable buttons
 <Toggle bind:checked/>
 

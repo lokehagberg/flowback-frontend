@@ -16,6 +16,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { formatDate } from './functions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import Toggle from '$lib/Generic/Toggle.svelte';
 
 	export let votings: votings[];
 	export let selectedPage: 'You' | 'Delegate';
@@ -25,6 +26,8 @@
 		votingStartTime: string;
 	let proposals: proposal[] = [];
 	let ranked: proposal[] = [];
+	let selected: proposal;
+	let checked = false;
 
 	export let tag: number;
 
@@ -85,17 +88,25 @@
 		*/
 
 		sortable.on('sortable:start', (e: any) => {
-			if (mode === 'Prod') e.cancel();
+			if (mode === 'Prod' || checked) e.cancel();
 		});
 
 		sortable.on('sortable:stop', async (e: any) => {
 			console.log(e, 'STOPPED');
+			// e.data.dragEvent.data.originalSource.remove();
+
+			// if (selected)
+			// addToRanked(selected)
+			// setTimeout(() => {
+			// }, 1000);
 		});
 
 		sortable.on('sortable:sorted', async (e: any) => {
 			unsaved = true;
 
 			console.log(e, 'SORTED');
+
+			
 
 			// const element: HTMLElement = e.data.dragEvent.data.originalSource;
 			// const index: number = e.data.newIndex;
@@ -167,7 +178,7 @@
 		}
 
 		sortable.on('sortable:start', (e: any) => {
-			if (selectedPage === 'Delegate') {
+			if (selectedPage === 'Delegate' || checked) {
 				e.cancel();
 			}
 		});
@@ -263,7 +274,8 @@
 
 		status = statusMessageFormatter(res, json);
 		//TODO replace with svelte store
-		const userId = (await fetchRequest('GET', 'user')).json.id;
+		// const userId = (await fetchRequest('GET', 'user')).json.id;
+		const userId = localStorage.getItem('userId')
 
 		const isDelegate = (
 			await fetchRequest('GET', `group/${$page.params.groupId}/users?user_id=${userId}`)
@@ -334,14 +346,15 @@
 							id={`${proposal.id}`}
 							class="proposal"
 							on:dblclick={() => doubleClick(proposal, 'ranked')}
+							on:click={() => (selected = proposal)}
 						>
 							<Proposal
 								{...proposal}
 								Class={`${selectedPage === 'You' && ''} ${
-									import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
+									(!checked && selectedPage !== 'Delegate') && 'cursor-move'
 								}`}
 							>
-								<div class={`${selectedPage === 'Delegate' && 'invisible'}`}>
+								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
 									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
 										<Fa icon={faMinus} />
 									</div>
@@ -371,16 +384,17 @@
 					id={`${proposal.id}`}
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
+					on:click={() => (selected = proposal)}
 				>
 					<Proposal
 						{...proposal}
 						Class={`${selectedPage === 'You'} ${
-							import.meta.env.VITE_MODE === 'DEV' && 'cursor-move'
+							(!checked && selectedPage !== 'Delegate') && 'cursor-move'
 						}`}
 					>
 						<div
 							class={`${
-								(selectedPage === 'Delegate' || new Date(votingStartTime) >= new Date()) &&
+								(selectedPage === 'Delegate' || new Date(votingStartTime) >= new Date() || !checked) &&
 								'invisible'
 							}`}
 						>
@@ -394,6 +408,9 @@
 		</ul>
 	</div>
 </div>
+
+Enable buttons
+<Toggle bind:checked/>
 
 <StatusMessage bind:status />
 

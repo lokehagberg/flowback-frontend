@@ -34,9 +34,14 @@
 		unsubscribe: Unsubscriber,
 		//Chat history
 		olderMessagesAPI: string,
-		newerMessagesAPI: string;
+		newerMessagesAPI: string,
+		displayNotificationGlobal = false;
 
-	$: chatOpen && openFirstTime();
+	// $: chatOpen && openFirstTime();
+
+	onMount(() => {
+		openFirstTime();
+	})
 
 	const openFirstTime = async () => {
 		await getChattable();
@@ -191,6 +196,9 @@
 		});
 	};
 
+	$: if (notified.length > 0) displayNotificationGlobal = true 
+	else displayNotificationGlobal=false
+
 	onMount(() => {});
 
 	// onMount(async () => {
@@ -203,8 +211,6 @@
 
 	// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
 	// });
-
-	$: console.log(preview);
 </script>
 
 <!-- <ButtonPrimary action={() => {
@@ -333,7 +339,8 @@
 {:else}
 	<div
 		on:click={() => (chatOpen = true)}
-		class="transition transition-all fixed z-30 bg-white shadow-md border rounded p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-black active:shadow-2xl active:p-7"
+		class:small-notification={displayNotificationGlobal}
+		class="transition transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 	>
 		<Fa icon={faComment} />
 	</div>
@@ -343,5 +350,15 @@
 	.grid-width-fix {
 		grid-template-columns: 30% 70%;
 		grid-template-rows: 3rem 50vh 50vh;
+	}
+
+	.small-notification:before {
+		position: absolute;
+		content: '';
+		top: 0;
+		right: 0;
+		background-color: rgb(167, 139, 250);
+		border-radius: 100%;
+		padding: 10px;
 	}
 </style>

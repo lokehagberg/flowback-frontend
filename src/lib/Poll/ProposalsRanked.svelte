@@ -105,77 +105,9 @@
 			unsaved = true;
 
 			console.log(e, 'SORTED');
-
-			
-
-			// const element: HTMLElement = e.data.dragEvent.data.originalSource;
-			// const index: number = e.data.newIndex;
-			// const parent = e.data.newContainer.className.includes('ranked') ? 'ranked' : 'abstained';
-			// element.classList.add('remove-after-placed');
-
-			// const proposal = proposals.find((proposal) => Number(element.id) === proposal.id);
-
-			// if (!proposal) return;
-
-			// if (parent === 'ranked') {
-			// 	// const oldRanked = ranked;
-			// 	// ranked = [];
-
-			// 	// const ee = document.querySelector('.container.ranked');
-
-			// 	// var first = ee?.firstElementChild;
-
-			// 	// while (first) {
-			// 	// 	console.log(first)
-			// 	// 	first.remove();
-			// 	// 	first = ee?.firstElementChild;
-			// 	// }
-
-			// 	await waitForElm('.remove-after-placed');
-
-			// 	ranked.splice(index, 0, proposal);
-			// 	ranked = ranked;
-
-			// 	// sortable.destroy()
-			// 	// console.log(document.querySelector("."))
-			// 	// console.log(elementLater.parentNode?.removeChild(document.querySelector(".remove-after-placed")))
-			// } else {
-			// 	abstained.push(proposal);
-			// 	abstained = abstained;
-			// }
-
-			// const elementLater = await waitForElm('.remove-after-placed');
-			// elementLater.parentNode?.removeChild(elementLater);
-			// setTimeout(() => {
-			// 	element.parentNode?.removeChild(element)
-			// }, 1000)
-			// console.log(element.parentNode)
-			// console.log(e.data.dragEvent)
-			// element.parentNode?.removeChild(element)
-			// console.log(e.data.dragEvent.data.originalSource.parent.removeChild(e.data.dragEvent.data.originalSource))
 		});
 
-		function waitForElm(selector: string): Promise<Element> {
-			return new Promise((resolve) => {
-				const obj = document.querySelector(selector);
-				if (obj) {
-					return resolve(obj);
-				}
-
-				const observer = new MutationObserver((mutations) => {
-					const objLater = document.querySelector(selector);
-					if (objLater) {
-						resolve(objLater);
-						observer.disconnect();
-					}
-				});
-
-				observer.observe(document.body, {
-					childList: true,
-					subtree: true
-				});
-			});
-		}
+		
 
 		sortable.on('sortable:start', (e: any) => {
 			if (selectedPage === 'Delegate' || checked) {
@@ -187,6 +119,8 @@
 			console.log(e);
 		});
 	};
+
+	$: console.log(ranked, "CHANGE CRANKED")
 
 	/*
 		Every voting has a priority, larger number means higher up in the ranking.
@@ -202,13 +136,9 @@
 
 		proposals.forEach((proposal) => {
 			const vote = votings.find((vote) => proposal.id === vote.proposal);
-			console.log(vote, 'VOTE');
-			// if (vote) ranked[votings.length - vote?.priority] = proposal;
-			if (vote) ranked.push(proposal);
+			if (vote) ranked[votings.length - vote?.priority] = proposal;
 			else abstained.push(proposal);
 		});
-
-		console.log(ranked, abstained, votings, 'ORDERING');
 
 		if (ranked[0] !== undefined) ranked = ranked;
 		else ranked = [];

@@ -148,7 +148,7 @@
 		if (newerMessagesAPI) getRecentMesseges();
 		
 		await sendMessageToSocket(message);
-		preview.find(message => message.id === selectedChat).text = message
+		// preview.find(message => message.id === selectedChat).text = message
 
 		messages.push({
 			message,

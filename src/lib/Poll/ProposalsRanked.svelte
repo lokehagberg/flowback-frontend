@@ -88,7 +88,7 @@
 		*/
 
 		sortable.on('sortable:start', (e: any) => {
-			if (mode === 'Prod' || checked) e.cancel();
+			if (checked) e.cancel();
 		});
 
 		sortable.on('sortable:stop', async (e: any) => {

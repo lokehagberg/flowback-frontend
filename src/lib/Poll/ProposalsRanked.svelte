@@ -40,7 +40,7 @@
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
-		if (import.meta.env.VITE_MODE === 'DEV') setUpSortable();
+		setUpSortable();
 		await getProposals();
 		setUpVotings();
 	});

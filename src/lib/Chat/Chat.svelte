@@ -15,6 +15,7 @@
 	import { _ } from 'svelte-i18n';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import TestToggle from '$lib/Generic/TestToggle.svelte';
+	import Selected from '$lib/Group/Delegation/Selected.svelte';
 
 	// User Action variables
 	let messages: Message[] = [],
@@ -79,7 +80,7 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		if (!socket) socket = createSocket(user.id);
 
-		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
+		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage)	
 
 		//This function triggers every time a message arrives from the socket
 		//Bug: This happends even when switching chats
@@ -102,6 +103,9 @@
 		// 	notified.push(user.id);
 		// 	notified = notified;
 		// }
+
+		console.log("Huhuhu")
+		getPreview();
 
 		//If most recent messeges are shown, display new message and scroll
 		if (!newerMessagesAPI) {
@@ -142,7 +146,10 @@
 
 		//When sending, go to most recent messages
 		if (newerMessagesAPI) getRecentMesseges();
+		
 		await sendMessageToSocket(message);
+		preview.find(message => message.id === selectedChat).text = message
+
 		messages.push({
 			message,
 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },

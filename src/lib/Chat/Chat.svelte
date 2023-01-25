@@ -14,12 +14,12 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
-	import TestToggle from '$lib/Generic/TestToggle.svelte';
-	import Selected from '$lib/Group/Delegation/Selected.svelte';
+
+	//TODO: Refactor the chat, both code-wise and design-wise
 
 	// User Action variables
 	let messages: Message[] = [],
-		chatOpen = false,
+		chatOpen = true,
 		message: string,
 		user: User,
 		// Specifies which chat window is open
@@ -42,11 +42,12 @@
 
 	onMount(() => {
 		openFirstTime();
-	})
+	});
 
 	const openFirstTime = async () => {
 		await getChattable();
 		setUpMessageSending();
+		getPreview();
 	};
 
 	const getChattable = async () => {
@@ -68,9 +69,7 @@
 
 		if (unsubscribe) unsubscribe();
 
-		preview = [];
-
-		getPreview();
+		// preview = [];
 
 		getRecentMesseges();
 
@@ -80,14 +79,29 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		if (!socket) socket = createSocket(user.id);
 
-		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage)	
+		sendMessageToSocket = await sendMessage(selectedChat, socket, selectedPage);
 
 		//This function triggers every time a message arrives from the socket
 		//Bug: This happends even when switching chats
 		unsubscribe = subscribe(handleNewChatMessage);
 	};
 
+	$: console.log(notified, 'notiser');
+	let recentlyChangedChat = false;
+
+	
+	$: selectedChat && (() => (recentlyChangedChat = true))();
+
+
+
 	const handleNewChatMessage = async (e: any) => {
+		//This function is being called when user changes chat but it shouldn't
+		//IDK how to fix it
+		// if (recentlyChangedChat) {
+		// 	recentlyChangedChat = false;
+		// 	return;
+		// }
+
 		//Try-catch to prevent error end at JSON string
 		try {
 			var { message, user } = JSON.parse(e);
@@ -95,16 +109,34 @@
 			return;
 		}
 
-		//Messages from other chats are not put in chat
+		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
+		let previewMessage = preview.find(
+			(preview_message) =>
+				preview_message.user_id === user.id || preview_message.target_id === user.id
+		);
+
+		previewMessage.message = message;
+		previewMessage.created_at = new Date();
+
+		if (selectedChat === previewMessage.user_id) {
+			previewMessage.timestamp = new Date();
+		}
+
+		preview = preview;
+
+		//Small purple dot for notification. Could probably be done better as a function
+		//That changes whenever preview is changed.
+		console.log(previewMessage.user_id in notified, previewMessage.user_id, notified);
+		if (!(previewMessage.user_id in notified) && selectedChat !== previewMessage.user_id) {
+			notified.push(previewMessage.user_id);
+			notified = notified;
+			console.log('HANDLENEWCHAT');
+		}
+
+		setTimeStamp(selectedChat);
+
 		if (selectedChat !== user.id) return;
 
-		//New message recieved, add to list of notifications to show to user
-		// if (user.id && !notified.includes(user.id)) {
-		// 	notified.push(user.id);
-		// 	notified = notified;
-		// }
-
-		console.log("Huhuhu")
 		getPreview();
 
 		//If most recent messeges are shown, display new message and scroll
@@ -141,14 +173,20 @@
 		}, 100);
 	};
 
+	//Runs when changing chats
 	const HandleMessageSending = async () => {
 		if (message.length === 0) return;
 
 		//When sending, go to most recent messages
 		if (newerMessagesAPI) getRecentMesseges();
-		
+
 		await sendMessageToSocket(message);
-		// preview.find(message => message.id === selectedChat).message = message
+
+		let previewMessage = preview.find(
+			(message) => message.user_id === selectedChat || message.target_id === selectedChat
+		);
+		previewMessage.message = message;
+		preview = preview;
 
 		messages.push({
 			message,
@@ -189,6 +227,7 @@
 		//Gets rid of existing notification when clicked on new chat
 		notified = notified.filter((notis) => notis !== chatter.id);
 		notified = notified;
+		console.log('CLICKEDCHATTER');
 
 		//Switches chat shown to the right of the screen to chatter
 		if (selectedChat !== chatter.id) selectedChat = chatter.id;
@@ -203,10 +242,8 @@
 		});
 	};
 
-	$: if (notified.length > 0) displayNotificationGlobal = true 
-	else displayNotificationGlobal=false
-
-	onMount(() => {});
+	$: if (notified.length > 0) displayNotificationGlobal = true;
+	else displayNotificationGlobal = false;
 
 	// onMount(async () => {
 	// 	getPreview();
@@ -347,7 +384,7 @@
 	<div
 		on:click={() => (chatOpen = true)}
 		class:small-notification={displayNotificationGlobal}
-		class="transition transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
+		class="transition transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-11"
 	>
 		<Fa icon={faComment} />
 	</div>

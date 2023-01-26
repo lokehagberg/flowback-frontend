@@ -204,8 +204,7 @@
 		);
 
 		previewMessage.message = message;
-		console.log(previewMessage.group_id, "HELLLOOPOOOTIS?!?!?!")
-
+		console.log(previewMessage.group_id, 'HELLLOOPOOOTIS?!?!?!');
 
 		preview = preview;
 
@@ -243,7 +242,7 @@
 
 		notified = json.results
 			.filter((message: any) => message.timestamp < message.created_at)
-			.map((message: any) => (message.target_id === user.id ? message.user_id : message.target_id));
+			.map((message: any) => (message.group_id ? message.group_id : message.target_id === user.id ? message.user_id : message.target_id));
 	};
 
 	const clickedChatter = (chatter: any) => {

@@ -97,10 +97,10 @@
 	const handleNewChatMessage = async (e: any) => {
 		//This function is being called when user changes chat but it shouldn't
 		//IDK how to fix it
-		// if (recentlyChangedChat) {
-		// 	recentlyChangedChat = false;
-		// 	return;
-		// }
+		if (recentlyChangedChat) {
+			recentlyChangedChat = false;
+			return;
+		}
 
 		//Try-catch to prevent error end at JSON string
 		try {

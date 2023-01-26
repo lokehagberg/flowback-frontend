@@ -92,8 +92,10 @@
 	$: selectedChat && (() => (recentlyChangedChat = true))();
 
 	$: selectedPage &&
-		(async () => {
-			await getPreview();
+		(() => {
+			setTimeout(() => {
+				getPreview();
+			}, 1000)
 		})();
 
 	const handleNewChatMessage = async (e: any) => {
@@ -228,7 +230,7 @@
 	};
 
 	const getPeople = async () => {
-		const { json } = await fetchRequest('GET', `users?limit=100`);
+		const { json, res } = await fetchRequest('GET', `users?limit=100`);
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 
@@ -237,6 +239,8 @@
 			'GET',
 			`chat/${selectedPage}/preview?order_by=created_at_desc`
 		);
+
+		if (!res.ok) return;
 
 		preview = json.results;
 

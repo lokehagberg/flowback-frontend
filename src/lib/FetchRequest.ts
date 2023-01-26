@@ -14,6 +14,7 @@ export async function fetchRequest(
 
 	// if (needs_authorization) headers.Authorization = 'Token ' + "3627a0e3d15cddcecc6cebc88ac5bad2a7d55f9d";
 	// if (needs_authorization) headers.Authorization = 'Token ' + "3b22b2980ef1c98956de18d6f2df0677bfa8abfb";
+	// if (needs_authorization) headers.Authorization = 'Token ' + "aeced5825244ec1dd3c9769ba6ed6e3dca38d8f4";
 	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 
 	if (needs_json) {

@@ -19,7 +19,7 @@
 
 	// User Action variables
 	let messages: Message[] = [],
-		chatOpen = true,
+		chatOpen = false,
 		message: string,
 		user: User,
 		// Specifies which chat window is open
@@ -36,7 +36,8 @@
 		//Chat history
 		olderMessagesAPI: string,
 		newerMessagesAPI: string,
-		displayNotificationGlobal = false;
+		displayNotificationDirect = false,
+		displayNotificationGroup = false;
 
 	// $: chatOpen && openFirstTime();
 
@@ -86,17 +87,18 @@
 		unsubscribe = subscribe(handleNewChatMessage);
 	};
 
-	$: console.log(notified, 'notiser');
 	let recentlyChangedChat = false;
 
-	
 	$: selectedChat && (() => (recentlyChangedChat = true))();
 
-
+	$: selectedPage &&
+		(async () => {
+			await getPreview();
+		})();
 
 	const handleNewChatMessage = async (e: any) => {
 		//This function is being called when user changes chat but it shouldn't
-		//IDK how to fix it
+		//IDK how to fix it except this way:
 		if (recentlyChangedChat) {
 			recentlyChangedChat = false;
 			return;
@@ -112,7 +114,9 @@
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = preview.find(
 			(preview_message) =>
-				preview_message.user_id === user.id || preview_message.target_id === user.id
+				preview_message.user_id === user.id ||
+				preview_message.target_id === user.id ||
+				selectedPage === 'group'
 		);
 
 		previewMessage.message = message;
@@ -121,6 +125,9 @@
 		if (selectedChat === previewMessage.user_id) {
 			previewMessage.timestamp = new Date();
 		}
+
+		if (previewMessage.group_id) displayNotificationGroup = true;
+		else displayNotificationDirect = true;
 
 		preview = preview;
 
@@ -137,7 +144,7 @@
 
 		if (selectedChat !== user.id) return;
 
-		getPreview();
+		// getPreview();
 
 		//If most recent messeges are shown, display new message and scroll
 		if (!newerMessagesAPI) {
@@ -173,6 +180,8 @@
 		}, 100);
 	};
 
+	let groupChatNotified = false;
+
 	//Runs when changing chats
 	const HandleMessageSending = async () => {
 		if (message.length === 0) return;
@@ -182,10 +191,22 @@
 
 		await sendMessageToSocket(message);
 
+		if (selectedPage === 'group') {
+			groupChatNotified = true;
+			console.log('HISHIHi');
+		}
+
 		let previewMessage = preview.find(
-			(message) => message.user_id === selectedChat || message.target_id === selectedChat
+			(message) =>
+				((message.user_id === selectedChat || message.target_id === selectedChat) &&
+					selectedPage === 'direct') ||
+				(message.group_id === selectedChat && selectedPage === 'group')
 		);
+
 		previewMessage.message = message;
+		console.log(previewMessage.group_id, "HELLLOOPOOOTIS?!?!?!")
+
+
 		preview = preview;
 
 		messages.push({
@@ -193,6 +214,7 @@
 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
 			created_at: new Date().toString()
 		});
+
 		messages = messages;
 		message = '';
 		setTimeout(() => {
@@ -216,6 +238,7 @@
 			'GET',
 			`chat/${selectedPage}/preview?order_by=created_at_desc`
 		);
+
 		preview = json.results;
 
 		notified = json.results
@@ -242,8 +265,11 @@
 		});
 	};
 
-	$: if (notified.length > 0) displayNotificationGlobal = true;
-	else displayNotificationGlobal = false;
+	// $: selectedPage === 'direct'
+	// 	? (displayNotificationDirect = Boolean(notified.length > 0))
+	// 	: (displayNotificationGroup = Boolean(notified.length > 0));
+
+	// ? (displayNotificationDirect = Boolean(notified.length > 0))
 
 	// onMount(async () => {
 	// 	getPreview();
@@ -352,9 +378,13 @@
 						<span class="text-gray-400 text-sm truncate h-[20px]">
 							{preview.find(
 								(message) =>
-									(user.id !== message.target_id && message.target_id === chatter.id) ||
-									(user.id !== message.user_id && message.user_id === chatter.id) ||
-									message.group_id === chatter.id
+									(user.id !== message.target_id &&
+										message.target_id === chatter.id &&
+										selectedPage === 'direct') ||
+									(user.id !== message.user_id &&
+										message.user_id === chatter.id &&
+										selectedPage === 'direct') ||
+									(message.group_id === chatter.id && selectedPage === 'group')
 							)?.message || ''}
 						</span>
 					</div>
@@ -383,7 +413,8 @@
 {:else}
 	<div
 		on:click={() => (chatOpen = true)}
-		class:small-notification={displayNotificationGlobal}
+		class:small-notification={displayNotificationDirect}
+		class:small-notification-group={displayNotificationGroup}
 		class="transition transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-11"
 	>
 		<Fa icon={faComment} />
@@ -402,6 +433,17 @@
 		top: 0;
 		right: 0;
 		background-color: rgb(167, 139, 250);
+		border-radius: 100%;
+		padding: 10px;
+		z-index: 10;
+	}
+
+	.small-notification-group:after {
+		position: absolute;
+		content: '';
+		top: 10px;
+		right: 0;
+		background-color: rgb(147, 197, 235);
 		border-radius: 100%;
 		padding: 10px;
 	}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	// @ts-ignore
-	import type { Message } from './interfaces';
+	import { setTimeStamp, type Message } from './interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -16,7 +16,9 @@
 		olderMessages: string,
 		newerMessages: string;
 
-	export let selectedChat: number, sendMessageToSocket: (message: string, selectedChat:number) => void, user: User;
+	export let selectedChat: number,
+		sendMessageToSocket: (message: string, selectedChat: number) => void,
+		user: User;
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -41,8 +43,6 @@
 		}, 100);
 	};
 
-	let groupChatNotified = false;
-
 	//Runs when changing chats
 	const postMessage = async () => {
 		if (message.length === 0) return;
@@ -51,11 +51,6 @@
 		if (newerMessages) getRecentMesseges();
 
 		await sendMessageToSocket(message, selectedChat);
-
-		if (selectedPage === 'group') {
-			groupChatNotified = true;
-			console.log('HISHIHi');
-		}
 
 		let previewMessage = preview.find(
 			(message) =>
@@ -76,10 +71,14 @@
 
 		messages = messages;
 		message = '';
+
+        setTimeStamp(selectedChat, selectedPage);
+
 		setTimeout(() => {
 			const d = document.querySelector('.overflow-y-scroll');
 			d?.scroll(0, 200);
 		}, 100);
+        
 	};
 </script>
 
@@ -111,7 +110,6 @@
 	{#if newerMessages}
 		<li class="text-center mt-6 mb-6">
 			<ButtonPrimary
-				Class=""
 				action={async () => {
 					const { res, json } = await fetchRequest('GET', newerMessages);
 
@@ -124,7 +122,7 @@
 		</li>
 	{/if}
 </ul>
-<div class="col-start-2 col-end-3 w-full bg-white shadow rounded p-8 w-full">
+<div class="col-start-2 col-end-3 bg-white shadow rounded p-8 w-full">
 	<!-- Here the user writes a message to be sent -->
 	<form class="flex gap-2" on:submit|preventDefault={postMessage}>
 		<textarea

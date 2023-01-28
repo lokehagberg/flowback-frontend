@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	// @ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { Message } from './interfaces';
+	import { setTimeStamp, type Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
@@ -18,16 +18,16 @@
 	//TODO: Refactor the chat, both code-wise and design-wise
 
 	// User Action variables
-	let // Specifies which chat window is open
-		groups: Group[] = [],
+	let groups: Group[] = [],
 		directs: any[] = [],
-		selectedPage: 'direct' | 'group' = 'direct',
-		previewDirect: any[] = [],
-		previewGroup: any[] = [],
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [];
 
-	export let selectedChat: number, user: User;
+	export let selectedChat: number,
+		user: User,
+		selectedPage: 'direct' | 'group' = 'direct',
+		previewDirect: any[] = [],
+		previewGroup: any[] = [];
 
 	$: user &&
 		(() => {
@@ -96,15 +96,20 @@
 		//Switches chat shown to the right of the screen to chatter
 		if (selectedChat !== chatter.id) selectedChat = chatter.id;
 
-		setTimeStamp(chatter.id);
+		setTimeStamp(chatter.id, selectedPage);
 	};
 
-	//User has looked at a message, affects /preview primarily.
-	const setTimeStamp = async (chatterId: number) => {
-		fetchRequest('POST', `chat/${selectedPage}/${chatterId}/timestamp`, {
-			timestamp: new Date()
-		});
-	};
+	$: {
+		notifiedDirect = previewDirect
+			.filter((message: any) => message.timestamp < message.created_at)
+			.map((message: any) =>
+				message.group_id
+					? message.group_id
+					: message.target_id === user.id
+					? message.user_id
+					: message.target_id
+			);
+	}
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">
@@ -142,31 +147,3 @@
 		</li>
 	{/each}
 </ul>
-
-<style>
-	.grid-width-fix {
-		grid-template-columns: 30% 70%;
-		grid-template-rows: 3rem 50vh 50vh;
-	}
-
-	.small-notification:before {
-		position: absolute;
-		content: '';
-		top: 0;
-		right: 0;
-		background-color: rgb(167, 139, 250);
-		border-radius: 100%;
-		padding: 10px;
-		z-index: 10;
-	}
-
-	.small-notification-group:after {
-		position: absolute;
-		content: '';
-		top: 10px;
-		right: 0;
-		background-color: rgb(147, 197, 235);
-		border-radius: 100%;
-		padding: 10px;
-	}
-</style>

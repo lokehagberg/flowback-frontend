@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	// @ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { Message } from './interfaces';
+	import { setTimeStamp, type Message } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -21,17 +21,20 @@
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
-		notified: number[] = [],
 		preview: any[] = [],
 		//Websocket utility functions and variables
 		socket: WebSocket,
-		sendMessageToSocket: (message: string, selectedChat:number) => void,
+		sendMessageToSocket: (message: string, selectedChat: number) => void,
 		unsubscribe: Unsubscriber,
 		//Chat history
 		olderMessages: string,
 		newerMessagesAPI: string,
 		displayNotificationDirect = false,
-		displayNotificationGroup = false;
+		displayNotificationGroup = false,
+		previewDirect: any[] = [],
+		previewGroup: any[] = [],
+		notifiedDirect: number[] = [],
+		notifiedGroup: number[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -41,7 +44,7 @@
 	const getUser = async () => {
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
-	}
+	};
 
 	const setUpMessageSending = async () => {
 		getRecentMesseges();
@@ -57,14 +60,11 @@
 		unsubscribe = subscribe(getMessage);
 	};
 
-	const getMessage = async (e: any) => {
-		//This function is being called when user changes chat but it shouldn't
-		//IDK how to fix it except this way:
-		if (recentlyChangedChat) {
-			recentlyChangedChat = false;
-			return;
-		}
+	//There's one large socket that handles messages from everywhere, which is why
+	//this function which gets messages from the socket is placed here an not in
+	//ChatWindow.svelte
 
+	const getMessage = async (e: any) => {
 		//Try-catch to prevent error end at JSON string
 		try {
 			var { message, user } = JSON.parse(e);
@@ -73,7 +73,7 @@
 		}
 
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
-		let previewMessage = preview.find(
+		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
 			(preview_message) =>
 				preview_message.user_id === user.id ||
 				preview_message.target_id === user.id ||
@@ -88,19 +88,24 @@
 				previewMessage.timestamp = new Date();
 			}
 
-			preview = preview;
+			previewDirect = previewDirect;
 		}
 
 		//Small purple dot for notification. Could probably be done better as a function
 		//That changes whenever preview is changed.
-		console.log(previewMessage.user_id in notified, previewMessage.user_id, notified);
-		if (!(previewMessage.user_id in notified) && selectedChat !== previewMessage.user_id) {
-			notified.push(previewMessage.user_id);
-			notified = notified;
-			console.log('HANDLENEWCHAT');
-		}
+		// if (selectedPage === 'direct')
+		// 	if (!(previewMessage.user_id in notifiedDirect) && selectedChat !== previewMessage.user_id) {
+		// 		notifiedDirect.push(previewMessage.user_id);
+		// 		notifiedDirect = notifiedDirect;
+		// 	}
 
-		setTimeStamp(selectedChat);
+		// if (selectedPage === 'group')
+		// 	if (!(previewMessage.user_id in notifiedGroup) && selectedChat !== previewMessage.user_id) {
+		// 		notifiedGroup.push(previewMessage.user_id);
+		// 		notifiedGroup = notifiedGroup;
+		// 	}
+
+		setTimeStamp(selectedChat, selectedPage);
 
 		if (selectedChat !== user.id) return;
 
@@ -116,15 +121,6 @@
 		// 	}, 100);
 		// }
 	};
-
-	let recentlyChangedChat = false;
-
-	$: selectedChat && (() => (recentlyChangedChat = true))();
-
-	$: if (notified.length === 0) {
-		if (selectedPage === 'direct') displayNotificationDirect = false;
-		else if (selectedPage === 'group') displayNotificationGroup = false;
-	}
 
 	const getRecentMesseges = async () => {
 		if (!selectedChat) return;
@@ -146,13 +142,6 @@
 			d?.scroll(0, 100000);
 		}, 100);
 	};
-
-	//User has looked at a message, affects /preview primarily.
-	const setTimeStamp = async (chatterId: number) => {
-		fetchRequest('POST', `chat/${selectedPage}/${chatterId}/timestamp`, {
-			timestamp: new Date()
-		});
-	};
 </script>
 
 {#if chatOpen}
@@ -163,7 +152,7 @@
 				<Fa size="1.5x" icon={faX} />
 			</div>
 		</div>
-		<Preview bind:selectedChat {user}/>
+		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup {user} />
 		<ChatWindow bind:selectedChat bind:sendMessageToSocket {user} />
 	</div>
 {:else}
@@ -171,7 +160,7 @@
 		on:click={() => (chatOpen = true)}
 		class:small-notification={displayNotificationDirect}
 		class:small-notification-group={displayNotificationGroup}
-		class="transition transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-11"
+		class="transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-11"
 	>
 		<Fa icon={faComment} />
 	</div>
@@ -205,3 +194,30 @@
 
 // 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
 // }); -->
+<style>
+	.grid-width-fix {
+		grid-template-columns: 30% 70%;
+		grid-template-rows: 3rem 50vh 50vh;
+	}
+
+	.small-notification:before {
+		position: absolute;
+		content: '';
+		top: 0;
+		right: 0;
+		background-color: rgb(167, 139, 250);
+		border-radius: 100%;
+		padding: 10px;
+		z-index: 10;
+	}
+
+	.small-notification-group:after {
+		position: absolute;
+		content: '';
+		top: 10px;
+		right: 0;
+		background-color: rgb(147, 197, 235);
+		border-radius: 100%;
+		padding: 10px;
+	}
+</style>

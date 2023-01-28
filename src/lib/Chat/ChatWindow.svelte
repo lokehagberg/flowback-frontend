@@ -12,7 +12,6 @@
 	let messages: Message[] = [],
 		message: string,
 		selectedPage: 'direct' | 'group' = 'direct',
-		preview: any[] = [],
 		olderMessages: string,
 		newerMessages: string;
 
@@ -51,17 +50,6 @@
 		if (newerMessages) getRecentMesseges();
 
 		await sendMessageToSocket(message, selectedChat);
-
-		let previewMessage = preview.find(
-			(message) =>
-				((message.user_id === selectedChat || message.target_id === selectedChat) &&
-					selectedPage === 'direct') ||
-				(message.group_id === selectedChat && selectedPage === 'group')
-		);
-
-		if (previewMessage) previewMessage.message = message;
-
-		preview = preview;
 
 		messages.push({
 			message,

@@ -109,6 +109,9 @@
 					? message.user_id
 					: message.target_id
 			);
+
+		notifiedDirect = notifiedDirect;
+        console.log(previewDirect, "DIRECT")
 	}
 </script>
 

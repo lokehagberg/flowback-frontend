@@ -12,8 +12,6 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 
-	//TODO: Refactor the chat, both code-wise and design-wise
-
 	// User Action variables
 	let messages: Message[] = [],
 		chatOpen = true,
@@ -21,7 +19,6 @@
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
-		preview: any[] = [],
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (message: string, selectedChat: number) => void,
@@ -32,9 +29,7 @@
 		displayNotificationDirect = false,
 		displayNotificationGroup = false,
 		previewDirect: any[] = [],
-		previewGroup: any[] = [],
-		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [];
+		previewGroup: any[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -82,28 +77,14 @@
 
 		if (previewMessage) {
 			previewMessage.message = message;
-			previewMessage.created_at = new Date();
+			previewMessage.created_at = new Date().toString();
 
 			if (selectedChat === previewMessage.user_id) {
-				previewMessage.timestamp = new Date();
+				previewMessage.timestamp = new Date().toString();
 			}
 
 			previewDirect = previewDirect;
 		}
-
-		//Small purple dot for notification. Could probably be done better as a function
-		//That changes whenever preview is changed.
-		// if (selectedPage === 'direct')
-		// 	if (!(previewMessage.user_id in notifiedDirect) && selectedChat !== previewMessage.user_id) {
-		// 		notifiedDirect.push(previewMessage.user_id);
-		// 		notifiedDirect = notifiedDirect;
-		// 	}
-
-		// if (selectedPage === 'group')
-		// 	if (!(previewMessage.user_id in notifiedGroup) && selectedChat !== previewMessage.user_id) {
-		// 		notifiedGroup.push(previewMessage.user_id);
-		// 		notifiedGroup = notifiedGroup;
-		// 	}
 
 		setTimeStamp(selectedChat, selectedPage);
 
@@ -114,12 +95,11 @@
 		// 	messages = [...messages, { message, user, created_at: new Date().toString() }];
 
 		// 	//TODO: make a better solution to scrolling down when sending/being sent message
-		// 	await setTimeout(() => {
-		// 		//If scrolled furtherst down, scroll whenever a message is recieved
-		// 		const d = document.querySelector('.overflow-y-scroll');
-		// 		d?.scroll(0, 100000);
-		// 	}, 100);
-		// }
+		// await setTimeout(() => {
+		// 	//If scrolled furtherst down, scroll whenever a message is recieved
+		// 	const d = document.querySelector('.overflow-y-scroll');
+		// 	d?.scroll(0, 10000);
+		// }, 100);
 	};
 
 	const getRecentMesseges = async () => {

@@ -42,8 +42,6 @@
 	};
 
 	const setUpMessageSending = async () => {
-		getRecentMesseges();
-
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(user.id);
@@ -92,7 +90,7 @@
 
 		//If most recent messeges are shown, display new message and scroll
 		// if (!newerMessages) {
-		// 	messages = [...messages, { message, user, created_at: new Date().toString() }];
+		messages = [...messages, { message, user, created_at: new Date().toString() }];
 
 		// 	//TODO: make a better solution to scrolling down when sending/being sent message
 		// await setTimeout(() => {
@@ -102,26 +100,6 @@
 		// }, 100);
 	};
 
-	const getRecentMesseges = async () => {
-		if (!selectedChat) return;
-
-		const { res, json } = await fetchRequest(
-			'GET',
-			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
-		);
-
-		messages = json.results.reverse();
-
-		//Temporary fix before json.next issue is fixed
-		olderMessages = json.next;
-		newerMessagesAPI = '';
-
-		//TODO: Replace this with something better
-		await setTimeout(() => {
-			const d = document.querySelector('.overflow-y-scroll');
-			d?.scroll(0, 100000);
-		}, 100);
-	};
 </script>
 
 {#if chatOpen}
@@ -133,7 +111,7 @@
 			</div>
 		</div>
 		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup {user} />
-		<ChatWindow bind:selectedChat bind:sendMessageToSocket {user} />
+		<ChatWindow bind:selectedChat bind:sendMessageToSocket {user} bind:messages/>
 	</div>
 {:else}
 	<div

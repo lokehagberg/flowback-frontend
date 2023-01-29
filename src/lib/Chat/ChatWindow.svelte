@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	// @ts-ignore
 	import { setTimeStamp, type Message } from './interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
@@ -7,19 +6,32 @@
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
+	import { browser } from '$app/env';
 
 	// User Action variables
-	let messages: Message[] = [],
-		message: string,
+	let message: string,
 		selectedPage: 'direct' | 'group' = 'direct',
 		olderMessages: string,
 		newerMessages: string;
 
 	export let selectedChat: number,
 		sendMessageToSocket: (message: string, selectedChat: number) => void,
-		user: User;
+		user: User,
+		messages: Message[] = [];
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
+
+	$: messages &&
+		(async () => {
+			if (newerMessages) return;
+			if (!browser) return;
+
+			await setTimeout(() => {
+				const d = document.querySelector('#chat-window');
+				d?.scroll(0, 100000);
+			}, 100);
+		})();
+
 
 	const getRecentMesseges = async () => {
 		if (!selectedChat) return;
@@ -34,12 +46,6 @@
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
 		newerMessages = '';
-
-		//TODO: Replace this with something better
-		await setTimeout(() => {
-			const d = document.querySelector('.overflow-y-scroll');
-			d?.scroll(0, 100000);
-		}, 100);
 	};
 
 	//Runs when changing chats
@@ -60,17 +66,14 @@
 		messages = messages;
 		message = '';
 
-        setTimeStamp(selectedChat, selectedPage);
-
-		setTimeout(() => {
-			const d = document.querySelector('.overflow-y-scroll');
-			d?.scroll(0, 200);
-		}, 100);
-        
+		setTimeStamp(selectedChat, selectedPage);
 	};
 </script>
 
-<ul class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all">
+<ul
+	class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
+	id="chat-window"
+>
 	{#if olderMessages}
 		<li class="text-center mt-6 mb-6">
 			<ButtonPrimary

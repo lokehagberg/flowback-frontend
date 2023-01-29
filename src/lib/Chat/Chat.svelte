@@ -71,9 +71,9 @@
 
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
-			(preview_message) =>
-				preview_message.user_id === user.id ||
-				preview_message.target_id === user.id ||
+			(previewMessage) =>
+				previewMessage.user_id === user.id ||
+				previewMessage.target_id === user.id ||
 				selectedPage === 'group'
 		);
 

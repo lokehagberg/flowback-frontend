@@ -21,7 +21,11 @@
 		selectedChat: number,
 		//Websocket utility functions and variables
 		socket: WebSocket,
-		sendMessageToSocket: (message: string, selectedChat: number) => void,
+		sendMessageToSocket: (
+			message: string,
+			selectedChat: number,
+			selectedPage: 'direct' | 'group'
+		) => void,
 		unsubscribe: Unsubscriber,
 		//Chat history
 		olderMessages: string,
@@ -46,7 +50,7 @@
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
 		socket = createSocket(user.id);
 
-		sendMessageToSocket = await sendMessage(socket, selectedPage);
+		sendMessageToSocket = await sendMessage(socket);
 
 		//This function triggers every time a message arrives from the socket
 		//Bug: This happends even when switching chats
@@ -91,15 +95,7 @@
 		//If most recent messeges are shown, display new message and scroll
 		// if (!newerMessages) {
 		messages = [...messages, { message, user, created_at: new Date().toString() }];
-
-		// 	//TODO: make a better solution to scrolling down when sending/being sent message
-		// await setTimeout(() => {
-		// 	//If scrolled furtherst down, scroll whenever a message is recieved
-		// 	const d = document.querySelector('.overflow-y-scroll');
-		// 	d?.scroll(0, 10000);
-		// }, 100);
 	};
-
 </script>
 
 {#if chatOpen}
@@ -111,7 +107,7 @@
 			</div>
 		</div>
 		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup {user} />
-		<ChatWindow bind:selectedChat bind:sendMessageToSocket {user} bind:messages/>
+		<ChatWindow bind:selectedChat bind:selectedPage bind:sendMessageToSocket {user} bind:messages />
 	</div>
 {:else}
 	<div

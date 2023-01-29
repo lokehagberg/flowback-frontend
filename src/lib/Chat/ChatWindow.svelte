@@ -9,15 +9,17 @@
 	import { browser } from '$app/env';
 
 	// User Action variables
-	let message: string,
-		selectedPage: 'direct' | 'group' = 'direct',
-		olderMessages: string,
-		newerMessages: string;
+	let message: string, olderMessages: string, newerMessages: string;
 
 	export let selectedChat: number,
-		sendMessageToSocket: (message: string, selectedChat: number) => void,
+		sendMessageToSocket: (
+			message: string,
+			selectedChat: number,
+			selectedPage: 'direct' | 'group'
+		) => void,
 		user: User,
-		messages: Message[] = [];
+		messages: Message[] = [],
+		selectedPage: 'direct' | 'group';
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -31,7 +33,6 @@
 				d?.scroll(0, 100000);
 			}, 100);
 		})();
-
 
 	const getRecentMesseges = async () => {
 		if (!selectedChat) return;
@@ -55,7 +56,7 @@
 		//When sending, go to most recent messages
 		if (newerMessages) getRecentMesseges();
 
-		await sendMessageToSocket(message, selectedChat);
+		await sendMessageToSocket(message, selectedChat, selectedPage);
 
 		messages.push({
 			message,

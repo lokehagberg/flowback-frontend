@@ -12,7 +12,6 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 
-	// User Action variables
 	let messages: Message[] = [],
 		chatOpen = true,
 		user: User,
@@ -27,9 +26,6 @@
 			selectedPage: 'direct' | 'group'
 		) => void,
 		unsubscribe: Unsubscriber,
-		//Chat history
-		olderMessages: string,
-		newerMessagesAPI: string,
 		displayNotificationDirect = false,
 		displayNotificationGroup = false,
 		previewDirect: any[] = [],
@@ -52,8 +48,6 @@
 
 		sendMessageToSocket = await sendMessage(socket);
 
-		//This function triggers every time a message arrives from the socket
-		//Bug: This happends even when switching chats
 		unsubscribe = subscribe(getMessage);
 	};
 
@@ -70,7 +64,7 @@
 		}
 
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
-		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
+		let previewMessage = (message.target_type === 'direct' ? previewDirect : previewGroup).find(
 			(previewMessage) =>
 				previewMessage.user_id === user.id ||
 				previewMessage.target_id === user.id ||

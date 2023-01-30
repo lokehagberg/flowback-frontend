@@ -1,23 +1,11 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
-	// @ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import { setTimeStamp, type Message } from './interfaces';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
-	import type { Unsubscriber } from 'svelte/store';
 	import type { User } from '$lib/User/interfaces';
-	import { formatDate } from '$lib/Generic/DateFormatter';
-	import { number, _ } from 'svelte-i18n';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
-	//TODO: Refactor the chat, both code-wise and design-wise
-
-	// User Action variables
 	let groups: Group[] = [],
 		directs: any[] = [],
 		notifiedDirect: number[] = [],
@@ -41,6 +29,7 @@
 
 		notifiedDirect = findNotifications(previewDirect);
 		notifiedGroup = findNotifications(previewGroup);
+		
 	};
 
 	const getPreview = async (selectedPage: 'direct' | 'group') => {
@@ -113,6 +102,8 @@
 		notifiedDirect = notifiedDirect;
         console.log(previewDirect, "DIRECT")
 	}
+
+	$: console.log(notifiedDirect, previewDirect, "DIRECT")
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">

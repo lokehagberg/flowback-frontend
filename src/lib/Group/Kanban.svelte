@@ -120,16 +120,18 @@
 	</div>
 	{#if type === 'group'}
 		<div class="pl-4 pr-4 pb-4">
-			<h1 class="mt-4 text-left">{$_('Create task')}</h1>
-			<form on:submit|preventDefault={createKanbanEntry}>
+			<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
+			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea required label="Description" bind:value={description} />
-				<select on:input={handleChangeAssignee}>
-					{#each users as user}
-						<option value={user.user_id}>{user.username}</option>
-					{/each}
-				</select>
-				<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
+				<div class="flex gap-6 justify-between mt-2">
+					<select on:input={handleChangeAssignee} class="border border-gray-600">
+						{#each users as user}
+							<option value={user.user_id}>{user.username}</option>
+						{/each}
+					</select>
+					<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
+				</div>
 				<StatusMessage Class="mt-2" bind:status />
 			</form>
 		</div>

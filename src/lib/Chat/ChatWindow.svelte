@@ -7,6 +7,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/env';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	// User Action variables
 	let message: string, olderMessages: string, newerMessages: string;
@@ -120,17 +121,18 @@
 	<div class="col-start-2 col-end-3 bg-white shadow rounded p-8 w-full">
 		<!-- Here the user writes a message to be sent -->
 		<form class="flex gap-2" on:submit|preventDefault={postMessage}>
-			<textarea
-				on:keypress={(e) => {
+			<TextArea
+				label=""
+				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
 						postMessage();
 						e.preventDefault();
 					}
 				}}
 				required
+				max={2000}
 				bind:value={message}
-				class="border border-black  w-full"
-				maxlength="2000"
+				Class="w-full"
 			/>
 			<ButtonPrimary type="submit" label="Skicka" Class="" />
 		</form>

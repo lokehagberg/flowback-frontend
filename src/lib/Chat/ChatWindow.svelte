@@ -76,7 +76,7 @@
 
 {#if selectedChat !== null}
 	<ul
-		class="col-start-2 col-end-3 bg-white h-[40vh] overflow-y-scroll overflow-x-hidden break-all"
+		class="col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 	>
 		{#if olderMessages}
@@ -120,7 +120,7 @@
 	</ul>
 	<div class="col-start-2 col-end-3 bg-white shadow rounded p-8 w-full">
 		<!-- Here the user writes a message to be sent -->
-		<form class="flex gap-2" on:submit|preventDefault={postMessage}>
+		<form class="flex gap-2 md:mt-2 lg:mt-5  xl:mt-14" on:submit|preventDefault={postMessage}>
 			<TextArea
 				label=""
 				onKeyPress={(e) => {
@@ -134,7 +134,7 @@
 				bind:value={message}
 				Class="w-full"
 			/>
-			<ButtonPrimary type="submit" label="Skicka" Class="" />
+			<ButtonPrimary type="submit" label="Skicka" Class="pl-2 pr-2 pt-2 pb-2 h-[30%] mb-0 mt-[2%] text-sm" />
 		</form>
 	</div>
 {:else}

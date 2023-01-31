@@ -110,17 +110,12 @@
 				.filter((message) => message.timestamp < message.created_at)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
-			notifiedDirect = notifiedDirect;
-
 			//@ts-ignore
 			notifiedGroup = previewGroup
 				.filter((message) => message.timestamp < message.created_at)
 				.map((message) => message.group_id);
-
-			previewGroup = previewGroup;
 		}
 	}
-
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">
@@ -134,7 +129,13 @@
 		<li
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 			class:bg-gray-200={selectedChat === chatter.id}
-			on:click={() => clickedChatter(chatter)}
+			on:click={async () => {
+				//TODO: Better fix than this! Fixes doubble clicking to remove notification
+				await setTimeout(() => {
+					clickedChatter(chatter);
+				}, 100);
+				clickedChatter(chatter);
+			}}
 		>
 			{#if (selectedPage === 'direct' ? notifiedDirect : notifiedGroup).includes(chatter.id)}
 				<div

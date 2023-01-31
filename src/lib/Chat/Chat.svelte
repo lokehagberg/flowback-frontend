@@ -17,7 +17,7 @@
 		User: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
-		selectedChat: number,
+		selectedChat: number | null,
 		//Websocket utility functions and variables
 		socket: WebSocket,
 		sendMessageToSocket: (
@@ -26,6 +26,7 @@
 			selectedPage: 'direct' | 'group'
 		) => void,
 		unsubscribe: Unsubscriber,
+		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [];
 
@@ -61,8 +62,6 @@
 			return;
 		}
 
-		console.log(target_type, 'TARGETTYPW');
-
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
 			(previewMessage) =>
@@ -71,9 +70,6 @@
 				previewMessage.group_id === group
 		);
 
-		console.log(previewMessage);
-
-		console.log(previewMessage, 'PREVIEW', message, previewDirect, previewGroup, group);
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
@@ -86,17 +82,16 @@
 		previewGroup = previewGroup;
 		previewDirect = previewDirect;
 
-		console.log(previewDirect);
-
-		// setTimeStamp(selectedChat, selectedPage);
-
 		if (selectedChat !== user.id) return;
 
-		//If most recent messeges are shown, display new message and scroll
-		// if (!newerMessages) {
 		messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
 
+	$: selectedPage &&
+		(() => {
+			console.log("hii")
+			selectedChat = null;
+		})();
 </script>
 
 {#if chatOpen}

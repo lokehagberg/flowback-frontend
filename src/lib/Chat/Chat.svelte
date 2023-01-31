@@ -13,7 +13,7 @@
 	import { _ } from 'svelte-i18n';
 
 	let messages: Message[] = [],
-		chatOpen = true,
+		chatOpen = false,
 		User: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',

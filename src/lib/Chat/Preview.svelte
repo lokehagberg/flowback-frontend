@@ -86,14 +86,14 @@
 			//TODO-user more advanced typescript features to make sure I don't have to use ts-ignore here
 			//@ts-ignore
 			let message = previewDirect.find(
-				(message) => message.target_id === user.id || message.user_id === user.id
+				(message) => message.target_id === selectedChat || message.user_id === selectedChat
 			);
 			if (message) message.timestamp = new Date().toString();
 			previewDirect = previewDirect;
-			
+
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find(
-				(message) => message.target_id === user.id || message.user_id === user.id
+				(message) => message.group_id === selectedChat
 			);
 			if (message) message.timestamp = new Date().toString();
 			previewGroup = previewGroup;
@@ -149,7 +149,10 @@
 			on:click={() => clickedChatter(chatter)}
 		>
 			{#if (selectedPage === 'direct' ? notifiedDirect : notifiedGroup).includes(chatter.id)}
-				<div class="bg-purple-400 p-1 rounded-full" />
+				<div class="p-1 rounded-full" 
+					class:bg-purple-400={selectedPage==='direct'}
+					class:bg-blue-300={selectedPage==='group'}
+				/>
 			{/if}
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">

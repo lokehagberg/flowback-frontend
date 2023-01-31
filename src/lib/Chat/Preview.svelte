@@ -9,9 +9,9 @@
 
 	let groups: Group[] = [],
 		directs: any[] = [],
+		user: User,
 		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [],
-		user: User;
+		notifiedGroup: number[] = [];
 
 	export let selectedChat: number,
 		// user: User,
@@ -102,25 +102,25 @@
 		setTimeStamp(chatter.id, selectedPage);
 	};
 
-	$: {//TODO: Use advanced typescript features to not have the ignore
-		//@ts-ignore
-		notifiedDirect = previewDirect
-			.filter((message) => message.timestamp < message.created_at)
-			.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
+	$: {
+		//TODO: Use advanced typescript features to not have the ignore
+		if (user) {
+			//@ts-ignore
+			notifiedDirect = previewDirect
+				.filter((message) => message.timestamp < message.created_at)
+				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
-		notifiedDirect = notifiedDirect;
+			notifiedDirect = notifiedDirect;
 
-		//@ts-ignore
-		notifiedGroup = previewGroup
-			.filter((message) => message.timestamp < message.created_at)
-			.map((message) => message.group_id);
+			//@ts-ignore
+			notifiedGroup = previewGroup
+				.filter((message) => message.timestamp < message.created_at)
+				.map((message) => message.group_id);
 
-		previewGroup = previewGroup;
-
-		console.log(previewDirect
-			.filter((message) => message.timestamp < message.created_at).map((message) => message.group_id), previewGroup
-			.filter((message) => message.timestamp < message.created_at).map((message) => message.group_id))
+			previewGroup = previewGroup;
+		}
 	}
+
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">

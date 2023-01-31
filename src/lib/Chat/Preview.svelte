@@ -13,7 +13,7 @@
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [];
 
-	export let selectedChat: number,
+	export let selectedChat: number | null,
 		// user: User,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
@@ -116,6 +116,8 @@
 				.map((message) => message.group_id);
 		}
 	}
+
+
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">

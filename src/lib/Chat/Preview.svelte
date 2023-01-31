@@ -107,7 +107,7 @@
 		if (user) {
 			//@ts-ignore
 			notifiedDirect = previewDirect
-				.filter((message) => message.timestamp < message.created_at)
+				.filter((message) => message.timestamp < message.created_at && message.target_id !== selectedChat && message.user_id !== selectedChat)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
 			//@ts-ignore

@@ -31,13 +31,13 @@
 	});
 </script>
 
-<div class={`relative text-black p-4 border border-gray-200 rounded ${Class}`}>
+<div class={`relative text-black p-2 border border-gray-200 rounded ${Class}`}>
 	{#if displayTimeline}
-		<h1 class="text-left text-2xl">{$_('Timeline')}</h1>
+		<h1 class="text-left text-xl">{$_('Timeline')}</h1>
 		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
-		<div class="h-4">
+		<div>
 			{#each datePlacement as date, i}
-				<div class="absolute z-20" style:left={`calc(${date}% - 0.75rem)`}>
+				<div class="absolute z-20 w-full" style:left={`${i*32}%`} style:top={"12px"}>
 					<HeaderIcon
 						Class="cursor-default"
 						size="1.5x"
@@ -49,22 +49,27 @@
 			{/each}
 		</div>
 		<!-- {/if} -->
-		<div class="h-10 mt-2">
-			<div class={`absolute bg-gray-300 left-0 h-6 rounded-full w-full`} />
+		<div class="h-10">
+			<div class={`absolute bg-gray-300 left-0 h-6 w-full`} />
 			<div
-				class={`absolute bg-blue-400 left-0 h-6 rounded-full`}
-				style:width={`${progress < 100 ? progress : 100}%`}
+				class={`absolute bg-blue-400 left-0 h-6`}
+				style:width={`${(() => {
+					if (date.getTime() < dates[1].getTime()) return 0
+					if (date.getTime() < dates[2].getTime()) return 33
+					if (date.getTime() < dates[3].getTime()) return 66
+					else return 100
+				})()}%`}
 			/>
 		</div>
 	{/if}
 	{#if displayDetails}
-		<ul class="border border-gray-200 p-4">
+		<ul class="p-2">
 			<div
 				class="hover:underline flex items-center gap-2 cursor-pointer"
 				on:click={() => (displayDetails = false)}
 			>
 				<Fa icon={faDownLong} flip />
-				{$_('Timeline details')}
+				{$_('Time details')}
 			</div>
 			{#each dateLabels as label, i}
 				<li class="flex justify-between flex-col md:flex-row text-center">
@@ -75,11 +80,11 @@
 		</ul>
 	{:else}
 		<ul
-			class="hover:underline border border-gray-200 p-4 flex items-center gap-2 cursor-pointer"
+			class="hover:underline flex items-center gap-2 cursor-pointer text-xs z-50"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />
-			{$_('Timeline details')}
+			{$_('Time details')}
 		</ul>
 	{/if}
 </div>

@@ -28,8 +28,8 @@
 			? '/groups/1'
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 	>
-		<h1 class="text-left text-3xl p-2 pl-0">{poll.title}</h1>
-		<div class="border border-gray-200 p-4">
+		<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
+		<div class="border border-gray-200 p-2">
 			<div class="flex items-center justify-between">
 				<Tag tag={poll.tag_name} Class="inline cursor-default" />
 				<div class="flex">
@@ -54,7 +54,7 @@
 				</a>
 			</div>
 		</div>
-		<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-4">
+		<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-3">
 			{poll.description}
 		</p>
 	</a>

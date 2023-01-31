@@ -65,8 +65,8 @@
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
 			(previewMessage) =>
-				previewMessage.user_id === User.id ||
-				previewMessage.target_id === User.id ||
+				previewMessage.user_id === user.id ||
+				previewMessage.target_id === user.id ||
 				previewMessage.group_id === group
 		);
 
@@ -77,6 +77,19 @@
 			if (selectedChat === previewMessage.user_id) {
 				previewMessage.timestamp = new Date().toString();
 			}
+		} else {
+			//For brand new chats, create new preview message
+			(target_type === 'direct' ? previewDirect : previewGroup).push({
+				created_at: new Date().toString(),
+				message,
+				timestamp: new Date().toString(),
+				username: user.username,
+				user_id: user.id,
+				target_id: User.id,
+				target_username: User.username,
+				profile_image: '',
+				group_id: group
+			});
 		}
 
 		previewGroup = previewGroup;
@@ -87,11 +100,12 @@
 		messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
 
+	//White screen when changing between direct and groups
 	$: selectedPage &&
 		(() => {
-			console.log("hii")
 			selectedChat = null;
 		})();
+
 </script>
 
 {#if chatOpen}

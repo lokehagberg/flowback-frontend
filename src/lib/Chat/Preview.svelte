@@ -112,7 +112,7 @@
 
 			//@ts-ignore
 			notifiedGroup = previewGroup
-				.filter((message) => message.timestamp < message.created_at)
+				.filter((message) => message.timestamp < message.created_at && message.group_id !== selectedChat)
 				.map((message) => message.group_id);
 		}
 	}

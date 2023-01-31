@@ -14,9 +14,9 @@
 
 <div
 	on:click={goToGroup}
-	class={`w-5/6 md:w-1/2 bg-white relative shadow-md ${
+	class={`w-4/6 md:w-2/5 bg-white relative shadow-md ${
 		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
-	} transition transition-shadow rounded-2xl`}
+	} transition-shadow rounded-2xl`}
 >
 	<div on:click={goToGroup}>
 		<img

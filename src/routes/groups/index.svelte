@@ -34,7 +34,7 @@
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
 			<a
 				href="creategroup"
-				class="w-4/5 md:w-1/2 text-center inline bg-blue-600 text-white pl-6 pr-6 md:pl-24 md:pr-24 pt-2 pb-2 rounded cursor-pointer "
+				class="w-3/5 md:w-2/5 text-center inline bg-blue-600 text-white pl-6 pr-6 md:pl-24 md:pr-24 pt-2 pb-2 rounded-full cursor-pointer "
 				>+ {$_('Create Group')}</a
 			>
 		{/if}

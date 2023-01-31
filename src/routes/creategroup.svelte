@@ -80,7 +80,7 @@
 			on:submit|preventDefault={createGroup}
 			class="absolute left-1/2 -translate-x-1/2 flex items-start justify-center gap-8 md:mt-8 w-full lg:w-[900px]"
 		>
-			<div class="bg-white p-6 shadow-xl flex flex-col gap-6 md:w-2/3 w-full">
+			<div class="bg-white p-6 shadow-xl flex flex-col gap-6 md:w-2/5">
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Redigera Grupp' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />

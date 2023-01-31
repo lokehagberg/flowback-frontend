@@ -83,7 +83,7 @@
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 					{#if selectedPage === 'flow'}
-						<PollThumbnails infoToGet="group" />
+						<PollThumbnails infoToGet="group" Class={`sm:w-full md:w-[60%] md:max-w-[600px] mx-auto my-0`} />
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}

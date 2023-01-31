@@ -90,11 +90,8 @@
 			);
 			if (message) message.timestamp = new Date().toString();
 			previewDirect = previewDirect;
-
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find(
-				(message) => message.group_id === selectedChat
-			);
+			let message = previewGroup.find((message) => message.group_id === selectedChat);
 			if (message) message.timestamp = new Date().toString();
 			previewGroup = previewGroup;
 		}
@@ -105,34 +102,25 @@
 		setTimeStamp(chatter.id, selectedPage);
 	};
 
-	$: {
+	$: {//TODO: Use advanced typescript features to not have the ignore
+		//@ts-ignore
 		notifiedDirect = previewDirect
-			.filter((message: any) => message.timestamp < message.created_at)
-			.map((message: any) =>
-				message.group_id
-					? message.group_id
-					: message.target_id === user.id
-					? message.user_id
-					: message.target_id
-			);
+			.filter((message) => message.timestamp < message.created_at)
+			.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
 		notifiedDirect = notifiedDirect;
 
+		//@ts-ignore
 		notifiedGroup = previewGroup
-			.filter((message: any) => message.timestamp < message.created_at)
-			.map((message: any) =>
-				message.group_id
-					? message.group_id
-					: message.target_id === user.id
-					? message.user_id
-					: message.target_id
-			);
+			.filter((message) => message.timestamp < message.created_at)
+			.map((message) => message.group_id);
 
 		previewGroup = previewGroup;
-	}
 
-	//TODO: Clean up the code above with this function
-	const previewMessagesWithNotification = () => {};
+		console.log(previewDirect
+			.filter((message) => message.timestamp < message.created_at).map((message) => message.group_id), previewGroup
+			.filter((message) => message.timestamp < message.created_at).map((message) => message.group_id))
+	}
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">
@@ -149,9 +137,10 @@
 			on:click={() => clickedChatter(chatter)}
 		>
 			{#if (selectedPage === 'direct' ? notifiedDirect : notifiedGroup).includes(chatter.id)}
-				<div class="p-1 rounded-full" 
-					class:bg-purple-400={selectedPage==='direct'}
-					class:bg-blue-300={selectedPage==='group'}
+				<div
+					class="p-1 rounded-full"
+					class:bg-purple-400={selectedPage === 'direct'}
+					class:bg-blue-300={selectedPage === 'group'}
 				/>
 			{/if}
 			<ProfilePicture user={chatter} />

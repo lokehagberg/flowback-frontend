@@ -1,27 +1,36 @@
 <script lang="ts">
-	import { setTimeStamp, type Message } from './interfaces';
+	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import type { User } from '$lib/User/interfaces';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import { onMount } from 'svelte';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
 		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [];
+		notifiedGroup: number[] = [],
+		user: User;
 
 	export let selectedChat: number,
-		user: User,
+		// user: User,
 		selectedPage: 'direct' | 'group' = 'direct',
-		previewDirect: any[] = [],
-		previewGroup: any[] = [];
+		previewDirect: PreviewMessage[] = [],
+		previewGroup: PreviewMessage[] = [];
 
-	$: user &&
-		(() => {
-			setUpPreview();
-			getChattable();
-		})();
+	// $: user &&
+	// 	(() => {
+	// 		setUpPreview();
+	// 		getChattable();
+	// 	})();
+
+	onMount(async () => {
+		const { json, res } = await fetchRequest('GET', 'user');
+		user = json;
+		setUpPreview();
+		getChattable();
+	});
 
 	const setUpPreview = async () => {
 		previewDirect = await getPreview('direct');
@@ -29,7 +38,6 @@
 
 		notifiedDirect = findNotifications(previewDirect);
 		notifiedGroup = findNotifications(previewGroup);
-		
 	};
 
 	const getPreview = async (selectedPage: 'direct' | 'group') => {
@@ -75,11 +83,20 @@
 	const clickedChatter = (chatter: any) => {
 		//Gets rid of existing notification when clicked on new chat
 		if (selectedPage === 'direct') {
-			notifiedDirect = notifiedDirect.filter((notis) => notis !== chatter.id);
-			notifiedDirect = notifiedDirect;
+			//TODO-user more advanced typescript features to make sure I don't have to use ts-ignore here
+			//@ts-ignore
+			let message = previewDirect.find(
+				(message) => message.target_id === user.id || message.user_id === user.id
+			);
+			if (message) message.timestamp = new Date().toString();
+			previewDirect = previewDirect;
+			
 		} else if (selectedPage === 'group') {
-			notifiedGroup = notifiedGroup.filter((notis) => notis !== chatter.id);
-			notifiedGroup = notifiedGroup;
+			let message = previewGroup.find(
+				(message) => message.target_id === user.id || message.user_id === user.id
+			);
+			if (message) message.timestamp = new Date().toString();
+			previewGroup = previewGroup;
 		}
 
 		//Switches chat shown to the right of the screen to chatter
@@ -100,10 +117,22 @@
 			);
 
 		notifiedDirect = notifiedDirect;
-        console.log(previewDirect, "DIRECT")
+
+		notifiedGroup = previewGroup
+			.filter((message: any) => message.timestamp < message.created_at)
+			.map((message: any) =>
+				message.group_id
+					? message.group_id
+					: message.target_id === user.id
+					? message.user_id
+					: message.target_id
+			);
+
+		previewGroup = previewGroup;
 	}
 
-	$: console.log(notifiedDirect, previewDirect, "DIRECT")
+	//TODO: Clean up the code above with this function
+	const previewMessagesWithNotification = () => {};
 </script>
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-2">

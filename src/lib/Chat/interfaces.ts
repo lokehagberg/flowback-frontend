@@ -11,6 +11,21 @@ export interface Message {
 	created_at?: string;
 }
 
+//Taken from the preview API
+export interface PreviewMessage {
+	created_at: string;
+	message: string;
+	profile_image: string;
+	timestamp: string;
+	user_id: number;
+	username: string;
+	//For group/preview
+	group_id?: number;
+	//For direct/preview
+	target_id?:number;
+	target_username?:string;
+}
+
 //User has looked at a message, affects /preview primarily.
 export const setTimeStamp = async (chatterId: number, selectedPage: 'direct' | 'group') => {
 	fetchRequest('POST', `chat/${selectedPage}/${chatterId}/timestamp`, {

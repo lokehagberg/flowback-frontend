@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	// @ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { setTimeStamp, type Message } from './interfaces';
+	import type { Message, PreviewMessage } from './interfaces';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -14,7 +14,7 @@
 
 	let messages: Message[] = [],
 		chatOpen = true,
-		user: User,
+		User: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number,
@@ -28,8 +28,8 @@
 		unsubscribe: Unsubscriber,
 		displayNotificationDirect = false,
 		displayNotificationGroup = false,
-		previewDirect: any[] = [],
-		previewGroup: any[] = [];
+		previewDirect: PreviewMessage[] = [],
+		previewGroup: PreviewMessage[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -38,13 +38,13 @@
 
 	const getUser = async () => {
 		const { json, res } = await fetchRequest('GET', 'user');
-		user = json;
+		User = json;
 	};
 
 	const setUpMessageSending = async () => {
 		//Must be imported here to avoid "document not found" error
 		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-		socket = createSocket(user.id);
+		socket = createSocket(User.id);
 
 		sendMessageToSocket = await sendMessage(socket);
 
@@ -58,19 +58,26 @@
 	const getMessage = async (e: any) => {
 		//Try-catch to prevent error end at JSON string
 		try {
-			var { message, user } = JSON.parse(e);
+			var { message, user, group, target_type } = JSON.parse(e);
 		} catch (err) {
 			return;
 		}
 
+		console.log(target_type, "TARGETTYPW")
+
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
-		let previewMessage = (message.target_type === 'direct' ? previewDirect : previewGroup).find(
+		let previewMessage = (
+			target_type === 'direct' ? previewDirect : previewGroup
+		).find(
 			(previewMessage) =>
-				previewMessage.user_id === user.id ||
-				previewMessage.target_id === user.id ||
-				selectedPage === 'group'
+				previewMessage.user_id === User.id ||
+				previewMessage.target_id === User.id ||
+				previewMessage.group_id === group
 		);
 
+		console.log(previewMessage);
+
+		console.log(previewMessage, 'PREVIEW', message, previewDirect, previewGroup, group);
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
@@ -78,11 +85,14 @@
 			if (selectedChat === previewMessage.user_id) {
 				previewMessage.timestamp = new Date().toString();
 			}
-
-			previewDirect = previewDirect;
 		}
 
-		setTimeStamp(selectedChat, selectedPage);
+		previewGroup = previewGroup;
+		previewDirect = previewDirect;
+
+		console.log(previewDirect);
+
+		// setTimeStamp(selectedChat, selectedPage);
 
 		if (selectedChat !== user.id) return;
 
@@ -100,8 +110,8 @@
 				<Fa size="1.5x" icon={faX} />
 			</div>
 		</div>
-		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup {user} />
-		<ChatWindow bind:selectedChat bind:selectedPage bind:sendMessageToSocket {user} bind:messages />
+		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup  />
+		<ChatWindow bind:selectedChat bind:selectedPage bind:sendMessageToSocket user={User} bind:messages />
 	</div>
 {:else}
 	<div

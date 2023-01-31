@@ -1,6 +1,6 @@
 <script lang="ts">
 	// @ts-ignore
-	import { setTimeStamp, type Message } from './interfaces';
+	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -23,6 +23,7 @@
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
+	//When messages are recieved and not looking at history, scroll.
 	$: messages &&
 		(async () => {
 			if (newerMessages) return;

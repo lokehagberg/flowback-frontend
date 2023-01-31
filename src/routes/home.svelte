@@ -61,5 +61,5 @@
 			{/each}
 		<!-- {/if} -->
 	</ul>
-	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-3/5 md:max-w-[720px] justify-center mt-6" />
+	<PollThumbnails infoToGet="home" Class="sm:w-full md:w-[44%] md:max-w-[600px] justify-center mt-6" />
 </Layout>

@@ -33,11 +33,11 @@
 
 <div class={`relative text-black p-2 border border-gray-200 rounded ${Class}`}>
 	{#if displayTimeline}
-		<h1 class="text-left text-xl">{$_('Timeline')}</h1>
+		<!-- <h1 class="text-left text-xl">{$_('Timeline')}</h1> -->
 		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
 		<div>
 			{#each datePlacement as date, i}
-				<div class="absolute z-20 w-full" style:left={`${i*32}%`} style:top={"12px"}>
+				<div class="h-4 absolute z-20 w-full" style:left={`${i*32}%`} style:top={"-17px"}>
 					<HeaderIcon
 						Class="cursor-default"
 						size="1.5x"
@@ -49,7 +49,7 @@
 			{/each}
 		</div>
 		<!-- {/if} -->
-		<div class="h-10">
+		<div class="h-8">
 			<div class={`absolute bg-gray-300 left-0 h-6 w-full`} />
 			<div
 				class={`absolute bg-blue-400 left-0 h-6`}
@@ -80,7 +80,7 @@
 		</ul>
 	{:else}
 		<ul
-			class="hover:underline flex items-center gap-2 cursor-pointer text-xs z-50"
+			class="hover:underline flex items-center gap-1 cursor-pointer text-xs absolute -bottom-1 left-0"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />

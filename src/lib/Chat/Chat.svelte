@@ -136,9 +136,9 @@
 			.filter((message) => message.timestamp < message.created_at)
 			.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
 			.length > 0}
-		class="transition-all fixed z-30 bg-white shadow-md border p-9 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-11"
+		class="transition-all fixed z-30 bg-white shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 	>
-		<Fa icon={faComment} />
+		<Fa icon={faComment} size="1.3x" />
 	</div>
 {/if}
 

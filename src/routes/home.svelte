@@ -48,6 +48,7 @@
 	};
 </script>
 
+<!-- TODO: stuck on loading when no polls -->
 <Layout centering={true}>
 	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
 	<ul class="mt-6 flex flex-col gap-6">

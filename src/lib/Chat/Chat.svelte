@@ -97,7 +97,11 @@
 
 		if (selectedChat !== user.id) return;
 
-		messages = [...messages, { message, user, created_at: new Date().toString() }];
+		if (
+			(selectedPage === 'direct' && target_type === 'direct' && message.target_id === User.id) ||
+			(selectedPage === 'group' && target_type === 'group' && group === selectedPage)
+		)
+			messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
 
 	//White screen when changing between direct and groups
@@ -105,7 +109,6 @@
 		(() => {
 			selectedChat = null;
 		})();
-
 </script>
 
 {#if chatOpen}

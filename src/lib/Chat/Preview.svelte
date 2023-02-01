@@ -107,21 +107,41 @@
 		if (user) {
 			//@ts-ignore
 			notifiedDirect = previewDirect
-				.filter((message) => message.timestamp < message.created_at && message.target_id !== selectedChat && message.user_id !== selectedChat)
+				.filter(
+					(message) =>
+						message.timestamp < message.created_at &&
+						message.target_id !== selectedChat &&
+						message.user_id !== selectedChat
+				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
 			//@ts-ignore
 			notifiedGroup = previewGroup
-				.filter((message) => message.timestamp < message.created_at && message.group_id !== selectedChat)
+				.filter(
+					(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
+				)
 				.map((message) => message.group_id);
 		}
 	}
-
-
 </script>
 
-<div class="col-start-1 col-end-2 row-start-1 row-end-2">
-	<Tab bind:selectedPage tabs={['direct', 'group']} displayNames={['Direct', 'Groups']} />
+<div
+	class={`col-start-1 col-end-2 row-start-1 row-end-2 ${
+		notifiedDirect.length && notifiedGroup.length
+			? 'both-message-bg'
+			: notifiedDirect.length > 0
+			? 'direct-message-bg'
+			: notifiedGroup.length > 0
+			? 'group-message-bg'
+			: 'bg-white'
+	}`}
+>
+	<Tab
+		Class={``}
+		bind:selectedPage
+		tabs={['direct', 'group']}
+		displayNames={['Direct', 'Groups']}
+	/>
 </div>
 
 <ul
@@ -165,3 +185,17 @@
 		</li>
 	{/each}
 </ul>
+
+<style>
+	.group-message-bg {
+		background: linear-gradient(90deg, rgba(255, 255, 255, 1) 32%, rgba(180, 210, 255, 1) 76%);
+	}
+
+	.direct-message-bg {
+		background: linear-gradient(90deg, rgb(240, 224, 255) 32%, rgb(255, 255, 255) 76%);
+	}
+
+	.both-message-bg {
+		background: linear-gradient(90deg, rgb(240, 224, 255) 32%, rgba(180, 210, 255, 1) 76%);
+	}
+</style>

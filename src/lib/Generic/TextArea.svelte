@@ -50,6 +50,6 @@
 		on:keypress={onKeyPress}
 		bind:value
 		class="border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none"
-		{max}
+		maxlength={max}
 	/>
 </label>

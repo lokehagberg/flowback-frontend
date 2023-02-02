@@ -20,7 +20,9 @@
 		) => void,
 		user: User,
 		messages: Message[] = [],
-		selectedPage: 'direct' | 'group';
+		selectedPage: 'direct' | 'group',
+		previewDirect: PreviewMessage[] = [],
+		previewGroup: PreviewMessage[] = [];
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -58,6 +60,17 @@
 
 		//When sending, go to most recent messages
 		if (newerMessages) getRecentMesseges();
+
+		//Updates preview window to display recently typed chat message
+		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
+			(previewMessage) =>
+				(selectedPage === 'direct' &&
+					((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
+						(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
+				(selectedPage === 'group' && previewMessage.group_id === selectedChat)
+		);
+		if (previewMessage) previewMessage.message = message;
+		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		await sendMessageToSocket(message, selectedChat, selectedPage);
 
@@ -134,7 +147,11 @@
 				bind:value={message}
 				Class="w-full"
 			/>
-			<ButtonPrimary type="submit" label="Skicka" Class="pl-2 pr-2 pt-2 pb-2 h-[30%] mb-0 mt-[2%] text-sm" />
+			<ButtonPrimary
+				type="submit"
+				label="Skicka"
+				Class="pl-2 pr-2 pt-2 pb-2 h-[30%] mb-0 mt-[2%] text-sm"
+			/>
 		</form>
 	</div>
 {:else}

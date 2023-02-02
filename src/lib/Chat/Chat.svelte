@@ -97,11 +97,9 @@
 		previewGroup = previewGroup;
 		previewDirect = previewDirect;
 
-		if (selectedChat !== user.id) return;
-
 		if (
 			(selectedPage === 'direct' && target_type === 'direct' && message.target_id === User.id) ||
-			(selectedPage === 'group' && target_type === 'group' && group === selectedPage)
+			(selectedPage === 'group' && target_type === 'group' && group === selectedChat)
 		)
 			messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
@@ -123,6 +121,8 @@
 		</div>
 		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
 		<ChatWindow
+			bind:previewDirect
+			bind:previewGroup
 			bind:selectedChat
 			bind:selectedPage
 			bind:sendMessageToSocket

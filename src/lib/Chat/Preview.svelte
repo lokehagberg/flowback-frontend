@@ -109,28 +109,28 @@
 	const sort = (chatter: any[], preview: PreviewMessage[], notified: number[]) => {
 		chatter.sort((direct) => {
 			let notifiedMsg = notified.find((notified) => notified === direct.id);
-			
+
 			if (notifiedMsg) return -1;
-			
+
 			let previewMsg = preview.find(
 				(preview) =>
 					(preview.target_id === direct.id && preview.user_id === user.id) ||
 					(preview.target_id === user.id && preview.user_id === direct.id)
 			);
-			
-			console.log(previewMsg, direct.id, "PRVTWIER");
+
+			console.log(previewMsg, direct.id, 'PRVTWIER');
 			if (previewMsg) return 0;
-			
+
 			return 1;
 		});
-		
+
 		return chatter;
 	};
-	
+
 	const sortPreview = () => {
 		sort(directs, previewDirect, notifiedDirect);
-		directs = directs
-		
+		directs = directs;
+
 		sort(groups, previewGroup, notifiedGroup);
 		groups = groups;
 	};

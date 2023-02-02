@@ -135,6 +135,7 @@
 		groups = groups;
 	};
 
+	//Adds notification data to chats where a new message just dropped
 	$: {
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
@@ -142,7 +143,7 @@
 			notifiedDirect = previewDirect
 				.filter(
 					(message) =>
-						message.timestamp < message.created_at &&
+						message.timestamp <= message.created_at &&
 						message.target_id !== selectedChat &&
 						message.user_id !== selectedChat
 				)
@@ -151,7 +152,7 @@
 			//@ts-ignore
 			notifiedGroup = previewGroup
 				.filter(
-					(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
+					(message) => message.timestamp <= message.created_at && message.group_id !== selectedChat
 				)
 				.map((message) => message.group_id);
 		}

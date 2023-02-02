@@ -68,8 +68,6 @@
 				(target_type === 'group' && previewMessage.group_id === group)
 		);
 
-		console.log(previewMessage);
-
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
@@ -113,7 +111,6 @@
 		selectedPage === 'direct';
 	}
 
-	$: console.log(selectedChat, 'CHANGED C HAG');
 </script>
 
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">

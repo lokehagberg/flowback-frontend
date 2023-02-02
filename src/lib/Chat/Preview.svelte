@@ -109,48 +109,29 @@
 	const sort = (chatter: any[], preview: PreviewMessage[], notified: number[]) => {
 		chatter.sort((direct) => {
 			let notifiedMsg = notified.find((notified) => notified === direct.id);
-			console.log(notified, direct, notifiedMsg);
-
-			if (notifiedMsg) return -2;
-
+			
+			if (notifiedMsg) return -1;
+			
 			let previewMsg = preview.find(
 				(preview) =>
 					(preview.target_id === direct.id && preview.user_id === user.id) ||
 					(preview.target_id === user.id && preview.user_id === direct.id)
 			);
-
-			if (previewMsg) return -1;
-
-			return 0;
+			
+			console.log(previewMsg, direct.id, "PRVTWIER");
+			if (previewMsg) return 0;
+			
+			return 1;
 		});
-
+		
 		return chatter;
 	};
-
+	
 	const sortPreview = () => {
-		directs = sort(directs, previewDirect, notifiedDirect);
-		groups = sort(groups, previewGroup, notifiedGroup);
-		// directs = directs;
-
-		// groups.sort((group) => {
-		// 	let notified = notifiedGroup.find((notified) => {
-		// 		(notified === group.id && notified === user.id) ||
-		// 			(notified === user.id && notified === group.id);
-		// 	});
-
-		// 	if (notified) return -2;
-
-		// 	let preview = previewGroup.find(
-		// 		(preview) =>
-		// 			(preview.target_id === group.id && preview.user_id === user.id) ||
-		// 			(preview.target_id === user.id && preview.user_id === group.id)
-		// 	);
-
-		// 	if (preview) return -1;
-
-		// 	return 0;
-		// });
-
+		sort(directs, previewDirect, notifiedDirect);
+		directs = directs
+		
+		sort(groups, previewGroup, notifiedGroup);
 		groups = groups;
 	};
 

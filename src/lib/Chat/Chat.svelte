@@ -25,7 +25,6 @@
 			selectedChat: number,
 			selectedPage: 'direct' | 'group'
 		) => void,
-		unsubscribe: Unsubscriber,
 		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [];
@@ -47,7 +46,7 @@
 
 		sendMessageToSocket = await sendMessage(socket);
 
-		unsubscribe = subscribe(getMessage);
+		subscribe(getMessage);
 	};
 
 	//There's one large socket that handles messages from everywhere, which is why
@@ -98,7 +97,7 @@
 		previewDirect = previewDirect;
 
 		if (
-			(selectedPage === 'direct' && target_type === 'direct' && message.target_id === User.id) ||
+			(selectedPage === 'direct' && target_type === 'direct' && user && user.id === selectedChat) ||
 			(selectedPage === 'group' && target_type === 'group' && group === selectedChat)
 		)
 			messages = [...messages, { message, user, created_at: new Date().toString() }];
@@ -110,7 +109,9 @@
 			selectedChat = null;
 		})();
 
-	$: if (chatOpen === false) selectedChat === null
+	$: if (chatOpen) selectedChat = null;
+	
+	
 </script>
 
 {#if chatOpen}

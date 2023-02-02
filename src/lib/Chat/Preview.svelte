@@ -30,7 +30,7 @@
 		user = json;
 		await getChattable();
 		await setUpPreview();
-		sortPreview();
+		// sortPreview();
 	});
 
 	const setUpPreview = async () => {
@@ -148,6 +148,8 @@
 						message.user_id !== selectedChat
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
+
+			console.log(notifiedDirect, "NOTIS");
 		}
 	}
 

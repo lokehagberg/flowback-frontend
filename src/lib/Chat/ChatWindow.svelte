@@ -10,7 +10,9 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	// User Action variables
-	let message: string, olderMessages: string, newerMessages: string;
+	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
+		olderMessages: string,
+		newerMessages: string;
 
 	export let selectedChat: number | null,
 		sendMessageToSocket: (
@@ -81,7 +83,7 @@
 		});
 
 		messages = messages;
-		message = '';
+		message =  import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
 		setTimeStamp(selectedChat, selectedPage);
 	};
@@ -135,6 +137,7 @@
 		<!-- Here the user writes a message to be sent -->
 		<form class="flex gap-2 md:mt-2 lg:mt-5  xl:mt-14" on:submit|preventDefault={postMessage}>
 			<TextArea
+				autofocus
 				label=""
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {

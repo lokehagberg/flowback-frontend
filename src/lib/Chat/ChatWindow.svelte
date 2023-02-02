@@ -47,7 +47,8 @@
 			'GET',
 			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
-
+		
+		if (res.ok)
 		messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed

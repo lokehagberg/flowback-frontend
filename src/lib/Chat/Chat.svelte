@@ -8,12 +8,11 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import type { Unsubscriber } from 'svelte/store';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 
 	let messages: Message[] = [],
-		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? true : false,
+		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
 		User: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
@@ -36,7 +35,7 @@
 
 	const getUser = async () => {
 		const { json, res } = await fetchRequest('GET', 'user');
-		User = json;
+		if (res.ok) User = json;
 	};
 
 	const setUpMessageSending = async () => {
@@ -109,46 +108,46 @@
 			selectedChat = null;
 		})();
 
-	$: if (chatOpen) selectedChat = null;
-	
-	
+	$: if (chatOpen === false) {
+		selectedChat = 1;
+		selectedPage === 'direct';
+	}
+
+	$: console.log(selectedChat, 'CHANGED C HAG');
 </script>
 
-{#if chatOpen}
-	<div class="bg-white fixed z-40 w-full grid grid-width-fix">
-		<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-			<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
-			<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
-				<Fa size="1.5x" icon={faX} />
-			</div>
+<div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
+	<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
+		<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
+		<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
+			<Fa size="1.5x" icon={faX} />
 		</div>
-		<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
-		<ChatWindow
-			bind:previewDirect
-			bind:previewGroup
-			bind:selectedChat
-			bind:selectedPage
-			bind:sendMessageToSocket
-			user={User}
-			bind:messages
-		/>
 	</div>
-{:else}
-	<div
-		on:click={() => (chatOpen = true)}
-		class:small-notification={previewDirect
-			.filter((message) => message.timestamp < message.created_at)
-			.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
-			.length > 0}
-		class:small-notification-group={previewGroup
-			.filter((message) => message.timestamp < message.created_at)
-			.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
-			.length > 0}
-		class="transition-all fixed z-30 bg-white shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
-	>
-		<Fa icon={faComment} size="1.3x" />
-	</div>
-{/if}
+	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
+	<ChatWindow
+		bind:previewDirect
+		bind:previewGroup
+		bind:selectedChat
+		bind:selectedPage
+		bind:sendMessageToSocket
+		user={User}
+		bind:messages
+	/>
+</div>
+<div
+	on:click={() => (chatOpen = true)}
+	class:small-notification={previewDirect
+		.filter((message) => message.timestamp < message.created_at)
+		.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
+		.length > 0}
+	class:small-notification-group={previewGroup
+		.filter((message) => message.timestamp < message.created_at)
+		.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
+		.length > 0}
+	class="transition-all fixed z-30 bg-white shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
+>
+	<Fa icon={faComment} size="1.3x" />
+</div>
 
 <!-- <ButtonPrimary action={() => {
 	fetchRequest('GET', 'notification')

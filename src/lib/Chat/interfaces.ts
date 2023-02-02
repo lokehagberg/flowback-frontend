@@ -22,8 +22,14 @@ export interface PreviewMessage {
 	//For group/preview
 	group_id?: number;
 	//For direct/preview
-	target_id?:number;
-	target_username?:string;
+	target_id?: number;
+	target_username?: string;
+}
+
+export interface Direct {
+	id: number;
+	profile_image: string | null;
+	username: string;
 }
 
 //User has looked at a message, affects /preview primarily.

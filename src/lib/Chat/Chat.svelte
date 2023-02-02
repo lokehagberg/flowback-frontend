@@ -13,7 +13,7 @@
 	import { _ } from 'svelte-i18n';
 
 	let messages: Message[] = [],
-		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
+		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? true : false,
 		User: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
@@ -65,10 +65,12 @@
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
 			(previewMessage) =>
-				previewMessage.user_id === user.id ||
-				previewMessage.target_id === user.id ||
-				previewMessage.group_id === group
+				(target_type === 'direct' &&
+					(previewMessage.user_id === user.id || previewMessage.target_id === user.id)) ||
+				(target_type === 'group' && previewMessage.group_id === group)
 		);
+
+		console.log(previewMessage);
 
 		if (previewMessage) {
 			previewMessage.message = message;

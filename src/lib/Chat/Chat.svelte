@@ -109,7 +109,7 @@
 		})();
 
 	$: if (chatOpen === false) {
-		selectedChat = 1;
+		selectedChat = null;
 		selectedPage === 'direct';
 	}
 

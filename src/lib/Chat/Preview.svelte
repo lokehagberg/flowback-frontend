@@ -148,13 +148,19 @@
 						message.user_id !== selectedChat
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
+		}
+	}
 
+	$: {
+		if (user) {
 			//@ts-ignore
 			notifiedGroup = previewGroup
 				.filter(
-					(message) => message.timestamp <= message.created_at && message.group_id !== selectedChat
+					(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
 				)
 				.map((message) => message.group_id);
+
+			console.log(notifiedGroup);
 		}
 	}
 </script>

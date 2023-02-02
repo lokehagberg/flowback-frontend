@@ -109,6 +109,8 @@
 		(() => {
 			selectedChat = null;
 		})();
+
+	$: if (chatOpen === false) selectedChat === null
 </script>
 
 {#if chatOpen}

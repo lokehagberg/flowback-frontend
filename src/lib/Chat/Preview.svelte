@@ -139,13 +139,13 @@
 	$: {
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
-			let newMember = directs.find((direct) => !previewDirect.find(previewMsg => previewMsg.user_id === direct.id));
-			if (newMember)
-				directs.push({
-					id: newMember.id,
-					profile_image: newMember.profile_image,
-					username: newMember.username
-				});
+			// let newMember = directs.find((direct) => !previewDirect.find(previewMsg => previewMsg.user_id === direct.id && ));
+			// if (newMember)
+			// 	directs.push({
+			// 		id: newMember.id,
+			// 		profile_image: newMember.profile_image,
+			// 		username: newMember.username
+			// 	});
 
 			//@ts-ignore
 			notifiedDirect = previewDirect

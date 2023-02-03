@@ -90,8 +90,6 @@
 			});
 		}
 
-		
-
 		previewGroup = previewGroup;
 		previewDirect = previewDirect;
 

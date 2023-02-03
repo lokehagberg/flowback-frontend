@@ -139,21 +139,18 @@
 	$: {
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
-			// let newMember = directs.find((direct) => !previewDirect.find(previewMsg => previewMsg.user_id === direct.id && ));
-			// if (newMember)
-			// 	directs.push({
-			// 		id: newMember.id,
-			// 		profile_image: newMember.profile_image,
-			// 		username: newMember.username
-			// 	});
-
 			//@ts-ignore
 			notifiedDirect = previewDirect
 				.filter(
 					(message) =>
-						message.timestamp <= message.created_at &&
+						(message.timestamp <= message.created_at || message.timestamp === null) &&
 						message.target_id !== selectedChat &&
-						message.user_id !== selectedChat
+						message.user_id !== selectedChat &&
+						// This piece of code hinders new accounts from causing a notification but no account present
+						// TODO: Append new user to list if being notified from them
+						directs.find(
+							(direct) => direct.id === message.user_id || direct.id === message.target_id
+						)
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 

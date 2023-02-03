@@ -6,10 +6,12 @@
 	import type { User } from '$lib/User/interfaces';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
-		user: User;
+		user: User,
+		chatSearch = '';
 
 	export let selectedChat: number | null,
 		// user: User,
@@ -166,6 +168,7 @@
 				.map((message) => message.group_id);
 		}
 	}
+
 </script>
 
 <div
@@ -190,8 +193,12 @@
 <ul
 	class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 >
+	<TextInput label="search users" bind:value={chatSearch} />
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		<li
+			class:hidden={selectedPage === 'direct'
+				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
+				: groups}
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 			class:bg-gray-200={selectedChat === chatter.id}
 			on:click={async () => {

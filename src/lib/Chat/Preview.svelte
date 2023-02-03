@@ -145,7 +145,8 @@
 					(message) =>
 						message.timestamp <= message.created_at &&
 						message.target_id !== selectedChat &&
-						message.user_id !== selectedChat
+						message.user_id !== selectedChat &&
+						directs.find(direct => direct.id === message.user_id || direct.id === message.target_id)
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 

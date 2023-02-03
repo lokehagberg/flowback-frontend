@@ -16,8 +16,8 @@
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
-		notifiedDirect : number[] = [],
-		notifiedGroup: number[] = [];
+		notifiedDirect : number[],
+		notifiedGroup: number[];
 
 
 	// $: user &&

@@ -140,12 +140,13 @@
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
 			let newMember = directs.find((user) => !previewDirect.find(user.id));
-			directs.push({
-				id: newMember.id,
-				profile_image: newMember.profile_image,
-				username: newMember.username
-			});
-			
+			if (newMember)
+				directs.push({
+					id: newMember.id,
+					profile_image: newMember.profile_image,
+					username: newMember.username
+				});
+
 			//@ts-ignore
 			notifiedDirect = previewDirect
 				.filter(

@@ -139,18 +139,24 @@
 	$: {
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
+			let newMember = directs.find((user) => !previewDirect.find(user.id));
+			directs.push({
+				id: newMember.id,
+				profile_image: newMember.profile_image,
+				username: newMember.username
+			});
+			
 			//@ts-ignore
 			notifiedDirect = previewDirect
 				.filter(
 					(message) =>
 						message.timestamp <= message.created_at &&
 						message.target_id !== selectedChat &&
-						message.user_id !== selectedChat &&
-						directs.find(direct => direct.id === message.user_id || direct.id === message.target_id)
+						message.user_id !== selectedChat
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
-			console.log(notifiedDirect, "NOTIS");
+			console.log(notifiedDirect, 'NOTIS');
 		}
 	}
 

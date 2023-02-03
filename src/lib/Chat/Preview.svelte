@@ -139,7 +139,7 @@
 	$: {
 		//TODO: Use advanced typescript features to not have the ignore
 		if (user) {
-			let newMember = directs.find((user) => !previewDirect.find(user.id));
+			let newMember = directs.find((direct) => !previewDirect.find(previewMsg => previewMsg.user_id === direct.id));
 			if (newMember)
 				directs.push({
 					id: newMember.id,

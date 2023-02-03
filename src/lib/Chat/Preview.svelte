@@ -10,15 +10,14 @@
 	let groups: Group[] = [],
 		directs: any[] = [],
 		user: User;
-		
+
 	export let selectedChat: number | null,
 		// user: User,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
-		notifiedDirect : number[],
+		notifiedDirect: number[],
 		notifiedGroup: number[];
-
 
 	// $: user &&
 	// 	(() => {
@@ -165,8 +164,6 @@
 					(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
 				)
 				.map((message) => message.group_id);
-
-			console.log(notifiedGroup);
 		}
 	}
 </script>

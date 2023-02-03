@@ -1,3 +1,4 @@
+//This function is a bit cursed due to problems with error codes from the backend 
 export const statusMessageFormatter = (res: any, json: any, successMessage: string = 'Success') => {
 	if (res.ok) {
 		return { message: successMessage, success: true };

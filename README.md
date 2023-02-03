@@ -40,6 +40,15 @@ You can preview the production build with `npm run preview`.
 
 # Documentation for developers:
 
+## Flowback Specific
+
+If you're experienced with React, Vue e.t.c and new to svelte you can check out this amazing tutorial by the svelte developers:
+https://svelte.dev/tutorial/basics
+
+
+Remember to check the “Generic” folder before doing something that’s very common
+
+## Generally good code practices:
 ```{js}
 // Unnecessary nesting
 if (boolean) {
@@ -170,8 +179,3 @@ const thingtoDo2Good = (thing) => {
 
 //Have paragraphs in functions to differentiate different operations
 ```
-
-
-Check the “Generic” folder before doing something that’s very common
-
-

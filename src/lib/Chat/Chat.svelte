@@ -26,7 +26,9 @@
 		) => void,
 		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [];
+		previewGroup: PreviewMessage[] = [],
+		notifiedDirect: number[] = [],
+		notifiedGroup: number[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -110,7 +112,6 @@
 		selectedChat = null;
 		selectedPage === 'direct';
 	}
-
 </script>
 
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
@@ -120,7 +121,14 @@
 			<Fa size="1.5x" icon={faX} />
 		</div>
 	</div>
-	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
+	<Preview
+		bind:selectedChat
+		bind:selectedPage
+		bind:previewDirect
+		bind:previewGroup
+		bind:notifiedDirect
+		bind:notifiedGroup
+	/>
 	<ChatWindow
 		bind:previewDirect
 		bind:previewGroup
@@ -133,14 +141,8 @@
 </div>
 <div
 	on:click={() => (chatOpen = true)}
-	class:small-notification={previewDirect
-		.filter((message) => message.timestamp < message.created_at || message.timestamp === null)
-		.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
-		.length > 0}
-	class:small-notification-group={previewGroup
-		.filter((message) => message.timestamp < message.created_at)
-		.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
-		.length > 0}
+	class:small-notification={notifiedDirect.length > 0}
+	class:small-notification-group={notifiedGroup.length > 0}
 	class="transition-all fixed z-30 bg-white shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
 	<Fa icon={faComment} size="1.3x" />

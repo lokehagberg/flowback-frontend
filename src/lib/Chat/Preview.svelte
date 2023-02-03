@@ -9,15 +9,16 @@
 
 	let groups: Group[] = [],
 		directs: any[] = [],
-		user: User,
-		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [];
-
+		user: User;
+		
 	export let selectedChat: number | null,
 		// user: User,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [];
+		previewGroup: PreviewMessage[] = [],
+		notifiedDirect : number[] = [],
+		notifiedGroup: number[] = [];
+
 
 	// $: user &&
 	// 	(() => {

@@ -40,7 +40,7 @@ You can preview the production build with `npm run preview`.
 
 #Documentation for developers:
 
-```{javascript}
+```{js}
 // Unnecessary nesting
 if (boolean) {
     // long statement...

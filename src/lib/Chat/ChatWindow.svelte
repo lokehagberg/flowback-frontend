@@ -24,7 +24,8 @@
 		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [];
+		previewGroup: PreviewMessage[] = [],
+		isLookingAtOlderMessages: boolean;
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -47,9 +48,8 @@
 			'GET',
 			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${5}`
 		);
-		
-		if (res.ok)
-		messages = json.results.reverse();
+
+		if (res.ok) messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
@@ -84,10 +84,15 @@
 		});
 
 		messages = messages;
-		message =  import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
+		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
 		setTimeStamp(selectedChat, selectedPage);
 	};
+
+	$: {
+		if (newerMessages) isLookingAtOlderMessages = true;
+		else isLookingAtOlderMessages = false;
+	}
 </script>
 
 {#if selectedChat !== null}

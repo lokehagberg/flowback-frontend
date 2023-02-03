@@ -28,7 +28,8 @@
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
 		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [];
+		notifiedGroup: number[] = [],
+		isLookingAtOlderMessages = false;
 
 	onMount(async () => {
 		await getUser();
@@ -61,6 +62,8 @@
 		} catch (err) {
 			return;
 		}
+
+		if (isLookingAtOlderMessages) return;
 
 		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
 		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
@@ -114,6 +117,13 @@
 	}
 </script>
 
+<svelte:head
+	><title 
+		>{`${notifiedDirect.length > 0 ? '🟣' : ''}${
+			notifiedGroup.length > 0 ? '🔵' : ''
+		} Flowback`}</title
+	></svelte:head
+>
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
 	<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 		<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
@@ -137,6 +147,7 @@
 		bind:sendMessageToSocket
 		user={User}
 		bind:messages
+		bind:isLookingAtOlderMessages
 	/>
 </div>
 <div

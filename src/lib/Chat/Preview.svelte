@@ -153,8 +153,6 @@
 						)
 				)
 				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
-
-			console.log(notifiedDirect, 'NOTIS');
 		}
 	}
 

@@ -134,7 +134,7 @@
 <div
 	on:click={() => (chatOpen = true)}
 	class:small-notification={previewDirect
-		.filter((message) => message.timestamp < message.created_at)
+		.filter((message) => message.timestamp < message.created_at || message.timestamp === null)
 		.map((message) => (message.target_id === User.id ? message.user_id : message.target_id))
 		.length > 0}
 	class:small-notification-group={previewGroup

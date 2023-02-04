@@ -7,6 +7,7 @@
 		window.location.href = '/';
 	};
 
+	//TODO: Implement codocument creation
 	const handleCoDocumentCreation = () => {};
 
 	const navs = [

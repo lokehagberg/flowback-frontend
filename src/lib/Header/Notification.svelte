@@ -1,0 +1,66 @@
+<script lang="ts">
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	import { _ } from 'svelte-i18n';
+
+	type NotificationType = 'kanban' | 'group';
+	interface Notification {
+		action: () => void;
+		type: NotificationType;
+		title: string;
+	}
+
+	const notifications:Notification[] = [
+		{ action: () => {}, title: 'hii notification from group', type: 'kanban' }
+	];
+</script>
+
+<Fa icon={faBell} size={'1.4x'} />
+
+<div class="absolute right-0 top-full bg-white z-50 select-none shadow slide-animation">
+	{#each notifications as notification}
+		<div
+			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"
+			on:click={notification.action}
+		>
+			{$_(notification.title)}
+		</div>
+	{/each}
+</div>
+
+<!-- <ButtonPrimary action={() => {
+	
+	// fetchRequest('GET', 'notification/subscriptions')
+		fetchRequest('POST', 'notification/read', {notification_ids:[3]})
+		fetchRequest('GET', 'notification')
+		// fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
+}}/> -->
+
+<!-- <ButtonPrimary action={() => {
+	fetchRequest('GET', 'notification')
+	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
+	fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
+	// fetchRequest('GET', 'chat/group/preview')
+	// fetchRequest('POST', 'group/2/poll/28/subscribe', {categories:['timeline', 'poll']})
+	// fetchRequest('POST', 'chat/group/2/timestamp', {
+	// 	timestamp :new Date()
+	// })
+}}
+/> -->
+
+<!-- // $: selectedPage === 'direct'
+// 	? (displayNotificationDirect = Boolean(notified.length > 0))
+// 	: (displayNotificationGroup = Boolean(notified.length > 0));
+
+// ? (displayNotificationDirect = Boolean(notified.length > 0))
+
+// onMount(async () => {
+// 	getPreview();
+
+// fetchRequest('GET', 'notification')
+// 	fetchRequest('POST', 'notification/subscriptions')
+// 	fetchRequest('POST', 'notification/read')
+// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
+
+// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
+// }); -->

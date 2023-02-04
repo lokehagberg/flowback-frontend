@@ -13,18 +13,22 @@
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import Notification from './Notification.svelte';
 
-	let sideHeaderOpen = false, profileImage = DefaultPFP;
+	let sideHeaderOpen = false,
+		notificationOpen = false,
+		profileImage = DefaultPFP;
 
 	onMount(() => {
 		getProfileImage();
-	})
+	});
 
 	const getProfileImage = async () => {
-		const {res, json} = await fetchRequest('GET', 'user')
+		const { res, json } = await fetchRequest('GET', 'user');
 
-		if (res.ok && json.profile_image) profileImage = `${import.meta.env.VITE_API}${json.profile_image}`
-	}
+		if (res.ok && json.profile_image)
+			profileImage = `${import.meta.env.VITE_API}${json.profile_image}`;
+	};
 </script>
 
 <div class="sticky z-50 w-full top-0">
@@ -32,7 +36,11 @@
 		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 bg-white shadow select-none"
 	>
 		<a href="/home" class="md:w-auto"
-			><img src={import.meta.env.VITE_LOGO === "REFORUM" ? Reforum : Logo} class="w-32 cursor-pointer" alt="flowback logo" /></a
+			><img
+				src={import.meta.env.VITE_LOGO === 'REFORUM' ? Reforum : Logo}
+				class="w-32 cursor-pointer"
+				alt="flowback logo"
+			/></a
 		>
 		<nav class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" />
@@ -47,10 +55,16 @@
 		</nav>
 
 		<div
-			class="inline-block float-right cursor-pointer hover:bg-grey-800"
+			class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
 			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 		>
-			<img class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`} src={profileImage} alt="default pfp" />
+			<Notification />
+
+			<img
+				class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`}
+				src={profileImage}
+				alt="default pfp"
+			/>
 		</div>
 	</header>
 	{#if sideHeaderOpen}

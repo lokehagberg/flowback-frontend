@@ -159,34 +159,6 @@
 	<Fa icon={faComment} size="1.3x" />
 </div>
 
-<!-- <ButtonPrimary action={() => {
-	fetchRequest('GET', 'notification')
-	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
-	fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
-	// fetchRequest('GET', 'chat/group/preview')
-	// fetchRequest('POST', 'group/2/poll/28/subscribe', {categories:['timeline', 'poll']})
-	// fetchRequest('POST', 'chat/group/2/timestamp', {
-	// 	timestamp :new Date()
-	// })
-}}
-/> -->
-
-<!-- // $: selectedPage === 'direct'
-// 	? (displayNotificationDirect = Boolean(notified.length > 0))
-// 	: (displayNotificationGroup = Boolean(notified.length > 0));
-
-// ? (displayNotificationDirect = Boolean(notified.length > 0))
-
-// onMount(async () => {
-// 	getPreview();
-
-// fetchRequest('GET', 'notification')
-// 	fetchRequest('POST', 'notification/subscriptions')
-// 	fetchRequest('POST', 'notification/read')
-// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
-
-// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
-// }); -->
 <style>
 	.grid-width-fix {
 		grid-template-columns: 30% 70%;

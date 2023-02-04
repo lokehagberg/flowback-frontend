@@ -44,7 +44,7 @@
 					{/if}
 					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 				</div>
-				<a href={`groups/${poll.group_id}`} class="text-black hover:underline">
+				<a href={poll.joined ? `groups/${poll.group_id}` : ""} class:hover-underline={poll.joined} class="text-black" >
 					<img
 						class="h-8 w-8 inline rounded-full"
 						src={`${import.meta.env.VITE_API}${poll.group_image}`}

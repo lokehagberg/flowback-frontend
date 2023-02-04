@@ -24,6 +24,7 @@ export interface poll {
 	delegate_vote_end_date:string;
 	group_name?:string;
 	group_image?:string;
+	joined:boolean;
 }
 
 export interface votings {

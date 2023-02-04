@@ -108,6 +108,7 @@
 	//Puts chats with notification circle at the top
 	//Puts chats with message between
 	//Puts empty chats at the bottom
+	//SIamand is doing this, to be changed drastically
 	const sort = (chatter: any[], preview: PreviewMessage[], notified: number[]) => {
 		chatter.sort((direct) => {
 			let notifiedMsg = notified.find((notified) => notified === direct.id);
@@ -193,7 +194,7 @@
 <ul
 	class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 >
-	<TextInput label="search users" bind:value={chatSearch} />
+	<TextInput label={selectedPage === 'direct' ? "Search users" : "Search groups"} bind:value={chatSearch} />
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		<li
 			class:hidden={selectedPage === 'direct'

@@ -42,7 +42,9 @@
 			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
 		);
 
-		statusMessageFormatter(res, json)
+		if (!res.ok) return;
+
+		statusMessageFormatter(res, json);
 		poll = json.results[0];
 		pollType = json.results[0].poll_type;
 		finished = new Date(json.results[0].end_date) < new Date();

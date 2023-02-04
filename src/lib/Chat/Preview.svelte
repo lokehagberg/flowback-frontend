@@ -198,7 +198,8 @@
 		<li
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
-				: groups}
+				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())
+				}
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 			class:bg-gray-200={selectedChat === chatter.id}
 			on:click={async () => {

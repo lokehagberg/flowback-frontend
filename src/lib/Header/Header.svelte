@@ -13,7 +13,7 @@
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Notification from './Notification.svelte';
+	import Notifications from './Notifications.svelte';
 
 	let sideHeaderOpen = false,
 		notificationOpen = false,
@@ -54,17 +54,16 @@
 			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
 		</nav>
 
-		<div
-			class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
-			on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
-		>
-			<Notification />
+		<div class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800">
+			<Notifications />
 
-			<img
-				class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`}
-				src={profileImage}
-				alt="default pfp"
-			/>
+			<div on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+				<img
+					class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`}
+					src={profileImage}
+					alt="default pfp"
+				/>
+			</div>
 		</div>
 	</header>
 	{#if sideHeaderOpen}

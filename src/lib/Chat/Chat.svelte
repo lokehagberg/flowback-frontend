@@ -10,6 +10,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
+	import CrossButton from '$lib/Generic/CrossButton.svelte';
 
 	let messages: Message[] = [],
 		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
@@ -128,7 +129,7 @@
 	<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
 		<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
 		<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
-			<Fa size="1.5x" icon={faX} />
+			<CrossButton  />
 		</div>
 	</div>
 	<Preview

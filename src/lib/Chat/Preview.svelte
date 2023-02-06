@@ -165,7 +165,6 @@
 	const sortChat = (chatters: Direct[] | Group[], previews: PreviewMessage[]) => {
 		if (user)
 			chatters.sort((chatter1, chatter2) => {
-				console.log(chatter1, 'CHATTER');
 				const preview1 = previews.find((preview) =>
 					preview.group_id === chatter1.id
 						? !(preview.target_id === chatter1.id || preview.user_id === chatter1.id)

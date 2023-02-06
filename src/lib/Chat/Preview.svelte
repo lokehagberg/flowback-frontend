@@ -88,7 +88,7 @@
 		if (selectedPage === 'direct') {
 			//TODO-user more advanced typescript features to make sure I don't have to use ts-ignore here
 			//@ts-ignore
-			let message = previewDirect.find(
+			let message = previewDirect?.find(
 				(message) => message.target_id === selectedChat || message.user_id === selectedChat
 			);
 			if (message) message.timestamp = new Date().toString();
@@ -115,13 +115,12 @@
 
 			if (notifiedMsg) return -1;
 
-			let previewMsg = preview.find(
+			var previewMsg = preview?.find(
 				(preview) =>
 					(preview.target_id === direct.id && preview.user_id === user.id) ||
 					(preview.target_id === user.id && preview.user_id === direct.id)
 			);
 
-			console.log(previewMsg, direct.id, 'PRVTWIER');
 			if (previewMsg) return 0;
 
 			return 1;
@@ -169,7 +168,6 @@
 				.map((message) => message.group_id);
 		}
 	}
-
 </script>
 
 <div
@@ -194,13 +192,15 @@
 <ul
 	class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 >
-	<TextInput label={selectedPage === 'direct' ? "Search users" : "Search groups"} bind:value={chatSearch} />
+	<TextInput
+		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
+		bind:value={chatSearch}
+	/>
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		<li
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
-				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())
-				}
+				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
 			class:bg-gray-200={selectedChat === chatter.id}
 			on:click={async () => {

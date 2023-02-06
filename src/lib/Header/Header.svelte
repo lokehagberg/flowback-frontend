@@ -31,6 +31,8 @@
 	};
 </script>
 
+<!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
+
 <div class="sticky z-50 w-100 top-0">
 	<header
 		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 px-3 bg-white shadow select-none"

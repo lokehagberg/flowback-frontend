@@ -33,8 +33,6 @@
 
 <div class={`relative text-black p-2 border border-gray-200 rounded ${Class}`}>
 	{#if displayTimeline}
-		<!-- <h1 class="text-left text-xl">{$_('Timeline')}</h1> -->
-		<!-- {#if import.meta.env.VITE_PROD === 'PROD'} -->
 		<div>
 			{#each datePlacement as date, i}
 				<div class="h-4 absolute z-20 w-full" style:left={`${i*32}%`} style:top={"-17px"}>
@@ -48,7 +46,6 @@
 				</div>
 			{/each}
 		</div>
-		<!-- {/if} -->
 		<div class="h-8">
 			<div class={`absolute bg-gray-300 left-0 h-6 w-full`} />
 			<div

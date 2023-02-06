@@ -217,6 +217,7 @@
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
 		bind:value={chatSearch}
+		Class="mt-1 ml-2 mb-2 w-7/12"
 	/>
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		<li

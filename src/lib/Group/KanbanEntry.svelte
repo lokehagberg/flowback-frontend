@@ -71,7 +71,7 @@
 		}}
 		class="cursor-pointer hover:underline"
 	>
-		<div class="text-sm break-all">{kanban.title}</div>
+		<div class="p-0.5 break-all">{kanban.title}</div>
 	</div>
 	<div
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
@@ -80,7 +80,7 @@
 				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} />
-		<div class="break-all">
+		<div class="break-all text-xs">
 			{type === 'group' ? kanban.assignee.username : kanban.group.name}
 		</div>
 	</div>

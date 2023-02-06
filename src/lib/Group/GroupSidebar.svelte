@@ -74,7 +74,7 @@
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white p-6 cursor-pointer shadow rounded flex justify-around items-center"
 			>
-				<Fa icon={faX} /><span class="ml-2">Close Menu</span>
+				<Fa icon={faX} /><span class="ml-2">{$_("Close Menu")}</span>
 			</div>
 		{/if}
 		<div class="bg-white shadow rounded flex flex-col">

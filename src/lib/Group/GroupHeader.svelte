@@ -18,7 +18,7 @@
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}
 	</h1>
-	<p class="text-xl">{memberCount} {$_('members')}</p>
+	<p class="text-xl hover:underline cursor-pointer" on:click={() => selectedPage = 'members'}>{memberCount} {$_('members')}</p>
 </div>
 
 <style>

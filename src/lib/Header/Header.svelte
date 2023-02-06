@@ -31,7 +31,7 @@
 	};
 </script>
 
-<div class="sticky z-50 w-full top-0">
+<div class="sticky z-50 w-100 top-0">
 	<header
 		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 bg-white shadow select-none"
 	>

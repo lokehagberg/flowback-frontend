@@ -20,7 +20,7 @@
 
 <!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
 <div
-	class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded transition transition-all vote-thumbnail"
+	class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
 >
 	<a
 	class="hover:shadow-xl hover:rounded-xl cursor-pointer "

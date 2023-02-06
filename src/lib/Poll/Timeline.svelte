@@ -33,12 +33,12 @@
 
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
-		<div class="flex justify-between mt-2"
-		class:bg-gray-400={date.getTime() < dates[1].getTime()}
-		class:third={date.getTime() < dates[2].getTime()}
-		class:two-third={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
-		class:bg-blue-400={date.getTime() >= dates[3].getTime()}
-		
+		<div
+			class="flex justify-between mt-2 rounded-md"
+			class:bg-gray-400={date.getTime() < dates[1].getTime()}
+			class:third={date.getTime() < dates[2].getTime()}
+			class:two-third={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
+			class:bg-blue-400={date.getTime() >= dates[3].getTime()}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">
@@ -81,13 +81,11 @@
 </div>
 
 <style>
-
 	.third {
-		background: linear-gradient(90deg, rgba(89,158,255,1) 34%, rgba(191,191,191,1) 34%);
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 34%, rgba(191, 191, 191, 1) 34%);
 	}
 
 	.two-third {
-		background: linear-gradient(90deg, rgba(89,158,255,1) 67%, rgba(191,191,191,1) 67%);
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 67%, rgba(191, 191, 191, 1) 67%);
 	}
-
 </style>

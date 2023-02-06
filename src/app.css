@@ -17,10 +17,14 @@
     overflow-x: hidden;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     /* min-height: 100vh; */
     margin: 0;
-    background: var(--background-color)
+    background: var(--background-color);
 }
 
 body::before {

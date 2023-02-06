@@ -163,7 +163,7 @@
 <style>
 	.grid-width-fix {
 		grid-template-columns: 30% 70%;
-		grid-template-rows: 2vh 70vh 20vh;
+		grid-template-rows: 8% 58vh 28vh;
 	}
 
 	.small-notification:before {

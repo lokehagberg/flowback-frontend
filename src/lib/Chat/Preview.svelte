@@ -153,6 +153,7 @@
 			)
 			.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
+	//Sorts the chat based on most recent messages highest up
 	$: {
 		if (user)
 			directs.sort((direct1, direct2) => {

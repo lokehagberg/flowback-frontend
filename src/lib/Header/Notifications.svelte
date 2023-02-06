@@ -13,7 +13,7 @@
 	}
 
 	const notifications: Notification[] = [
-		{ action: () => {}, title: 'hii notification from group', type: 'kanban' }
+		{ action: () => {}, title: 'Notification example', type: 'kanban' }
 	];
 
 	const getNotifications = async () => {

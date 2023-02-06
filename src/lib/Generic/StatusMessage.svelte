@@ -2,9 +2,9 @@
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from './GenericFunctions';
 
-	export let Class = '';
-	export let status: StatusMessageInfo;
-	export let disableSuccess = false;
+	export let Class = '',
+		status: StatusMessageInfo,
+		disableSuccess = false;
 </script>
 
 {#if status !== null && status !== undefined}

@@ -12,12 +12,18 @@
 	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
-		selectedEntry: number;
+		selectedEntry: number,
+		status: StatusMessageInfo;
 
-	export let kanban: any, type: 'group' | 'home', users: any[], removeKanbanEntry : (id:number) => void;
+	export let kanban: any,
+		type: 'group' | 'home',
+		users: any[],
+		removeKanbanEntry: (id: number) => void;
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
@@ -33,9 +39,12 @@
 			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
 			kanbanEdited
 		);
+		status = statusMessageFormatter(res, json);
+		if (!res.ok) return;
+
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
-		statusMessageFormatter(res, json);
+		openModal = false;
 	};
 
 	const updateKanbanTag = async (kanban: any) => {
@@ -44,22 +53,24 @@
 			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
 			kanban
 		);
-		statusMessageFormatter(res, json);
+		status = statusMessageFormatter(res, json);
+		if (!res.ok) return;
+		kanban.tag = kanban.tag;
 	};
 
 	const changeAssignee = (e: any) => {
 		kanbanEdited.assignee = Number(e.target.value);
 	};
 
-	// Delete kanban removes it from the database, 
+	// Delete kanban removes it from the database,
 	// remove kanban removes the displaying of the kanban.
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/kanban/${kanban.id}/delete`
 		);
-		statusMessageFormatter(res, json);
-		removeKanbanEntry(kanban.id)
+		status = statusMessageFormatter(res, json);
+		removeKanbanEntry(kanban.id);
 	};
 </script>
 
@@ -90,10 +101,7 @@
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
-					if (kanban.tag > 0) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
-						kanban.tag -= 1;
-					}
+					if (kanban.tag > 0) updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
 				}}
 			>
 				<Fa icon={faArrowLeft} size="1.5x" />
@@ -101,10 +109,7 @@
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
-					if (kanban.tag < tags.length) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
-						kanban.tag += 1;
-					}
+					if (kanban.tag < tags.length) updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
 				}}
 			>
 				<Fa icon={faArrowRight} size="1.5x" />
@@ -117,6 +122,7 @@
 	<Modal bind:open={openModal}>
 		<TextInput slot="header" bind:value={kanbanEdited.title} label="" />
 		<div slot="body">
+			<StatusMessage bind:status />
 			<TextArea bind:value={kanbanEdited.description} label="" />
 			<select on:input={changeAssignee}>
 				{#each users as user}

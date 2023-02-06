@@ -31,13 +31,19 @@
 	});
 </script>
 
-<div class={`relative text-black p-2 border border-gray-200 rounded ${Class}`}>
+<div class={`relative ${Class}`}>
 	{#if displayTimeline}
-		<div>
+		<div class="flex justify-between mt-2"
+		class:bg-gray-400={date.getTime() < dates[1].getTime()}
+		class:third={date.getTime() < dates[2].getTime()}
+		class:two-third={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
+		class:bg-blue-400={date.getTime() >= dates[3].getTime()}
+		
+		>
 			{#each datePlacement as date, i}
-				<div class="h-4 absolute z-20 w-full" style:left={`${i*32}%`} style:top={"-17px"}>
+				<div class="h-6">
 					<HeaderIcon
-						Class="cursor-default"
+						Class="cursor-default p-0"
 						size="1.5x"
 						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
 						icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
@@ -45,18 +51,6 @@
 					/>
 				</div>
 			{/each}
-		</div>
-		<div class="h-8">
-			<div class={`absolute bg-gray-300 left-0 h-6 w-full`} />
-			<div
-				class={`absolute bg-blue-400 left-0 h-6`}
-				style:width={`${(() => {
-					if (date.getTime() < dates[1].getTime()) return 0
-					if (date.getTime() < dates[2].getTime()) return 33
-					if (date.getTime() < dates[3].getTime()) return 66
-					else return 100
-				})()}%`}
-			/>
 		</div>
 	{/if}
 	{#if displayDetails}
@@ -77,7 +71,7 @@
 		</ul>
 	{:else}
 		<ul
-			class="hover:underline flex items-center gap-1 cursor-pointer text-xs absolute -bottom-1 left-0"
+			class="hover:underline flex items-center gap-1 cursor-pointer text-xs mb-3"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />
@@ -85,3 +79,15 @@
 		</ul>
 	{/if}
 </div>
+
+<style>
+
+	.third {
+		background: linear-gradient(90deg, rgba(89,158,255,1) 34%, rgba(191,191,191,1) 34%);
+	}
+
+	.two-third {
+		background: linear-gradient(90deg, rgba(89,158,255,1) 67%, rgba(191,191,191,1) 67%);
+	}
+
+</style>

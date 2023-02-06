@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
+	import { setTimeStamp, type Direct, type Message, type PreviewMessage } from './interfaces';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
@@ -155,13 +155,26 @@
 
 	//Sorts the chat based on most recent messages highest up
 	$: {
+		sortChat(directs, previewDirect);
+		directs = directs;
+
+		sortChat(groups, previewGroup);
+		groups = groups;
+	}
+
+	const sortChat = (chatters: Direct[] | Group[], previews: PreviewMessage[]) => {
 		if (user)
-			directs.sort((direct1, direct2) => {
-				const preview1 = previewDirect.find(
-					(preview) => preview.target_id === direct1.id || preview.user_id === direct1.id
+			chatters.sort((chatter1, chatter2) => {
+				console.log(chatter1, 'CHATTER');
+				const preview1 = previews.find((preview) =>
+					preview.group_id === chatter1.id
+						? !(preview.target_id === chatter1.id || preview.user_id === chatter1.id)
+						: preview.target_id === chatter1.id || preview.user_id === chatter1.id
 				);
-				const preview2 = previewDirect.find(
-					(preview) => preview.target_id === direct2.id || preview.user_id === direct2.id
+				const preview2 = previews.find((preview) =>
+					preview.group_id === chatter2.id
+						? !(preview.target_id === chatter2.id || preview.user_id === chatter2.id)
+						: preview.target_id === chatter2.id || preview.user_id === chatter2.id
 				);
 				if (preview1 && preview2)
 					return (
@@ -169,14 +182,7 @@
 					);
 				else return 1;
 			});
-		directs = directs;
-	}
-
-	// directs.sort((direct1, direct2) => {
-	// 	const notified1 = notifiedDirect.find(notified => notified === direct1.id);
-	// 	const notified2 = notifiedDirect.find(notified => notified === direct2.id);
-	// 	return notified2.created_at - notified1.created_at
-	// });
+	};
 
 	$: if (user)
 		//@ts-ignore

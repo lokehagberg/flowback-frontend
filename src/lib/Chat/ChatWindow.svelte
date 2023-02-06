@@ -8,6 +8,8 @@
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/env';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -139,9 +141,12 @@
 			</li>
 		{/if}
 	</ul>
-	<div class="col-start-2 col-end-3 bg-white shadow rounded p-8 w-full">
+	<div class="col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
 		<!-- Here the user writes a message to be sent -->
-		<form class="flex gap-2 md:mt-2 lg:mt-5  xl:mt-14" on:submit|preventDefault={postMessage}>
+		<form
+			class="w-full flex gap-2 md:mt-2 lg:mt-5 xl:mt-14 items-center"
+			on:submit|preventDefault={postMessage}
+		>
 			<TextArea
 				autofocus
 				label=""
@@ -156,11 +161,9 @@
 				bind:value={message}
 				Class="w-full"
 			/>
-			<ButtonPrimary
-				type="submit"
-				label="Skicka"
-				Class="pl-2 pr-2 pt-2 pb-2 h-[30%] mb-0 mt-[2%] text-sm"
-			/>
+			<ButtonPrimary type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
+				><Fa icon={faPaperPlane} /></ButtonPrimary
+			>
 		</form>
 	</div>
 {:else}

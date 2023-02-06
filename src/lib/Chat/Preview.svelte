@@ -138,36 +138,52 @@
 	};
 
 	//Adds notification data to chats where a new message just dropped
-	$: {
-		//TODO: Use advanced typescript features to not have the ignore
-		if (user) {
-			//@ts-ignore
-			notifiedDirect = previewDirect
-				.filter(
-					(message) =>
-						(message.timestamp <= message.created_at || message.timestamp === null) &&
-						message.target_id !== selectedChat &&
-						message.user_id !== selectedChat &&
-						// This piece of code hinders new accounts from causing a notification but no account present
-						// TODO: Append new user to list if being notified from them
-						directs.find(
-							(direct) => direct.id === message.user_id || direct.id === message.target_id
-						)
-				)
-				.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
-		}
-	}
+	//TODO: Use advanced typescript features to not have the ignore
+	$: if (user)
+		//@ts-ignore
+		notifiedDirect = previewDirect
+			.filter(
+				(message) =>
+					(message.timestamp <= message.created_at || message.timestamp === null) &&
+					message.target_id !== selectedChat &&
+					message.user_id !== selectedChat &&
+					// This piece of code hinders new accounts from causing a notification but no account present
+					// TODO: Append new user to list if being notified from them
+					directs.find((direct) => direct.id === message.user_id || direct.id === message.target_id)
+			)
+			.map((message) => (message.target_id === user.id ? message.user_id : message.target_id));
 
 	$: {
-		if (user) {
-			//@ts-ignore
-			notifiedGroup = previewGroup
-				.filter(
-					(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
-				)
-				.map((message) => message.group_id);
-		}
+		if (user)
+			directs.sort((direct1, direct2) => {
+				const preview1 = previewDirect.find(
+					(preview) => preview.target_id === direct1.id || preview.user_id === direct1.id
+				);
+				const preview2 = previewDirect.find(
+					(preview) => preview.target_id === direct2.id || preview.user_id === direct2.id
+				);
+				if (preview1 && preview2)
+					return (
+						new Date(preview2?.created_at).getTime() - new Date(preview1?.created_at).getTime()
+					);
+				else return 1;
+			});
+		directs = directs;
 	}
+
+	// directs.sort((direct1, direct2) => {
+	// 	const notified1 = notifiedDirect.find(notified => notified === direct1.id);
+	// 	const notified2 = notifiedDirect.find(notified => notified === direct2.id);
+	// 	return notified2.created_at - notified1.created_at
+	// });
+
+	$: if (user)
+		//@ts-ignore
+		notifiedGroup = previewGroup
+			.filter(
+				(message) => message.timestamp < message.created_at && message.group_id !== selectedChat
+			)
+			.map((message) => message.group_id);
 </script>
 
 <div

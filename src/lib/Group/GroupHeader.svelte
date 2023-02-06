@@ -14,6 +14,7 @@
 		alt="profile"
 	/>
 </div>
+<!-- TODO: Fix layout design -->
 <div class="bg-white pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
 	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
 		{group.name}

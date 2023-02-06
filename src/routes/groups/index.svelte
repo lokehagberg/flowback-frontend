@@ -24,13 +24,13 @@
 </script>
 
 <svelte:head>
-	<title>Flowback Groups</title>
+	<title>{$_("Flowback Groups")}</title>
 </svelte:head>
 
 <Layout centering={true}>
 	<!-- TODO: design of statusmessage is off -->
 	<StatusMessage bind:status disableSuccess/>
-	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1100px]">
+	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1300px]">
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
 			<a
 				href="creategroup"

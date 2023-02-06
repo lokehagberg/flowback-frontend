@@ -10,11 +10,13 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
 		olderMessages: string,
-		newerMessages: string;
+		newerMessages: string,
+		showEmoji = false;
 
 	export let selectedChat: number | null,
 		sendMessageToSocket: (
@@ -141,6 +143,8 @@
 			</li>
 		{/if}
 	</ul>
+	<!-- <div class:invisible={!showEmoji} class="fixed">
+	</div> -->
 	<div class="col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
 		<!-- Here the user writes a message to be sent -->
 		<form
@@ -161,6 +165,14 @@
 				bind:value={message}
 				Class="w-full"
 			/>
+
+			{#if import.meta.env.VITE_MODE === 'DEV'}
+				<ButtonPrimary
+					action={() => (showEmoji = !showEmoji)}
+					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></ButtonPrimary
+				>
+			{/if}
+			
 			<ButtonPrimary type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
 				><Fa icon={faPaperPlane} /></ButtonPrimary
 			>

@@ -76,10 +76,10 @@
 						(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
 				(selectedPage === 'group' && previewMessage.group_id === selectedChat)
 		);
-		if (previewMessage){
+		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
-		} 
+		}
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		await sendMessageToSocket(message, selectedChat, selectedPage);
@@ -175,7 +175,7 @@
 					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></ButtonPrimary
 				>
 			{/if}
-			
+
 			<ButtonPrimary type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
 				><Fa icon={faPaperPlane} /></ButtonPrimary
 			>

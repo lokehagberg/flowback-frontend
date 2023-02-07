@@ -9,7 +9,8 @@
 		onBlur = () => {},
 		autofocus = false,
 		max = 2000,
-		onKeyPress = (e:any) => {};
+		onKeyPress = (e:any) => {},
+		inputClass = "";
 
 	const expandTextArea = (e: any) => {
 		value = e.target.value;
@@ -49,7 +50,7 @@
 		on:input={expandTextArea}
 		on:keypress={onKeyPress}
 		bind:value
-		class="border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none"
+		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 		maxlength={max}
 	/>
 </label>

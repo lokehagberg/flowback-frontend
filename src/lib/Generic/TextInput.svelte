@@ -8,8 +8,9 @@
 		required = false,
 		onInput = () => {},
 		Class = '',
-		onBlur = () => {};
-		
+		onBlur = () => {},
+		inputClass = '';
+
 	import { _ } from 'svelte-i18n';
 
 	//Wait what is this?!
@@ -20,7 +21,7 @@
 	onMount(() => {
 		const input = document.getElementById(`textinput-${label}`);
 		if (autofocus) input?.focus();
-	})
+	});
 </script>
 
 <label class={`w-full ${Class}`}
@@ -30,8 +31,8 @@
 		on:blur={onBlur}
 		use:typeAction
 		bind:value
-		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none`}
-		id = {`textinput-${label}`}
+		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		id={`textinput-${label}`}
 		on:input={onInput}
 		max="100"
 	/></label

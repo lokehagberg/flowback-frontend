@@ -155,6 +155,7 @@
 
 	//Sorts the chat based on most recent messages highest up
 	$: {
+		console.log("in sorting")
 		sortChat(directs, previewDirect);
 		directs = directs;
 

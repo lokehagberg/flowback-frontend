@@ -76,7 +76,10 @@
 						(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
 				(selectedPage === 'group' && previewMessage.group_id === selectedChat)
 		);
-		if (previewMessage) previewMessage.message = message;
+		if (previewMessage){
+			previewMessage.message = message;
+			previewMessage.created_at = new Date().toString();
+		} 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		await sendMessageToSocket(message, selectedChat, selectedPage);

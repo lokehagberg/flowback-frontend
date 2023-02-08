@@ -79,6 +79,22 @@
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
+		} else {
+			//For brand new chats, create new preview message
+			(selectedPage === 'direct' ? previewDirect : previewGroup).push({
+				created_at: new Date().toString(),
+				message,
+				timestamp: new Date().toString(),
+				username: user.username,
+				user_id: user.id,
+				target_id: selectedChat,
+				target_username: user.username,
+				profile_image: '',
+				group_id: selectedChat
+			});
+
+			previewGroup = previewGroup;
+			previewDirect = previewDirect;
 		}
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 

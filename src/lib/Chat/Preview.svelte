@@ -155,7 +155,6 @@
 
 	//Sorts the chat based on most recent messages highest up
 	$: {
-		console.log("in sorting")
 		sortChat(directs, previewDirect);
 		directs = directs;
 
@@ -166,7 +165,7 @@
 	const sortChat = (chatters: Direct[] | Group[], previews: PreviewMessage[]) => {
 		if (user)
 			chatters.sort((chatter1, chatter2) => {
-				const preview1 = previews.find((preview) =>
+				const preview1: any = previews.find((preview) =>
 					preview.group_id === chatter1.id
 						? !(preview.target_id === chatter1.id || preview.user_id === chatter1.id)
 						: preview.target_id === chatter1.id || preview.user_id === chatter1.id
@@ -176,10 +175,12 @@
 						? !(preview.target_id === chatter2.id || preview.user_id === chatter2.id)
 						: preview.target_id === chatter2.id || preview.user_id === chatter2.id
 				);
-				if (preview1 && preview2)
-					return (
-						new Date(preview2?.created_at).getTime() - new Date(preview1?.created_at).getTime()
-					);
+
+				if (!preview1 && !preview2) return 0;
+				else if (!preview1 && preview2) return 1;
+				else if (preview1 && !preview2) return -1;
+				else if (preview1 && preview2)
+					return new Date(preview2.created_at).getTime() - new Date(preview1.created_at).getTime();
 				else return 1;
 			});
 	};

@@ -10,6 +10,10 @@
 	const goToGroup = () => {
 		if (group.joined) window.location.href = `/groups/${group.id}`;
 	};
+
+	const subscribeToGroup = async () => {
+		const {res, json} = await fetchRequest('POST', 'notification/group')
+	}
 </script>
 
 <div

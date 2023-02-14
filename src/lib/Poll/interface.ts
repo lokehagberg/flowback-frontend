@@ -25,6 +25,7 @@ export interface poll {
 	group_name?:string;
 	group_image?:string;
 	joined:boolean;
+	group_joined:boolean;
 }
 
 export interface votings {

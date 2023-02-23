@@ -22,7 +22,7 @@
 	};
 
 	onMount(() => {
-		// getNotifications();
+		getNotifications();
 	});
 
 	let notificationsOpen = false;

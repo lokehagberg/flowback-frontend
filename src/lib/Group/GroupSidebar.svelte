@@ -74,16 +74,14 @@
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white p-6 cursor-pointer shadow rounded flex justify-around items-center"
 			>
-				<Fa icon={faX} /><span class="ml-2">{$_("Close Menu")}</span>
+				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</div>
 		{/if}
-		<div class="bg-white shadow rounded flex flex-col">
-			<a class="text-black" href={`/createpoll?id=${$page.params.groupId}`}><GroupSidebarButton
-				text="Create Poll"
-				icon={faPoll}
-				isSelected={false}
-			/></a>
-			</div>
+		<div class="bg-white shadow rounded flex flex-col mb-6">
+			<a class="text-black" href={`/createpoll?id=${$page.params.groupId}`}
+				><GroupSidebarButton text="Create Poll" icon={faPoll} isSelected={false} /></a
+			>
+		</div>
 		<div class="bg-white shadow rounded flex flex-col">
 			<GroupSidebarButton
 				action={() => (selectedPage = 'flow')}
@@ -130,11 +128,9 @@
 		<div class="bg-white shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 
-			<a class="text-black" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}> <GroupSidebarButton
-				text="Video Conference"
-				icon={faVideoCamera}
-				isSelected={false}
-			/></a>
+			<a class="text-black" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}>
+				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
+			>
 			<GroupSidebarButton
 				action={() => (areYouSureModal = true)}
 				text="Leave group"
@@ -174,12 +170,12 @@
 </nav>
 
 <Modal bind:open={areYouSureModal}>
-	<div slot="header">{$_("Are you sure?")}</div>
-	<div slot="body">{$_("You are about to leave the group!")}</div>
+	<div slot="header">{$_('Are you sure?')}</div>
+	<div slot="body">{$_('You are about to leave the group!')}</div>
 	<div slot="footer">
-		<ButtonPrimary action={leaveGroup} Class="bg-red-500">{$_("Yes")}</ButtonPrimary>
+		<ButtonPrimary action={leaveGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary>
 		<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-			>{$_("No")}</ButtonPrimary
+			>{$_('No')}</ButtonPrimary
 		>
 	</div>
 </Modal>

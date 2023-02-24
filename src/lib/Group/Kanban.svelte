@@ -69,7 +69,6 @@
 		if (!res.ok) return;
 
 		const userAssigned = users.find((user) => assignee === user.user_id);
-		console.log(users, assignee);
 		if (userAssigned)
 			kanbanEntries.push({
 				assignee: {

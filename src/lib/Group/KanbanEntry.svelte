@@ -54,7 +54,6 @@
 			kanban
 		);
 		status = statusMessageFormatter(res, json);
-		if (!res.ok) return;
 		kanban.tag = kanban.tag;
 	};
 
@@ -101,7 +100,10 @@
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
-					if (kanban.tag > 0) updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
+					if (kanban.tag > 0) {
+						updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
+						kanban.tag -= 1;
+					}
 				}}
 			>
 				<Fa icon={faArrowLeft} size="1.5x" />
@@ -109,7 +111,10 @@
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
-					if (kanban.tag < tags.length) updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
+					if (kanban.tag < tags.length) {
+						updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
+						kanban.tag += 1;
+					}
 				}}
 			>
 				<Fa icon={faArrowRight} size="1.5x" />

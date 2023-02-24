@@ -32,7 +32,7 @@
 	let selected_poll: polltypes = 'Ranking';
 	let selected_time: timetypes = 'Endtime';
 	//Something about this feels very scuffed
-	const polls: polltypes[] = ['Ranking', 'Scheduled', 'For/Against', 'Quadratic', 'Cardinal'];
+	const polls: polltypes[] = ['Ranking', 'Scheduled'];
 	const times: timetypes[] = ['Endtime', 'Dynamic'];
 
 	const pollDescriptions: Record<polltypes, string> = {

@@ -11,19 +11,25 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
 		olderMessages: string,
 		newerMessages: string,
-		showEmoji = false;
+		showEmoji = false,
+		status: {
+			message: any;
+			success: boolean;
+		};
 
 	export let selectedChat: number | null,
 		sendMessageToSocket: (
 			message: string,
 			selectedChat: number,
 			selectedPage: 'direct' | 'group'
-		) => void,
+		) => Promise<boolean>,
 		user: User,
 		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
@@ -98,8 +104,10 @@
 		}
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		await sendMessageToSocket(message, selectedChat, selectedPage);
+		const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
 
+		if (!didSend) status = { message: 'Could not send message', success: false };
+		else
 		messages.push({
 			message,
 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
@@ -140,6 +148,7 @@
 			</li>
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
+		<StatusMessage bind:status disableSuccess />
 		{#each messages as message}
 			<li class="p-3 hover:bg-gray-200">
 				<span>{message.user?.username || message.username}</span>

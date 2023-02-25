@@ -5,7 +5,6 @@
 	// @ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message, PreviewMessage } from './interfaces';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -24,7 +23,7 @@
 			message: string,
 			selectedChat: number,
 			selectedPage: 'direct' | 'group'
-		) => void,
+		) => Promise<boolean>,
 		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
@@ -51,6 +50,8 @@
 
 		subscribe(getMessage);
 	};
+
+	$: console.log(socket?.OPEN, "SUCK IT")
 
 	//There's one large socket that handles messages from everywhere, which is why
 	//this function which gets messages from the socket is placed here an not in

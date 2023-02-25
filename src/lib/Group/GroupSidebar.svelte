@@ -77,9 +77,9 @@
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</div>
 		{/if}
-		<div class="bg-white shadow rounded flex flex-col mb-6">
-			<a class="text-black" href={`/createpoll?id=${$page.params.groupId}`}
-				><GroupSidebarButton text="Create Poll" icon={faPoll} isSelected={false} /></a
+		<div class="mb-6 w-full">
+			<a class="text-black w-full" href={`/createpoll?id=${$page.params.groupId}`}
+				><ButtonPrimary>{$_("Create Poll")}</ButtonPrimary></a
 			>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col">

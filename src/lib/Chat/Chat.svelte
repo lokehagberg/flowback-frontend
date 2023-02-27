@@ -50,9 +50,7 @@
 
 		subscribe(getMessage);
 	};
-
-	$: console.log(socket?.OPEN, "SUCK IT")
-
+	
 	//There's one large socket that handles messages from everywhere, which is why
 	//this function which gets messages from the socket is placed here an not in
 	//ChatWindow.svelte

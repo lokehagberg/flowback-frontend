@@ -78,8 +78,8 @@
 			</div>
 		{/if}
 		<div class="mb-6 w-full">
-			<a class="text-black w-full" href={`/createpoll?id=${$page.params.groupId}`}
-				><ButtonPrimary>{$_("Create Poll")}</ButtonPrimary></a
+			<ButtonPrimary action={() => (location.href = `/createpoll?id=${$page.params.groupId}`)}
+				>{$_('Create Poll')}</ButtonPrimary
 			>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col">

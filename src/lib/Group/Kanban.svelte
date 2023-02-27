@@ -32,13 +32,15 @@
 
 	const getKanbanEntries = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban`);
+		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
-
+	
 	const getKanbanEntriesHome = async () => {
 		const user = await fetchRequest('GET', 'user');
 		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}`);
+		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};

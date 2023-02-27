@@ -89,7 +89,7 @@
 			(window.location.href =
 				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
 	>
-		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} />
+		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} Class="" />
 		<div class="break-all text-xs">
 			{type === 'group' ? kanban.assignee.username : kanban.group.name}
 		</div>
@@ -141,3 +141,4 @@
 		</div>
 	</Modal>
 {/if}
+

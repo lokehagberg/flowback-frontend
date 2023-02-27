@@ -105,7 +105,7 @@
 			{#if i !== 0}
 				<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
-					<span class="text-sm p-1">{$_(tag)}</span>
+					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}

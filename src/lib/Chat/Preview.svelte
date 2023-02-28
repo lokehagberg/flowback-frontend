@@ -91,8 +91,10 @@
 			let message = previewDirect?.find(
 				(message) => message.target_id === selectedChat || message.user_id === selectedChat
 			);
-			if (message) message.timestamp = new Date().toString();
-			previewDirect = previewDirect;
+			if (message) {
+				message.timestamp = new Date().toString();
+				previewDirect = previewDirect;
+			}
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.group_id === selectedChat);
 			if (message) message.timestamp = new Date().toString();
@@ -120,12 +122,9 @@
 					(preview.target_id === direct.id && preview.user_id === user.id) ||
 					(preview.target_id === user.id && preview.user_id === direct.id)
 			);
-
 			if (previewMsg) return 0;
-
 			return 1;
 		});
-
 		return chatter;
 	};
 
@@ -145,8 +144,10 @@
 			.filter(
 				(message) =>
 					(message.timestamp <= message.created_at || message.timestamp === null) &&
-					message.target_id !== selectedChat &&
-					message.user_id !== selectedChat &&
+					message.user_id !== user.id &&
+					((selectedPage === "direct" && message.target_id !== selectedChat && 
+					message.user_id !== selectedChat) || selectedPage === 'group') &&
+					// 	selectedPage === 'group') &&
 					// This piece of code hinders new accounts from causing a notification but no account present
 					// TODO: Append new user to list if being notified from them
 					directs.find((direct) => direct.id === message.user_id || direct.id === message.target_id)

@@ -98,21 +98,19 @@
 				profile_image: '',
 				group_id: selectedPage === 'group' ? selectedChat : 0
 			});
-
-			previewGroup = previewGroup;
-			previewDirect = previewDirect;
 		}
+
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
-		messages.push({
-			message,
-			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-			created_at: new Date().toString()
-		});
+			messages.push({
+				message,
+				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
+				created_at: new Date().toString()
+			});
 
 		messages = messages;
 		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
@@ -134,7 +132,6 @@
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
 				<ButtonPrimary
-					Class=""
 					action={async () => {
 						const { res, json } = await fetchRequest('GET', olderMessages);
 
@@ -143,7 +140,8 @@
 						olderMessages = json.next;
 
 						messages = json.results.reverse();
-					}}>{$_('Show older messages')}</ButtonPrimary
+					}}
+					>{$_('Show older messages')}</ButtonPrimary
 				>
 			</li>
 		{/if}
@@ -166,7 +164,8 @@
 						newerMessages = json.previous;
 
 						messages = json.results.reverse();
-					}}>{$_('Show earlier messages')}</ButtonPrimary
+					}}
+					buttonStyle="secondary">{$_('Show earlier messages')}</ButtonPrimary
 				>
 			</li>
 		{/if}

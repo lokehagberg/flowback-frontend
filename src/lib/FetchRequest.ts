@@ -14,7 +14,7 @@ export async function fetchRequest(
 
 	let headers: any = {};
 
-	if (!browser) return { res: {ok: false}, json: {  } };
+	if (!browser) return { res: { ok: false }, json: {} };
 
 	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 

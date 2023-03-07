@@ -1,11 +1,17 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	export let action = () => {},
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
 		type: buttontypes = 'default',
 		disabled = false,
-		label:string = ""
+		label:string = "",
+		href = ""
+
+	onMount(() => {
+		if (href !== "") action = () => { window.location.href = href }
+	})
 
 	type buttonstyles = 'primary' | 'secondary';
 	type buttontypes = 'default' | 'submit';

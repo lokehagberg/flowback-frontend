@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -32,10 +33,10 @@
 	<StatusMessage bind:status disableSuccess/>
 	<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full lg:w-[1300px]">
 		{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
-			<a
+			<Button
 				href="creategroup"
-				class="w-3/5 md:w-2/5 text-center inline bg-blue-600 text-white pl-6 pr-6 md:pl-24 md:pr-24 pt-2 pb-2 rounded-full cursor-pointer "
-				>+ {$_('Create Group')}</a
+				Class= "w-[40%] rounded-2xl"
+				>Create Group</Button
 			>
 		{/if}
 

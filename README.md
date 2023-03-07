@@ -46,7 +46,10 @@ If you're experienced with React, Vue e.t.c and new to svelte you can check out 
 https://svelte.dev/tutorial/basics
 
 
-Remember to check the “Generic” folder before doing something that’s very common
+Remember to check the “Generic” folder before doing something that’s very common.
+
+
+Check out the backend documentation here: https://docs.flowback.org/
 
 ## Generally good code practices:
 ```{js}

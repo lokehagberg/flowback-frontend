@@ -13,7 +13,8 @@ module.exports = {
                 secondary: 'var(--secondary-color)',
                 background: 'var(--background-color)',
                 accent: 'var(accent-color)'
-            }
+            },
+            filter: ['hover', 'focus'],
         },
     },
     plugins: [],

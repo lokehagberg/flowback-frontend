@@ -18,17 +18,16 @@
 {#if type === 'default'}
 	<div
 		on:click|preventDefault={action}
-		class={`text-center ${Class.includes("bg-") ? "" : "bg-primary"} inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
+		class={`text-center ${Class.includes("bg-") ? "" : "bg-primary"} filter hover:brightness-50 inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-all duration-50`}
 		class:bg-gray-300={disabled}
 		class:bg-blue-200={buttonStyle == 'secondary'}
-		disabled={disabled}
 	>
 		<slot />
 	</div>
 {:else if type === 'submit'}
 	<button
 		type="submit"
-		class={`text-center inline bg-primary text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class}`}
+		class={`text-center inline bg-primary text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-colors`}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		disabled={disabled}
 		value={$_(label)}

@@ -78,9 +78,11 @@
 			</div>
 		{/if}
 		<div class="mb-6 w-full">
-			<Button action={() => (location.href = `/createpoll?id=${$page.params.groupId}`)}
-				>{$_('Create Poll')}</Button
-			>
+			<div class="bg-secondary text-white shadow rounded flex flex-col">
+				<a class="text-white" target="_blank" href={`/createpoll?id=${$page.params.groupId}`}>
+					<GroupSidebarButton text="Create Poll" icon={faVideoCamera} isSelected={false} /></a
+				>
+			</div>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col">
 			<GroupSidebarButton
@@ -174,8 +176,6 @@
 	<div slot="body">{$_('You are about to leave the group!')}</div>
 	<div slot="footer">
 		<Button action={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
-		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-			>{$_('No')}</Button
-		>
+		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>

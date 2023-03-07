@@ -223,8 +223,8 @@
 							disabled.includes(selected_poll) ||
 							disabled.includes(selected_time)}
 						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
-							? 'bg-gray-200'
-							: 'bg-blue-600'}>{$_('Create Poll')}</Button
+							? '!bg-gray-200'
+							: 'bg-primary'}>{$_('Create Poll')}</Button
 					>
 				</div>
 			</Loader>
@@ -237,9 +237,10 @@
 							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-							Class={`transition transition-colors ${
-								disabled.includes(poll) &&
-								(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200')
+							Class={`${
+								(!disabled.includes(poll) && selected_poll === poll ? '!bg-primary' : '!bg-secondary') ||
+								(disabled.includes(poll) &&
+									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
 							}`}
 						>
 							<div class="flex items-center text-center">
@@ -257,7 +258,7 @@
 					{#each times as time}
 						<Button
 							disabled={loading}
-							Class={`transition transition-colors ${
+							Class={`${
 								disabled.includes(time) &&
 								(selected_time === time ? '!bg-gray-400' : '!bg-gray-200')
 							} ${selected_time === time ? 'bg-purple-600' : 'bg-purple-300'}`}

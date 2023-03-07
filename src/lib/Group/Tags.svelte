@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Tag from './Tag.svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { _ } from 'svelte-i18n';
@@ -65,34 +65,34 @@
 	<Loader bind:loading>
 		<form on:submit|preventDefault={addTag} class="p-3">
 			<TextInput label="Add tag" bind:value={tagToAdd} />
-			<ButtonPrimary disabled={loading} type="submit" Class="mt-2" label="Lägg till Tagg" />
+			<Button disabled={loading} type="submit" Class="mt-2" label="Lägg till Tagg" />
 		</form>
 		<div class="flex flex-wrap mt-2">
 			{#each tags as tag}
 				<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
 					<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
 					<div class="mt-2 w-full flex flex-col gap-2">
-						<ButtonPrimary disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
-							>{tag.active ? $_('Disable') : $_('Activate')}</ButtonPrimary
+						<Button disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
+							>{tag.active ? $_('Disable') : $_('Activate')}</Button
 						>
-						<ButtonPrimary
+						<Button
 							disabled={loading}
 							Class="bg-rose-500"
-							action={() => (areYouSureModal = true)}>{$_('Delete')}</ButtonPrimary
+							action={() => (areYouSureModal = true)}>{$_('Delete')}</Button
 						>
 						<Modal bind:open={areYouSureModal}>
 							<div slot="header">{$_('Are you sure?')}</div>
 							<div slot="body">{$_('Removing a tagg removes all polls with that tag!')}</div>
 							<div slot="footer">
-								<ButtonPrimary
+								<Button
 									action={() => {
 										removeTag(tag);
 										areYouSureModal = false;
 									}}
-									Class="bg-red-500">{$_('Yes')}</ButtonPrimary
+									Class="bg-red-500">{$_('Yes')}</Button
 								>
-								<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-									>{$_('No')}</ButtonPrimary
+								<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+									>{$_('No')}</Button
 								>
 							</div>
 						</Modal>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -56,8 +56,8 @@
 		<TextInput label={'Password'} bind:value={password} type={'password'} required />
 
 		<StatusMessage bind:status />
-		<ButtonPrimary type="submit" >
+		<Button type="submit" >
 			{$_('Send')}
-		</ButtonPrimary>
+		</Button>
 	</form>
 </Loader>

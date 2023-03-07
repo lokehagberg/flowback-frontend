@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ButtonPrimary from './ButtonPrimary.svelte';
+	import Button from './Button.svelte';
 
 	export let action = () => {},
 		loopTime = 1000;
@@ -14,7 +14,7 @@
 	};
 </script>
 
-<ButtonPrimary
+<Button
 	action={toggled
 		? () => {
 				toggled = false;
@@ -26,4 +26,4 @@
 		  }}
 >
 	Toggle
-</ButtonPrimary>
+</Button>

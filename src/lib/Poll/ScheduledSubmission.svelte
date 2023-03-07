@@ -2,7 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { DateInput } from 'date-picker-svelte';
 	import { page } from '$app/stores';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { proposal } from './interface';
 	import { formatDate } from './functions';
 	import Loader from '$lib/Generic/Loader.svelte';
@@ -63,7 +63,7 @@
 			max={maxDatePickerYear}
 		/>
 
-		<ButtonPrimary Class="mt-4" type="submit" label="Lägg till" />
+		<Button Class="mt-4" type="submit" label="Lägg till" />
 		<StatusMessage bind:status Class="mt-4" />
 	</Loader>
 </form>

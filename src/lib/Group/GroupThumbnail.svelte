@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
 
@@ -46,7 +46,7 @@
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<ButtonPrimary
+			<Button
 				action={async () => {
 					if (!group.direct_join) {
 						pending = true;
@@ -60,7 +60,7 @@
 					}
 				}}
 				Class="hover:bg-blue-800 bg-blue-600"
-				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</ButtonPrimary
+				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
 		{:else if pending === true}
 			<div>{$_('Pending invite')}</div>

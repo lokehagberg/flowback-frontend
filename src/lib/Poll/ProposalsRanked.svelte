@@ -9,7 +9,7 @@
 	import type { proposal, votings } from './interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
@@ -347,9 +347,9 @@ Enable buttons
 <StatusMessage bind:status />
 
 {#if new Date(votingStartTime) <= new Date()}
-	<ButtonPrimary action={saveVotings}
+	<Button action={saveVotings}
 		>{(selectedPage === 'You' && $_('Save Votings')) ||
-			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</ButtonPrimary
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
 	>
 {/if}
 

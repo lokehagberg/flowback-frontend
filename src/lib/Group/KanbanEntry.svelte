@@ -9,7 +9,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { page } from '$app/stores';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -136,8 +136,8 @@
 			</select>
 		</div>
 		<div slot="footer">
-			<ButtonPrimary action={updateKanbanContent}>Update</ButtonPrimary>
-			<ButtonPrimary action={deleteKanbanEntry} Class="bg-red-500">Delete</ButtonPrimary>
+			<Button action={updateKanbanContent}>Update</Button>
+			<Button action={deleteKanbanEntry} Class="bg-red-500">Delete</Button>
 		</div>
 	</Modal>
 {/if}

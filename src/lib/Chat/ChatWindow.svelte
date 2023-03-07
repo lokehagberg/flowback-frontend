@@ -1,7 +1,7 @@
 <script lang="ts">
 	// @ts-ignore
 	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
@@ -131,7 +131,7 @@
 	>
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
-				<ButtonPrimary
+				<Button
 					action={async () => {
 						const { res, json } = await fetchRequest('GET', olderMessages);
 
@@ -141,7 +141,7 @@
 
 						messages = json.results.reverse();
 					}}
-					>{$_('Show older messages')}</ButtonPrimary
+					>{$_('Show older messages')}</Button
 				>
 			</li>
 		{/if}
@@ -156,7 +156,7 @@
 		{/each}
 		{#if newerMessages}
 			<li class="text-center mt-6 mb-6">
-				<ButtonPrimary
+				<Button
 					action={async () => {
 						const { res, json } = await fetchRequest('GET', newerMessages);
 
@@ -165,7 +165,7 @@
 
 						messages = json.results.reverse();
 					}}
-					buttonStyle="secondary">{$_('Show earlier messages')}</ButtonPrimary
+					buttonStyle="secondary">{$_('Show earlier messages')}</Button
 				>
 			</li>
 		{/if}
@@ -194,14 +194,14 @@
 			/>
 
 			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<ButtonPrimary
+				<Button
 					action={() => (showEmoji = !showEmoji)}
-					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></ButtonPrimary
+					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
 				>
 			{/if}
 
-			<ButtonPrimary type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
-				><Fa icon={faPaperPlane} /></ButtonPrimary
+			<Button type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
+				><Fa icon={faPaperPlane} /></Button
 			>
 		</form>
 	</div>

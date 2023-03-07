@@ -19,7 +19,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 
 	export let selectedPage: SelectablePage = 'flow';
@@ -78,8 +78,8 @@
 			</div>
 		{/if}
 		<div class="mb-6 w-full">
-			<ButtonPrimary action={() => (location.href = `/createpoll?id=${$page.params.groupId}`)}
-				>{$_('Create Poll')}</ButtonPrimary
+			<Button action={() => (location.href = `/createpoll?id=${$page.params.groupId}`)}
+				>{$_('Create Poll')}</Button
 			>
 		</div>
 		<div class="bg-white shadow rounded flex flex-col">
@@ -173,9 +173,9 @@
 	<div slot="header">{$_('Are you sure?')}</div>
 	<div slot="body">{$_('You are about to leave the group!')}</div>
 	<div slot="footer">
-		<ButtonPrimary action={leaveGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary>
-		<ButtonPrimary action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-			>{$_('No')}</ButtonPrimary
+		<Button action={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
+		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+			>{$_('No')}</Button
 		>
 	</div>
 </Modal>

@@ -11,7 +11,7 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
@@ -157,8 +157,8 @@
 		{/each}
 	</ul>
 	<StatusMessage bind:status />
-	<ButtonPrimary Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
-		>{$_("Save changes")}</ButtonPrimary
+	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
+		>{$_("Save changes")}</Button
 	>
 {:else}
 	<div>{$_("No delegates selected")}</div>

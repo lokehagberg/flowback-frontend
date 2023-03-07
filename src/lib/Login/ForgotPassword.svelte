@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -25,6 +25,6 @@
 	<form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={sendCode}>
 		<TextInput label={'E-mail'} bind:value={email} required />
 		<StatusMessage bind:status />
-		<ButtonPrimary type="submit" label="Send" />
+		<Button type="submit" label="Send" />
 	</form>
 </Loader>

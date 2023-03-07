@@ -45,7 +45,7 @@
 	</div>
 {/if}
 
-<!-- <ButtonPrimary action={() => {
+<!-- <Button action={() => {
 	
 	// fetchRequest('GET', 'notification/subscriptions')
 		fetchRequest('POST', 'notification/read', {notification_ids:[3]})
@@ -53,7 +53,7 @@
 		// fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
 }}/> -->
 
-<!-- <ButtonPrimary action={() => {
+<!-- <Button action={() => {
 	fetchRequest('GET', 'notification')
 	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
 	fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})

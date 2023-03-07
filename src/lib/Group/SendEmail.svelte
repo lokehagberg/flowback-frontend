@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { page } from '$app/stores';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -36,7 +36,7 @@
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea required label="Message" bind:value={message} />
 			<StatusMessage bind:status />
-			<ButtonPrimary disabled={loading} type="submit" Class="mt-4" label="Skicka Mail" />
+			<Button disabled={loading} type="submit" Class="mt-4" label="Skicka Mail" />
 		</form>
 	</Loader>
 </div>

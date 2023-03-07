@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
@@ -47,8 +47,8 @@
 			bind:Yes={acceptedToS}
 		/>
 		<StatusMessage bind:status />
-		<ButtonPrimary type="submit">
+		<Button type="submit">
 			{$_('Send')}
-		</ButtonPrimary>
+		</Button>
 	</form>
 </Loader>

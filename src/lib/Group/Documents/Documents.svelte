@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	// import Button from '$lib/Generic/Button.svelte';
 	import Folder from './Folder.svelte';
 	import { _ } from 'svelte-i18n';
 
@@ -51,7 +51,7 @@
 
 <div class="w-full bg-white shadow rounded p-4 pt-6">
 	<!-- <a on:click={() => open(`https://drive.google.com/drive/u/0/folders/${folderId}`)} target="_blank" href={`https://drive.google.com/drive/u/0/folders/${folderId}`}
-		><ButtonPrimary Class="p-6">{$_("Go to main folder")}</ButtonPrimary></a
+		><Button Class="p-6">{$_("Go to main folder")}</Button></a
 	> -->
 	<iframe
 		title="Documents"

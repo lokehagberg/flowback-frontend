@@ -9,7 +9,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import type { poll, proposal, votings } from '$lib/Poll/interface';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -125,15 +125,15 @@
 				</div>
 				<div slot="footer">
 					<div class="flex justify-center gap-16">
-						<ButtonPrimary action={deletePoll} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
-						><ButtonPrimary action={() => (DeletePollModalShow = false)} Class="bg-gray-400 w-1/2"
-							>{$_('Cancel')}</ButtonPrimary
+						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button
+						><Button action={() => (DeletePollModalShow = false)} Class="bg-gray-400 w-1/2"
+							>{$_('Cancel')}</Button
 						>
 					</div>
 				</div>
 			</Modal>
-			<ButtonPrimary action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
-				>{$_('Delete poll')}</ButtonPrimary
+			<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
+				>{$_('Delete poll')}</Button
 			>
 		</div>
 	</Layout>

@@ -6,7 +6,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
@@ -105,7 +105,7 @@
 			<StatusMessage Class="mt-6" bind:status />
 			{#if isUser}
 				<div class="mt-8">
-					<ButtonPrimary action={() => (isEditing = true)}>{$_('Edit profile')}</ButtonPrimary>
+					<Button action={() => (isEditing = true)}>{$_('Edit profile')}</Button>
 				</div>
 			{/if}
 		</div>
@@ -197,8 +197,8 @@
 			<StatusMessage Class="mt-4" bind:status />
 			<span>{$_('Recommended ratios for images: 1:1 for profile, 4:1 for banner')}</span>
 			<div class="mt-6">
-				<ButtonPrimary Class="mt-4" action={updateProfile}>{$_('Save changes')}</ButtonPrimary>
-				<ButtonPrimary Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</ButtonPrimary
+				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>
+				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button
 				>
 			</div>
 		</form>

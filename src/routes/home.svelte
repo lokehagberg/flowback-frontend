@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -56,8 +56,8 @@
 			{#each invitations as invite}
 				<li class="bg-white p-6 shadow rounded">
 					<span>You have been invited to {invite.group_name}</span>
-					<ButtonPrimary action={() => acceptInvitation(invite.group)}>Accept</ButtonPrimary>
-					<ButtonPrimary action={() => rejectInvitation(invite.group)}>Reject</ButtonPrimary>
+					<Button action={() => acceptInvitation(invite.group)}>Accept</Button>
+					<Button action={() => rejectInvitation(invite.group)}>Reject</Button>
 				</li>
 			{/each}
 		<!-- {/if} -->

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -40,5 +40,5 @@
 	<TextInput label={'Verification Code'} bind:value={verification_code} required />
 
 	<StatusMessage bind:status />
-	<ButtonPrimary type="submit" label="Send" />
+	<Button type="submit" label="Send" />
 </form>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 
 	const generatePayment = async () => {
@@ -13,5 +13,5 @@
 </script>
 
 <Layout>
-	<ButtonPrimary action={generatePayment}>PAY UP</ButtonPrimary>
+	<Button action={generatePayment}>PAY UP</Button>
 </Layout>

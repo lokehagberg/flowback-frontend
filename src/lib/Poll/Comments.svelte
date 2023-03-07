@@ -1,5 +1,5 @@
 <script>
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
@@ -13,7 +13,7 @@
 		<TextArea label="Comment" required />
 		<!-- <textarea></textarea> -->
 		<!-- <TextArea type="field" label="Comment" /> -->
-		<ButtonPrimary Class="mt-4" type="submit" label="Skicka" />
+		<Button Class="mt-4" type="submit" label="Skicka" />
 	</form>
 
 	<div class="flex flex-col gap-4 mt-6">

@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { userIsDelegateStore, userIdStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { get } from 'svelte/store';
@@ -138,14 +138,14 @@
 				{#if userId !== delegate.id}
 					<div />
 					{#if delegate.isInRelation}
-						<ButtonPrimary
+						<Button
 							Class={'bg-red-500'}
 							action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
-							>{$_('Remove as delegate')}</ButtonPrimary
+							>{$_('Remove as delegate')}</Button
 						>
 					{:else}
-						<ButtonPrimary action={() => createDelegateRelation(delegate.delegate_pool_id)}
-							>{$_('Add as delegate')}</ButtonPrimary
+						<Button action={() => createDelegateRelation(delegate.delegate_pool_id)}
+							>{$_('Add as delegate')}</Button
 						>
 					{/if}
 				{/if}
@@ -157,11 +157,11 @@
 {/if}
 
 {#if userIsDelegate}
-	<ButtonPrimary Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}
-		>{$_('Stop being delegate')}</ButtonPrimary
+	<Button Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}
+		>{$_('Stop being delegate')}</Button
 	>
 {:else}
-	<ButtonPrimary Class="mt-3 bg-red-500" action={handleCreateDelegationButton}
-		>{$_('Become delegate')}</ButtonPrimary
+	<Button Class="mt-3 bg-red-500" action={handleCreateDelegationButton}
+		>{$_('Become delegate')}</Button
 	>
 {/if}

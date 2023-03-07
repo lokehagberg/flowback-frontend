@@ -7,7 +7,7 @@
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
@@ -132,7 +132,7 @@
 							<option value={user.user_id}>{user.username}</option>
 						{/each}
 					</select>
-					<ButtonPrimary type="submit">{$_('Create task')}</ButtonPrimary>
+					<Button type="submit">{$_('Create task')}</Button>
 				</div>
 				<StatusMessage Class="mt-2" bind:status />
 			</form>

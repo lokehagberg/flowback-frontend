@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { page } from '$app/stores';
@@ -147,10 +147,10 @@
 					<TextArea required label="Description" bind:value={description} />
 
 					<div class="border border-gray-200 p-6 ">
-						<ButtonPrimary
+						<Button
 							Class={`inline ${advancedTimeSettings ? '!bg-blue-600' : '!bg-blue-200'}`}
 							action={() => (advancedTimeSettings = !advancedTimeSettings)}
-							>{$_('Advanced time settings')}</ButtonPrimary
+							>{$_('Advanced time settings')}</Button
 						>
 						<h2 class="mt-4">{$_('Days between phases')}</h2>
 						<input type="number" bind:value={daysBetweenPhases} min="1" max="1000" />
@@ -217,14 +217,14 @@
 						{$_('This polltype is not implemented yet')}
 					{/if}
 					<StatusMessage bind:status />
-					<ButtonPrimary
+					<Button
 						type="submit"
 						disabled={loading ||
 							disabled.includes(selected_poll) ||
 							disabled.includes(selected_time)}
 						Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 							? 'bg-gray-200'
-							: 'bg-blue-600'}>{$_('Create Poll')}</ButtonPrimary
+							: 'bg-blue-600'}>{$_('Create Poll')}</Button
 					>
 				</div>
 			</Loader>
@@ -233,7 +233,7 @@
 			<div class="bg-white p-6 shadow-xl rounded">
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}
-						<ButtonPrimary
+						<Button
 							disabled={loading}
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
@@ -250,12 +250,12 @@
 
 								<span class="ml-10">{$_(poll)}</span>
 							</div>
-						</ButtonPrimary>
+						</Button>
 					{/each}
 				</div>
 				<div class="flex flex-col gap-6 mt-12">
 					{#each times as time}
-						<ButtonPrimary
+						<Button
 							disabled={loading}
 							Class={`transition transition-colors ${
 								disabled.includes(time) &&
@@ -269,7 +269,7 @@
 								{/each}
 								<span class="ml-10">{$_(time)}</span>
 							</div>
-						</ButtonPrimary>
+						</Button>
 					{/each}
 				</div>
 			</div>

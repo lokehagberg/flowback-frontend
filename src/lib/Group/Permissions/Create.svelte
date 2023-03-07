@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -50,6 +50,6 @@
 				<Toggle bind:checked={rolePerms[i]} />
 			</div>
 		{/each}
-		<ButtonPrimary type="submit">Create Role</ButtonPrimary>
+		<Button type="submit">Create Role</Button>
 	</form>
 </div>

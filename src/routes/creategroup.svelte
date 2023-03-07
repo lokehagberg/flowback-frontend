@@ -1,6 +1,6 @@
 <script lang="ts">
 	import RadioButtons from '../lib/Generic/RadioButtons.svelte';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -99,25 +99,25 @@
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
 						<div slot="footer">
 							<div class="flex justify-center gap-16">
-								<ButtonPrimary action={deleteGroup} Class="bg-red-500">{$_('Yes')}</ButtonPrimary
-								><ButtonPrimary
+								<Button action={deleteGroup} Class="bg-red-500">{$_('Yes')}</Button
+								><Button
 									action={() => (DeleteGroupModalShow = false)}
-									Class="bg-gray-400 w-1/2">{$_('Cancel')}</ButtonPrimary
+									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 								>
 							</div>
 						</div>
 					</Modal>
-					<ButtonPrimary action={() => (DeleteGroupModalShow = true)}
-						>{$_('Delete Group')}</ButtonPrimary
+					<Button action={() => (DeleteGroupModalShow = true)}
+						>{$_('Delete Group')}</Button
 					>
 				{/if}
 
 				<StatusMessage bind:status />
-				<ButtonPrimary type="submit" disabled={loading}
+				<Button type="submit" disabled={loading}
 					><div class="flex justify-center gap-3 items-center">
 						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Redigera Grupp' : 'Create Group')}
 					</div>
-				</ButtonPrimary>
+				</Button>
 			</div>
 		</form>
 	</Loader>

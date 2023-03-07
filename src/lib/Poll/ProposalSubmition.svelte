@@ -2,7 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import ButtonPrimary from '$lib/Generic/ButtonPrimary.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { page } from '$app/stores';
 	import type { proposal } from '$lib/typescriptexperiments';
 	import { _ } from 'svelte-i18n';
@@ -53,6 +53,6 @@
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		<StatusMessage bind:status />
-		<ButtonPrimary type="submit" label="Lägg till" />
+		<Button type="submit" label="Lägg till" />
 	</Loader>
 </form>

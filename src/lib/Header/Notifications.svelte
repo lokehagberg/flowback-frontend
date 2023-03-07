@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	type NotificationType = 'kanban' | 'group';
 	interface Notification {
@@ -45,13 +46,14 @@
 	</div>
 {/if}
 
-<!-- <Button action={() => {
+<Button action={async () => {
 	
-	// fetchRequest('GET', 'notification/subscriptions')
-		fetchRequest('POST', 'notification/read', {notification_ids:[3]})
-		fetchRequest('GET', 'notification')
-		// fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
-}}/> -->
+	const {res, json} = await fetchRequest('GET', 'notification')
+	console.log(res, json, "NOTIS")
+}}/>
+<!-- // fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
+// fetchRequest('GET', 'notification/subscriptions')
+	// fetchRequest('POST', 'notification/read', {notification_ids:[3]}) -->
 
 <!-- <Button action={() => {
 	fetchRequest('GET', 'notification')

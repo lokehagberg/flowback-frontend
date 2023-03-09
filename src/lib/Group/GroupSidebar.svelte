@@ -9,6 +9,7 @@
 	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
 	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
 	import { faPersonRunning } from '@fortawesome/free-solid-svg-icons/faPersonRunning';
+	import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons/faCheckToSlot';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
@@ -79,8 +80,8 @@
 		{/if}
 		<div class="mb-6 w-full">
 			<div class="bg-secondary text-white shadow rounded flex flex-col">
-				<a class="text-white" target="_blank" href={`/createpoll?id=${$page.params.groupId}`}>
-					<GroupSidebarButton text="Create Poll" icon={faVideoCamera} isSelected={false} /></a
+				<a class="text-white"  href={`/createpoll?id=${$page.params.groupId}`}>
+					<GroupSidebarButton text="Create Poll" icon={faCheckToSlot} isSelected={false} /></a
 				>
 			</div>
 		</div>

@@ -11,7 +11,7 @@ export const initializeLocalization = () => {
     addMessages('se', se);
 
     init({
-        fallbackLocale: 'se',
-        initialLocale: 'se'
+        fallbackLocale: 'en',
+        initialLocale: 'en'
     });
 }

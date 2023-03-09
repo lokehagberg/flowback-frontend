@@ -31,7 +31,7 @@
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/list`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;

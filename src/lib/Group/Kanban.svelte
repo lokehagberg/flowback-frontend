@@ -31,7 +31,7 @@
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/list`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -97,15 +97,15 @@
 	};
 </script>
 
-<div class={'mt-6 bg-white p-2 rounded-2xl ' + Class}>
-	<div class="flex justify-between">
+<div class={'bg-white p-2 rounded-2xl ' + Class}>
+	<div class="flex overflow-x-auto">
 		<StatusMessage bind:status disableSuccess/>
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
 			{#if i !== 0}
-				<div class="flex-1 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
+				<div class="inline-block min-w-[200px] p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2">

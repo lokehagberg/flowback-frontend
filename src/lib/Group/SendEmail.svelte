@@ -36,7 +36,7 @@
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea required label="Message" bind:value={message} />
 			<StatusMessage bind:status />
-			<Button disabled={loading} type="submit" Class="mt-4" label="Skicka Mail" />
+			<Button disabled={loading} type="submit" Class="mt-4" label="Send Mail" />
 		</form>
 	</Loader>
 </div>

@@ -46,11 +46,11 @@
 	</div>
 {/if}
 
-<!-- <Button action={async () => {
-	
+<Button action={async () => {
+
 	const {res, json} = await fetchRequest('GET', 'notification')
 	console.log(res, json, "NOTIS")
-}}/> -->
+}}/>
 <!-- // fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
 // fetchRequest('GET', 'notification/subscriptions')
 	// fetchRequest('POST', 'notification/read', {notification_ids:[3]}) -->
@@ -66,7 +66,7 @@
 }}
 /> -->
 
-<!-- 
+<!--
 // fetchRequest('GET', 'notification')
 // 	fetchRequest('POST', 'notification/subscriptions')
 // 	fetchRequest('POST', 'notification/read')

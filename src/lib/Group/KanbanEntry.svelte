@@ -81,7 +81,7 @@
 		}}
 		class="cursor-pointer hover:underline"
 	>
-		<div class="p-0.5 break-all">{kanban.title}</div>
+		<div class="p-0.5">{kanban.title}</div>
 	</div>
 	<div
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"

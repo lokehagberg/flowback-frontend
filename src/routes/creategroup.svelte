@@ -30,46 +30,63 @@
 	let status: StatusMessageInfo;
 	let DeleteGroupModalShow = false;
 
+	//This function is also used for group editing
 	const createGroup = async () => {
 		loading = true;
 		const formData = new FormData();
 
 		formData.append('name', name);
 		formData.append('description', description);
-		formData.append('image', image);
-		formData.append('cover_image', coverImage);
 		formData.append('direct_join', directJoin.toString());
 		formData.append('public', publicGroup.toString());
+		if (image)
+		formData.append('image', image);
+		if (coverImage)
+		formData.append('cover_image', coverImage);
 
 		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
 
-		if (!res.ok) return;
-		else status = statusMessageFormatter(res, json);
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			loading = false;
+			return;
+		}
 
-			if (groupToEdit === null) {
-				const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
-					tag_name: 'Okategoriserad' //Default
-				});
-				if (res.ok) window.location.href = `/groups/${json}`;
-				else status = statusMessageFormatter(res, json);
-			}
+		if (groupToEdit === null) {
+			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
+				tag_name: 'Okategoriserad' //Default
+			});
+
+			if (res.ok) window.location.href = `/groups/${json}`;
+			else status = statusMessageFormatter(res, json);
+		}
 
 		loading = false;
 	};
 
 	const deleteGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${groupToEdit}/delete`);
-
+		
 		//Rederict to group
 		console.log(res);
 		if (res.ok) {
 			window.location.href = '/groups';
 		}
 	};
+	
+	const getGroupToEdit = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${groupToEdit}/detail`);
+		name = json.name
+		description = json.description
+		directJoin = json.direct_join
+		publicGroup = json.public
+
+	}
 
 	onMount(() => {
 		if (groupToEdit !== null) {
+			getGroupToEdit();
 		}
 	});
 </script>
@@ -78,10 +95,10 @@
 	<Loader bind:loading>
 		<form
 			on:submit|preventDefault={createGroup}
-			class="absolute left-1/2 -translate-x-1/2 flex items-start justify-center gap-8 md:mt-8 w-full lg:w-[900px]"
+			class="mt-6 mb-6 absolute left-1/2 -translate-x-1/2 flex items-start justify-center gap-8 md:mt-8 w-[1500px]"
 		>
 			<div class="bg-white p-6 shadow-xl flex flex-col gap-6 md:w-2/5">
-				<h1 class="text-2xl">{$_(groupToEdit ? 'Redigera Grupp' : 'Create a Group')}</h1>
+				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />
 				<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
@@ -99,17 +116,14 @@
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
 						<div slot="footer">
 							<div class="flex justify-center gap-16">
-								<Button action={deleteGroup} Class="bg-red-500">{$_('Yes')}</Button
-								><Button
+								<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
 									action={() => (DeleteGroupModalShow = false)}
 									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 								>
 							</div>
 						</div>
 					</Modal>
-					<Button action={() => (DeleteGroupModalShow = true)}
-						>{$_('Delete Group')}</Button
-					>
+					<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button>
 				{/if}
 
 				<StatusMessage bind:status />

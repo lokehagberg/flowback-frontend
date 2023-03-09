@@ -31,7 +31,7 @@
 		statusMessageFormatter(res, json)
 
 		if (res.ok) {
-			status = { message: 'Lyckades skapa förslag', success: true };
+			status = { message: 'Successfully created proposal', success: true };
 			abstained.push({
 				title,
 				description,

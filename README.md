@@ -1,12 +1,10 @@
-## Downloading the project
+## Setting up the project
 
 ```bash
 # Downloading the files
 git clone https://github.com/lokehagberg/flowback-frontend.git
-```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-```bash
+#Then you install the dependencies
 npm install
 ```
 

@@ -42,7 +42,6 @@
 	onMount(() => {
 		getGroupInfo();
 		setUserGroupInfo();
-
 	});
 
 	const setUserGroupInfo = async () => {
@@ -58,6 +57,19 @@
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 		statusMessageFormatter(res, json);
 	};
+
+	let hasMounted = false;
+	onMount(() => {
+		hasMounted = true;
+	});
+
+	$: if (hasMounted) {
+		const searchParams = new URLSearchParams(window.location.search)
+		searchParams.set('page', selectedPage)
+		window.history.pushState({}, '', `${location.pathname}?${searchParams}`)
+
+	};
+
 </script>
 
 <svelte:head>
@@ -76,7 +88,10 @@
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 					{#if selectedPage === 'flow'}
-						<PollThumbnails infoToGet="group" Class={`sm:w-full md:w-[80%] md:max-w-[600px] mx-auto my-0`} />
+						<PollThumbnails
+							infoToGet="group"
+							Class={`sm:w-full md:w-[80%] md:max-w-[600px] mx-auto my-0`}
+						/>
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}

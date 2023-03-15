@@ -61,15 +61,16 @@
 	let hasMounted = false;
 	onMount(() => {
 		hasMounted = true;
+		const page = new URLSearchParams(window.location.search).get('page');
+		//@ts-ignore
+		selectedPage = page;
 	});
 
 	$: if (hasMounted) {
-		const searchParams = new URLSearchParams(window.location.search)
-		searchParams.set('page', selectedPage)
-		window.history.pushState({}, '', `${location.pathname}?${searchParams}`)
-
-	};
-
+		const searchParams = new URLSearchParams(window.location.search);
+		searchParams.set('page', selectedPage);
+		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
+	}
 </script>
 
 <svelte:head>

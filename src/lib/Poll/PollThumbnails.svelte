@@ -59,7 +59,7 @@
 
 <div class={`${Class} `}>
 	<Loader bind:loading>
-		<div class={`flex flex-col gap-6 `}>
+		<div class={`flex flex-col gap-6 w-full`}>
 			<StatusMessage bind:status disableSuccess />
 			<PollFiltering handleSearch={getPolls} bind:filter />
 			{#if polls.length === 0}

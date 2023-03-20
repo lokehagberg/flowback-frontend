@@ -148,7 +148,7 @@
 
 					<div class="border border-gray-200 p-6 ">
 						<Button
-							Class={`inline ${advancedTimeSettings ? '!bg-blue-600' : '!bg-blue-200'}`}
+							Class={`inline !bg-blue-600`}
 							action={() => (advancedTimeSettings = !advancedTimeSettings)}
 							>{$_('Advanced time settings')}</Button
 						>
@@ -156,25 +156,29 @@
 						<input type="number" bind:value={daysBetweenPhases} min="1" max="1000" />
 
 						{#if advancedTimeSettings}
-							<h2 class="mt-4">{$_('Poll Start')}</h2>
-							<DateInput
-								format="yyyy-MM-dd HH:mm"
-								closeOnSelection
-								bind:value={start_date}
-								min={new Date()}
-								max={maxDatePickerYear}
-							/>
+							<div class="flex flex-wrap gap-6 justify-center">
+								<div>
+									<h2 class="mt-4">{$_('Poll Start')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={start_date}
+										min={new Date()}
+										max={maxDatePickerYear}
+									/>
+								</div>
+								<div>
+									<h2 class="mt-4">{$_('Proposal vote date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={proposal_end_date}
+										min={start_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
 
-							<h2 class="mt-4">{$_('Proposal vote date')}</h2>
-							<DateInput
-								format="yyyy-MM-dd HH:mm"
-								closeOnSelection
-								bind:value={proposal_end_date}
-								min={start_date}
-								max={maxDatePickerYear}
-							/>
-
-							<!-- <h2 class="mt-4">{$_('Prediction vote date')}</h2>
+								<!-- <h2 class="mt-4">{$_('Prediction vote date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
@@ -182,24 +186,27 @@
 						min={proposal_end_date}
 						max={maxDatePickerYear}
 					/> -->
-
-							<h2 class="mt-4">{$_('Delegate vote date')}</h2>
-							<DateInput
-								format="yyyy-MM-dd HH:mm"
-								closeOnSelection
-								bind:value={delegate_vote_end_date}
-								min={proposal_end_date}
-								max={maxDatePickerYear}
-							/>
-
-							<h2 class="mt-4">{$_('End date')}</h2>
-							<DateInput
-								format="yyyy-MM-dd HH:mm"
-								closeOnSelection
-								bind:value={end_date}
-								min={delegate_vote_end_date}
-								max={maxDatePickerYear}
-							/>
+								<div>
+									<h2 class="mt-4">{$_('Delegate vote date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={delegate_vote_end_date}
+										min={proposal_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+								<div>
+									<h2 class="mt-4">{$_('End date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={end_date}
+										min={delegate_vote_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+							</div>
 						{/if}
 					</div>
 					<h2>{$_('Select Tag')}</h2>
@@ -238,7 +245,9 @@
 							action={() => (selected_poll = poll)}
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
 							Class={`${
-								(!disabled.includes(poll) && selected_poll === poll ? '!bg-primary' : '!bg-secondary') ||
+								(!disabled.includes(poll) && selected_poll === poll
+									? '!bg-primary'
+									: '!bg-secondary') ||
 								(disabled.includes(poll) &&
 									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
 							}`}

@@ -45,12 +45,10 @@
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
 
-		console.log("userser", users)
 		const assignee = users.find(user => user.user_id === kanbanEdited.assignee)
 		kanban.assignee.id = kanbanEdited.assignee
 		kanban.assignee.username = assignee.username
 		kanban.assignee.profile_image = assignee.profile_image
-		console.log(kanban, "KAN BAN?")
 		
 		openModal = false;
 	};
@@ -89,10 +87,10 @@
 		}}
 		class="cursor-pointer hover:underline"
 	>
-		<div class="p-0.5">{kanban.title}</div>
+		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
 	<div
-		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
+		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
 				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
@@ -132,11 +130,11 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal}>
+	<Modal bind:open={openModal} Class="">
 		<TextInput slot="header" bind:value={kanbanEdited.title} label="" inputClass="border-none" />
 		<div slot="body">
 			<StatusMessage bind:status disableSuccess />
-			<TextArea bind:value={kanbanEdited.description} label="" Class="" inputClass="border-none"/>
+			<TextArea rows={10} bind:value={kanbanEdited.description} label="" Class="h-full" inputClass="border-none"/>
 			<select on:input={changeAssignee} value={kanban.assignee.id}>
 				{#each users as user}
 					<option value={user.user_id}>{user.username}</option>

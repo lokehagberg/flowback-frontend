@@ -2,7 +2,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 
-	export let loading: boolean, Class:string
+	export let loading: boolean, Class:string = ""
 </script>
 
 <div class={`w-full relative ${loading && 'contrast-50'} ${Class}`}>

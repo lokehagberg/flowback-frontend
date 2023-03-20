@@ -33,8 +33,6 @@
 		assignee: kanban.assignee.id
 	};
 
-	console.log(kanban)
-
 	const updateKanbanContent = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -46,6 +44,14 @@
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
+
+		console.log("userser", users)
+		const assignee = users.find(user => user.user_id === kanbanEdited.assignee)
+		kanban.assignee.id = kanbanEdited.assignee
+		kanban.assignee.username = assignee.username
+		kanban.assignee.profile_image = assignee.profile_image
+		console.log(kanban, "KAN BAN?")
+		
 		openModal = false;
 	};
 
@@ -131,7 +137,7 @@
 		<div slot="body">
 			<StatusMessage bind:status disableSuccess />
 			<TextArea bind:value={kanbanEdited.description} label="" Class="" inputClass="border-none"/>
-			<select on:input={changeAssignee} bind:value={kanban.assignee.id}>
+			<select on:input={changeAssignee} value={kanban.assignee.id}>
 				{#each users as user}
 					<option value={user.user_id}>{user.username}</option>
 				{/each}

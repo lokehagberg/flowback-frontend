@@ -158,7 +158,7 @@
 						{#if advancedTimeSettings}
 							<div class="flex flex-wrap gap-6 justify-center">
 								<div>
-									<h2 class="mt-4">{$_('Poll Start')}</h2>
+									<h2 class="mt-4">{$_('Poll start')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
@@ -246,7 +246,7 @@
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
 							Class={`${
 								(!disabled.includes(poll) && selected_poll === poll
-									? '!bg-primary'
+									? '!bg-primary' 
 									: '!bg-secondary') ||
 								(disabled.includes(poll) &&
 									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))

@@ -14,7 +14,7 @@
 	<div class="shadow-xl border border-gray-300 rounded bg-white relative p-4 w-full max-w-md h-full">
 		<div class="text-xl border-b-2 border-gray-300 border-solid">
 			<slot name="header" />
-			<CrossButton action={() => (open = false)} />
+			<CrossButton action={() => (open = false)}/>
 		</div>
 		<div class="p-6 text-center">
 			<slot name="body" />

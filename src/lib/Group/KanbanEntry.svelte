@@ -131,10 +131,12 @@
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class="">
-		<TextInput slot="header" bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+		<div slot="header" class="mt-7">
+		<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none"/>
+	</div>
 		<div slot="body">
 			<StatusMessage bind:status disableSuccess />
-			<TextArea rows={10} bind:value={kanbanEdited.description} label="" Class="h-full" inputClass="border-none"/>
+			<TextArea rows={14} bind:value={kanbanEdited.description} label="" Class="h-full" inputClass="border-none"/>
 			<select on:input={changeAssignee} value={kanban.assignee.id}>
 				{#each users as user}
 					<option value={user.user_id}>{user.username}</option>

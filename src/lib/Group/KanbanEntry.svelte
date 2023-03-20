@@ -33,6 +33,8 @@
 		assignee: kanban.assignee.id
 	};
 
+	console.log(kanban)
+
 	const updateKanbanContent = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -129,15 +131,15 @@
 		<div slot="body">
 			<StatusMessage bind:status disableSuccess />
 			<TextArea bind:value={kanbanEdited.description} label="" Class="" inputClass="border-none"/>
-			<select on:input={changeAssignee}>
+			<select on:input={changeAssignee} bind:value={kanban.assignee.id}>
 				{#each users as user}
 					<option value={user.user_id}>{user.username}</option>
 				{/each}
 			</select>
 		</div>
 		<div slot="footer">
-			<Button action={updateKanbanContent}>Update</Button>
-			<Button action={deleteKanbanEntry} Class="bg-red-500">Delete</Button>
+			<Button action={updateKanbanContent}>{$_("Update")}</Button>
+			<Button action={deleteKanbanEntry} Class="bg-red-500">{$_("Delete")}</Button>
 		</div>
 	</Modal>
 {/if}

@@ -19,6 +19,7 @@
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
 	import Kanban from '$lib/Group/Kanban.svelte';
+	import { _ } from 'svelte-i18n';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 
@@ -61,7 +62,7 @@
 	let hasMounted = false;
 	onMount(() => {
 		hasMounted = true;
-		const page = new URLSearchParams(window.location.search).get('page');
+		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
 		//@ts-ignore
 		selectedPage = page;
 	});
@@ -121,7 +122,7 @@
 {:else}
 	<Layout centering={true}>
 		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
-			You are not a memeber of this group!
+			{$_('You are not a memeber of this group!')}
 		</div>
 	</Layout>
 {/if}

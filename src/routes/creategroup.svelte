@@ -55,7 +55,7 @@
 
 		if (groupToEdit === null) {
 			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
-				tag_name: 'Okategoriserad' //Default
+				tag_name: 'Uncategorised' //Default
 			});
 
 			if (res.ok) window.location.href = `/groups/${json}`;

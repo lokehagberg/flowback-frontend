@@ -65,7 +65,7 @@
 	<Loader bind:loading>
 		<form on:submit|preventDefault={addTag} class="p-3">
 			<TextInput label="Add tag" bind:value={tagToAdd} />
-			<Button disabled={loading} type="submit" Class="mt-2" label="Lägg till Tagg" />
+			<Button disabled={loading} type="submit" Class="mt-2" label="Add tag" />
 		</form>
 		<div class="flex flex-wrap mt-2">
 			{#each tags as tag}

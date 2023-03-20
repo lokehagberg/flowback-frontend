@@ -48,32 +48,16 @@
 
 <Button action={async () => {
 
-	const {res, json} = await fetchRequest('GET', 'notification')
+	// const {res, json} = await fetchRequest('GET', 'notification/list')
+	// const {res, json} = await fetchRequest('GET', 'notification/subscription')
+	// const {res, json} = await fetchRequest('POST', 'notification/read')
+	// const {res, json} = await fetchRequest('POST', 'group/3/subscribe', {categories: ["group"]})
+	const {res, json} = await fetchRequest('POST', 'group/3/unsubscribe', {categories: ["group"]})
+
+
+
 	console.log(res, json, "NOTIS")
 }}/>
-<!-- // fetchRequest('POST', `group/${$page.params.groupId}/subscribe`, {categories: []})
-// fetchRequest('GET', 'notification/subscriptions')
-	// fetchRequest('POST', 'notification/read', {notification_ids:[3]}) -->
-
-<!-- <Button action={() => {
-	fetchRequest('GET', 'notification')
-	// fetchRequest('POST', 'kanban/subscribe', {kanban:2})
-	fetchRequest('POST', 'group/2/subscribe', {categories:['poll']})
-	// fetchRequest('POST', 'group/2/poll/28/subscribe', {categories:['timeline', 'poll']})
-	// fetchRequest('POST', 'chat/group/2/timestamp', {
-	// 	timestamp :new Date()
-	// })
-}}
-/> -->
-
-<!--
-// fetchRequest('GET', 'notification')
-// 	fetchRequest('POST', 'notification/subscriptions')
-// 	fetchRequest('POST', 'notification/read')
-// 	fetchRequest('POST', 'group/2/subscribe', {categories:['group']})
-
-// 	// fetchRequest('POST', 'chat/direct/2/timestamp', {
-// }); -->
 
 <style>
 	@keyframes slide-animation {

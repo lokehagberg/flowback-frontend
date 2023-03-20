@@ -22,6 +22,7 @@
 	import { _ } from 'svelte-i18n';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -38,9 +39,11 @@
 		id: 0
 	};
 	let userInGroup: boolean = true,
-		memberCount = 0;
+		memberCount = 0,
+		loading = true;
 
 	onMount(() => {
+		loading = true;
 		getGroupInfo();
 		setUserGroupInfo();
 	});
@@ -49,6 +52,7 @@
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
 		userIsDelegateStore.set(json.results[0].delegate);
 		statusMessageFormatter(res, json);
+		loading = false;
 	};
 
 	const getGroupInfo = async () => {
@@ -78,8 +82,12 @@
 	<title>{group.name}</title>
 </svelte:head>
 
-{#if userInGroup}
-	<Layout>
+<Layout>
+	{#if loading}
+		<Loader bind:loading Class="mt-24">
+
+		</Loader>
+	{:else if userInGroup}
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
@@ -118,11 +126,9 @@
 				<GroupSidebar Class={``} {group} bind:selectedPage />
 			</div>
 		</div>
-	</Layout>
-{:else}
-	<Layout centering={true}>
+	{:else}
 		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
 			{$_('You are not a memeber of this group!')}
 		</div>
-	</Layout>
-{/if}
+	{/if}
+</Layout>

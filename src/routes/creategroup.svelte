@@ -129,7 +129,7 @@
 				<StatusMessage bind:status />
 				<Button type="submit" disabled={loading}
 					><div class="flex justify-center gap-3 items-center">
-						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Redigera Grupp' : 'Create Group')}
+						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Edit Group' : 'Create Group')}
 					</div>
 				</Button>
 			</div>

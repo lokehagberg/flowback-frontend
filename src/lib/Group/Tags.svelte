@@ -82,7 +82,7 @@
 						>
 						<Modal bind:open={areYouSureModal}>
 							<div slot="header">{$_('Are you sure?')}</div>
-							<div slot="body">{$_('Removing a tagg removes all polls with that tag!')}</div>
+							<div slot="body">{$_('Removing a tag removes all polls with that tag!')}</div>
 							<div slot="footer">
 								<Button
 									action={() => {

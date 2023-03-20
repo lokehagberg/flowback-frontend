@@ -35,7 +35,6 @@
 	let status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
-	$: console.log(abstained, 'ABSTAIN');
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -49,7 +48,6 @@
 		if (selectedPage === 'You') await getVotings();
 		else if (selectedPage === 'Delegate') await getDelegateVotings();
 		setOrdering();
-		console.log(ranked, 'PRANKEDS');
 	};
 
 	const getProposals = async () => {
@@ -120,8 +118,6 @@
 		});
 	};
 
-	$: console.log(ranked, "CHANGE CRANKED")
-
 	/*
 		Every voting has a priority, larger number means higher up in the ranking.
 		We find whether or not a proposal has been ranked, and then put it in the right slot
@@ -178,6 +174,7 @@
 	};
 
 	const doubleClick = (proposal: proposal, container: string) => {
+		if (new Date(votingStartTime) > new Date()) return;
 		unsaved = true;
 
 		if (container === 'abstained') addToRanked(proposal);

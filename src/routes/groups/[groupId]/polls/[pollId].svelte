@@ -22,15 +22,13 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
-	let poll: poll;
-	let votings: votings[];
-	let selectedPage: 'You' | 'Delegate' = 'You';
-	let abstained: proposal[];
-	let DeletePollModalShow = false;
-	let pollType = 1;
-	let finished: boolean;
-
-	$: console.log(abstained, 'ABS');
+	let poll: poll,
+	votings: votings[],
+	selectedPage: 'You' | 'Delegate' = 'You',
+	abstained: proposal[],
+	DeletePollModalShow = false,
+	pollType = 1,
+	finished: boolean;
 
 	onMount(async () => {
 		getPollData();

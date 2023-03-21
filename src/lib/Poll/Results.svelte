@@ -40,6 +40,7 @@
 </script>
 
 <div class="border border-gray- p-4 rounded">
+	<h1 class="text-4xl mb-6">{$_("Results")}</h1>
 	{#if pollType === 1}
 		<Statistics bind:votes bind:labels />
 	{/if}

@@ -10,7 +10,11 @@
 				data: [],
 				backgroundColor: ['#0157BE', '#9333EA', '#93C5FD', '#D8B4FE'],
 			}
-		]
+		],
+		options: {
+                responsive: false,
+				onResize: () => {console.log("HI")}
+            }
 	};
 
 	onMount(() => {
@@ -40,6 +44,6 @@
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 </script>
 
-<div>
+<div class="w-[450px] m-auto">
 	<Pie bind:chart bind:data={data} options={{ responsive: true }} />
 </div>

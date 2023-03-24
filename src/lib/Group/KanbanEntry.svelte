@@ -130,7 +130,7 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="">
+	<Modal bind:open={openModal} Class="z-50">
 		<div slot="header" class="mt-7">
 		<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none"/>
 	</div>

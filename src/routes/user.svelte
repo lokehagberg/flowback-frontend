@@ -12,6 +12,8 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import getCroppedImg from '$lib/Generic/Cropper/canvasUtils';
+	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -69,28 +71,81 @@
 		status = statusMessageFormatter(res, json);
 	};
 
-	const handleProfileImageChange = (e: any) => {
-		//Type string, for preview image
-		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
+	let currentlyCroppingProfile = false,
+		currentlyCroppingBanner = false,
+		oldProfileImagePreview = '',
+		files: File[],
+		crop: any,
+		pixelCrop: any,
+		croppedImage: any;
 
+	$: console.log(crop);
+
+	const handleCropProfileImage = (e: any) => {
+		//Type string, for preview image
+		oldProfileImagePreview = profileImagePreview;
+		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
+		files = Array.from(e.target.files);
+		currentlyCroppingProfile = true;
+	};
+
+	const handleProfileImageChange = async () => {
+		// @ts-ignore
+		// userEdit.profile_image_file = await getCroppedImg(profileImagePreview, pixelCrop);
+		// profileImagePreview = await getCroppedImg(profileImagePreview, crop.pixels)
+		currentlyCroppingProfile = false;
 		//Type File, for sending to server
-		const files: File[] = Array.from(e.target.files);
-		userEdit.profile_image_file = files[0];
+		// userEdit.profile_image_file = files[0];
 	};
 
 	const handleBannerImageChange = (e: any) => {
 		//Type string, for preview image
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
-
 		//Type File, for sending to server
 		const files: File[] = Array.from(e.target.files);
 		userEdit.banner_image_file = files[0];
 	};
 </script>
 
-<Layout centering={true}>
-	<!-- Viewing someone's profile -->
+{#if currentlyCroppingProfile}
+	<!-- Cropp image -->
+	<CropperModal
+		confirmAction={() => {
+			profileImagePreview = croppedImage
+		}}
+		cancelAction={() => (currentlyCroppingProfile = false)}
+		bind:croppedImage
+		image={profileImagePreview}
+		bind:userEdit
+	/>
+	<!-- <div class="z-50 fixed p-4 bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+		<h1>Crop profile picture</h1>
+		<div class=" bg-white relative w-[30vw] aspect-square mb-6">
+			<Cropper
+				bind:crop
+				image={profileImagePreview}
+				showGrid={false}
+				cropShape={'round'}
+				zoomSpeed={0.1}
+				aspect={1}
+				on:cropcomplete={(e) => pixelCrop = e.detail.pixels}
+			/>
+		</div>
+		<Button buttonStyle="primary" action={handleProfileImageChange}>Confirm</Button>
+		<Button
+			buttonStyle="secondary"
+			action={() => {
+				currentlyCroppingProfile = false;
+				profileImagePreview = oldProfileImagePreview;
+				files = [];
+				// userEdit.profile_image_file = new File([], '');
+			}}>Cancel</Button
+		>
+	</div> -->
+{/if}
 
+<!-- Viewing someone's profile -->
+<Layout centering={true}>
 	{#if !isEditing}
 		<img src={bannerImagePreview} class="bg-gray-200 w-full h-[40%] cover" alt="banner" />
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
@@ -115,7 +170,7 @@
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
 				src={bannerImagePreview}
-				class="w-full cover transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -132,8 +187,8 @@
 		>
 			<label for="file-ip-1" class="inline">
 				<img
-					src={profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
+					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 					alt="avatar"
 				/>
 				<input
@@ -142,7 +197,7 @@
 					name="file-ip-1"
 					id="file-ip-1"
 					accept="image/*"
-					on:change={handleProfileImageChange}
+					on:change={handleCropProfileImage}
 				/></label
 			>
 
@@ -198,8 +253,7 @@
 			<span>{$_('Recommended ratios for images: 1:1 for profile, 4:1 for banner')}</span>
 			<div class="mt-6">
 				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>
-				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button
-				>
+				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
 			</div>
 		</form>
 	{/if}

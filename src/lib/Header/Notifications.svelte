@@ -48,11 +48,11 @@
 
 <Button action={async () => {
 
-	// const {res, json} = await fetchRequest('GET', 'notification/list')
-	// const {res, json} = await fetchRequest('GET', 'notification/subscription')
+	const {res, json} = await fetchRequest('GET', 'notification/list')
+	 await fetchRequest('GET', 'notification/subscription')
 	// const {res, json} = await fetchRequest('POST', 'notification/read')
 	// const {res, json} = await fetchRequest('POST', 'group/3/subscribe', {categories: ["group"]})
-	const {res, json} = await fetchRequest('POST', 'group/3/unsubscribe', {categories: ["group"]})
+	// const {res, json} = await fetchRequest('POST', 'group/3/unsubscribe', {categories: ["group"]})
 
 
 

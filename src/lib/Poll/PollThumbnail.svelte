@@ -23,7 +23,7 @@
 				//@ts-ignore
 				!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
 			) {
-				notificationOpen = false
+				notificationOpen = false;
 			}
 		});
 	});
@@ -58,60 +58,56 @@
 			<Fa icon={faBell} size={'1.2x'} />
 		</div>
 		{#if notificationOpen}
-			<ul
-				class="absolute -right-[40%] bottom-0 bg-white shadow text-sm"
-			>
+			<ul class="absolute -right-[40%] bottom-0 bg-white shadow text-sm">
 				<li
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription(['poll', 'timeline'])}
 				>
-					{$_("All notifications")}
+					{$_('All notifications')}
 				</li>
 				<li
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription(['timeline'])}
 				>
-					{$_("Only timeline")}
+					{$_('Only timeline')}
 				</li>
 				<li
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription([])}
 				>
-					{$_("Cancel notifications")}
+					{$_('Cancel notifications')}
 				</li>
 			</ul>
 		{/if}
 	</div>
-	<div class="border border-gray-200 p-2">
-		<div class="flex items-center justify-between">
-			<Tag tag={poll.tag_name} Class="inline cursor-default" />
-			<div class="flex">
-				{#if poll.poll_type === 1}
-					<HeaderIcon
-						Class="p-2 pl-0 cursor-default"
-						icons={[faArrowUp, faArrowDown]}
-						text={'Ranking'}
-					/>
-				{:else if poll.poll_type === 3}
-					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
-				{/if}
-				<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
-			</div>
-			<a
-				href={poll.group_joined ? `groups/${poll.group_id}` : ''}
-				class:hover:underline={poll.group_joined}
-				class="text-black"
-			>
-				<img
-					class="h-8 w-8 inline rounded-full"
-					src={`${import.meta.env.VITE_API}${poll.group_image}`}
-					alt="group thumbnail"
+	<div class="flex items-center justify-between mt-1">
+		<Tag tag={poll.tag_name} Class="inline cursor-default" />
+		<div class="flex">
+			{#if poll.poll_type === 1}
+				<HeaderIcon
+					Class="p-2 pl-0 cursor-default"
+					icons={[faArrowUp, faArrowDown]}
+					text={'Ranking'}
 				/>
-				<span class="inline">{poll.group_name}</span>
-			</a>
+			{:else if poll.poll_type === 3}
+				<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
+			{/if}
+			<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 		</div>
+		<a
+			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
+			class:hover:underline={poll.group_joined}
+			class="text-black"
+		>
+			<img
+				class="h-8 w-8 inline rounded-full"
+				src={`${import.meta.env.VITE_API}${poll.group_image}`}
+				alt="group thumbnail"
+			/>
+			<span class="inline">{poll.group_name}</span>
+		</a>
 	</div>
-	<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-3">
+	<p class="mt-2 whitespace-pre-wrap mb-4 ">
 		{poll.description}
 	</p>
 

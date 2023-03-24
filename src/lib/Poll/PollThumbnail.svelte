@@ -12,6 +12,7 @@
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import { _ } from 'svelte-i18n';
 
 	export let poll: poll;
 
@@ -22,13 +23,12 @@
 				//@ts-ignore
 				!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
 			) {
-				console.log(`clicked out ${poll.id} id`)
 				notificationOpen = false
 			}
 		});
 	});
 	let onHoverGroup = false,
-		notificationOpen = true;
+		notificationOpen = false;
 
 	type notificationCategory = 'poll' | 'timeline';
 
@@ -65,19 +65,19 @@
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription(['poll', 'timeline'])}
 				>
-					All notifications
+					{$_("All notifications")}
 				</li>
 				<li
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription(['timeline'])}
 				>
-					Only timeline
+					{$_("Only timeline")}
 				</li>
 				<li
 					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
 					on:click={() => handleNotificationSubscription([])}
 				>
-					Cancel notifications
+					{$_("Cancel notifications")}
 				</li>
 			</ul>
 		{/if}

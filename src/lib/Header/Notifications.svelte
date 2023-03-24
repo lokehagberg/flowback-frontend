@@ -14,19 +14,32 @@
 		notifications = json.results
 	};
 
+	const closeWindowWhenClickingOutside = () => {
+		window.addEventListener('click', function (e) {
+			if (
+				notificationsOpen &&
+				//@ts-ignore
+				!document.getElementById(`notifications-list`)?.contains(e.target)
+			) {
+				notificationsOpen = false;
+			}
+		});
+	}
+
 	onMount(() => {
 		getNotifications();
+		closeWindowWhenClickingOutside();
 	});
 
 	let notificationsOpen = false;
 </script>
 
-<div on:click={() => (notificationsOpen = !notificationsOpen)}>
+<div id ="notifications-list" on:click={() => (notificationsOpen = !notificationsOpen)}>
 	<Fa icon={faBell} size={'1.4x'} />
 </div>
 
 {#if notificationsOpen}
-	<div class="absolute right-0 top-full bg-white select-none shadow slide-animation">
+	<div class="absolute right-0 top-full bg-white select-none shadow slide-animation" id ="notifications-list">
 		{#each notifications as notification}
 		<!-- on:click={notification.action} -->
 			<div

@@ -6,6 +6,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	export let selectedPage: SelectablePage;
 	export let group: GroupDetails;
 	export let memberCount: number;
@@ -65,16 +66,17 @@
 <!-- TODO: Fix layout design -->
 <div class="bg-white pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
 	<div class="flex items-center relative" id="notifications-list-group">
-		<div on:click={() => (notificationOpen = !notificationOpen)}>
+		<!-- <div on:click={() => (notificationOpen = !notificationOpen)}>
 			<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
-		</div>
+		</div> -->
 		<h1
 			class="ml-2 text-3xl hover:underline cursor-pointer"
 			on:click={() => (selectedPage = 'flow')}
 		>
 			{group.name}
 		</h1>
-		{#if notificationOpen}
+		<NotificationOptions api={`group/${$page.params.groupId}/subscribe`} categories={groupNotificationCategories} labels={groupNotificationCategories} />
+		<!-- {#if notificationOpen}
 			<ul class="z-50 absolute top-12 bg-white shadow text-sm" >
 				{#each groupNotificationCategories as category}
 					<li class="p-2 flex items-center" on:click={() => changeNotificationList(category)}>
@@ -86,7 +88,7 @@
 					</li>
 				{/each}
 			</ul>
-		{/if}
+		{/if} -->
 	</div>
 	<p class="text-xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'members')}>
 		{memberCount}

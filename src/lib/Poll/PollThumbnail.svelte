@@ -13,6 +13,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 
 	export let poll: poll;
 
@@ -50,7 +51,8 @@
 		>
 			<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
 		</a>
-		<div
+		<NotificationOptions api={`group/${poll.group_id}/poll/${poll.id}/subscribe`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}/>
+		<!-- <div
 			class="hover:text-primary hover:cursor-pointer"
 			id={`notification-list-${poll.id}`}
 			on:click={() => (notificationOpen = !notificationOpen)}
@@ -78,7 +80,7 @@
 					{$_('Cancel notifications')}
 				</li>
 			</ul>
-		{/if}
+		{/if} -->
 	</div>
 	<div class="flex items-center justify-between mt-1">
 		<Tag tag={poll.tag_name} Class="inline cursor-default" />

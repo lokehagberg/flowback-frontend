@@ -49,14 +49,10 @@
 	</div>
 
 	{#if notificationOpen}
-		<ul class="z-50 absolute top-12 bg-white shadow text-sm">
+		<ul class="z-50 absolute top-12 bg-white shadow-xl text-sm">
 			{#each categories as category, i}
-				<li class="p-2 flex items-center" on:click={() => changeNotificationList(category)}>
-					<input
-						class="hover:shadow p-1 hover:bg-gray-100 transition-all"
-						type="checkbox"
-						id={category}
-					/><label for={category} class="ml-2 mb-0.5">{$_(labels[i])}</label>
+				<li class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all" class:bg-gray-200={categoriesData?.find((cat) => cat === category)} on:click={() => changeNotificationList(category)}>
+					{$_(labels[i])}
 				</li>
 			{/each}
 		</ul>

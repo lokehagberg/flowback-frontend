@@ -17,32 +17,27 @@
 			if (
 				notificationOpen &&
 				//@ts-ignore
-				!Array(document.getElementsByClassName(`notifications-clickable-region`))?.find(element => element.contains(e.target) ) 
+				! [... document.getElementsByClassName(`notifications-clickable-region`)]?.find(element => element.contains(e.target) ) 
 			) {
 				notificationOpen = false;
 			}
 		});
 	};
 
-	const handleNotificationSubscription = async () => {
-		// await fetchRequest('POST', `group/${$page.params.groupId}/unsubscribe`);
-		await fetchRequest('POST', api, { categories:categoriesData });
-	};
+	const getNontifications = async () => {
+		await fetchRequest('GET', 'notification/subscription')
+	}
 
-	const changeNotificationList = (newCategory: string) => {
-		const oldCategory = categoriesData?.find((category) => category === newCategory);
-		if (oldCategory) categoriesData = categoriesData.filter((category) => category !== newCategory);
-		else categoriesData?.push(newCategory);
-		categories = categories;
-		handleNotificationSubscription();
+	const handleNotificationSubscription = async (category:string) => {
+		// await fetchRequest('POST', `group/${$page.params.groupId}/unsubscribe`);
+		await fetchRequest('POST', api, { categories:[category] });
 	};
 
 	onMount(() => {
-       
 		closeWindowWhenClickingOutside();
+		getNontifications();
 	});
 
-    $: console.log(notificationOpen)
 
 </script>
 
@@ -54,7 +49,7 @@
 	{#if notificationOpen}
 		<ul class="z-50 absolute top-12 bg-white shadow-xl text-sm">
 			{#each categories as category, i}
-				<li class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all" class:bg-gray-200={categoriesData?.find((cat) => cat === category)} on:click={() => changeNotificationList(category)}>
+				<li class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all" class:bg-gray-200={categoriesData?.find((cat) => cat === category)} on:click={() => handleNotificationSubscription(category)}>
 					{$_(labels[i])}
 				</li>
 			{/each}

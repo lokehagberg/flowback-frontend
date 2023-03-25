@@ -56,13 +56,13 @@
 			aspect={1}
 		/>
 	</div>
-	<h2>Preview</h2>
-	<div class="prof-pic-wrapper hidden">
+	<!-- <h2>Preview</h2> -->
+	<!-- <div class="prof-pic-wrapper hidden">
 		<img bind:this={profilePicture} class="prof-pic" src={image} alt="Profile example" {style} />
-	</div>
+	</div> -->
 	{#if croppedImage}
-		<h2>Cropped Output</h2>
-		<img src={croppedImage} alt="Cropped profile" /><br />
+		<!-- <h2>Cropped Output</h2>
+		<img src={croppedImage} alt="Cropped profile" /><br /> -->
 	{:else}
 		<Button
 			buttonStyle="primary"

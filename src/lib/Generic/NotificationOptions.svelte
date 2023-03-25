@@ -17,7 +17,7 @@
 			if (
 				notificationOpen &&
 				//@ts-ignore
-				!document.getElementById(`notifications-clickable-region`)?.contains(e.target)
+				!Array(document.getElementsByClassName(`notifications-clickable-region`))?.find(element => element.contains(e.target) ) 
 			) {
 				notificationOpen = false;
 			}
@@ -42,9 +42,11 @@
 		closeWindowWhenClickingOutside();
 	});
 
+    $: console.log(notificationOpen)
+
 </script>
 
-<div id="notifications-clickable-region">
+<div class="notifications-clickable-region">
 	<div on:click={() => (notificationOpen = !notificationOpen)}>
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
 	</div>

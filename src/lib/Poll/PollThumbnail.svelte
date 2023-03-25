@@ -18,15 +18,15 @@
 	export let poll: poll;
 
 	onMount(() => {
-		window.addEventListener('click', function (e) {
-			if (
-				notificationOpen &&
-				//@ts-ignore
-				!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
-			) {
-				notificationOpen = false;
-			}
-		});
+		// window.addEventListener('click', function (e) {
+		// 	if (
+		// 		notificationOpen &&
+		// 		//@ts-ignore
+		// 		!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
+		// 	) {
+		// 		notificationOpen = false;
+		// 	}
+		// });
 	});
 	let onHoverGroup = false,
 		notificationOpen = false;
@@ -40,11 +40,10 @@
 	};
 </script>
 
-<!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
 <div class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
 	<div class="flex justify-between items-center text-black relative">
 		<a
-			class="hover:shadow-xl hover:rounded-xl cursor-pointer "
+			class="hover:underline cursor-pointer "
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -52,35 +51,6 @@
 			<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
 		</a>
 		<NotificationOptions api={`group/${poll.group_id}/poll/${poll.id}/subscribe`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}/>
-		<!-- <div
-			class="hover:text-primary hover:cursor-pointer"
-			id={`notification-list-${poll.id}`}
-			on:click={() => (notificationOpen = !notificationOpen)}
-		>
-			<Fa icon={faBell} size={'1.2x'} />
-		</div>
-		{#if notificationOpen}
-			<ul class="absolute -right-[40%] bottom-0 bg-white shadow text-sm">
-				<li
-					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
-					on:click={() => handleNotificationSubscription(['poll', 'timeline'])}
-				>
-					{$_('All notifications')}
-				</li>
-				<li
-					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
-					on:click={() => handleNotificationSubscription(['timeline'])}
-				>
-					{$_('Only timeline')}
-				</li>
-				<li
-					class="hover:cursor-pointer hover:shadow p-1 hover:bg-gray-100 transition-all"
-					on:click={() => handleNotificationSubscription([])}
-				>
-					{$_('Cancel notifications')}
-				</li>
-			</ul>
-		{/if} -->
 	</div>
 	<div class="flex items-center justify-between mt-1">
 		<Tag tag={poll.tag_name} Class="inline cursor-default" />

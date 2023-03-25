@@ -17,7 +17,7 @@
 			if (
 				notificationOpen &&
 				//@ts-ignore
-				!document.getElementById(`notifications-list-group`)?.contains(e.target)
+				!document.getElementById(`notifications-clickable-region`)?.contains(e.target)
 			) {
 				notificationOpen = false;
 			}
@@ -41,9 +41,10 @@
        
 		closeWindowWhenClickingOutside();
 	});
+
 </script>
 
-<div>
+<div id="notifications-clickable-region">
 	<div on:click={() => (notificationOpen = !notificationOpen)}>
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
 	</div>

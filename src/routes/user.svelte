@@ -115,7 +115,7 @@
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
 				src={bannerImagePreview}
-				class="w-full cover transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -133,7 +133,7 @@
 			<label for="file-ip-1" class="inline">
 				<img
 					src={profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 					alt="avatar"
 				/>
 				<input

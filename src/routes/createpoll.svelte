@@ -33,7 +33,7 @@
 	let selected_time: timetypes = 'Endtime';
 	//Something about this feels very scuffed
 	const polls: polltypes[] = ['Ranking', 'Scheduled'];
-	const times: timetypes[] = ['Endtime', 'Dynamic'];
+	const times: timetypes[] = ['Endtime'];
 
 	const pollDescriptions: Record<polltypes, string> = {
 		Ranking: `Ranking is the method of preferential voting known as the borda count. The top proposal in Added always gets the number of points as there are proposals (it does not depend on there being proposals below it), and the one below that gets that number minus one, the one below that gets that number minus two and so on. Each proposal that are in abstain each get zero points. This is added over all voters and is divided by the total number of votes to get the result.`,

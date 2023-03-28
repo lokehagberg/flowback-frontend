@@ -56,8 +56,17 @@
 			aspect={1}
 		/>
 	</div>
+	<h2>Preview</h2>
+	<div class="prof-pic-wrapper hidden">
+		<img bind:this={profilePicture} class="prof-pic" src={image} alt="Profile example" {style} />
+	</div>
+	{#if croppedImage}
+		<h2>Cropped Output</h2>
+		<img src={croppedImage} alt="Cropped profile" /><br />
+	{/if}
 	<!-- <h2>Preview</h2> -->
 	<!-- <div class="prof-pic-wrapper hidden">
+		
 		<img bind:this={profilePicture} class="prof-pic" src={image} alt="Profile example" {style} />
 	</div> -->
 	{#if croppedImage}
@@ -68,13 +77,16 @@
 			buttonStyle="primary"
 			action={async () => {
 				croppedImage = await getCroppedImg(image, pixelCrop);
+				let blob = new Blob(userEdit.profile_image_file);
+				console.log("YOU'RE NOT MY TYPE: ", blob.type)
+				
 				userEdit.profile_image_file = new File(
 					[croppedImage],
-					Math.round(Math.random() * 100000000000).toString() + ".png",
-					{type:"image/png"}
+					Math.round(Math.random() * 100000000000).toString() + '.jpg',
+					{ type: 'image/jpeg' }
 				);
-				console.log("HIIIII", userEdit.profile_image_file)
-				console.log("HIIIII", userEdit.banner_image_file)
+				console.log('HIIIII', userEdit.profile_image_file);
+				console.log('HIIIII', userEdit.banner_image_file);
 				confirmAction();
 			}}>Confirm</Button
 		>

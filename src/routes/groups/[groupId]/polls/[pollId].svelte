@@ -21,17 +21,20 @@
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import type { groupUser } from '$lib/Group/interface';
 
 	let poll: poll,
-	votings: votings[],
-	selectedPage: 'You' | 'Delegate' = 'You',
-	abstained: proposal[],
-	DeletePollModalShow = false,
-	pollType = 1,
-	finished: boolean;
+		votings: votings[],
+		selectedPage: 'You' | 'Delegate' = 'You',
+		abstained: proposal[],
+		DeletePollModalShow = false,
+		pollType = 1,
+		finished: boolean,
+		groupUser: groupUser;
 
 	onMount(async () => {
 		getPollData();
+		getGroupUser();
 	});
 
 	const getPollData = async () => {
@@ -54,6 +57,19 @@
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
 		);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
+	};
+
+	//TODO: Replace this later with some kind of svelte stores or local storage data
+	const getGroupUser = async () => {
+		const { res, json } = await fetchRequest('GET', `user`);
+		const userId = json.id;
+		{
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/${$page.params.groupId}/users?user_id=${userId}`
+			);
+			if (res.ok) groupUser = json.results[0];
+		}
 	};
 </script>
 
@@ -119,20 +135,21 @@
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">
 					{$_('Are you sure you want to delete this poll?')}
-					{$_('This will only work if you are an admin')}
 				</div>
 				<div slot="footer">
 					<div class="flex justify-center gap-16">
-						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button
-						><Button action={() => (DeletePollModalShow = false)} Class="bg-gray-400 w-1/2"
-							>{$_('Cancel')}</Button
+						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+							action={() => (DeletePollModalShow = false)}
+							Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 						>
 					</div>
 				</div>
 			</Modal>
-			<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
-				>{$_('Delete poll')}</Button
-			>
+			{#if groupUser?.is_admin}
+				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
+					>{$_('Delete poll')}</Button
+				>
+			{/if}
 		</div>
 	</Layout>
 {/if}

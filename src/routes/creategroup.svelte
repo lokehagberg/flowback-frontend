@@ -109,6 +109,12 @@
 				<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
 				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 
+				<StatusMessage bind:status />
+				<Button type="submit" disabled={loading}
+					><div class="flex justify-center gap-3 items-center">
+						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Edit Group' : 'Create Group')}
+					</div>
+				</Button>
 				{#if groupToEdit !== null}
 					<Modal bind:open={DeleteGroupModalShow}>
 						<div slot="header">{$_('Deleting group')}</div>
@@ -126,13 +132,6 @@
 						>{$_('Delete Group')}</Button
 					>
 				{/if}
-
-				<StatusMessage bind:status />
-				<Button type="submit" disabled={loading}
-					><div class="flex justify-center gap-3 items-center">
-						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Edit Group' : 'Create Group')}
-					</div>
-				</Button>
 			</div>
 		</form>
 	</Loader>

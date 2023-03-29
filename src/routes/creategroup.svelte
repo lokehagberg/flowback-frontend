@@ -16,6 +16,8 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+	import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
 
 	let name: string,
 		description: string,
@@ -39,10 +41,8 @@
 		formData.append('description', description);
 		formData.append('direct_join', directJoin.toString());
 		formData.append('public', publicGroup.toString());
-		if (image)
-		formData.append('image', image);
-		if (coverImage)
-		formData.append('cover_image', coverImage);
+		if (image) formData.append('image', image);
+		if (coverImage) formData.append('cover_image', coverImage);
 
 		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
@@ -60,29 +60,27 @@
 
 			if (res.ok) window.location.href = `/groups/${json}`;
 			else status = statusMessageFormatter(res, json);
-		}
+		} else status = statusMessageFormatter(res, json);
 
 		loading = false;
 	};
 
 	const deleteGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${groupToEdit}/delete`);
-		
+
 		//Rederict to group
-		console.log(res);
 		if (res.ok) {
 			window.location.href = '/groups';
 		}
 	};
-	
+
 	const getGroupToEdit = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupToEdit}/detail`);
-		name = json.name
-		description = json.description
-		directJoin = json.direct_join
-		publicGroup = json.public
-
-	}
+		name = json.name;
+		description = json.description;
+		directJoin = json.direct_join;
+		publicGroup = json.public;
+	};
 
 	onMount(() => {
 		if (groupToEdit !== null) {
@@ -101,8 +99,9 @@
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />
-				<ImageUpload bind:image label="Upload Image, recomended ratio 1:1" />
+				<ImageUpload icon={faUser} bind:image label="Upload Image, recomended ratio 1:1" />
 				<ImageUpload
+					icon={faFileImage}
 					bind:image={coverImage}
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
@@ -123,7 +122,9 @@
 							</div>
 						</div>
 					</Modal>
-					<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button>
+					<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}
+						>{$_('Delete Group')}</Button
+					>
 				{/if}
 
 				<StatusMessage bind:status />

@@ -3,6 +3,10 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
+	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -41,10 +45,19 @@
 			{group.name}
 		</h1>
 	</div>
-	<p class="text-xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'members')}>
-		{memberCount}
-		{$_('members')}
-	</p>
+	<div class="flex items-center">
+		<p class="text-xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'members')}>
+			{memberCount}
+			{$_('members')}
+		</p>
+		{#if typeof window !== "undefined"}
+		{#if group.public}
+			<HeaderIcon icon={faGlobeEurope} text="Public" />
+		{:else}
+			<HeaderIcon icon={faLock} text="Private" />
+		{/if}
+		{/if}
+	</div>
 </div>
 
 <style>

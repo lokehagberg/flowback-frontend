@@ -50,6 +50,7 @@ export interface Group {
 	image: string;
 	joined: boolean;
 	name: string;
+	public:boolean;
 }
 
 export interface GroupDetails {

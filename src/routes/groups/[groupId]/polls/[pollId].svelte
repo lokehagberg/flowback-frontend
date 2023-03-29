@@ -22,6 +22,8 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { groupUser } from '$lib/Group/interface';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 
 	let poll: poll,
 		votings: votings[],
@@ -30,7 +32,8 @@
 		DeletePollModalShow = false,
 		pollType = 1,
 		finished: boolean,
-		groupUser: groupUser;
+		groupUser: groupUser,
+		deleteStatus: StatusMessageInfo;
 
 	onMount(async () => {
 		getPollData();
@@ -52,23 +55,26 @@
 	};
 
 	const deletePoll = async () => {
-		const { res } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
 		);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
+		else deleteStatus = statusMessageFormatter(res, json, "")
 	};
 
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
 		const { res, json } = await fetchRequest('GET', `user`);
-		const userId = json.id;
-		{
-			const { res, json } = await fetchRequest(
-				'GET',
-				`group/${$page.params.groupId}/users?user_id=${userId}`
-			);
-			if (res.ok) groupUser = json.results[0];
+		if (res.ok) {
+			const userId = json.id;
+			{
+				const { res, json } = await fetchRequest(
+					'GET',
+					`group/${$page.params.groupId}/users?user_id=${userId}`
+				);
+				if (res.ok) groupUser = json.results[0];
+			}
 		}
 	};
 </script>
@@ -129,7 +135,7 @@
 				]}
 			/>
 			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<Comments />
+				<!-- <Comments /> -->
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
@@ -146,7 +152,8 @@
 				</div>
 			</Modal>
 			{#if groupUser?.is_admin}
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
+				<StatusMessage bind:status={deleteStatus} />
+				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500"
 					>{$_('Delete poll')}</Button
 				>
 			{/if}

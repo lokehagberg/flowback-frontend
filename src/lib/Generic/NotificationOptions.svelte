@@ -37,10 +37,10 @@
 
 		
 
-		const {res, json} = await fetchRequest("GET", "notification/subscriptions")
-		{
-			const {res, json} = await fetchRequest("GET", "home/polls")
-		}
+		// const {res, json} = await fetchRequest("GET", "notification/subscriptions")
+		// {
+		// 	const {res, json} = await fetchRequest("GET", "home/polls")
+		// }
 	}
 
 	onMount(() => {

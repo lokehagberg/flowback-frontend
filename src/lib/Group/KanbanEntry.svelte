@@ -14,6 +14,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import type { GroupUser } from './interface';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -22,7 +23,7 @@
 
 	export let kanban: any,
 		type: 'group' | 'home',
-		users: any[],
+		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void;
 
 	// initializes the kanban to be edited when modal is opened
@@ -47,10 +48,10 @@
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
 
-		const assignee = users.find((user) => user.user_id === kanbanEdited.assignee);
+		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
 		kanban.assignee.id = kanbanEdited.assignee;
-		kanban.assignee.username = assignee.username;
-		kanban.assignee.profile_image = assignee.profile_image;
+		kanban.assignee.username = assignee?.user.username;
+		kanban.assignee.profile_image = assignee?.user.profile_image;
 
 		openModal = false;
 	};
@@ -151,7 +152,7 @@
 			/>
 			<select on:input={changeAssignee} value={kanban?.assignee?.id}>
 				{#each users as user}
-					<option value={user.user_id}>{user.username}</option>
+					<option value={user.user.id}>{user.user.username}</option>
 				{/each}
 			</select>
 		</div>

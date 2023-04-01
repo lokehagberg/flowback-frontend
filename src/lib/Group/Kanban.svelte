@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { kanban, User } from './interface';
+	import type { GroupUser, kanban, User } from './interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -17,7 +17,7 @@
 	let description = '',
 		title = '',
 		assignee = 0,
-		users: User[] = [],
+		users: GroupUser[] = [],
 		status: StatusMessageInfo;
 
 	export let type: 'home' | 'group',
@@ -70,13 +70,13 @@
 
 		if (!res.ok) return;
 
-		const userAssigned = users.find((user) => assignee === user.user_id);
+		const userAssigned = users.find((user) => assignee === user.user.id);
 		if (userAssigned)
 			kanbanEntries.push({
 				assignee: {
 					id: assignee,
-					profile_image: userAssigned.profile_image || '',
-					username: userAssigned.username
+					profile_image: userAssigned.user.profile_image || '',
+					username: userAssigned.user.username
 				},
 				group: { id: 0, image: '', name: '' },
 				description,
@@ -129,7 +129,7 @@
 				<div class="flex gap-6 justify-between mt-2">
 					<select on:input={handleChangeAssignee} class="border border-gray-600">
 						{#each users as user}
-							<option value={user.user_id}>{user.username}</option>
+							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
 					</select>
 					<Button type="submit">{$_('Create task')}</Button>

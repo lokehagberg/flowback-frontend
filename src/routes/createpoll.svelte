@@ -94,7 +94,7 @@
 			description,
 			start_date,
 			delegate_vote_end_date,
-			prediction_end_date: delegate_vote_end_date,
+			vote_start_date: delegate_vote_end_date,
 			proposal_end_date,
 			end_date,
 			poll_type: selected_poll === 'Ranking' ? 1 : 3,

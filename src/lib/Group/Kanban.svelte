@@ -31,7 +31,7 @@
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/list`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -58,7 +58,7 @@
 	const createKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/create`,
+			`group/${$page.params.groupId}/kanban/entry/create`,
 			{
 				assignee,
 				description,
@@ -99,7 +99,7 @@
 
 <div class={'bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex overflow-x-auto">
-		<StatusMessage bind:status disableSuccess/>
+		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->

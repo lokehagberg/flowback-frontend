@@ -57,7 +57,7 @@
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
+			`group/poll/${$page.params.pollId}/delete`
 		);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
 		else deleteStatus = statusMessageFormatter(res, json, "")

@@ -16,7 +16,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
+			`group/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
 		if (pollType === 1) proposals = json.results;

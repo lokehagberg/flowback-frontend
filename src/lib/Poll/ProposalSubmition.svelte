@@ -23,7 +23,7 @@
 		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/create`,
+			`group/poll/${$page.params.pollId}/proposal/create`,
 			{
 				title,
 				description

@@ -3,7 +3,6 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';

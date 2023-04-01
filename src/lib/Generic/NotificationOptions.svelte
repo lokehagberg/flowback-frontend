@@ -33,16 +33,28 @@
 		await fetchRequest('POST', api, { categories:[category] });
 	};
 
+	const getAlreadySubscribedCategories = async () => {
+
+		
+
+		const {res, json} = await fetchRequest("GET", "notification/subscriptions")
+		{
+			const {res, json} = await fetchRequest("GET", "home/polls")
+		}
+	}
+
 	onMount(() => {
 		closeWindowWhenClickingOutside();
 		getNontifications();
 	});
 
-
 </script>
 
 <div class="notifications-clickable-region">
-	<div on:click={() => (notificationOpen = !notificationOpen)}>
+	<div on:click={() => {
+		notificationOpen = !notificationOpen
+		getAlreadySubscribedCategories();
+	}}>
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
 	</div>
 

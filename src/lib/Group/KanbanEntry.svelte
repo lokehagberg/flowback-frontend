@@ -27,7 +27,7 @@
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
-		entry_id:kanban.id,
+		entry_id: kanban.id,
 		id: kanban.id,
 		description: kanban.description,
 		title: kanban.title,
@@ -35,7 +35,7 @@
 	};
 
 	const updateKanbanContent = async () => {
-		kanbanEdited.entry_id = kanban.id
+		kanbanEdited.entry_id = kanban.id;
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/kanban/entry/update`,
@@ -56,13 +56,12 @@
 	};
 
 	const updateKanbanTag = async (kanban: any) => {
-		
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/kanban/entry/update`,
 			{
-				tag:kanban.tag,
-				entry_id:kanban.id
+				tag: kanban.tag,
+				entry_id: kanban.id
 			}
 		);
 		status = statusMessageFormatter(res, json);
@@ -78,7 +77,8 @@
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/${kanban.id}/delete`
+			`group/${$page.params.groupId}/kanban/entry/delete`,
+			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
 		removeKanbanEntry(kanban.id);

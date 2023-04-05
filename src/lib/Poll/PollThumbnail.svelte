@@ -50,7 +50,12 @@
 		>
 			<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
 		</a>
-		<NotificationOptions api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}/>
+		<NotificationOptions
+			id={poll.id}
+			api={`group/poll/${poll.id}`}
+			categories={['poll', 'timeline']}
+			labels={['Poll', 'Timeline']}
+		/>
 	</div>
 	<div class="flex items-center justify-between mt-1">
 		<Tag tag={poll.tag_name} Class="inline cursor-default" />

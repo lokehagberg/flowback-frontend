@@ -34,6 +34,7 @@
 	<div class="flex items-center relative" id="notifications-list-group">
 		<NotificationOptions
 			api={`group/${$page.params.groupId}`}
+			id = {Number($page.params.groupId)}
 			categories={groupNotificationCategories}
 			labels={groupNotificationCategories}
 		/>

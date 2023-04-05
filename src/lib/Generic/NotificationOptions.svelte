@@ -9,7 +9,8 @@
 	export let notificationOpen = false,
 		categories: string[],
 		labels: string[],
-		api: string;
+		api: string,
+		id:number;
 
 	interface NotificationObject {
 		channel_category: string;
@@ -38,7 +39,7 @@
 		const { res, json } = await fetchRequest('GET', 'notification/subscription');
 		notifications = json.results.filter(
 			(notificationObject: any) =>
-				notificationObject.channel_sender_id === Number($page.params.groupId)
+				notificationObject.channel_sender_id === id
 		);
 	};
 
@@ -49,14 +50,14 @@
 		if (res.ok)
 			notifications.push({
 				channel_category: category,
-				channel_sender_id: Number($page.params.groupId),
+				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
 	};
 	const handleNotificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `${api}/unsubscribe`, {
 			channel_sender_type: 'group',
-			channel_sender_id: Number($page.params.groupId),
+			channel_sender_id: id,
 			channel_category: category
 		});
 		if (res.ok)

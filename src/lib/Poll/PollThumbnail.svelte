@@ -36,7 +36,7 @@
 	const handleNotificationSubscription = async (categories: notificationCategory[]) => {
 		notificationOpen = !notificationOpen;
 		// const {res, json} = await fetchRequest('POST', `group/${poll.group_id}/poll/${poll.id}/unsubscribe`)
-		await fetchRequest('POST', `group/${poll.group_id}/poll/${poll.id}/subscribe`, { categories });
+		await fetchRequest('POST', `group/poll/${poll.id}/subscribe`, { categories });
 	};
 </script>
 
@@ -50,7 +50,7 @@
 		>
 			<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
 		</a>
-		<NotificationOptions api={`group/${poll.group_id}/poll/${poll.id}/subscribe`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}/>
+		<NotificationOptions api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}/>
 	</div>
 	<div class="flex items-center justify-between mt-1">
 		<Tag tag={poll.tag_name} Class="inline cursor-default" />

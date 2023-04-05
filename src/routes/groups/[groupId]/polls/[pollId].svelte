@@ -66,7 +66,7 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<NotificationOptions api={`group/${poll.group_id}/poll/${poll.id}/subscribe`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
+			<NotificationOptions api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />

@@ -4,20 +4,30 @@
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+	import { page } from '$app/stores';
 
 	export let notificationOpen = false,
 		categories: string[],
 		labels: string[],
 		api: string;
 
-    let categoriesData:string[] = []
+	interface NotificationObject {
+		channel_category: string;
+		channel_sender_id: number;
+		channel_sender_type: string;
+	}
+
+	let categoriesData: string[] = [],
+		notifications: NotificationObject[] = [];
 
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
 			if (
 				notificationOpen &&
 				//@ts-ignore
-				! [... document.getElementsByClassName(`notifications-clickable-region`)]?.find(element => element.contains(e.target) ) 
+				![...document.getElementsByClassName(`notifications-clickable-region`)]?.find((element) =>
+					element.contains(e.target)
+				)
 			) {
 				notificationOpen = false;
 			}
@@ -25,43 +35,66 @@
 	};
 
 	const getNontifications = async () => {
-		await fetchRequest('GET', 'notification/subscription')
-	}
-
-	const handleNotificationSubscription = async (category:string) => {
-		// await fetchRequest('POST', `group/${$page.params.groupId}/unsubscribe`);
-		await fetchRequest('POST', api, { categories:[category] });
+		const { res, json } = await fetchRequest('GET', 'notification/subscription');
+		notifications = json.results.filter(
+			(notificationObject: any) =>
+				notificationObject.channel_sender_id === Number($page.params.groupId)
+		);
 	};
 
-	const getAlreadySubscribedCategories = async () => {
-
-		
-
-		// const {res, json} = await fetchRequest("GET", "notification/subscriptions")
-		// {
-		// 	const {res, json} = await fetchRequest("GET", "home/polls")
-		// }
-	}
+	const handleNotificationSubscription = async (category: string) => {
+		const { res, json } = await fetchRequest('POST', `${api}/subscribe`, {
+			categories: [category]
+		});
+		if (res.ok)
+			notifications.push({
+				channel_category: category,
+				channel_sender_id: Number($page.params.groupId),
+				channel_sender_type: 'group'
+			});
+	};
+	const handleNotificationUnsubscription = async (category: string) => {
+		const { res, json } = await fetchRequest('POST', `${api}/unsubscribe`, {
+			channel_sender_type: 'group',
+			channel_sender_id: Number($page.params.groupId),
+			channel_category: category
+		});
+		if (res.ok)
+			notifications = notifications.filter((object) => object.channel_category !== category);
+	};
 
 	onMount(() => {
 		closeWindowWhenClickingOutside();
-		getNontifications();
 	});
 
+	$: if (notificationOpen && notifications.length === 0) getNontifications();
+
+	$: console.log(notifications);
 </script>
 
 <div class="notifications-clickable-region">
-	<div on:click={() => {
-		notificationOpen = !notificationOpen
-		getAlreadySubscribedCategories();
-	}}>
+	<div
+		on:click={() => {
+			notificationOpen = !notificationOpen;
+		}}
+	>
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
 	</div>
 
 	{#if notificationOpen}
 		<ul class="z-50 absolute top-12 bg-white shadow-xl text-sm">
 			{#each categories as category, i}
-				<li class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all" class:bg-gray-200={categoriesData?.find((cat) => cat === category)} on:click={() => handleNotificationSubscription(category)}>
+				<li
+					class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"
+					class:bg-gray-200={notifications?.find(
+						(notificationObject) => notificationObject.channel_category === category
+					)}
+					on:click={() => {
+						if (notifications.find((object) => object.channel_category === category))
+							handleNotificationUnsubscription(category);
+						else handleNotificationSubscription(category);
+					}}
+				>
 					{$_(labels[i])}
 				</li>
 			{/each}

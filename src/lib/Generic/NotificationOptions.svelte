@@ -83,7 +83,7 @@
 	</div>
 
 	{#if notificationOpen}
-		<ul class="z-50 absolute top-12 bg-white shadow-xl text-sm">
+		<ul class="z-50 absolute mt-2 bg-white shadow-xl text-sm">
 			{#each categories as category, i}
 				<li
 					class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"

@@ -11,6 +11,7 @@
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
 		notifications = json.results;
+		console.log(notifications, "NOTIS ME")
 	};
 
 	const closeWindowWhenClickingOutside = () => {

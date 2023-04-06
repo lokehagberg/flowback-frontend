@@ -187,7 +187,7 @@
 						max={maxDatePickerYear}
 					/> -->
 								<div>
-									<h2 class="mt-4">{$_('Delegate vote date')}</h2>
+									<h2 class="mt-4">{$_('Delegate end date')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection

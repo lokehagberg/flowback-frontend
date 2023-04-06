@@ -14,6 +14,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import type { GroupUser } from './interface';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -22,23 +23,25 @@
 
 	export let kanban: any,
 		type: 'group' | 'home',
-		users: any[],
+		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void;
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
+		entry_id: kanban.id,
 		id: kanban.id,
 		description: kanban.description,
 		title: kanban.title,
-		assignee: kanban.assignee.id
+		assignee: kanban.assignee?.id
 	};
 
 	console.log(kanban)
 
 	const updateKanbanContent = async () => {
+		kanbanEdited.entry_id = kanban.id;
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
+			`group/${$page.params.groupId}/kanban/entry/update`,
 			kanbanEdited
 		);
 		status = statusMessageFormatter(res, json);
@@ -46,14 +49,23 @@
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
+
+		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
+		kanban.assignee.id = kanbanEdited.assignee;
+		kanban.assignee.username = assignee?.user.username;
+		kanban.assignee.profile_image = assignee?.user.profile_image;
+
 		openModal = false;
 	};
 
 	const updateKanbanTag = async (kanban: any) => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/${kanban.id}/update`,
-			kanban
+			`group/${$page.params.groupId}/kanban/entry/update`,
+			{
+				tag: kanban.tag,
+				entry_id: kanban.id
+			}
 		);
 		status = statusMessageFormatter(res, json);
 		kanban.tag = kanban.tag;
@@ -68,7 +80,8 @@
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/${kanban.id}/delete`
+			`group/${$page.params.groupId}/kanban/entry/delete`,
+			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
 		removeKanbanEntry(kanban.id);
@@ -83,17 +96,17 @@
 		}}
 		class="cursor-pointer hover:underline"
 	>
-		<div class="p-0.5">{kanban.title}</div>
+		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
 	<div
-		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
+		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
 				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} Class="" />
 		<div class="break-all text-xs">
-			{type === 'group' ? kanban.assignee.username : kanban.group.name}
+			{type === 'group' ? kanban.assignee?.username : kanban.group?.name}
 		</div>
 	</div>
 	<!-- Arrows -->
@@ -126,21 +139,27 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal}>
-		<TextInput slot="header" bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+	<Modal bind:open={openModal} Class="z-50">
+		<div slot="header" class="mt-7">
+			<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+		</div>
 		<div slot="body">
 			<StatusMessage bind:status disableSuccess />
-			<TextArea bind:value={kanbanEdited.description} label="" Class="" inputClass="border-none"/>
-			<select on:input={changeAssignee} bind:value={kanban.assignee.id}>
+			<TextArea
+				bind:value={kanbanEdited.description}
+				label=""
+				Class="h-full"
+				inputClass="border-none"
+			/>
+			<select on:input={changeAssignee} value={kanban?.assignee?.id}>
 				{#each users as user}
-					<option value={user.user_id}>{user.username}</option>
+					<option value={user.user.id}>{user.user.username}</option>
 				{/each}
 			</select>
 		</div>
 		<div slot="footer">
-			<Button action={updateKanbanContent}>{$_("Update")}</Button>
-			<Button action={deleteKanbanEntry} Class="bg-red-500">{$_("Delete")}</Button>
+			<Button action={updateKanbanContent}>{$_('Update')}</Button>
+			<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
 		</div>
 	</Modal>
 {/if}
-

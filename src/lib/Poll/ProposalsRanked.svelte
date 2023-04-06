@@ -35,7 +35,6 @@
 	let status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
-	$: console.log(abstained, 'ABSTAIN');
 
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
@@ -49,13 +48,12 @@
 		if (selectedPage === 'You') await getVotings();
 		else if (selectedPage === 'Delegate') await getDelegateVotings();
 		setOrdering();
-		console.log(ranked, 'PRANKEDS');
 	};
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
+			`group/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
 		//Ranked
@@ -120,8 +118,6 @@
 		});
 	};
 
-	$: console.log(ranked, "CHANGE CRANKED")
-
 	/*
 		Every voting has a priority, larger number means higher up in the ranking.
 		We find whether or not a proposal has been ranked, and then put it in the right slot
@@ -178,6 +174,7 @@
 	};
 
 	const doubleClick = (proposal: proposal, container: string) => {
+		if (new Date(votingStartTime) > new Date()) return;
 		unsaved = true;
 
 		if (container === 'abstained') addToRanked(proposal);
@@ -196,7 +193,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
+			`group/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
 				votes
 			}
@@ -214,7 +211,7 @@
 		if (isDelegate)
 			await fetchRequest(
 				'POST',
-				`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
+				`group/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
 				{
 					votes
 				}
@@ -226,7 +223,7 @@
 	const getVotings = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?limit=100`
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=100`
 		);
 		votings = json.results;
 	};
@@ -245,7 +242,7 @@
 		const delegateId = await getDelegateId();
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=True`
+			`group/poll/${$page.params.pollId}/proposal/votes?delegates=True`
 		);
 
 		votings = json.results;

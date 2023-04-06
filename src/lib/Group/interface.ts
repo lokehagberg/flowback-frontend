@@ -19,6 +19,16 @@ export interface User {
 	user_id: number;
 }
 
+export interface GroupUser {
+	group_image: string;
+	group_name: string;
+	id: number;
+	is_admin: boolean;
+	permission_id: number | null;
+	permission_name: string;
+	user: { banner_image: string; id: number; profile_image: string; username: string };
+}
+
 export interface DelegatePools {
 	data: [
 		{

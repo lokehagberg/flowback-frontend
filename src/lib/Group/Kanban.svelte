@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { kanban, User } from './interface';
+	import type { GroupUser, kanban, User } from './interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -17,7 +17,7 @@
 	let description = '',
 		title = '',
 		assignee = 0,
-		users: User[] = [],
+		users: GroupUser[] = [],
 		status: StatusMessageInfo;
 
 	export let type: 'home' | 'group',
@@ -31,7 +31,7 @@
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/list`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -58,7 +58,7 @@
 	const createKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/create`,
+			`group/${$page.params.groupId}/kanban/entry/create`,
 			{
 				assignee,
 				description,
@@ -70,13 +70,13 @@
 
 		if (!res.ok) return;
 
-		const userAssigned = users.find((user) => assignee === user.user_id);
+		const userAssigned = users.find((user) => assignee === user.user.id);
 		if (userAssigned)
 			kanbanEntries.push({
 				assignee: {
 					id: assignee,
-					profile_image: userAssigned.profile_image || '',
-					username: userAssigned.username
+					profile_image: userAssigned.user.profile_image || '',
+					username: userAssigned.user.username
 				},
 				group: { id: 0, image: '', name: '' },
 				description,
@@ -99,13 +99,13 @@
 
 <div class={'bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex overflow-x-auto">
-		<StatusMessage bind:status disableSuccess/>
+		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
 			{#if i !== 0}
-				<div class="inline-block min-w-[200px] p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
+				<div class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2">
@@ -129,7 +129,7 @@
 				<div class="flex gap-6 justify-between mt-2">
 					<select on:input={handleChangeAssignee} class="border border-gray-600">
 						{#each users as user}
-							<option value={user.user_id}>{user.username}</option>
+							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
 					</select>
 					<Button type="submit">{$_('Create task')}</Button>

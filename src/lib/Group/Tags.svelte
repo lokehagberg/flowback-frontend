@@ -65,7 +65,7 @@
 	<Loader bind:loading>
 		<form on:submit|preventDefault={addTag} class="p-3">
 			<TextInput label="Add tag" bind:value={tagToAdd} />
-			<Button disabled={loading} type="submit" Class="mt-2" label="Lägg till Tagg" />
+			<Button disabled={loading} type="submit" Class="mt-2" label="Add tag" />
 		</form>
 		<div class="flex flex-wrap mt-2">
 			{#each tags as tag}
@@ -82,7 +82,7 @@
 						>
 						<Modal bind:open={areYouSureModal}>
 							<div slot="header">{$_('Are you sure?')}</div>
-							<div slot="body">{$_('Removing a tagg removes all polls with that tag!')}</div>
+							<div slot="body">{$_('Removing a tag removes all polls with that tag!')}</div>
 							<div slot="footer">
 								<Button
 									action={() => {

@@ -20,17 +20,19 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		status = statusMessageFormatter(res, json, 'Successfully logged in');
-		console.log(status, 'STATS');
-		if (json.token) {
+		if (json?.token) {
+			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
 			{
 				const { json } = await fetchRequest('GET', 'user');
 				localStorage.setItem('userId', json.id);
 				localStorage.setItem('userName', json.username);
 			}
-
+			
 			window.location.href = '/home';
+		}
+		else {
+			status = statusMessageFormatter(res, json, 'Problems');
 		}
 	};
 </script>

@@ -16,7 +16,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
+			`group/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
 		if (pollType === 1) proposals = json.results;
@@ -40,6 +40,7 @@
 </script>
 
 <div class="border border-gray- p-4 rounded">
+	<h1 class="text-4xl mb-6">{$_("Results")}</h1>
 	{#if pollType === 1}
 		<Statistics bind:votes bind:labels />
 	{/if}

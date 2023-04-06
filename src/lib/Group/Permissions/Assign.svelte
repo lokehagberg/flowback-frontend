@@ -48,7 +48,7 @@
 				<div class="flex">
 					<ProfilePicture {user} displayName />
 				</div>
-				<div class="flex gap-2 flex-wrap mt-4">
+				<div class="ml-6 flex gap-2 flex-wrap mt-4">
 					<Tag tag={user.permission_name} />
 				</div>
 				<div

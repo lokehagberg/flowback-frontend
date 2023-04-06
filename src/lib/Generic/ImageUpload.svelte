@@ -1,8 +1,10 @@
 <script lang="ts">
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	export let image: File | null = null,
 		label: string,
-		isCover = false;
+		isCover = false,
+		icon:any;
 	let fileinput: HTMLInputElement;
 
 	const onFileSelected = (e: any) => {
@@ -25,14 +27,15 @@
 	{#if image}
 		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} />
 	{:else}
-		<img
+		<!-- <img
 			class="avatar"
 			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
 			alt=""
-		/>
+		/> -->
+		<Fa icon={icon} size={'5x'} class="mt-6"/>
 	{/if}
 	<img
-		class="upload"
+		class="upload mt-4"
 		src="https://static.thenounproject.com/png/625182-200.png"
 		alt=""
 		on:click={() => {

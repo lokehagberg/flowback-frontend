@@ -10,7 +10,8 @@
 		autofocus = false,
 		max = 2000,
 		onKeyPress = (e:any) => {},
-		inputClass = "";
+		inputClass = "",
+		rows = 2;
 
 	const expandTextArea = (e: any) => {
 		value = e.target.value;
@@ -44,6 +45,7 @@
 <label class={`${Class}`}
 	><p class="text-sm mb-1">{$_(label)}</p>
 	<textarea
+		rows = {rows}
 		on:blur={onBlur}
 		id="textarea"
 		{required}

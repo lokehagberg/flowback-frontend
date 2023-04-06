@@ -43,9 +43,9 @@
 	</div>
 	<div>
 		<select on:input={handleFinishedSelection}>
-			<option value="all">Alla</option>
-			<option value="unfinished">Igång</option>
-			<option value="finished">Färdiga</option>
+			<option value="all">{$_("All")}</option>
+			<option value="unfinished">{$_("Ongoing")}</option>
+			<option value="finished">{$_("Done")}</option>
 		</select>
 		<!-- <CheckboxButtons
 			label={''}

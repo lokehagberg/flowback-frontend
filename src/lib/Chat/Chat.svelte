@@ -127,9 +127,9 @@
 	></svelte:head
 >
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
-	<div class="col-start-2 col-end-3 flex justify-between bg-white border border-gray-300 p-2 ">
-		<div class="text-xl font-light text-gray-500">{$_('Chat')}</div>
-		<div class="cursor-pointer" on:click={() => (chatOpen = false)}>
+	<div class="col-start-2 col-end-3 flex justify-between bg-white p-2 ">
+		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
+		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
 			<CrossButton  />
 		</div>
 	</div>

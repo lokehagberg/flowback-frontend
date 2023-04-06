@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import type { SelectablePages, User } from './interface';
+	import type { GroupUser, SelectablePages, User } from './interface';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
@@ -13,7 +13,7 @@
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
-	let users: User[] = [];
+	let users: GroupUser[] = [];
 	let loading = true;
 	let selectedPage: SelectablePages = 'Members';
 	let searchUser = '';
@@ -31,6 +31,7 @@
 	});
 
 	const searchUsers = async (username: string) => {
+		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
 		// if (username === '') {
 		// 	searchedUsers = [];
@@ -77,10 +78,10 @@
 				{#each users as user}
 					<a
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
-						href={`/user?id=${user.user_id}`}
+						href={`/user?id=${user.user.id}`}
 					>
 						<ProfilePicture user={user}/>
-						<div class="w-64 ml-10 hover:underline">{user.username}</div>
+						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
 			</div>
@@ -91,7 +92,7 @@
 					href={`/user?id=${user.id}`}
 				>
 					<ProfilePicture user={user}/>
-					<div class="w-64 ml-10 hover">{user.username}</div>
+					<div class="w-64 ml-10 hover">{user.user.username}</div>
 					<div class="w-64 ml-10 hover:underline">{$_('ACCEPT')}</div>
 				</a>
 			{/each}

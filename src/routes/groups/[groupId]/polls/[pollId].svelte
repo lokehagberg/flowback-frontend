@@ -21,20 +21,24 @@
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import type { groupUser } from '$lib/Group/interface';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 
-	let poll: poll;
-	let votings: votings[];
-	let selectedPage: 'You' | 'Delegate' = 'You';
-	let abstained: proposal[];
-	let DeletePollModalShow = false;
-	let pollType = 1;
-	let finished: boolean;
-
-	$: console.log(abstained, 'ABS');
+	let poll: poll,
+		votings: votings[],
+		selectedPage: 'You' | 'Delegate' = 'You',
+		abstained: proposal[],
+		DeletePollModalShow = false,
+		pollType = 1,
+		finished: boolean,
+		groupUser: groupUser,
+		deleteStatus: StatusMessageInfo;
 
 	onMount(async () => {
 		getPollData();
+		getGroupUser();
 	});
 
 	const getPollData = async () => {
@@ -52,11 +56,27 @@
 	};
 
 	const deletePoll = async () => {
-		const { res } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
+			`group/poll/${$page.params.pollId}/delete`
 		);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
+		else deleteStatus = statusMessageFormatter(res, json, "")
+	};
+
+	//TODO: Replace this later with some kind of svelte stores or local storage data
+	const getGroupUser = async () => {
+		const { res, json } = await fetchRequest('GET', `user`);
+		if (res.ok) {
+			const userId = json.id;
+			{
+				const { res, json } = await fetchRequest(
+					'GET',
+					`group/${$page.params.groupId}/users?user_id=${userId}`
+				);
+				if (res.ok) groupUser = json.results[0];
+			}
+		}
 	};
 </script>
 
@@ -66,7 +86,7 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<NotificationOptions api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
+			<NotificationOptions id={poll.id} api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
@@ -117,26 +137,28 @@
 				]}
 			/>
 			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<Comments />
+				<!-- <Comments /> -->
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">
 					{$_('Are you sure you want to delete this poll?')}
-					{$_('This will only work if you are an admin')}
 				</div>
 				<div slot="footer">
 					<div class="flex justify-center gap-16">
-						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button
-						><Button action={() => (DeletePollModalShow = false)} Class="bg-gray-400 w-1/2"
-							>{$_('Cancel')}</Button
+						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+							action={() => (DeletePollModalShow = false)}
+							Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 						>
 					</div>
 				</div>
 			</Modal>
-			<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 mt-6"
-				>{$_('Delete poll')}</Button
-			>
+			{#if groupUser?.is_admin}
+				<StatusMessage bind:status={deleteStatus} />
+				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500"
+					>{$_('Delete poll')}</Button
+				>
+			{/if}
 		</div>
 	</Layout>
 {/if}

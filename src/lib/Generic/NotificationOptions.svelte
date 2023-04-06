@@ -52,7 +52,7 @@
 				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
-			notifications = notifications
+		notifications = notifications;
 	};
 	const handleNotificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
@@ -84,10 +84,11 @@
 
 	{#if notificationOpen}
 		<ul class="z-50 absolute mt-2 bg-white shadow-xl text-sm">
+			<!-- <div class="p-3">Subscriptions</div> -->
 			{#each categories as category, i}
 				<li
-					class="p-2 px-5 flex items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"
-					class:bg-gray-200={notifications?.find(
+					class="bg-gray-200 p-2 px-5 flex justify-between items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"
+					class:!bg-white={notifications?.find(
 						(notificationObject) => notificationObject.channel_category === category
 					)}
 					on:click={() => {
@@ -97,6 +98,9 @@
 					}}
 				>
 					{$_(labels[i])}
+					<Fa class="" color={notifications?.find(
+						(notificationObject) => notificationObject.channel_category === category
+					) ? "black" : "white"} swapOpacity icon={faBell} size={'1.4x'} />
 				</li>
 			{/each}
 		</ul>

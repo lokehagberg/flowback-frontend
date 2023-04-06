@@ -8,7 +8,8 @@
 	import TimeAgo from 'javascript-time-ago';
 
 	let notifications: notification[],
-		hovered: number[] = [];
+		hovered: number[] = [],
+		numberOfNotifications = '5';
 
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
@@ -32,11 +33,11 @@
 		await fetchRequest('POST', 'notification/read', { notification_ids: [id], read: true });
 	};
 
-	let timeAgo:TimeAgo;
+	let timeAgo: TimeAgo;
 	onMount(async () => {
-		const en = ((await import('javascript-time-ago/locale/en')).default);
+		const en = (await import('javascript-time-ago/locale/en')).default;
 		TimeAgo.addDefaultLocale(en);
-		timeAgo = new TimeAgo('en-US');
+		timeAgo = new TimeAgo('en');
 
 		getNotifications();
 		closeWindowWhenClickingOutside();
@@ -45,7 +46,12 @@
 	let notificationsOpen = false;
 </script>
 
-<div id="notifications-list" on:click={() => (notificationsOpen = !notificationsOpen)}>
+<div
+	id="notifications-list"
+	class="small-notification relative"
+	style="--numberOfNotifications:{numberOfNotifications};"
+	on:click={() => (notificationsOpen = !notificationsOpen)}
+>
 	<Fa icon={faBell} size={'1.4x'} />
 </div>
 
@@ -65,6 +71,9 @@
 						hovered.push(notification.id);
 						hovered = hovered;
 						readNotification(notification.id);
+					}}
+					on:click={() => {
+						window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`
 					}}
 				>
 					{$_(notification.message)}
@@ -92,5 +101,22 @@
 	.slide-animation {
 		animation-name: slide-animation;
 		animation-duration: 300ms;
+	}
+
+	.small-notification:before {
+		position: absolute;
+		/* TODO: Fix */
+		content: var(--numberOfNotifications);
+		font-size: 10px;
+		font-weight: bold;
+		top: -5px;
+		right: -5px;
+		background-color: rgb(167, 139, 250);
+		border-radius: 100%;
+		/* padding-left:10px; */
+		/* padding-right:1px; */
+
+		/* padding: 7px; */
+		z-index: 10;
 	}
 </style>

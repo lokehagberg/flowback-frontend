@@ -2,6 +2,15 @@
 	import { _ } from 'svelte-i18n';
 
 	export let show = false;
+
+	const successPoppupAnimation = () => {
+		show = true;
+		setTimeout(() => {
+			show = false;
+		}, 1000);
+	};
+
+	$: show && successPoppupAnimation();
 </script>
 
 <div class="fixed bottom-5 right-5 z-50">

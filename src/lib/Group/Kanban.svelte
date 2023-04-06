@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	let kanbanEntries: kanban[] = [];
@@ -18,7 +19,8 @@
 		title = '',
 		assignee = 0,
 		users: GroupUser[] = [],
-		status: StatusMessageInfo;
+		status: StatusMessageInfo,
+		showSuccessPoppup = false;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -70,13 +72,14 @@
 
 		if (!res.ok) return;
 
+		console.log(users, assignee)
 		const userAssigned = users.find((user) => assignee === user.user.id);
-		if (userAssigned)
+		// if (userAssigned)
 			kanbanEntries.push({
 				assignee: {
 					id: assignee,
-					profile_image: userAssigned.user.profile_image || '',
-					username: userAssigned.user.username
+					profile_image: userAssigned?.user.profile_image || '',
+					username: userAssigned?.user.username || "unasigned"
 				},
 				group: { id: 0, image: '', name: '' },
 				description,
@@ -90,12 +93,16 @@
 
 		description = '';
 		title = '';
+
+		showSuccessPoppup = true;
 	};
 
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 </script>
+
+<SuccessPoppup bind:show={showSuccessPoppup}/>
 
 <div class={'bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex overflow-x-auto">

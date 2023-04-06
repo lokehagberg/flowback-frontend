@@ -15,11 +15,13 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser } from './interface';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
 		selectedEntry: number,
-		status: StatusMessageInfo;
+		status: StatusMessageInfo,
+		showSuccessPoppup = false;
 
 	export let kanban: any,
 		type: 'group' | 'home',
@@ -35,8 +37,6 @@
 		assignee: kanban.assignee?.id
 	};
 
-	console.log(kanban)
-
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
 		const { res, json } = await fetchRequest(
@@ -51,11 +51,15 @@
 		kanban.description = kanbanEdited.description;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
-		kanban.assignee.id = kanbanEdited.assignee;
-		kanban.assignee.username = assignee?.user.username;
-		kanban.assignee.profile_image = assignee?.user.profile_image;
+		console.log(kanban, 'KANBAN');
+		kanban.assignee = {
+			id: kanbanEdited?.assignee,
+			username: assignee?.user.username,
+			profile_image: assignee?.user.profile_image
+		};
 
 		openModal = false;
+		showSuccessPoppup = true;
 	};
 
 	const updateKanbanTag = async (kanban: any) => {
@@ -68,7 +72,10 @@
 			}
 		);
 		status = statusMessageFormatter(res, json);
-		kanban.tag = kanban.tag;
+		if (res.ok) {
+			kanban.tag = kanban.tag;
+			showSuccessPoppup = true;
+		}
 	};
 
 	const changeAssignee = (e: any) => {
@@ -84,9 +91,14 @@
 			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
-		removeKanbanEntry(kanban.id);
+		if (res.ok) {
+			removeKanbanEntry(kanban.id);
+			showSuccessPoppup = true;
+		}
 	};
 </script>
+
+<SuccessPoppup bind:show={showSuccessPoppup} />
 
 <li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
 	<div

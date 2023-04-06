@@ -5,13 +5,15 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import type { notification } from './Notification';
+	import TimeAgo from 'javascript-time-ago';
 
-	let notifications: notification[], hovered:number[] = [];
+	let notifications: notification[],
+		hovered: number[] = [];
 
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
 		notifications = json.results;
-		console.log(notifications, "NOTIS ME")
+		console.log(notifications, 'NOTIS ME');
 	};
 
 	const closeWindowWhenClickingOutside = () => {
@@ -30,7 +32,12 @@
 		await fetchRequest('POST', 'notification/read', { notification_ids: [id], read: true });
 	};
 
-	onMount(() => {
+	let timeAgo:TimeAgo;
+	onMount(async () => {
+		const en = ((await import('javascript-time-ago/locale/en')).default);
+		TimeAgo.addDefaultLocale(en);
+		timeAgo = new TimeAgo('en-US');
+
 		getNotifications();
 		closeWindowWhenClickingOutside();
 	});
@@ -47,24 +54,27 @@
 		class="absolute right-0 top-full bg-white select-none shadow slide-animation"
 		id="notifications-list"
 	>
-	{#if notifications?.length > 0}
-		{#each notifications as notification}
-			<!-- on:click={notification.action} -->
-			<div
-				class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
-				class:bg-gray-200={hovered.find(hover => hover === notification.id)}
-				on:focus={() => {}}
-				on:mouseover={() => {
-					hovered.push(notification.id)
-					hovered = hovered
-					readNotification(notification.id)}
-					}
-			>
-				{$_(notification.message)}
-			</div>
-		{/each}
+		{#if notifications?.length > 0}
+			{#each notifications as notification}
+				<!-- on:click={notification.action} -->
+				<div
+					class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
+					on:focus={() => {}}
+					on:mouseover={() => {
+						hovered.push(notification.id);
+						hovered = hovered;
+						readNotification(notification.id);
+					}}
+				>
+					{$_(notification.message)}
+					{timeAgo.format(new Date(notification.timestamp))}
+				</div>
+			{/each}
 		{:else}
-		<div class="pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border cursor-default">{$_("No notifications")}</div>
+			<div class="pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border cursor-default">
+				{$_('No notifications')}
+			</div>
 		{/if}
 	</div>
 {/if}

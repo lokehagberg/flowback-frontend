@@ -46,7 +46,7 @@
 		class="absolute right-0 top-full bg-white select-none shadow slide-animation"
 		id="notifications-list"
 	>
-	{#if notifications.length > 0}
+	{#if notifications?.length > 0}
 		{#each notifications as notification}
 			<!-- on:click={notification.action} -->
 			<div

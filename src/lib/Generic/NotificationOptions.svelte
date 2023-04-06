@@ -10,7 +10,7 @@
 		categories: string[],
 		labels: string[],
 		api: string,
-		id:number;
+		id: number;
 
 	interface NotificationObject {
 		channel_category: string;
@@ -38,8 +38,7 @@
 	const getNontifications = async () => {
 		const { res, json } = await fetchRequest('GET', 'notification/subscription');
 		notifications = json.results.filter(
-			(notificationObject: any) =>
-				notificationObject.channel_sender_id === id
+			(notificationObject: any) => notificationObject.channel_sender_id === id
 		);
 	};
 
@@ -53,9 +52,10 @@
 				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
+			notifications = notifications
 	};
 	const handleNotificationUnsubscription = async (category: string) => {
-		const { res, json } = await fetchRequest('POST', `${api}/unsubscribe`, {
+		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
 			channel_sender_id: id,
 			channel_category: category

@@ -30,6 +30,7 @@
 			getKanbanEntries();
 			getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
+
 	});
 
 	const getKanbanEntries = async () => {
@@ -54,7 +55,8 @@
 	const getGroupUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
-		assignee = json.results[0].user_id;
+		assignee = users[0]?.user.id
+		
 	};
 
 	const createKanbanEntry = async () => {
@@ -134,6 +136,7 @@
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea required label="Description" bind:value={description} />
 				<div class="flex gap-6 justify-between mt-2">
+					<!-- {@debug users} -->
 					<select on:input={handleChangeAssignee} class="border border-gray-600">
 						{#each users as user}
 							<option value={user.user.id}>{user.user.username}</option>

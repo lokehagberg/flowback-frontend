@@ -9,55 +9,85 @@
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { _ } from 'svelte-i18n';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 
 	export let poll: poll;
 
 	onMount(() => {
-		// console.log(poll, 'POLL');
+		// window.addEventListener('click', function (e) {
+		// 	if (
+		// 		notificationOpen &&
+		// 		//@ts-ignore
+		// 		!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
+		// 	) {
+		// 		notificationOpen = false;
+		// 	}
+		// });
 	});
-	let onHoverGroup = false;
+	let onHoverGroup = false,
+		notificationOpen = false;
+
+	type notificationCategory = 'poll' | 'timeline';
+
+	const handleNotificationSubscription = async (categories: notificationCategory[]) => {
+		notificationOpen = !notificationOpen;
+		// const {res, json} = await fetchRequest('POST', `group/${poll.group_id}/poll/${poll.id}/unsubscribe`)
+		await fetchRequest('POST', `group/poll/${poll.id}/subscribe`, { categories });
+	};
 </script>
 
-<!-- href={onHoverGroup ? (window.location.href = '/groups/1') : (window.location.href = '/poll')} -->
-<div
-	class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
->
-	<a
-	class="hover:shadow-xl hover:rounded-xl cursor-pointer "
-		href={onHoverGroup
-			? '/groups/1'
-			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-	>
-		<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
-		<div class="border border-gray-200 p-2">
-			<div class="flex items-center justify-between">
-				<Tag tag={poll.tag_name} Class="inline cursor-default" />
-				<div class="flex">
-					{#if poll.poll_type === 1}
-						<HeaderIcon
-							Class="p-2 pl-0 cursor-default"
-							icons={[faArrowUp, faArrowDown]}
-							text={'Ranking'}
-						/>
-					{:else if poll.poll_type === 3}
-						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
-					{/if}
-					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
-				</div>
-				<a href={poll.group_joined ? `groups/${poll.group_id}` : ""} class:hover:underline={poll.group_joined} class="text-black" >
-					<img
-						class="h-8 w-8 inline rounded-full"
-						src={`${import.meta.env.VITE_API}${poll.group_image}`}
-						alt="group thumbnail"
-					/>
-					<span class="inline">{poll.group_name}</span>
-				</a>
-			</div>
+<div class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
+	<div class="flex justify-between items-center text-black relative">
+		<a
+			class="hover:underline cursor-pointer "
+			href={onHoverGroup
+				? '/groups/1'
+				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+		>
+			<h1 class="text-left text-xl p-1 pl-0">{poll.title}</h1>
+		</a>
+		<NotificationOptions
+			id={poll.id}
+			api={`group/poll/${poll.id}`}
+			categories={['poll', 'timeline']}
+			labels={['Poll', 'Timeline']}
+		/>
+	</div>
+	<div class="flex items-center justify-between mt-1">
+		<Tag tag={poll.tag_name} Class="inline cursor-default" />
+		<div class="flex">
+			{#if poll.poll_type === 1}
+				<HeaderIcon
+					Class="p-2 pl-0 cursor-default"
+					icons={[faArrowUp, faArrowDown]}
+					text={'Ranking'}
+				/>
+			{:else if poll.poll_type === 3}
+				<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
+			{/if}
+			<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
 		</div>
-		<p class="mt-2 whitespace-pre-wrap border border-gray-200 p-3">
-			{poll.description}
-		</p>
-	</a>
+		<a
+			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
+			class:hover:underline={poll.group_joined}
+			class="text-black"
+		>
+			<img
+				class="h-8 w-8 inline rounded-full"
+				src={`${import.meta.env.VITE_API}${poll.group_image}`}
+				alt="group thumbnail"
+			/>
+			<span class="inline">{poll.group_name}</span>
+		</a>
+	</div>
+	<p class="mt-2 whitespace-pre-wrap mb-4 ">
+		{poll.description}
+	</p>
+
 	<Timeline
 		displayDetails={false}
 		Class="border-none pointer-default"

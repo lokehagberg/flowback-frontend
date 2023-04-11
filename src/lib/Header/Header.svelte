@@ -57,7 +57,7 @@
 		</nav>
 
 		<div class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800">
-			<!-- <Notifications /> -->
+			<Notifications />
 
 			<div on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 				<img

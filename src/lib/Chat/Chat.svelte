@@ -116,7 +116,6 @@
 		// selectedPage === 'direct';
 	}
 
-	$: console.log(selectedChat, selectedPage, notifiedDirect, "NOT IFICK")
 </script>
 
 <svelte:head

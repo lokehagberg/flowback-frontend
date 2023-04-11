@@ -8,13 +8,13 @@
 
 <!-- TODO: Simplify this function to only take images as input or include name -->
 <div class={Class}>
-	{#if user.profile_image}
+	{#if user?.profile_image}
 		<img
 			src={`${import.meta.env.VITE_API}${user.profile_image}`}
 			alt="avatar"
 			class={`w-10 h-10 rounded-full`}
 		/>
-	{:else if user.image}
+	{:else if user?.image}
 		<img
 			src={`${import.meta.env.VITE_API}${user.image}`}
 			alt="avatar"
@@ -26,7 +26,7 @@
 
 	<!-- TODO: Make default name default on everywhere-->
 	{#if displayName}
-		{user.username}
+		{user?.username}
 	{/if}
 </div>
 

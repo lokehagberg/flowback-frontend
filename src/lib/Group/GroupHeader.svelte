@@ -1,9 +1,24 @@
 <script lang="ts">
 	import type { GroupDetails, SelectablePage } from './interface';
 	import { _ } from 'svelte-i18n';
-	export let selectedPage: SelectablePage;
-	export let group: GroupDetails;
-	export let memberCount: number;
+	import { page } from '$app/stores';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
+	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
+	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+
+	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
+
+	//https://docs.flowback.org/#notification-categories
+	const groupNotificationCategories = [
+		'group',
+		'members',
+		'invite',
+		'delegate',
+		'poll',
+		'kanban',
+		'schedule'
+	];
 </script>
 
 <div class="relative flex justify-center">
@@ -16,10 +31,33 @@
 </div>
 <!-- TODO: Fix layout design -->
 <div class="bg-white pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
-	<h1 class="text-3xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'flow')}>
-		{group.name}
-	</h1>
-	<p class="text-xl hover:underline cursor-pointer" on:click={() => selectedPage = 'members'}>{memberCount} {$_('members')}</p>
+	<div class="flex items-center relative" id="notifications-list-group">
+		<NotificationOptions
+			api={`group/${$page.params.groupId}`}
+			id = {Number($page.params.groupId)}
+			categories={groupNotificationCategories}
+			labels={groupNotificationCategories}
+		/>
+		<h1
+			class="ml-2 text-3xl hover:underline cursor-pointer"
+			on:click={() => (selectedPage = 'flow')}
+		>
+			{group.name}
+		</h1>
+	</div>
+	<div class="flex items-center">
+		<p class="text-xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'members')}>
+			{memberCount}
+			{$_('members')}
+		</p>
+		{#if typeof window !== "undefined"}
+		{#if group.public}
+			<HeaderIcon icon={faGlobeEurope} text="Public" />
+		{:else}
+			<HeaderIcon icon={faLock} text="Private" />
+		{/if}
+		{/if}
+	</div>
 </div>
 
 <style>

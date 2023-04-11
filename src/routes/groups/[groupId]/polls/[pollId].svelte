@@ -24,6 +24,7 @@
 	import type { groupUser } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 
 	let poll: poll,
 		votings: votings[],
@@ -57,7 +58,7 @@
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/delete`
+			`group/poll/${$page.params.pollId}/delete`
 		);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
 		else deleteStatus = statusMessageFormatter(res, json, "")
@@ -85,6 +86,7 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
+			<NotificationOptions id={poll.id} api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />

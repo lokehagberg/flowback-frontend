@@ -53,7 +53,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposals?limit=100`
+			`group/poll/${$page.params.pollId}/proposals?limit=100`
 		);
 
 		//Ranked
@@ -193,7 +193,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/update`,
+			`group/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
 				votes
 			}
@@ -211,7 +211,7 @@
 		if (isDelegate)
 			await fetchRequest(
 				'POST',
-				`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
+				`group/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
 				{
 					votes
 				}
@@ -223,7 +223,7 @@
 	const getVotings = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?limit=100`
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=100`
 		);
 		votings = json.results;
 	};
@@ -242,7 +242,7 @@
 		const delegateId = await getDelegateId();
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/${$page.params.pollId}/proposal/votes?delegates=True`
+			`group/poll/${$page.params.pollId}/proposal/votes?delegates=True`
 		);
 
 		votings = json.results;

@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { kanban, User } from './interface';
+	import type { GroupUser, kanban, User } from './interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -11,14 +11,16 @@
 	import { onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	let kanbanEntries: kanban[] = [];
 	let description = '',
 		title = '',
 		assignee = 0,
-		users: User[] = [],
-		status: StatusMessageInfo;
+		users: GroupUser[] = [],
+		status: StatusMessageInfo,
+		showSuccessPoppup = false;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -28,10 +30,11 @@
 			getKanbanEntries();
 			getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
+
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/list`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list?limit=10000`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -39,7 +42,7 @@
 	
 	const getKanbanEntriesHome = async () => {
 		const user = await fetchRequest('GET', 'user');
-		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}`);
+		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}?limit=10000`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -52,13 +55,14 @@
 	const getGroupUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
-		assignee = json.results[0].user_id;
+		assignee = users[0]?.user.id
+		
 	};
 
 	const createKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/create`,
+			`group/${$page.params.groupId}/kanban/entry/create`,
 			{
 				assignee,
 				description,
@@ -70,13 +74,14 @@
 
 		if (!res.ok) return;
 
-		const userAssigned = users.find((user) => assignee === user.user_id);
-		if (userAssigned)
+		console.log(users, assignee)
+		const userAssigned = users.find((user) => assignee === user.user.id);
+		// if (userAssigned)
 			kanbanEntries.push({
 				assignee: {
 					id: assignee,
-					profile_image: userAssigned.profile_image || '',
-					username: userAssigned.username
+					profile_image: userAssigned?.user.profile_image || '',
+					username: userAssigned?.user.username || "unasigned"
 				},
 				group: { id: 0, image: '', name: '' },
 				description,
@@ -90,6 +95,8 @@
 
 		description = '';
 		title = '';
+
+		showSuccessPoppup = true;
 	};
 
 	const removeKanbanEntry = (id: number) => {
@@ -97,9 +104,11 @@
 	};
 </script>
 
+<SuccessPoppup bind:show={showSuccessPoppup}/>
+
 <div class={'bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex overflow-x-auto">
-		<StatusMessage bind:status disableSuccess/>
+		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
@@ -127,9 +136,10 @@
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea required label="Description" bind:value={description} />
 				<div class="flex gap-6 justify-between mt-2">
+					<!-- {@debug users} -->
 					<select on:input={handleChangeAssignee} class="border border-gray-600">
 						{#each users as user}
-							<option value={user.user_id}>{user.username}</option>
+							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
 					</select>
 					<Button type="submit">{$_('Create task')}</Button>

@@ -3,7 +3,7 @@ export interface notification {
     channel_category: 'poll' | 'kanban';
     channel_id: number;
     channel_sender_id: number;
-    channel_sender_type: 'group';
+    channel_sender_type: 'group' | 'poll';
     id: number;
     message: string;
     object_id: number;

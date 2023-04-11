@@ -72,11 +72,17 @@
 						hovered = hovered;
 						// readNotification(notification.id);
 					}}
-					on:click={() => {
-						if (notification.channel_category === 'kanban')
-						window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`
-						else if (notification.channel_category === 'poll')
-						window.location.href = `groups/${notification.channel_id}/poll/${notification.channel_id}`
+					on:click={async () => {
+						if (notification.channel_sender_type === 'group')
+							window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
+						else if (notification.channel_sender_type === 'poll') {
+							const { res, json } = await fetchRequest(
+								'GET',
+								`home/polls?id=${notification.channel_sender_id}`
+							);
+							const groupId = json.results[0].group_id;
+							window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
+						}
 					}}
 				>
 					{$_(notification.message)}

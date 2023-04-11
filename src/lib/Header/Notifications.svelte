@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import type { notification } from './Notification';
 	import TimeAgo from 'javascript-time-ago';
+	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 
 	let notifications: notification[],
 		hovered: number[] = [],
@@ -64,29 +65,38 @@
 			{#each notifications as notification}
 				<!-- on:click={notification.action} -->
 				<div
-					class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
-					on:focus={() => {}}
-					on:mouseover={() => {
-						hovered.push(notification.id);
-						hovered = hovered;
-						// readNotification(notification.id);
-					}}
-					on:click={async () => {
-						if (notification.channel_sender_type === 'group')
-							window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
-						else if (notification.channel_sender_type === 'poll') {
-							const { res, json } = await fetchRequest(
-								'GET',
-								`home/polls?id=${notification.channel_sender_id}`
-							);
-							const groupId = json.results[0].group_id;
-							window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
-						}
-					}}
 				>
-					{$_(notification.message)}
-					{timeAgo.format(new Date(notification.timestamp))}
+					<div
+						class="pt-3 pb-3 pr-10 pl-6 "
+						on:click={async () => {
+							console.log('HIAIAI Below');
+							if (notification.channel_sender_type === 'group')
+								window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
+							else if (notification.channel_sender_type === 'poll') {
+								const { res, json } = await fetchRequest(
+									'GET',
+									`home/polls?id=${notification.channel_sender_id}`
+								);
+								const groupId = json.results[0].group_id;
+								window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
+							}
+						}}
+					>
+						{$_(notification.message)}
+						{timeAgo.format(new Date(notification.timestamp))}
+					</div>
+					<div
+						style="z-index: 1;"
+						on:click={() => {
+							readNotification(notification.id)
+							hovered.push(notification.id);
+							hovered = hovered;
+						}}
+					>
+						<Fa icon={faX} />
+					</div>
 				</div>
 			{/each}
 		{:else}

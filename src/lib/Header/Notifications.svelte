@@ -9,8 +9,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 
 	let notifications: notification[],
-		hovered: number[] = [],
-		numberOfNotifications = '5';
+		hovered: number[] = []
 
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
@@ -50,10 +49,14 @@
 <div
 	id="notifications-list"
 	class="small-notification relative"
-	style="--numberOfNotifications:{numberOfNotifications};"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 >
 	<Fa icon={faBell} size={'1.4x'} />
+	<div
+	class:hidden={notifications?.length === 0 || notifications?.length === undefined} 
+	class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white  bg-secondary">
+		<span class="">{notifications?.length}</span>
+	</div>
 </div>
 
 {#if notificationsOpen}
@@ -90,7 +93,7 @@
 					<div
 						style="z-index: 1;"
 						on:click={() => {
-							readNotification(notification.id)
+							readNotification(notification.id);
 							hovered.push(notification.id);
 							hovered = hovered;
 						}}
@@ -120,22 +123,5 @@
 	.slide-animation {
 		animation-name: slide-animation;
 		animation-duration: 300ms;
-	}
-
-	.small-notification:before {
-		position: absolute;
-		/* TODO: Fix */
-		content: var(--numberOfNotifications);
-		font-size: 10px;
-		font-weight: bold;
-		top: -5px;
-		right: -5px;
-		background-color: rgb(167, 139, 250);
-		border-radius: 100%;
-		/* padding-left:10px; */
-		/* padding-right:1px; */
-
-		/* padding: 7px; */
-		z-index: 10;
 	}
 </style>

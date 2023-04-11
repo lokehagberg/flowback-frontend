@@ -70,10 +70,13 @@
 					on:mouseover={() => {
 						hovered.push(notification.id);
 						hovered = hovered;
-						readNotification(notification.id);
+						// readNotification(notification.id);
 					}}
 					on:click={() => {
+						if (notification.channel_category === 'kanban')
 						window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`
+						else if (notification.channel_category === 'poll')
+						window.location.href = `groups/${notification.channel_id}/poll/${notification.channel_id}`
 					}}
 				>
 					{$_(notification.message)}

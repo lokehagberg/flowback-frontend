@@ -1,6 +1,6 @@
 export interface notification {
     action: 'update';
-    channel_category: 'poll';
+    channel_category: 'poll' | 'kanban';
     channel_id: number;
     channel_sender_id: number;
     channel_sender_type: 'group';

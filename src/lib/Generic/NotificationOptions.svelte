@@ -70,7 +70,6 @@
 
 	$: if (notificationOpen && notifications.length === 0) getNontifications();
 
-	$: console.log(notifications);
 </script>
 
 <div class="notifications-clickable-region">

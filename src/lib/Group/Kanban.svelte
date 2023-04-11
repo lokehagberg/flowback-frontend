@@ -34,7 +34,7 @@
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list?limit=10000`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -42,7 +42,7 @@
 	
 	const getKanbanEntriesHome = async () => {
 		const user = await fetchRequest('GET', 'user');
-		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}`);
+		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}?limit=10000`);
 		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;

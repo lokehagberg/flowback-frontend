@@ -16,6 +16,8 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { onMount } from 'svelte';
+	import type { KanbanEntry } from './Kanban';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -23,7 +25,7 @@
 		status: StatusMessageInfo,
 		showSuccessPoppup = false;
 
-	export let kanban: any,
+	export let kanban: KanbanEntry,
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void;
@@ -51,11 +53,10 @@
 		kanban.description = kanbanEdited.description;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
-		console.log(kanban, 'KANBAN');
 		kanban.assignee = {
 			id: kanbanEdited?.assignee,
-			username: assignee?.user.username,
-			profile_image: assignee?.user.profile_image
+			username: assignee?.user.username || '',
+			profile_image: assignee?.user.profile_image || ''
 		};
 
 		openModal = false;
@@ -96,6 +97,18 @@
 			showSuccessPoppup = true;
 		}
 	};
+
+	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
+	const getGroupKanbanIsFrom = async () => {
+		const { res, json } = await fetchRequest('GET', `groups/${kanban.origin_id}/detail`);
+		kanban.group_name = json.results.name;
+		console.log(json.results, 'RSURLESUTLSU');
+	};
+
+	onMount(() => {
+		console.log("HERE?!", kanban.origin_type)
+		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
+	});
 </script>
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
@@ -114,11 +127,11 @@
 		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
-				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
+				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.origin_id}`)}
 	>
-		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} Class="" />
+		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
-			{type === 'group' ? kanban.assignee?.username : kanban.group?.name}
+			{type === 'group' ? kanban.assignee?.username : kanban.group_name}
 		</div>
 	</div>
 	<!-- Arrows -->

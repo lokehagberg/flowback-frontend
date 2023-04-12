@@ -62,7 +62,7 @@
 	});
 
 	const setUpScheduledPolls = async () => {
-		const { json, res } = await fetchRequest('GET', 'poll/user/schedule?limit=100');
+		const { json, res } = await fetchRequest('GET', 'user/schedule?limit=100');
 		polls = json.results;
 	};
 

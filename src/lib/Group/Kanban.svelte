@@ -28,23 +28,24 @@
 	onMount(() => {
 		if (type === 'group') {
 			getKanbanEntries();
-			getGroupUsers();
+			if (type === 'group') getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
-
 	});
 
 	const getKanbanEntries = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/kanban/entry/list?limit=10000`);
-		if (!res.ok)
-		status = statusMessageFormatter(res, json);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/kanban/entry/list?limit=10000`
+		);
+		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
-	
+
 	const getKanbanEntriesHome = async () => {
-		const user = await fetchRequest('GET', 'user');
-		const { res, json } = await fetchRequest('GET', `home/kanban?assignee=${user.json.id}?limit=10000`);
-		if (!res.ok)
-		status = statusMessageFormatter(res, json);
+		assignee = Number(localStorage.getItem('userId')) || 1;
+		// const user = await fetchRequest('GET', 'user');
+		const { res, json } = await fetchRequest('GET', `user/kanban/entry/list?limit=10000`);
+		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
 
@@ -55,14 +56,15 @@
 	const getGroupUsers = async () => {
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
 		users = json.results;
-		assignee = users[0]?.user.id
-		
+		assignee = users[0]?.user.id;
 	};
 
 	const createKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/create`,
+			type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/create`
+				: 'user/kanban/entry/create',
 			{
 				assignee,
 				description,
@@ -74,22 +76,21 @@
 
 		if (!res.ok) return;
 
-		console.log(users, assignee)
 		const userAssigned = users.find((user) => assignee === user.user.id);
 		// if (userAssigned)
-			kanbanEntries.push({
-				assignee: {
-					id: assignee,
-					profile_image: userAssigned?.user.profile_image || '',
-					username: userAssigned?.user.username || "unasigned"
-				},
-				group: { id: 0, image: '', name: '' },
-				description,
-				tag: 1,
-				title,
-				id: json,
-				created_by: 1
-			});
+		kanbanEntries.push({
+			assignee: {
+				id: assignee,
+				profile_image: userAssigned?.user.profile_image || '',
+				username: userAssigned?.user.username || 'unasigned'
+			},
+			group: { id: 0, image: '', name: '' },
+			description,
+			tag: 1,
+			title,
+			id: json,
+			created_by: 1
+		});
 
 		kanbanEntries = kanbanEntries;
 
@@ -104,7 +105,7 @@
 	};
 </script>
 
-<SuccessPoppup bind:show={showSuccessPoppup}/>
+<SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div class={'bg-white p-2 rounded-2xl ' + Class}>
 	<div class="flex overflow-x-auto">
@@ -114,7 +115,9 @@
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
 			{#if i !== 0}
-				<div class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl">
+				<div
+					class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl"
+				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2">
@@ -129,23 +132,22 @@
 		{/each}
 		<!-- {/await} -->
 	</div>
-	{#if type === 'group'}
-		<div class="pl-4 pr-4 pb-4">
-			<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
-			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
-				<TextInput required label="Title" bind:value={title} />
-				<TextArea required label="Description" bind:value={description} />
-				<div class="flex gap-6 justify-between mt-2">
-					<!-- {@debug users} -->
+	<div class="pl-4 pr-4 pb-4">
+		<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
+		<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
+			<TextInput required label="Title" bind:value={title} />
+			<TextArea required label="Description" bind:value={description} />
+			<div class="flex gap-6 justify-between mt-2">
+				{#if type === 'group'}
 					<select on:input={handleChangeAssignee} class="border border-gray-600">
 						{#each users as user}
 							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
 					</select>
-					<Button type="submit">{$_('Create task')}</Button>
-				</div>
-				<StatusMessage Class="mt-2" bind:status />
-			</form>
-		</div>
-	{/if}
+				{/if}
+				<Button type="submit">{$_('Create task')}</Button>
+			</div>
+			<StatusMessage Class="mt-2" bind:status />
+		</form>
+	</div>
 </div>

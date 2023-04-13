@@ -43,8 +43,9 @@
 		kanbanEdited.entry_id = kanban.id;
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/update`,
-			kanbanEdited
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/update`
+				: 'user/kanban/entry/update'
 		);
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;
@@ -64,9 +65,12 @@
 	};
 
 	const updateKanbanTag = async (kanban: any) => {
+		console.log(kanban.origin_type, 'TYPE typ');
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/update`,
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/update`
+				: 'user/kanban/entry/update',
 			{
 				tag: kanban.tag,
 				entry_id: kanban.id
@@ -88,7 +92,9 @@
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/delete`,
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/delete`
+				: 'user/kanban/entry/delete',
 			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
@@ -100,13 +106,12 @@
 
 	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
 	const getGroupKanbanIsFrom = async () => {
-		const { res, json } = await fetchRequest('GET', `groups/${kanban.origin_id}/detail`);
-		kanban.group_name = json.results.name;
-		console.log(json.results, 'RSURLESUTLSU');
+		const { res, json } = await fetchRequest('GET', `group/${kanban.origin_id}/detail`);
+		kanban.group_name = json.name;
 	};
 
 	onMount(() => {
-		console.log("HERE?!", kanban.origin_type)
+		console.log('HERE?!', kanban);
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 	});
 </script>
@@ -131,7 +136,11 @@
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
-			{type === 'group' ? kanban.assignee?.username : kanban.group_name}
+			{type === 'group'
+				? kanban.assignee?.username
+				: kanban.origin_type === 'user'
+				? 'My own'
+				: kanban.group_name}
 		</div>
 	</div>
 	<!-- Arrows -->

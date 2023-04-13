@@ -128,4 +128,7 @@ export interface kanban {
 	id: number;
 	tag: number;
 	title: string;
+	origin_id:number;
+	origin_type:'group' | 'user';
+	group_name:string;
 }

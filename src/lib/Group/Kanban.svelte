@@ -14,6 +14,7 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
+	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [];
 	let description = '',
 		title = '',
@@ -69,7 +70,8 @@
 				assignee,
 				description,
 				tag: 1,
-				title
+				title,
+				priority:1
 			}
 		);
 		status = statusMessageFormatter(res, json);
@@ -89,7 +91,11 @@
 			tag: 1,
 			title,
 			id: json,
-			created_by: 1
+			created_by: 1,
+			origin_id:1,
+			origin_type:'user',
+			group_name:""
+
 		});
 
 		kanbanEntries = kanbanEntries;

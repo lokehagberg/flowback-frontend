@@ -84,6 +84,7 @@
 	{#if notificationOpen}
 		<ul class="z-50 absolute mt-2 bg-white shadow-xl text-sm">
 			<!-- <div class="p-3">Subscriptions</div> -->
+			<li class="text-xs p-2">{$_("Manage Subscriptions")}</li>
 			{#each categories as category, i}
 				<li
 					class="bg-gray-200 p-2 px-5 flex justify-between items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"

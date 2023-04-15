@@ -1,15 +1,17 @@
 <script lang="ts">
-	import Header from '$lib/Header/Header.svelte';
 	import { onMount } from 'svelte';
-	import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
-	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { scheduledEvent } from '$lib/Schedule/interface';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	const months = [
 		'Jan',
@@ -27,14 +29,14 @@
 	];
 
 	const currentDate = new Date();
-	let month = currentDate.getMonth();
-	let year = currentDate.getFullYear();
-	let selectedDate = new Date(year, month, 0);
-	let polls: scheduledEvent[] = [];
-	let loading = false;
-
-	//A fix due to class struggle
-	let selectedDatePosition = '0-0';
+	let month = currentDate.getMonth(),
+		year = currentDate.getFullYear(),
+		selectedDate = new Date(year, month, 0),
+		polls: scheduledEvent[] = [],
+		loading = false,
+		showCreateScheduleEventModal = false,
+		//A fix due to class struggle
+		selectedDatePosition = '0-0';
 
 	$: month && year && deleteSelection();
 	$: month && test();
@@ -69,16 +71,30 @@
 	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
 	};
+
+	let start_date: Date, end_date: Date, title: string, description: string;
+
+	$: start_date = new Date(selectedDate.setHours(0, 0, 0));
+	$: end_date = new Date(selectedDate.setHours(23, 59, 59));
+
+	const scheduleEventCreate = async (e: any) => {
+		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
+			start_date,
+			end_date,
+			title,
+			description
+		});
+	};
 </script>
 
 <Layout>
 	<div class="flex bg-white">
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
-			{$_('Time polls at')}
+			{$_('Scheduled events for')}
 			{selectedDate.getDate()}/{selectedDate.getMonth()}
 			{selectedDate.getFullYear()}
 
-			<div class="hover:bg-gray-300 pt-3 pb-3">
+			<div class="pt-3 pb-3">
 				{#each polls.filter((poll) => {
 					//Fixes a one day off issue
 					const date = new Date(poll.start_date);
@@ -86,13 +102,21 @@
 					return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
 				}) as poll}
 					<a
-						class="text-center color-black"
-						href={`groups/${poll.group_id}/polls/${poll.poll}`}
+						class="text-center color-black text-black cursor-default"
+						class:hover:bg-gray-300={poll.poll}
+						href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
 					>
 						{poll.title}
 						{new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()}
 					</a>
 				{/each}
+				<div on:click={() => (showCreateScheduleEventModal = true)}>
+					<Fa
+						class="ml-auto mr-auto hover:bg-gray-200 transition p-3 cursor-pointer rounded"
+						size="3x"
+						icon={faPlus}
+					/>
+				</div>
 			</div>
 		</div>
 
@@ -122,7 +146,7 @@
 				{#each [1, 2, 3, 4, 5, 6] as y}
 					{#each [1, 2, 3, 4, 5, 6, 7] as x}
 						<div
-							class={` relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-200`}
+							class={` relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 							id={`${x}-${y}`}
 							class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 								month === currentDate.getMonth() &&
@@ -158,6 +182,19 @@
 	</div>
 </Layout>
 
+<Modal bind:open={showCreateScheduleEventModal}>
+	<div slot="header">{$_('Create Event')}</div>
+	<div slot="body">
+		<form on:submit|preventDefault={scheduleEventCreate}>
+			<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
+			<DateInput value={end_date} format="yyyy-MM-dd HH:mm" />
+			<TextInput label="Event title" bind:value={title} />
+			<Button type="submit">{$_('Submit')}</Button>
+		</form>
+	</div>
+	<div slot="footer" />
+</Modal>
+
 <style>
 	.calendar {
 		display: grid;
@@ -175,10 +212,14 @@
 	}
 
 	.today {
-		box-shadow: inset 0 0 0 2px var(--primary-color);
+		box-shadow: inset 0 0 0 2px var(--primary-color) !important;
 	}
 
 	.selected {
-		box-shadow: inset 0 0 2px 3px var(--secondary-color);
+		box-shadow: inset 0 0 2px 3px var(--secondary-color) !important;
+	}
+
+	.calendar-day:hover {
+		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.1);
 	}
 </style>

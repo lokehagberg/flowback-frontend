@@ -60,6 +60,6 @@
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		<StatusMessage bind:status />
-		<Button type="submit" label="Lägg till" />
+		<Button type="submit" label="Add" />
 	</Loader>
 </form>

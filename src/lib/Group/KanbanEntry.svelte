@@ -45,7 +45,8 @@
 			'POST',
 			kanban.origin_type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/update`
-				: 'user/kanban/entry/update'
+				: 'user/kanban/entry/update',
+				kanbanEdited
 		);
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;

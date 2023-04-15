@@ -12,6 +12,8 @@
 	import { DateInput, DatePicker } from 'date-picker-svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	const months = [
 		'Jan',
@@ -31,7 +33,7 @@
 	const currentDate = new Date();
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
-		selectedDate = new Date(year, month, 0),
+		selectedDate = new Date(),
 		polls: scheduledEvent[] = [],
 		loading = false,
 		showCreateScheduleEventModal = false,
@@ -91,25 +93,10 @@
 	<div class="flex bg-white">
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 			{$_('Scheduled events for')}
-			{selectedDate.getDate()}/{selectedDate.getMonth()}
+			{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
 			{selectedDate.getFullYear()}
-
+			
 			<div class="pt-3 pb-3">
-				{#each polls.filter((poll) => {
-					//Fixes a one day off issue
-					const date = new Date(poll.start_date);
-					const fixedDate = new Date(date.setDate(date.getDate() - 1));
-					return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
-				}) as poll}
-					<a
-						class="text-center color-black text-black cursor-default"
-						class:hover:bg-gray-300={poll.poll}
-						href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
-					>
-						{poll.title}
-						{new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()}
-					</a>
-				{/each}
 				<div on:click={() => (showCreateScheduleEventModal = true)}>
 					<Fa
 						class="ml-auto mr-auto hover:bg-gray-200 transition p-3 cursor-pointer rounded"
@@ -117,6 +104,35 @@
 						icon={faPlus}
 					/>
 				</div>
+				{#each polls.filter((poll) => {
+					//Fixes a one day off issue
+					const date = new Date(poll.start_date);
+					const fixedDate = new Date(date.setDate(date.getDate()));
+					return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
+				}) as poll}
+					<div class="mt-2">
+						<a
+							class="text-xs text-center color-black text-black cursor-default flex justify-between items-center gap-3"
+							class:hover:bg-gray-300={poll.poll}
+							href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
+						>
+							<span>{poll.title}</span>
+							<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
+							<span
+								>{(() => {
+									const startDate = new Date(poll.start_date);
+									return `${
+										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
+									}:${
+										startDate.getMinutes() > 9
+											? startDate.getMinutes()
+											: '0' + startDate.getMinutes()
+									}`;
+								})()}</span
+							>
+						</a>
+					</div>
+				{/each}
 			</div>
 		</div>
 
@@ -162,7 +178,7 @@
 								<div class="text-center">
 									{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 								</div>
-								{#each polls.filter((poll) => new Date(poll.start_date)
+								<!-- {#each polls.filter((poll) => new Date(poll.start_date)
 											.toJSON()
 											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
 											.toJSON()
@@ -172,7 +188,14 @@
 									>
 										{poll.title}
 									</p>
-								{/each}
+								{/each} -->
+								{#if polls.filter((poll) => new Date(poll.start_date)
+											.toJSON()
+											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
+											.toJSON()
+											.split('T')[0]).length > 0}
+									<Fa class="m-auto" icon={faCalendarAlt} />
+								{/if}
 							</div>
 						</div>
 					{/each}

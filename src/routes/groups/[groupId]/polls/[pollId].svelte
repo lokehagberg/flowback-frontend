@@ -8,7 +8,7 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { poll, proposal, votings } from '$lib/Poll/interface';
+	import type { Phase, poll, proposal, votings } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { _ } from 'svelte-i18n';
@@ -34,12 +34,26 @@
 		pollType = 1,
 		finished: boolean,
 		groupUser: groupUser,
-		deleteStatus: StatusMessageInfo;
+		deleteStatus: StatusMessageInfo,
+		phase: Phase;
 
 	onMount(async () => {
-		getPollData();
 		getGroupUser();
+		await getPollData();
+		phase = getPhase();
 	});
+
+	const getPhase = (): Phase => {
+		const now = new Date();
+		if (now < new Date(poll?.start_date)) return 'pre-start';
+		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.proposal_end_date))
+			return 'proposals';
+		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.delegate_vote_end_date))
+			return 'delegate-voting';
+		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
+			return 'voting';
+		else return 'end';
+	};
 
 	const getPollData = async () => {
 		const { res, json } = await fetchRequest(
@@ -56,12 +70,9 @@
 	};
 
 	const deletePoll = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/delete`
-		);
+		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
 		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
-		else deleteStatus = statusMessageFormatter(res, json, "")
+		else deleteStatus = statusMessageFormatter(res, json, '');
 	};
 
 	//TODO: Replace this later with some kind of svelte stores or local storage data
@@ -86,7 +97,12 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<NotificationOptions id={poll.id} api={`group/poll/${poll.id}`} categories={["poll", "timeline"]} labels={["Poll", "Timeline"]}  />
+			<NotificationOptions
+				id={poll.id}
+				api={`group/poll/${poll.id}`}
+				categories={['poll', 'timeline']}
+				labels={['Poll', 'Timeline']}
+			/>
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
 				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
@@ -112,10 +128,11 @@
 				<ProposalsRanked
 					votingStartTime={poll.proposal_end_date}
 					pollType={poll.poll_type}
+					tag={poll.tag}
+					bind:phase
 					bind:votings
 					bind:selectedPage
 					bind:abstained
-					tag={poll.tag}
 				/>
 
 				{#if new Date(poll.proposal_end_date) >= new Date() && new Date(poll.start_date) <= new Date()}
@@ -137,7 +154,7 @@
 				]}
 			/>
 			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<!-- <Comments /> -->
+				<Comments />
 			{/if}
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>

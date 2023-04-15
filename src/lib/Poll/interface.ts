@@ -18,14 +18,14 @@ export interface poll {
 	tag: number;
 	tag_name: string;
 	title: string;
-	group_id:number;
-	proposal_end_date:string;
-	prediction_end_date:string;
-	delegate_vote_end_date:string;
-	group_name?:string;
-	group_image?:string;
-	joined:boolean;
-	group_joined:boolean;
+	group_id: number;
+	proposal_end_date: string;
+	prediction_end_date: string;
+	delegate_vote_end_date: string;
+	group_name?: string;
+	group_image?: string;
+	joined: boolean;
+	group_joined: boolean;
 }
 
 export interface votings {
@@ -38,7 +38,8 @@ export interface votings {
 
 export interface Filter {
 	public: boolean;
-	finishedSelection:'all'|'unfinished'|'finished'
+	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
 }
 
+export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';

@@ -6,7 +6,7 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import type { proposal, votings } from './interface';
+	import type { Phase, proposal, votings } from './interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
@@ -18,21 +18,21 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 
-	export let votings: votings[];
-	export let selectedPage: 'You' | 'Delegate';
-	export let abstained: proposal[] = [];
-	//1 is ranked, 3 is scheduled
-	export let pollType: number = 1,
-		votingStartTime: string;
-	let proposals: proposal[] = [];
-	let ranked: proposal[] = [];
-	let selected: proposal;
-	let checked = false;
+	export let votings: votings[],
+		selectedPage: 'You' | 'Delegate',
+		abstained: proposal[] = [],
+		//1 is ranked, 3 is schedule,
+		pollType: number = 1,
+		votingStartTime: string,
+		phase: Phase,
+		tag: number;
 
-	export let tag: number;
-
-	let unsaved = false;
-	let status: StatusMessageInfo;
+	let proposals: proposal[] = [],
+		ranked: proposal[] = [],
+		selected: proposal,
+		checked = false,
+		unsaved = false,
+		status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
 
@@ -104,8 +104,6 @@
 
 			console.log(e, 'SORTED');
 		});
-
-		
 
 		sortable.on('sortable:start', (e: any) => {
 			if (selectedPage === 'Delegate' || checked) {
@@ -202,7 +200,7 @@
 		status = statusMessageFormatter(res, json);
 		//TODO replace with svelte store
 		// const userId = (await fetchRequest('GET', 'user')).json.id;
-		const userId = localStorage.getItem('userId')
+		const userId = localStorage.getItem('userId');
 
 		const isDelegate = (
 			await fetchRequest('GET', `group/${$page.params.groupId}/users?user_id=${userId}`)
@@ -278,7 +276,7 @@
 							<Proposal
 								{...proposal}
 								Class={`${selectedPage === 'You' && ''} ${
-									(!checked && selectedPage !== 'Delegate') && 'cursor-move'
+									!checked && selectedPage !== 'Delegate' && 'cursor-move'
 								}`}
 							>
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
@@ -316,12 +314,14 @@
 					<Proposal
 						{...proposal}
 						Class={`${selectedPage === 'You'} ${
-							(!checked && selectedPage !== 'Delegate') && 'cursor-move'
+							!checked && selectedPage !== 'Delegate' && 'cursor-move'
 						}`}
 					>
 						<div
 							class={`${
-								(selectedPage === 'Delegate' || new Date(votingStartTime) >= new Date() || !checked) &&
+								(selectedPage === 'Delegate' ||
+									new Date(votingStartTime) >= new Date() ||
+									!checked) &&
 								'invisible'
 							}`}
 						>
@@ -338,8 +338,10 @@
 
 <!-- TODO: Remove this and replace by allowing drag-drop
 and buttons at the same time without a toggle both. -->
-Enable buttons
-<Toggle bind:checked/>
+{#if phase !== 'pre-start' && phase !== 'proposals'}
+	Enable buttons
+	<Toggle bind:checked />
+{/if}
 
 <StatusMessage bind:status />
 

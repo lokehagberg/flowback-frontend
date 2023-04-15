@@ -1,10 +1,26 @@
-<script>
+<script lang="ts">
+	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
-	const sendComment = () => {};
+	const sendComment = async () => {
+		const { res, json } = await fetchRequest("POST", `group/poll/${$page.params.pollId}/comment/create`, {
+			message:"haiiiiiii"
+		});
+		console.log($page.params.pollId)
+	};
+
+	const getComments = async () => {
+		const { res, json } = await fetchRequest("GET", `group/poll/${$page.params.pollId}/comment/list`);
+	}
+
+	onMount(() => {
+		getComments();
+	})
 </script>
 
 <div class="p-4 border border-gray-200 rounded">

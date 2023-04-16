@@ -43,18 +43,20 @@
 
 <div class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
 	<div class="flex items-center justify-between mt-1">
-		<Tag tag={poll.tag_name} Class="inline cursor-default" />
-		<div class="flex">
-			{#if poll.poll_type === 1}
-				<HeaderIcon
-					Class="p-2 pl-0 cursor-default"
-					icons={[faArrowUp, faArrowDown]}
-					text={'Ranking'}
-				/>
-			{:else if poll.poll_type === 3}
-				<!-- <HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} /> -->
-			{/if}
-			<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+		<div>
+			<Tag tag={poll.tag_name} Class="inline cursor-default" />
+			<div class="ml-2 inline-flex">
+				{#if poll.poll_type === 1}
+					<HeaderIcon
+						Class="p-2 pl-0 cursor-default"
+						icons={[faArrowUp, faArrowDown]}
+						text={'Ranking'}
+					/>
+				{:else if poll.poll_type === 3}
+					<!-- <HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} /> -->
+				{/if}
+				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+			</div>
 		</div>
 		<a
 			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
@@ -86,11 +88,9 @@
 		/>
 	</div>
 
-
 	<p class="mt-2 whitespace-pre-wrap mb-4 ">
 		{poll.description}
 	</p>
-
 
 	<Timeline
 		displayDetails={false}

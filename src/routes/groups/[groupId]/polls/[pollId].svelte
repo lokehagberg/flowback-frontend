@@ -48,7 +48,10 @@
 		if (now < new Date(poll?.start_date)) return 'pre-start';
 		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
-		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.delegate_vote_end_date))
+		else if (
+			now >= new Date(poll?.proposal_end_date) &&
+			now < new Date(poll?.delegate_vote_end_date)
+		)
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
 			return 'voting';
@@ -116,7 +119,7 @@
 					{:else if pollType === 3}
 						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 					{/if}
-					<HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} />
+					<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 				</div>
 			</div>
 			{#if finished}
@@ -153,9 +156,7 @@
 					new Date(poll.end_date)
 				]}
 			/>
-			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<Comments />
-			{/if}
+			<Comments />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">

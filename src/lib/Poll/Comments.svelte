@@ -9,7 +9,6 @@
 	import type { Comment, Phase } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { faReply } from '@fortawesome/free-solid-svg-icons/faReply';
-	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 
 	let message: string,
@@ -26,7 +25,8 @@
 			}
 		);
 		if (res.ok) {
-			comments.reverse().push({
+			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
+			comments.splice(parentPosition + 1, 0, {
 				author_id: Number(localStorage.getItem('userId')) || 0,
 				author_name: localStorage.getItem('userName') || '',
 				author_thumbnail: '',
@@ -38,15 +38,16 @@
 				id: json,
 				reply_depth: replyDepth + 1
 			});
-			comments = comments.reverse();
+			comments = comments;
 			show = true;
+			message = '';
 		}
 	};
 
 	const getComments = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/comment/list`
+			`group/poll/${$page.params.pollId}/comment/list?limit=10000`
 		);
 
 		comments = json.results.map((comment: Comment) => {
@@ -110,7 +111,7 @@
 
 <div class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
-	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined, 0)}>
+	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined, -1)}>
 		<TextArea label="Comment" required bind:value={message} />
 		<Button Class="mt-4" type="submit" label="Send" />
 	</form>
@@ -128,7 +129,12 @@
 					<Button Class="mt-4" type="submit" label="Update" />
 				</form>
 			{:else}
-				<div class=" p-3 text-sm">
+				<div
+					class={`p-3 text-sm border border-l-gray-400 ml-${
+						comment.reply_depth < 10 ? comment.reply_depth * 2 : 20
+					}`}
+					class:bg-gray-100={comment.reply_depth % 2 === 1}
+				>
 					<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 					<div class="flex gap-2">
 						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
@@ -162,22 +168,19 @@
 					</div>
 				</div>
 			{/if}
-			{#if comment?.being_replied}
+			{#if comment.being_replied}
 				<form
 					class="ml-4"
-					on:submit|preventDefault={() => postComment(comment.id, comment.reply_depth)}
+					on:submit|preventDefault={() => {
+						postComment(comment.id, comment.reply_depth);
+						comment.being_replied = false;
+						comment.being_edited_message = '';
+					}}
 				>
 					<TextArea label="Reply to comment" required bind:value={message} />
 					<Button Class="mt-4" type="submit" label="Send" />
 				</form>
 			{/if}
 		{/each}
-		<div class="border border-gray-400 p-4 ml-4">
-			<div class="flex gap-3">
-				<img class="w-8 h-8 rounded-full" src={DefaultPFP} alt="default pfp" />
-				<div>Nerd</div>
-			</div>
-			<div>I disagree</div>
-		</div>
 	</div>
 </div>

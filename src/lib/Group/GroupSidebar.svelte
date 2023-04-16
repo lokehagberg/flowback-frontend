@@ -110,6 +110,12 @@
 				icon={faList}
 			/>
 			<GroupSidebarButton
+				action={() => (selectedPage = 'schedule')}
+				isSelected={selectedPage === 'schedule'}
+				text="Group schedule"
+				icon={faList}
+			/>
+			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}
 				text="Members"
 				icon={faUserGroup}

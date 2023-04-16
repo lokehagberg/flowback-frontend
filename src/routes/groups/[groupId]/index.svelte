@@ -23,6 +23,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import Schedule from '$lib/Schedule/Schedule.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -121,6 +122,8 @@
 						<Kanban type="group" />
 					{:else if selectedPage === 'perms'}
 						<Permissions />
+					{:else if selectedPage === 'schedule'}
+						<Schedule />
 					{/if}
 				</div>
 

@@ -43,3 +43,12 @@ export interface Filter {
 }
 
 export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';
+
+export interface Comment {
+	author_id: number;
+	author_name: string;
+	author_thumbnail: string;
+	parent: number;
+	message: string;
+	score: number;
+}

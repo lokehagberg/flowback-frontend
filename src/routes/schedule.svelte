@@ -18,6 +18,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	const months = [
 		'Jan',
@@ -88,6 +89,7 @@
 	};
 
 	const scheduleEventCreate = async (e: any) => {
+		loading = true;
 		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
 			start_date,
 			end_date,
@@ -107,10 +109,11 @@
 				title
 			});
 			events = events;
-			
+
 			start_date = null;
 			end_date = null;
 			title = '';
+			loading = false;
 		} else status = statusMessageFormatter(res, json);
 	};
 </script>
@@ -239,6 +242,7 @@
 <Modal bind:open={showCreateScheduleEventModal}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
+		<Loader bind:loading>
 		<form on:submit|preventDefault={scheduleEventCreate}>
 			<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
 			<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
@@ -246,6 +250,7 @@
 			<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 			<Button type="submit">{$_('Submit')}</Button>
 		</form>
+	</Loader>
 	</div>
 	<div slot="footer" />
 </Modal>

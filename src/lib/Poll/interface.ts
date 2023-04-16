@@ -49,6 +49,7 @@ export interface Comment {
 	author_name: string;
 	author_thumbnail: string;
 	parent_id?: number;
+	reply_depth:number;
 	message: string;
 	score: number;
 	being_edited: boolean;

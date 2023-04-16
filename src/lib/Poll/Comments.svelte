@@ -16,7 +16,7 @@
 		comments: Comment[] = [],
 		show = false;
 
-	const postComment = async (parent_id: number | undefined = undefined) => {
+	const postComment = async (parent_id: number | undefined = undefined, replyDepth: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/create`,
@@ -35,7 +35,8 @@
 				score: 0,
 				being_edited: false,
 				being_replied: false,
-				id: json
+				id: json,
+				reply_depth: replyDepth + 1
 			});
 			comments = comments.reverse();
 			show = true;
@@ -76,12 +77,16 @@
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
 
-		let sortedComments = parentComments;
+		let sortedComments = parentComments.map((parent) => {
+			parent.reply_depth = 0;
+			return parent;
+		});
 
 		while (childrenComments.length > 0) {
 			childrenComments.every((child, j) => {
 				parentComments.forEach((parent, i) => {
 					if (parent.id === child.parent_id) {
+						child.reply_depth = parent.reply_depth + 1;
 						sortedComments.splice(i + 1, 0, child);
 						childrenComments.splice(j, 1);
 						return false;
@@ -92,6 +97,7 @@
 		}
 
 		comments = sortedComments;
+		console.log(sortedComments);
 	};
 
 	onMount(async () => {
@@ -104,7 +110,7 @@
 
 <div class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
-	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined)}>
+	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined, 0)}>
 		<TextArea label="Comment" required bind:value={message} />
 		<Button Class="mt-4" type="submit" label="Send" />
 	</form>
@@ -157,7 +163,10 @@
 				</div>
 			{/if}
 			{#if comment?.being_replied}
-				<form class="ml-4" on:submit|preventDefault={() => postComment(comment.id)}>
+				<form
+					class="ml-4"
+					on:submit|preventDefault={() => postComment(comment.id, comment.reply_depth)}
+				>
 					<TextArea label="Reply to comment" required bind:value={message} />
 					<Button Class="mt-4" type="submit" label="Send" />
 				</form>

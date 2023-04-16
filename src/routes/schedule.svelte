@@ -14,6 +14,10 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { formatDate } from '$lib/Generic/DateFormatter';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 
 	const months = [
 		'Jan',
@@ -38,11 +42,13 @@
 		polls: scheduledEvent[] = [],
 		loading = false,
 		showCreateScheduleEventModal = false,
+		show = false,
+		status:StatusMessageInfo,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
-		start_date: Date,
-		end_date: Date,
+		start_date: Date | null,
+		end_date: Date | null,
 		title: string,
 		description: string;
 
@@ -82,11 +88,6 @@
 		return new Date(year, month, 0).getDay();
 	};
 
-	// $: start_date = new Date(selectedDate.setHours(0, 0, 0));
-	// $: end_date = new Date(selectedDate.setHours(23, 59, 59));
-
-	$:console.log(selectedDate, "SELECTED DATE");
-
 	const scheduleEventCreate = async (e: any) => {
 		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
 			start_date,
@@ -94,9 +95,23 @@
 			title,
 			description
 		});
-	};
+		if (res.ok){
+			showCreateScheduleEventModal = false;
+			show = true;
+			// polls.push({
+			// 	created_by=localStorage.getItem("userName"),
+			// 	description="",
+			// 	end_date: end_date.toString() || "",
+			// 	start_date,
 
-	$: console.log(start_date);
+			// })
+			start_date = null;
+			end_date = null;
+			title = "";
+		}
+		else status = statusMessageFormatter(res, json)
+
+	};
 </script>
 
 <Layout>
@@ -223,11 +238,14 @@
 			<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
 			<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
 			<TextInput label="Event title" bind:value={title} />
+			<StatusMessage bind:status Class="w-full mt-3 mb-3"/>
 			<Button type="submit">{$_('Submit')}</Button>
 		</form>
 	</div>
 	<div slot="footer" />
 </Modal>
+
+<SuccessPoppup bind:show/>
 
 <style>
 	.calendar {

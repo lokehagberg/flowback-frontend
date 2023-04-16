@@ -22,6 +22,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -113,7 +114,7 @@
 				action={() => (selectedPage = 'schedule')}
 				isSelected={selectedPage === 'schedule'}
 				text="Group schedule"
-				icon={faList}
+				icon={faCalendarAlt}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}

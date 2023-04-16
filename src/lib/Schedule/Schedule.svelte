@@ -17,6 +17,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { page } from '$app/stores';
 
     export const Class = ""
 
@@ -35,7 +36,8 @@
 		'Dec'
 	];
 
-	const currentDate = new Date();
+	const currentDate = new Date(),
+    groupId = $page.params.groupId
 
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
@@ -80,7 +82,7 @@
 	let deleteSelection = () => {};
 
 	const setUpScheduledPolls = async () => {
-		const { json, res } = await fetchRequest('GET', 'user/schedule?limit=100');
+		const { json, res } = await fetchRequest('GET', groupId ? `group/${groupId}/schedule` : 'user/schedule?limit=100');
 		events = json.results;
 	};
 

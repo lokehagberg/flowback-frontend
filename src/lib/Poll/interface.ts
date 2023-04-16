@@ -48,7 +48,7 @@ export interface Comment {
 	author_id: number;
 	author_name: string;
 	author_thumbnail: string;
-	parent: number;
+	parent_id?: number;
 	message: string;
 	score: number;
 	being_edited: boolean;

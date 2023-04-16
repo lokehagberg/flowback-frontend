@@ -16,13 +16,13 @@
 		comments: Comment[] = [],
 		show = false;
 
-	const postComment = async (parent: number | null = null) => {
+	const postComment = async (parent_id: number | undefined = undefined) => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/create`,
 			{
 				message,
-				parent
+				parent_id
 			}
 		);
 		if (res.ok) {
@@ -31,7 +31,7 @@
 				author_name: localStorage.getItem('userName') || '',
 				author_thumbnail: '',
 				message,
-				parent: 2,
+				parent_id: parent_id || undefined,
 				score: 0,
 				being_edited: false,
 				being_replied: false,
@@ -72,8 +72,31 @@
 		);
 	};
 
-	onMount(() => {
-		getComments();
+	const sortComments = () => {
+		let parentComments = comments.filter((comment) => comment.parent_id === null);
+		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
+
+		let sortedComments = parentComments;
+
+		while (childrenComments.length > 0) {
+			childrenComments.every((child, j) => {
+				parentComments.forEach((parent, i) => {
+					if (parent.id === child.parent_id) {
+						sortedComments.splice(i + 1, 0, child);
+						childrenComments.splice(j, 1);
+						return false;
+					}
+				});
+			});
+			parentComments = sortedComments;
+		}
+
+		comments = sortedComments;
+	};
+
+	onMount(async () => {
+		await getComments();
+		sortComments();
 	});
 </script>
 
@@ -81,7 +104,7 @@
 
 <div class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
-	<form class="mt-4" on:submit|preventDefault={() => postComment(null)}>
+	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined)}>
 		<TextArea label="Comment" required bind:value={message} />
 		<Button Class="mt-4" type="submit" label="Send" />
 	</form>
@@ -89,9 +112,11 @@
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
 			{#if comment.being_edited}
+				{@debug comment}
 				<form
 					class="ml-4"
-					on:submit|preventDefault={() => updateComment(comment.id, comment.being_edited_message || "")}
+					on:submit|preventDefault={() =>
+						updateComment(comment.id, comment.being_edited_message || '')}
 				>
 					<TextArea label="Comment" required bind:value={comment.being_edited_message} />
 					<Button Class="mt-4" type="submit" label="Update" />

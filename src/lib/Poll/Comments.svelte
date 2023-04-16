@@ -16,7 +16,6 @@
 		comments: Comment[] = [],
 		show = false;
 
-
 	const postComment = async (parent: number | null = null) => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -35,7 +34,8 @@
 				parent: 2,
 				score: 0,
 				being_edited: false,
-				being_replied: false
+				being_replied: false,
+				id: json
 			});
 			comments = comments.reverse();
 			show = true;
@@ -47,15 +47,23 @@
 			'GET',
 			`group/poll/${$page.params.pollId}/comment/list`
 		);
-		
-		comments = json.results.map((comment:Comment) => {
-			comment.being_edited = false
-			comment.being_replied = false
-			return comment
-		})
+
+		comments = json.results.map((comment: Comment) => {
+			comment.being_edited = false;
+			comment.being_replied = false;
+			return comment;
+		});
 	};
 
-	const updateComment = async () => {};
+	const updateComment = async (id: number, message: string) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/comment/${id}/update`,
+			{
+				message
+			}
+		);
+	};
 
 	const deleteComment = async (id: number) => {
 		const { res, json } = await fetchRequest(
@@ -80,9 +88,12 @@
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
-			{#if comment?.being_edited}
-				<form class="ml-4" on:submit|preventDefault={() => updateComment()}>
-					<TextArea label="Comment" required bind:value={message} />
+			{#if comment.being_edited}
+				<form
+					class="ml-4"
+					on:submit|preventDefault={() => updateComment(comment.id, comment.being_edited_message || "")}
+				>
+					<TextArea label="Comment" required bind:value={comment.being_edited_message} />
 					<Button Class="mt-4" type="submit" label="Update" />
 				</form>
 			{:else}
@@ -98,24 +109,30 @@
 							class="flex items-center gap-1 hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
 							on:click={() => (comment.being_replied = true)}
 						>
-							<Fa icon={faReply} />{$_("Reply")}
+							<Fa icon={faReply} />{$_('Reply')}
 						</div>
 						{#if Number(localStorage.getItem('userId')) === comment.author_id}
 							<div
 								class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
-								on:click={() => deleteComment(1)}
+								on:click={() => deleteComment(comment.id)}
 							>
-								{$_("Delete")}
+								{$_('Delete')}
 							</div>
-							<div class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors">
-								{$_("Edit")}
+							<div
+								class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+								on:click={() => {
+									comment.being_edited = true;
+									comment.being_edited_message = comment.message;
+								}}
+							>
+								{$_('Edit')}
 							</div>
 						{/if}
 					</div>
 				</div>
 			{/if}
 			{#if comment?.being_replied}
-				<form class="ml-4" on:submit|preventDefault={() => postComment(comment.author_id)}>
+				<form class="ml-4" on:submit|preventDefault={() => postComment(comment.id)}>
 					<TextArea label="Reply to comment" required bind:value={message} />
 					<Button Class="mt-4" type="submit" label="Send" />
 				</form>

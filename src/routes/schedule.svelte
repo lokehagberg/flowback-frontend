@@ -39,11 +39,11 @@
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
 		selectedDate = new Date(),
-		polls: scheduledEvent[] = [],
+		events: scheduledEvent[] = [],
 		loading = false,
 		showCreateScheduleEventModal = false,
 		show = false,
-		status:StatusMessageInfo,
+		status: StatusMessageInfo,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
@@ -52,13 +52,12 @@
 		title: string,
 		description: string;
 
-		
-		onMount(async () => {
-			//Prevents "document not found" error
-			deleteSelection = () => {
+	onMount(async () => {
+		//Prevents "document not found" error
+		deleteSelection = () => {
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		};
-		
+
 		setUpScheduledPolls();
 	});
 
@@ -81,7 +80,7 @@
 
 	const setUpScheduledPolls = async () => {
 		const { json, res } = await fetchRequest('GET', 'user/schedule?limit=100');
-		polls = json.results;
+		events = json.results;
 	};
 
 	const firstDayInMonthWeekday = () => {
@@ -95,22 +94,24 @@
 			title,
 			description
 		});
-		if (res.ok){
+		if (res.ok) {
 			showCreateScheduleEventModal = false;
 			show = true;
-			// polls.push({
-			// 	created_by=localStorage.getItem("userName"),
-			// 	description="",
-			// 	end_date: end_date.toString() || "",
-			// 	start_date,
-
-			// })
+			events.push({
+				created_by: Number(localStorage.getItem('userId')),
+				description: '',
+				end_date: end_date?.toString() || '',
+				start_date: start_date?.toString() || '',
+				id: json,
+				score: 0,
+				title
+			});
+			events = events;
+			
 			start_date = null;
 			end_date = null;
-			title = "";
-		}
-		else status = statusMessageFormatter(res, json)
-
+			title = '';
+		} else status = statusMessageFormatter(res, json);
 	};
 </script>
 
@@ -129,7 +130,7 @@
 						icon={faPlus}
 					/>
 				</div>
-				{#each polls.filter((poll) => {
+				{#each events.filter((poll) => {
 					//Fixes a one day off issue
 					const date = new Date(poll.start_date);
 					const fixedDate = new Date(date.setDate(date.getDate()));
@@ -196,7 +197,11 @@
 								document.getElementById(selectedDatePosition)?.classList.remove('selected');
 								document.getElementById(`${x}-${y}`)?.classList.add('selected');
 								selectedDatePosition = `${x}-${y}`;
-								selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1) + 1);
+								selectedDate = new Date(
+									year,
+									month,
+									-firstDayInMonthWeekday() + x + 7 * (y - 1) + 1
+								);
 							}}
 						>
 							<div class="w-full">
@@ -214,7 +219,7 @@
 										{poll.title}
 									</p>
 								{/each} -->
-								{#if polls.filter((poll) => new Date(poll.start_date)
+								{#if events.filter((poll) => new Date(poll.start_date)
 											.toJSON()
 											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
 											.toJSON()
@@ -238,14 +243,14 @@
 			<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
 			<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
 			<TextInput label="Event title" bind:value={title} />
-			<StatusMessage bind:status Class="w-full mt-3 mb-3"/>
+			<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 			<Button type="submit">{$_('Submit')}</Button>
 		</form>
 	</div>
 	<div slot="footer" />
 </Modal>
 
-<SuccessPoppup bind:show/>
+<SuccessPoppup bind:show />
 
 <style>
 	.calendar {

@@ -51,10 +51,10 @@ export interface Comment {
 	parent: number;
 	message: string;
 	score: number;
-	being_edited:boolean;
-	being_replied:boolean;
+	being_edited: boolean;
+	being_replied: boolean;
+	being_edited_message?:string;
+	id: number;
 }
 
-export interface CommentEdited {
-
-}
+export interface CommentEdited {}

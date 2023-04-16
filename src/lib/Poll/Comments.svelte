@@ -98,17 +98,17 @@
 							class="flex items-center gap-1 hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
 							on:click={() => (comment.being_replied = true)}
 						>
-							<Fa icon={faReply} />Reply
+							<Fa icon={faReply} />{$_("Reply")}
 						</div>
 						{#if Number(localStorage.getItem('userId')) === comment.author_id}
 							<div
 								class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
 								on:click={() => deleteComment(1)}
 							>
-								Delete
+								{$_("Delete")}
 							</div>
 							<div class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors">
-								Edit
+								{$_("Edit")}
 							</div>
 						{/if}
 					</div>

@@ -31,6 +31,7 @@
 	];
 
 	const currentDate = new Date();
+
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
 		selectedDate = new Date(),
@@ -38,12 +39,27 @@
 		loading = false,
 		showCreateScheduleEventModal = false,
 		//A fix due to class struggle
-		selectedDatePosition = '0-0';
+		selectedDatePosition = '0-0',
+		//Variables for creating new scheduled events
+		start_date: Date,
+		end_date: Date,
+		title: string,
+		description: string;
+
+		
+		onMount(async () => {
+			//Prevents "document not found" error
+			deleteSelection = () => {
+			document.getElementById(selectedDatePosition)?.classList.remove('selected');
+		};
+		
+		setUpScheduledPolls();
+	});
 
 	$: month && year && deleteSelection();
-	$: month && test();
+	$: month && updateMonth();
 
-	const test = () => {
+	const updateMonth = () => {
 		if (month === 12) {
 			year += 1;
 			month = 0;
@@ -54,16 +70,8 @@
 		}
 	};
 
+	//This function is defined in onMount
 	let deleteSelection = () => {};
-
-	onMount(async () => {
-		//Prevents "document not found" error
-		deleteSelection = () => {
-			document.getElementById(selectedDatePosition)?.classList.remove('selected');
-		};
-
-		setUpScheduledPolls();
-	});
 
 	const setUpScheduledPolls = async () => {
 		const { json, res } = await fetchRequest('GET', 'user/schedule?limit=100');
@@ -74,10 +82,10 @@
 		return new Date(year, month, 0).getDay();
 	};
 
-	let start_date: Date, end_date: Date, title: string, description: string;
+	// $: start_date = new Date(selectedDate.setHours(0, 0, 0));
+	// $: end_date = new Date(selectedDate.setHours(23, 59, 59));
 
-	$: start_date = new Date(selectedDate.setHours(0, 0, 0));
-	$: end_date = new Date(selectedDate.setHours(23, 59, 59));
+	$:console.log(selectedDate, "SELECTED DATE");
 
 	const scheduleEventCreate = async (e: any) => {
 		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
@@ -87,15 +95,17 @@
 			description
 		});
 	};
+
+	$: console.log(start_date);
 </script>
 
 <Layout>
 	<div class="flex bg-white">
 		<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 			{$_('Scheduled events for')}
-			{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
+			{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
 			{selectedDate.getFullYear()}
-			
+
 			<div class="pt-3 pb-3">
 				<div on:click={() => (showCreateScheduleEventModal = true)}>
 					<Fa
@@ -171,7 +181,7 @@
 								document.getElementById(selectedDatePosition)?.classList.remove('selected');
 								document.getElementById(`${x}-${y}`)?.classList.add('selected');
 								selectedDatePosition = `${x}-${y}`;
-								selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+								selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1) + 1);
 							}}
 						>
 							<div class="w-full">
@@ -205,12 +215,13 @@
 	</div>
 </Layout>
 
+<!-- Modal for creating one's own/group scheduled event -->
 <Modal bind:open={showCreateScheduleEventModal}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<form on:submit|preventDefault={scheduleEventCreate}>
 			<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-			<DateInput value={end_date} format="yyyy-MM-dd HH:mm" />
+			<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
 			<TextInput label="Event title" bind:value={title} />
 			<Button type="submit">{$_('Submit')}</Button>
 		</form>

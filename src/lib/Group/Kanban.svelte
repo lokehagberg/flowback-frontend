@@ -71,7 +71,7 @@
 				description,
 				tag: 1,
 				title,
-				priority:1
+				priority: 1
 			}
 		);
 		status = statusMessageFormatter(res, json);
@@ -92,10 +92,9 @@
 			title,
 			id: json,
 			created_by: 1,
-			origin_id:1,
-			origin_type:'user',
-			group_name:""
-
+			origin_id: 1,
+			origin_type: type === 'group' ? 'group' : 'user',
+			group_name: ''
 		});
 
 		kanbanEntries = kanbanEntries;

@@ -14,7 +14,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import type { GroupUser } from './interface';
+	import type { GroupUser, kanban } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import type { KanbanEntry } from './Kanban';
@@ -25,7 +25,7 @@
 		status: StatusMessageInfo,
 		showSuccessPoppup = false;
 
-	export let kanban: KanbanEntry,
+	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void;

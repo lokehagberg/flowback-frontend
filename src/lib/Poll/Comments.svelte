@@ -37,7 +37,8 @@
 				being_edited: false,
 				being_replied: false,
 				id: json,
-				reply_depth: replyDepth + 1
+				reply_depth: replyDepth + 1,
+				active: true
 			});
 			comments = comments;
 			showMessage = 'Posted Comment';
@@ -162,31 +163,33 @@
 						<div class="text-gray-700">{comment.author_name}</div>
 					</div>
 					<div class="text-md mt-1 mb-3">{comment.message}</div>
-					<div class="flex gap-3 text-xs">
-						<div
-							class="flex items-center gap-1 hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
-							on:click={() => (comment.being_replied = true)}
-						>
-							<Fa icon={faReply} />{$_('Reply')}
+					{#if comment.active}
+						<div class="flex gap-3 text-xs">
+							<div
+								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+								on:click={() => (comment.being_replied = true)}
+							>
+								<Fa icon={faReply} />{$_('Reply')}
+							</div>
+							{#if Number(localStorage.getItem('userId')) === comment.author_id}
+								<div
+									class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+									on:click={() => deleteComment(comment.id)}
+								>
+									{$_('Delete')}
+								</div>
+								<div
+									class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+									on:click={() => {
+										comment.being_edited = true;
+										comment.being_edited_message = comment.message;
+									}}
+								>
+									{$_('Edit')}
+								</div>
+							{/if}
 						</div>
-						{#if Number(localStorage.getItem('userId')) === comment.author_id}
-							<div
-								class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
-								on:click={() => deleteComment(comment.id)}
-							>
-								{$_('Delete')}
-							</div>
-							<div
-								class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
-								on:click={() => {
-									comment.being_edited = true;
-									comment.being_edited_message = comment.message;
-								}}
-							>
-								{$_('Edit')}
-							</div>
-						{/if}
-					</div>
+					{/if}
 				</div>
 			{/if}
 			{#if comment.being_replied}

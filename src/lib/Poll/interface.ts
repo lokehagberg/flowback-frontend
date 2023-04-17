@@ -56,6 +56,8 @@ export interface Comment {
 	being_replied: boolean;
 	being_edited_message?:string;
 	id: number;
+	//False if comment has been deleted
+	active:boolean;
 }
 
 export interface CommentEdited {}

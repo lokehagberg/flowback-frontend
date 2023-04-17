@@ -20,22 +20,32 @@
 	import { faWallet } from '@fortawesome/free-solid-svg-icons/faWallet';
 	import { faSliders } from '@fortawesome/free-solid-svg-icons/faSliders';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
-	type polltypes = 'Ranking' | 'For/Against' | 'Quadratic' | 'Cardinal' | 'Scheduled';
+	type polltypes =
+		| 'Ranking'
+		| 'For/Against'
+		| 'Quadratic'
+		| 'Cardinal'
+		| 'Scheduled'
+		| 'Text Poll'
+		| 'Date Poll';
 	type timetypes = 'Endtime' | 'Dynamic';
 
-	let selected_poll: polltypes = 'Ranking';
+	let selected_poll: polltypes = 'Text Poll';
 	let selected_time: timetypes = 'Endtime';
 	//Something about this feels very scuffed
-	const polls: polltypes[] = ['Ranking', 'Scheduled'];
-	const times: timetypes[] = ['Endtime'];
+	const polls: polltypes[] = ['Text Poll', 'Date Poll'];
+	const times: timetypes[] = [];
 
 	const pollDescriptions: Record<polltypes, string> = {
+		'Text Poll': '',
+		'Date Poll': '',
 		Ranking: `Ranking is the method of preferential voting known as the borda count. The top proposal in Added always gets the number of points as there are proposals (it does not depend on there being proposals below it), and the one below that gets that number minus one, the one below that gets that number minus two and so on. Each proposal that are in abstain each get zero points. This is added over all voters and is divided by the total number of votes to get the result.`,
 		'For/Against': `For/Against is the method where each proposal that is voted for gets one point and each voted against gets minus one independently of order, all other proposals get zero points. The points are then added over all voters and is divided by the total number of votes to get the result.`,
 		Cardinal: `Cardinal currently has no description`,
@@ -51,6 +61,8 @@
 	const disabled: (polltypes | timetypes)[] = ['For/Against', 'Cardinal', 'Quadratic', 'Dynamic'];
 
 	const pollIcons: Record<polltypes, any[]> = {
+		'Text Poll': [faFile],
+		'Date Poll': [faCalendarAlt],
 		Ranking: [faArrowUp, faArrowDown],
 		'For/Against': [faCheck, faX],
 		Cardinal: [faSliders],
@@ -66,6 +78,7 @@
 	let title = '',
 		description = '',
 		tags: TagType[] = [],
+		defaultType : polltypes = "Text Poll",
 		selectedTag: TagType,
 		status: StatusMessageInfo,
 		start_date = new Date(),
@@ -97,7 +110,7 @@
 			vote_start_date: delegate_vote_end_date,
 			proposal_end_date,
 			end_date,
-			poll_type: selected_poll === 'Ranking' ? 1 : 3,
+			poll_type: selected_poll === defaultType ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
 			public: isPublic
@@ -246,7 +259,7 @@
 							buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
 							Class={`${
 								(!disabled.includes(poll) && selected_poll === poll
-									? '!bg-primary' 
+									? '!bg-primary'
 									: '!bg-secondary') ||
 								(disabled.includes(poll) &&
 									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
@@ -263,7 +276,7 @@
 						</Button>
 					{/each}
 				</div>
-				<div class="flex flex-col gap-6 mt-12">
+				<div class="flex flex-col gap-6 mt--12">
 					{#each times as time}
 						<Button
 							disabled={loading}
@@ -283,7 +296,7 @@
 					{/each}
 				</div>
 			</div>
-			<div class="bg-white p-6 shadow-xl mt-4 rounded">
+			<!-- <div class="bg-white p-6 shadow-xl mt-4 rounded">
 				<div>
 					{#each Object.entries(pollDescriptions) as [pollType, description]}
 						{#if selected_poll === pollType}
@@ -298,7 +311,7 @@
 						{/if}
 					{/each}
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </Layout>

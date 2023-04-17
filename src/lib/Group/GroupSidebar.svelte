@@ -45,7 +45,7 @@
 
 		userIsOwner =
 			groupAdmins.json.results.find(
-				(user: any) => user.user_id === userData.json.id && user.is_admin
+				(user: any) => user.user.id === userData.json.id && user.is_admin
 			) !== undefined;
 	};
 

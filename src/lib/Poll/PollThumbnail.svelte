@@ -15,6 +15,7 @@
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
 
 	export let poll: poll;
 
@@ -49,11 +50,11 @@
 				{#if poll.poll_type === 1}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
-						icons={[faArrowUp, faArrowDown]}
-						text={'Ranking'}
+						icons={[faFile]}
+						text={'File'}
 					/>
 				{:else if poll.poll_type === 3}
-					<!-- <HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} /> -->
+					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
@@ -87,10 +88,15 @@
 			labels={['Poll', 'Timeline']}
 		/>
 	</div>
-
+	<a
+	class="cursor-pointe"
+	href={onHoverGroup
+		? '/groups/1'
+		: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+>
 	<p class="mt-2 whitespace-pre-wrap mb-4 ">
 		{poll.description}
-	</p>
+	</p></a>
 
 	<Timeline
 		displayDetails={false}

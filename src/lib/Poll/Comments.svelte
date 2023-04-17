@@ -13,7 +13,8 @@
 
 	let message: string,
 		comments: Comment[] = [],
-		show = false;
+		show = false,
+		showMessage = '';
 
 	const postComment = async (parent_id: number | undefined = undefined, replyDepth: number) => {
 		const { res, json } = await fetchRequest(
@@ -39,6 +40,7 @@
 				reply_depth: replyDepth + 1
 			});
 			comments = comments;
+			showMessage = 'Posted Comment';
 			show = true;
 			message = '';
 		}
@@ -65,6 +67,17 @@
 				message
 			}
 		);
+		if (res.ok) {
+			show = true;
+			showMessage = 'Edited Comment';
+			const index = comments.findIndex((comment) => comment.id === id);
+			let comment = comments.find((comment) => comment.id === id);
+			if (comment) {
+				comment.message = message;
+				comments.splice(index, 1, comment);
+				comments = comments;
+			}
+		}
 	};
 
 	const deleteComment = async (id: number) => {
@@ -72,6 +85,12 @@
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${id}/delete`
 		);
+		if (res.ok) {
+			show = true;
+			showMessage = 'Comment Deleted';
+			comments = comments.filter((comment) => comment.id !== id);
+			comments = comments;
+		}
 	};
 
 	const sortComments = () => {
@@ -107,7 +126,7 @@
 	});
 </script>
 
-<SuccessPoppup bind:show message={'Comment Posted'} />
+<SuccessPoppup bind:show message={showMessage} />
 
 <div class="p-4 border border-gray-200 rounded">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
@@ -122,8 +141,10 @@
 				{@debug comment}
 				<form
 					class="ml-4"
-					on:submit|preventDefault={() =>
-						updateComment(comment.id, comment.being_edited_message || '')}
+					on:submit|preventDefault={() => {
+						updateComment(comment.id, comment.being_edited_message || '');
+						comment.being_edited = false;
+					}}
 				>
 					<TextArea label="Comment" required bind:value={comment.being_edited_message} />
 					<Button Class="mt-4" type="submit" label="Update" />

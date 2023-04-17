@@ -263,7 +263,9 @@
 									: '!bg-secondary') ||
 								(disabled.includes(poll) &&
 									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
-							}`}
+							}
+							${selected_poll ===  poll? 'shadow-sm outline outline-primary' : 'shadow-xl'}
+							`}
 						>
 							<div class="flex items-center text-center">
 								<!-- Some buttons have multiple icons -->

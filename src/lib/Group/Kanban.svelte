@@ -28,12 +28,12 @@
 
 	onMount(() => {
 		if (type === 'group') {
-			getKanbanEntries();
+			getKanbanEntriesGroup();
 			if (type === 'group') getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
 	});
 
-	const getKanbanEntries = async () => {
+	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/kanban/entry/list?limit=10000`

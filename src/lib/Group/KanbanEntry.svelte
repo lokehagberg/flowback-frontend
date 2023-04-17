@@ -65,15 +65,14 @@
 		showSuccessPoppup = true;
 	};
 
-	const updateKanbanTag = async (kanban: any) => {
-		console.log(kanban.origin_type, 'TYPE typ');
+	const updateKanbanTag = async (tag: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			{
-				tag: kanban.tag,
+				tag,
 				entry_id: kanban.id
 			}
 		);
@@ -145,13 +144,13 @@
 		</div>
 	</div>
 	<!-- Arrows -->
-	{#if type === 'group'}
+		{#if ((type === "group" && kanban.origin_type === "group") || (type === "home" && kanban.origin_type === "user"))}
 		<div class="flex justify-between mt-3">
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag > 0) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
+						updateKanbanTag(kanban.tag - 1);
 						kanban.tag -= 1;
 					}
 				}}
@@ -162,7 +161,7 @@
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag < tags.length) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
+						updateKanbanTag(kanban.tag + 1);
 						kanban.tag += 1;
 					}
 				}}

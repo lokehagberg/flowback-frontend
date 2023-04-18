@@ -41,6 +41,7 @@
 		getGroupUser();
 		await getPollData();
 		phase = getPhase();
+		scrollToSection();
 	});
 
 	const getPhase = (): Phase => {
@@ -91,6 +92,15 @@
 				if (res.ok) groupUser = json.results[0];
 			}
 		}
+	};
+
+	const scrollToSection = () => {
+		const section = $page.url.searchParams.get('section');
+		if (!section) return;
+		setTimeout(() => {
+			const scrollTo = document.getElementById(section);
+			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+		}, 1500);
 	};
 </script>
 

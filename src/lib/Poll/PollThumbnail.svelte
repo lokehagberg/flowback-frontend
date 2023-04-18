@@ -16,30 +16,11 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
+	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 
 	export let poll: poll;
 
-	onMount(() => {
-		// window.addEventListener('click', function (e) {
-		// 	if (
-		// 		notificationOpen &&
-		// 		//@ts-ignore
-		// 		!document.getElementById(`notification-list-${poll.id}`)?.contains(e.target)
-		// 	) {
-		// 		notificationOpen = false;
-		// 	}
-		// });
-	});
-	let onHoverGroup = false,
-		notificationOpen = false;
-
-	type notificationCategory = 'poll' | 'timeline';
-
-	const handleNotificationSubscription = async (categories: notificationCategory[]) => {
-		notificationOpen = !notificationOpen;
-		// const {res, json} = await fetchRequest('POST', `group/${poll.group_id}/poll/${poll.id}/unsubscribe`)
-		await fetchRequest('POST', `group/poll/${poll.id}/subscribe`, { categories });
-	};
+	let onHoverGroup = false;
 </script>
 
 <div class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
@@ -118,5 +99,14 @@
 			on:focus
 		/>
 	</div>
+	<div class="hover:bg-gray-100 cursor-pointer text-sm text-gray-600 px-1 mb-2">
+		<a class="text-black"
+		href={onHoverGroup
+			? '/groups/1'
+			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
+		>
+			<Fa class="inline" icon={faComment} />
+			<span class="inline">{$_('comments')} : {poll.total_comments}</span>
+		</a>
+	</div>
 </div>
-

@@ -129,7 +129,7 @@
 
 <SuccessPoppup bind:show message={showMessage} />
 
-<div class="p-4 border border-gray-200 rounded">
+<div class="p-4 border border-gray-200 rounded" id="comments">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined, -1)}>
 		<TextArea label="Comment" required bind:value={message} />

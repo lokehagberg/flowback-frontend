@@ -26,6 +26,7 @@ export interface poll {
 	group_image?: string;
 	joined: boolean;
 	group_joined: boolean;
+	total_comments: number;
 }
 
 export interface votings {

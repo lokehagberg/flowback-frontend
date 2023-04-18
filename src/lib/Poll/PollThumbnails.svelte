@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import PollFiltering from './PollFiltering.svelte';
-	import type { Filter } from './interface';
+	import type { Filter, poll as Poll } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -14,7 +14,7 @@
 	export let Class = '';
 	export let infoToGet: 'group' | 'home' | 'public';
 
-	let polls: any[] = [];
+	let polls: Poll[] = [];
 	let filter: Filter = {
 		search: '',
 		finishedSelection: 'all',

@@ -115,18 +115,18 @@
 				{poll.description}
 				<div class="flex h-8 justify-between">
 					<div class="flex items-baseline">
-					<Tag Class="w-32" tag={poll.tag_name} />
-					{#if pollType === 1}
-						<!-- TODO make it easy to change poll types e.t.c -->
-						<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
-					{:else if pollType === 3}
-						<HeaderIcon
-							Class="p-2 pl-0 cursor-default"
-							icon={faCalendarAlt}
-							text={'Scheduled Poll'}
-						/>
-					{/if}
-				</div>
+						<Tag Class="w-32" tag={poll.tag_name} />
+						{#if pollType === 1}
+							<!-- TODO make it easy to change poll types e.t.c -->
+							<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+						{:else if pollType === 3}
+							<HeaderIcon
+								Class="p-2 pl-0 cursor-default"
+								icon={faCalendarAlt}
+								text={'Scheduled Poll'}
+							/>
+						{/if}
+					</div>
 					<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 					<NotificationOptions
 						id={poll.id}
@@ -143,6 +143,7 @@
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				{/if}
 				<ProposalsRanked
+					{groupUser}
 					votingStartTime={poll.proposal_end_date}
 					pollType={poll.poll_type}
 					tag={poll.tag}

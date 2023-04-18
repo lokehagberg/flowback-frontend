@@ -17,6 +17,7 @@
 	import { formatDate } from './functions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Toggle from '$lib/Generic/Toggle.svelte';
+	import type { groupUser } from '$lib/Group/interface';
 
 	export let votings: votings[],
 		selectedPage: 'You' | 'Delegate',
@@ -25,7 +26,8 @@
 		pollType: number = 1,
 		votingStartTime: string,
 		phase: Phase,
-		tag: number;
+		tag: number,
+		groupUser:groupUser
 
 	let proposals: proposal[] = [],
 		ranked: proposal[] = [],
@@ -274,7 +276,9 @@
 							on:click={() => (selected = proposal)}
 						>
 							<Proposal
-								{...proposal}
+								{proposal}
+								proposals={ranked}
+								{groupUser}
 								Class={`${selectedPage === 'You' && ''} ${
 									!checked && selectedPage !== 'Delegate' && 'cursor-move'
 								}`}
@@ -312,7 +316,9 @@
 					on:click={() => (selected = proposal)}
 				>
 					<Proposal
-						{...proposal}
+						{proposal}
+						proposals={abstained}
+						{groupUser}
 						Class={`${selectedPage === 'You'} ${
 							!checked && selectedPage !== 'Delegate' && 'cursor-move'
 						}`}

@@ -35,7 +35,7 @@
 		});
 	};
 
-	const getNontifications = async () => {
+	const getNotifications = async () => {
 		const { res, json } = await fetchRequest('GET', 'notification/subscription');
 		notifications = json.results.filter(
 			(notificationObject: any) => notificationObject.channel_sender_id === id
@@ -68,7 +68,7 @@
 		closeWindowWhenClickingOutside();
 	});
 
-	$: if (notificationOpen && notifications.length === 0) getNontifications();
+	$: if (notificationOpen) getNotifications();
 
 </script>
 

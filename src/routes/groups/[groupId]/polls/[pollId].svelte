@@ -25,6 +25,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 
 	let poll: poll,
 		votings: votings[],
@@ -110,26 +111,29 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<NotificationOptions
-				id={poll.id}
-				api={`group/poll/${poll.id}`}
-				categories={['poll', 'timeline']}
-				labels={['Poll', 'Timeline']}
-			/>
 			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap">
 				{poll.description}
-				<Tag Class="w-32 mb-1 mt-1" tag={poll.tag_name} />
-				<div class="flex h-8">
+				<div class="flex h-8 justify-between">
+					<div class="flex items-baseline">
+					<Tag Class="w-32" tag={poll.tag_name} />
 					{#if pollType === 1}
+						<!-- TODO make it easy to change poll types e.t.c -->
+						<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+					{:else if pollType === 3}
 						<HeaderIcon
 							Class="p-2 pl-0 cursor-default"
-							icons={[faArrowUp, faArrowDown]}
-							text={'Ranking'}
+							icon={faCalendarAlt}
+							text={'Scheduled Poll'}
 						/>
-					{:else if pollType === 3}
-						<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 					{/if}
+				</div>
 					<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+					<NotificationOptions
+						id={poll.id}
+						api={`group/poll/${poll.id}`}
+						categories={['poll', 'timeline']}
+						labels={['Poll', 'Timeline']}
+					/>
 				</div>
 			</div>
 			{#if finished}

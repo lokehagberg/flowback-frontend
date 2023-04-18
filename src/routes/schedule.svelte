@@ -4,5 +4,5 @@
 </script>
 
 <Layout>
-	<Schedule />
+	<Schedule type='user' />
 </Layout>

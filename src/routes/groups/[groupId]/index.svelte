@@ -59,7 +59,7 @@
 	const getGroupInfo = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
-		console.log(group, "GROUPPP")
+		console.log(group, 'GROUPPP');
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 		statusMessageFormatter(res, json);
@@ -86,9 +86,7 @@
 
 <Layout>
 	{#if loading}
-		<Loader bind:loading Class="mt-24">
-
-		</Loader>
+		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">
@@ -123,7 +121,7 @@
 					{:else if selectedPage === 'perms'}
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
-						<Schedule />
+						<Schedule type="group" />
 					{/if}
 				</div>
 

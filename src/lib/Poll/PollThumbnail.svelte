@@ -48,13 +48,13 @@
 			<Tag tag={poll.tag_name} Class="inline cursor-default" />
 			<div class="ml-2 inline-flex">
 				{#if poll.poll_type === 1}
+					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+				{:else if poll.poll_type === 3}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
-						icon={faAlignLeft}
-						text={'Text Poll'}
+						icon={faCalendarAlt}
+						text={'Scheduled Poll'}
 					/>
-				{:else if poll.poll_type === 3}
-					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
@@ -89,14 +89,15 @@
 		/>
 	</div>
 	<a
-	class="cursor-pointe"
-	href={onHoverGroup
-		? '/groups/1'
-		: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
->
-	<p class="mt-2 whitespace-pre-wrap mb-4 ">
-		{poll.description}
-	</p></a>
+		class="cursor-pointe"
+		href={onHoverGroup
+			? '/groups/1'
+			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+	>
+		<p class="mt-2 whitespace-pre-wrap mb-4 ">
+			{poll.description}
+		</p></a
+	>
 
 	<Timeline
 		displayDetails={false}
@@ -119,8 +120,3 @@
 	</div>
 </div>
 
-<style>
-	.vote-thumbnail:hover {
-		/* outline: 2px #ccc solid; */
-	}
-</style>

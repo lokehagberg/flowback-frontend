@@ -19,7 +19,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 
-    export const Class = ""
+	export const Class = '';
 
 	const months = [
 		'Jan',
@@ -37,7 +37,7 @@
 	];
 
 	const currentDate = new Date(),
-    groupId = $page.params.groupId
+		groupId = $page.params.groupId;
 
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
@@ -54,6 +54,8 @@
 		end_date: Date | null,
 		title: string,
 		description: string;
+
+	export let type: 'user' | 'group';
 
 	onMount(async () => {
 		//Prevents "document not found" error
@@ -82,7 +84,10 @@
 	let deleteSelection = () => {};
 
 	const setUpScheduledPolls = async () => {
-		const { json, res } = await fetchRequest('GET', groupId ? `group/${groupId}/schedule` : 'user/schedule?limit=100');
+		const { json, res } = await fetchRequest(
+			'GET',
+			groupId ? `group/${groupId}/schedule` : 'user/schedule?limit=100'
+		);
 		events = json.results;
 	};
 
@@ -128,11 +133,13 @@
 
 		<div class="pt-3 pb-3">
 			<div on:click={() => (showCreateScheduleEventModal = true)}>
-				<Fa
-					class="ml-auto mr-auto hover:bg-gray-200 transition p-3 cursor-pointer rounded"
-					size="3x"
-					icon={faPlus}
-				/>
+				{#if type === 'user'}
+					<Fa
+						class="ml-auto mr-auto hover:bg-gray-200 transition p-3 cursor-pointer rounded"
+						size="3x"
+						icon={faPlus}
+					/>
+				{/if}
 			</div>
 			{#each events.filter((poll) => {
 				//Fixes a one day off issue

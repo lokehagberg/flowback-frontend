@@ -15,7 +15,7 @@
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 
 	export let poll: poll;
 
@@ -50,8 +50,8 @@
 				{#if poll.poll_type === 1}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
-						icons={[faFile]}
-						text={'File'}
+						icon={faAlignLeft}
+						text={'Text Poll'}
 					/>
 				{:else if poll.poll_type === 3}
 					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faCalendarAlt} text={'Scheduled'} />

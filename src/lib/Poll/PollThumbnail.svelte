@@ -65,8 +65,8 @@
 		<NotificationOptions
 			id={poll.id}
 			api={`group/poll/${poll.id}`}
-			categories={['poll', 'timeline']}
-			labels={['Poll', 'Timeline']}
+			categories={['poll', 'timeline', 'comment_all']}
+			labels={['Poll', 'Timeline', "Comments"]}
 		/>
 	</div>
 	<a

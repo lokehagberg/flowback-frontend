@@ -44,8 +44,16 @@
 			showMessage = 'Posted Comment';
 			show = true;
 			message = '';
+
+			subscribeToReplies()
 		}
 	};
+
+	const subscribeToReplies = async () => {
+		const { res, json } = await fetchRequest("POST", `group/poll/${$page.params.pollId}/subscribe`, {
+			categories: ["comment_self"]
+		});
+	}
 
 	const getComments = async () => {
 		const { res, json } = await fetchRequest(

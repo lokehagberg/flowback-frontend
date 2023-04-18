@@ -40,6 +40,7 @@ export interface Filter {
 	public: boolean;
 	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
+	order_by: 'created_at_asc' | 'created_at_desc';
 }
 
 export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';
@@ -49,15 +50,15 @@ export interface Comment {
 	author_name: string;
 	author_thumbnail: string;
 	parent_id?: number;
-	reply_depth:number;
+	reply_depth: number;
 	message: string;
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
-	being_edited_message?:string;
+	being_edited_message?: string;
 	id: number;
 	//False if comment has been deleted
-	active:boolean;
+	active: boolean;
 }
 
 export interface CommentEdited {}

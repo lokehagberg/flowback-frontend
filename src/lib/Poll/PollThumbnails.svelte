@@ -15,7 +15,12 @@
 	export let infoToGet: 'group' | 'home' | 'public';
 
 	let polls: any[] = [];
-	let filter: Filter = { search: '', finishedSelection: 'all', public: false };
+	let filter: Filter = {
+		search: '',
+		finishedSelection: 'all',
+		public: false,
+		order_by: 'created_at_desc'
+	};
 	let loading = false;
 
 	const getPolls = async () => {
@@ -32,7 +37,7 @@
 			infoToGet === 'group'
 				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
 						filter.search || ''
-				  }&${finishedFilter}`
+				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
 				? `home/polls?limit=30&title__icontains=${filter.search || ''}&${finishedFilter}`
 				: infoToGet === 'public'
@@ -43,7 +48,6 @@
 
 		const { json, res } = await fetchRequest('GET', API);
 
-		
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		else polls = json.results;
 
@@ -63,7 +67,7 @@
 			<StatusMessage bind:status disableSuccess />
 			<PollFiltering handleSearch={getPolls} bind:filter />
 			{#if polls.length === 0}
-			<div class="bg-white rounded shadow p-8 mt-6">
+				<div class="bg-white rounded shadow p-8 mt-6">
 					{$_('No polls currently here')}
 				</div>
 			{:else}

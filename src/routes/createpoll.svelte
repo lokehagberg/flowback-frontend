@@ -20,7 +20,7 @@
 	import { faWallet } from '@fortawesome/free-solid-svg-icons/faWallet';
 	import { faSliders } from '@fortawesome/free-solid-svg-icons/faSliders';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
 	import Loader from '$lib/Generic/Loader.svelte';
@@ -61,7 +61,7 @@
 	const disabled: (polltypes | timetypes)[] = ['For/Against', 'Cardinal', 'Quadratic', 'Dynamic'];
 
 	const pollIcons: Record<polltypes, any[]> = {
-		'Text Poll': [faFile],
+		'Text Poll': [faAlignLeft],
 		'Date Poll': [faCalendarAlt],
 		Ranking: [faArrowUp, faArrowDown],
 		'For/Against': [faCheck, faX],
@@ -228,7 +228,7 @@
 							<Tag
 								onclick={() => (selectedTag = tag)}
 								tag={tag.tag_name}
-								Class={`cursor-pointer ${selectedTag === tag ? 'bg-blue-600' : 'bg-blue-200'}`}
+								Class={`cursor-pointer ${selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300'}`}
 							/>
 						{/each}
 					</div>

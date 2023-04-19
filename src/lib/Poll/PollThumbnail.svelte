@@ -106,7 +106,7 @@
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
 		>
 			<Fa class="inline" icon={faComment} />
-			<span class="inline">{$_('comments')} : {poll.total_comments}</span>
+			<span class="inline">{poll.total_comments} {$_('comments')}</span>
 		</a>
 	</div>
 </div>

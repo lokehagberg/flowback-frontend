@@ -15,7 +15,8 @@
 	let message: string,
 		comments: Comment[] = [],
 		show = false,
-		showMessage = '';
+		showMessage = '',
+		recentlyTappedButton = '';
 
 	export let proposals: proposal[] = [];
 
@@ -148,16 +149,23 @@
 	<!-- Add Comment -->
 	<form class="mt-4 relative" on:submit|preventDefault={() => postComment(undefined, -1)}>
 		<!-- When # typed, show proposals to be tagged -->
-		<div class="hidden absolute bg-white p-4 shadow w-full bottom-full"
-		class:!block={true}
+		<div
+			class="invisible absolute bg-white shadow w-full bottom-full"
+			class:!visible={recentlyTappedButton === '#'}
 		>
 			<ul>
 				{#each proposals as proposal}
-				<li>{proposal.title}</li>
+					<li class="hover:bg-gray-100 cursor-pointer px-2 py-1"
+					on:click={() => {
+						message = `${message}${proposal.title}`
+						recentlyTappedButton = ""
+					}
+						}
+					>{proposal.title}</li>
 				{/each}
 			</ul>
 		</div>
-		<TextArea label="Comment" required bind:value={message} />
+		<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
 		<Button Class="mt-4" type="submit" label="Send" />
 	</form>
 

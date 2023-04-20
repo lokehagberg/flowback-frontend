@@ -27,10 +27,10 @@
 		votingStartTime: string,
 		phase: Phase,
 		tag: number,
-		groupUser:groupUser
+		groupUser: groupUser,
+		proposals: proposal[] = [];
 
-	let proposals: proposal[] = [],
-		ranked: proposal[] = [],
+	let ranked: proposal[] = [],
 		selected: proposal,
 		checked = false,
 		unsaved = false,
@@ -254,7 +254,6 @@
 	// $: pollType === 3 && abstained && formatAllDates(abstained);
 
 	const formatAllDates = (proposals: proposal[]) => {
-		console.log(proposals, 'PROPS');
 		proposals.map((proposal) => {
 			proposal.title = `${formatDate(proposal.title)}`;
 			proposal.description = formatDate(proposal.description).toString();

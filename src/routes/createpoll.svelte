@@ -228,7 +228,7 @@
 							<Tag
 								onclick={() => (selectedTag = tag)}
 								tag={tag.tag_name}
-								Class={`cursor-pointer ${selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300'}`}
+								Class={`cursor-pointer ${selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'}`}
 							/>
 						{/each}
 					</div>

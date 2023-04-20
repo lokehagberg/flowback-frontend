@@ -36,7 +36,8 @@
 		finished: boolean,
 		groupUser: groupUser,
 		deleteStatus: StatusMessageInfo,
-		phase: Phase;
+		phase: Phase,
+		proposals: proposal[];
 
 	onMount(async () => {
 		getGroupUser();
@@ -121,7 +122,7 @@
 							<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
 						{:else if pollType === 3}
 							<HeaderIcon
-								Class="p-2 pl-0 cursor-default"
+								Class="p-2 pl-2 cursor-default"
 								icon={faCalendarAlt}
 								text={'Scheduled Poll'}
 							/>
@@ -151,8 +152,9 @@
 					bind:votings
 					bind:selectedPage
 					bind:abstained
+					bind:proposals
 				/>
-
+				<!-- TODO: Replace this if statement with phases -->
 				{#if new Date(poll.proposal_end_date) >= new Date() && new Date(poll.start_date) <= new Date()}
 					{#if pollType === 1}
 						<!-- Ranked Poll -->
@@ -171,7 +173,7 @@
 					new Date(poll.end_date)
 				]}
 			/>
-			<Comments />
+			<Comments bind:proposals />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">

@@ -10,11 +10,14 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { faReply } from '@fortawesome/free-solid-svg-icons/faReply';
 	import Fa from 'svelte-fa/src/fa.svelte';
+	import type { proposal } from './interface';
 
 	let message: string,
 		comments: Comment[] = [],
 		show = false,
 		showMessage = '';
+
+	export let proposals: proposal[] = [];
 
 	const postComment = async (parent_id: number | undefined = undefined, replyDepth: number) => {
 		const { res, json } = await fetchRequest(
@@ -45,15 +48,19 @@
 			show = true;
 			message = '';
 
-			subscribeToReplies()
+			subscribeToReplies();
 		}
 	};
 
 	const subscribeToReplies = async () => {
-		const { res, json } = await fetchRequest("POST", `group/poll/${$page.params.pollId}/subscribe`, {
-			categories: ["comment_self"]
-		});
-	}
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/subscribe`,
+			{
+				categories: ['comment_self']
+			}
+		);
+	};
 
 	const getComments = async () => {
 		const { res, json } = await fetchRequest(
@@ -138,7 +145,18 @@
 
 <div class="p-4 border border-gray-200 rounded" id="comments">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
-	<form class="mt-4" on:submit|preventDefault={() => postComment(undefined, -1)}>
+	<!-- Add Comment -->
+	<form class="mt-4 relative" on:submit|preventDefault={() => postComment(undefined, -1)}>
+		<!-- When # typed, show proposals to be tagged -->
+		<div class="hidden absolute bg-white p-4 shadow w-full bottom-full"
+		class:!block={true}
+		>
+			<ul>
+				{#each proposals as proposal}
+				<li>{proposal.title}</li>
+				{/each}
+			</ul>
+		</div>
 		<TextArea label="Comment" required bind:value={message} />
 		<Button Class="mt-4" type="submit" label="Send" />
 	</form>
@@ -146,7 +164,6 @@
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
 			{#if comment.being_edited}
-				{@debug comment}
 				<form
 					class="ml-4"
 					on:submit|preventDefault={() => {

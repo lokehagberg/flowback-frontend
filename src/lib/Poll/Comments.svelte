@@ -38,8 +38,10 @@
 		if (res.ok) {
 			show = true;
 			showMessage = 'Comment Deleted';
-			comments = comments.filter((comment) => comment.id !== id);
-			comments = comments;
+			let comment = comments.find((comment) => comment.id === id);
+			if (!comment) return;
+			comment.message = '[Deleted]';
+			comments = comments
 		}
 	};
 

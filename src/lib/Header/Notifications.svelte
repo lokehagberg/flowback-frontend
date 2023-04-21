@@ -40,6 +40,16 @@
 		notifications = notifications.filter((notification) => notification.id !== id);
 	};
 
+	const markAllAsRead = async () => {
+		const { res, json } = await fetchRequest('POST', 'notification/read', {
+			notification_ids: notifications.map(notification => notification.id),
+			read: true
+		});
+		if (!res.ok) return;
+
+		notifications = []
+	};
+
 	let timeAgo: TimeAgo;
 	onMount(async () => {
 		const en = (await import('javascript-time-ago/locale/en')).default;
@@ -68,14 +78,15 @@
 </div>
 
 {#if notificationsOpen}
-	<div
+	<ul
 		class="absolute right-0 top-full bg-white select-none shadow slide-animation"
 		id="notifications-list"
 	>
+	<li on:click={markAllAsRead} class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all">{$_("Mark all as read")}</li>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
 				<!-- on:click={notification.action} -->
-				<div
+				<li
 					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
@@ -111,14 +122,14 @@
 					>
 						<Fa icon={faX} />
 					</div>
-				</div>
+				</li>
 			{/each}
 		{:else}
 			<div class="pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border cursor-default">
 				{$_('No notifications')}
 			</div>
 		{/if}
-	</div>
+	</ul>
 {/if}
 
 <style>

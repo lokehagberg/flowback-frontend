@@ -93,7 +93,7 @@
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
 					class={`w-full sm:w-[300px] md:w-[500px] ${
-						selectedPage === 'kanban' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
+						selectedPage === 'kanban' || selectedPage === 'schedule' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
 					}`}
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
@@ -121,7 +121,7 @@
 					{:else if selectedPage === 'perms'}
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
-						<Schedule type="group" />
+						<Schedule type="group"/>
 					{/if}
 				</div>
 

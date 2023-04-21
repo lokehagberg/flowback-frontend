@@ -19,7 +19,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 
-	export const Class = '';
+	export let Class = '';
 
 	const months = [
 		'Jan',

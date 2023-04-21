@@ -9,13 +9,14 @@
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
-        parent_id: number | undefined = undefined,
-        replyDepth: number,
-        updating = false,
-        id = 0;
+		parent_id: number | undefined = undefined,
+		replyDepth: number,
+		id = 0,
+		beingEdited = false,
+		message = '',
+        replying = false;
 
-	let message: string,
-		show = false,
+	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '';
 
@@ -50,9 +51,10 @@
 
 			subscribeToReplies();
 		}
+        replying = false;
 	};
 
-    const updateComment = async () => {
+	const updateComment = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${id}/update`,
@@ -71,9 +73,10 @@
 				comments = comments;
 			}
 		}
+		beingEdited = false;
 	};
 
-    //TODO: Optimize so that this doesn't fire every time a comment is made
+	//TODO: Optimize so that this doesn't fire every time a comment is made
 	const subscribeToReplies = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -85,7 +88,10 @@
 	};
 </script>
 
-<form class="mt-4 relative" on:submit|preventDefault={() => updating ? updateComment() : postComment()}>
+<form
+	class="mt-4 relative"
+	on:submit|preventDefault={() => (beingEdited ? updateComment() : postComment())}
+>
 	<!-- When # typed, show proposals to be tagged -->
 	<div
 		class="invisible absolute bg-white shadow w-full bottom-full"

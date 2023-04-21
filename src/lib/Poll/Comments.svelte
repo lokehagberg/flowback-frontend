@@ -153,18 +153,16 @@
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
 			{#if comment.being_edited}
-			<!-- TODO: Finish comment refactoring -->
-			<!-- <CommentPost bind:proposals bind:comments parent_id={comment.parent_id} replyDepth={comment.reply_depth} updating id={comment.id} /> -->
-				<form
-					class="ml-4"
-					on:submit|preventDefault={() => {
-						updateComment(comment.id, comment.being_edited_message || '');
-						comment.being_edited = false;
-					}}
-				>
-					<TextArea label="Comment" required bind:value={comment.being_edited_message} />
-					<Button Class="mt-4" type="submit" label="Update" />
-				</form>
+				<!-- TODO: Finish comment refactoring -->
+				<CommentPost
+					bind:proposals
+					bind:comments
+					bind:beingEdited={comment.being_edited}
+					message={comment.message}
+					parent_id={comment.parent_id}
+					replyDepth={comment.reply_depth}
+					id={comment.id}
+				/>
 			{:else}
 				<div
 					class={`p-3 text-sm border border-l-gray-400 ml-${
@@ -208,17 +206,13 @@
 				</div>
 			{/if}
 			{#if comment.being_replied}
-				<form
-					class="ml-4"
-					on:submit|preventDefault={() => {
-						postComment(comment.id, comment.reply_depth);
-						comment.being_replied = false;
-						comment.being_edited_message = '';
-					}}
-				>
-					<TextArea label="Reply to comment" required bind:value={message} />
-					<Button Class="mt-4" type="submit" label="Send" />
-				</form>
+				<CommentPost
+					bind:proposals
+					bind:comments
+					bind:replying={comment.being_replied}
+					parent_id={comment.id}
+					replyDepth={comment.reply_depth}
+				/>
 			{/if}
 		{/each}
 	</div>

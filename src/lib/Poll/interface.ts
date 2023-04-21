@@ -3,7 +3,7 @@ export interface proposal {
 	description: string;
 	id: number;
 	created_by: number;
-	
+	poll: number;
 }
 
 export interface poll {

@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import { onMount } from 'svelte';
 
 	export let proposal: proposal,
 		Class = '',
@@ -40,6 +41,10 @@
 			`group/poll/${$page.params.pollId}/proposal/create`
 		);
 	};
+
+	onMount(() => {
+		console.log(proposal);
+	})
 </script>
 
 <div

@@ -16,9 +16,6 @@
 	import Results from '$lib/Poll/Results.svelte';
 	import ScheduledSubmission from '$lib/Poll/ScheduledSubmission.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
-	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
-	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { groupUser } from '$lib/Group/interface';

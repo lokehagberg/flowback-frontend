@@ -11,7 +11,6 @@
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { formatDate } from './functions';
@@ -344,7 +343,7 @@
 <!-- TODO: Remove this and replace by allowing drag-drop
 and buttons at the same time without a toggle both. -->
 {#if phase !== 'pre-start' && phase !== 'proposals'}
-	Enable buttons
+	{$_('Enable buttons')}
 	<Toggle bind:checked />
 {/if}
 

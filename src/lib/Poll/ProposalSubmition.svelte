@@ -4,13 +4,13 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { page } from '$app/stores';
-	import type { proposal } from '$lib/typescriptexperiments';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import type { proposal } from './interface';
 
 	let title: string,
 		description: string,
@@ -33,15 +33,20 @@
 		statusMessageFormatter(res, json);
 
 		if (res.ok) {
-			show = true
-			setTimeout(() => {
-				show = false
-			}, 3000);
+			show = true;
+
+			//TODO: Multiple places in the codebase uses this rather than local storage for group-user info
+			const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?user_id=${Number(localStorage.getItem('userId'))}`
+			);
 
 			abstained.push({
 				title,
 				description,
-				id: json
+				id: json,
+				created_by: json.results[0].id,
+				poll: Number($page.params.pollId)
 			});
 
 			abstained = abstained;

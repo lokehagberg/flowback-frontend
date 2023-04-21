@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CommentPost from './CommentPost.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -147,31 +148,12 @@
 <div class="p-4 border border-gray-200 rounded" id="comments">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
-	<form class="mt-4 relative" on:submit|preventDefault={() => postComment(undefined, -1)}>
-		<!-- When # typed, show proposals to be tagged -->
-		<div
-			class="invisible absolute bg-white shadow w-full bottom-full"
-			class:!visible={recentlyTappedButton === '#'}
-		>
-			<ul>
-				{#each proposals as proposal}
-					<li class="hover:bg-gray-100 cursor-pointer px-2 py-1"
-					on:click={() => {
-						message = `${message}${proposal.title}`
-						recentlyTappedButton = ""
-					}
-						}
-					>{proposal.title}</li>
-				{/each}
-			</ul>
-		</div>
-		<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
-		<Button Class="mt-4" type="submit" label="Send" />
-	</form>
+	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} />
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
 			{#if comment.being_edited}
+			<CommentPost bind:proposals bind:comments parent_id={-1} replyDepth={0} />
 				<form
 					class="ml-4"
 					on:submit|preventDefault={() => {

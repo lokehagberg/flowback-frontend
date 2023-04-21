@@ -10,15 +10,12 @@
 		autofocus = false,
 		max = 2000,
 		onKeyPress = (e: any) => {},
-		onInput = (e: any) => {},
 		inputClass = '',
 		rows = 2,
-		keyCode = 0,
-		tagged = false,
-		recentlyTappedButton = "";
+		recentlyTappedButton = '';
 
 	const onKeyDown = (e: any) => {
-		recentlyTappedButton = e.target.value[e.target.value.length - 1]
+		recentlyTappedButton = e.target.value[e.target.value.length - 1];
 	};
 
 	const expandableTextArea = () => {

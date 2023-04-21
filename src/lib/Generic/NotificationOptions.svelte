@@ -54,6 +54,7 @@
 			});
 		notifications = notifications;
 	};
+	
 	const handleNotificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',

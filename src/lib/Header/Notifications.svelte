@@ -9,7 +9,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 
 	let notifications: notification[],
-		hovered: number[] = []
+		hovered: number[] = [];
 
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
@@ -19,10 +19,11 @@
 
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
+			const notificationListElement = document.getElementById(`notifications-list`);
 			if (
 				notificationsOpen &&
 				//@ts-ignore
-				!document.getElementById(`notifications-list`)?.contains(e.target)
+				!notificationListElement?.contains(e.target) 
 			) {
 				notificationsOpen = false;
 			}
@@ -30,7 +31,13 @@
 	};
 
 	const readNotification = async (id: number) => {
-		await fetchRequest('POST', 'notification/read', { notification_ids: [id], read: true });
+		const { res, json } = await fetchRequest('POST', 'notification/read', {
+			notification_ids: [id],
+			read: true
+		});
+		if (!res.ok) return;
+
+		notifications = notifications.filter((notification) => notification.id !== id);
 	};
 
 	let timeAgo: TimeAgo;
@@ -53,8 +60,9 @@
 >
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
-	class:hidden={notifications?.length === 0 || notifications?.length === undefined} 
-	class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white  bg-secondary">
+		class:hidden={notifications?.length === 0 || notifications?.length === undefined}
+		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white  bg-secondary"
+	>
 		<span class="">{notifications?.length}</span>
 	</div>
 </div>
@@ -94,8 +102,11 @@
 						style="z-index: 1;"
 						on:click={() => {
 							readNotification(notification.id);
-							hovered.push(notification.id);
-							hovered = hovered;
+							setTimeout(() => {
+								notificationsOpen = true;
+							}, 100);
+							// hovered.push(notification.id);
+							// hovered = hovered;
 						}}
 					>
 						<Fa icon={faX} />

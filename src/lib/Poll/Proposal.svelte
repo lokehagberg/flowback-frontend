@@ -14,6 +14,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	export let proposal: proposal,
 		Class = '',
@@ -25,7 +26,8 @@
 	let isHoveredOver = false,
 		newTitle = proposal.title,
 		newDescription = proposal.description,
-		open = false;
+		open = false,
+		show = false;
 
 	const deleteProposal = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/proposal/${proposal.id}/delete`);
@@ -35,16 +37,30 @@
 
 	//TODO: Actual Edit
 	const editProposal = async () => {
-		deleteProposal();
+		await deleteProposal();
+
+		let newProposal = proposal;
+		newProposal.title = newTitle;
+		newProposal.description = newDescription;
+
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${$page.params.pollId}/proposal/create`
+			`group/poll/${$page.params.pollId}/proposal/create`,
+			newProposal
 		);
+
+		if (res.ok) {
+			proposal.id = json;
+			proposal.title = newTitle;
+			proposal.description = newDescription;
+			show = true;
+		}
+		
 	};
 
 	onMount(() => {
 		console.log(proposal);
-	})
+	});
 </script>
 
 <div
@@ -83,11 +99,13 @@
 		>
 			<TextInput label="Title" bind:value={newTitle} />
 			<TextArea label="Description" bind:value={newDescription} />
-			<Button type="submit">{$_("Submit")}</Button>
+			<Button type="submit">{$_('Submit')}</Button>
 		</form>
 	</div>
 	<div slot="footer" />
 </Modal>
+
+<SuccessPoppup bind:show message="Successfully edited proposal"/>
 
 <style>
 	.elipsis {

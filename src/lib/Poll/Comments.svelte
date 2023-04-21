@@ -1,68 +1,21 @@
 <script lang="ts">
 	import CommentPost from './CommentPost.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Button from '$lib/Generic/Button.svelte';
-	import TextArea from '$lib/Generic/TextArea.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import type { Comment, Phase } from './interface';
+	import type { Comment } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { faReply } from '@fortawesome/free-solid-svg-icons/faReply';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { proposal } from './interface';
 
-	let message: string,
-		comments: Comment[] = [],
+	let comments: Comment[] = [],
 		show = false,
-		showMessage = '',
-		recentlyTappedButton = '';
+		showMessage = '';
 
 	export let proposals: proposal[] = [];
-
-	const postComment = async (parent_id: number | undefined = undefined, replyDepth: number) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/comment/create`,
-			{
-				message,
-				parent_id
-			}
-		);
-		if (res.ok) {
-			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
-			comments.splice(parentPosition + 1, 0, {
-				author_id: Number(localStorage.getItem('userId')) || 0,
-				author_name: localStorage.getItem('userName') || '',
-				author_thumbnail: '',
-				message,
-				parent_id: parent_id || undefined,
-				score: 0,
-				being_edited: false,
-				being_replied: false,
-				id: json,
-				reply_depth: replyDepth + 1,
-				active: true
-			});
-			comments = comments;
-			showMessage = 'Posted Comment';
-			show = true;
-			message = '';
-
-			subscribeToReplies();
-		}
-	};
-
-	const subscribeToReplies = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/subscribe`,
-			{
-				categories: ['comment_self']
-			}
-		);
-	};
 
 	const getComments = async () => {
 		const { res, json } = await fetchRequest(
@@ -75,27 +28,6 @@
 			comment.being_replied = false;
 			return comment;
 		});
-	};
-
-	const updateComment = async (id: number, message: string) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/comment/${id}/update`,
-			{
-				message
-			}
-		);
-		if (res.ok) {
-			show = true;
-			showMessage = 'Edited Comment';
-			const index = comments.findIndex((comment) => comment.id === id);
-			let comment = comments.find((comment) => comment.id === id);
-			if (comment) {
-				comment.message = message;
-				comments.splice(index, 1, comment);
-				comments = comments;
-			}
-		}
 	};
 
 	const deleteComment = async (id: number) => {

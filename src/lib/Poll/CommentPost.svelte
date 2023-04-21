@@ -10,7 +10,9 @@
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
         parent_id: number | undefined = undefined,
-        replyDepth: number;
+        replyDepth: number,
+        updating = false,
+        id = 0;
 
 	let message: string,
 		show = false,
@@ -50,7 +52,7 @@
 		}
 	};
 
-    const updateComment = async (id: number, message: string) => {
+    const updateComment = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${id}/update`,
@@ -83,7 +85,7 @@
 	};
 </script>
 
-<form class="mt-4 relative" on:submit|preventDefault={() => postComment()}>
+<form class="mt-4 relative" on:submit|preventDefault={() => updating ? updateComment() : postComment()}>
 	<!-- When # typed, show proposals to be tagged -->
 	<div
 		class="invisible absolute bg-white shadow w-full bottom-full"

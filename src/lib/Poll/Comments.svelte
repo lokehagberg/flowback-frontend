@@ -153,7 +153,8 @@
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
 			{#if comment.being_edited}
-			<CommentPost bind:proposals bind:comments parent_id={-1} replyDepth={0} />
+			<!-- TODO: Finish comment refactoring -->
+			<!-- <CommentPost bind:proposals bind:comments parent_id={comment.parent_id} replyDepth={comment.reply_depth} updating id={comment.id} /> -->
 				<form
 					class="ml-4"
 					on:submit|preventDefault={() => {

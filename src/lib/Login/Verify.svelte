@@ -65,7 +65,7 @@
 		<TextInput label={'Verification Code'} bind:value={verification_code} required />
 		<TextInput label={'Password'} bind:value={password} type={'password'} required />
 		<RadioButtons
-			label="Do you accept terms and conditions?"
+			label="Do you want Email Notifications?"
 			centering={true}
 			bind:Yes={acceptedEmailNotifications}
 		/>

@@ -47,7 +47,7 @@
 					});
 				}
 
-				// window.location.href = '/home';
+				window.location.href = '/home';
 			} else status = { message: 'Account was created but was unable to sign in', success: true };
 		} else {
 			loading = false;

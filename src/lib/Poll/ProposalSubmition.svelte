@@ -56,14 +56,11 @@
 
 	//TODO: Multiple places in the codebase uses this rather than local storage for group-user info
 	const getUserInfo = async () => {
-		const { res, json } = await fetchRequest('GET', `user`);
-		if (res.ok){
-			const results = await fetchRequest(
-				'GET',
-				`group/${$page.params.groupId}/users?user_id=${json.id}`
-			);
-			return results.json.results[0].id;
-		}
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?user_id=${Number(localStorage.getItem('userId'))}`
+		);
+		return json.results[0].id;
 	};
 </script>
 

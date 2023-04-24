@@ -14,8 +14,10 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import type { GroupUser } from './interface';
+	import type { GroupUser, kanban } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { onMount } from 'svelte';
+	import type { KanbanEntry } from './Kanban';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -23,7 +25,7 @@
 		status: StatusMessageInfo,
 		showSuccessPoppup = false;
 
-	export let kanban: any,
+	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void;
@@ -41,8 +43,10 @@
 		kanbanEdited.entry_id = kanban.id;
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/update`,
-			kanbanEdited
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/update`
+				: 'user/kanban/entry/update',
+				kanbanEdited
 		);
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;
@@ -51,23 +55,24 @@
 		kanban.description = kanbanEdited.description;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
-		console.log(kanban, 'KANBAN');
 		kanban.assignee = {
 			id: kanbanEdited?.assignee,
-			username: assignee?.user.username,
-			profile_image: assignee?.user.profile_image
+			username: assignee?.user.username || '',
+			profile_image: assignee?.user.profile_image || ''
 		};
 
 		openModal = false;
 		showSuccessPoppup = true;
 	};
 
-	const updateKanbanTag = async (kanban: any) => {
+	const updateKanbanTag = async (tag: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/update`,
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/update`
+				: 'user/kanban/entry/update',
 			{
-				tag: kanban.tag,
+				tag,
 				entry_id: kanban.id
 			}
 		);
@@ -87,7 +92,9 @@
 	const deleteKanbanEntry = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/kanban/entry/delete`,
+			kanban.origin_type === 'group'
+				? `group/${$page.params.groupId}/kanban/entry/delete`
+				: 'user/kanban/entry/delete',
 			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
@@ -96,6 +103,17 @@
 			showSuccessPoppup = true;
 		}
 	};
+
+	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
+	const getGroupKanbanIsFrom = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${kanban.origin_id}/detail`);
+		kanban.group_name = json.name;
+	};
+
+	onMount(() => {
+		console.log('HERE?!', kanban);
+		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
+	});
 </script>
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
@@ -114,21 +132,25 @@
 		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
-				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.group.id}`)}
+				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.origin_id}`)}
 	>
-		<ProfilePicture user={type === 'group' ? kanban.assignee : kanban.group} Class="" />
+		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
-			{type === 'group' ? kanban.assignee?.username : kanban.group?.name}
+			{type === 'group'
+				? kanban.assignee?.username
+				: kanban.origin_type === 'user'
+				? 'My own'
+				: kanban.group_name}
 		</div>
 	</div>
 	<!-- Arrows -->
-	{#if type === 'group'}
+		{#if ((type === "group" && kanban.origin_type === "group") || (type === "home" && kanban.origin_type === "user"))}
 		<div class="flex justify-between mt-3">
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag > 0) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag - 1 });
+						updateKanbanTag(kanban.tag - 1);
 						kanban.tag -= 1;
 					}
 				}}
@@ -139,7 +161,7 @@
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
 					if (kanban.tag < tags.length) {
-						updateKanbanTag({ id: kanban.id, tag: kanban.tag + 1 });
+						updateKanbanTag(kanban.tag + 1);
 						kanban.tag += 1;
 					}
 				}}

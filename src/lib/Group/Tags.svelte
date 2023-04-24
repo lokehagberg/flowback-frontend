@@ -10,10 +10,11 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 
-	let tags: TagType[] = [];
-	let tagToAdd = '';
-	let loading = false;
-	let areYouSureModal = false;
+	let tags: TagType[] = [],
+		tagToAdd = '',
+		selectedTag: TagType = { active: false, id: 0, tag_name: '' },
+		loading = false,
+		areYouSureModal = false;
 
 	onMount(async () => {
 		getTags();
@@ -21,11 +22,14 @@
 
 	const getTags = async () => {
 		loading = true;
-		console.log('here');
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
-		tags = json.results.sort((tag1: TagType, tag2: TagType) =>
-			tag1.tag_name.localeCompare(tag2.tag_name)
-		);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
+
+		if (res.ok) {
+			//Sorts tags alphabetically
+			tags = json.results.sort((tag1: TagType, tag2: TagType) =>
+				tag1.tag_name.localeCompare(tag2.tag_name)
+			);
+		}
 		loading = false;
 	};
 
@@ -41,13 +45,16 @@
 	};
 
 	const removeTag = async (tag: TagType) => {
+		console.log(tag, 'TAGG');
 		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/delete`, {
 			tag: tag.id
 		});
 		//TODO: Just update DOM instead of re-getting tags
-		if (res.ok) getTags();
-		else loading = false;
+		if (res.ok) {
+			getTags();
+			areYouSureModal = false;
+		} else loading = false;
 	};
 
 	const editTag = async (tag: TagType) => {
@@ -78,27 +85,27 @@
 						<Button
 							disabled={loading}
 							Class="bg-rose-500"
-							action={() => (areYouSureModal = true)}>{$_('Delete')}</Button
+							action={() => {
+								areYouSureModal = true;
+								selectedTag = tag;
+							}}>{$_('Delete')}</Button
 						>
-						<Modal bind:open={areYouSureModal}>
-							<div slot="header">{$_('Are you sure?')}</div>
-							<div slot="body">{$_('Removing a tag removes all polls with that tag!')}</div>
-							<div slot="footer">
-								<Button
-									action={() => {
-										removeTag(tag);
-										areYouSureModal = false;
-									}}
-									Class="bg-red-500">{$_('Yes')}</Button
-								>
-								<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
-									>{$_('No')}</Button
-								>
-							</div>
-						</Modal>
 					</div>
 				</div>
 			{/each}
 		</div>
 	</Loader>
 </div>
+
+<Modal bind:open={areYouSureModal}>
+	<div slot="header">{$_('Are you sure?')}</div>
+	<div slot="body">
+		<span>{$_('Removing a tag removes all polls with that tag!')}</span>
+		<br />
+		<span>{$_('You are removing:')} {selectedTag.tag_name}</span>
+	</div>
+	<div slot="footer">
+		<Button action={() => removeTag(selectedTag)} Class="bg-red-500">{$_('Yes')}</Button>
+		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+	</div>
+</Modal>

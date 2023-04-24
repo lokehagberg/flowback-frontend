@@ -35,7 +35,7 @@
 		});
 	};
 
-	const getNontifications = async () => {
+	const getNotifications = async () => {
 		const { res, json } = await fetchRequest('GET', 'notification/subscription');
 		notifications = json.results.filter(
 			(notificationObject: any) => notificationObject.channel_sender_id === id
@@ -54,6 +54,7 @@
 			});
 		notifications = notifications;
 	};
+	
 	const handleNotificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
@@ -68,7 +69,7 @@
 		closeWindowWhenClickingOutside();
 	});
 
-	$: if (notificationOpen && notifications.length === 0) getNontifications();
+	$: if (notificationOpen) getNotifications();
 
 </script>
 
@@ -84,6 +85,7 @@
 	{#if notificationOpen}
 		<ul class="z-50 absolute mt-2 bg-white shadow-xl text-sm">
 			<!-- <div class="p-3">Subscriptions</div> -->
+			<li class="text-xs p-2">{$_("Manage Subscriptions")}</li>
 			{#each categories as category, i}
 				<li
 					class="bg-gray-200 p-2 px-5 flex justify-between items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"

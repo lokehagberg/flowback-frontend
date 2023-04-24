@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 
-	export let show = false;
+	export let show = false, message = "Task performed successfully";
 
 	const successPoppupAnimation = () => {
 		show = true;
 		setTimeout(() => {
 			show = false;
-		}, 1000);
+		}, 2500);
 	};
 
 	$: show && successPoppupAnimation();
@@ -16,10 +16,10 @@
 <div class="fixed bottom-5 right-5 z-50">
 	<div
 		id="popup"
-		class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md opacity-0 transition-opacity duration-300 transform translate-y-3"
+		class="bg-primary text-white px-4 py-2 rounded-md shadow-md opacity-0 transition-opacity duration-300 transform translate-y-3"
 		class:show
 	>
-		{$_('Task performed successfully!')}
+		{$_(message)}
 	</div>
 </div>
 

@@ -6,33 +6,34 @@
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import type { proposal, votings } from './interface';
+	import type { Phase, proposal, votings } from './interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { mode } from '$lib/configuration';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { formatDate } from './functions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Toggle from '$lib/Generic/Toggle.svelte';
+	import type { groupUser } from '$lib/Group/interface';
 
-	export let votings: votings[];
-	export let selectedPage: 'You' | 'Delegate';
-	export let abstained: proposal[] = [];
-	//1 is ranked, 3 is scheduled
-	export let pollType: number = 1,
-		votingStartTime: string;
-	let proposals: proposal[] = [];
-	let ranked: proposal[] = [];
-	let selected: proposal;
-	let checked = false;
+	export let votings: votings[],
+		selectedPage: 'You' | 'Delegate',
+		abstained: proposal[] = [],
+		//1 is ranked, 3 is schedule,
+		pollType: number = 1,
+		votingStartTime: string,
+		phase: Phase,
+		tag: number,
+		groupUser: groupUser,
+		proposals: proposal[] = [];
 
-	export let tag: number;
-
-	let unsaved = false;
-	let status: StatusMessageInfo;
+	let ranked: proposal[] = [],
+		selected: proposal,
+		checked = false,
+		unsaved = false,
+		status: StatusMessageInfo;
 
 	$: selectedPage && setUpVotings();
 
@@ -104,8 +105,6 @@
 
 			console.log(e, 'SORTED');
 		});
-
-		
 
 		sortable.on('sortable:start', (e: any) => {
 			if (selectedPage === 'Delegate' || checked) {
@@ -202,7 +201,7 @@
 		status = statusMessageFormatter(res, json);
 		//TODO replace with svelte store
 		// const userId = (await fetchRequest('GET', 'user')).json.id;
-		const userId = localStorage.getItem('userId')
+		const userId = localStorage.getItem('userId');
 
 		const isDelegate = (
 			await fetchRequest('GET', `group/${$page.params.groupId}/users?user_id=${userId}`)
@@ -254,7 +253,6 @@
 	// $: pollType === 3 && abstained && formatAllDates(abstained);
 
 	const formatAllDates = (proposals: proposal[]) => {
-		console.log(proposals, 'PROPS');
 		proposals.map((proposal) => {
 			proposal.title = `${formatDate(proposal.title)}`;
 			proposal.description = formatDate(proposal.description).toString();
@@ -276,9 +274,11 @@
 							on:click={() => (selected = proposal)}
 						>
 							<Proposal
-								{...proposal}
+								{proposal}
+								proposals={ranked}
+								{groupUser}
 								Class={`${selectedPage === 'You' && ''} ${
-									(!checked && selectedPage !== 'Delegate') && 'cursor-move'
+									!checked && selectedPage !== 'Delegate' && 'cursor-move'
 								}`}
 							>
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
@@ -314,14 +314,18 @@
 					on:click={() => (selected = proposal)}
 				>
 					<Proposal
-						{...proposal}
+						{proposal}
+						proposals={abstained}
+						{groupUser}
 						Class={`${selectedPage === 'You'} ${
-							(!checked && selectedPage !== 'Delegate') && 'cursor-move'
+							!checked && selectedPage !== 'Delegate' && 'cursor-move'
 						}`}
 					>
 						<div
 							class={`${
-								(selectedPage === 'Delegate' || new Date(votingStartTime) >= new Date() || !checked) &&
+								(selectedPage === 'Delegate' ||
+									new Date(votingStartTime) >= new Date() ||
+									!checked) &&
 								'invisible'
 							}`}
 						>
@@ -338,8 +342,10 @@
 
 <!-- TODO: Remove this and replace by allowing drag-drop
 and buttons at the same time without a toggle both. -->
-Enable buttons
-<Toggle bind:checked/>
+{#if phase !== 'pre-start' && phase !== 'proposals'}
+	{$_('Enable buttons')}
+	<Toggle bind:checked />
+{/if}
 
 <StatusMessage bind:status />
 

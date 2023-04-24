@@ -50,7 +50,7 @@
 
 		subscribe(getMessage);
 	};
-	
+
 	//There's one large socket that handles messages from everywhere, which is why
 	//this function which gets messages from the socket is placed here an not in
 	//ChatWindow.svelte
@@ -115,21 +115,20 @@
 		// selectedChat = null;
 		// selectedPage === 'direct';
 	}
-
 </script>
 
 <svelte:head
-	><title 
+	><title
 		>{`${notifiedDirect.length > 0 ? '🟣' : ''}${
 			notifiedGroup.length > 0 ? '🔵' : ''
 		} Flowback`}</title
 	></svelte:head
 >
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
-	<div class="col-start-2 col-end-3 flex justify-between bg-white p-2 ">
+	<div class="col-start-2 col-end-3 flex justify-between bg-white p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
 		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
-			<CrossButton  />
+			<CrossButton />
 		</div>
 	</div>
 	<Preview
@@ -164,6 +163,10 @@
 	.grid-width-fix {
 		grid-template-columns: 30% 70%;
 		grid-template-rows: 2.9rem 58vh 28vh;
+		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
+    on the header, 40px from the height of each symbol/the logo on the header, and 
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved */
+		height: calc(100vh - 2rem - 40px - 28px);
 	}
 
 	.small-notification:before {

@@ -22,6 +22,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
+	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -44,7 +45,7 @@
 
 		userIsOwner =
 			groupAdmins.json.results.find(
-				(user: any) => user.user_id === userData.json.id && user.is_admin
+				(user: any) => user.user.id === userData.json.id && user.is_admin
 			) !== undefined;
 	};
 
@@ -108,6 +109,12 @@
 				isSelected={selectedPage === 'kanban'}
 				text="Group Kanban"
 				icon={faList}
+			/>
+			<GroupSidebarButton
+				action={() => (selectedPage = 'schedule')}
+				isSelected={selectedPage === 'schedule'}
+				text="Group schedule"
+				icon={faCalendarAlt}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'members')}

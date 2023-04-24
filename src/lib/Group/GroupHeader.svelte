@@ -39,22 +39,22 @@
 			labels={groupNotificationCategories}
 		/>
 		<h1
-			class="ml-2 text-3xl hover:underline cursor-pointer"
+			class="ml-2 text-3xl hover:text-gray-800 cursor-pointer"
 			on:click={() => (selectedPage = 'flow')}
 		>
 			{group.name}
 		</h1>
 	</div>
 	<div class="flex items-center">
-		<p class="text-xl hover:underline cursor-pointer" on:click={() => (selectedPage = 'members')}>
+		<p class="text-xl hover:text-gray-800 cursor-pointer" on:click={() => (selectedPage = 'members')}>
 			{memberCount}
 			{$_('members')}
 		</p>
 		{#if typeof window !== "undefined"}
 		{#if group.public}
-			<HeaderIcon icon={faGlobeEurope} text="Public" />
+			<HeaderIcon icon={faGlobeEurope} text="Public" Class="cursor-auto" />
 		{:else}
-			<HeaderIcon icon={faLock} text="Private" />
+			<HeaderIcon icon={faLock} text="Private" Class="cursor-auto"/>
 		{/if}
 		{/if}
 	</div>

@@ -1,11 +1,14 @@
-//This function is a bit cursed due to problems with error codes from the backend 
+//This function is a bit cursed due to problems with error codes from the backend
 export const statusMessageFormatter = (res: any, json: any, successMessage: string = 'Success') => {
 	if (res.ok) {
 		return { message: successMessage, success: true };
 	} else if (res.status - 500 >= 0) {
 		return { message: 'Server Error', success: false };
 	} else if (json.detail) {
-		if (json.detail === 'Invalid token.' || json.detail === "Invalid token header. No credentials provided.") {
+		if (
+			json.detail === 'Invalid token.' ||
+			json.detail === 'Invalid token header. No credentials provided.'
+		) {
 			if (localStorage.getItem('token')) localStorage.removeItem('token');
 			window.location.href = '/login';
 			// return { message: 'Invalid token.', success: false };

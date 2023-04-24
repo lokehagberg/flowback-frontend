@@ -118,6 +118,17 @@
 		setTimeStamp(selectedChat, selectedPage);
 	};
 
+	const showOlderMessages = async () => {
+		const { res, json } = await fetchRequest('GET', olderMessages);
+
+		if (!res.ok) return;
+		// nextMessagesAPI = json.next
+		newerMessages = json.previous;
+		olderMessages = json.next;
+
+		messages = json.results.reverse();
+	};
+
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
@@ -131,18 +142,7 @@
 	>
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
-				<Button
-					action={async () => {
-						const { res, json } = await fetchRequest('GET', olderMessages);
-
-						// nextMessagesAPI = json.next
-						newerMessages = json.previous;
-						olderMessages = json.next;
-
-						messages = json.results.reverse();
-					}}
-					>{$_('Show older messages')}</Button
-				>
+				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
 			</li>
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->

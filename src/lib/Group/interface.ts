@@ -10,7 +10,8 @@ export type SelectablePage =
 	| 'delegation'
 	| 'tags'
 	| 'kanban'
-	| 'perms';
+	| 'perms'
+	| 'schedule';
 
 export interface User {
 	username: string;
@@ -128,4 +129,7 @@ export interface kanban {
 	id: number;
 	tag: number;
 	title: string;
+	origin_id:number;
+	origin_type:'group' | 'user';
+	group_name:string;
 }

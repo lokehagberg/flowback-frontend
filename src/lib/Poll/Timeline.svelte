@@ -15,7 +15,7 @@
 
 	let date = new Date();
 	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
-	const dateLabels = ['Start date', 'Proposal vote date', 'Delegate end date', 'End date'];
+	const dateLabels = ['Start', 'Proposal vote', 'Delegate end', 'End'];
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	// Difference between now and start date

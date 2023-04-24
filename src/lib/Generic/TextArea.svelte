@@ -9,12 +9,13 @@
 		onBlur = () => {},
 		autofocus = false,
 		max = 2000,
-		onKeyPress = (e:any) => {},
-		inputClass = "",
-		rows = 2;
+		onKeyPress = (e: any) => {},
+		inputClass = '',
+		rows = 2,
+		recentlyTappedButton = '';
 
-	const expandTextArea = (e: any) => {
-		value = e.target.value;
+	const onKeyDown = (e: any) => {
+		recentlyTappedButton = e.target.value[e.target.value.length - 1];
 	};
 
 	const expandableTextArea = () => {
@@ -34,7 +35,7 @@
 		if (!textarea) return;
 
 		textarea.focus();
-	}
+	};
 
 	onMount(() => {
 		expandableTextArea();
@@ -44,15 +45,16 @@
 
 <label class={`${Class}`}
 	><p class="text-sm mb-1">{$_(label)}</p>
+	<!-- on:input={expandTextArea} -->
 	<textarea
-		rows = {rows}
-		on:blur={onBlur}
-		id="textarea"
-		{required}
-		on:input={expandTextArea}
-		on:keypress={onKeyPress}
 		bind:value
-		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		on:blur={onBlur}
+		on:keypress={onKeyPress}
+		on:input={onKeyDown}
+		{required}
+		{rows}
 		maxlength={max}
+		class={`border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		id="textarea"
 	/>
 </label>

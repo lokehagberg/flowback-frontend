@@ -21,7 +21,7 @@
 	};
 </script>
 
-<div class="bg-white p-6 text-xl rounded shadow p-6">
+<div class="bg-white p-6 text-xl rounded shadow">
 	<p>{description}</p>
 	<span>{$_('Creator')}: {creator.username}</span>
 </div>

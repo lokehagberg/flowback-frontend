@@ -6,15 +6,20 @@
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 
-	export let filter: Filter = { search: '', finishedSelection:"all", public: false };
-	export let handleSearch: () => {};
+	export let filter: Filter,
+		handleSearch: () => {};
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
 
-	const handleFinishedSelection = (e:any) => {
-		filter.finishedSelection = e.target.value
+	const handleFinishedSelection = (e: any) => {
+		filter.finishedSelection = e.target.value;
 		handleSearch();
-	}
+	};
+
+	const handleSort = (e: any) => {
+		filter.order_by = e.target.value;
+		handleSearch();
+	};
 </script>
 
 <form
@@ -33,7 +38,7 @@
 		/>
 
 		<Button
-			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center transition transition-colors ${
+			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
 				searched ? 'bg-blue-300' : 'bg-blue-600'
 			}`}
 			type="submit"
@@ -43,9 +48,14 @@
 	</div>
 	<div>
 		<select on:input={handleFinishedSelection}>
-			<option value="all">{$_("All")}</option>
-			<option value="unfinished">{$_("Ongoing")}</option>
-			<option value="finished">{$_("Done")}</option>
+			<option value="all">{$_('All')}</option>
+			<option value="unfinished">{$_('Ongoing')}</option>
+			<option value="finished">{$_('Done')}</option>
+		</select>
+
+		<select on:input={handleSort}>
+			<option value="created_at_desc">{$_('Newest first')}</option>
+			<option value="created_at_asc">{$_('Oldest first')}</option>
 		</select>
 		<!-- <CheckboxButtons
 			label={''}
@@ -55,5 +65,6 @@
 			]}
 		/>
 	</div> -->
-	<!--<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
+		<!--<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
+	</div>
 </form>

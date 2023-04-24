@@ -23,6 +23,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import Schedule from '$lib/Schedule/Schedule.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -58,7 +59,7 @@
 	const getGroupInfo = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
-		console.log(group, "GROUPPP")
+		console.log(group, 'GROUPPP');
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 		statusMessageFormatter(res, json);
@@ -85,16 +86,14 @@
 
 <Layout>
 	{#if loading}
-		<Loader bind:loading Class="mt-24">
-
-		</Loader>
+		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
 		<GroupHeader bind:selectedPage {group} {memberCount} />
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
 					class={`w-full sm:w-[300px] md:w-[500px] ${
-						selectedPage === 'kanban' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
+						selectedPage === 'kanban' || selectedPage === 'schedule' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
 					}`}
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
@@ -121,6 +120,8 @@
 						<Kanban type="group" />
 					{:else if selectedPage === 'perms'}
 						<Permissions />
+					{:else if selectedPage === 'schedule'}
+						<Schedule type="group"/>
 					{/if}
 				</div>
 

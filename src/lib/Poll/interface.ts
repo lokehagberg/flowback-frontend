@@ -2,6 +2,8 @@ export interface proposal {
 	title: string;
 	description: string;
 	id: number;
+	created_by: number;
+	poll: number;
 }
 
 export interface poll {
@@ -18,14 +20,15 @@ export interface poll {
 	tag: number;
 	tag_name: string;
 	title: string;
-	group_id:number;
-	proposal_end_date:string;
-	prediction_end_date:string;
-	delegate_vote_end_date:string;
-	group_name?:string;
-	group_image?:string;
-	joined:boolean;
-	group_joined:boolean;
+	group_id: number;
+	proposal_end_date: string;
+	prediction_end_date: string;
+	delegate_vote_end_date: string;
+	group_name?: string;
+	group_image?: string;
+	joined: boolean;
+	group_joined: boolean;
+	total_comments: number;
 }
 
 export interface votings {
@@ -38,7 +41,27 @@ export interface votings {
 
 export interface Filter {
 	public: boolean;
-	finishedSelection:'all'|'unfinished'|'finished'
+	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
+	order_by: 'created_at_asc' | 'created_at_desc';
 }
 
+export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';
+
+export interface Comment {
+	author_id: number;
+	author_name: string;
+	author_thumbnail: string;
+	parent_id?: number;
+	reply_depth: number;
+	message: string;
+	score: number;
+	being_edited: boolean;
+	being_replied: boolean;
+	being_edited_message?: string;
+	id: number;
+	//False if comment has been deleted
+	active: boolean;
+}
+
+export interface CommentEdited {}

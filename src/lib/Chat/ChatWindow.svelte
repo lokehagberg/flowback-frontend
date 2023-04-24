@@ -188,7 +188,7 @@
 					}
 				}}
 				required
-				max={250}
+				max={3000}
 				bind:value={message}
 				Class="w-full"
 			/>

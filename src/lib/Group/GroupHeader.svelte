@@ -14,6 +14,7 @@
 		'group',
 		'members',
 		'delegate',
+		//invite,
 		'poll',
 		'kanban',
 		'schedule'

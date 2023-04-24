@@ -108,11 +108,11 @@
 	//White screen when changing between direct and groups
 	$: selectedPage &&
 		(() => {
-			// selectedChat = null;
+			selectedChat = null;
 		})();
 
 	$: if (chatOpen === false) {
-		// selectedChat = null;
+		selectedChat = null;
 		// selectedPage === 'direct';
 	}
 </script>

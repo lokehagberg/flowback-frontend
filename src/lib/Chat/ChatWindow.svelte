@@ -140,6 +140,9 @@
 		class="col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 	>
+		{#if messages.length === 0}
+			<span class="self-center">{'Chat is currently empty, maybe say hello?'}</span>
+		{/if}
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
 				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
@@ -206,5 +209,5 @@
 		</form>
 	</div>
 {:else}
-	<div />
+	<div>{("No chat selected")}</div>
 {/if}

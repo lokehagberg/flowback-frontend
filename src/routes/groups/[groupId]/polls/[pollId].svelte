@@ -124,6 +124,7 @@
 								text={'Scheduled Poll'}
 							/>
 						{/if}
+						<!-- Group Profile -->
 						<a
 							href={`/groups/${$page.params.groupId}`}
 							class:hover:underline={poll.group_joined}

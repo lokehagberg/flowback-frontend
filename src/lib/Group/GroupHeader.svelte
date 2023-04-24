@@ -13,7 +13,6 @@
 	const groupNotificationCategories = [
 		'group',
 		'members',
-		'invite',
 		'delegate',
 		'poll',
 		'kanban',

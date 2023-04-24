@@ -70,6 +70,8 @@
 	const postMessage = async () => {
 		if (message.length === 0) return;
 		if (!selectedChat) return;
+		//If only spaces, return
+		if (message.match(/^\s+$/)) return;
 
 		//When sending, go to most recent messages
 		if (newerMessages) getRecentMesseges();

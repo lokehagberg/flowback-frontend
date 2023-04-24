@@ -7,11 +7,13 @@
 	import { _ } from 'svelte-i18n';
 	import TextInput from '../Generic/TextInput.svelte';
 	import { mailStore } from './stores';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 
-	let verification_code: string;
-	let password: string;
-	let status: StatusMessageInfo;
-	let loading = false;
+	let verification_code: string,
+		password: string,
+		status: StatusMessageInfo,
+		loading = false,
+		acceptedEmailNotifications = false;
 
 	async function verifyAccount() {
 		loading = true;
@@ -35,9 +37,17 @@
 			loading = false;
 
 			if (res.ok && json.token) {
+				//Done with account registration, redirect
 				status = { message: 'Success', success: true };
 				localStorage.setItem('token', json.token);
-				window.location.href = '/home';
+
+				{
+					const { res, json } = await fetchRequest('POST', 'user/update', {
+						email_notifications: acceptedEmailNotifications
+					});
+				}
+
+				// window.location.href = '/home';
 			} else status = { message: 'Account was created but was unable to sign in', success: true };
 		} else {
 			loading = false;
@@ -54,9 +64,13 @@
 	<form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
 		<TextInput label={'Verification Code'} bind:value={verification_code} required />
 		<TextInput label={'Password'} bind:value={password} type={'password'} required />
-
+		<RadioButtons
+			label="Do you accept terms and conditions?"
+			centering={true}
+			bind:Yes={acceptedEmailNotifications}
+		/>
 		<StatusMessage bind:status />
-		<Button type="submit" >
+		<Button type="submit">
 			{$_('Send')}
 		</Button>
 	</form>

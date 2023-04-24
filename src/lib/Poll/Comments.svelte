@@ -100,7 +100,7 @@
 			{:else}
 				<div
 					class={`p-3 text-sm border border-l-gray-400 ml-${
-						comment.reply_depth < 10 ? comment.reply_depth * 2 : 20
+						comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
 					}`}
 					class:bg-gray-100={comment.reply_depth % 2 === 1}
 				>

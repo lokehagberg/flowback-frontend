@@ -114,3 +114,4 @@
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
 	<Button Class="mt-4" type="submit" label="Send" />
 </form>
+ 

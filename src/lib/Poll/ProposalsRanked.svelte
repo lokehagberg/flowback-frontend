@@ -54,7 +54,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=100`
+			`group/poll/${$page.params.pollId}/proposals?limit=10000`
 		);
 
 		//Ranked

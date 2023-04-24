@@ -17,6 +17,7 @@
 		loading = false,
 		status: StatusMessageInfo,
 		show = false;
+
 	export let abstained: proposal[];
 
 	const addProposal = async () => {
@@ -30,22 +31,18 @@
 			}
 		);
 
+		const id = json;
 		statusMessageFormatter(res, json);
 
 		if (res.ok) {
 			show = true;
 
-			//TODO: Multiple places in the codebase uses this rather than local storage for group-user info
-			const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?user_id=${Number(localStorage.getItem('userId'))}`
-			);
-
+			let created_by = await getUserInfo();
 			abstained.push({
 				title,
 				description,
-				id: json,
-				created_by: json.results[0].id,
+				id,
+				created_by,
 				poll: Number($page.params.pollId)
 			});
 
@@ -55,6 +52,18 @@
 		}
 
 		loading = false;
+	};
+
+	//TODO: Multiple places in the codebase uses this rather than local storage for group-user info
+	const getUserInfo = async () => {
+		const { res, json } = await fetchRequest('GET', `user`);
+		if (res.ok){
+			const results = await fetchRequest(
+				'GET',
+				`group/${$page.params.groupId}/users?user_id=${json.id}`
+			);
+			return results.json.results[0].id;
+		}
 	};
 </script>
 

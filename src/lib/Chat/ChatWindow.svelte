@@ -146,7 +146,6 @@
 			</li>
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
-		<StatusMessage bind:status disableSuccess />
 		{#each messages as message}
 			<li class="p-3 hover:bg-gray-200">
 				<span>{message.user?.username || message.username}</span>
@@ -169,6 +168,7 @@
 				>
 			</li>
 		{/if}
+		<StatusMessage bind:status disableSuccess />
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->

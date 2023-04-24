@@ -163,6 +163,7 @@
 				{/if}
 			{/if}
 			<Timeline
+				displayDetails={false}
 				dates={[
 					new Date(poll.start_date),
 					new Date(poll.proposal_end_date),

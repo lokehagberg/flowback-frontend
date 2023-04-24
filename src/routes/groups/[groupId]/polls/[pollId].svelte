@@ -124,6 +124,18 @@
 								text={'Scheduled Poll'}
 							/>
 						{/if}
+						<a
+							href={`/groups/${$page.params.groupId}`}
+							class:hover:underline={poll.group_joined}
+							class="text-black"
+						>
+							<img
+								class="h-8 w-8 inline rounded-full"
+								src={`${import.meta.env.VITE_API}${poll.group_image}`}
+								alt="group thumbnail"
+							/>
+							<span class="inline">{poll.group_name}</span>
+						</a>
 					</div>
 					<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 					<NotificationOptions

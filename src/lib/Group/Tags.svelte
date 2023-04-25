@@ -68,6 +68,7 @@
 	};
 </script>
 
+<!-- TODO: Nicer design -->
 <div class="bg-white rounded shadow p-6">
 	<Loader bind:loading>
 		<form on:submit|preventDefault={addTag} class="p-3">

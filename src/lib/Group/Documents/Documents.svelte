@@ -47,7 +47,7 @@
 		case 9:
 			folderId = '1eexH5tCIi6Foq1u23-hw0WpX0GfJFY-f';
 			break;
-			default:
+		default:
 			folderId = '1erJd1OgTlDNFPcJql5Eq1zr_sS_tgGsw';
 			break;
 	}
@@ -63,6 +63,8 @@
 		src={`https://drive.google.com/embeddedfolderview?id=${folderId}#list`}
 	/>
 </div>
+
+<!-- TODO: Will be implemented later -->
 
 <!-- <div class="w-full bg-white flex items-center flex-col shadow rounded">
 	<div class="rounded-full border border-gray-500 p-2 w-1/2 text-center">+ Add Document</div>

@@ -47,7 +47,8 @@
 		case 9:
 			folderId = '1eexH5tCIi6Foq1u23-hw0WpX0GfJFY-f';
 			break;
-		default:
+			default:
+			folderId = '1erJd1OgTlDNFPcJql5Eq1zr_sS_tgGsw';
 			break;
 	}
 </script>

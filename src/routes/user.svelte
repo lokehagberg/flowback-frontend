@@ -5,6 +5,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultBanner from '$lib/assets/default_banner_user.png';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -147,7 +148,7 @@
 <!-- Viewing someone's profile -->
 <Layout centering={true}>
 	{#if !isEditing}
-		<img src={bannerImagePreview} class="bg-gray-200 w-full h-[40%] cover" alt="banner" />
+		<img src={bannerImagePreview || DefaultBanner} class="bg-gray-200 w-full h-[40%] cover" alt="banner" />
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
 			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>

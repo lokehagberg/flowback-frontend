@@ -3,6 +3,9 @@
 	import { _ } from 'svelte-i18n';
 
 	import { onMount } from 'svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion';
+	import Question from '$lib/Generic/Question.svelte';
 	// Or
 	// import Swappable from '@shopify/draggable/lib/swappable';
 	onMount(() => {
@@ -18,6 +21,8 @@
 </script>
 
 <Layout centering={true}>
+	<Question />
+
 	<div class="bg-white p-6 shadow rounded mt-6">{$_('Under Construction')}</div>
 
 	<ul>

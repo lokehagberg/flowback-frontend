@@ -17,6 +17,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { groupUser } from '$lib/Group/interface';
+	import Question from '$lib/Generic/Question.svelte';
 
 	export let votings: votings[],
 		selectedPage: 'You' | 'Delegate',
@@ -264,7 +265,14 @@
 	{#if new Date(votingStartTime) <= new Date()}
 		<div class="lg:w-1/2">
 			{#if new Date(votingStartTime) <= new Date()}
-				<div class="text-2xl p-6 select-none">{$_(pollType === 1 ? 'Rank' : 'Vote for')}</div>
+				<div class="text-2xl p-6 select-none">
+					<span>{$_(pollType === 1 ? 'Rank' : 'Vote for')}</span>
+					<Question
+						message="
+					This is the section where you can prioritize your proposals by ranking them in order. The proposal that you wish to be voted on the most should be listed as your top priority.
+					"
+					/>
+				</div>
 				<ol class="container ranked lg:h-full">
 					{#each ranked as proposal, i}
 						<li
@@ -343,8 +351,15 @@
 <!-- TODO: Remove this and replace by allowing drag-drop
 and buttons at the same time without a toggle both. -->
 {#if phase !== 'pre-start' && phase !== 'proposals'}
-	{$_('Enable buttons')}
-	<Toggle bind:checked />
+	<div class="flex gap-3">
+		{$_('Enable buttons')}
+		<Toggle bind:checked />
+		<Question
+			message="
+		For accessibility reasons for people who can't click and drag proposals, activate this to use buttons to vote
+	"
+		/>
+	</div>
 {/if}
 
 <StatusMessage bind:status />

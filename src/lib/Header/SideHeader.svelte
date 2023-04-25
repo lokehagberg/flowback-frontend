@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { onMount } from 'svelte';
+
+	export let sideHeaderOpen = false;
 
 	const logOut = () => {
 		localStorage.removeItem('token');
@@ -9,6 +12,20 @@
 
 	//TODO: Implement codocument creation
 	const handleCoDocumentCreation = () => {};
+
+	const closeWindowWhenClickingOutside = () => {
+		
+		window.addEventListener('click', function (e) {
+			const notificationListElement = document.getElementById(`side-header`);
+			if (
+				sideHeaderOpen &&
+				//@ts-ignore
+				!notificationListElement?.contains(e.target)
+			) {
+				sideHeaderOpen = false;
+			}
+		});
+	};
 
 	const navs = [
 		{
@@ -22,10 +39,14 @@
 
 	let open_support = false;
 	let open_tools = false;
+
+	onMount(() => {
+		closeWindowWhenClickingOutside();
+	});
 </script>
 
 <!-- TODO: Relative works great for phones -->
-<div class="absolute right-0 bg-white z-50 select-none shadow slide-animation">
+<div class:invisible={!sideHeaderOpen} class="absolute right-0 bg-white z-50 select-none shadow slide-animation" id="side-header" on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 	{#each navs as nav}
 		<div
 			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"

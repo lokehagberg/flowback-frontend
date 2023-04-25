@@ -56,7 +56,10 @@
 			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
 		</nav>
 
-		<div class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800">
+		<div
+			id="side-header"
+			class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
+		>
 			<Notifications />
 
 			<div on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
@@ -68,9 +71,8 @@
 			</div>
 		</div>
 	</header>
-	{#if sideHeaderOpen}
-		<SideHeader />
-	{/if}
+
+	<SideHeader bind:sideHeaderOpen />
 </div>
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->

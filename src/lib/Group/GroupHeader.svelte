@@ -6,6 +6,7 @@
 	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
+	import DefaultBanner from '$lib/assets/default_banner_group.png';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -25,7 +26,7 @@
 	<img class="cover " src={`${import.meta.env.VITE_API}${group.cover_image}`} alt="cover" />
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
-		src={`${import.meta.env.VITE_API}${group.image}`}
+		src={group.image ? `${import.meta.env.VITE_API}${group.image}` : DefaultBanner}
 		alt="profile"
 	/>
 </div>

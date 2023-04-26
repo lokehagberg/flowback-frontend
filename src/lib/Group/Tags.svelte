@@ -22,7 +22,7 @@
 
 	const getTags = async () => {
 		loading = true;
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=1000`);
 
 		if (res.ok) {
 			//Sorts tags alphabetically

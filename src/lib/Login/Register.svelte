@@ -7,7 +7,6 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
-
 	import TextInput from '../Generic/TextInput.svelte';
 	import { mailStore } from './stores';
 	import TermsOfService from './TermsOfService.svelte';

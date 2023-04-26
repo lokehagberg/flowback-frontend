@@ -43,7 +43,7 @@
 	};
 
 	const getPolls = async () => {
-		const { res, json } = await fetchRequest('GET', 'home/polls?limit=30');
+		const { res, json } = await fetchRequest('GET', 'home/polls?limit=1000');
 		status = statusMessageFormatter(res, json);
 	};
 </script>

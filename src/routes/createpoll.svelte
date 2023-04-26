@@ -123,7 +123,7 @@
 
 	const getGroupTags = async () => {
 		loading = true;
-		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=1000`);
 		loading = false;
 		tags = json.results;
 		selectedTag = tags[0];

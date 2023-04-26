@@ -18,7 +18,7 @@
 	});
 
 	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', 'group/list?limit=100');
+		const { res, json } = await fetchRequest('GET', 'group/list?limit=1000');
 		status = statusMessageFormatter(res, json);
 		if (res.ok) groupList = json.results.reverse();
 	};

@@ -223,7 +223,7 @@
 	const getVotings = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposal/votes?limit=100`
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=1000`
 		);
 		votings = json.results;
 	};

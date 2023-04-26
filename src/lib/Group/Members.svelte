@@ -21,7 +21,7 @@
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=1000`);
 		users = json.results;
 		loading = false;
 

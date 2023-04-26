@@ -43,19 +43,19 @@
 	};
 
 	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=1000`);
 		return json.results;
 	};
 
 	const setTagList = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=1000`);
 		tags = json.results.map(({ active, ...args }: any) => args);
 	};
 
 	const getDelegatesUserInfo = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?limit=100&delegate=true`
+			`group/${$page.params.groupId}/users?limit=1000&delegate=true`
 		);
 		return json.results;
 	};
@@ -140,7 +140,7 @@
 					<ul class="mt-6 flex flex-wrap items-center">
 						{#each tags as tag}
 							<li
-								class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4"
+								class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border-white border-4"
 								on:click={() => changeDelegation(delegate, tag)}
 							>
 								<Tag

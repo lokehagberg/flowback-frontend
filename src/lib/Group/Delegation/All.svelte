@@ -75,7 +75,7 @@
 	const getDelegatePools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=100`
+			`group/${$page.params.groupId}/delegate/pools?limit=1000`
 		);
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
@@ -92,12 +92,10 @@
 				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
-
-		console.log(delegates, 'DELEGADOS');
 	};
 
 	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=1000`);
 		delegateRelations = json.results;
 	};
 

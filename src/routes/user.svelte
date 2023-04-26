@@ -71,8 +71,8 @@
 		}
 		status = statusMessageFormatter(res, json);
 	};
-
-	let currentlyCroppingProfile = false,
+	// TODO: Fix cropping
+	let currentlyCroppingProfile: false = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
 		files: File[],
@@ -82,15 +82,23 @@
 
 	$: console.log(crop);
 
+	// TODO: Fix cropping
 	const handleCropProfileImage = (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 		files = Array.from(e.target.files);
-		currentlyCroppingProfile = true;
+		// currentlyCroppingProfile = true;
 	};
 
-	const handleProfileImageChange = async () => {
+	const handleProfileImageChange = async (e: any) => {
+		//Type string, for preview image
+		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
+
+		//Type File, for sending to server
+		const files: File[] = Array.from(e.target.files);
+		userEdit.profile_image_file = files[0];
+
 		// @ts-ignore
 		// userEdit.profile_image_file = await getCroppedImg(profileImagePreview, pixelCrop);
 		// profileImagePreview = await getCroppedImg(profileImagePreview, crop.pixels)
@@ -112,7 +120,7 @@
 	<!-- Cropp image -->
 	<CropperModal
 		confirmAction={() => {
-			profileImagePreview = croppedImage
+			profileImagePreview = croppedImage;
 		}}
 		cancelAction={() => (currentlyCroppingProfile = false)}
 		bind:croppedImage
@@ -148,7 +156,11 @@
 <!-- Viewing someone's profile -->
 <Layout centering={true}>
 	{#if !isEditing}
-		<img src={bannerImagePreview || DefaultBanner} class="bg-gray-200 w-full h-[40%] cover" alt="banner" />
+		<img
+			src={bannerImagePreview || DefaultBanner}
+			class="bg-gray-200 w-full h-[40%] cover"
+			alt="banner"
+		/>
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
 			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
@@ -198,7 +210,7 @@
 					name="file-ip-1"
 					id="file-ip-1"
 					accept="image/*"
-					on:change={handleCropProfileImage}
+					on:change={handleProfileImageChange}
 				/></label
 			>
 

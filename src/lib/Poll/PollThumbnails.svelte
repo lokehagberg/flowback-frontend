@@ -39,8 +39,11 @@
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
-				? `home/polls?limit=300&title__icontains=${filter.search || ''}&${finishedFilter}`
-				: infoToGet === 'public'
+				? `home/polls?limit=300&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}&order_by=${filter.order_by}`
+				: //TODO remove public
+				infoToGet === 'public'
 				? `home/polls?limit=300&public=true&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}`

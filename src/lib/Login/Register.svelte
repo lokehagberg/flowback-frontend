@@ -21,7 +21,7 @@
 
 	async function registerAccount() {
 		if (!acceptedToS) {
-			status = { message: 'You must accept rerms of service to register', success: false };
+			status = { message: 'You must accept terms of service to register', success: false };
 			return;
 		}
 		loading = true;

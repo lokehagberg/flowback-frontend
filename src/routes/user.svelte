@@ -41,7 +41,7 @@
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
 		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
-		status: StatusMessageInfo;
+		status: StatusMessageInfo | undefined;
 
 	onMount(async () => {
 		//The URL has no ID if the user is on their own profile
@@ -93,7 +93,11 @@
 
 	const handleProfileImageChange = async (e: any) => {
 		//Max 2 MB filesize
-		if (e.target.files[0].size > 2097152) return;
+		if (e.target.files[0].size > 2097152) {
+			status = { success: false, message: 'No filesize greater than 2MB' };
+			return;
+		}
+		status = undefined
 		//Type string, for preview image
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 

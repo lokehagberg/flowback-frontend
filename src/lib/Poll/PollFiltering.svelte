@@ -54,8 +54,8 @@
 		</select>
 
 		<select on:input={handleSort}>
-			<option value="created_at_desc">{$_('Newest first')}</option>
-			<option value="created_at_asc">{$_('Oldest first')}</option>
+			<option value="start_date_desc">{$_('Newest first')}</option>
+			<option value="start_date_asc">{$_('Oldest first')}</option>
 		</select>
 		<!-- <CheckboxButtons
 			label={''}

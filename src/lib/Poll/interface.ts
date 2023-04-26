@@ -43,7 +43,7 @@ export interface Filter {
 	public: boolean;
 	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
-	order_by: 'created_at_asc' | 'created_at_desc';
+	order_by: 'start_date_asc' | 'start_date_desc';
 }
 
 export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';

@@ -19,7 +19,7 @@
 		search: '',
 		finishedSelection: 'all',
 		public: false,
-		order_by: 'created_at_desc'
+		order_by: 'start_date_desc'
 	};
 	let loading = false;
 
@@ -39,9 +39,9 @@
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
-				? `home/polls?limit=30&title__icontains=${filter.search || ''}&${finishedFilter}`
+				? `home/polls?limit=300&title__icontains=${filter.search || ''}&${finishedFilter}`
 				: infoToGet === 'public'
-				? `home/polls?limit=30&public=true&title__icontains=${
+				? `home/polls?limit=300&public=true&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}`
 				: '';

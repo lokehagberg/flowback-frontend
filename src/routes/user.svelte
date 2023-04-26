@@ -92,6 +92,8 @@
 	};
 
 	const handleProfileImageChange = async (e: any) => {
+		//Max 2 MB filesize
+		if (e.target.files[0].size > 2097152) return;
 		//Type string, for preview image
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 

@@ -132,7 +132,7 @@
 		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
-				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.origin_id}`)}
+				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.origin_id}?page=kanban`)}
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">

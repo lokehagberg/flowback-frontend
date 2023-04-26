@@ -55,11 +55,25 @@
 			proposal.description = newDescription;
 			show = true;
 		}
-		
+	};
+
+	const checkForLinks = () => {
+		const regex = new RegExp(
+			'^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?$'
+		);
+
+		if (proposal.description.match(regex))
+
+		proposal.description = proposal.description.replace(regex, (url:any) => {
+			console.log(url)
+			return `<a>${url}</a>`
+		})
+
+		proposal = proposal
 	};
 
 	onMount(() => {
-		console.log(proposal);
+		checkForLinks();
 	});
 </script>
 
@@ -105,7 +119,7 @@
 	<div slot="footer" />
 </Modal>
 
-<SuccessPoppup bind:show message="Successfully edited proposal"/>
+<SuccessPoppup bind:show message="Successfully edited proposal" />
 
 <style>
 	.elipsis {

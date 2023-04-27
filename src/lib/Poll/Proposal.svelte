@@ -33,6 +33,7 @@
 		const { res, json } = await fetchRequest('POST', `group/poll/proposal/${proposal.id}/delete`);
 		if (!res.ok) return;
 		proposals.filter((proposalInList) => proposalInList.id === proposal.id);
+		proposals = proposals;
 	};
 
 	//TODO: Actual Edit
@@ -58,18 +59,26 @@
 	};
 
 	const checkForLinks = () => {
-		const regex = new RegExp(
-			'^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?$'
-		);
+		// const regex = new RegExp(
+		// 	'^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?$'
+		// );
 
-		if (proposal.description.match(regex))
+		// // if (proposal.description.matchAll(regex))
 
-		proposal.description = proposal.description.replace(regex, (url:any) => {
-			console.log(url)
-			return `<a>${url}</a>`
-		})
+		// proposal.description = proposal.description.replaceAll(regex, (url: any) => {
+		// 	console.log(url, "URLLL");
+		// 	return `<a>${url}</a>`;
+		// });
 
-		proposal = proposal
+		const linkPattern = /https?:\/\/[^\s]+/g;
+		const linkified = proposal.description.replace(linkPattern, (match) => {
+			return `<a href="${match}" target="_blank">${match}</a>`;
+		});
+
+		const descriptionHtmlElement = document.getElementById(`proposal-${proposal.id}-description`)
+		if (descriptionHtmlElement !== null)
+		//@ts-ignore
+		descriptionHtmlElement.innerHTML = linkified
 	};
 
 	onMount(() => {
@@ -86,7 +95,7 @@
 	<div><Fa icon={faBars} /></div>
 	<div class="h-full w-2/3">
 		<h1 class="text-lg text-left">{proposal.title}</h1>
-		<p class="elipsis text-sm mt-2">
+		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
 			{proposal.description}
 		</p>
 	</div>

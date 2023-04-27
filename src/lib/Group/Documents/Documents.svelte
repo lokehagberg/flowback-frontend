@@ -32,6 +32,7 @@
 	const groupId = Number($page.params.groupId);
 	let folderId: string;
 
+	//TODO: Environment variables probably need to be less cursed
 	switch (groupId) {
 		case 1:
 			folderId = import.meta.env.VITE_DOCUMENT_1;

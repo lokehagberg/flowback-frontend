@@ -1,26 +1,29 @@
 <script lang="ts">
 	import Timeline from './Timeline.svelte';
 	import type { poll } from './interface';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
-	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import Button from '$lib/Generic/Button.svelte';
-	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
+	import { faThumbtack } from '@fortawesome/free-solid-svg-icons/faThumbtack';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
+	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 
 	export let poll: poll;
 
 	let onHoverGroup = false;
+
+	const pinPoll = async () => {
+		poll.pinned = !poll.pinned;
+		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
+			pinned: true
+		});
+	};
 </script>
 
 <div class="bg-white pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
@@ -38,6 +41,13 @@
 					/>
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+			</div>
+			<div class="cursor-pointer inline" on:click={pinPoll}>
+				<Fa
+					icon={faThumbtack}
+					color={poll.pinned ? 'Black' : '#BBB'}
+					rotate={poll.pinned ? '0' : '90'}
+				/>
 			</div>
 		</div>
 		<a
@@ -66,7 +76,7 @@
 			id={poll.id}
 			api={`group/poll/${poll.id}`}
 			categories={['poll', 'timeline', 'comment_all']}
-			labels={['Poll', 'Timeline', "Comments"]}
+			labels={['Poll', 'Timeline', 'Comments']}
 		/>
 	</div>
 	<a
@@ -100,10 +110,11 @@
 		/>
 	</div>
 	<div class="hover:bg-gray-100 cursor-pointer text-sm text-gray-600 px-1 mb-2">
-		<a class="text-black"
-		href={onHoverGroup
-			? '/groups/1'
-			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
+		<a
+			class="text-black"
+			href={onHoverGroup
+				? '/groups/1'
+				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
 		>
 			<Fa class="inline" icon={faComment} />
 			<span class="inline">{poll.total_comments} {$_('comments')}</span>

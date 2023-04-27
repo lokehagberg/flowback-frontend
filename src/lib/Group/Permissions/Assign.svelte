@@ -22,7 +22,7 @@
 	};
 
 	const getUsers = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=1000`);
 		users = json.results;
 	};
 
@@ -46,7 +46,7 @@
 		<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
 				<div class="flex">
-					<ProfilePicture {user} displayName />
+					<ProfilePicture user={user.user} displayName />
 				</div>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
 					<Tag tag={user.permission_name} />
@@ -63,7 +63,7 @@
 				class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 				class:hidden={selected !== user.id}
 			>
-				<h1 class="text-xl">{user.username}</h1>
+				<h1 class="text-xl">{user.user.username}</h1>
 				<!-- <TextInput label="Search" /> -->
 				<ul class="mt-6 flex flex-wrap items-center">
 					{#each roles as role}

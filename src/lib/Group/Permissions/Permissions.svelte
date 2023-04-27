@@ -3,12 +3,13 @@
 	import Create from './Create.svelte';
 	import Assign from './Assign.svelte';
 	import List from './List.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let selectedPage: 'assign' | 'create' | 'list' = 'assign';
 </script>
 
 <div class="bg-white p-6 rounded">
-	<h1>Roles</h1>
+	<h1>{$_("Roles")}</h1>
 	<Tab
 		tabs={['assign', 'list', 'create']}
 		bind:selectedPage

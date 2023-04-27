@@ -29,6 +29,7 @@ export interface poll {
 	joined: boolean;
 	group_joined: boolean;
 	total_comments: number;
+	pinned:boolean;
 }
 
 export interface votings {

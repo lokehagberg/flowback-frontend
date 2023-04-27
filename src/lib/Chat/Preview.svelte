@@ -145,8 +145,10 @@
 				(message) =>
 					(message.timestamp <= message.created_at || message.timestamp === null) &&
 					message.user_id !== user.id &&
-					((selectedPage === "direct" && message.target_id !== selectedChat && 
-					message.user_id !== selectedChat) || selectedPage === 'group') &&
+					((selectedPage === 'direct' &&
+						message.target_id !== selectedChat &&
+						message.user_id !== selectedChat) ||
+						selectedPage === 'group') &&
 					// 	selectedPage === 'group') &&
 					// This piece of code hinders new accounts from causing a notification but no account present
 					// TODO: Append new user to list if being notified from them
@@ -184,6 +186,21 @@
 					return new Date(preview2.created_at).getTime() - new Date(preview1.created_at).getTime();
 				else return 1;
 			});
+	};
+
+	const getMessage = (chatter: any) => {
+		return (
+			(selectedPage === 'direct' ? previewDirect : previewGroup).find(
+				(message) =>
+					(user.id !== message.target_id &&
+						message.target_id === chatter.id &&
+						selectedPage === 'direct') ||
+					(user.id !== message.user_id &&
+						message.user_id === chatter.id &&
+						selectedPage === 'direct') ||
+					(message.group_id === chatter.id && selectedPage === 'group')
+			)?.message || ''
+		);
 	};
 
 	$: if (user)
@@ -247,17 +264,8 @@
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span>{chatter.name || chatter.username}</span>
-				<span class="text-gray-400 text-sm truncate h-[20px]">
-					{(selectedPage === 'direct' ? previewDirect : previewGroup).find(
-						(message) =>
-							(user.id !== message.target_id &&
-								message.target_id === chatter.id &&
-								selectedPage === 'direct') ||
-							(user.id !== message.user_id &&
-								message.user_id === chatter.id &&
-								selectedPage === 'direct') ||
-							(message.group_id === chatter.id && selectedPage === 'group')
-					)?.message || ''}
+				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[5rem]">
+					{getMessage(chatter)}
 				</span>
 			</div>
 		</li>

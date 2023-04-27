@@ -37,7 +37,7 @@
 	});
 
 	const getUser = async () => {
-		const { json, res } = await fetchRequest('GET', 'user?limit=1000');
+		const { json, res } = await fetchRequest('GET', 'user');
 		if (res.ok) User = json;
 	};
 

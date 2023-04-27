@@ -74,12 +74,12 @@
 	};
 
 	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=100`);
+		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=1000`);
 		return json.results;
 	};
 
 	const getPeople = async () => {
-		const { json, res } = await fetchRequest('GET', `users?limit=100`);
+		const { json, res } = await fetchRequest('GET', `users?limit=1000`);
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 

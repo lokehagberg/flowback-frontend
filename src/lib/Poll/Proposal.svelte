@@ -35,6 +35,7 @@
 		if (!res.ok) return;
 		proposals = proposals.filter((proposalInList) => proposalInList.id !== proposal.id);
 		proposals = proposals;
+		show = true;
 	};
 
 	//TODO: Actual Edit

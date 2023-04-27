@@ -78,7 +78,7 @@
 	let title = '',
 		description = '',
 		tags: TagType[] = [],
-		defaultType : polltypes = "Text Poll",
+		defaultType: polltypes = 'Text Poll',
 		selectedTag: TagType,
 		status: StatusMessageInfo,
 		start_date = new Date(),
@@ -113,7 +113,8 @@
 			poll_type: selected_poll === defaultType ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
-			public: isPublic
+			public: isPublic,
+			pinned: false
 		});
 
 		loading = false;
@@ -228,7 +229,9 @@
 							<Tag
 								onclick={() => (selectedTag = tag)}
 								tag={tag.tag_name}
-								Class={`cursor-pointer ${selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'}`}
+								Class={`cursor-pointer ${
+									selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
+								}`}
 							/>
 						{/each}
 					</div>
@@ -264,7 +267,7 @@
 								(disabled.includes(poll) &&
 									(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
 							}
-							${selected_poll ===  poll? 'shadow-sm outline outline-primary' : 'shadow-xl'}
+							${selected_poll === poll ? 'shadow-sm outline outline-primary' : 'shadow-xl'}
 							`}
 						>
 							<div class="flex items-center text-center">

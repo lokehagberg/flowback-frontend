@@ -116,7 +116,7 @@
 		// selectedPage === 'direct';
 	}
 
-	$: document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
+	// $: if (document !== undefined) document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
 </script>
 
 <svelte:head

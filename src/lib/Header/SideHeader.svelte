@@ -65,7 +65,7 @@
 	<div slot="body" class="text-left">
 		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
 		<div>{$_('Number: +46737482562')}</div>
-		<div>{$_('Mail: flowbacktask@gmail.com')}</div>
+		<div>{$_(`Mail: ${import.meta.env.VITE_SUPPORT_MAIL}`)}</div>
 		<!-- <div>{$_('For questions about Metamask, contact the Metamask team.')}</div> -->
 	</div>
 </Modal>

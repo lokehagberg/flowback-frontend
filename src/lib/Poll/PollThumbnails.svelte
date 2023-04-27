@@ -99,6 +99,7 @@
 	onMount(async () => {
 		await getPolls();
 		amendWithPinnedPolls();
+		if ($page.params.groupId)
 		isAdmin = await getUserIsOwner($page.params.groupId);
 
 	});

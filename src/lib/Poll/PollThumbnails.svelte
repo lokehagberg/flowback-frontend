@@ -10,6 +10,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { getUserIsOwner } from '$lib/Group/functions';
 
 	export let Class = '';
 	export let infoToGet: 'group' | 'home' | 'public';
@@ -21,7 +22,8 @@
 		public: false,
 		order_by: 'start_date_desc'
 	};
-	let loading = false;
+	let loading = false,
+	isAdmin = false;
 
 	const getPolls = async () => {
 		loading = true;
@@ -97,6 +99,8 @@
 	onMount(async () => {
 		await getPolls();
 		amendWithPinnedPolls();
+		isAdmin = await getUserIsOwner($page.params.groupId);
+
 	});
 </script>
 
@@ -121,7 +125,7 @@
 
 				{#if polls.length > 0}
 					{#each polls as poll}
-						<PollThumbnail {poll} />
+						<PollThumbnail {poll} {isAdmin} />
 					{/each}
 				{:else}
 					<div class="bg-white rounded shadow p-8">{$_('No polls currently here')}</div>

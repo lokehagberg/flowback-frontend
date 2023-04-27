@@ -14,7 +14,8 @@
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 
-	export let poll: poll;
+	export let poll: poll,
+		isAdmin = false;
 
 	let onHoverGroup = false;
 
@@ -22,8 +23,7 @@
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
 			pinned: !poll.pinned
 		});
-		if (res.ok)
-		poll.pinned = !poll.pinned;
+		if (res.ok) poll.pinned = !poll.pinned;
 	};
 </script>
 
@@ -43,13 +43,15 @@
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
-			<div class="cursor-pointer inline" on:click={pinPoll}>
-				<Fa
-					icon={faThumbtack}
-					color={poll.pinned ? 'Black' : '#BBB'}
-					rotate={poll.pinned ? '0' : '90'}
-				/>
-			</div>
+			{#if isAdmin}
+				<div class="cursor-pointer inline" on:click={pinPoll}>
+					<Fa
+						icon={faThumbtack}
+						color={poll.pinned ? 'Black' : '#BBB'}
+						rotate={poll.pinned ? '0' : '90'}
+					/>
+				</div>
+			{/if}
 		</div>
 		<a
 			href={poll.group_joined ? `groups/${poll.group_id}` : ''}

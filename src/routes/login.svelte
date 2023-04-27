@@ -29,7 +29,7 @@
 		<img src={import.meta.env.VITE_LOGO === "REFORUM" ? Reforum : Logo} class="w-44" alt="flowback logo" />
 	</div>
 	<div class="bg-white mt-6 rounded shadow-lg w-full max-w-[600px]">
-		<Tab bind:selectedPage tabs={['Login', 'Register']} />
+		<Tab bind:selectedPage tabs={import.meta.env.VITE_DISABLE_ACCOUNT_CREATION ? ['Login'] : ['Login', 'Register']} />
 		<div class="">
 			{#if selectedPage === 'Login'}
 				<Login bind:selectedPage />

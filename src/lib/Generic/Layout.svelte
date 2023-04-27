@@ -1,7 +1,6 @@
 <script>
 	import Chat from '$lib/Chat/Chat.svelte';
 	import Header from '$lib/Header/Header.svelte';
-
 	export let centering = false;
 </script>
 

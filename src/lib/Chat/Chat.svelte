@@ -116,15 +116,19 @@
 		// selectedPage === 'direct';
 	}
 
+
+
 	// $: if (document !== undefined) document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
 </script>
 
 <svelte:head
-	><title
+	>
+	<!-- <title
 		>{`${notifiedDirect.length > 0 ? '🟣' : ''}${
 			notifiedGroup.length > 0 ? '🔵' : ''
-		} Flowback`}</title
-	></svelte:head
+		}`}</title
+	> -->
+	</svelte:head
 >
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
 	<div class="col-start-2 col-end-3 flex justify-between bg-white p-2">

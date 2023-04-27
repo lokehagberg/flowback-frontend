@@ -27,7 +27,7 @@
 				localStorage.setItem('userName', json.username);
 			}
 
-			window.location.href = '/home';
+			// window.location.href = '/home';
 		} else {
 			status = statusMessageFormatter(res, json, 'Problems');
 		}

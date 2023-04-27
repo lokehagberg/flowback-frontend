@@ -43,8 +43,8 @@
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
-			{#if isAdmin}
-				<div class="cursor-pointer inline" on:click={pinPoll}>
+			{#if isAdmin || poll.pinned}
+				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll}>
 					<Fa
 						icon={faThumbtack}
 						color={poll.pinned ? 'Black' : '#BBB'}

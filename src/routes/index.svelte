@@ -1,22 +1,58 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
-	onMount(() => {
-		if (localStorage.getItem('token')) window.location.href = '/home';
-		else window.location.href = "/login"
+	let status: StatusMessageInfo;
+
+	const logIn = async (username: string, password: string) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`login`,
+			{
+				username,
+				password
+			},
+			false
+		);
+		if (json?.token) {
+			status = statusMessageFormatter(res, json, 'Successfully logged in');
+			await localStorage.setItem('token', json.token);
+			{
+				const { json } = await fetchRequest('GET', 'user');
+				localStorage.setItem('userId', json.id);
+				localStorage.setItem('userName', json.username);
+			}
+
+			window.location.href = '/home';
+		} else {
+			status = statusMessageFormatter(res, json, 'Problems');
+		}
+	};
+
+	onMount(async () => {
+		let params = new URLSearchParams(window.location.search);
+		const username = params.getAll('username')[0];
+		const password = params.getAll('password')[0];
+		if (username && password) logIn(username, password);
+		else if (localStorage.getItem('token')) window.location.href = '/home';
+		else window.location.href = '/login';
 	});
 </script>
 
 <svelte:head>
 	<title>{$_('Welcome to Flowback')}</title>
 </svelte:head>
+<StatusMessage bind:status />
 <!-- 
 <div class="flex justify-center">
 	<div class="flex flex-col items-center bg-white p-12 shadow rounded w-1/2 mt-12">
 		<h1>{$_('Welcome to Flowback')}</h1> -->
-		<!-- <h1 class="text-2xl">New and improved!</h1> -->
-		<!-- <a
+<!-- <h1 class="text-2xl">New and improved!</h1> -->
+<!-- <a
 			href="/login"
 			class="block text-center mt-4 w-1/2 bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mb-5 rounded cursor-pointer hover:no-underline hover:bg-blue-500"
 			>{$_('Go to login page')}

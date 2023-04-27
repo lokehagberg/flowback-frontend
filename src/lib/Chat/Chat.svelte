@@ -123,13 +123,13 @@
 
 <svelte:head
 	>
-	<title
+	<!-- <title
 		>
-		<!-- {`${notifiedDirect.length > 0 ? '🟣' : ''}${
+		{`${notifiedDirect.length > 0 ? '🟣' : ''}${
 			notifiedGroup.length > 0 ? '🔵' : ''
-		}`} -->
+		}`}
 		</title
-	>
+	> -->
 	</svelte:head
 >
 <div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">

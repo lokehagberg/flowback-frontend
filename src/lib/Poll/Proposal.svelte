@@ -33,7 +33,7 @@
 	const deleteProposal = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/proposal/${proposal.id}/delete`);
 		if (!res.ok) return;
-		proposals.filter((proposalInList) => proposalInList.id === proposal.id);
+		proposals = proposals.filter((proposalInList) => proposalInList.id !== proposal.id);
 		proposals = proposals;
 	};
 

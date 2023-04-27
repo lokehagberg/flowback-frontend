@@ -323,7 +323,7 @@
 				>
 					<Proposal
 						{proposal}
-						proposals={abstained}
+						bind:proposals={abstained}
 						{groupUser}
 						Class={`${selectedPage === 'You'} ${
 							!checked && selectedPage !== 'Delegate' && 'cursor-move'

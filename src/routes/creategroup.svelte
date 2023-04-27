@@ -89,6 +89,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Creating a Group</title>
+</svelte:head>
+
 <Layout centering>
 	<Loader bind:loading>
 		<form

@@ -54,6 +54,11 @@
 		if (user.profile_image)
 			profileImagePreview = `${import.meta.env.VITE_API}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
+
+
+
+		document.title = `${user.username}'s profile`
+
 	});
 
 	const updateProfile = async () => {

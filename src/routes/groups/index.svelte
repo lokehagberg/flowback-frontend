@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>{$_("Flowback Groups")}</title>
+	<title>Groups</title>
 </svelte:head>
 
 <Layout centering={true}>

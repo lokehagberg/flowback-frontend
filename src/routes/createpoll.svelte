@@ -145,6 +145,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Creating a Poll</title>
+</svelte:head>
+
 <Layout centering={true}>
 	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px]">
 		<form

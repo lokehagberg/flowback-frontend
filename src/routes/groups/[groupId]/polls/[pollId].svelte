@@ -41,7 +41,8 @@
 		await getPollData();
 		phase = getPhase();
 		scrollToSection();
-		checkForLinks(poll.description, "poll-description")
+		checkForLinks(poll.description, "poll-description");
+		document.title = poll.title
 	});
 
 	const getPhase = (): Phase => {

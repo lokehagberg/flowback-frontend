@@ -81,7 +81,7 @@
 </script>
 
 <svelte:head>
-	<title>{group.name}</title>
+	<title>{group.name} at {selectedPage}</title>
 </svelte:head>
 
 <Layout>

@@ -10,6 +10,7 @@
 	import { faReply } from '@fortawesome/free-solid-svg-icons/faReply';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { proposal } from './interface';
+	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 
 	let comments: Comment[] = [],
 		show = false,
@@ -74,6 +75,9 @@
 	onMount(async () => {
 		await getComments();
 		sortComments();
+		comments.forEach(comment => {
+			checkForLinks(comment.message, `comment-${comment.id}`)
+		});
 	});
 </script>
 
@@ -98,7 +102,7 @@
 					id={comment.id}
 				/>
 			{:else}
-				<div
+				<div 
 					class={`p-3 text-sm border border-l-gray-400 ml-${
 						comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
 					}`}
@@ -109,7 +113,7 @@
 						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
 						<div class="text-gray-700">{comment.author_name}</div>
 					</div>
-					<div class="text-md mt-1 mb-3">{comment.message}</div>
+					<div class="text-md mt-1 mb-3" id={`comment-${comment.id}`}>{comment.message}</div>
 					<div class="text-xs text-gray-400">{comment.edited ? "(edited)" : ""}</div>
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">

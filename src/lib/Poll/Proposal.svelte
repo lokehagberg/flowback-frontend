@@ -15,6 +15,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 
 	export let proposal: proposal,
 		Class = '',
@@ -58,18 +59,8 @@
 		}
 	};
 
-	const checkForLinks = () => {
-		const linkPattern = /https?:\/\/[^\s]+/g;
-		const linkified = proposal.description.replace(linkPattern, (match) => {
-			return `<a href="${match}" target="_blank">${match}</a>`;
-		});
-
-		const descriptionHtmlElement = document.getElementById(`proposal-${proposal.id}-description`)
-		if (descriptionHtmlElement !== null) descriptionHtmlElement.innerHTML = linkified
-	};
-
 	onMount(() => {
-		checkForLinks();
+		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
 </script>
 

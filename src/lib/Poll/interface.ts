@@ -62,6 +62,7 @@ export interface Comment {
 	id: number;
 	//False if comment has been deleted
 	active: boolean;
+	edited: boolean;
 }
 
 export interface CommentEdited {}

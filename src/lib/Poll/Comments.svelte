@@ -110,6 +110,7 @@
 						<div class="text-gray-700">{comment.author_name}</div>
 					</div>
 					<div class="text-md mt-1 mb-3">{comment.message}</div>
+					<div class="text-xs text-gray-400">{comment.edited ? "(edited)" : ""}</div>
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
 							<div

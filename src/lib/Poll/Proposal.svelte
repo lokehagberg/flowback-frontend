@@ -59,26 +59,13 @@
 	};
 
 	const checkForLinks = () => {
-		// const regex = new RegExp(
-		// 	'^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?$'
-		// );
-
-		// // if (proposal.description.matchAll(regex))
-
-		// proposal.description = proposal.description.replaceAll(regex, (url: any) => {
-		// 	console.log(url, "URLLL");
-		// 	return `<a>${url}</a>`;
-		// });
-
 		const linkPattern = /https?:\/\/[^\s]+/g;
 		const linkified = proposal.description.replace(linkPattern, (match) => {
 			return `<a href="${match}" target="_blank">${match}</a>`;
 		});
 
 		const descriptionHtmlElement = document.getElementById(`proposal-${proposal.id}-description`)
-		if (descriptionHtmlElement !== null)
-		//@ts-ignore
-		descriptionHtmlElement.innerHTML = linkified
+		if (descriptionHtmlElement !== null) descriptionHtmlElement.innerHTML = linkified
 	};
 
 	onMount(() => {

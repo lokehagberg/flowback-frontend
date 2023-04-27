@@ -33,7 +33,7 @@
 				? 'finished=true'
 				: 'finished=false';
 
-		const API =
+		let API =
 			infoToGet === 'group'
 				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
 						filter.search || ''
@@ -48,6 +48,8 @@
 						filter.search || ''
 				  }&${finishedFilter}`
 				: '';
+
+		API = API + '&pinned=false';
 
 		const { json, res } = await fetchRequest('GET', API);
 
@@ -82,19 +84,18 @@
 				  }&${finishedFilter}`
 				: '';
 
+		API = API + '&pinned=true';
 
-			API = API + "&pinned=true"
+		const { json, res } = await fetchRequest('GET', API);
 
-			const { json, res } = await fetchRequest('GET', API);
-
-			if (!res.ok) status = statusMessageFormatter(res, json);
-			else polls = [...json.results, ...polls];
-	}
+		if (!res.ok) status = statusMessageFormatter(res, json);
+		else polls = [...json.results, ...polls];
+	};
 
 	let status: StatusMessageInfo;
 
-	onMount(() => {
-		getPolls();
+	onMount(async () => {
+		await getPolls();
 		amendWithPinnedPolls();
 	});
 </script>
@@ -103,7 +104,14 @@
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>
 			<StatusMessage bind:status disableSuccess />
-			<PollFiltering handleSearch={getPolls} bind:filter />
+			<PollFiltering
+				handleSearch={async () => {
+					await getPolls();
+					amendWithPinnedPolls();
+					return {};
+				}}
+				bind:filter
+			/>
 			{#if polls.length === 0}
 				<div class="bg-white rounded shadow p-8 mt-6">
 					{$_('No polls currently here')}

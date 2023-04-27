@@ -33,6 +33,7 @@
 	let folderId: string;
 
 	//TODO: Environment variables probably need to be less cursed
+	//like for example in .env do a,b,c, instead
 	switch (groupId) {
 		case 1:
 			folderId = import.meta.env.VITE_DOCUMENT_1;

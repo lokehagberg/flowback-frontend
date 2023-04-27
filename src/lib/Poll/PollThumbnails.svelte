@@ -57,10 +57,45 @@
 		loading = false;
 	};
 
+	//TODO: Remove this shit later
+	const amendWithPinnedPolls = async () => {
+		const finishedFilter =
+			filter.finishedSelection === 'all'
+				? ''
+				: filter.finishedSelection === 'finished'
+				? 'finished=true'
+				: 'finished=false';
+
+		let API =
+			infoToGet === 'group'
+				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}&order_by=${filter.order_by}`
+				: infoToGet === 'home'
+				? `home/polls?limit=300&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}&order_by=${filter.order_by}`
+				: //TODO remove public
+				infoToGet === 'public'
+				? `home/polls?limit=300&public=true&title__icontains=${
+						filter.search || ''
+				  }&${finishedFilter}`
+				: '';
+
+
+			API = API + "&pinned=true"
+
+			const { json, res } = await fetchRequest('GET', API);
+
+			if (!res.ok) status = statusMessageFormatter(res, json);
+			else polls = [...json.results, ...polls];
+	}
+
 	let status: StatusMessageInfo;
 
 	onMount(() => {
 		getPolls();
+		amendWithPinnedPolls();
 	});
 </script>
 

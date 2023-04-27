@@ -19,10 +19,11 @@
 	let onHoverGroup = false;
 
 	const pinPoll = async () => {
-		poll.pinned = !poll.pinned;
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
-			pinned: true
+			pinned: !poll.pinned
 		});
+		if (res.ok)
+		poll.pinned = !poll.pinned;
 	};
 </script>
 

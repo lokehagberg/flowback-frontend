@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	// import Button from '$lib/Generic/Button.svelte';
 	import Folder from './Folder.svelte';
 	import { _ } from 'svelte-i18n';
@@ -33,22 +34,22 @@
 
 	switch (groupId) {
 		case 1:
-			folderId = '1RPO5L-jboVB_AfReTu-kV2Vy6gTfhr2P';
+			folderId = import.meta.env.VITE_DOCUMENT_1;
 			break;
 		case 2:
-			folderId = '1aAVp1GjYDTfx_w3FHmp3o1dHYA6AJniY';
+			folderId = import.meta.env.VITE_DOCUMENT_2;
 			break;
 		case 4:
-			folderId = '1nXWjUfbn7qvLUIwiNmPETIHuYISy8L3P';
+			folderId = import.meta.env.VITE_DOCUMENT_4;
 			break;
 		case 5:
-			folderId = '1FM_pMKZKRUbpL48szxmp2dGD-8xaTmVB';
+			folderId = import.meta.env.VITE_DOCUMENT_5;
 			break;
 		case 9:
-			folderId = '1eexH5tCIi6Foq1u23-hw0WpX0GfJFY-f';
+			folderId = import.meta.env.VITE_DOCUMENT_9;
 			break;
 		default:
-			folderId = '1erJd1OgTlDNFPcJql5Eq1zr_sS_tgGsw';
+			folderId = import.meta.env.VITE_DOCUMENT_DEFAULT;
 			break;
 	}
 </script>

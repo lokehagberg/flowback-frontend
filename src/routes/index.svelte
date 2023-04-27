@@ -38,6 +38,7 @@
 		const username = params.getAll('username')[0];
 		const password = params.getAll('password')[0];
 		if (username && password) logIn(username, password);
+		console.log(username, password)
 		// else if (localStorage.getItem('token')) window.location.href = '/home';
 		// else window.location.href = '/login';
 	});

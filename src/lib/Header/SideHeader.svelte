@@ -63,7 +63,7 @@
 	</div>
 
 	<div slot="body" class="text-left">
-		<div>{$_('Support between 12:00 and 17:00 CET')}</div>
+		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
 		<div>{$_('Number: +46737482562')}</div>
 		<div>{$_('Mail: flowbacktask@gmail.com')}</div>
 		<!-- <div>{$_('For questions about Metamask, contact the Metamask team.')}</div> -->

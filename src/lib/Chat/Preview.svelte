@@ -263,7 +263,7 @@
 			{/if}
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
-				<span>{chatter.name || chatter.username}</span>
+				<span class="max-w-[5rem] overflow-x-hidden overflow-ellipsis">{chatter.name || chatter.username}</span>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[5rem]">
 					{getMessage(chatter)}
 				</span>

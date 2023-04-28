@@ -15,6 +15,12 @@
 	};
 
     //TODO: Maybe implement this in the future (using google analytics)
+    /* Sources for further knowledge:
+    https://support.google.com/analytics/answer/9976101
+    https://support.google.com/tagmanager/answer/10718549
+    https://www.youtube.com/watch?v=4lKkRD-xVMk&ab_channel=LovesData
+    https://developers.google.com/tag-platform/tag-manager/templates/consent-apis
+    */
 	const denyCookies = () => {
 		hasClicked = true;
 		localStorage.setItem('cookies-consent', 'false');

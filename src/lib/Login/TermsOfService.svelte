@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 
+    export let Class = ""
 </script>
 
-<div class="flex flex-col gap-6 border p-4">
+<div class={"flex flex-col gap-6 border p-4 " + Class}>
     <h1>{$_("Flowback terms of service")}</h1>
     <p>
         {$_(`§1: the user agreeing to the terms of service means that they have acknowledged and accepted all

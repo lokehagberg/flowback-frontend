@@ -2,8 +2,13 @@
 	import { _ } from 'svelte-i18n';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { onMount } from 'svelte';
+	import TermsOfService from '$lib/Login/TermsOfService.svelte';
 
 	export let sideHeaderOpen = false;
+
+	let open_tos = false,
+	 open_support = false,
+	 open_tools = false;
 
 	const logOut = () => {
 		localStorage.removeItem('token');
@@ -33,12 +38,10 @@
 			action: () => (window.location.href = '/user')
 		},
 		{ title: 'Support', action: () => (open_support = true) },
+		{ title: 'TOS', action: () => (open_tos = true) },
 		// { title: 'Tools', action: () => (open_tools = true) },
 		{ title: 'Log Out', action: logOut }
 	];
-
-	let open_support = false;
-	let open_tools = false;
 
 	onMount(() => {
 		closeWindowWhenClickingOutside();
@@ -86,6 +89,12 @@
 				<div on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</div>
 			</div>
 		</div>
+	</div>
+</Modal>
+
+<Modal bind:open={open_tos}>
+	<div slot="body">
+		<TermsOfService Class="!border-none !p-0 text-xs leading-7"/>
 	</div>
 </Modal>
 

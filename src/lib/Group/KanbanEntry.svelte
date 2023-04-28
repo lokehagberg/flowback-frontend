@@ -38,14 +38,18 @@
 		assignee: kanban.assignee?.id
 	};
 
-	$: if (openModal)
-		kanbanEdited = {
-			entry_id: kanban.id,
-			id: kanban.id,
-			description: kanban.description,
-			title: kanban.title,
-			assignee: kanban.assignee?.id
-		};
+	$: if (openModal) console.log('openmodal');
+	$: openModal && (kanban.id !== selectedEntry) &&
+		(() => {
+			console.log("HERE")
+			kanbanEdited = {
+				entry_id: kanban.id,
+				id: kanban.id,
+				description: kanban.description,
+				title: kanban.title,
+				assignee: kanban.assignee?.id
+			};
+		})();
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
@@ -119,7 +123,6 @@
 	};
 
 	onMount(() => {
-		console.log('HERE?!', kanban);
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 	});
 </script>

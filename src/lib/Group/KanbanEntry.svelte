@@ -17,7 +17,6 @@
 	import type { GroupUser, kanban } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
-	import type { KanbanEntry } from './Kanban';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -46,7 +45,7 @@
 			kanban.origin_type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/update`
 				: 'user/kanban/entry/update',
-				kanbanEdited
+			kanbanEdited
 		);
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;
@@ -77,10 +76,10 @@
 			}
 		);
 		status = statusMessageFormatter(res, json);
-		if (res.ok) {
-			kanban.tag = kanban.tag;
-			showSuccessPoppup = true;
-		}
+		if (!res.ok) return;
+
+		kanban.tag = kanban.tag;
+		showSuccessPoppup = true;
 	};
 
 	const changeAssignee = (e: any) => {
@@ -98,10 +97,10 @@
 			{ entry_id: kanban.id }
 		);
 		status = statusMessageFormatter(res, json);
-		if (res.ok) {
-			removeKanbanEntry(kanban.id);
-			showSuccessPoppup = true;
-		}
+		if (!res.ok) return;
+
+		removeKanbanEntry(kanban.id);
+		showSuccessPoppup = true;
 	};
 
 	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
@@ -132,7 +131,9 @@
 		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() =>
 			(window.location.href =
-				type === 'group' ? `/user?id=${kanban.assignee.id}` : `groups/${kanban.origin_id}?page=kanban`)}
+				type === 'group'
+					? `/user?id=${kanban.assignee.id}`
+					: `groups/${kanban.origin_id}?page=kanban`)}
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
@@ -144,7 +145,7 @@
 		</div>
 	</div>
 	<!-- Arrows -->
-		{#if ((type === "group" && kanban.origin_type === "group") || (type === "home" && kanban.origin_type === "user"))}
+	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3">
 			<div
 				class="cursor-pointer hover:text-gray-500"

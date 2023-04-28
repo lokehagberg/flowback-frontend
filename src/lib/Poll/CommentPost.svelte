@@ -42,7 +42,9 @@
 				being_replied: false,
 				id: json,
 				reply_depth: replyDepth + 1,
-				active: true
+				active: true,
+				edited: false,
+
 			});
 			comments = comments;
 			showMessage = 'Posted Comment';
@@ -71,6 +73,7 @@
 				comment.message = message;
 				comments.splice(index, 1, comment);
 				comments = comments;
+				comment.edited = true;
 			}
 		}
 		beingEdited = false;

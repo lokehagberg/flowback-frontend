@@ -27,11 +27,15 @@
 		Class = '';
 
 	onMount(() => {
+		getKanbanEntries();
+	});
+
+	const getKanbanEntries = async () => {
 		if (type === 'group') {
 			getKanbanEntriesGroup();
 			if (type === 'group') getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
-	});
+	}
 
 	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
@@ -107,6 +111,8 @@
 
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
+		getKanbanEntries();
+
 	};
 </script>
 

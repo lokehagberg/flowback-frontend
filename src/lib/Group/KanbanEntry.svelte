@@ -20,6 +20,7 @@
 	import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
 	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
+	import TimeAgo from 'javascript-time-ago';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -133,14 +134,24 @@
 		kanban.group_name = json.name;
 	};
 
-	onMount(() => {
+	let endDate: TimeAgo;
+	const formatEndDate = async () => {
+		const en = (await import('javascript-time-ago/locale/en')).default;
+		TimeAgo.addDefaultLocale(en);
+		endDate = new TimeAgo('en');
+	}
+	onMount(async () => {
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
+		if (kanban.end_date !== null) formatEndDate();
 	});
 </script>
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
 <li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
+	{#if kanban.end_date !== null && endDate}
+	Ends {endDate.format(new Date(kanban.end_date))}
+	{/if}
 	<div
 		on:click={() => {
 			openModal = true;
@@ -184,15 +195,15 @@
 
 			{#if kanban.priority === 1}
 				<div class="flex flex-col">
-					<Fa icon={faChevronDown} color="#B664E9" />
-					<Fa icon={faChevronDown} color="#B664E9" class="-mt-2.5" />
+					<Fa icon={faChevronDown}  />
+					<Fa icon={faChevronDown}  class="-mt-2.5" />
 				</div>
 			{:else if kanban.priority === 2}
 				<Fa icon={faChevronDown} />
 			{:else if kanban.priority === 3}
 				<Fa icon={faGripLines} />
 			{:else if kanban.priority === 4}
-				<Fa icon={faChevronUp} />
+				<Fa icon={faChevronUp} color="#419EDA"/>
 			{:else if kanban.priority === 5}
 				<div class="flex flex-col">
 					<Fa icon={faChevronUp} color="#015BC0"/>

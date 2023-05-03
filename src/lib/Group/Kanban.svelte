@@ -12,6 +12,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { DateInput, DatePicker } from 'date-picker-svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -22,8 +23,9 @@
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
-		priorities = [1,2,3,4,5],
-		priority = 1;
+		priorities = [1, 2, 3, 4, 5],
+		priority = 1,
+		end_date: null | Date = null;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -37,7 +39,7 @@
 			getKanbanEntriesGroup();
 			if (type === 'group') getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
-	}
+	};
 
 	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
@@ -81,7 +83,8 @@
 				description,
 				tag: 1,
 				title,
-				priority
+				priority,
+				end_date
 			}
 		);
 		status = statusMessageFormatter(res, json);
@@ -105,7 +108,8 @@
 			origin_id: 1,
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
-			priority
+			priority,
+			end_date:end_date?.toString() || null
 		});
 
 		kanbanEntries = kanbanEntries;
@@ -160,14 +164,16 @@
 						{#each users as user}
 							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
-					</select >
+					</select>
 				{/if}
-				Priority
+				{$_("Priority")}
 				<select class="border border-gray-600" on:input={handleChangePriority}>
 					{#each priorities as i}
 						<option value={i}>{i}</option>
 					{/each}
 				</select>
+				{$_("End date")}
+				<DateInput bind:value={end_date} min={new Date()}/>
 				<Button type="submit">{$_('Create task')}</Button>
 			</div>
 			<StatusMessage Class="mt-2" bind:status />

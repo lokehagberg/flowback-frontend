@@ -23,7 +23,7 @@
 			if (
 				notificationsOpen &&
 				//@ts-ignore
-				!notificationListElement?.contains(e.target) 
+				!notificationListElement?.contains(e.target)
 			) {
 				notificationsOpen = false;
 			}
@@ -42,12 +42,12 @@
 
 	const markAllAsRead = async () => {
 		const { res, json } = await fetchRequest('POST', 'notification/read', {
-			notification_ids: notifications.map(notification => notification.id),
+			notification_ids: notifications.map((notification) => notification.id),
 			read: true
 		});
 		if (!res.ok) return;
 
-		notifications = []
+		notifications = [];
 	};
 
 	let timeAgo: TimeAgo;
@@ -82,7 +82,12 @@
 		class="absolute right-0 top-full bg-white select-none shadow slide-animation"
 		id="notifications-list"
 	>
-	<li on:click={markAllAsRead} class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all">{$_("Mark all as read")}</li>
+		<li
+			on:click={markAllAsRead}
+			class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+		>
+			{$_('Mark all as read')}
+		</li>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
 				<!-- on:click={notification.action} -->

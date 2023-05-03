@@ -90,7 +90,7 @@ export interface groupUser extends User {
 	is_admin: boolean;
 	permission_id: number;
 	permission_name: string;
-	user: { id: number; username: string; profile_image: null  | string; banner_image: null | string };
+	user: { id: number; username: string; profile_image: null | string; banner_image: null | string };
 }
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
@@ -133,5 +133,6 @@ export interface kanban {
 	origin_id: number;
 	origin_type: 'group' | 'user';
 	group_name: string;
-	priority:number;
+	priority: number;
+	end_date: null | string;
 }

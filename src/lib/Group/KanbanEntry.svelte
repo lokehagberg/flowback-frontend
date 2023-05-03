@@ -17,12 +17,16 @@
 	import type { GroupUser, kanban } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
+	import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
+	import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
+	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
 		selectedEntry: number,
 		status: StatusMessageInfo,
-		showSuccessPoppup = false;
+		showSuccessPoppup = false,
+		priorities = [1,2,3,4,5];
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -35,19 +39,22 @@
 		id: kanban.id,
 		description: kanban.description,
 		title: kanban.title,
-		assignee: kanban.assignee?.id
+		assignee: kanban.assignee?.id,
+		priority:kanban.priority
 	};
 
 	$: if (openModal) console.log('openmodal');
-	$: openModal && (kanban.id !== selectedEntry) &&
+	$: openModal &&
+		kanban.id !== selectedEntry &&
 		(() => {
-			console.log("HERE")
+			console.log('HERE');
 			kanbanEdited = {
 				entry_id: kanban.id,
 				id: kanban.id,
 				description: kanban.description,
 				title: kanban.title,
-				assignee: kanban.assignee?.id
+				assignee: kanban.assignee?.id,
+				priority:kanban.priority
 			};
 		})();
 
@@ -97,6 +104,10 @@
 
 	const changeAssignee = (e: any) => {
 		kanbanEdited.assignee = Number(e.target.value);
+	};
+
+	const handleChangePriority = (e: any) => {
+		kanbanEdited.priority = Number(e.target.value);
 	};
 
 	// Delete kanban removes it from the database,
@@ -170,6 +181,25 @@
 			>
 				<Fa icon={faArrowLeft} size="1.5x" />
 			</div>
+
+			{#if kanban.priority === 1}
+				<div class="flex flex-col">
+					<Fa icon={faChevronDown} color="#B664E9" />
+					<Fa icon={faChevronDown} color="#B664E9" class="-mt-2.5" />
+				</div>
+			{:else if kanban.priority === 2}
+				<Fa icon={faChevronDown} />
+			{:else if kanban.priority === 3}
+				<Fa icon={faGripLines} />
+			{:else if kanban.priority === 4}
+				<Fa icon={faChevronUp} />
+			{:else if kanban.priority === 5}
+				<div class="flex flex-col">
+					<Fa icon={faChevronUp} color="#015BC0"/>
+					<Fa icon={faChevronUp} class="-mt-2.5" color="#015BC0"/>
+				</div>
+			{/if}
+
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
@@ -201,6 +231,12 @@
 			<select on:input={changeAssignee} value={kanban?.assignee?.id}>
 				{#each users as user}
 					<option value={user.user.id}>{user.user.username}</option>
+				{/each}
+			</select>
+			{$_("Priority")}
+			<select class="border border-gray-600" on:input={handleChangePriority} value={kanban?.priority}>
+				{#each priorities as i}
+					<option value={i}>{i}</option>
 				{/each}
 			</select>
 		</div>

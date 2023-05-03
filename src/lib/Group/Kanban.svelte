@@ -21,7 +21,9 @@
 		assignee = 0,
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
-		showSuccessPoppup = false;
+		showSuccessPoppup = false,
+		priorities = [1,2,3,4,5],
+		priority = 1;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -40,7 +42,7 @@
 	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/kanban/entry/list?limit=10000`
+			`group/${$page.params.groupId}/kanban/entry/list?limit=10000&order_by=priority`
 		);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -56,6 +58,10 @@
 
 	const handleChangeAssignee = (e: any) => {
 		assignee = Number(e.target.value);
+	};
+
+	const handleChangePriority = (e: any) => {
+		priority = Number(e.target.value);
 	};
 
 	const getGroupUsers = async () => {
@@ -75,7 +81,7 @@
 				description,
 				tag: 1,
 				title,
-				priority: 1
+				priority
 			}
 		);
 		status = statusMessageFormatter(res, json);
@@ -98,7 +104,8 @@
 			created_by: 1,
 			origin_id: 1,
 			origin_type: type === 'group' ? 'group' : 'user',
-			group_name: ''
+			group_name: '',
+			priority
 		});
 
 		kanbanEntries = kanbanEntries;
@@ -153,8 +160,14 @@
 						{#each users as user}
 							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
-					</select>
+					</select >
 				{/if}
+				Priority
+				<select class="border border-gray-600" on:input={handleChangePriority}>
+					{#each priorities as i}
+						<option value={i}>{i}</option>
+					{/each}
+				</select>
 				<Button type="submit">{$_('Create task')}</Button>
 			</div>
 			<StatusMessage Class="mt-2" bind:status />

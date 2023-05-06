@@ -37,7 +37,9 @@
 
 		if (!res.ok) return;
 
-		groupList = json.results.reverse().sort((group: any) => group.joined);
+		groupList = json.results
+			.reverse()
+			.sort((group1: any, group2: any) => +group2.joined - +group1.joined);
 		loading = false;
 	};
 </script>

@@ -78,7 +78,7 @@
 	const createKanbanEntry = async () => {
 		const content = priority
 			? {
-					assignee: null,
+					assignee,
 					description,
 					tag: 1,
 					title,
@@ -86,7 +86,7 @@
 					end_date
 			  }
 			: {
-					assignee: null,
+					assignee,
 					description,
 					tag: 1,
 					title,

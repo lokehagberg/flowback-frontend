@@ -25,7 +25,7 @@
 		selectedEntry: number,
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
-		priorities = [1,2,3,4,5];
+		priorities = [5,4,3,2,1];
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -42,7 +42,6 @@
 		priority:kanban.priority
 	};
 
-	$: if (openModal) console.log('openmodal');
 	$: openModal &&
 		kanban.id !== selectedEntry &&
 		(() => {
@@ -71,6 +70,7 @@
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
+		kanban.priority = kanbanEdited.priority
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
 		kanban.assignee = {

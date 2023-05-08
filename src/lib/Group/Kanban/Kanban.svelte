@@ -185,16 +185,20 @@
 						{/each}
 					</select>
 				{/if}
-				{$_('Priority')}
-				<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
-					{#each priorities as i}
-						<option value={i}>
-							{priorityText[i]}
-						</option>
-					{/each}
-				</select>
-				{$_('End date')}
-				<DateInput bind:value={end_date} min={new Date()} />
+				<div>
+					{$_('Priority')}
+					<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
+						{#each priorities as i}
+							<option value={i}>
+								{priorityText[i]}
+							</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					{$_('End date')}
+					<DateInput bind:value={end_date} min={new Date()} />
+				</div>
 				<Button type="submit">{$_('Create task')}</Button>
 			</div>
 			<StatusMessage Class="mt-2" bind:status />

@@ -13,9 +13,6 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
-	import KanbanIcons from './KanbanIcons.svelte';
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -27,6 +24,13 @@
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
 		priorities = [5, 4, 3, 2, 1],
+		priorityText = [
+			'Very high priority',
+			'High priority',
+			'Medium priority',
+			'Low priority',
+			'Very low priority'
+		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null;
 
@@ -185,10 +189,10 @@
 				<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
 					{#each priorities as i}
 						<option value={i}>
-							{i} 
+							{priorityText[i]}
 						</option>
-						{/each}
-					</select>
+					{/each}
+				</select>
 				{$_('End date')}
 				<DateInput bind:value={end_date} min={new Date()} />
 				<Button type="submit">{$_('Create task')}</Button>

@@ -17,9 +17,6 @@
 	import type { GroupUser, kanban } from '../interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
-	import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
-	import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
-	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './KanbanIcons.svelte';
 
@@ -232,7 +229,8 @@
 			{$_("Priority")}
 			<select class="border border-gray-600" on:input={handleChangePriority} value={kanban?.priority}>
 				{#each priorities as i}
-					<option value={i}>{i}</option>
+					<option value={i}>{i}
+					</option>
 				{/each}
 			</select>
 		</div>

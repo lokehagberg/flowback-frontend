@@ -14,13 +14,14 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import type { GroupUser, kanban } from './interface';
+	import type { GroupUser, kanban } from '../interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
 	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
 	import TimeAgo from 'javascript-time-ago';
+	import KanbanIcons from './KanbanIcons.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -193,23 +194,7 @@
 				<Fa icon={faArrowLeft} size="1.5x" />
 			</div>
 
-			{#if kanban.priority === 1}
-				<div class="flex flex-col">
-					<Fa icon={faChevronDown}  />
-					<Fa icon={faChevronDown}  class="-mt-2.5" />
-				</div>
-			{:else if kanban.priority === 2}
-				<Fa icon={faChevronDown} />
-			{:else if kanban.priority === 3}
-				<Fa icon={faGripLines} />
-			{:else if kanban.priority === 4}
-				<Fa icon={faChevronUp} color="#419EDA"/>
-			{:else if kanban.priority === 5}
-				<div class="flex flex-col">
-					<Fa icon={faChevronUp} color="#015BC0"/>
-					<Fa icon={faChevronUp} class="-mt-2.5" color="#015BC0"/>
-				</div>
-			{/if}
+			<KanbanIcons bind:priority={kanban.priority} />
 
 			<div
 				class="cursor-pointer hover:text-gray-500"

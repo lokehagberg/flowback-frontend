@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { GroupUser, kanban, User } from './interface';
+	import type { GroupUser, kanban, User } from '../interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -13,6 +13,9 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import KanbanIcons from './KanbanIcons.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -23,7 +26,7 @@
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
-		priorities = [1, 2, 3, 4, 5],
+		priorities = [5, 4, 3, 2, 1],
 		priority: undefined | number = 3,
 		end_date: null | Date = null;
 
@@ -181,9 +184,11 @@
 				{$_('Priority')}
 				<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
 					{#each priorities as i}
-						<option value={i}>{i}</option>
-					{/each}
-				</select>
+						<option value={i}>
+							{i} 
+						</option>
+						{/each}
+					</select>
 				{$_('End date')}
 				<DateInput bind:value={end_date} min={new Date()} />
 				<Button type="submit">{$_('Create task')}</Button>

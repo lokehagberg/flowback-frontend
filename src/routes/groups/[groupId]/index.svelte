@@ -18,7 +18,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
-	import Kanban from '$lib/Group/Kanban.svelte';
+	import Kanban from '$lib/Group/Kanban/Kanban.svelte';
 	import { _ } from 'svelte-i18n';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';

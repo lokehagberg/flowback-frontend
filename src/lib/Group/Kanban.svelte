@@ -24,7 +24,7 @@
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
 		priorities = [1, 2, 3, 4, 5],
-		priority = 1,
+		priority: undefined | number = 3,
 		end_date: null | Date = null;
 
 	export let type: 'home' | 'group',
@@ -44,7 +44,7 @@
 	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/kanban/entry/list?limit=10000&order_by=priority`
+			`group/${$page.params.groupId}/kanban/entry/list?limit=10000&order_by=priority_desc`
 		);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -53,7 +53,10 @@
 	const getKanbanEntriesHome = async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		// const user = await fetchRequest('GET', 'user');
-		const { res, json } = await fetchRequest('GET', `user/kanban/entry/list?limit=10000`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`user/kanban/entry/list?limit=10000&order_by=priority_desc`
+		);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -73,19 +76,28 @@
 	};
 
 	const createKanbanEntry = async () => {
+		const content = priority
+			? {
+					assignee: null,
+					description,
+					tag: 1,
+					title,
+					priority,
+					end_date
+			  }
+			: {
+					assignee: null,
+					description,
+					tag: 1,
+					title,
+					end_date
+			  };
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/create`
 				: 'user/kanban/entry/create',
-			{
-				assignee,
-				description,
-				tag: 1,
-				title,
-				priority,
-				end_date
-			}
+			content
 		);
 		status = statusMessageFormatter(res, json);
 
@@ -109,7 +121,7 @@
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
-			end_date:end_date?.toString() || null
+			end_date: end_date?.toString() || null
 		});
 
 		kanbanEntries = kanbanEntries;
@@ -166,14 +178,14 @@
 						{/each}
 					</select>
 				{/if}
-				{$_("Priority")}
-				<select class="border border-gray-600" on:input={handleChangePriority}>
+				{$_('Priority')}
+				<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
 					{#each priorities as i}
 						<option value={i}>{i}</option>
 					{/each}
 				</select>
-				{$_("End date")}
-				<DateInput bind:value={end_date} min={new Date()}/>
+				{$_('End date')}
+				<DateInput bind:value={end_date} min={new Date()} />
 				<Button type="submit">{$_('Create task')}</Button>
 			</div>
 			<StatusMessage Class="mt-2" bind:status />

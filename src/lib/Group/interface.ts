@@ -133,6 +133,6 @@ export interface kanban {
 	origin_id: number;
 	origin_type: 'group' | 'user';
 	group_name: string;
-	priority: number;
+	priority: undefined | number;
 	end_date: null | string;
 }

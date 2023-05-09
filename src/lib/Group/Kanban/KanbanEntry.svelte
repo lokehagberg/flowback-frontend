@@ -18,7 +18,7 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
-	import KanbanIcons from './KanbanIcons.svelte';
+	import KanbanIcons from './PriorityIcons.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,

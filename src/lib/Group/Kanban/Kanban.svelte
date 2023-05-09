@@ -190,7 +190,7 @@
 					<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
 						{#each priorities as i}
 							<option value={i}>
-								{priorityText[i]}
+								{priorityText[priorityText.length - i]}
 							</option>
 						{/each}
 					</select>

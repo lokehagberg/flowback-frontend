@@ -19,6 +19,8 @@
 {:else if priority === 4}
 	<Fa icon={faChevronUp} color="#419EDA" />
 {:else if priority === 5}
-	<Fa icon={faChevronUp} color="#015BC0" />
-	<Fa icon={faChevronUp} class="-mt-2.5" color="#015BC0" />
+	<div class="flex flex-col">
+		<Fa icon={faChevronUp} color="#015BC0" />
+		<Fa icon={faChevronUp} class="-mt-2.5" color="#015BC0" />
+	</div>
 {/if}

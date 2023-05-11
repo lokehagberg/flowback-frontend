@@ -233,6 +233,7 @@
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
 				<TextArea
+				rows={10}
 					bind:value={kanbanEdited.description}
 					label=""
 					Class="h-full"

@@ -113,7 +113,7 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap" id="poll-description">
+			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap break-words" id="poll-description">
 				{poll.description}
 				<div class="flex h-8 justify-between">
 					<div class="flex items-baseline">

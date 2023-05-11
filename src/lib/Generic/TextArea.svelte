@@ -12,7 +12,8 @@
 		onKeyPress = (e: any) => {},
 		inputClass = '',
 		rows = 2,
-		recentlyTappedButton = '';
+		recentlyTappedButton = '',
+		id = "";
 
 	const onKeyDown = (e: any) => {
 		recentlyTappedButton = e.target.value[e.target.value.length - 1];
@@ -43,7 +44,7 @@
 	});
 </script>
 
-<label class={`${Class}`}
+<label class={`${Class}`} {id}
 	><p class="text-sm mb-1">{$_(label)}</p>
 	<!-- on:input={expandTextArea} -->
 	<textarea

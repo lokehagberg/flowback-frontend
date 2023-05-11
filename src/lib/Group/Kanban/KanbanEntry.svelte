@@ -13,7 +13,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser, kanban } from '../interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
@@ -151,11 +151,13 @@
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 		if (kanban.end_date !== null) formatEndDate();
 	});
+
+	$:if (openModal && !isEditing) checkForLinks(kanban.description, `kanban-${kanban.id}-description`)
 </script>
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
+<li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade >
 	{#if kanban.end_date !== null && endDate}
 		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}
@@ -252,7 +254,7 @@
 					{/each}
 				</select>
 			{:else}
-				<div class="max-h-[40vh] overflow-y-auto">
+				<div class="max-h-[40vh] overflow-y-auto" id={`kanban-${kanban.id}-description`}>
 					{kanban?.description}
 				</div>
 				<span>

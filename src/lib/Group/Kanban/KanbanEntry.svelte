@@ -25,7 +25,14 @@
 		selectedEntry: number,
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
-		priorities = [5,4,3,2,1];
+		priorities = [5,4,3,2,1],
+		priorityText = [
+			'Very high priority',
+			'High priority',
+			'Medium priority',
+			'Low priority',
+			'Very low priority'
+		]
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -229,7 +236,7 @@
 			{$_("Priority")}
 			<select class="border border-gray-600" on:input={handleChangePriority} value={kanban?.priority}>
 				{#each priorities as i}
-					<option value={i}>{i}
+					<option value={i}>{priorityText[priorityText.length - i]}						
 					</option>
 				{/each}
 			</select>

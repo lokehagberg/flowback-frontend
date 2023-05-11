@@ -92,11 +92,11 @@
 			{#each notifications as notification}
 				<!-- on:click={notification.action} -->
 				<li
-					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all "
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
 					<div
-						class="pt-3 pb-3 pr-10 pl-6 "
+						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {
 							console.log('HIAIAI Below');
 							if (notification.channel_sender_type === 'group')
@@ -111,8 +111,10 @@
 							}
 						}}
 					>
-						{$_(notification.message)}
-						{timeAgo.format(new Date(notification.timestamp))}
+						<div class=" max-w-[25vw] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
+							{$_(notification.message)}
+							{timeAgo.format(new Date(notification.timestamp))}
+						</div>
 					</div>
 					<div
 						style="z-index: 1;"

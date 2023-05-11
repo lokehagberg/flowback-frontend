@@ -19,20 +19,22 @@
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
+	import PriorityIcons from './PriorityIcons.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
 		selectedEntry: number,
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
-		priorities = [5,4,3,2,1],
+		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
 			'Very high priority',
 			'High priority',
 			'Medium priority',
 			'Low priority',
 			'Very low priority'
-		]
+		],
+		isEditing = false;
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -46,7 +48,7 @@
 		description: kanban.description,
 		title: kanban.title,
 		assignee: kanban.assignee?.id,
-		priority:kanban.priority
+		priority: kanban.priority
 	};
 
 	$: openModal &&
@@ -59,7 +61,7 @@
 				description: kanban.description,
 				title: kanban.title,
 				assignee: kanban.assignee?.id,
-				priority:kanban.priority
+				priority: kanban.priority
 			};
 		})();
 
@@ -77,7 +79,7 @@
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
-		kanban.priority = kanbanEdited.priority
+		kanban.priority = kanbanEdited.priority;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
 		kanban.assignee = {
@@ -86,8 +88,8 @@
 			profile_image: assignee?.user.profile_image || ''
 		};
 
-		openModal = false;
 		showSuccessPoppup = true;
+		isEditing = false;
 	};
 
 	const updateKanbanTag = async (tag: number) => {
@@ -144,7 +146,7 @@
 		const en = (await import('javascript-time-ago/locale/en')).default;
 		TimeAgo.addDefaultLocale(en);
 		endDate = new TimeAgo('en');
-	}
+	};
 	onMount(async () => {
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 		if (kanban.end_date !== null) formatEndDate();
@@ -155,7 +157,7 @@
 
 <li class="bg-white border border-gray-200 hover:bg-gray-200 p-2" in:fade>
 	{#if kanban.end_date !== null && endDate}
-	Ends {endDate.format(new Date(kanban.end_date))}
+		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}
 	<div
 		on:click={() => {
@@ -218,32 +220,54 @@
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class="z-50">
 		<div slot="header" class="mt-7">
-			<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+			{#if isEditing}
+				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+			{:else}
+				{kanbanEdited.title}
+			{/if}
 		</div>
+
 		<div slot="body">
-			<StatusMessage bind:status disableSuccess />
-			<TextArea
-				bind:value={kanbanEdited.description}
-				label=""
-				Class="h-full"
-				inputClass="border-none"
-			/>
-			<select on:input={changeAssignee} value={kanban?.assignee?.id}>
-				{#each users as user}
-					<option value={user.user.id}>{user.user.username}</option>
-				{/each}
-			</select>
-			{$_("Priority")}
-			<select class="border border-gray-600" on:input={handleChangePriority} value={kanban?.priority}>
-				{#each priorities as i}
-					<option value={i}>{priorityText[priorityText.length - i]}						
-					</option>
-				{/each}
-			</select>
+			{#if isEditing}
+				<StatusMessage bind:status disableSuccess />
+				<TextArea
+					bind:value={kanbanEdited.description}
+					label=""
+					Class="h-full"
+					inputClass="border-none"
+				/>
+				<select on:input={changeAssignee} value={kanban?.assignee?.id}>
+					{#each users as user}
+						<option value={user.user.id}>{user.user.username}</option>
+					{/each}
+				</select>
+				{$_('Priority')}
+				<select
+					class="border border-gray-600"
+					on:input={handleChangePriority}
+					value={kanban?.priority}
+				>
+					{#each priorities as i}
+						<option value={i}>{priorityText[priorityText.length - i]} </option>
+					{/each}
+				</select>
+			{:else}
+				<div class="max-h-[40vh] overflow-y-auto">
+					{kanban?.description}
+				</div>
+				<span>
+					{kanban?.assignee?.username}
+				</span>
+				<PriorityIcons priority={kanban?.priority} />
+			{/if}
 		</div>
 		<div slot="footer">
-			<Button action={updateKanbanContent}>{$_('Update')}</Button>
-			<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
+			{#if isEditing}
+				<Button action={updateKanbanContent}>{$_('Update')}</Button>
+				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
+				{:else}
+				<Button action={() => isEditing = true}>{$_("Edit")}</Button>
+			{/if}
 		</div>
 	</Modal>
 {/if}

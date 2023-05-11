@@ -39,7 +39,7 @@
 		<h1 class="text-2xl p-4 mt-10 text-center">
 			{group.name}
 		</h1>
-		<p class="pl-6 pr-6 pb-6">
+		<p class="pl-6 pr-6 pb-6 break-words">
 			{group.description}
 		</p>
 	</div>

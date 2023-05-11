@@ -88,7 +88,7 @@
 			? '/groups/1'
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 	>
-		<p class="mt-2 whitespace-pre-wrap mb-4 ">
+		<p class="mt-2 whitespace-pre-wrap break-words mb-4">
 			{poll.description}
 		</p></a
 	>

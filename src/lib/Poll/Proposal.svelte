@@ -6,7 +6,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import type { groupUser } from '$lib/Group/interface';
-	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -52,12 +51,13 @@
 			newProposal
 		);
 
-		if (res.ok) {
-			proposal.id = json;
-			proposal.title = newTitle;
-			proposal.description = newDescription;
-			show = true;
-		}
+		if (!res.ok) return;
+
+		proposals.push({...newProposal, title:newTitle, description:newDescription})
+		proposals = proposals
+		proposal.title = newTitle;
+		proposal.description = newDescription;
+		show = true;
 	};
 
 	onMount(() => {

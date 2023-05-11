@@ -13,6 +13,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -32,7 +33,8 @@
 			'Very low priority'
 		],
 		priority: undefined | number = 3,
-		end_date: null | Date = null;
+		end_date: null | Date = null,
+		loading = false;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -83,6 +85,7 @@
 	};
 
 	const createKanbanEntry = async () => {
+		loading = true
 		const content = priority
 			? {
 					assignee,
@@ -107,6 +110,7 @@
 			content
 		);
 		status = statusMessageFormatter(res, json);
+		loading = false;
 
 		if (!res.ok) return;
 
@@ -147,7 +151,7 @@
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<div class={'bg-white p-2 rounded-2xl ' + Class}>
+<div class={'bg-white p-2 rounded-2xl break-words' + Class}>
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
@@ -174,6 +178,7 @@
 	</div>
 	<div class="pl-4 pr-4 pb-4">
 		<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
+		<Loader bind:loading>
 		<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea required label="Description" bind:value={description} />
@@ -203,5 +208,6 @@
 			</div>
 			<StatusMessage Class="mt-2" bind:status />
 		</form>
+	</Loader>
 	</div>
 </div>

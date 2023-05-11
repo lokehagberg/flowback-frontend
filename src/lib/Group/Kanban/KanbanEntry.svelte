@@ -220,7 +220,7 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="z-50">
+	<Modal bind:open={openModal} Class="z-50 break-words">
 		<div slot="header" class="mt-7">
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
@@ -261,7 +261,8 @@
 				<span>
 					{kanban?.assignee?.username}
 				</span>
-				<PriorityIcons priority={kanban?.priority} />
+						<!-- Don't ask why the class "table" works here -->
+				<PriorityIcons Class="ml-auto mr-auto table mt-4" priority={kanban?.priority} />
 			{/if}
 		</div>
 		<div slot="footer">

@@ -15,7 +15,7 @@
 
 	let date = new Date();
 	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
-	const dateLabels = ['Start', 'Proposal vote', 'Delegate end', 'End'];
+	const dateLabels = ['Start', 'Proposal end', 'Vote Start', 'Delegate end', 'End'];
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	// Difference between now and start date
@@ -35,10 +35,11 @@
 	{#if displayTimeline}
 		<div
 			class="flex justify-between mt-2 rounded-md"
-			class:bg-gray-400={date.getTime() < dates[1].getTime()}
-			class:third={date.getTime() < dates[2].getTime()}
-			class:two-third={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
-			class:bg-blue-400={date.getTime() >= dates[3].getTime()}
+			class:bg-gray-400={date.getTime() < dates[0].getTime()}
+			class:quarter={date.getTime() < dates[1].getTime()}
+			class:half={date.getTime() < dates[2].getTime() && date.getTime() > dates[3].getTime()}
+			class:three-quarter={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
+			class:full={date.getTime() >= dates[4].getTime()}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">
@@ -81,11 +82,19 @@
 </div>
 
 <style>
-	.third {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 34%, rgba(191, 191, 191, 1) 34%);
+	.quarter {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 25%, rgba(191, 191, 191, 1) 25%);
 	}
 
-	.two-third {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 67%, rgba(191, 191, 191, 1) 67%);
+	.half {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 50%, rgba(191, 191, 191, 1) 50%);
+	}
+
+	.three-quarter {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 75%, rgba(191, 191, 191, 1) 75%);
+	}
+
+	.full {
+		background:rgba(89, 158, 255, 1)
 	}
 </style>

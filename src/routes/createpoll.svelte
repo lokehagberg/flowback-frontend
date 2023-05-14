@@ -83,7 +83,7 @@
 		status: StatusMessageInfo,
 		start_date = new Date(),
 		delegate_vote_end_date = new Date(),
-		prediction_end_date = new Date(),
+		voting_start_date = new Date(),
 		proposal_end_date = new Date(),
 		end_date = new Date(),
 		isPublic = false,
@@ -109,6 +109,7 @@
 			delegate_vote_end_date,
 			vote_start_date: delegate_vote_end_date,
 			proposal_end_date,
+			voting_start_date,
 			end_date,
 			poll_type: selected_poll === defaultType ? 1 : 3,
 			tag: selectedTag.id,
@@ -136,6 +137,7 @@
 		const now = new Date();
 		start_date = new Date();
 		proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		voting_start_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 	};
@@ -186,7 +188,7 @@
 									/>
 								</div>
 								<div>
-									<h2 class="mt-4">{$_('Proposal vote date')}</h2>
+									<h2 class="mt-4">{$_('Proposal end date')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
@@ -195,22 +197,23 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
-
-								<!-- <h2 class="mt-4">{$_('Prediction vote date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={prediction_end_date}
-						min={proposal_end_date}
-						max={maxDatePickerYear}
-					/> -->
+								<div>
+									<h2 class="mt-4">{$_('Voting start date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={voting_start_date}
+										min={proposal_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
 								<div>
 									<h2 class="mt-4">{$_('Delegate end date')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
 										bind:value={delegate_vote_end_date}
-										min={proposal_end_date}
+										min={voting_start_date}
 										max={maxDatePickerYear}
 									/>
 								</div>

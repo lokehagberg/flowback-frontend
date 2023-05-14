@@ -99,6 +99,7 @@
 		dates={[
 			new Date(poll.start_date),
 			new Date(poll.proposal_end_date),
+			new Date(poll.vote_start_date),
 			new Date(poll.delegate_vote_end_date),
 			new Date(poll.end_date)
 		]}

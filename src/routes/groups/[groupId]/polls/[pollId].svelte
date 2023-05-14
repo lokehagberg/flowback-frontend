@@ -41,8 +41,8 @@
 		await getPollData();
 		phase = getPhase();
 		scrollToSection();
-		checkForLinks(poll.description, "poll-description");
-		document.title = poll.title
+		checkForLinks(poll.description, 'poll-description');
+		document.title = poll.title;
 	});
 
 	const getPhase = (): Phase => {
@@ -50,10 +50,9 @@
 		if (now < new Date(poll?.start_date)) return 'pre-start';
 		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
-		else if (
-			now >= new Date(poll?.proposal_end_date) &&
-			now < new Date(poll?.delegate_vote_end_date)
-		)
+		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.vote_start_date))
+			return 'prediction';
+		else if (now >= new Date(poll?.vote_start_date) && now < new Date(poll?.delegate_vote_end_date))
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
 			return 'voting';
@@ -103,8 +102,6 @@
 			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 		}, 1500);
 	};
-
-
 </script>
 
 {#if poll}
@@ -113,7 +110,10 @@
 			class="p-10 m-10 bg-white rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<div class="border border-gray-200 rounded p-4 whitespace-pre-wrap break-words" id="poll-description">
+			<div
+				class="border border-gray-200 rounded p-4 whitespace-pre-wrap break-words"
+				id="poll-description"
+			>
 				{poll.description}
 				<div class="flex h-8 justify-between">
 					<div class="flex items-baseline">
@@ -154,12 +154,12 @@
 			{#if finished}
 				<Results {pollType} />
 			{:else}
-				{#if new Date(poll.proposal_end_date) <= new Date()}
+				{#if phase === 'delegate-voting' || phase === 'voting' || phase === 'end'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				{/if}
 				<ProposalsRanked
 					{groupUser}
-					votingStartTime={poll.proposal_end_date}
+					votingStartTime={poll.vote_start_date}
 					pollType={poll.poll_type}
 					tag={poll.tag}
 					bind:phase
@@ -169,7 +169,7 @@
 					bind:proposals
 				/>
 				<!-- TODO: Replace this if statement with phases -->
-				{#if new Date(poll.proposal_end_date) >= new Date() && new Date(poll.start_date) <= new Date()}
+				{#if phase === "proposals"}
 					{#if pollType === 1}
 						<!-- Ranked Poll -->
 						<ProposalSubmition bind:abstained />
@@ -184,6 +184,7 @@
 				dates={[
 					new Date(poll.start_date),
 					new Date(poll.proposal_end_date),
+					new Date(poll.vote_start_date),
 					new Date(poll.delegate_vote_end_date),
 					new Date(poll.end_date)
 				]}

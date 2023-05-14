@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "scripts": {
         "dev": "vite dev",
+        "comment": "What even is this? TODO: fix later",
         "dev1000": "vite dev --port 1000",
         "dev2000": "vite dev --port 2000",
         "dev3000": "vite dev --port 3000",

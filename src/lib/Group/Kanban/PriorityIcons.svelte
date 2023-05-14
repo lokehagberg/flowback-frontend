@@ -5,10 +5,17 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 
 	export let priority: number = 3,
+	priorityText = [
+		'Very low priority',
+		'Low priority',
+		'Medium priority',
+		'High priority',
+		'Very high priority',
+		],
 		Class = '';
 </script>
 
-<div class={Class}>
+<div class={Class} title={priorityText[priority - 1]}>
 	{#if priority === 1}
 		<div class="flex flex-col">
 			<Fa icon={faChevronDown} />

@@ -157,6 +157,7 @@
 				{#if phase === 'delegate-voting' || phase === 'voting' || phase === 'end'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				{/if}
+				{#if phase !== "pre-start"}
 				<ProposalsRanked
 					{groupUser}
 					votingStartTime={poll.vote_start_date}
@@ -168,6 +169,7 @@
 					bind:abstained
 					bind:proposals
 				/>
+				{/if}
 				<!-- TODO: Replace this if statement with phases -->
 				{#if phase === "proposals"}
 					{#if pollType === 1}

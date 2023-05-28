@@ -6,6 +6,7 @@
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -29,15 +30,19 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
+	
+	onMount(() => {
+		console.log(date.getTime() < dates[0].getTime())
+	})
 </script>
 
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
 			class="flex justify-between mt-2 rounded-md"
-			class:bg-gray-400={date.getTime() < dates[0].getTime()}
-			class:quarter={date.getTime() < dates[1].getTime()}
-			class:half={date.getTime() < dates[2].getTime() && date.getTime() > dates[3].getTime()}
+			class:none={date.getTime() < dates[0].getTime()}
+			class:quarter={date.getTime() < dates[1].getTime() && date.getTime() > dates[0].getTime()}
+			class:half={date.getTime() < dates[2].getTime() && date.getTime() > dates[1].getTime()}
 			class:three-quarter={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
 			class:full={date.getTime() >= dates[4].getTime()}
 		>
@@ -82,12 +87,16 @@
 </div>
 
 <style>
+	.none {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 0%);
+	}
+
 	.quarter {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 25%, rgba(191, 191, 191, 1) 25%);
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 15%);
 	}
 
 	.half {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 50%, rgba(191, 191, 191, 1) 50%);
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 25%, rgba(191, 191, 191, 1) 40%);
 	}
 
 	.three-quarter {

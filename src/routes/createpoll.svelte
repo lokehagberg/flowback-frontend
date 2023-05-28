@@ -120,7 +120,8 @@
 
 		loading = false;
 		status = statusMessageFormatter(res, json);
-		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
+		
+		// if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 
 	const getGroupTags = async () => {

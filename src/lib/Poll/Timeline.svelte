@@ -38,13 +38,14 @@
 
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
-		<div
+	<div
 			class="flex justify-between mt-2 rounded-md"
-			class:none={date.getTime() < dates[0].getTime()}
-			class:quarter={date.getTime() < dates[1].getTime() && date.getTime() > dates[0].getTime()}
-			class:half={date.getTime() < dates[2].getTime() && date.getTime() > dates[1].getTime()}
-			class:three-quarter={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
-			class:full={date.getTime() >= dates[4].getTime()}
+			class:pre-start={date.getTime() < dates[0].getTime()}
+			class:proposals={date.getTime() < dates[1].getTime() && date.getTime() > dates[0].getTime()}
+			class:prediction={date.getTime() < dates[2].getTime() && date.getTime() > dates[1].getTime()}
+			class:delegate-voting={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
+			class:voting={date.getTime() < dates[4].getTime() && date.getTime() > dates[3].getTime()}
+			class:end={date.getTime() >= dates[4].getTime()}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">
@@ -85,25 +86,28 @@
 		</ul>
 	{/if}
 </div>
-
 <style>
-	.none {
+	.pre-start {
 		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 0%);
 	}
 
-	.quarter {
+	.proposals {
 		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 15%);
 	}
 
-	.half {
+	.prediction {
 		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 25%, rgba(191, 191, 191, 1) 40%);
 	}
 
-	.three-quarter {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 75%, rgba(191, 191, 191, 1) 75%);
+	.delegate-voting {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 50%, rgba(191, 191, 191, 1) 65%);
 	}
 
-	.full {
+	.voting {
+		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 75%, rgba(191, 191, 191, 1) 85%);
+	}
+
+	.end {
 		background:rgba(89, 158, 255, 1)
 	}
 </style>

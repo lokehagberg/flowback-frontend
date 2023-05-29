@@ -107,7 +107,7 @@
 			description,
 			start_date,
 			delegate_vote_end_date,
-			vote_start_date: delegate_vote_end_date,
+			vote_start_date: voting_start_date,
 			proposal_end_date,
 			voting_start_date,
 			end_date,
@@ -121,7 +121,7 @@
 		loading = false;
 		status = statusMessageFormatter(res, json);
 		
-		// if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
+		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 
 	const getGroupTags = async () => {

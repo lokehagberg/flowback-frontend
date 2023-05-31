@@ -36,7 +36,7 @@
 
 <div class="sticky z-50 w-100 top-0">
 	<header
-		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 px-3 bg-white shadow select-none"
+		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-slate-700"
 	>
 		<a href="/home" class="md:w-auto"
 			><img
@@ -46,7 +46,7 @@
 			/></a
 		>
 		<nav class="inline-flex">
-			<HeaderIcon icon={faHome} text="Home" href="home" />
+			<HeaderIcon icon={faHome} text="Home" href="home"/>
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
 			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />

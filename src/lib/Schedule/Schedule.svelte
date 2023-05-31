@@ -125,7 +125,7 @@
 	};
 </script>
 
-<div class={`flex bg-white ${Class}`}>
+<div class={`flex bg-white dark:bg-slate-600 dark:text-gray-300 ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
 		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
@@ -135,7 +135,7 @@
 			<div on:click={() => (showCreateScheduleEventModal = true)}>
 				{#if type === 'user'}
 					<Fa
-						class="ml-auto mr-auto hover:bg-gray-200 transition p-3 cursor-pointer rounded"
+						class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
 						size="3x"
 						icon={faPlus}
 					/>
@@ -174,21 +174,21 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (year -= 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year -= 1)}>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (year += 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year += 1)}>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month -= 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month -= 1)}>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200" on:click={() => (month += 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month += 1)}>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
@@ -197,7 +197,7 @@
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<div
-						class={` relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
+						class={`dark:text-gray-300 relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 							month === currentDate.getMonth() &&

@@ -8,16 +8,18 @@
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { get } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	interface Delegate extends User {
 		delegate_pool_id: number;
 		isInRelation: boolean;
 	}
 
-	let delegates: Delegate[] = [];
-	let delegateRelations: any[] = [];
-	let userIsDelegate: boolean;
-	let userId: number;
+	let delegates: Delegate[] = [],
+		delegateRelations: any[] = [],
+		userIsDelegate: boolean,
+		userId: number,
+		loading = false;
 
 	onMount(async () => {
 		userId = (await fetchRequest('GET', 'user')).json.id;
@@ -26,7 +28,7 @@
 
 		userIsDelegateStore.subscribe((info) => {
 			userIsDelegate = info;
-			console.log(info, "INFO")
+			console.log(info, 'INFO');
 		});
 	});
 
@@ -44,6 +46,7 @@
 	 	Makes the currently logged in user into a delegate(pool)
 	 */
 	const createDelegationPool = async () => {
+		loading = true;
 		const { res } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/delegate/pool/create`
@@ -51,6 +54,7 @@
 
 		if (!res.ok) return;
 
+		loading = false;
 		userIsDelegateStore.update((value) => (value = true));
 	};
 
@@ -58,10 +62,12 @@
 		Makes the currently logged in user no longer a delegate(pool)
 	*/
 	const deleteDelegationPool = async () => {
+		loading = true;
 		const { res } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/delegate/pool/delete`
 		);
+		loading = false;
 
 		if (!res.ok) return;
 
@@ -73,6 +79,7 @@
 		TODO: Implement delegate pool feature in the front end (Figma design first)
 	*/
 	const getDelegatePools = async () => {
+		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?limit=1000`
@@ -92,18 +99,26 @@
 				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
+		loading = false;
 	};
 
 	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=1000`);
+		loading = true;
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegates?limit=1000`
+		);
+		loading = false;
 		delegateRelations = json.results;
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
+		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
 			delegate_pool_id
 		});
 
+		loading = false;
 		if (res.ok)
 			delegates[
 				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
@@ -111,10 +126,12 @@
 	};
 
 	const deleteDelegateRelation = async (delegate_pool_id: number) => {
+		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/delete`, {
 			delegate_pool_id
 		});
 
+		loading = false;
 		if (res.ok)
 			delegates[
 				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
@@ -122,7 +139,7 @@
 	};
 </script>
 
-{#if delegates.length > 0}
+{#if delegates.length > 0 && loading === false}
 	<ul class="w-full">
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
@@ -130,7 +147,13 @@
 					class="cursor-pointer hover:underline flex items-center"
 					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
 				>
-					<img src={delegate.profile_image ? `${import.meta.env.VITE_API}${delegate.profile_image}` : DefaultPFP} alt="avatar" class="w-10 h-10 rounded-full" />
+					<img
+						src={delegate.profile_image
+							? `${import.meta.env.VITE_API}${delegate.profile_image}`
+							: DefaultPFP}
+						alt="avatar"
+						class="w-10 h-10 rounded-full"
+					/>
 					<span class="text-black ml-4 mr-4">{delegate.username}</span>
 				</div>
 				{#if userId !== delegate.id}
@@ -150,8 +173,10 @@
 			</li>
 		{/each}
 	</ul>
-{:else}
+{:else if delegates.length > 0 && loading === false}
 	<div>{$_('No delegates in group')}</div>
+{:else if loading === true}
+	<Loader bind:loading />
 {/if}
 
 {#if userIsDelegate}

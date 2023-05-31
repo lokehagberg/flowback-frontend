@@ -7,20 +7,20 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Delegate } from '../interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
-	let delegates: Delegate[] = [];
-	let tags: any[] = [];
-	let status: StatusMessageInfo;
+	let delegates: Delegate[] = [],
+		tags: any[] = [],
+		status: StatusMessageInfo,
+		loading = false;
 
 	onMount(async () => {
 		setDelegators();
@@ -28,6 +28,7 @@
 	});
 
 	const saveDelegation = async () => {
+		loading = true;
 		const toSendDelegates = delegates.map(({ pool_id, tags }) => ({
 			delegate_pool_id: pool_id,
 			tags: tags.map(({ id }) => id)
@@ -39,24 +40,34 @@
 			toSendDelegates
 		);
 
-		if (res.ok) status={message:"Success", success:true}
+		if (res.ok) status = { message: 'Success', success: true };
+		loading = false;
 	};
 
 	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/delegates?limit=1000`);
+		loading = true;
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegates?limit=1000`
+		);
+		loading = false;
 		return json.results;
 	};
 
 	const setTagList = async () => {
+		loading = true;
 		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=1000`);
 		tags = json.results.map(({ active, ...args }: any) => args);
+		loading = false;
 	};
 
 	const getDelegatesUserInfo = async () => {
+		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/users?limit=1000&delegate=true`
 		);
+		loading = false;
 		return json.results;
 	};
 
@@ -84,10 +95,10 @@
 				tags: relation.tags
 			};
 
-			delegates.push(delegate)
+			delegates.push(delegate);
 		});
 
-		delegates = delegates
+		delegates = delegates;
 	};
 
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
@@ -98,7 +109,6 @@
 			delegate.tags.find((_tag) => _tag.id === tag.id)
 		);
 
-		console.log(delegates);
 		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag.id !== tag.id);
 		if (delegateOld?.id === delegate.id) {
 			delegates = delegates;
@@ -110,12 +120,12 @@
 	};
 </script>
 
-{#if delegates.length !== 0}
+{#if delegates.length !== 0 && loading === false}
 	<ul class="w-full">
 		{#each delegates as delegate}
 			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
-					<ProfilePicture user={delegate} displayName/>
+					<ProfilePicture user={delegate} displayName />
 				</div>
 				<div class="flex items-center">
 					<div class="flex gap-2 flex-wrap mt-4">
@@ -135,7 +145,7 @@
 					class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 					class:hidden={selected !== delegate.id}
 				>
-					<h1 class="text-xl">{$_("Edit tags for")} {delegate.username}</h1>
+					<h1 class="text-xl">{$_('Edit tags for')} {delegate.username}AAAAHHH</h1>
 					<!-- <TextInput label="Search" /> -->
 					<ul class="mt-6 flex flex-wrap items-center">
 						{#each tags as tag}
@@ -158,10 +168,12 @@
 	</ul>
 	<StatusMessage bind:status />
 	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
-		>{$_("Save changes")}</Button
+		>{$_('Save changes')}</Button
 	>
-{:else}
-	<div>{$_("No delegates selected")}</div>
+{:else if loading === false}
+	<div>{$_('No delegates selected')}</div>
+{:else if loading === true}
+	<Loader bind:loading />
 {/if}
 
 <style>

@@ -156,6 +156,7 @@
 					/>
 					<span class="text-black ml-4 mr-4">{delegate.username}</span>
 				</div>
+				<span class="text-gray-500 cursor-pointer hover:underline">{$_("See delegate history")}</span>
 				{#if userId !== delegate.id}
 					<div />
 					{#if delegate.isInRelation}

@@ -27,7 +27,7 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-slate-700 dark:text-gray-300 pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
+<div class="bg-white dark:bg-slate-700 dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
 	<div class="flex items-center justify-between mt-1">
 		<div>
 			<Tag tag={poll.tag_name} Class="inline cursor-default" />
@@ -56,7 +56,7 @@
 		<a
 			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
 			class:hover:underline={poll.group_joined}
-			class="text-black dark:text-gray-300"
+			class="text-black dark:text-darkmodeText"
 		>
 			<img
 				class="h-8 w-8 inline rounded-full"
@@ -66,14 +66,14 @@
 			<span class="inline">{poll.group_name}</span>
 		</a>
 	</div>
-	<div class="flex justify-between items-center text-black dark:text-gray-300 relative">
+	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
 		<a
 			class="cursor-pointer "
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 		>
-			<h1 class="text-left text-xl p-1 pl-0 hover:text-primary dark:text-gray-300">{poll.title}</h1>
+			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText">{poll.title}</h1>
 		</a>
 		<NotificationOptions
 			id={poll.id}
@@ -88,7 +88,7 @@
 			? '/groups/1'
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 	>
-		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-gray-300">
+		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText">
 			{poll.description}
 		</p></a
 	>
@@ -104,7 +104,7 @@
 			new Date(poll.end_date)
 		]}
 	/>
-	<div class="flex justify-between text-sm text-gray-600 dark:text-gray-300 mt-2 pointer-default">
+	<div class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default">
 		<p
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
@@ -113,9 +113,9 @@
 			on:focus
 		/>
 	</div>
-	<div class="hover:bg-gray-100 cursor-pointer text-sm text-gray-600 dark:text-gray-300 px-1 mb-2">
+	<div class="hover:bg-gray-100 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2">
 		<a
-			class="text-black dark:text-gray-300"
+			class="text-black dark:text-darkmodeText"
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}

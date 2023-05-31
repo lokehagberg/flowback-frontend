@@ -125,7 +125,7 @@
 	};
 </script>
 
-<div class={`flex bg-white dark:bg-slate-600 dark:text-gray-300 ${Class}`}>
+<div class={`flex bg-white dark:bg-slate-600 dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
 		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
@@ -197,7 +197,7 @@
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<div
-						class={`dark:text-gray-300 relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
+						class={`dark:text-darkmodeText relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 							month === currentDate.getMonth() &&

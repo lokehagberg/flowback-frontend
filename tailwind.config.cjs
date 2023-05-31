@@ -13,7 +13,8 @@ module.exports = {
                 primary: 'var(--primary-color)',
                 secondary: 'var(--secondary-color)',
                 background: 'var(--background-color)',
-                accent: 'var(accent-color)'
+                accent: 'var(--accent-color)',
+                darkmodeText: 'var(--darkmode-text-color)'
             },
             filter: ['hover', 'focus'],
         },

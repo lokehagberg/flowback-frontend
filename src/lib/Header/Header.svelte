@@ -14,6 +14,7 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
+	import { changeDarkMode } from '$lib/Generic/DarkMode';
 
 	let sideHeaderOpen = false,
 		notificationOpen = false,
@@ -60,6 +61,7 @@
 			id="side-header"
 			class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
 		>
+			<span on:click={() => changeDarkMode(localStorage.theme === 'light' ? 'dark' : 'light')}>Darkmode</span>
 			<Notifications />
 
 			<div on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>

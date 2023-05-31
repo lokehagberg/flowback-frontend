@@ -151,7 +151,7 @@
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<div class={'bg-white p-2 rounded-2xl break-words' + Class}>
+<div class={'bg-white dark:bg-gray-500 p-2 rounded-2xl break-words' + Class}>
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}

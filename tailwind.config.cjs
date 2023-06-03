@@ -14,7 +14,9 @@ module.exports = {
                 secondary: 'var(--secondary-color)',
                 background: 'var(--background-color)',
                 accent: 'var(--accent-color)',
-                darkmodeText: 'var(--darkmode-text-color)'
+                darkmodeText: 'var(--darkmode-text-color)',
+                darkbackground: 'var(--darkmode-background-color)',
+                darkobject: 'var(--darkmode-object-color)',
             },
             filter: ['hover', 'focus'],
         },

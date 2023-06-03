@@ -125,7 +125,7 @@
 	};
 </script>
 
-<div class={`flex bg-white dark:bg-slate-600 dark:text-darkmodeText ${Class}`}>
+<div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
 		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}

@@ -23,7 +23,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-slate-700 shadow rounded p-6 flex flex-col w-[40%] gap-4"
+	class="bg-white dark:bg-darkbackground shadow rounded p-6 flex flex-col w-[40%] gap-4"
 	on:submit|preventDefault={handleSearch}
 >
 	<div class="w-full flex items-end">
@@ -44,7 +44,7 @@
 		</Button>
 	</div>
 	<div>
-		<select on:input={handleChangeMember} class="dark:bg-slate-600 text-gray-300">
+		<select on:input={handleChangeMember} class="dark:bg-darkobject text-gray-300">
 			<option value="all">{$_('All')}</option>
 			<option value="member">{$_('Member')}</option>
 			<option value="not-member">{$_('Not member')}</option>

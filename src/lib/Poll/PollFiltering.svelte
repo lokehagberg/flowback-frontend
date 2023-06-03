@@ -23,7 +23,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-slate-700 dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
+	class="bg-white dark:bg-darkbackground dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();
@@ -47,13 +47,13 @@
 		</Button>
 	</div>
 	<div>
-		<select on:input={handleFinishedSelection} class="dark:bg-slate-600">
+		<select on:input={handleFinishedSelection} class="dark:bg-darkobject">
 			<option value="all">{$_('All')}</option>
 			<option value="unfinished">{$_('Ongoing')}</option>
 			<option value="finished">{$_('Done')}</option>
 		</select>
 
-		<select on:input={handleSort} class="dark:bg-slate-600">
+		<select on:input={handleSort} class="dark:bg-darkobject">
 			<option value="start_date_desc">{$_('Newest first')}</option>
 			<option value="start_date_asc">{$_('Oldest first')}</option>
 		</select>

@@ -33,13 +33,13 @@
 	const searchUsers = async (username: string) => {
 		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
-		// if (username === '') {
-		// 	searchedUsers = [];
-		// 	return;
-		// }
+		if (username === '') {
+			searchedUsers = [];
+			return;
+		}
 
-		// const { json } = await fetchRequest('GET', `users?limit=100&username=${username}`);
-		// searchedUsers = json.results;
+		const { json } = await fetchRequest('GET', `users?limit=100&username=${username}`);
+		searchedUsers = json.results;
 	};
 
 	const getInvitesList = async () => {

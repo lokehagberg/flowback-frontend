@@ -27,7 +27,7 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-slate-700 dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
+<div class="bg-white dark:bg-darkbackground dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
 	<div class="flex items-center justify-between mt-1">
 		<div>
 			<Tag tag={poll.tag_name} Class="inline cursor-default" />

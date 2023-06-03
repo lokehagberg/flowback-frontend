@@ -27,7 +27,7 @@ html {
 body {
     /* min-height: 100vh; */
     margin: 0;
-    background: rgb(250 245 255);
+    /* background: rgb(250 245 255); */
 }
 
 body::before {

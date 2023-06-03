@@ -13,7 +13,7 @@
 	let selectedPage: 'All' | 'Selected' = 'All';
 </script>
 
-<div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4">
+<div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4 dark:bg-darkobject dark:text-darkmodeText">
 	<Tab tabs={['All', 'Selected']} bind:selectedPage />
 	{#if selectedPage === 'Selected'}
 		<Selected />

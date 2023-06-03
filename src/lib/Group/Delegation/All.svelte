@@ -142,7 +142,7 @@
 {#if delegates.length > 0 && loading === false}
 	<ul class="w-full">
 		{#each delegates as delegate}
-			<li class="bg-white p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
+			<li class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
@@ -154,7 +154,7 @@
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
 					/>
-					<span class="text-black ml-4 mr-4">{delegate.username}</span>
+					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
 				<span class="text-gray-500 cursor-pointer hover:underline">{$_("See delegate history")}</span>
 				{#if userId !== delegate.id}

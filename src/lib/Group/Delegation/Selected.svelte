@@ -121,9 +121,9 @@
 </script>
 
 {#if delegates.length !== 0 && loading === false}
-	<ul class="w-full">
+	<ul class="w-full ">
 		{#each delegates as delegate}
-			<li class="bg-white p-3 w-full border-b-2 border-gray-200">
+			<li class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200">
 				<div class="flex">
 					<ProfilePicture user={delegate} displayName />
 				</div>
@@ -145,7 +145,7 @@
 					class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 					class:hidden={selected !== delegate.id}
 				>
-					<h1 class="text-xl">{$_('Edit tags for')} {delegate.username}AAAAHHH</h1>
+					<h1 class="text-xl">{$_('Edit tags for')} {delegate.username}</h1>
 					<!-- <TextInput label="Search" /> -->
 					<ul class="mt-6 flex flex-wrap items-center">
 						{#each tags as tag}

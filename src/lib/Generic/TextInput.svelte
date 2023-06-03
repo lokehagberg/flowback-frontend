@@ -31,7 +31,7 @@
 		on:blur={onBlur}
 		use:typeAction
 		bind:value
-		class={`dark:text-darkmodeText dark:bg-slate-500 border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 		id={`textinput-${label}`}
 		on:input={onInput}
 		max="100"

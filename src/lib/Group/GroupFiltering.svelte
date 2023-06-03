@@ -23,7 +23,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-darkbackground shadow rounded p-6 flex flex-col w-[40%] gap-4"
+	class="bg-white dark:bg-darkobject shadow rounded p-6 flex flex-col w-[40%] gap-4"
 	on:submit|preventDefault={handleSearch}
 >
 	<div class="w-full flex items-end">

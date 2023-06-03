@@ -56,7 +56,7 @@
 	}
 </script>
 
-<div class="w-full bg-white shadow rounded p-4 pt-6">
+<div class="w-full bg-white shadow rounded p-4 pt-6 dark:bg-darkobject dark:text-darkmodeText">
 	<!-- <a on:click={() => open(`https://drive.google.com/drive/u/0/folders/${folderId}`)} target="_blank" href={`https://drive.google.com/drive/u/0/folders/${folderId}`}
 		><Button Class="p-6">{$_("Go to main folder")}</Button></a
 	> -->

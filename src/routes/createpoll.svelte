@@ -153,7 +153,7 @@
 </svelte:head>
 
 <Layout centering={true}>
-	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px]">
+	<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
 		<form
 			on:submit|preventDefault={() =>
 				!disabled.includes(selected_poll) && !disabled.includes(selected_time)
@@ -162,7 +162,7 @@
 			class="md:w-2/3"
 		>
 			<Loader {loading}>
-				<div class="bg-white p-6 shadow-xl flex flex-col gap-3 rounded">
+				<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 					<h1 class="text-2xl">{$_('Create a poll')}</h1>
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
@@ -261,7 +261,7 @@
 			</Loader>
 		</form>
 		<div class="md:w-1/3">
-			<div class="bg-white p-6 shadow-xl rounded">
+			<div class="bg-white dark:bg-darkobject p-6 shadow-xl rounded">
 				<div class="flex flex-col gap-6">
 					{#each polls as poll}
 						<Button

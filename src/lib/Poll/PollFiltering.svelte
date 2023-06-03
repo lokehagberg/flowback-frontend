@@ -23,7 +23,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-darkbackground dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();

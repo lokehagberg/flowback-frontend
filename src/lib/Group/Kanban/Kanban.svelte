@@ -151,7 +151,7 @@
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<div class={'bg-white dark:bg-gray-500 p-2 rounded-2xl break-words' + Class}>
+<div class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words' + Class}>
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
@@ -160,7 +160,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 border-gray-200 rounded-xl"
+					class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
@@ -184,7 +184,7 @@
 			<TextArea required label="Description" bind:value={description} />
 			<div class="flex gap-6 justify-between mt-2">
 				{#if type === 'group'}
-					<select on:input={handleChangeAssignee} class="border border-gray-600">
+					<select on:input={handleChangeAssignee} class="dark:bg-darkobject border border-gray-600">
 						{#each users as user}
 							<option value={user.user.id}>{user.user.username}</option>
 						{/each}
@@ -192,7 +192,7 @@
 				{/if}
 				<div>
 					{$_('Priority')}
-					<select class="border border-gray-600" on:input={handleChangePriority} value={priority}>
+					<select class="border border-gray-600 dark:bg-darkobject" on:input={handleChangePriority} value={priority}>
 						{#each priorities as i}
 							<option value={i}>
 								{priorityText[priorityText.length - i]}
@@ -202,7 +202,7 @@
 				</div>
 				<div>
 					{$_('End date')}
-					<DateInput bind:value={end_date} min={new Date()} />
+					<DateInput  bind:value={end_date} min={new Date()} />
 				</div>
 				<Button type="submit">{$_('Create task')}</Button>
 			</div>

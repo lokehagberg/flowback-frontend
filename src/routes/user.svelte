@@ -172,7 +172,7 @@
 			class="bg-gray-200 w-full h-[40%] cover"
 			alt="banner"
 		/>
-		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8">
+		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText">
 			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
 			<a class={`block mt-6`} href={user.website || ''}>
@@ -206,7 +206,7 @@
 			/>
 		</label>
 		<form
-			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8"
+			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">

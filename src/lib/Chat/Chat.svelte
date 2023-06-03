@@ -131,8 +131,8 @@
 	> -->
 	</svelte:head
 >
-<div class:invisible={!chatOpen} class="bg-white fixed z-40 w-full grid grid-width-fix">
-	<div class="col-start-2 col-end-3 flex justify-between bg-white p-2">
+<div class:invisible={!chatOpen} class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix">
+	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
 		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
 			<CrossButton />
@@ -161,9 +161,9 @@
 	on:click={() => (chatOpen = true)}
 	class:small-notification={notifiedDirect.length > 0}
 	class:small-notification-group={notifiedGroup.length > 0}
-	class="transition-all fixed z-30 bg-white shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
+	class="transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
-	<Fa icon={faComment} size="1.3x" />
+	<Fa icon={faComment} size="1.3x" color={localStorage.theme === 'dark' ? 'white' : 'black'} />
 </div>
 
 <style>

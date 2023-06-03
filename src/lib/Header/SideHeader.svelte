@@ -49,7 +49,7 @@
 </script>
 
 <!-- TODO: Relative works great for phones -->
-<div class:invisible={!sideHeaderOpen} class="absolute right-0 bg-white z-50 select-none shadow slide-animation" id="side-header" on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+<div class:invisible={!sideHeaderOpen} class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText" id="side-header" on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 	{#each navs as nav}
 		<div
 			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"

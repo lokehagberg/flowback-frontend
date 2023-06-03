@@ -213,7 +213,7 @@
 </script>
 
 <div
-	class={`col-start-1 col-end-2 row-start-1 row-end-2 ${
+	class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject${
 		notifiedDirect.length && notifiedGroup.length
 			? 'both-message-bg'
 			: notifiedDirect.length > 0
@@ -232,7 +232,7 @@
 </div>
 
 <ul
-	class="row-start-2 row-end-4 bg-white flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
+	class="row-start-2 row-end-4 bg-white dark:bg-darkobject flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
 >
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}

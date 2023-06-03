@@ -139,7 +139,7 @@
 
 {#if selectedChat !== null}
 	<ul
-		class="col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
+		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 	>
 		{#if messages.length === 0}
@@ -177,7 +177,7 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
+	<div class="dark:bg-darkobject col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
 		<!-- Here the user writes a message to be sent -->
 		<form
 			class="w-full flex gap-2 md:mt-2 lg:mt-5 xl:mt-14 items-center"

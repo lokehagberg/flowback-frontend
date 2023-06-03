@@ -43,7 +43,7 @@
 	};
 
 	const getInvitesList = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
+		const { json } = await fetchRequest('GET', `group/invites?group=${$page.params.groupId}`);
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -68,7 +68,7 @@
 </script>
 
 <Loader bind:loading>
-	<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative">
+	<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText">
 		<Tab
 			bind:selectedPage
 			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members', 'Invite']}
@@ -77,7 +77,7 @@
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}
 					<a
-						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
+						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
 						<ProfilePicture user={user}/>

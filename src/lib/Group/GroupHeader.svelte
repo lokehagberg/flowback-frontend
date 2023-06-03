@@ -31,7 +31,7 @@
 	/>
 </div>
 <!-- TODO: Fix layout design -->
-<div class="bg-white pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4">
 	<div class="flex items-center relative" id="notifications-list-group">
 		<NotificationOptions
 			api={`group/${$page.params.groupId}`}

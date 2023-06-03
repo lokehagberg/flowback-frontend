@@ -62,11 +62,11 @@
 <svelte:window bind:innerWidth />
 
 <!-- TODO: Make it easier to add a sidebarbutton -->
-<nav class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`}`}>
+<nav class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`} dark:!text-darkmodeText `}>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}
-			class="bg-white p-6 cursor-pointer absolute shadow rounded"
+			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded"
 		>
 			<Fa icon={faBars} />
 		</div>
@@ -74,7 +74,7 @@
 		{#if innerWidth < 700}
 			<div
 				on:click={() => (clickedExpandSidebar = false)}
-				class="bg-white p-6 cursor-pointer shadow rounded flex justify-around items-center"
+				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
 			>
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</div>
@@ -86,7 +86,7 @@
 				>
 			</div>
 		</div>
-		<div class="bg-white shadow rounded flex flex-col">
+		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
 			<GroupSidebarButton
 				action={() => (selectedPage = 'flow')}
 				text="Flow"
@@ -135,7 +135,7 @@
 				isSelected={selectedPage === 'about'}
 			/>
 		</div>
-		<div class="bg-white shadow rounded flex flex-col mt-6">
+		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 
 			<a class="text-black" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}>
@@ -149,7 +149,7 @@
 			/>
 		</div>
 		{#if userIsOwner}
-			<div class="bg-white shadow rounded flex flex-col mt-6">
+			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton
 					action={() => (selectedPage = 'email')}
 					text="Send Email"

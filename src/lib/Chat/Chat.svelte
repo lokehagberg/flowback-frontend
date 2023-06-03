@@ -29,11 +29,13 @@
 		previewGroup: PreviewMessage[] = [],
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [],
-		isLookingAtOlderMessages = false;
+		isLookingAtOlderMessages = false,
+		darkMode = false;
 
 	onMount(async () => {
 		await getUser();
 		await setUpMessageSending();
+		darkMode = darkModeChatSymbol() === 'dark' ? true : false;
 	});
 
 	const getUser = async () => {
@@ -105,6 +107,10 @@
 			messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
 
+	const darkModeChatSymbol = () => {
+		return localStorage.theme
+	}
+
 	//White screen when changing between direct and groups
 	$: selectedPage &&
 		(() => {
@@ -163,7 +169,7 @@
 	class:small-notification-group={notifiedGroup.length > 0}
 	class="transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
-	<Fa icon={faComment} size="1.3x" color={localStorage.theme === 'dark' ? 'white' : 'black'} />
+	<Fa icon={faComment} size="1.3x" color={darkMode ? 'white' : 'black' } />
 </div>
 
 <style>

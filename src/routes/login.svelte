@@ -24,7 +24,7 @@
 	<title>{$_('Login to Flowback')}</title>
 </svelte:head>
 
-<div class="flex flex-col items-center">
+<div class="dark:bg-darkobject flex flex-col items-center">
 	<div class="mt-6">
 		<img src={import.meta.env.VITE_LOGO === "REFORUM" ? Reforum : Logo} class="w-44" alt="flowback logo" />
 	</div>

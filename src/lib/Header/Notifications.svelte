@@ -79,7 +79,7 @@
 
 {#if notificationsOpen}
 	<ul
-		class="absolute right-0 top-full bg-white select-none shadow slide-animation"
+		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation"
 		id="notifications-list"
 	>
 		<li

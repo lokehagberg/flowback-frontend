@@ -41,6 +41,9 @@
 
 	onMount(() => {
 		getKanbanEntries();
+		setInterval(() => {
+			getKanbanEntries();
+		}, 30000)
 	});
 
 	const getKanbanEntries = async () => {

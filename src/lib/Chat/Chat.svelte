@@ -10,6 +10,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
+	import { themeChange } from '$lib/Generic/DarkMode';
 
 	let messages: Message[] = [],
 		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
@@ -36,6 +37,7 @@
 		await getUser();
 		await setUpMessageSending();
 		darkMode = darkModeChatSymbol() === 'dark' ? true : false;
+		themeChange();
 	});
 
 	const getUser = async () => {

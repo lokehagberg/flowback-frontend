@@ -20,3 +20,11 @@ export const changeDarkMode = (changeTo:'light'|'dark') => {
     document.body.classList.add(changeTo === 'dark' ? "bg-darkbackground" : "bg-purple-50")
     document.body.classList.remove(changeTo === 'light' ? "bg-darkbackground" : "bg-purple-50")
 }
+
+export const themeChange = () => {
+    window.addEventListener("storage", (e) => {
+    
+        console.log(e.storageArea?.getItem('theme'))
+    })
+
+}

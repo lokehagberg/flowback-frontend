@@ -68,7 +68,7 @@
 	</div>
 	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
 		<a
-			class="cursor-pointer "
+			class="cursor-pointer text-black"
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -83,7 +83,7 @@
 		/>
 	</div>
 	<a
-		class="cursor-pointe"
+		class="cursor-pointe text-black"
 		href={onHoverGroup
 			? '/groups/1'
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -113,7 +113,7 @@
 			on:focus
 		/>
 	</div>
-	<div class="hover:bg-gray-100 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2">
+	<div class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2">
 		<a
 			class="text-black dark:text-darkmodeText"
 			href={onHoverGroup

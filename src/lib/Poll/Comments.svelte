@@ -83,7 +83,7 @@
 
 <SuccessPoppup bind:show message={showMessage} />
 
-<div class="p-4 border border-gray-200 rounded" id="comments">
+<div class="p-4 border border-gray-200 rounded darK:text-darktext" id="comments">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
 	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} />
@@ -111,27 +111,27 @@
 					<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 					<div class="flex gap-2">
 						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
-						<div class="text-gray-700">{comment.author_name}</div>
+						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 					</div>
 					<div class="text-md mt-1 mb-3" id={`comment-${comment.id}`}>{comment.message}</div>
-					<div class="text-xs text-gray-400">{comment.edited ? "(edited)" : ""}</div>
+					<div class="text-xs text-gray-400 dark:text-darkmodeText">{comment.edited ? "(edited)" : ""}</div>
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
 							<div
-								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 								on:click={() => (comment.being_replied = true)}
 							>
 								<Fa icon={faReply} />{$_('Reply')}
 							</div>
 							{#if Number(localStorage.getItem('userId')) === comment.author_id}
 								<div
-									class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 									on:click={() => deleteComment(comment.id)}
 								>
 									{$_('Delete')}
 								</div>
 								<div
-									class="hover:text-gray-900 text-gray-600 cursor-pointer transition-colors"
+									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 									on:click={() => {
 										comment.being_edited = true;
 										comment.being_edited_message = comment.message;

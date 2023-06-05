@@ -1,23 +1,29 @@
 <script lang="ts">
-	import Selected from './Selected.svelte';
-
 	/*
 		Code is not very good in this folder, refactoring almost from scratch needed
 		that incorporates new feature such as delegation pools.
 		Design in Figma should be done first 
 	*/
-
+	import Selected from './Selected.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';
+	import DelegateHistory from './DelegateHistory.svelte';
 
-	let selectedPage: 'All' | 'Selected' = 'All';
+	let selectedPage: 'All' | 'Selected' | 'History' = 'All',
+		history: number | null = null;
+
+		$:if (history) selectedPage = 'History';
 </script>
 
-<div class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4 dark:bg-darkobject dark:text-darkmodeText">
+<div
+	class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4 dark:bg-darkobject dark:text-darkmodeText"
+>
 	<Tab tabs={['All', 'Selected']} bind:selectedPage />
 	{#if selectedPage === 'Selected'}
 		<Selected />
 	{:else if selectedPage === 'All'}
-		<All />
+		<All bind:history/>
+	{:else if selectedPage === 'History'}
+		<DelegateHistory bind:history/>
 	{/if}
 </div>

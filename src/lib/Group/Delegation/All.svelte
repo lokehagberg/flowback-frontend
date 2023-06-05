@@ -21,6 +21,8 @@
 		userId: number,
 		loading = false;
 
+	export let history: number | null;
+
 	onMount(async () => {
 		userId = (await fetchRequest('GET', 'user')).json.id;
 		await getDelegateRelations();
@@ -142,7 +144,9 @@
 {#if delegates.length > 0 && loading === false}
 	<ul class="w-full">
 		{#each delegates as delegate}
-			<li class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200 flex justify-between items-center">
+			<li
+				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200 flex justify-between items-center"
+			>
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
@@ -156,7 +160,10 @@
 					/>
 					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
-				<span class="text-gray-500 cursor-pointer hover:underline">{$_("See delegate history")}</span>
+				<span
+					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
+					on:click={() => (history = delegate.id)}>{$_('See delegate history')}</span
+				>
 				{#if userId !== delegate.id}
 					<div />
 					{#if delegate.isInRelation}

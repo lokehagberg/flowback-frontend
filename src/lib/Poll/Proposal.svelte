@@ -66,7 +66,7 @@
 </script>
 
 <div
-	class={`select-none hover:shadow-2xl proposal flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 lg:h-60 xl:h-40 ${Class}`}
+	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 lg:h-60 xl:h-40 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}

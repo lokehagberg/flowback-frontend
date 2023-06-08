@@ -26,7 +26,8 @@
 	};
 
 	const handleTags = (e: any) => {
-		filter.tag = e.target.value;
+		if (e.target.value === "null") filter.tag = null
+		else filter.tag = e.target.value;
 		handleSearch();
 	};
 
@@ -80,6 +81,7 @@
 		</select>
 
 		<select on:input={handleTags} class="dark:bg-darkobject">
+			<option value={null}>{$_("All")}</option>
 			{#each tags as tag}
 				<option value={tag.id}>{tag.tag_name}</option>
 			{/each}

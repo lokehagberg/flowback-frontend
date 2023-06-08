@@ -5,11 +5,15 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import type { Tag } from '$lib/Group/interface';
 
-	export let filter: Filter,
-		handleSearch: () => {};
+	export let filter: Filter, handleSearch: () => {};
 	//Aesthethics only, changes the UI when searching would lead to different results.
-	let searched = true;
+	let searched = true,
+		tags: Tag[] = [];
 
 	const handleFinishedSelection = (e: any) => {
 		filter.finishedSelection = e.target.value;
@@ -20,6 +24,23 @@
 		filter.order_by = e.target.value;
 		handleSearch();
 	};
+
+	const handleTags = (e: any) => {
+		filter.tag = e.target.value;
+		handleSearch();
+	};
+
+	const getTags = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/tags?limit=1000`
+		);
+		tags = json.results;
+	};
+
+	onMount(() => {
+		getTags();
+	});
 </script>
 
 <form
@@ -56,6 +77,12 @@
 		<select on:input={handleSort} class="dark:bg-darkobject">
 			<option value="start_date_desc">{$_('Newest first')}</option>
 			<option value="start_date_asc">{$_('Oldest first')}</option>
+		</select>
+
+		<select on:input={handleTags} class="dark:bg-darkobject">
+			{#each tags as tag}
+				<option value={tag.id}>{tag.tag_name}</option>
+			{/each}
 		</select>
 		<!-- <CheckboxButtons
 			label={''}

@@ -46,6 +46,7 @@ export interface Filter {
 	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
 	order_by: 'start_date_asc' | 'start_date_desc';
+	tag:number | null
 }
 
 export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';

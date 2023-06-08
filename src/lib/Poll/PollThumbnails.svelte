@@ -20,11 +20,13 @@
 		search: '',
 		finishedSelection: 'all',
 		public: false,
-		order_by: 'start_date_desc'
+		order_by: 'start_date_desc',
+		tag: null
 	};
 	let loading = false,
-	isAdmin = false;
+		isAdmin = false;
 
+	//TODO: Refactor this
 	const getPolls = async () => {
 		loading = true;
 
@@ -52,6 +54,8 @@
 				: '';
 
 		API = API + '&pinned=false';
+
+		if (filter.tag) API = API + `&tag=${filter.tag}`;
 
 		const { json, res } = await fetchRequest('GET', API);
 
@@ -99,9 +103,7 @@
 	onMount(async () => {
 		await getPolls();
 		amendWithPinnedPolls();
-		if ($page.params.groupId)
-		isAdmin = await getUserIsOwner($page.params.groupId);
-
+		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
 	});
 </script>
 
@@ -129,7 +131,9 @@
 						<PollThumbnail {poll} {isAdmin} />
 					{/each}
 				{:else}
-					<div class="bg-white rounded shadow p-8 dark:bg-darkobject">{$_('No polls currently here')}</div>
+					<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+						{$_('No polls currently here')}
+					</div>
 				{/if}
 			{/if}
 		</div>

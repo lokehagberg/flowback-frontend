@@ -6,7 +6,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
-	import { browser } from '$app/env';
+	import { browser } from '$app/environment';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';

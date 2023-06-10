@@ -1,6 +1,6 @@
 {
     "name": "flowback",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "scripts": {
         "dev": "vite dev",
         "comment": "What even is this? TODO: fix later",
@@ -22,7 +22,7 @@
     "devDependencies": {
         "@playwright/test": "^1.22.2",
         "@sveltejs/adapter-auto": "next",
-        "@sveltejs/kit": "next",
+        "@sveltejs/kit": "^1.15.2",
         "@types/cookie": "^0.5.1",
         "@typescript-eslint/eslint-plugin": "^5.27.0",
         "@typescript-eslint/parser": "^5.27.0",

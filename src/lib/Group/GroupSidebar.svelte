@@ -138,7 +138,7 @@
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 
-			<a class="text-black" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}>
+			<a class="text-inherit" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}>
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
 			<GroupSidebarButton

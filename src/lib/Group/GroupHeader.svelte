@@ -53,9 +53,9 @@
 		</p>
 		{#if typeof window !== "undefined"}
 		{#if group.public}
-			<HeaderIcon icon={faGlobeEurope} text="Public" Class="cursor-auto" />
+			<HeaderIcon icon={faGlobeEurope} text="Public" Class="cursor-auto " />
 		{:else}
-			<HeaderIcon icon={faLock} text="Private" Class="cursor-auto"/>
+			<HeaderIcon icon={faLock} text="Private" Class="cursor-auto "/>
 		{/if}
 		{/if}
 	</div>

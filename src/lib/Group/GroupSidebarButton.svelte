@@ -16,9 +16,9 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class={`select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4 ${isSelected && "text-gray-300"}`}
+	class={`select-none flex item-center items-center hover:outline outline-gray-200 cursor-pointer p-4 ${isSelected && "text-gray-300 dark:text-gray-500"}`}
 >
-	<Fa {icon} color={isSelected ? "gray" : hovering ? "#015BC0" : "black"} />
+	<Fa {icon}  />
 	<div class="ml-2">
 		{$_(text)}
 	</div>

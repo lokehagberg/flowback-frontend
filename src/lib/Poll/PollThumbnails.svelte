@@ -12,18 +12,18 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 
-	export let Class = '';
-	export let infoToGet: 'group' | 'home' | 'public';
+	export let Class = '',
+		infoToGet: 'group' | 'home' | 'public';
 
-	let polls: Poll[] = [];
-	let filter: Filter = {
-		search: '',
-		finishedSelection: 'all',
-		public: false,
-		order_by: 'start_date_desc',
-		tag: null
-	};
-	let loading = false,
+	let polls: Poll[] = [],
+		filter: Filter = {
+			search: '',
+			finishedSelection: 'all',
+			public: false,
+			order_by: 'start_date_desc',
+			tag: null
+		},
+		loading = false,
 		isAdmin = false;
 
 	//TODO: Refactor this
@@ -112,6 +112,7 @@
 		<div class={`flex flex-col gap-6 w-full`}>
 			<StatusMessage bind:status disableSuccess />
 			<PollFiltering
+				tagFiltering={infoToGet === 'group'}
 				handleSearch={async () => {
 					await getPolls();
 					amendWithPinnedPolls();

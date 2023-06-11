@@ -86,6 +86,7 @@
 		>
 			<span
 				class="dark:text-darkmodeText"
+				title={`Enable ${darkMode ? 'lightmode': 'darkmode'}`}
 				on:keydown={() => {}}
 				on:click={() => {
 					changeDarkMode(darkMode ? 'light' : 'dark');

@@ -10,7 +10,7 @@
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
 
-	export let filter: Filter, handleSearch: () => {};
+	export let filter: Filter, handleSearch: () => {}, tagFiltering = false;
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
 		tags: Tag[] = [];
@@ -80,12 +80,14 @@
 			<option value="start_date_asc">{$_('Oldest first')}</option>
 		</select>
 
+		{#if tagFiltering}
 		<select on:input={handleTags} class="dark:bg-darkobject">
 			<option value={null}>{$_("All")}</option>
 			{#each tags as tag}
 				<option value={tag.id}>{tag.tag_name}</option>
 			{/each}
 		</select>
+		{/if}
 		<!-- <CheckboxButtons
 			label={''}
 			labels={[

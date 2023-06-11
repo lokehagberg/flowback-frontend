@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	import HeaderIcon from './HeaderIcon.svelte';
 	//Temporary fix due to bug with Sveltekit, it should be "import {faHome, faGlobeEurope, ...} from @fortawesome/free-solid-svg-icons"
 	import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
-	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
+	import { faSun } from '@fortawesome/free-solid-svg-icons/faSun';
 	import { faUserFriends } from '@fortawesome/free-solid-svg-icons/faUserFriends';
 	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
 	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
@@ -15,13 +15,16 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 
 	let sideHeaderOpen = false,
-		notificationOpen = false,
-		profileImage = DefaultPFP;
+		profileImage = DefaultPFP,
+		darkMode: boolean | null = null;
 
 	onMount(() => {
 		getProfileImage();
+		darkMode = localStorage.theme === 'dark';
 	});
 
 	const getProfileImage = async () => {
@@ -34,7 +37,7 @@
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
 
-<div class="sticky z-50 w-100 top-0">
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0">
 	<header
 		class="md:flex justify-between flex-col md:flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
@@ -46,25 +49,58 @@
 			/></a
 		>
 		<nav class="inline-flex">
-			<HeaderIcon icon={faHome} text="Home" href="home"/>
+			<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
-			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
+			<HeaderIcon
+				icon={faUserFriends}
+				text="Groups"
+				href="groups"
+				color={darkMode ? 'white' : 'black'}
+			/>
+			<HeaderIcon
+				icon={faCalendarWeek}
+				text="Schedule"
+				href="schedule"
+				color={darkMode ? 'white' : 'black'}
+			/>
 
 			{#if import.meta.env.VITE_MODE === 'DEV'}
-				<HeaderIcon icon={faChartBar} text="Prediction" href="prediction" />
+				<HeaderIcon
+					icon={faChartBar}
+					text="Prediction"
+					href="prediction"
+					color={darkMode ? 'white' : 'black'}
+				/>
 			{/if}
-			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
+			<HeaderIcon
+				icon={faList}
+				text="My Kanban"
+				href="kanban"
+				color={darkMode ? 'white' : 'black'}
+			/>
 		</nav>
 
 		<div
 			id="side-header"
 			class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
 		>
-			<span on:click={() => changeDarkMode(localStorage.theme === 'light' ? 'dark' : 'light')}>Darkmode</span>
+			<span
+				class="dark:text-darkmodeText"
+				on:keydown={() => {}}
+				on:click={() => {
+					changeDarkMode(darkMode ? 'light' : 'dark');
+					darkMode = !darkMode;
+				}}
+			>
+				{#if darkMode}
+					<Fa icon={faSun} />
+				{:else}
+					<Fa icon={faMoon} />
+				{/if}
+			</span>
 			<Notifications />
 
-			<div on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+			<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 				<img
 					class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border border-blue-500 border-4'}`}
 					src={profileImage}

@@ -30,27 +30,28 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
-	
+
 	onMount(() => {
-		console.log(date.getTime() < dates[0].getTime())
-	})
+		console.log(date.getTime() < dates[0].getTime());
+	});
 </script>
 
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
-	<div
+		<div
 			class="flex justify-between mt-2 rounded-md"
 			class:pre-start={date.getTime() < dates[0].getTime()}
 			class:proposals={date.getTime() < dates[1].getTime() && date.getTime() > dates[0].getTime()}
 			class:prediction={date.getTime() < dates[2].getTime() && date.getTime() > dates[1].getTime()}
-			class:delegate-voting={date.getTime() < dates[3].getTime() && date.getTime() > dates[2].getTime()}
+			class:delegate-voting={date.getTime() < dates[3].getTime() &&
+				date.getTime() > dates[2].getTime()}
 			class:voting={date.getTime() < dates[4].getTime() && date.getTime() > dates[3].getTime()}
 			class:end={date.getTime() >= dates[4].getTime()}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">
 					<HeaderIcon
-						Class="cursor-default p-0"
+						Class="cursor-default !p-0"
 						size="1.5x"
 						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
 						icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
@@ -63,6 +64,7 @@
 	{#if displayDetails}
 		<ul class="p-2">
 			<div
+				on:keydown={() => {}}
 				class="hover:underline flex items-center gap-2 cursor-pointer"
 				on:click={() => (displayDetails = false)}
 			>
@@ -78,6 +80,7 @@
 		</ul>
 	{:else}
 		<ul
+			on:keydown={() => {}}
 			class="hover:underline flex items-center gap-1 cursor-pointer text-xs mb-3"
 			on:click={() => (displayDetails = true)}
 		>
@@ -86,6 +89,7 @@
 		</ul>
 	{/if}
 </div>
+
 <style>
 	.pre-start {
 		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 0%);
@@ -108,6 +112,6 @@
 	}
 
 	.end {
-		background:rgba(89, 158, 255, 1)
+		background: rgba(89, 158, 255, 1);
 	}
 </style>

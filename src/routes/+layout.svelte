@@ -8,18 +8,19 @@
 <Header />
 -->
 
-<script>
-	import "../app.css";
-	
-	import {initializeLocalization} from '$lib/Localization/i18n'
+<script lang="ts">
+	import '../app.css';
+	import { initializeLocalization } from '$lib/Localization/i18n';
+
 	initializeLocalization();
 </script>
+
 <main>
 	<slot />
 </main>
 
 <!-- <footer>  -->
-	<!-- <p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p> -->
+<!-- <p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p> -->
 <!-- </footer> -->
 
 <!-- <style>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ProposalSubmition from '../../../../lib/Poll/ProposalSubmition.svelte';
 	import ProposalsRanked from '$lib/Poll/ProposalsRanked.svelte';
 	import Timeline from '$lib/Poll/Timeline.svelte';
 	import Comments from '$lib/Poll/Comments.svelte';
@@ -23,6 +22,7 @@
 	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
+	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
 
 	let poll: poll,
 		votings: votings[],

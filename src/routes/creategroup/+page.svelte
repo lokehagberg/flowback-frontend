@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RadioButtons from '../lib/Generic/RadioButtons.svelte';
+	import RadioButtons from '../../lib/Generic/RadioButtons.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';

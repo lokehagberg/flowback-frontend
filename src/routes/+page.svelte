@@ -5,8 +5,9 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import {initializeLocalization} from '$lib/Localization/i18n'
 
-	let status: StatusMessageInfo;
+	let status: StatusMessageInfo, initializedLocale = false;
 
 	const logIn = async (username: string, password: string) => {
 		const { res, json } = await fetchRequest(
@@ -33,6 +34,12 @@
 		}
 	};
 
+	const setUpLocale = () => {
+		if (!initializedLocale)
+		initializeLocalization();
+		else initializedLocale = true;
+	}
+
 	onMount(async () => {
 		let params = new URLSearchParams(window.location.search);
 		const username = params.getAll('username')[0];
@@ -40,6 +47,8 @@
 		if (username && password) logIn(username, password);
 		else if (localStorage.getItem('token')) window.location.href = '/home';
 		else window.location.href = '/login';
+
+		
 	});
 </script>
 

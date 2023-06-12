@@ -9,7 +9,7 @@
 
     const getDelegateHistory = async () => {
         loading = true;
-        const { res, json } = await fetchRequest('GET', `group/delegate/history?id=${history}`);
+        const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
         loading = false;
     }
 

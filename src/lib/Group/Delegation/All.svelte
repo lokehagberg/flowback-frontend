@@ -162,7 +162,7 @@
 				</div>
 				<span
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
-					on:click={() => (history = delegate.id)}>{$_('See delegate history')}</span
+					on:click={() => (history = delegate.delegate_pool_id)}>{$_('See delegate history')}</span
 				>
 				{#if userId !== delegate.id}
 					<div />

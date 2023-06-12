@@ -27,6 +27,7 @@
 				notificationOpen &&
 				//@ts-ignore
 				![...document.getElementsByClassName(`notifications-clickable-region`)]?.find((element) =>
+					//@ts-ignore
 					element.contains(e.target)
 				)
 			) {
@@ -54,7 +55,7 @@
 			});
 		notifications = notifications;
 	};
-	
+
 	const handleNotificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
@@ -70,7 +71,6 @@
 	});
 
 	$: if (notificationOpen) getNotifications();
-
 </script>
 
 <div class="notifications-clickable-region">
@@ -78,20 +78,26 @@
 		on:click={() => {
 			notificationOpen = !notificationOpen;
 		}}
+		on:keydown
 	>
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.4x'} />
 	</div>
 
 	{#if notificationOpen}
-		<ul class="z-50 absolute mt-2 bg-white shadow-xl text-sm">
+		<ul class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
 			<!-- <div class="p-3">Subscriptions</div> -->
-			<li class="text-xs p-2">{$_("Manage Subscriptions")}</li>
+			<li class="text-xs p-2">{$_('Manage Subscriptions')}</li>
 			{#each categories as category, i}
 				<li
-					class="bg-gray-200 p-2 px-5 flex justify-between items-center hover:cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all"
+					on:keydown
+					class="bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer  transition-all"
 					class:!bg-white={notifications?.find(
 						(notificationObject) => notificationObject.channel_category === category
 					)}
+					class:dark:!bg-slate-400={notifications?.find(
+						(notificationObject) => notificationObject.channel_category === category
+					)}
+
 					on:click={() => {
 						if (notifications.find((object) => object.channel_category === category))
 							handleNotificationUnsubscription(category);
@@ -99,9 +105,17 @@
 					}}
 				>
 					{$_(labels[i])}
-					<Fa class="" color={notifications?.find(
-						(notificationObject) => notificationObject.channel_category === category
-					) ? "black" : "white"} swapOpacity icon={faBell} size={'1.4x'} />
+					<Fa
+						class=""
+						color={notifications?.find(
+							(notificationObject) => notificationObject.channel_category === category
+						)
+							? 'black'
+							: 'white'}
+						swapOpacity
+						icon={faBell}
+						size={'1.4x'}
+					/>
 				</li>
 			{/each}
 		</ul>

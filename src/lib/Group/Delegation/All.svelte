@@ -10,6 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 
+	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
 		delegate_pool_id: number;
 		isInRelation: boolean;
@@ -149,6 +150,7 @@
 			>
 				<div
 					class="cursor-pointer hover:underline flex items-center"
+					on:keydown
 					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
 				>
 					<img
@@ -161,6 +163,7 @@
 					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
 				<span
+					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => (history = delegate.delegate_pool_id)}>{$_('See delegate history')}</span
 				>

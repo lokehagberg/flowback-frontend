@@ -1,6 +1,6 @@
 [{
         "poll_id": 5,
-        "poll_title": "COOL POOL BRO",
+        "poll_title": "COOL POLL BRO",
         "vote": [{
                 "proposal_id": 3,
                 "proposal_title": "I hate proposals",
@@ -21,7 +21,7 @@
     },
     {
         "poll_id": 5,
-        "poll_title": "COOL POOL 2 BRO",
+        "poll_title": "COOL POLL BRO",
         "vote": [{
                 "proposal_id": 3,
                 "proposal_title": "I hate proposals 2",

@@ -27,7 +27,9 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail">
+<div
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
+>
 	<div class="flex items-center justify-between mt-1">
 		<div>
 			<Tag tag={poll.tag_name} Class="inline cursor-default" />
@@ -44,7 +46,7 @@
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
 			{#if isAdmin || poll.pinned}
-				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll}>
+				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
 					<Fa
 						icon={faThumbtack}
 						color={poll.pinned ? 'Black' : '#BBB'}
@@ -73,7 +75,7 @@
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 		>
-			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText">{poll.title}</h1>
+			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">{poll.title}</h1>
 		</a>
 		<NotificationOptions
 			id={poll.id}
@@ -88,7 +90,7 @@
 			? '/groups/1'
 			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 	>
-		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText">
+		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText hover:underline">
 			{poll.description}
 		</p></a
 	>
@@ -104,16 +106,21 @@
 			new Date(poll.end_date)
 		]}
 	/>
-	<div class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default">
+	<div
+		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
+	>
 		<p
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
 			on:mouseleave={() => (onHoverGroup = false)}
 			on:click={() => (window.location.href = '/groups/1')}
 			on:focus
+			on:keydown
 		/>
 	</div>
-	<div class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2">
+	<div
+		class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2"
+	>
 		<a
 			class="text-black dark:text-darkmodeText"
 			href={onHoverGroup

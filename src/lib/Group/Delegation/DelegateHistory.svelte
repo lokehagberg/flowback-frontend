@@ -35,7 +35,7 @@
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
 			>
 				<a
-					class="text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
+					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
 					href={`group/${$page.params.groupId}/poll/${poll.poll_id}`}
 				>
 					{poll.poll_title}</a

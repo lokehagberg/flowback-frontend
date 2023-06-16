@@ -23,6 +23,7 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
+	import Prediction from '$lib/Poll/Prediction.svelte';
 
 	let poll: poll,
 		votings: votings[],
@@ -180,6 +181,9 @@
 						<ScheduledSubmission bind:abstained />
 					{/if}
 				{/if}
+			{/if}
+			{#if phase === "prediction"}
+					<!-- <Prediction /> -->
 			{/if}
 			<Timeline
 				displayDetails={false}

@@ -42,7 +42,7 @@
 			let comment = comments.find((comment) => comment.id === id);
 			if (!comment) return;
 			comment.message = '[Deleted]';
-			comments = comments
+			comments = comments;
 		}
 	};
 
@@ -75,8 +75,8 @@
 	onMount(async () => {
 		await getComments();
 		sortComments();
-		comments.forEach(comment => {
-			checkForLinks(comment.message, `comment-${comment.id}`)
+		comments.forEach((comment) => {
+			checkForLinks(comment.message, `comment-${comment.id}`);
 		});
 	});
 </script>
@@ -102,11 +102,12 @@
 					id={comment.id}
 				/>
 			{:else}
-				<div 
+				<div
 					class={`p-3 text-sm border border-l-gray-400 ml-${
 						comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
 					}`}
 					class:bg-gray-100={comment.reply_depth % 2 === 1}
+					class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}
 				>
 					<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 					<div class="flex gap-2">
@@ -114,12 +115,15 @@
 						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 					</div>
 					<div class="text-md mt-1 mb-3" id={`comment-${comment.id}`}>{comment.message}</div>
-					<div class="text-xs text-gray-400 dark:text-darkmodeText">{comment.edited ? "(edited)" : ""}</div>
+					<div class="text-xs text-gray-400 dark:text-darkmodeText">
+						{comment.edited ? '(edited)' : ''}
+					</div>
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
 							<div
 								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 								on:click={() => (comment.being_replied = true)}
+								on:keydown
 							>
 								<Fa icon={faReply} />{$_('Reply')}
 							</div>
@@ -127,6 +131,7 @@
 								<div
 									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 									on:click={() => deleteComment(comment.id)}
+									on:keydown
 								>
 									{$_('Delete')}
 								</div>
@@ -136,6 +141,7 @@
 										comment.being_edited = true;
 										comment.being_edited_message = comment.message;
 									}}
+									on:keydown
 								>
 									{$_('Edit')}
 								</div>

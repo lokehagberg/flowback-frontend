@@ -280,8 +280,10 @@
 							class="proposal"
 							on:dblclick={() => doubleClick(proposal, 'ranked')}
 							on:click={() => (selected = proposal)}
+							on:keydown
 						>
 							<Proposal
+								editable={proposal.created_by === groupUser.id && phase === 'proposals'}
 								{proposal}
 								proposals={ranked}
 								{groupUser}
@@ -290,14 +292,14 @@
 								}`}
 							>
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
-									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer">
+									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer" on:keydown>
 										<Fa icon={faMinus} />
 									</div>
 									{#if pollType !== 3}
-										<div on:click={() => moveUp(i)} class="cursor-pointer">
+										<div on:click={() => moveUp(i)} class="cursor-pointer" on:keydown>
 											<Fa icon={faArrowUp} />
 										</div>
-										<div on:click={() => moveDown(i)} class="cursor-pointer">
+										<div on:click={() => moveDown(i)} class="cursor-pointer" on:keydown>
 											<Fa icon={faArrowDown} />
 										</div>
 									{/if}
@@ -320,6 +322,7 @@
 					class="proposal"
 					on:dblclick={() => doubleClick(proposal, 'abstained')}
 					on:click={() => (selected = proposal)}
+					on:keydown
 				>
 					<Proposal
 						{proposal}
@@ -337,7 +340,7 @@
 								'invisible'
 							}`}
 						>
-							<div on:click={() => addToRanked(proposal)} class="cursor-pointer">
+							<div on:click={() => addToRanked(proposal)} class="cursor-pointer" on:keydown>
 								<Fa icon={faPlus} />
 							</div>
 						</div>

@@ -19,7 +19,8 @@
 	export let proposal: proposal,
 		Class = '',
 		groupUser: groupUser,
-		proposals: proposal[];
+		proposals: proposal[],
+		editable: boolean = false;
 
 	export const id: number = 0;
 
@@ -53,8 +54,8 @@
 
 		if (!res.ok) return;
 
-		proposals.push({...newProposal, title:newTitle, description:newDescription})
-		proposals = proposals
+		proposals.push({ ...newProposal, title: newTitle, description: newDescription });
+		proposals = proposals;
 		proposal.title = newTitle;
 		proposal.description = newDescription;
 		show = true;
@@ -78,7 +79,7 @@
 			{proposal.description}
 		</p>
 	</div>
-	{#if proposal.created_by === groupUser.id}
+	{#if editable}
 		<!-- TODO and also before proposal end date -->
 		<div on:click={() => (open = true)} class="cursor-pointer">
 			<Fa icon={faPen} />

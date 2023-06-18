@@ -23,7 +23,12 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
-	import Prediction from '$lib/Poll/Prediction.svelte';
+	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
+
+	// TODO: refactor the phase system so be very modular
+	//{#if phase === "phase x}
+	//	 <PhaseX />
+	// ...
 
 	let poll: poll,
 		votings: votings[],
@@ -183,7 +188,7 @@
 				{/if}
 			{/if}
 			{#if phase === "prediction"}
-					<!-- <Prediction /> -->
+					<Predictions />
 			{/if}
 			<Timeline
 				displayDetails={false}

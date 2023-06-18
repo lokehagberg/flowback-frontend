@@ -1,6 +1,21 @@
-{
+[{
     "title": "Hiiii",
     "description": "nooo",
     "polls": [1, 2, 3, 4],
     "prediction_score": 40
-}
+}, {
+    "title": "Hiiii 2",
+    "description": "nooo",
+    "polls": [1, 2, 3, 4],
+    "prediction_score": 40
+}, {
+    "title": "Hiiii 3",
+    "description": "nooo",
+    "polls": [1, 2, 3, 4],
+    "prediction_score": 40
+}, {
+    "title": "Hiiii 4",
+    "description": "nooo",
+    "polls": [1, 2, 3, 4],
+    "prediction_score": 40
+}]

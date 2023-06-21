@@ -188,7 +188,7 @@
 				{/if}
 			{/if}
 			{#if phase === "prediction"}
-					<!-- <Predictions /> -->
+					<Predictions />
 			{/if}
 			<Timeline
 				displayDetails={false}

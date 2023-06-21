@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import json from './PredictionTest.json';
@@ -27,6 +28,7 @@
 </script>
 
 <Loader bind:loading>
+	<h2>{$_("Prediction Market")}</h2>
 	<ul>
 		{#each predictions as prediction}
 			<li><Prediction {prediction}/></li>

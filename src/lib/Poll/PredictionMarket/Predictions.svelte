@@ -6,9 +6,14 @@
 	import { page } from '$app/stores';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Prediction from './Prediction.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	let loading = false,
-		predictions: any[] = [];
+		predictions: any[] = [],
+		addingPrediction = false;
 
 	const getDelegateHistory = async () => {
 		loading = true;
@@ -34,4 +39,17 @@
 			<li><Prediction {prediction}/></li>
 		{/each}
 	</ul>
+
+	<Button on:click={() => addingPrediction = true}>
+		Add Prediction
+	</Button>
+	
 </Loader>
+
+<Modal>
+	<div slot="header">Add Prediction</div>
+	<form slot="body">
+		<TextInput label="Title"/>
+		<TextArea label="Description"/>
+	</form>
+</Modal>

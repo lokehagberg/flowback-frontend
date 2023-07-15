@@ -18,7 +18,7 @@
 
 	let delegates: Delegate[] = [],
 		delegateRelations: any[] = [],
-		userIsDelegate: boolean,
+		userIsDelegate: boolean = false,
 		userId: number,
 		loading = false;
 
@@ -28,12 +28,24 @@
 		userId = (await fetchRequest('GET', 'user')).json.id;
 		await getDelegateRelations();
 		getDelegatePools();
+		getUserInfo();
 
-		userIsDelegateStore.subscribe((info) => {
-			userIsDelegate = info;
-			console.log(info, 'INFO');
-		});
+
+		// userIsDelegateStore.subscribe((info) => {
+		// 	userIsDelegate = info;
+		// 	console.log(info, 'INFO');
+		// });
 	});
+
+	const getUserInfo = async () => {
+		
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem("userId")}&delegate=true`
+		);
+		if (res.ok) userIsDelegate = true;
+
+	}
 
 	const handleCreateDelegationButton = async () => {
 		await createDelegationPool();
@@ -43,6 +55,7 @@
 	const handleDeleteDelegationButton = async () => {
 		await deleteDelegationPool();
 		getDelegatePools();
+		userIsDelegate = false;
 	};
 
 	/*
@@ -58,7 +71,8 @@
 		if (!res.ok) return;
 
 		loading = false;
-		userIsDelegateStore.update((value) => (value = true));
+		userIsDelegate = true;
+		// userIsDelegateStore.update((value) => (value = true));
 	};
 
 	/*
@@ -74,7 +88,8 @@
 
 		if (!res.ok) return;
 
-		userIsDelegateStore.update((value) => (value = false));
+		userIsDelegate = false;
+		// userIsDelegateStore.update((value) => (value = false));
 	};
 
 	/*

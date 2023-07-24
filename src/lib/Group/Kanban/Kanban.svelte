@@ -46,7 +46,8 @@
 			interval = getKanbanEntries();
 		}, 30000)
 	});
-
+	
+	//TODO fix this 
 	onDestroy(() => {
 		clearInterval(interval);
 	})	

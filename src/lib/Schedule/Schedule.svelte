@@ -44,7 +44,8 @@
 		selectedDate = new Date(),
 		events: scheduledEvent[] = [],
 		loading = false,
-		showCreateScheduleEventModal = false,
+		showCreateScheduleEvent = false,
+		showEditScheduleEvent = false,
 		show = false,
 		status: StatusMessageInfo,
 		//A fix due to class struggle
@@ -53,7 +54,8 @@
 		start_date: Date | null,
 		end_date: Date | null,
 		title: string,
-		description: string;
+		description: string,
+		event_id:number|undefined;
 
 	export let type: 'user' | 'group';
 
@@ -104,16 +106,17 @@
 			description
 		});
 		if (res.ok) {
-			showCreateScheduleEventModal = false;
+			showCreateScheduleEvent = false;
 			show = true;
 			events.push({
 				created_by: Number(localStorage.getItem('userId')),
 				description: '',
 				end_date: end_date?.toString() || '',
 				start_date: start_date?.toString() || '',
-				id: json,
+				event_id: json,
 				score: 0,
-				title
+				title,
+				schedule_origin_name: 'user'
 			});
 			events = events;
 
@@ -123,6 +126,62 @@
 			loading = false;
 		} else status = statusMessageFormatter(res, json);
 	};
+
+	const scheduleEventEdit = async (e: any) => {
+		loading = true;
+		const { res, json } = await fetchRequest('POST', `user/schedule/update`, {
+			event_id,
+			start_date,
+			end_date,
+			title,
+			description:' '
+		});
+		if (res.ok) {
+			showEditScheduleEvent = false;
+			show = true;
+			events.push({
+				created_by: Number(localStorage.getItem('userId')),
+				description: '',
+				end_date: end_date?.toString() || '',
+				start_date: start_date?.toString() || '',
+				event_id: json,
+				score: 0,
+				title,
+				schedule_origin_name: 'user'
+			});
+			events = events;
+
+			start_date = null;
+			end_date = null;
+			title = '';
+			loading = false;
+		} else status = statusMessageFormatter(res, json);
+	};
+
+	const scheduleEventDelete = async () => {
+		const { res, json } = await fetchRequest('POST', `user/schedule/delete`, {
+			event_id,
+		});
+
+		if (!res.ok) return;
+
+		start_date = null;
+		end_date = null;
+		title = '';
+		loading = false;
+		events = events.filter(event => event.event_id === event_id);
+		events = events;
+	}
+
+	const handleShowEditScheduleEvent = (event:scheduledEvent) => {
+		start_date = new Date(event.start_date);
+		end_date = new Date(event.end_date);
+		title = event.title;
+		description = event.description;
+		event_id = event.event_id
+		console.log("hiiiiiii", event)
+		showEditScheduleEvent = true;
+	}
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -132,7 +191,7 @@
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
-			<div on:click={() => (showCreateScheduleEventModal = true)}>
+			<div on:click={() => (showCreateScheduleEvent = true)} on:keydown>
 				{#if type === 'user'}
 					<Fa
 						class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
@@ -149,9 +208,11 @@
 			}) as poll}
 				<div class="mt-2">
 					<a
-						class="text-xs text-center color-black text-black cursor-default flex justify-between items-center gap-3"
+						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
 						class:hover:bg-gray-300={poll.poll}
 						href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
+						on:click={() => {
+							if (poll.schedule_origin_name === "user") handleShowEditScheduleEvent(poll)}}
 					>
 						<span>{poll.title}</span>
 						<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
@@ -174,21 +235,21 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year -= 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year -= 1)} on:keydown>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year += 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year += 1)} on:keydown>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month -= 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month -= 1)} on:keydown>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month += 1)}>
+				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month += 1)} on:keydown>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
@@ -208,6 +269,7 @@
 							selectedDatePosition = `${x}-${y}`;
 							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1) + 1);
 						}}
+						on:keydown
 					>
 						<div class="w-full">
 							<div class="text-center">
@@ -240,7 +302,7 @@
 </div>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal bind:open={showCreateScheduleEventModal}>
+<Modal bind:open={showCreateScheduleEvent}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
@@ -254,6 +316,23 @@
 		</Loader>
 	</div>
 	<div slot="footer" />
+</Modal>
+
+<Modal bind:open={showEditScheduleEvent}>
+	<div slot="header">Edit Event</div>
+	<div slot="body">
+		<Loader bind:loading>
+			<form on:submit|preventDefault={scheduleEventEdit}>
+				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<TextInput label="Event title" bind:value={title} />
+				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
+				<Button type="submit">{$_('Submit')}</Button>
+				<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
+			</form>
+		</Loader>
+	</div>
+
 </Modal>
 
 <SuccessPoppup bind:show />

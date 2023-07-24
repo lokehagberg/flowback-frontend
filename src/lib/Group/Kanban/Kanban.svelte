@@ -8,7 +8,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
@@ -34,7 +34,8 @@
 		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
-		loading = false;
+		loading = false,
+		interval:any;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -42,9 +43,13 @@
 	onMount(() => {
 		getKanbanEntries();
 		setInterval(() => {
-			getKanbanEntries();
+			interval = getKanbanEntries();
 		}, 30000)
 	});
+
+	onDestroy(() => {
+		clearInterval(interval);
+	})	
 
 	const getKanbanEntries = async () => {
 		if (type === 'group') {

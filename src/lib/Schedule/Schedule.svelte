@@ -1,3 +1,5 @@
+<!-- TODO: Split up this file into two files, one about functionality and the other about visuals -->
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
@@ -18,6 +20,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
+	import { addDateOffset } from '$lib/Generic/Dates';
 
 	export let Class = '';
 
@@ -105,26 +108,34 @@
 			title,
 			description
 		});
-		if (res.ok) {
-			showCreateScheduleEvent = false;
-			show = true;
-			events.push({
-				created_by: Number(localStorage.getItem('userId')),
-				description: '',
-				end_date: end_date?.toString() || '',
-				start_date: start_date?.toString() || '',
-				event_id: json,
-				score: 0,
-				title,
-				schedule_origin_name: 'user'
-			});
-			events = events;
+		
+		loading = false;
 
-			start_date = null;
-			end_date = null;
-			title = '';
-			loading = false;
-		} else status = statusMessageFormatter(res, json);
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		showCreateScheduleEvent = false;
+		show = true;
+		events.push({
+			created_by: Number(localStorage.getItem('userId')),
+			description: '',
+			end_date: end_date?.toString() || '',
+			start_date: start_date?.toString() || '',
+			event_id: json.id,
+			score: 0,
+			title,
+			schedule_origin_name: 'user'
+		});
+		events = events;
+
+		start_date = selectedDate;
+		end_date = null;
+		title = '';
+		event_id = undefined;
+
+		 
 	};
 
 	const scheduleEventEdit = async (e: any) => {
@@ -136,26 +147,33 @@
 			title,
 			description:' '
 		});
-		if (res.ok) {
-			showEditScheduleEvent = false;
-			show = true;
-			events.push({
-				created_by: Number(localStorage.getItem('userId')),
-				description: '',
-				end_date: end_date?.toString() || '',
-				start_date: start_date?.toString() || '',
-				event_id: json,
-				score: 0,
-				title,
-				schedule_origin_name: 'user'
-			});
-			events = events;
+		
+		loading = false; 
 
-			start_date = null;
-			end_date = null;
-			title = '';
-			loading = false;
-		} else status = statusMessageFormatter(res, json);
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		showEditScheduleEvent = false;
+		show = true;
+		events.push({
+			created_by: Number(localStorage.getItem('userId')),
+			description: '',
+			end_date: end_date?.toString() || '',
+			start_date: start_date?.toString() || '',
+			event_id: json,
+			score: 0,
+			title,
+			schedule_origin_name: 'user'
+		});
+		events = events;
+
+		start_date = selectedDate;
+		end_date = null;
+		title = '';
+		event_id = undefined;
+
 	};
 
 	const scheduleEventDelete = async () => {
@@ -163,14 +181,23 @@
 			event_id,
 		});
 
-		if (!res.ok) return;
+		loading = false;
 
-		start_date = null;
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		console.log(events, event_id)
+		events.filter(event => event.event_id === event_id);
+		events = events;
+		console.log(events, event_id)
+		
+		start_date = selectedDate;
 		end_date = null;
 		title = '';
-		loading = false;
-		events = events.filter(event => event.event_id === event_id);
-		events = events;
+		event_id = undefined;
+		
 	}
 
 	const handleShowEditScheduleEvent = (event:scheduledEvent) => {
@@ -179,9 +206,15 @@
 		title = event.title;
 		description = event.description;
 		event_id = event.event_id
-		console.log("hiiiiiii", event)
 		showEditScheduleEvent = true;
 	}
+
+	$: if (showCreateScheduleEvent) {
+		start_date = addDateOffset(selectedDate, -1, "day");
+		end_date = addDateOffset(addDateOffset(selectedDate, -1, 'day'), 1, 'hour' );
+	}
+
+	// $: end_date = start_date ? addDateOffset(start_date, 1, 'hour') : new Date();
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -205,20 +238,20 @@
 				const date = new Date(poll.start_date);
 				const fixedDate = new Date(date.setDate(date.getDate()));
 				return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
-			}) as poll}
+			}) as event}
 				<div class="mt-2">
 					<a
 						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
-						class:hover:bg-gray-300={poll.poll}
-						href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
+						class:hover:bg-gray-300={event.poll}
+						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
 						on:click={() => {
-							if (poll.schedule_origin_name === "user") handleShowEditScheduleEvent(poll)}}
+							if (event.schedule_origin_name === "user") handleShowEditScheduleEvent(event)}}
 					>
-						<span>{poll.title}</span>
+						<span>{event.title}</span>
 						<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
 						<span
 							>{(() => {
-								const startDate = new Date(poll.start_date);
+								const startDate = new Date(event.start_date);
 								return `${
 									startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
 								}:${

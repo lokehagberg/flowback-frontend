@@ -157,7 +157,7 @@
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<li class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-200 hover:bg-gray-200 p-2" in:fade >
+<li class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:bg-slate-500 p-2" in:fade >
 	{#if kanban.end_date !== null && endDate}
 		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}

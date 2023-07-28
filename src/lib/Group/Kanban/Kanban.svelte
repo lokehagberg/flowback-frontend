@@ -173,7 +173,7 @@
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
-					<ul class="flex flex-col mt-2">
+					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
 								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} />

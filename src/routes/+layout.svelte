@@ -13,6 +13,7 @@
 	import { initializeLocalization } from '$lib/Localization/i18n';
 
 	initializeLocalization();
+	export const prerender = true
 </script>
 
 <main>

@@ -9,6 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { tags as tagLimit } from '../Generic/APILimits.json'
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
@@ -22,7 +23,7 @@
 
 	const getTags = async () => {
 		loading = true;
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=1000`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=${tagLimit}`);
 
 		if (res.ok) {
 			//Sorts tags alphabetically

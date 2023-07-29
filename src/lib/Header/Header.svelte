@@ -20,6 +20,7 @@
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
+		//TODO: The <HeaderIcon> component should handle default darkMode
 		darkMode: boolean | null = null;
 
 	onMount(() => {

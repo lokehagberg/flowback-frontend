@@ -154,7 +154,6 @@
 
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
-		getKanbanEntries();
 	};
 </script>
 

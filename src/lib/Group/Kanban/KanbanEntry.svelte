@@ -247,14 +247,14 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select on:input={changeAssignee} value={kanban?.assignee?.id}>
+				<select on:input={changeAssignee} value={kanban?.assignee?.id} class="dark:bg-darkbackground">
 					{#each users as user}
 						<option value={user.user.id}>{user.user.username}</option>
 					{/each}
 				</select>
 				{$_('Priority')}
 				<select
-					class="border border-gray-600"
+					class="border border-gray-600 bg-darkbackground"
 					on:input={handleChangePriority}
 					value={kanban?.priority}
 				>

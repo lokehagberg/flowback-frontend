@@ -58,7 +58,7 @@
 		end_date: Date | null,
 		title: string,
 		description: string,
-		event_id:number|undefined;
+		event_id: number | undefined;
 
 	export let type: 'user' | 'group';
 
@@ -85,7 +85,7 @@
 		}
 	};
 
-	//This function is defined in onMount
+	//This function is defined in onMount, prevents "document not found" error
 	let deleteSelection = () => {};
 
 	const setUpScheduledPolls = async () => {
@@ -106,9 +106,9 @@
 			start_date,
 			end_date,
 			title,
-			description
+			description: 'a'
 		});
-		
+
 		loading = false;
 
 		if (!res.ok) {
@@ -134,8 +134,6 @@
 		end_date = null;
 		title = '';
 		event_id = undefined;
-
-		 
 	};
 
 	const scheduleEventEdit = async (e: any) => {
@@ -145,10 +143,10 @@
 			start_date,
 			end_date,
 			title,
-			description:' '
+			description: 'a'
 		});
-		
-		loading = false; 
+
+		loading = false;
 
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
@@ -173,12 +171,11 @@
 		end_date = null;
 		title = '';
 		event_id = undefined;
-
 	};
 
 	const scheduleEventDelete = async () => {
 		const { res, json } = await fetchRequest('POST', `user/schedule/delete`, {
-			event_id,
+			event_id
 		});
 
 		loading = false;
@@ -188,30 +185,27 @@
 			return;
 		}
 
-		console.log(events, event_id)
-		events.filter(event => event.event_id === event_id);
+		events.filter((event) => event.event_id === event_id);
 		events = events;
-		console.log(events, event_id)
-		
+
 		start_date = selectedDate;
 		end_date = null;
 		title = '';
 		event_id = undefined;
-		
-	}
+	};
 
-	const handleShowEditScheduleEvent = (event:scheduledEvent) => {
+	const handleShowEditScheduleEvent = (event: scheduledEvent) => {
 		start_date = new Date(event.start_date);
 		end_date = new Date(event.end_date);
 		title = event.title;
 		description = event.description;
-		event_id = event.event_id
+		event_id = event.event_id;
 		showEditScheduleEvent = true;
-	}
+	};
 
 	$: if (showCreateScheduleEvent) {
-		start_date = addDateOffset(selectedDate, -1, "day");
-		end_date = addDateOffset(addDateOffset(selectedDate, -1, 'day'), 1, 'hour' );
+		start_date = selectedDate
+		end_date = addDateOffset(selectedDate, 1, 'hour');
 	}
 
 	// $: end_date = start_date ? addDateOffset(start_date, 1, 'hour') : new Date();
@@ -220,7 +214,7 @@
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
+		{selectedDate.getDate()}/{selectedDate.getMonth()}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
@@ -245,7 +239,8 @@
 						class:hover:bg-gray-300={event.poll}
 						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
 						on:click={() => {
-							if (event.schedule_origin_name === "user") handleShowEditScheduleEvent(event)}}
+							if (event.schedule_origin_name === 'user') handleShowEditScheduleEvent(event);
+						}}
 					>
 						<span>{event.title}</span>
 						<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
@@ -268,21 +263,37 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year -= 1)} on:keydown>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (year -= 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year += 1)} on:keydown>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (year += 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month -= 1)} on:keydown>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (month -= 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month += 1)} on:keydown>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (month += 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
@@ -300,7 +311,7 @@
 							document.getElementById(selectedDatePosition)?.classList.remove('selected');
 							document.getElementById(`${x}-${y}`)?.classList.add('selected');
 							selectedDatePosition = `${x}-${y}`;
-							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1) + 1);
+							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 						}}
 						on:keydown
 					>
@@ -308,20 +319,9 @@
 							<div class="text-center">
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
-							<!-- {#each polls.filter((poll) => new Date(poll.start_date)
-											.toJSON()
-											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
-											.toJSON()
-											.split('T')[0]) as poll}
-									<p
-										class="elipsis text-xs h-12 absolute w-full text-center max-h-[1rem] overflow-hidden"
-									>
-										{poll.title}
-									</p>
-								{/each} -->
 							{#if events.filter((poll) => new Date(poll.start_date)
 										.toJSON()
-										.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
+										.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))
 										.toJSON()
 										.split('T')[0]).length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
@@ -341,7 +341,11 @@
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
 				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput
+					bind:value={end_date}
+					format="yyyy-MM-dd HH:mm"
+					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
+				/>
 				<TextInput label="Event title" bind:value={title} />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
@@ -357,7 +361,11 @@
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventEdit}>
 				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput
+					bind:value={end_date}
+					format="yyyy-MM-dd HH:mm"
+					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
+				/>
 				<TextInput label="Event title" bind:value={title} />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
@@ -365,7 +373,6 @@
 			</form>
 		</Loader>
 	</div>
-
 </Modal>
 
 <SuccessPoppup bind:show />

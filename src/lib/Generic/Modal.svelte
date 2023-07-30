@@ -1,9 +1,9 @@
-<!-- TODO: Make the design nicer, make it draggable, add more options -->
+<!-- TODO: Make the design nicer and larger, make it draggable, add more options -->
 
 <script lang="ts">
 	import CrossButton from './CrossButton.svelte';
 	export let open = false, Class = '', onClose = () => {};
-
+	
 	$: if (!open) onClose()
 </script>
 

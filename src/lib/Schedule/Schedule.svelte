@@ -21,6 +21,8 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 	import { addDateOffset } from '$lib/Generic/Dates';
+	import { formatDate } from '$lib/Generic/DateFormatter';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let Class = '';
 
@@ -49,8 +51,9 @@
 		loading = false,
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
+		showEvent = false,
 		show = false,
-		status: StatusMessageInfo,
+		status: StatusMessageInfo | null = null,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
@@ -106,7 +109,7 @@
 			start_date,
 			end_date,
 			title,
-			description: 'a'
+			description
 		});
 
 		loading = false;
@@ -133,6 +136,7 @@
 		start_date = selectedDate;
 		end_date = null;
 		title = '';
+		description = '';
 		event_id = undefined;
 	};
 
@@ -143,33 +147,39 @@
 			start_date,
 			end_date,
 			title,
-			description: 'a'
+			description
 		});
 
 		loading = false;
 
+		
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
+			console.log(status)
 			return;
 		}
 
 		showEditScheduleEvent = false;
 		show = true;
-		events.push({
-			created_by: Number(localStorage.getItem('userId')),
-			description: '',
-			end_date: end_date?.toString() || '',
-			start_date: start_date?.toString() || '',
-			event_id: json,
-			score: 0,
-			title,
-			schedule_origin_name: 'user'
+		events = events.map((event) => {
+			if (event.event_id === event_id)
+				return {
+					created_by: Number(localStorage.getItem('userId')),
+					description,
+					end_date: end_date?.toString() || '',
+					start_date: start_date?.toString() || '',
+					event_id: json,
+					score: 0,
+					title,
+					schedule_origin_name: 'user'
+				};
+			else return event;
 		});
-		events = events;
 
 		start_date = selectedDate;
 		end_date = null;
 		title = '';
+		description = '';
 		event_id = undefined;
 	};
 
@@ -191,20 +201,21 @@
 		start_date = selectedDate;
 		end_date = null;
 		title = '';
+		description = '';
 		event_id = undefined;
 	};
 
-	const handleShowEditScheduleEvent = (event: scheduledEvent) => {
+	const handleShowEvent = (event: scheduledEvent) => {
 		start_date = new Date(event.start_date);
 		end_date = new Date(event.end_date);
 		title = event.title;
 		description = event.description;
 		event_id = event.event_id;
-		showEditScheduleEvent = true;
+		showEvent = true;
 	};
 
 	$: if (showCreateScheduleEvent) {
-		start_date = selectedDate
+		start_date = selectedDate;
 		end_date = addDateOffset(selectedDate, 1, 'hour');
 	}
 
@@ -239,7 +250,7 @@
 						class:hover:bg-gray-300={event.poll}
 						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
 						on:click={() => {
-							if (event.schedule_origin_name === 'user') handleShowEditScheduleEvent(event);
+							if (event.schedule_origin_name === 'user') handleShowEvent(event);
 						}}
 					>
 						<span>{event.title}</span>
@@ -302,7 +313,7 @@
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<div
-						class={`dark:text-darkmodeText relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
+						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 							month === currentDate.getMonth() &&
@@ -335,7 +346,12 @@
 </div>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal bind:open={showCreateScheduleEvent}>
+<Modal
+	bind:open={showCreateScheduleEvent}
+	onClose={() => {
+		if (status !== null) status = null;
+	}}
+>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
@@ -347,6 +363,7 @@
 					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
 				/>
 				<TextInput label="Event title" bind:value={title} />
+				<TextArea label="Event description" bind:value={description} />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 			</form>
@@ -355,8 +372,29 @@
 	<div slot="footer" />
 </Modal>
 
-<Modal bind:open={showEditScheduleEvent}>
-	<div slot="header">Edit Event</div>
+<Modal bind:open={showEvent}>
+	<div slot="header">{title}</div>
+	<div slot="body">
+		<div class="flex flex-col">
+			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
+			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
+			<span> {description} </span>
+		</div>
+	</div>
+	<div slot="footer">
+		<Button
+			action={() => {
+				showEditScheduleEvent = true;
+				showEvent = false;
+			}}>{$_('Edit Event')}</Button
+		>
+	</div>
+</Modal>
+
+<Modal bind:open={showEditScheduleEvent} onClose={() => {
+	console.log("WHY HERE?!")
+}}>
+	<div slot="header">{$_('Edit Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventEdit}>
@@ -367,6 +405,7 @@
 					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
 				/>
 				<TextInput label="Event title" bind:value={title} />
+				<TextArea label="Event description" bind:value={description} />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 				<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>

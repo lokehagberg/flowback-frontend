@@ -203,8 +203,10 @@
 			return;
 		}
 
-		events.filter((event) => event.event_id === event_id);
+		events = events.filter((event) => event.event_id !== event_id);
 		events = events;
+
+		showEditScheduleEvent = false;
 
 		start_date = selectedDate;
 		end_date = null;

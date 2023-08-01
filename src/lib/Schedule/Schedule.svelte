@@ -251,10 +251,11 @@
 				{/if}
 			</div>
 			{#each events.filter((poll) => {
-				//Fixes a one day off issue
-				const date = new Date(poll.start_date);
-				const fixedDate = new Date(date.setDate(date.getDate()));
-				return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
+				const startDate = new Date(poll.start_date);
+				const startDateAtMidnight = addDateOffset(addDateOffset(startDate, -startDate.getHours(), 'hour'), -startDate.getMinutes(), 'minute');
+				return startDateAtMidnight <= selectedDate && new Date(poll.end_date) >= selectedDate;
+				// const date = new Date(poll.start_date);
+				// return date.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
 			}) as event}
 				<div class="mt-2">
 					<a
@@ -270,11 +271,23 @@
 						<span
 							>{(() => {
 								const startDate = new Date(event.start_date);
-								return `${
-									startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
-								}:${
-									startDate.getMinutes() > 9 ? startDate.getMinutes() : '0' + startDate.getMinutes()
-								}`;
+								const endDate = new Date(event.end_date);
+
+								if (selectedDate.getDate() === startDate.getDate())
+									return `Start: ${
+										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
+									}:${
+										startDate.getMinutes() > 9
+											? startDate.getMinutes()
+											: '0' + startDate.getMinutes()
+									}`;
+								else if (selectedDate.getDate() === endDate.getDate())
+									return `Ends: ${
+										endDate.getHours() > 9 ? endDate.getHours() : '0' + endDate.getHours()
+									}:${
+										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
+									}`;
+								else return 'ongoing';
 							})()}</span
 						>
 					</a>

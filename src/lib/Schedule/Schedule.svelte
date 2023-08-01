@@ -103,6 +103,15 @@
 		return new Date(year, month, 0).getDay();
 	};
 
+	const isEventOnDate = (date: Date) => {
+		let eventsOnDate = events;
+		eventsOnDate = eventsOnDate.filter((event) => {
+			return date >= new Date(event.start_date) && date <= new Date(event.end_date);
+		});
+
+		return eventsOnDate.length > 0;
+	};
+
 	const scheduleEventCreate = async (e: any) => {
 		loading = true;
 		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
@@ -333,11 +342,15 @@
 							<div class="text-center">
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
-							{#if events.filter((poll) => new Date(poll.start_date)
+
+							<!-- {#if events.filter((poll) => new Date(poll.start_date)
 										.toJSON()
 										.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))
 										.toJSON()
 										.split('T')[0]).length > 0}
+								<Fa class="m-auto" icon={faCalendarAlt} />
+								{/if} -->
+							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
 							{/if}
 						</div>

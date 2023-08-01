@@ -35,7 +35,7 @@
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
 		loading = false,
-		interval:any;
+		interval: any;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -44,13 +44,13 @@
 		getKanbanEntries();
 		setInterval(() => {
 			interval = getKanbanEntries();
-		}, 30000)
+		}, 30000);
 	});
-	
-	//TODO fix this 
+
+	//TODO fix this
 	onDestroy(() => {
 		clearInterval(interval);
-	})	
+	});
 
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
@@ -94,7 +94,7 @@
 	};
 
 	const createKanbanEntry = async () => {
-		loading = true
+		loading = true;
 		const content = priority
 			? {
 					assignee,
@@ -159,7 +159,9 @@
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<div class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words' + Class}>
+<div
+	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words' + Class}
+>
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
@@ -187,35 +189,42 @@
 	<div class="pl-4 pr-4 pb-4">
 		<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
 		<Loader bind:loading>
-		<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
-			<TextInput required label="Title" bind:value={title} />
-			<TextArea required label="Description" bind:value={description} />
-			<div class="flex gap-6 justify-between mt-2">
-				{#if type === 'group'}
-					<select on:input={handleChangeAssignee} class="dark:bg-darkobject border border-gray-600">
-						{#each users as user}
-							<option value={user.user.id}>{user.user.username}</option>
-						{/each}
-					</select>
-				{/if}
-				<div>
-					{$_('Priority')}
-					<select class="border border-gray-600 dark:bg-darkobject" on:input={handleChangePriority} value={priority}>
-						{#each priorities as i}
-							<option value={i}>
-								{priorityText[priorityText.length - i]}
-							</option>
-						{/each}
-					</select>
+			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
+				<TextInput required label="Title" bind:value={title} />
+				<TextArea required label="Description" bind:value={description} />
+				<div class="flex gap-6 justify-between mt-2">
+					{#if type === 'group'}
+						<select
+							on:input={handleChangeAssignee}
+							class="dark:bg-darkobject border border-gray-600"
+						>
+							{#each users as user}
+								<option value={user.user.id}>{user.user.username}</option>
+							{/each}
+						</select>
+					{/if}
+					<div>
+						{$_('Priority')}
+						<select
+							class="border border-gray-600 dark:bg-darkobject"
+							on:input={handleChangePriority}
+							value={priority}
+						>
+							{#each priorities as i}
+								<option value={i}>
+									{priorityText[priorityText.length - i]}
+								</option>
+							{/each}
+						</select>
+					</div>
+					<div>
+						{$_('End date')}
+						<DateInput bind:value={end_date} min={new Date()} />
+					</div>
+					<Button type="submit">{$_('Create task')}</Button>
 				</div>
-				<div>
-					{$_('End date')}
-					<DateInput  bind:value={end_date} min={new Date()} />
-				</div>
-				<Button type="submit">{$_('Create task')}</Button>
-			</div>
-			<StatusMessage Class="mt-2" bind:status />
-		</form>
-	</Loader>
+				<StatusMessage Class="mt-2" bind:status />
+			</form>
+		</Loader>
 	</div>
 </div>

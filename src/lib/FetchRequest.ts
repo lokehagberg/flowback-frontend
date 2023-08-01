@@ -16,7 +16,13 @@ export async function fetchRequest(
 
 	if (!browser) return { res: { ok: false }, json: {} };
 
-	if (needs_authorization) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+	if (needs_authorization) {
+		const token = localStorage.getItem('token');
+		
+		// Redirect if no token
+		if (token === null) location.href = '/login';
+		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+	}
 
 	if (needs_json) {
 		headers.Accept = 'application/json';

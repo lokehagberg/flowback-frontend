@@ -53,7 +53,7 @@
 		showEditScheduleEvent = false,
 		showEvent = false,
 		show = false,
-		status: StatusMessageInfo | null = null,
+		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
@@ -152,10 +152,9 @@
 
 		loading = false;
 
-		
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
-			console.log(status)
+			console.log(status);
 			return;
 		}
 
@@ -214,10 +213,14 @@
 		showEvent = true;
 	};
 
-	$: if (showCreateScheduleEvent) {
+	let notActivated = true;
+	$: if (showCreateScheduleEvent && notActivated) {
+		notActivated = false;
 		start_date = selectedDate;
 		end_date = addDateOffset(selectedDate, 1, 'hour');
 	}
+
+	$: if (!showCreateScheduleEvent) notActivated = true;
 
 	// $: end_date = start_date ? addDateOffset(start_date, 1, 'hour') : new Date();
 </script>
@@ -349,7 +352,7 @@
 <Modal
 	bind:open={showCreateScheduleEvent}
 	onClose={() => {
-		if (status !== null) status = null;
+		if (status !== undefined) status = undefined;
 	}}
 >
 	<div slot="header">{$_('Create Event')}</div>
@@ -391,9 +394,12 @@
 	</div>
 </Modal>
 
-<Modal bind:open={showEditScheduleEvent} onClose={() => {
-	console.log("WHY HERE?!")
-}}>
+<Modal
+	bind:open={showEditScheduleEvent}
+	onClose={() => {
+		console.log('WHY HERE?!');
+	}}
+>
 	<div slot="header">{$_('Edit Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>

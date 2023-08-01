@@ -26,3 +26,13 @@ export const addDateOffset = (originalDate: Date, offsetValue: number, offsetUni
   
     return newDate;
   }
+
+
+export const setDateToMidnight = (date: Date) => {
+		const startDateAtMidnight = addDateOffset(
+			addDateOffset(date, -date.getHours(), 'hour'),
+			-date.getMinutes(),
+			'minute'
+		);
+		return startDateAtMidnight;
+	};

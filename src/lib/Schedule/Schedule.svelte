@@ -20,7 +20,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
-	import { addDateOffset } from '$lib/Generic/Dates';
+	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 
@@ -106,7 +106,7 @@
 	const isEventOnDate = (date: Date) => {
 		let eventsOnDate = events;
 		eventsOnDate = eventsOnDate.filter((event) => {
-			return date >= new Date(event.start_date) && date <= new Date(event.end_date);
+			return date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date);
 		});
 
 		return eventsOnDate.length > 0;
@@ -252,13 +252,7 @@
 					/>
 				{/if}
 			</div>
-			{#each events.filter((poll) => {
-				const startDate = new Date(poll.start_date);
-				const startDateAtMidnight = addDateOffset(addDateOffset(startDate, -startDate.getHours(), 'hour'), -startDate.getMinutes(), 'minute');
-				return startDateAtMidnight <= selectedDate && new Date(poll.end_date) >= selectedDate;
-				// const date = new Date(poll.start_date);
-				// return date.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
-			}) as event}
+			{#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
 				<div class="mt-2">
 					<a
 						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
@@ -269,7 +263,6 @@
 						}}
 					>
 						<span>{event.title}</span>
-						<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
 						<span
 							>{(() => {
 								const startDate = new Date(event.start_date);
@@ -358,13 +351,6 @@
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
 
-							<!-- {#if events.filter((poll) => new Date(poll.start_date)
-										.toJSON()
-										.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))
-										.toJSON()
-										.split('T')[0]).length > 0}
-								<Fa class="m-auto" icon={faCalendarAlt} />
-								{/if} -->
 							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
 							{/if}

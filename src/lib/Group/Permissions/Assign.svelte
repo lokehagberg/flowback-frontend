@@ -8,7 +8,7 @@
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
-	import { permissions as permissionsLimit } from '../../Generic/APILimits.json'
+	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
 
 	let roles: Permission[] = [];
 	let users: groupUser[] = [];
@@ -22,11 +22,14 @@
 	};
 
 	const getUsers = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${permissionsLimit}`);
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=${permissionsLimit}`
+		);
 		users = json.results;
 	};
 
-	const updateUserRoles = async (roleId:number) => {
+	const updateUserRoles = async (roleId: number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
 			user: localStorage.getItem('userId'),
 			permission: roleId
@@ -43,7 +46,7 @@
 
 <ul class="w-full">
 	{#each users as user}
-		<li class="bg-white p-3 w-full border-b-2 border-gray-200">
+		<li class=" p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
 				<div class="flex">
 					<ProfilePicture user={user.user} displayName />
@@ -55,12 +58,13 @@
 					class:selected={selected === user.id}
 					class="faPlus ml-auto cursor-pointer"
 					on:click={() => (selected === user.id ? (selected = -1) : (selected = user.id))}
+					on:keydown
 				>
 					<Fa icon={faPlus} size="2x" />
 				</div>
 			</div>
 			<div
-				class="bg-white p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
+				class="p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
 				class:hidden={selected !== user.id}
 			>
 				<h1 class="text-xl">{user.user.username}</h1>
@@ -68,8 +72,9 @@
 				<ul class="mt-6 flex flex-wrap items-center">
 					{#each roles as role}
 						<li
-							class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-white border-4"
+							class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
 							on:click={() => updateUserRoles(role.id)}
+							on:keydown
 						>
 							<Tag
 								tag={role.role_name}

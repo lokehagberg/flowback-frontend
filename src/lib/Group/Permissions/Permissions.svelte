@@ -8,7 +8,7 @@
 	let selectedPage: 'assign' | 'create' | 'list' = 'assign';
 </script>
 
-<div class="bg-white p-6 rounded">
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 rounded">
 	<h1>{$_("Roles")}</h1>
 	<Tab
 		tabs={['assign', 'list', 'create']}

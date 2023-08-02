@@ -11,6 +11,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
+	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json'
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public';
@@ -39,16 +40,16 @@
 
 		let API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
+				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
-				? `home/polls?limit=300&title__icontains=${
+				? `home/polls?limit=${pollThumbnailsLimit}&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: //TODO remove public
 				infoToGet === 'public'
-				? `home/polls?limit=300&public=true&title__icontains=${
+				? `home/polls?limit=${pollThumbnailsLimit}&public=true&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}`
 				: '';
@@ -76,16 +77,16 @@
 
 		let API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=100&title__icontains=${
+				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
-				? `home/polls?limit=300&title__icontains=${
+				? `home/polls?limit=${pollThumbnailsLimit}&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}&order_by=${filter.order_by}`
 				: //TODO remove public
 				infoToGet === 'public'
-				? `home/polls?limit=300&public=true&title__icontains=${
+				? `home/polls?limit=${pollThumbnailsLimit}&public=true&title__icontains=${
 						filter.search || ''
 				  }&${finishedFilter}`
 				: '';

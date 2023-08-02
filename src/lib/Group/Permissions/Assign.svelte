@@ -2,13 +2,13 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import type { Permission } from './interface';
-	import type { groupUser, User } from '../interface';
+	import type { groupUser } from '../interface';
 	import Tag from '../Tag.svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { number } from 'svelte-i18n';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import { permissions as permissionsLimit } from '../../Generic/APILimits.json'
 
 	let roles: Permission[] = [];
 	let users: groupUser[] = [];
@@ -16,13 +16,13 @@
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/permissions?limit=100`
+			`group/${$page.params.groupId}/permissions?limit=${permissionsLimit}`
 		);
 		roles = json.results;
 	};
 
 	const getUsers = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=1000`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${permissionsLimit}`);
 		users = json.results;
 	};
 

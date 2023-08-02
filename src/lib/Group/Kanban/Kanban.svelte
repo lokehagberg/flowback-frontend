@@ -14,7 +14,7 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-
+	import { kanban as kanbanLimit } from '../../Generic/APILimits.json'
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [];
@@ -62,7 +62,7 @@
 	const getKanbanEntriesGroup = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/kanban/entry/list?limit=10000&order_by=priority_desc`
+			`group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
 		);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -73,7 +73,7 @@
 		// const user = await fetchRequest('GET', 'user');
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/kanban/entry/list?limit=10000&order_by=priority_desc`
+			`user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
 		);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -88,7 +88,7 @@
 	};
 
 	const getGroupUsers = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=100`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${kanbanLimit}`);
 		users = json.results;
 		assignee = users[0]?.user.id;
 	};

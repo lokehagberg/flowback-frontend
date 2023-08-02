@@ -18,6 +18,7 @@
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { groupUser } from '$lib/Group/interface';
 	import Question from '$lib/Generic/Question.svelte';
+	import { proposals as proposalsLimit } from '../Generic/APILimits.json'
 
 	export let votings: votings[],
 		selectedPage: 'You' | 'Delegate',
@@ -55,7 +56,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=10000`
+			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
 
 		//Ranked
@@ -223,7 +224,7 @@
 	const getVotings = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposal/votes?limit=1000`
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
 		);
 		votings = json.results;
 	};

@@ -26,6 +26,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { tagsCreatePoll as tagsCreatePollLimit } from '$lib/Generic/APILimits.json'
 
 	type polltypes =
 		| 'Ranking'
@@ -126,7 +127,7 @@
 
 	const getGroupTags = async () => {
 		loading = true;
-		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=1000`);
+		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=${tagsCreatePollLimit}`);
 		loading = false;
 		tags = json.results;
 		selectedTag = tags[0];

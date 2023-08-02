@@ -4,13 +4,14 @@
 	import type { Permission } from './interface';
 	import { onMount } from 'svelte';
 	import Role from './Role.svelte';
-
+	import { permissions as permissionsLimit } from '../../Generic/APILimits.json'
+	
 	let roles: Permission[] = [];
 
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/permissions?limit=100`
+			`group/${$page.params.groupId}/permissions?limit=${permissionsLimit}`
 		);
 		roles = json.results;
 	};

@@ -4,11 +4,10 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Button from '$lib/Generic/Button.svelte';
-	import { userIsDelegateStore, userIdStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-	import { get } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { delegation as delegationLimit } from '../../Generic/APILimits.json'
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -100,7 +99,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=1000`
+			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
 		);
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
@@ -124,7 +123,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegates?limit=1000`
+			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
 		delegateRelations = json.results;

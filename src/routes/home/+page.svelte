@@ -4,11 +4,11 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { poll } from '$lib/Poll/interface';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json'
 
 	interface Invitation {
 		external: boolean;
@@ -43,7 +43,7 @@
 	};
 
 	const getPolls = async () => {
-		const { res, json } = await fetchRequest('GET', 'home/polls?limit=1000');
+		const { res, json } = await fetchRequest('GET', `home/polls?limit=${homePollsLimit}`);
 		status = statusMessageFormatter(res, json);
 	};
 </script>

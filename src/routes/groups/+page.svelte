@@ -11,6 +11,7 @@
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json'
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
@@ -32,7 +33,7 @@
 
 		urlFilter = `${urlFilter}&name__icontains=${filter.search}`;
 
-		const { res, json } = await fetchRequest('GET', 'group/list?limit=1000' + urlFilter);
+		const { res, json } = await fetchRequest('GET', `group/list?limit=${groupMembersLimit}` + urlFilter);
 		status = statusMessageFormatter(res, json);
 
 		if (!res.ok) return;

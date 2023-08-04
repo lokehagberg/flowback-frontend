@@ -55,7 +55,7 @@
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
 			{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
-				<Button href="creategroup" Class="w-[40%] rounded-2xl">{$_("Create Group")}</Button>
+				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl">{$_("Create Group")}</Button>
 			{/if}
 
 			<GroupFiltering bind:filter {getGroups} />

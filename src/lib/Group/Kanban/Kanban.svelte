@@ -160,7 +160,7 @@
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div
-	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words' + Class}
+	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' + Class}
 >
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
@@ -170,7 +170,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="inline-block min-w-[200px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
+					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>

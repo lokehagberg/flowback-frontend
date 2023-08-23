@@ -7,6 +7,7 @@
 	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
 	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
+	import { faMoneyBill } from '@fortawesome/free-solid-svg-icons/faMoneyBill';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
@@ -19,12 +20,22 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 
 	let sideHeaderOpen = false,
+<<<<<<< Updated upstream
 		profileImage = DefaultPFP,
 		darkMode: boolean | null = null;
 
 	onMount(() => {
 		getProfileImage();
 		darkMode = localStorage.theme === 'dark';
+=======
+		notificationOpen = false,
+		profileImage = DefaultPFP,
+		ledgerExists = false;
+
+	onMount(() => {
+		getProfileImage();
+		checkForLedgerModule();
+>>>>>>> Stashed changes
 	});
 
 	const getProfileImage = async () => {
@@ -33,6 +44,14 @@
 		if (res.ok && json.profile_image)
 			profileImage = `${import.meta.env.VITE_API}${json.profile_image}`;
 	};
+
+	const checkForLedgerModule = async () => {
+		const {res, json} = await fetchRequest('GET', 'ledger/accounts');
+		ledgerExists = !!res.ok;
+		ledgerExistsStore.set(
+			Object.assign(ledgerExists, {at: new Date()})
+		);
+	}
 </script>
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
@@ -51,6 +70,7 @@
 		<nav class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+<<<<<<< Updated upstream
 			<HeaderIcon
 				icon={faUserFriends}
 				text="Groups"
@@ -64,6 +84,10 @@
 				color={darkMode ? 'white' : 'black'}
 			/>
 
+=======
+			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
+			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
+>>>>>>> Stashed changes
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<HeaderIcon
 					icon={faChartBar}
@@ -72,12 +96,22 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 			{/if}
+<<<<<<< Updated upstream
 			<HeaderIcon
 				icon={faList}
 				text="My Kanban"
 				href="kanban"
 				color={darkMode ? 'white' : 'black'}
 			/>
+=======
+			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
+			{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if ledgerExists}
+					<HeaderIcon
+						icon={faMoneyBill} text="Account" href="accounts"/>
+				{/if}
+			{/if}
+>>>>>>> Stashed changes
 		</nav>
 
 		<div

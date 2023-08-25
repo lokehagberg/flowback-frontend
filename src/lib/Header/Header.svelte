@@ -21,9 +21,8 @@
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
-		//TODO: The <HeaderIcon> component should handle default darkMode
 		darkMode: boolean | null = null,
-		ledgerExists = false;
+		ledgerExists: boolean = false;
 
 	onMount(() => {
 		getProfileImage();
@@ -41,9 +40,6 @@
 	const checkForLedgerModule = async () => {
 		const {res, json} = await fetchRequest('GET', 'ledger/accounts');
 		ledgerExists = !!res.ok;
-		ledgerExistsStore.set(
-			Object.assign(ledgerExists, {at: new Date()})
-		);
 	}
 </script>
 
@@ -75,6 +71,7 @@
 				href="schedule"
 				color={darkMode ? 'white' : 'black'}
 			/>
+
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<HeaderIcon
 					icon={faChartBar}

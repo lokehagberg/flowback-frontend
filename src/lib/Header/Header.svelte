@@ -20,22 +20,15 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 
 	let sideHeaderOpen = false,
-<<<<<<< Updated upstream
 		profileImage = DefaultPFP,
-		darkMode: boolean | null = null;
-
-	onMount(() => {
-		getProfileImage();
-		darkMode = localStorage.theme === 'dark';
-=======
-		notificationOpen = false,
-		profileImage = DefaultPFP,
+		//TODO: The <HeaderIcon> component should handle default darkMode
+		darkMode: boolean | null = null,
 		ledgerExists = false;
 
 	onMount(() => {
 		getProfileImage();
+		darkMode = localStorage.theme === 'dark';
 		checkForLedgerModule();
->>>>>>> Stashed changes
 	});
 
 	const getProfileImage = async () => {
@@ -70,7 +63,6 @@
 		<nav class="inline-flex">
 			<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 			<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-<<<<<<< Updated upstream
 			<HeaderIcon
 				icon={faUserFriends}
 				text="Groups"
@@ -83,11 +75,6 @@
 				href="schedule"
 				color={darkMode ? 'white' : 'black'}
 			/>
-
-=======
-			<HeaderIcon icon={faUserFriends} text="Groups" href="groups" />
-			<HeaderIcon icon={faCalendarWeek} text="Schedule" href="schedule" />
->>>>>>> Stashed changes
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				<HeaderIcon
 					icon={faChartBar}
@@ -96,22 +83,18 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 			{/if}
-<<<<<<< Updated upstream
 			<HeaderIcon
 				icon={faList}
 				text="My Kanban"
 				href="kanban"
 				color={darkMode ? 'white' : 'black'}
 			/>
-=======
-			<HeaderIcon icon={faList} text="My Kanban" href="kanban" />
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				{#if ledgerExists}
 					<HeaderIcon
 						icon={faMoneyBill} text="Account" href="accounts"/>
 				{/if}
 			{/if}
->>>>>>> Stashed changes
 		</nav>
 
 		<div

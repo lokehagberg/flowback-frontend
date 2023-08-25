@@ -1,4 +1,3 @@
-import {writable} from 'svelte/store';
 export interface Account {
 	id: number;
 	account_name: string;

@@ -16,7 +16,7 @@
 		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
 		const json= await fetchRequest(
 			'GET',
-			`group/poll/pool/${history}/poll/votes`
+			`group/poll/pool/${history}/votes`
 			);
 			loading = false;
 		

@@ -92,7 +92,11 @@
 			{#if import.meta.env.VITE_MODE === 'DEV'}
 				{#if ledgerExists}
 					<HeaderIcon
-						icon={faMoneyBill} text="Account" href="accounts"/>
+						icon={faMoneyBill}
+						text="Account"
+						href="accounts"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
 			{/if}
 		</nav>

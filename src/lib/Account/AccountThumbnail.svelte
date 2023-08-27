@@ -1,8 +1,12 @@
 <script lang="ts">
 	import Button         from '$lib/Generic/Button.svelte';
+	import AccountRemovalModal from '$lib/Account/AccountRemovalModal.svelte';
 	import {fetchRequest} from '$lib/FetchRequest';
 	import type {Account} from '$lib/Group/interface';
 	import {_}            from 'svelte-i18n';
+	let
+		consideringRemoving = false,
+		status: StatusMessageInfo;
 	export let account : Account;
 	const update = async ()=>{
 		window.location.href = `/accounts/${account.id}/update`;
@@ -27,7 +31,11 @@
 			<a href="/accounts/{account.id}/transactions">Transactions</a>
 		</p>
 		<Button action={update}>{$_("Update")}</Button>
-		<Button action={remove} buttonStyle="warning">Remove</Button>
+		<Button
+			action={()=>consideringRemoving = true}
+			buttonStyle="warning"
+		>Remove</Button>
 		<br/>&nbsp;
 	</div>
 </div>
+<AccountRemovalModal bind:open={consideringRemoving} account={account}/>

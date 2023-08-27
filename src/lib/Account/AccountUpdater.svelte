@@ -9,15 +9,17 @@
 	import {faPaperPlane}  from
 		'@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import {_}            from 'svelte-i18n';
+	import {onMount}      from 'svelte';
+
 	export let newOne : bool;
 	export let id : number;
 
 	const
 		{statusMessageFormatter} = StatusMessage;
 	let
-		name: string = "",
-		number: string = "",
-		loading: bool = false,
+		name: string = newOne ? "" : "...",
+		number: string = newOne ? "" : "...",
+		loading: bool = !newOne,
 		status: StatusMessageInfo;
 	const updateAccount = async ()=>{
 		loading = true;
@@ -28,8 +30,8 @@
 		formData.append("account_number", number);
 		const path = "ledger/accounts/" + (
 			newOne ?
-				`${id}/update` :
-				"create"
+				"create" :
+				`${id}/update`
 		);
 		const {res, json} = await fetchRequest(
 			"POST", path, formData, true, false
@@ -41,7 +43,21 @@
 		}
 		window.location.href = "/accounts";
 		loading = false;
-	}
+	};
+	onMount(async ()=>{
+		if (newOne)
+			return;
+		const {res, json} = await fetchRequest("GET", `ledger/accounts`);
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+		const accounts = json.results;
+		const account = accounts.filter(x => +x.id === +id)[0];
+		name = account.account_name;
+		number = account.account_number;
+		loading = false;
+	});
 </script>
 <Loader bind:loading>
 	<form

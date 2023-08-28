@@ -168,7 +168,7 @@
 					<TextInput required label="Title" bind:value={title} />
 					<TextArea required label="Description" bind:value={description} />
 
-					<div class="border border-gray-200 p-6 ">
+					<div class="border border-gray-200 dark:border-gray-500 p-6 ">
 						<Button
 							Class={`inline !bg-blue-600`}
 							action={() => (advancedTimeSettings = !advancedTimeSettings)}

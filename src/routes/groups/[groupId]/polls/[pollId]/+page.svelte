@@ -117,7 +117,7 @@
 		>
 			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
 			<div
-				class="border border-gray-200 rounded p-4 whitespace-pre-wrap break-words"
+				class="border border-gray-200 dark:border-gray-500 rounded p-4 whitespace-pre-wrap break-words"
 				id="poll-description"
 			>
 				{poll.description}

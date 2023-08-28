@@ -65,7 +65,7 @@
 </script>
 
 <SuccessPoppup bind:show />
-<form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 rounded">
+<form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 dark:border-gray-500 rounded">
 	<Loader bind:loading>
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
 		<TextInput required label="Title" bind:value={title} />

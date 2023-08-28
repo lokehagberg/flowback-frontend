@@ -28,12 +28,21 @@
 			// predictions = json.results[0];
 			predictions = json
 		};
+
+		const createPredictionStatement = async () => {
+			const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/prediction/statement/create`, {
+				description: "Predicti",
+				end_date:new Date("2030-09-22"),
+				segments:[]
+			});
+			
+		}
 		
 		const addPrediction = async () => {
 		loading = true;
 		
 		const { res, json } = await fetchRequest('POST', `group/poll/${prediction_statement_id}/prediction/create` ,{
-			
+
 		});
 		loading = false;
 
@@ -51,7 +60,7 @@
 		{/each}
 	</ul>
 
-	<Button action={addPrediction}>
+	<Button action={createPredictionStatement}>
 		Add Prediction
 	</Button>
 

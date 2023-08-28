@@ -26,7 +26,8 @@
 			{account.account_name}
 		</h2>
 		<p class="pl-6 pr-6 pb-6 break-words">
-			<code>{account.account_number}</code>: {account.balance}
+			{$_("Nº")}: <code>{account.account_number}</code><br/>
+			{$_("Balance")}: {account.balance}
 			<br/>
 			<a href="/accounts/{account.id}/transactions">Transactions</a>
 		</p>

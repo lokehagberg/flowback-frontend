@@ -26,9 +26,9 @@
 		{$_("Are you sure you want to remove this account?")}
 	</div>
 	<div slot="footer">
-		<div class="flex justify-center gap-16">
-			<Button action={removeAccount} Class="bg-red-500">{
-				$_("Yes")
+		<div class="flex justify-center gap-8">
+			<Button action={removeAccount} Class="bg-red-500 w-1/2">{
+				$_("Remove")
 			}</Button>
 			<Button action={()=>open = false} Class="bg-gray-400 w-1/2">{
 				$_("Cancel")

@@ -17,6 +17,7 @@ Object.assign(accountsStore, {
 		console.log(".get", this);
 		let storedVal;
 		storedVal = await this.promiseValue();
+		console.log("storedVal:", storedVal);
 		const oneMinute = 60_000;
 		if (
 			!storedVal.loaded ||

@@ -1,9 +1,13 @@
 <script lang="ts">
-	import {onMount}      from 'svelte';
-	import Layout         from '$lib/Generic/Layout.svelte';
-	import Loader         from '$lib/Generic/Loader.svelte';
-	import {fetchRequest} from '$lib/FetchRequest';
-	import {page}         from '$app/stores';
+	import {onMount}        from 'svelte';
+	import Button           from '$lib/Generic/Button.svelte';
+	import Layout           from '$lib/Generic/Layout.svelte';
+	import Loader           from '$lib/Generic/Loader.svelte';
+	import {fetchRequest}   from '$lib/FetchRequest';
+	import {page}           from '$app/stores';
+	import TransactionTable
+		from '$lib/Account/Transaction/TransactionTable.svelte'
+	import {accountsStore}  from '$lib/Account/stores';
 
 	const
 		{accountId} = $page.params;
@@ -13,25 +17,21 @@
 		tLoading: bool = true,
 		aOK: bool = false,
 		tOK: bool = false,
+		aStatus,
+		tStatus,
 		account: Object = undefined,
 		transactions: Array = [];
 	const updateLoading = async () =>
 		loading = aLoading || tLoading;
 	const loadAccount = async ()=>{
-		aLoading = true;
-		updateLoading();
-		aOK = false;
-		const {res, json} = await fetchRequest(
-			"GET", "ledger/accounts"
-		);
-		console.log("account:", {res, json});
-		aOK = res.ok;
-		account = !res.ok ?
-			undefined :
-			json.results.filter(x => x.id === +accountId)[0];
+		const accounts = await accountsStore.get();
 		aLoading = false;
 		updateLoading();
-	}
+		aOK = accounts.loaded;
+		aStatus = accounts.status;
+		if (aOK)
+			account = accounts.filter(x => x.id === +accountId)[0];
+	};
 	const loadTransactions = async ()=>{
 		tLoading = true;
 		updateLoading();
@@ -45,7 +45,7 @@
 			json.results;
 		tLoading = false;
 		updateLoading();
-	}
+	};
 	onMount(async ()=>{
 		loadAccount();
 		loadTransactions();
@@ -61,15 +61,12 @@
 				Balance: {account.balance}
 			</div>
 		{/if}
+		<Button>Record Transaction</Button>
 		<div>
-			{#if tOK}
+			<p>{#if tOK}
 				{transactions.length} transactions:
-			{/if}
-			<table>
-				{#each transactions as ta}
-					<tr>,</tr>
-				{/each}
-			</table>
+			{/if}&nbsp;</p>
+			<TransactionTable {transactions}/>
 		</div>
 	</Loader>
 </Layout>

@@ -2,7 +2,6 @@
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
-	import json from './PredictionTest.json';
 	import { page } from '$app/stores';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Prediction from './Prediction.svelte';
@@ -19,59 +18,107 @@
 	const getPredictions = async () => {
 		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		loading = true;
-		
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/prediction/list`);
-		loading = false;
-		// const { res, json } = await fetchRequest(
-			// 	'GET',
-			// );
-			// predictions = json.results[0];
-			predictions = json
-		};
 
-		const createPredictionStatement = async () => {
-			const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/prediction/statement/create`, {
-				description: "Predicti",
-				end_date:new Date("2030-09-22"),
-				segments:[]
-			});
-			
-		}
-		
-		const addPrediction = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/prediction/statement/list`
+		);
+		loading = false;
+		predictions = json.results[0];
+	};
+
+	const createPredictionStatement = async () => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/prediction/statement/create`,
+			{
+				description: 'Predicti',
+				end_date: new Date('2028-09-22'),
+				segments: [
+					{
+						proposal_id: 26,
+						is_true: true
+					}
+				]
+			}
+		);
+	};
+	const deletePredictionStatement = async (id: number) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/prediction/${id}/statement/delete`
+		);
+	};
+	const updatePredictionStatement = async () => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/prediction/statement/update`,
+			{
+				description: 'Predicti',
+				end_date: new Date('2028-09-22'),
+				segments: [
+					{
+						proposal_id: 26,
+						is_true: true
+					}
+				]
+			}
+		);
+	};
+
+	const addPrediction = async () => {
 		loading = true;
-		
-		const { res, json } = await fetchRequest('POST', `group/poll/${prediction_statement_id}/prediction/create` ,{
 
-		});
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${prediction_statement_id}/prediction/create`,
+			{}
+		);
 		loading = false;
+	};
 
-	}
+	const test = async () => {
+		// const { res, json } = await fetchRequest(
+		// 	'GET',
+		// 	`group/${$page.params.groupId}/poll/prediction/list`
+		// );
+
+		// const { res, json } = await fetchRequest(
+		// 	'POST',
+		// 	`group/poll/${1}/prediction/create`, {score:4}
+		// 	)
+		// const { res, json } = await fetchRequest(
+		// 	'POST',
+		// 	`group/poll/${1}/prediction/update`, {score:5}
+		// 	)
+		// const { res, json } = await fetchRequest(
+		// 	'POST',
+		// 	`group/poll/${1}/prediction/delete`
+		// 	)
+	};
 
 	onMount(() => {
+		getPredictions();
 	});
 </script>
 
 <Loader bind:loading>
-	<h2>{$_("Prediction Market")}</h2>
+	<h2>{$_('Prediction Market')}</h2>
 	<ul>
 		{#each predictions as prediction}
-			<li><Prediction {prediction}/></li>
+			<li><Prediction {prediction} /></li>
 		{/each}
 	</ul>
 
-	<Button action={createPredictionStatement}>
-		Add Prediction
-	</Button>
+	<Button action={createPredictionStatement}>Add Prediction</Button>
 
-	<Button action={getPredictions}>Test</Button>
-	
+	<Button action={test}>Test</Button>
 </Loader>
 
 <Modal>
 	<div slot="header">Add Prediction</div>
 	<form slot="body">
-		<TextInput label="Title"/>
-		<TextArea label="Description"/>
+		<TextInput label="Title" />
+		<TextArea label="Description" />
 	</form>
 </Modal>

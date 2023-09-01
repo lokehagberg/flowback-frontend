@@ -152,12 +152,16 @@
 		if (kanban.end_date !== null) formatEndDate();
 	});
 
-	$:if (openModal && !isEditing) checkForLinks(kanban.description, `kanban-${kanban.id}-description`)
+	$: if (openModal && !isEditing)
+		checkForLinks(kanban.description, `kanban-${kanban.id}-description`);
 </script>
 
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
-<li class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-200 hover:bg-gray-200 p-2" in:fade >
+<li
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	in:fade
+>
 	{#if kanban.end_date !== null && endDate}
 		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}
@@ -167,6 +171,7 @@
 			selectedEntry = kanban.id;
 		}}
 		class="cursor-pointer hover:underline"
+		on:keydown
 	>
 		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
@@ -177,6 +182,7 @@
 				type === 'group'
 					? `/user?id=${kanban.assignee.id}`
 					: `groups/${kanban.origin_id}?page=kanban`)}
+		on:keydown
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
@@ -198,6 +204,7 @@
 						kanban.tag -= 1;
 					}
 				}}
+				on:keydown
 			>
 				<Fa icon={faArrowLeft} size="1.5x" />
 			</div>
@@ -212,6 +219,7 @@
 						kanban.tag += 1;
 					}
 				}}
+				on:keydown
 			>
 				<Fa icon={faArrowRight} size="1.5x" />
 			</div>
@@ -233,20 +241,20 @@
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
 				<TextArea
-				rows={10}
+					rows={10}
 					bind:value={kanbanEdited.description}
 					label=""
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select on:input={changeAssignee} value={kanban?.assignee?.id}>
+				<select on:input={changeAssignee} value={kanban?.assignee?.id} class="dark:bg-darkbackground">
 					{#each users as user}
 						<option value={user.user.id}>{user.user.username}</option>
 					{/each}
 				</select>
 				{$_('Priority')}
 				<select
-					class="border border-gray-600"
+					class="border border-gray-600 bg-darkbackground"
 					on:input={handleChangePriority}
 					value={kanban?.priority}
 				>
@@ -261,7 +269,7 @@
 				<span>
 					{kanban?.assignee?.username}
 				</span>
-						<!-- Don't ask why the class "table" works here -->
+				<!-- Don't ask why the class "table" works here -->
 				<PriorityIcons Class="ml-auto mr-auto table mt-4" priority={kanban?.priority} />
 			{/if}
 		</div>
@@ -269,8 +277,8 @@
 			{#if isEditing}
 				<Button action={updateKanbanContent}>{$_('Update')}</Button>
 				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
-				{:else}
-				<Button action={() => isEditing = true}>{$_("Edit")}</Button>
+			{:else}
+				<Button action={() => (isEditing = true)}>{$_('Edit')}</Button>
 			{/if}
 		</div>
 	</Modal>

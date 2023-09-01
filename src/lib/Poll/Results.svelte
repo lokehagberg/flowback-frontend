@@ -5,6 +5,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
+	import { schedule as scheduleLimit } from '$lib/Generic/APILimits.json'
 
 	let proposals: any[] = [],
 		votes: number[] = [],

@@ -9,6 +9,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
+	import { homePolls as homePollsLimit } from '../Generic/APILimits.json'
 
 	export let filter: Filter, handleSearch: () => {}, tagFiltering = false;
 	//Aesthethics only, changes the UI when searching would lead to different results.
@@ -34,7 +35,7 @@
 	const getTags = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/tags?limit=1000`
+			`group/${$page.params.groupId}/tags?limit=${homePollsLimit}`
 		);
 		tags = json.results;
 	};

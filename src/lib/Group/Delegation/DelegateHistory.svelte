@@ -14,12 +14,13 @@
 	const getDelegateHistory = async () => {
 		loading = true;
 		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
-		loading = false;
-		const { res, json } = await fetchRequest(
+		const json= await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?id=${history}`
-		);
-		delegatePool = json.results[0];
+			`group/poll/pool/${history}/votes`
+			);
+			loading = false;
+		
+		// delegatePool = json.results[0];
 	};
 
 	onMount(() => {

@@ -16,6 +16,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { delegation as delegationLimit } from '../../Generic/APILimits.json'
 
 	let delegates: Delegate[] = [],
 		tags: any[] = [],
@@ -48,7 +49,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegates?limit=1000`
+			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
 		return json.results;
@@ -56,7 +57,7 @@
 
 	const setTagList = async () => {
 		loading = true;
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=1000`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=${delegationLimit}`);
 		tags = json.results.map(({ active, ...args }: any) => args);
 		loading = false;
 	};
@@ -65,7 +66,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?limit=1000&delegate=true`
+			`group/${$page.params.groupId}/users?limit=${delegationLimit}&delegate=true`
 		);
 		loading = false;
 		return json.results;
@@ -74,7 +75,7 @@
 	const getDelegationPools = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=100`
+			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
 		);
 
 		return json.results;

@@ -15,3 +15,4 @@ src/lib/assets/Default_pfp.png
 /.src/app.html
 ./src/app.html
 src/app.html
+package-lock.json

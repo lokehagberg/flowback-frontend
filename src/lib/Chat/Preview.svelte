@@ -7,7 +7,8 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-
+	import { chatPreview as chatLimit } from '../Generic/APILimits.json'
+	
 	let groups: Group[] = [],
 		directs: any[] = [],
 		user: User,
@@ -74,12 +75,12 @@
 	};
 
 	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=1000`);
+		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=${chatLimit}`);
 		return json.results;
 	};
 
 	const getPeople = async () => {
-		const { json, res } = await fetchRequest('GET', `users?limit=1000`);
+		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
 		return json.results.filter((chatter: any) => chatter.id !== user.id);
 	};
 

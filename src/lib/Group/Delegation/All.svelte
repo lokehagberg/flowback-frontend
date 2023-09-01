@@ -4,11 +4,10 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Button from '$lib/Generic/Button.svelte';
-	import { userIsDelegateStore, userIdStore } from '$lib/Group/interface';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-	import { get } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { delegation as delegationLimit } from '../../Generic/APILimits.json'
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -18,7 +17,7 @@
 
 	let delegates: Delegate[] = [],
 		delegateRelations: any[] = [],
-		userIsDelegate: boolean,
+		userIsDelegate: boolean = false,
 		userId: number,
 		loading = false;
 
@@ -28,12 +27,24 @@
 		userId = (await fetchRequest('GET', 'user')).json.id;
 		await getDelegateRelations();
 		getDelegatePools();
+		getUserInfo();
 
-		userIsDelegateStore.subscribe((info) => {
-			userIsDelegate = info;
-			console.log(info, 'INFO');
-		});
+
+		// userIsDelegateStore.subscribe((info) => {
+		// 	userIsDelegate = info;
+		// 	console.log(info, 'INFO');
+		// });
 	});
+
+	const getUserInfo = async () => {
+		
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem("userId")}&delegate=true`
+		);
+		if (res.ok) userIsDelegate = true;
+
+	}
 
 	const handleCreateDelegationButton = async () => {
 		await createDelegationPool();
@@ -43,6 +54,7 @@
 	const handleDeleteDelegationButton = async () => {
 		await deleteDelegationPool();
 		getDelegatePools();
+		userIsDelegate = false;
 	};
 
 	/*
@@ -58,7 +70,8 @@
 		if (!res.ok) return;
 
 		loading = false;
-		userIsDelegateStore.update((value) => (value = true));
+		userIsDelegate = true;
+		// userIsDelegateStore.update((value) => (value = true));
 	};
 
 	/*
@@ -74,7 +87,8 @@
 
 		if (!res.ok) return;
 
-		userIsDelegateStore.update((value) => (value = false));
+		userIsDelegate = false;
+		// userIsDelegateStore.update((value) => (value = false));
 	};
 
 	/*
@@ -85,7 +99,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=1000`
+			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
 		);
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
@@ -109,7 +123,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegates?limit=1000`
+			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
 		delegateRelations = json.results;

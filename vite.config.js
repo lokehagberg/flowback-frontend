@@ -8,7 +8,7 @@ const config = {
     },
     server: {
         //Insert port here, TODO: Make it easier for backend to add port
-        port: 1000,
+        port: 4000,
         strictPort: true
     }
 };

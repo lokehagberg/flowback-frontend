@@ -11,6 +11,7 @@
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json'
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
@@ -32,7 +33,7 @@
 
 		urlFilter = `${urlFilter}&name__icontains=${filter.search}`;
 
-		const { res, json } = await fetchRequest('GET', 'group/list?limit=1000' + urlFilter);
+		const { res, json } = await fetchRequest('GET', `group/list?limit=${groupMembersLimit}` + urlFilter);
 		status = statusMessageFormatter(res, json);
 
 		if (!res.ok) return;
@@ -54,7 +55,7 @@
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
 			{#if import.meta.env.VITE_DISABLE_GROUP_CREATION === 'false' || import.meta.env.VITE_DISABLE_GROUP_CREATION === undefined}
-				<Button href="creategroup" Class="w-[40%] rounded-2xl">{$_("Create Group")}</Button>
+				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl">{$_("Create Group")}</Button>
 			{/if}
 
 			<GroupFiltering bind:filter {getGroups} />

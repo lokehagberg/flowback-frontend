@@ -12,6 +12,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json'
 
 	let users: GroupUser[] = [];
 	let loading = true;
@@ -21,7 +22,7 @@
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=1000`);
+		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${groupMembersLimit}`);
 		users = json.results;
 		loading = false;
 
@@ -38,7 +39,7 @@
 			return;
 		}
 
-		const { json } = await fetchRequest('GET', `users?limit=100&username=${username}`);
+		const { json } = await fetchRequest('GET', `users?limit=${groupMembersLimit}&username=${username}`);
 		searchedUsers = json.results;
 	};
 

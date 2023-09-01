@@ -13,22 +13,42 @@
 
 	let loading = false,
 		predictions: any[] = [],
-		addingPrediction = false;
+		addingPrediction = false,
+		prediction_statement_id = 0;
 
-	const getDelegateHistory = async () => {
+	const getPredictions = async () => {
+		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		loading = true;
-		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
+		
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/prediction/list`);
 		loading = false;
 		// const { res, json } = await fetchRequest(
-		// 	'GET',
-		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
-		// );
-		// predictions = json.results[0];
-        predictions = json
-	};
+			// 	'GET',
+			// );
+			// predictions = json.results[0];
+			predictions = json
+		};
+
+		const createPredictionStatement = async () => {
+			const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/prediction/statement/create`, {
+				description: "Predicti",
+				end_date:new Date("2030-09-22"),
+				segments:[]
+			});
+			
+		}
+		
+		const addPrediction = async () => {
+		loading = true;
+		
+		const { res, json } = await fetchRequest('POST', `group/poll/${prediction_statement_id}/prediction/create` ,{
+
+		});
+		loading = false;
+
+	}
 
 	onMount(() => {
-		getDelegateHistory();
 	});
 </script>
 
@@ -40,9 +60,11 @@
 		{/each}
 	</ul>
 
-	<Button on:click={() => addingPrediction = true}>
+	<Button action={createPredictionStatement}>
 		Add Prediction
 	</Button>
+
+	<Button action={getPredictions}>Test</Button>
 	
 </Loader>
 

@@ -11,6 +11,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
+	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json'
 
 	let comments: Comment[] = [],
 		show = false,
@@ -21,7 +22,7 @@
 	const getComments = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/comment/list?limit=10000`
+			`group/poll/${$page.params.pollId}/comment/list?limit=${pollCommentsLimit}`
 		);
 
 		comments = json.results.map((comment: Comment) => {
@@ -83,7 +84,7 @@
 
 <SuccessPoppup bind:show message={showMessage} />
 
-<div class="p-4 border border-gray-200 rounded darK:text-darktext" id="comments">
+<div class="p-4 border border-gray-200 dark:border-gray-500 rounded darK:text-darktext" id="comments">
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
 	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} />

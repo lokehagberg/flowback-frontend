@@ -1,0 +1,16 @@
+{
+    "tags":1000,
+    "groupMembers":1000,
+    "chatPreview":1000,
+    "delegation":1000,
+    "kanban":1000,
+    "permissions":1000,
+    "pollComments":1000,
+    "pollThumbnails":1000,
+    "proposals":1000,
+    "results":1000,
+    "schedule":1000,
+    "tagsCreatePoll":1000,
+    "groups":1000,
+    "homePolls":1000
+}

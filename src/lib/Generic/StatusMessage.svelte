@@ -3,7 +3,7 @@
 	import type { StatusMessageInfo } from './GenericFunctions';
 
 	export let Class = '',
-		status: StatusMessageInfo | undefined,
+		status: StatusMessageInfo | undefined | null,
 		disableSuccess = false;
 </script>
 

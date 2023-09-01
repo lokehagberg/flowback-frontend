@@ -42,7 +42,7 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal} class="rounded border-gray-200 border p-4 z-30">
+<form on:submit|preventDefault={addProposal} class="rounded border-gray-200 dark:border-gray-500 border p-4 z-30">
 	<Loader bind:loading>
 		<div class="text-xl">Lägg till Datumförslag</div>
 		<div class="mt-4">Start Datum</div>

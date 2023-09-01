@@ -49,7 +49,7 @@
 </script>
 
 <Loader bind:loading>
-<div class="bg-white p-6 rounded">
+<div class="p-6 rounded">
 	<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
 		<TextInput label="Role name" bind:value={roleName} required />
 		<h1 class="text-xl">Permissions</h1>

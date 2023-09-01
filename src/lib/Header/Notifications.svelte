@@ -67,6 +67,7 @@
 	id="notifications-list"
 	class="small-notification relative"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
+	on:keydown
 >
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
@@ -84,6 +85,7 @@
 	>
 		<li
 			on:click={markAllAsRead}
+			on:keydown
 			class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 		>
 			{$_('Mark all as read')}
@@ -110,6 +112,7 @@
 								window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
 							}
 						}}
+						on:keydown
 					>
 						<div class=" max-w-[25vw] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
 							{$_(notification.message)}
@@ -126,6 +129,7 @@
 							// hovered.push(notification.id);
 							// hovered = hovered;
 						}}
+						on:keydown
 					>
 						<Fa icon={faX} />
 					</div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	/*
 		Code is not very good in this folder, refactoring almost from scratch needed
-		that incorporates new feature such as delegation pools.
+		that incorporates features such as delegation pools.
 		Design in Figma should be done first 
 	*/
 	import Selected from './Selected.svelte';

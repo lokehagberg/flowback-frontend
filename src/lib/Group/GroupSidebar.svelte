@@ -57,16 +57,21 @@
 	onMount(() => {
 		getUserIsOwner();
 	});
+
+	$: selectedPage && (() => (clickedExpandSidebar = false))();
 </script>
 
 <svelte:window bind:innerWidth />
 
 <!-- TODO: Make it easier to add a sidebarbutton -->
-<nav class={`${Class} ${innerWidth < 700 && `absolute left-0 top-[50%]`} dark:!text-darkmodeText `}>
+<nav
+	class={`${Class} ${innerWidth < 700 && `fixed right-0 top-[50%] h-[50%] ${clickedExpandSidebar && "overflow-y-scroll"}`} dark:!text-darkmodeText `}
+>
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
 			on:click={() => (clickedExpandSidebar = true)}
-			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded"
+			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
+			on:keydown
 		>
 			<Fa icon={faBars} />
 		</div>
@@ -75,13 +80,14 @@
 			<div
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
+				on:keydown
 			>
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</div>
 		{/if}
 		<div class="mb-6 w-full">
 			<div class="bg-secondary text-white shadow rounded flex flex-col">
-				<a class="text-white"  href={`/createpoll?id=${$page.params.groupId}`}>
+				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
 					<GroupSidebarButton text="Create Poll" icon={faCheckToSlot} isSelected={false} /></a
 				>
 			</div>
@@ -138,7 +144,11 @@
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 
-			<a class="text-inherit" target="_blank" href={`https://meet.flowback.org/${group.jitsi_room}`}>
+			<a
+				class="text-inherit"
+				target="_blank"
+				href={`https://meet.flowback.org/${group.jitsi_room}`}
+			>
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
 			<GroupSidebarButton

@@ -1,3 +1,5 @@
+<!-- TODO: Split up this file into two files, one about functionality and the other about visuals -->
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
@@ -18,6 +20,9 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
+	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
+	import { formatDate } from '$lib/Generic/DateFormatter';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let Class = '';
 
@@ -44,16 +49,19 @@
 		selectedDate = new Date(),
 		events: scheduledEvent[] = [],
 		loading = false,
-		showCreateScheduleEventModal = false,
+		showCreateScheduleEvent = false,
+		showEditScheduleEvent = false,
+		showEvent = false,
 		show = false,
-		status: StatusMessageInfo,
+		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
 		start_date: Date | null,
 		end_date: Date | null,
 		title: string,
-		description: string;
+		description: string,
+		event_id: number | undefined;
 
 	export let type: 'user' | 'group';
 
@@ -80,7 +88,7 @@
 		}
 	};
 
-	//This function is defined in onMount
+	//This function is defined in onMount, prevents "document not found" error
 	let deleteSelection = () => {};
 
 	const setUpScheduledPolls = async () => {
@@ -95,6 +103,15 @@
 		return new Date(year, month, 0).getDay();
 	};
 
+	const isEventOnDate = (date: Date) => {
+		let eventsOnDate = events;
+		eventsOnDate = eventsOnDate.filter((event) => {
+			return date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date);
+		});
+
+		return eventsOnDate.length > 0;
+	};
+
 	const scheduleEventCreate = async (e: any) => {
 		loading = true;
 		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
@@ -103,36 +120,130 @@
 			title,
 			description
 		});
-		if (res.ok) {
-			showCreateScheduleEventModal = false;
-			show = true;
-			events.push({
-				created_by: Number(localStorage.getItem('userId')),
-				description: '',
-				end_date: end_date?.toString() || '',
-				start_date: start_date?.toString() || '',
-				id: json,
-				score: 0,
-				title
-			});
-			events = events;
 
-			start_date = null;
-			end_date = null;
-			title = '';
-			loading = false;
-		} else status = statusMessageFormatter(res, json);
+		loading = false;
+
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		showCreateScheduleEvent = false;
+		show = true;
+		events.push({
+			created_by: Number(localStorage.getItem('userId')),
+			description: '',
+			end_date: end_date?.toString() || '',
+			start_date: start_date?.toString() || '',
+			event_id: json.id,
+			score: 0,
+			title,
+			schedule_origin_name: 'user'
+		});
+		events = events;
+
+		start_date = selectedDate;
+		end_date = null;
+		title = '';
+		description = '';
+		event_id = undefined;
 	};
+
+	const scheduleEventEdit = async (e: any) => {
+		loading = true;
+		const { res, json } = await fetchRequest('POST', `user/schedule/update`, {
+			event_id,
+			start_date,
+			end_date,
+			title,
+			description
+		});
+
+		loading = false;
+
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			console.log(status);
+			return;
+		}
+
+		showEditScheduleEvent = false;
+		show = true;
+		events = events.map((event) => {
+			if (event.event_id === event_id)
+				return {
+					created_by: Number(localStorage.getItem('userId')),
+					description,
+					end_date: end_date?.toString() || '',
+					start_date: start_date?.toString() || '',
+					event_id: json,
+					score: 0,
+					title,
+					schedule_origin_name: 'user'
+				};
+			else return event;
+		});
+
+		start_date = selectedDate;
+		end_date = null;
+		title = '';
+		description = '';
+		event_id = undefined;
+	};
+
+	const scheduleEventDelete = async () => {
+		const { res, json } = await fetchRequest('POST', `user/schedule/delete`, {
+			event_id
+		});
+
+		loading = false;
+
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		events = events.filter((event) => event.event_id !== event_id);
+		events = events;
+
+		showEditScheduleEvent = false;
+
+		start_date = selectedDate;
+		end_date = null;
+		title = '';
+		description = '';
+		event_id = undefined;
+	};
+
+	const handleShowEvent = (event: scheduledEvent) => {
+		start_date = new Date(event.start_date);
+		end_date = new Date(event.end_date);
+		title = event.title;
+		description = event.description;
+		event_id = event.event_id;
+		showEvent = true;
+	};
+
+	let notActivated = true;
+	$: if (showCreateScheduleEvent && notActivated) {
+		notActivated = false;
+		start_date = selectedDate;
+		end_date = addDateOffset(selectedDate, 1, 'hour');
+	}
+
+	$: if (!showCreateScheduleEvent) notActivated = true;
+
+	// $: end_date = start_date ? addDateOffset(start_date, 1, 'hour') : new Date();
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
+		{selectedDate.getDate()}/{selectedDate.getMonth()}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
-			<div on:click={() => (showCreateScheduleEventModal = true)}>
+			<div on:click={() => (showCreateScheduleEvent = true)} on:keydown>
 				{#if type === 'user'}
 					<Fa
 						class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
@@ -141,28 +252,37 @@
 					/>
 				{/if}
 			</div>
-			{#each events.filter((poll) => {
-				//Fixes a one day off issue
-				const date = new Date(poll.start_date);
-				const fixedDate = new Date(date.setDate(date.getDate()));
-				return fixedDate.toJSON().split('T')[0] === selectedDate.toJSON().split('T')[0];
-			}) as poll}
+			{#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
 				<div class="mt-2">
 					<a
-						class="text-xs text-center color-black text-black cursor-default flex justify-between items-center gap-3"
-						class:hover:bg-gray-300={poll.poll}
-						href={poll.poll ? `groups/${poll.group_id}/polls/${poll.poll}` : location.href}
+						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
+						class:hover:bg-gray-300={event.poll}
+						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
+						on:click={() => {
+							if (event.schedule_origin_name === 'user') handleShowEvent(event);
+						}}
 					>
-						<span>{poll.title}</span>
-						<!-- {new Date(poll.start_date).getHours()}:{new Date(poll.start_date).getMinutes()} -->
+						<span>{event.title}</span>
 						<span
 							>{(() => {
-								const startDate = new Date(poll.start_date);
-								return `${
-									startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
-								}:${
-									startDate.getMinutes() > 9 ? startDate.getMinutes() : '0' + startDate.getMinutes()
-								}`;
+								const startDate = new Date(event.start_date);
+								const endDate = new Date(event.end_date);
+
+								if (selectedDate.getDate() === startDate.getDate())
+									return `Start: ${
+										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
+									}:${
+										startDate.getMinutes() > 9
+											? startDate.getMinutes()
+											: '0' + startDate.getMinutes()
+									}`;
+								else if (selectedDate.getDate() === endDate.getDate())
+									return `Ends: ${
+										endDate.getHours() > 9 ? endDate.getHours() : '0' + endDate.getHours()
+									}:${
+										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
+									}`;
+								else return 'ongoing';
 							})()}</span
 						>
 					</a>
@@ -174,21 +294,37 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year -= 1)}>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (year -= 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (year += 1)}>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (year += 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month -= 1)}>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (month -= 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
-				<div class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700" on:click={() => (month += 1)}>
+				<div
+					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+					on:click={() => (month += 1)}
+					on:keydown
+				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</div>
 			</div>
@@ -197,7 +333,7 @@
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<div
-						class={`dark:text-darkmodeText relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
+						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
 							month === currentDate.getMonth() &&
@@ -206,29 +342,16 @@
 							document.getElementById(selectedDatePosition)?.classList.remove('selected');
 							document.getElementById(`${x}-${y}`)?.classList.add('selected');
 							selectedDatePosition = `${x}-${y}`;
-							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1) + 1);
+							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 						}}
+						on:keydown
 					>
 						<div class="w-full">
 							<div class="text-center">
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
-							<!-- {#each polls.filter((poll) => new Date(poll.start_date)
-											.toJSON()
-											.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
-											.toJSON()
-											.split('T')[0]) as poll}
-									<p
-										class="elipsis text-xs h-12 absolute w-full text-center max-h-[1rem] overflow-hidden"
-									>
-										{poll.title}
-									</p>
-								{/each} -->
-							{#if events.filter((poll) => new Date(poll.start_date)
-										.toJSON()
-										.split('T')[0] === new Date(year, month, -firstDayInMonthWeekday() + x + 1 + 7 * (y - 1))
-										.toJSON()
-										.split('T')[0]).length > 0}
+
+							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
 							{/if}
 						</div>
@@ -240,20 +363,75 @@
 </div>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal bind:open={showCreateScheduleEventModal}>
+<Modal
+	bind:open={showCreateScheduleEvent}
+	onClose={() => {
+		if (status !== undefined) status = undefined;
+	}}
+>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
 				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput
+					bind:value={end_date}
+					format="yyyy-MM-dd HH:mm"
+					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
+				/>
 				<TextInput label="Event title" bind:value={title} />
+				<TextArea label="Event description" bind:value={description} />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 			</form>
 		</Loader>
 	</div>
 	<div slot="footer" />
+</Modal>
+
+<Modal bind:open={showEvent}>
+	<div slot="header">{title}</div>
+	<div slot="body">
+		<div class="flex flex-col">
+			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
+			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
+			<span> {description} </span>
+		</div>
+	</div>
+	<div slot="footer">
+		<Button
+			action={() => {
+				showEditScheduleEvent = true;
+				showEvent = false;
+			}}>{$_('Edit Event')}</Button
+		>
+	</div>
+</Modal>
+
+<Modal
+	bind:open={showEditScheduleEvent}
+	onClose={() => {
+		console.log('WHY HERE?!');
+	}}
+>
+	<div slot="header">{$_('Edit Event')}</div>
+	<div slot="body">
+		<Loader bind:loading>
+			<form on:submit|preventDefault={scheduleEventEdit}>
+				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput
+					bind:value={end_date}
+					format="yyyy-MM-dd HH:mm"
+					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
+				/>
+				<TextInput label="Event title" bind:value={title} />
+				<TextArea label="Event description" bind:value={description} />
+				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
+				<Button type="submit">{$_('Submit')}</Button>
+				<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
+			</form>
+		</Loader>
+	</div>
 </Modal>
 
 <SuccessPoppup bind:show />

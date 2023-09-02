@@ -7,3 +7,5 @@ export const formatDate = (dateInput: string | undefined) => {
 		date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
 	}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
 };
+
+export const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());

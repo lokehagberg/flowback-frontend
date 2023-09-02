@@ -9,10 +9,9 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 
 	let start_date: Date | null, end_date: Date | null, loading = false, status:StatusMessageInfo;
-
-	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	export let abstained: proposal[];
 

@@ -13,6 +13,8 @@
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import type { proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 
 	let loading = false,
 		predictions: any[] = [],
@@ -21,11 +23,11 @@
 		newPredictionStatement: {
 			description?: string;
 			end_date?: Date;
-			segments?: {
+			segments: {
 				proposal_id: number;
 				is_true: boolean;
 			}[];
-		} = {};
+		} = { segments:[] };
 
 	export let proposals: proposal[];
 
@@ -116,39 +118,33 @@
 <Modal bind:open={addingPrediction}>
 	<div slot="header">Add Prediction</div>
 	<form slot="body" on:submit={createPredictionStatement}>
-		<TextArea label="Description" bind:value={newPredictionStatement.description} />
-		End date for prediction<DateInput bind:value={newPredictionStatement.end_date} />
+		End date for prediction
+		<DateInput bind:value={newPredictionStatement.end_date} min={new Date()} max={maxDatePickerYear} />
 		<span>Select Proposals to predict on</span>
 		<Question
 			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 		/><br />
 		{#each proposals as proposal}
-			
-			<input
-				type="checkbox"
-				value={proposal.id}
-				name={proposal.title}
-				on:input={(e) => {
+			<Select
+				label={proposal.title}
+				onInput={(e) => {
 					//@ts-ignore
-					e.target.checked ? newPredictionStatement.segments.append({
-						proposal_id:proposal.id,
-						is_true:true
-					}) : newPredictionStatement.segments?.filter(segment => segment.proposal_id === proposal.id);
+					e.target.value === 'neutral'
+						? newPredictionStatement.segments?.filter(
+								(segment) => segment.proposal_id === proposal.id
+						  )
+						: 
+						//@ts-ignore
+						  newPredictionStatement.segments.append({
+								proposal_id: proposal.id,
+								//@ts-ignore
+								is_true: e.target.value === 'implemented' ? true : false
+						  });
 				}}
-			/> 
-			<input
-				type="checkbox"
-				value={proposal.id}
-				name={proposal.title}
-				on:input={(e) => {
-					//@ts-ignore
-					e.target.checked ? newPredictionStatement.segments.append({
-						proposal_id:proposal.id,
-						is_true:true
-					}) : newPredictionStatement.segments?.filter(segment => segment.proposal_id === proposal.id);
-				}}
-			/> <label for={proposal.id.toString()}>{proposal.title}</label> <br />
-		{/each}
+				options={['Neutral', 'Implemented', 'Not implemented']}
+			/>
+			{/each}
+			<TextArea label="Description" bind:value={newPredictionStatement.description} />
 		<Button type="submit">Submit</Button>
 		<Button buttonStyle="warning">Cancel</Button>
 	</form>

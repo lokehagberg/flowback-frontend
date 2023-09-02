@@ -27,6 +27,7 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { tagsCreatePoll as tagsCreatePollLimit } from '$lib/Generic/APILimits.json'
+	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 
 	type polltypes =
 		| 'Ranking'
@@ -93,8 +94,6 @@
 		daysBetweenPhases = 1;
 
 	const groupId = $page.url.searchParams.get('id');
-
-	const maxDatePickerYear = new Date((new Date().getFullYear() + 5).toString());
 
 	const createPoll = async () => {
 		if (selectedTag === undefined) {

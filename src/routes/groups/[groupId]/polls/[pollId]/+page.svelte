@@ -188,7 +188,7 @@
 				{/if}
 			{/if}
 			{#if phase === "prediction"}
-					<Predictions />
+					<Predictions bind:proposals/>
 			{/if}
 			<Timeline
 				displayDetails={false}

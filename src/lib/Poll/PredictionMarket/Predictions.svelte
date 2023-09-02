@@ -129,16 +129,15 @@
 				label={proposal.title}
 				onInput={(e) => {
 					//@ts-ignore
-					e.target.value === 'neutral'
+					e.target.value === 'Neutral'
 						? newPredictionStatement.segments?.filter(
 								(segment) => segment.proposal_id === proposal.id
 						  )
 						: 
-						//@ts-ignore
-						  newPredictionStatement.segments.append({
+						  newPredictionStatement.segments.push({
 								proposal_id: proposal.id,
 								//@ts-ignore
-								is_true: e.target.value === 'implemented' ? true : false
+								is_true: e.target.value === 'Implemented' ? true : false
 						  });
 				}}
 				options={['Neutral', 'Implemented', 'Not implemented']}

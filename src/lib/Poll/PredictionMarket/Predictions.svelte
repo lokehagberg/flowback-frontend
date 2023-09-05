@@ -15,6 +15,9 @@
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
+	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	let loading = false,
 		predictions: any[] = [],
@@ -27,7 +30,8 @@
 				proposal_id: number;
 				is_true: boolean;
 			}[];
-		} = { segments:[] };
+		} = { segments: [] },
+		statusMessage: StatusMessageInfo;
 
 	export let proposals: proposal[];
 
@@ -40,17 +44,27 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list`
 		);
 		loading = false;
-		console.log(json.results, 'JSON?!!!');
 		predictions = json.results;
 	};
 
 	const createPredictionStatement = async () => {
+		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/prediction/statement/create`,
 			newPredictionStatement
 		);
+		loading = false;
+
+		if (!res.ok) {
+			statusMessage = statusMessageFormatter(res, json);
+			return;
+		}
+
+		addingPrediction = false;
+		getPredictions();
 	};
+
 	const deletePredictionStatement = async (id: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -83,10 +97,6 @@
 		// );
 		// const { res, json } = await fetchRequest(
 		// 	'POST',
-		// 	`group/poll/${1}/prediction/create`, {score:4}
-		// 	)
-		// const { res, json } = await fetchRequest(
-		// 	'POST',
 		// 	`group/poll/${1}/prediction/update`, {score:5}
 		// 	)
 		// const { res, json } = await fetchRequest(
@@ -106,7 +116,7 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul>
 		{#each predictions as prediction}
-			<li><Prediction {prediction} /></li>
+			<li><Prediction {prediction} bind:loading /></li>
 		{/each}
 	</ul>
 
@@ -118,33 +128,40 @@
 <Modal bind:open={addingPrediction}>
 	<div slot="header">Add Prediction</div>
 	<form slot="body" on:submit={createPredictionStatement}>
-		End date for prediction
-		<DateInput bind:value={newPredictionStatement.end_date} min={new Date()} max={maxDatePickerYear} />
-		<span>Select Proposals to predict on</span>
-		<Question
-			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
-		/><br />
-		{#each proposals as proposal}
-			<Select
-				label={proposal.title}
-				onInput={(e) => {
-					//@ts-ignore
-					e.target.value === 'Neutral'
-						? newPredictionStatement.segments?.filter(
-								(segment) => segment.proposal_id === proposal.id
-						  )
-						: 
-						  newPredictionStatement.segments.push({
-								proposal_id: proposal.id,
-								//@ts-ignore
-								is_true: e.target.value === 'Implemented' ? true : false
-						  });
-				}}
-				options={['Neutral', 'Implemented', 'Not implemented']}
+		<Loader bind:loading>
+			End date for prediction
+			<DateInput
+			
+				bind:value={newPredictionStatement.end_date}
+				min={new Date()}
+				max={maxDatePickerYear}
 			/>
+			<span>Select Proposals to predict on</span>
+			<Question
+				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
+			/><br />
+			{#each proposals as proposal}
+				<Select
+					label={proposal.title}
+					onInput={(e) => {
+						//@ts-ignore
+						e.target.value === 'Neutral'
+							? newPredictionStatement.segments?.filter(
+									(segment) => segment.proposal_id === proposal.id
+							  )
+							: newPredictionStatement.segments.push({
+									proposal_id: proposal.id,
+									//@ts-ignore
+									is_true: e.target.value === 'Implemented' ? true : false
+							  });
+					}}
+					options={['Neutral', 'Implemented', 'Not implemented']}
+				/>
 			{/each}
-			<TextArea label="Description" bind:value={newPredictionStatement.description} />
-		<Button type="submit">Submit</Button>
-		<Button buttonStyle="warning">Cancel</Button>
+			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+			<StatusMessage bind:status={statusMessage} />
+			<Button type="submit">Submit</Button>
+			<Button buttonStyle="warning">Cancel</Button>
+		</Loader>
 	</form>
 </Modal>

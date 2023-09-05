@@ -3,9 +3,9 @@
 			e: Event & {
 				currentTarget: EventTarget & HTMLSelectElement;
 			}
-		) => void,
-		label: string,
-		options: string[];
+		) => void = (e) => {},
+		label: string = '',
+		options: string[] = [];
 </script>
 
 <select name={label} on:input={onInput} class="dark:bg-darkobject">
@@ -13,4 +13,6 @@
 		<option value={option} class="dark:bg-darkobject"> {option} </option>
 	{/each}
 </select>
-<label for={label}>{label}</label> <br />
+{#if label}
+	<label for={label}>{label}</label> <br />
+{/if}

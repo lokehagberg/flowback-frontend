@@ -187,8 +187,8 @@
 					{/if}
 				{/if}
 			{/if}
-			{#if phase === "prediction"}
-					<Predictions bind:proposals/>
+			{#if phase === "prediction" || phase === "voting" || phase === "delegate-voting" || phase === "end"}
+					<Predictions bind:proposals bind:phase/>
 			{/if}
 			<Timeline
 				displayDetails={false}

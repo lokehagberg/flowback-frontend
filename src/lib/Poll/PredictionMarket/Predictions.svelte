@@ -11,7 +11,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import DatePicker from 'date-picker-svelte/DatePicker.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
-	import type { proposal } from '../interface';
+	import type { Phase, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
@@ -35,7 +35,7 @@
 		statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [];
 
-	export let proposals: proposal[];
+	export let proposals: proposal[], phase: Phase;
 
 	const getPredictionStatements = async () => {
 		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
@@ -43,7 +43,7 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/prediction/statement/list`
+			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
 		);
 		loading = false;
 		predictions = json.results;
@@ -111,7 +111,7 @@
 		// 	)
 	};
 
-	onMount( () => {
+	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
 	});
@@ -123,12 +123,13 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul>
 		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading score={2} /></li>
+			<li><Prediction {prediction} bind:loading score={2} bind:phase /></li>
 		{/each}
 	</ul>
 
-	<Button action={() => (addingPrediction = true)}>Add Prediction</Button>
-
+	{#if phase === 'prediction'}
+		<Button action={() => (addingPrediction = true)}>Add Prediction</Button>
+	{/if}
 </Loader>
 
 <Modal bind:open={addingPrediction}>

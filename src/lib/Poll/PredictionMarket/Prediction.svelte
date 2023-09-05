@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import Button from '$lib/Generic/Button.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import type { Phase } from '../interface';
 	import type { PredictionStatement } from './interfaces';
 
-	export let prediction: PredictionStatement, loading: boolean, score: null | number;
+	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
 	let showPoppup = false;
 
@@ -25,8 +27,10 @@
 
 		if (!res.ok) showPoppup = true;
 	};
+
 	const predictionBetDelete = async () => {
 		loading = true;
+		console.log(prediction.id);
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -36,21 +40,41 @@
 		if (!res.ok) showPoppup = true;
 		loading = false;
 	};
+	
+	const createEvaluation = async (vote:boolean) => {
+		loading = true;
+	
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/prediction/${prediction.id}/statement/vote/create`, {vote}
+		);
+	
+		if (!res.ok) showPoppup = true;
+		loading = false;
+
+	}
 </script>
 
 <div class="flex justify-between">
 	<span> {prediction.description}</span>
-	<Select
-		labels={['Not selected', '0', '20', '40', '60', '80', '100']}
-		values={[null, 0, 1, 2, 3, 4, 5]}
-		onInput={async (e) => {
-			//@ts-ignore
-			const selectedScore = e?.target?.value;
-			await predictionBetDelete();
+	{#if phase === 'prediction'}
+		<Select
+			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
+			values={[null, 0, 1, 2, 3, 4, 5]}
+			onInput={async (e) => {
+				//@ts-ignore
+				const selectedScore = e?.target?.value;
+				await predictionBetDelete();
 
-			if (selectedScore !== 'Not selected') predictionBetCreate();
-		}}
-	/>
+				if (selectedScore !== null) predictionBetCreate();
+			}}
+		/>
+	{/if}
+	{#if phase === "end"}
+		<Button action={() => createEvaluation(true)}>Yes</Button>
+		<Button action={() => createEvaluation(false)}>No</Button>
+
+	{/if}
 </div>
 
 <SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} />

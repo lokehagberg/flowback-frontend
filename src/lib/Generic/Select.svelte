@@ -5,12 +5,13 @@
 			}
 		) => void = (e) => {},
 		label: string = '',
-		options: string[] = [];
+		labels: string[] = [],
+		values:any[] = labels;
 </script>
 
-<select name={label} on:input={onInput} class="dark:bg-darkobject">
-	{#each options as option}
-		<option value={option} class="dark:bg-darkobject"> {option} </option>
+<select name={label} on:input={onInput} class="dark:bg-darkobject" >
+	{#each labels as label, i}
+		<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
 	{/each}
 </select>
 {#if label}

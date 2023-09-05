@@ -18,9 +18,10 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import type { PredictionBet, PredictionStatement } from './interfaces';
 
 	let loading = false,
-		predictions: any[] = [],
+		predictions: PredictionStatement[] = [],
 		addingPrediction = false,
 		prediction_statement_id = 0,
 		newPredictionStatement: {
@@ -31,11 +32,12 @@
 				is_true: boolean;
 			}[];
 		} = { segments: [] },
-		statusMessage: StatusMessageInfo;
+		statusMessage: StatusMessageInfo,
+		bets: PredictionBet[] = [];
 
 	export let proposals: proposal[];
 
-	const getPredictions = async () => {
+	const getPredictionStatements = async () => {
 		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		loading = true;
 
@@ -45,6 +47,17 @@
 		);
 		loading = false;
 		predictions = json.results;
+	};
+
+	const getPredictionBets = async () => {
+		loading = true;
+
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/prediction/list`
+		);
+		loading = false;
+		bets = json.results;
 	};
 
 	const createPredictionStatement = async () => {
@@ -62,20 +75,13 @@
 		}
 
 		addingPrediction = false;
-		getPredictions();
+		getPredictionStatements();
 	};
 
 	const deletePredictionStatement = async (id: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${id}/statement/delete`
-		);
-	};
-	const updatePredictionStatement = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/prediction/statement/update`,
-			newPredictionStatement
 		);
 	};
 
@@ -105,8 +111,9 @@
 		// 	)
 	};
 
-	onMount(() => {
-		getPredictions();
+	onMount( () => {
+		getPredictionStatements();
+		getPredictionBets();
 	});
 
 	const handleProposalCheckboxChange = async () => {};
@@ -116,13 +123,12 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul>
 		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading /></li>
+			<li><Prediction {prediction} bind:loading score={2} /></li>
 		{/each}
 	</ul>
 
 	<Button action={() => (addingPrediction = true)}>Add Prediction</Button>
 
-	<Button action={test}>Test</Button>
 </Loader>
 
 <Modal bind:open={addingPrediction}>
@@ -131,7 +137,6 @@
 		<Loader bind:loading>
 			End date for prediction
 			<DateInput
-			
 				bind:value={newPredictionStatement.end_date}
 				min={new Date()}
 				max={maxDatePickerYear}
@@ -155,7 +160,7 @@
 									is_true: e.target.value === 'Implemented' ? true : false
 							  });
 					}}
-					options={['Neutral', 'Implemented', 'Not implemented']}
+					labels={['Neutral', 'Implemented', 'Not implemented']}
 				/>
 			{/each}
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />

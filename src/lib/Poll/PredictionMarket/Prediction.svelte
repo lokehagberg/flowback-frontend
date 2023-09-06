@@ -33,11 +33,10 @@
 
 	const predictionBetDelete = async () => {
 		loading = true;
-		console.log(prediction.id);
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${prediction.id}/prediction/delete`
+			`group/poll/${prediction.prediction_statement_id}/prediction/delete`
 		);
 
 		if (!res.ok) showPoppup = true;
@@ -53,8 +52,13 @@
 			{ vote }
 		);
 
-		if (!res.ok) showPoppup = true;
 		loading = false;
+		if (!res.ok) {
+			showPoppup = true;
+			return;
+		}
+
+		prediction.user_prediction_statement_vote = vote;
 	};
 
 	const deleteEvaluation = async () => {
@@ -62,11 +66,36 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/statement/vote/${prediction.id}/delete`
+			`group/poll/prediction/statement/vote/${prediction.user_prediction_statement_vote_id}/delete`
+		);
+		loading = false;
+
+		if (!res.ok) {
+			showPoppup = true;
+			return;
+		}
+
+		prediction.user_prediction_statement_vote = null;
+	};
+
+	const changeEvaluation = async (vote: boolean) => {
+		loading = true;
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/prediction/statement/vote/${prediction.user_prediction_statement_vote_id}/update`,
+			{
+				vote
+			}
 		);
 
-		if (!res.ok) showPoppup = true;
 		loading = false;
+		if (!res.ok) {
+			showPoppup = true;
+			return;
+		}
+
+		prediction.user_prediction_statement_vote = vote;
 	};
 </script>
 
@@ -88,15 +117,24 @@
 	{#if phase === 'end'}
 		<div class="flex">
 			<Button
-				action={() => (prediction.user_vote === true ? createEvaluation(true) : deleteEvaluation())}
-				Class={`${prediction.user_vote === true && 'brightness-200'}`}
+				action={() =>
+					prediction.user_prediction_statement_vote === null
+						? createEvaluation(true)
+						: prediction.user_prediction_statement_vote === true
+						? deleteEvaluation()
+						: changeEvaluation(false)}
+				Class={`${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
 			>
 				<Fa icon={faCheck} />
 			</Button>
 			<Button
 				action={() =>
-					prediction.user_vote === false ? createEvaluation(false) : deleteEvaluation()}
-				Class={`${prediction.user_vote === false && 'brightness-200'}`}
+					prediction.user_prediction_statement_vote === null
+						? createEvaluation(false)
+						: prediction.user_prediction_statement_vote === false
+						? deleteEvaluation()
+						: changeEvaluation(false)}
+				Class={`${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
 			>
 				<Fa icon={faX} />
 			</Button>

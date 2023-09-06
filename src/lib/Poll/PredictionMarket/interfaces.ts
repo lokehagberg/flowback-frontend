@@ -16,6 +16,8 @@ export interface PredictionStatement {
 
 	description: string;
 	id: number;
+	prediction_statement_id:number;
+	user_prediction_statement_vote_id:number;
 	poll_id: number;
 	segments: [
 		{
@@ -26,7 +28,7 @@ export interface PredictionStatement {
 		}
 	];
 	user_prediction: null | number;
-	user_vote: null | boolean;
+	user_prediction_statement_vote: null | boolean;
 }
 
 export interface PredictionBet {

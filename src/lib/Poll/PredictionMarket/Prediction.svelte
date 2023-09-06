@@ -3,8 +3,11 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Phase } from '../interface';
 	import type { PredictionStatement } from './interfaces';
+	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
@@ -40,19 +43,31 @@
 		if (!res.ok) showPoppup = true;
 		loading = false;
 	};
-	
-	const createEvaluation = async (vote:boolean) => {
+
+	const createEvaluation = async (vote: boolean) => {
 		loading = true;
-	
+
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/statement/vote/create`, {vote}
+			`group/poll/prediction/${prediction.id}/statement/vote/create`,
+			{ vote }
 		);
-	
+
 		if (!res.ok) showPoppup = true;
 		loading = false;
+	};
 
-	}
+	const deleteEvaluation = async () => {
+		loading = true;
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/prediction/statement/vote/${prediction.id}/delete`
+		);
+
+		if (!res.ok) showPoppup = true;
+		loading = false;
+	};
 </script>
 
 <div class="flex justify-between">
@@ -70,10 +85,22 @@
 			}}
 		/>
 	{/if}
-	{#if phase === "end"}
-		<Button action={() => createEvaluation(true)}>Yes</Button>
-		<Button action={() => createEvaluation(false)}>No</Button>
-
+	{#if phase === 'end'}
+		<div class="flex">
+			<Button
+				action={() => (prediction.user_vote === true ? createEvaluation(true) : deleteEvaluation())}
+				Class={`${prediction.user_vote === true && 'brightness-200'}`}
+			>
+				<Fa icon={faCheck} />
+			</Button>
+			<Button
+				action={() =>
+					prediction.user_vote === false ? createEvaluation(false) : deleteEvaluation()}
+				Class={`${prediction.user_vote === false && 'brightness-200'}`}
+			>
+				<Fa icon={faX} />
+			</Button>
+		</div>
 	{/if}
 </div>
 

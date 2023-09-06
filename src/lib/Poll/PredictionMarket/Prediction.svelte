@@ -36,7 +36,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${prediction.prediction_statement_id}/prediction/delete`
+			`group/poll/${prediction.id}/prediction/delete`
 		);
 
 		if (!res.ok) showPoppup = true;
@@ -63,10 +63,12 @@
 
 	const deleteEvaluation = async () => {
 		loading = true;
-
+		console.log(prediction, "PREDICTI");
+		
 		const { res, json } = await fetchRequest(
+			
 			'POST',
-			`group/poll/prediction/statement/vote/${prediction.user_prediction_statement_vote_id}/delete`
+			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
 		loading = false;
 
@@ -83,7 +85,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/statement/vote/${prediction.user_prediction_statement_vote_id}/update`,
+			`group/poll/prediction/${prediction.id}/statement/vote/update`,
 			{
 				vote
 			}
@@ -122,7 +124,7 @@
 						? createEvaluation(true)
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
-						: changeEvaluation(false)}
+						: changeEvaluation(true)}
 				Class={`${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
 			>
 				<Fa icon={faCheck} />

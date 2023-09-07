@@ -151,15 +151,24 @@
 					label={proposal.title}
 					onInput={(e) => {
 						//@ts-ignore
-						e.target.value === 'Neutral'
-							? newPredictionStatement.segments?.filter(
-									(segment) => segment.proposal_id === proposal.id
-							  )
-							: newPredictionStatement.segments.push({
-									proposal_id: proposal.id,
+						if (e.target.value === 'Neutral')
+							newPredictionStatement.segments?.filter(
+								(segment) => segment.proposal_id === proposal.id
+							);
+						else if (
+							newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id)
+						)
+							newPredictionStatement.segments.map((segment) => {
+								if (segment.proposal_id === proposal.id)
 									//@ts-ignore
-									is_true: e.target.value === 'Implemented' ? true : false
-							  });
+									segment.is_true = e.target.value === 'Implemented' ? true : false;
+							});
+						else
+							newPredictionStatement.segments.push({
+								proposal_id: proposal.id,
+								//@ts-ignore
+								is_true: e.target.value === 'Implemented' ? true : false
+							});
 					}}
 					labels={['Neutral', 'Implemented', 'Not implemented']}
 				/>

@@ -6,28 +6,30 @@
 	import {fetchRequest} from '$lib/FetchRequest';
 	import {_}            from 'svelte-i18n';
 
-	const
-		{statusMessageFormatter} = StatusMessage;
-	let
-		name : string = "",
+	const {statusMessageFormatter} = StatusMessage;
+	let name : string = "",
 		number : string = "",
 		loading : bool = false,
 		status : StatusMessageInfo;
+
 	const addAccount = async ()=>{
 		loading = true;
 		const formData = new FormData();
 
 		formData.append("account_name", name);
 		formData.append("account_number", number);
+		
 		const {res, json} = await fetchRequest(
 			"POST", "ledger/accounts/create",
 			formData, true, false
 		);
+		
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
 			loading = false;
 			return;
 		}
+
 		window.location.href = "/accounts";
 		loading = false;
 	};

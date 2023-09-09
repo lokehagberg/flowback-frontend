@@ -5,12 +5,10 @@
 	import Loader           from '$lib/Generic/Loader.svelte';
 	import {fetchRequest}   from '$lib/FetchRequest';
 	import {page}           from '$app/stores';
-	import TransactionTable
-		from '$lib/Account/Transaction/TransactionTable.svelte'
+	import TransactionTable from '$lib/Account/Transaction/TransactionTable.svelte'
 	import {accountsStore}  from '$lib/Account/stores';
 
-	const
-		{accountId} = $page.params;
+	const {accountId} = $page.params;
 	let
 		loading: bool = true,
 		aLoading: bool = true,
@@ -21,8 +19,10 @@
 		tStatus,
 		account: Object = undefined,
 		transactions: Array = [];
+
 	const updateLoading = async () =>
 		loading = aLoading || tLoading;
+
 	const loadAccount = async ()=>{
 		const accounts = await accountsStore.get();
 		aLoading = false;
@@ -32,6 +32,7 @@
 		if (aOK)
 			account = accounts.filter(x => x.id === +accountId)[0];
 	};
+
 	const loadTransactions = async ()=>{
 		tLoading = true;
 		updateLoading();
@@ -46,6 +47,7 @@
 		tLoading = false;
 		updateLoading();
 	};
+
 	onMount(async ()=>{
 		loadAccount();
 		loadTransactions();

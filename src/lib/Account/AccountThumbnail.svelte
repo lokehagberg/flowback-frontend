@@ -4,15 +4,18 @@
 	import {fetchRequest} from '$lib/FetchRequest';
 	import type {Account} from '$lib/Group/interface';
 	import {_}            from 'svelte-i18n';
-	let
-		consideringRemoving = false,
-		status: StatusMessageInfo;
+	
+	let consideringRemoving = false,
+	status: StatusMessageInfo;
+	
 	export let account : Account;
+	
 	const update = async ()=>{
 		window.location.href = `/accounts/${account.id}/update`;
 	};
 	const remove = async ()=>{
 	};
+
 </script>
 <div
 	class="

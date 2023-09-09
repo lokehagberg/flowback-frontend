@@ -8,8 +8,8 @@
 	import StatusMessage    from '$lib/Generic/StatusMessage.svelte';
 	import {statusMessageFormatter} from '$lib/Generic/StatusMessage';
 
-	export let open: bool = false;
-	export let account: Account;
+	export let open: bool = false, account: Account;
+	
 	const removeAccount = async () => {
 		const {res, json} = await fetchRequest(
 			'POST', `ledger/accounts/${account.id}/delete`

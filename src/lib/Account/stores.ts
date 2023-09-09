@@ -7,12 +7,14 @@ export const darkModeStore = writable<bool>(false);
 export const accountsStore = writable(
 	Object.assign([], {loaded: false, asOf: new Date(0)})
 );
+
 Object.assign(accountsStore, {
 	promiseValue() {
 		return new Promise((res, rej)=>
 			this.subscribe(res)
 		);
 	},
+	
 	async get() {
 		console.log(".get", this);
 		let storedVal;
@@ -31,6 +33,7 @@ Object.assign(accountsStore, {
 		} else
 			return storedVal;
 	},
+	
 	async load() {
 		console.log(".load", this);
 		const {res, json} =

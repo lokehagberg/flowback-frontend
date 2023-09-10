@@ -8,10 +8,12 @@
 	import type { PredictionStatement } from './interfaces';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
-	let showPoppup = false;
+	let showPoppup = false,
+		showDetails = false;
 
 	const predictionBetCreate = async () => {
 		console.log(score, 'SCOOOORE');
@@ -63,10 +65,9 @@
 
 	const deleteEvaluation = async () => {
 		loading = true;
-		console.log(prediction, "PREDICTI");
-		
+		console.log(prediction, 'PREDICTI');
+
 		const { res, json } = await fetchRequest(
-			
 			'POST',
 			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
@@ -101,7 +102,7 @@
 	};
 </script>
 
-<div class="flex justify-between">
+<div class="flex justify-between hover:underline cursor-pointer" on:click={() => showDetails=true} on:keydown>
 	<span> {prediction.description}</span>
 	{#if phase === 'prediction'}
 		<Select
@@ -143,5 +144,16 @@
 		</div>
 	{/if}
 </div>
+
+<Modal bind:open={showDetails} >
+	<div slot="body">
+		<div>{prediction.description}</div>
+		<ul>
+			{#each prediction.segments as proposal}
+				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>
+			{/each}
+		</ul>
+	</div>
+</Modal>
 
 <SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} />

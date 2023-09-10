@@ -7,6 +7,7 @@
 	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
 	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
+	import { faMoneyBill } from '@fortawesome/free-solid-svg-icons/faMoneyBill';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
@@ -17,15 +18,18 @@
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
+	import {accountsStore} from '$lib/Account/stores';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
+		darkMode: boolean | null = null,
+		ledgerExists: boolean = false;
 		//TODO: The <HeaderIcon> component should handle default darkMode
-		darkMode: boolean | null = null;
 
 	onMount(() => {
 		getProfileImage();
 		darkMode = localStorage.theme === 'dark';
+		checkForLedgerModule();
 	});
 
 	const getProfileImage = async () => {
@@ -34,6 +38,11 @@
 		if (res.ok && json.profile_image)
 			profileImage = `${import.meta.env.VITE_API}${json.profile_image}`;
 	};
+
+	const checkForLedgerModule = async () => {
+		const accounts = await accountsStore.get();
+		ledgerExists = accounts.loaded;
+	}
 </script>
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
@@ -80,6 +89,23 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/>
+				{/if}
+				<HeaderIcon
+					icon={faList}
+					text="My Kanban"
+					href="kanban"
+					color={darkMode ? 'white' : 'black'}
+				/>
+				{#if import.meta.env.VITE_MODE === 'DEV'}
+					{#if ledgerExists}
+						<HeaderIcon
+							icon={faMoneyBill}
+							text="Account"
+							href="accounts"
+							color={darkMode ? 'white' : 'black'}
+						/>
+					{/if}
+				{/if}
 			</nav>
 
 			<div

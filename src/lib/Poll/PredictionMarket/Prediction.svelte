@@ -103,8 +103,8 @@
 	};
 </script>
 
-<div class="flex justify-between hover:underline cursor-pointer" on:click={() => showDetails=true} on:keydown>
-	<span> {prediction.description}</span>
+<div class="flex justify-between" >
+	<span on:click={() => showDetails=true} on:keydown class="hover:underline cursor-pointer"> {prediction.description}</span>
 	{#if phase === 'prediction'}
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}

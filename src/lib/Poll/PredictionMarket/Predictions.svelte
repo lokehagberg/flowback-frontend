@@ -121,7 +121,7 @@
 
 <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
-	<ul>
+	<ul class="mb-4">
 		{#each predictions as prediction}
 			<li><Prediction {prediction} bind:loading score={2} bind:phase /></li>
 		{/each}

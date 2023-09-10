@@ -89,13 +89,12 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/>
-				{/if}
-				<HeaderIcon
+				<!-- <HeaderIcon
 					icon={faList}
 					text="My Kanban"
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
-				/>
+				/> -->
 				{#if import.meta.env.VITE_MODE === 'DEV'}
 					{#if ledgerExists}
 						<HeaderIcon

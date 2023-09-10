@@ -2,6 +2,7 @@ export interface PredictionStatement {
 	created_by: {
 		group_image: string;
 		group_name: string;
+		end_date: Date;
 		id: number;
 		is_admin: boolean;
 		permission_id: number;

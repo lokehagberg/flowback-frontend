@@ -9,6 +9,7 @@
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
@@ -153,6 +154,8 @@
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>
 			{/each}
 		</ul>
+		<!-- {@debug prediction} -->
+		<div>End date: {formatDate(prediction.end_date)}</div>
 	</div>
 </Modal>
 

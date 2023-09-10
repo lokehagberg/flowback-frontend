@@ -155,7 +155,7 @@
 			{/each}
 		</ul>
 		<!-- {@debug prediction} -->
-		<div>End date: {formatDate(prediction.end_date)}</div>
+		<div>End date: {formatDate(prediction.end_date.toString())}</div>
 	</div>
 </Modal>
 

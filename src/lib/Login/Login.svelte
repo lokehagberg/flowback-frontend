@@ -20,7 +20,8 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		if (json?.token) {
+		if (!json) status = {message:"There was a problem logging in", success:false}
+		else if (json?.token) {
 			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
 			{
@@ -32,7 +33,7 @@
 			window.location.href = '/home';
 		}
 		else {
-			status = statusMessageFormatter(res, json, 'Problems');
+			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}
 	};
 </script>
@@ -52,6 +53,7 @@
 		<div
 			class="mb-4 cursor-pointer hover:underline"
 			on:click={() => (selectedPage = 'ForgotPassword')}
+			on:keydown
 		>
 			{$_('Forgot password?')}
 		</div>

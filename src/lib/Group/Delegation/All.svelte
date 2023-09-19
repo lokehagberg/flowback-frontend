@@ -7,7 +7,7 @@
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { delegation as delegationLimit } from '../../Generic/APILimits.json'
+	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -21,14 +21,13 @@
 		userId: number,
 		loading = false;
 
-	export let history: number | null;
+	export let history: number | null, selectedPage: 'All' | 'Selected' | 'History';
 
 	onMount(async () => {
 		userId = (await fetchRequest('GET', 'user')).json.id;
 		await getDelegateRelations();
 		getDelegatePools();
 		getUserInfo();
-
 
 		// userIsDelegateStore.subscribe((info) => {
 		// 	userIsDelegate = info;
@@ -37,14 +36,12 @@
 	});
 
 	const getUserInfo = async () => {
-		
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem("userId")}&delegate=true`
+			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 		if (res.ok) userIsDelegate = true;
-
-	}
+	};
 
 	const handleCreateDelegationButton = async () => {
 		await createDelegationPool();
@@ -179,7 +176,10 @@
 				<span
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
-					on:click={() => (history = delegate.delegate_pool_id)}>{$_('See delegate history')}</span
+					on:click={() => {
+						history = delegate.delegate_pool_id;
+						selectedPage = 'History';
+					}}>{$_('See delegate history')}</span
 				>
 				{#if userId !== delegate.id}
 					<div />

@@ -12,7 +12,7 @@
 	let selectedPage: 'All' | 'Selected' | 'History' = 'All',
 		history: number | null = null;
 
-		$:if (history) selectedPage = 'History';
+	// $: if (history) selectedPage = 'History';
 </script>
 
 <div
@@ -22,8 +22,8 @@
 	{#if selectedPage === 'Selected'}
 		<Selected />
 	{:else if selectedPage === 'All'}
-		<All bind:history/>
+		<All bind:history bind:selectedPage/>
 	{:else if selectedPage === 'History'}
-		<DelegateHistory bind:history/>
+		<DelegateHistory bind:history />
 	{/if}
 </div>

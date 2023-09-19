@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
-	import { page } from '$app/stores';
+	import SuccessPoppup from './SuccessPoppup.svelte';
 
 	export let notificationOpen = false,
 		categories: string[],
@@ -19,7 +19,8 @@
 	}
 
 	let categoriesData: string[] = [],
-		notifications: NotificationObject[] = [];
+		notifications: NotificationObject[] = [],
+		show = false;
 
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
@@ -53,6 +54,7 @@
 				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
+		else show = true;
 		notifications = notifications;
 	};
 
@@ -64,6 +66,7 @@
 		});
 		if (res.ok)
 			notifications = notifications.filter((object) => object.channel_category !== category);
+		else show = true;
 	};
 
 	onMount(() => {
@@ -85,19 +88,17 @@
 
 	{#if notificationOpen}
 		<ul class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
-			<!-- <div class="p-3">Subscriptions</div> -->
 			<li class="text-xs p-2">{$_('Manage Subscriptions')}</li>
 			{#each categories as category, i}
 				<li
 					on:keydown
-					class="bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer  transition-all"
+					class="bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
 					class:!bg-white={notifications?.find(
 						(notificationObject) => notificationObject.channel_category === category
 					)}
 					class:dark:!bg-slate-400={notifications?.find(
 						(notificationObject) => notificationObject.channel_category === category
 					)}
-
 					on:click={() => {
 						if (notifications.find((object) => object.channel_category === category))
 							handleNotificationUnsubscription(category);
@@ -121,3 +122,5 @@
 		</ul>
 	{/if}
 </div>
+
+<SuccessPoppup bind:show message="Something went wrong" />

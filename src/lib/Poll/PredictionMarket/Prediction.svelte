@@ -17,14 +17,13 @@
 		showDetails = false;
 
 	const predictionBetCreate = async () => {
-		console.log(score, 'SCOOOORE');
 		loading = true;
 
 		if (!score) return;
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${prediction.id}/prediction/create`,
+			`group/poll/prediction/${prediction.id}/bet/create`,
 			{
 				score
 			}
@@ -39,7 +38,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${prediction.id}/prediction/delete`
+			`group/poll/prediction/${prediction.id}/bet/delete`
 		);
 
 		if (!res.ok) showPoppup = true;
@@ -66,7 +65,6 @@
 
 	const deleteEvaluation = async () => {
 		loading = true;
-		console.log(prediction, 'PREDICTI');
 
 		const { res, json } = await fetchRequest(
 			'POST',

@@ -10,11 +10,32 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
 	let showPoppup = false,
 		showDetails = false;
+
+	onMount(() => {
+		getPredictionBet();
+	});
+
+	const getPredictionBet = async () => {
+		loading = true;
+
+		if (!score) return;
+
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
+		);
+		loading = false;
+
+		if (!res.ok) showPoppup = true;
+		else score = json.results[0].score;
+	};
 
 	const predictionBetCreate = async () => {
 		loading = true;
@@ -101,12 +122,15 @@
 	};
 </script>
 
-<div class="flex justify-between" >
-	<span on:click={() => showDetails=true} on:keydown class="hover:underline cursor-pointer"> {prediction.description}</span>
+<div class="flex justify-between">
+	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer">
+		{prediction.description}</span
+	>
 	{#if phase === 'prediction'}
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
+			bind:value={score}
 			onInput={async (e) => {
 				//@ts-ignore
 				const selectedScore = e?.target?.value;
@@ -144,7 +168,7 @@
 	{/if}
 </div>
 
-<Modal bind:open={showDetails} >
+<Modal bind:open={showDetails}>
 	<div slot="body">
 		<div>{prediction.description}</div>
 		<ul>

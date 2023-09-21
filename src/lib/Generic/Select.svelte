@@ -6,10 +6,11 @@
 		) => void = (e) => {},
 		label: string = '',
 		labels: string[] = [],
-		values:any[] = labels;
+		values: any[] = labels,
+		value = values[1];
 </script>
 
-<select name={label} on:input={onInput} class="dark:bg-darkobject" >
+<select name={label} on:input={onInput} class="dark:bg-darkobject" {value}>
 	{#each labels as label, i}
 		<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
 	{/each}

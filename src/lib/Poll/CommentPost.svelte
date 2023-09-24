@@ -97,17 +97,18 @@
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="invisible absolute bg-white shadow w-full bottom-full"
+		class="invisible absolute bg-white dark:bg-darkbackground shadow w-full bottom-full"
 		class:!visible={recentlyTappedButton === '#'}
 	>
 		<ul>
 			{#each proposals as proposal}
 				<li
-					class="hover:bg-gray-100 cursor-pointer px-2 py-1"
+					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
 					on:click={() => {
 						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
 						recentlyTappedButton = '';
 					}}
+					on:keydown
 				>
 					{proposal.title}
 				</li>

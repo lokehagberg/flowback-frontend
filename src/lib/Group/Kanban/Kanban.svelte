@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { GroupUser, kanban, User } from '../interface';
+	import type { GroupUser, kanban } from '../interface';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -12,9 +12,11 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { kanban as kanbanLimit } from '../../Generic/APILimits.json'
+	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
+	import Modal from '$lib/Generic/Modal.svelte';
+
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [];
@@ -35,7 +37,8 @@
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
 		loading = false,
-		interval: any;
+		interval: any,
+		open = false;
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -88,7 +91,10 @@
 	};
 
 	const getGroupUsers = async () => {
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${kanbanLimit}`);
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=${kanbanLimit}`
+		);
 		users = json.results;
 		assignee = users[0]?.user.id;
 	};
@@ -160,7 +166,8 @@
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div
-	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' + Class}
+	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
+		Class}
 >
 	<div class="flex overflow-x-auto">
 		<!-- <StatusMessage bind:status disableSuccess/> -->
@@ -186,8 +193,14 @@
 		{/each}
 		<!-- {/await} -->
 	</div>
-	<div class="pl-4 pr-4 pb-4">
-		<h1 class="mt-4 text-left text-2xl">{$_('Create task')}</h1>
+	<div class="mt-4 ml-2 mb-4">
+		<Button action={() => (open = true)}>{$_("Create Task")}</Button>
+	</div>
+</div>
+
+<Modal bind:open Class="!overflow-visible">
+	<div slot="header">{$_("Create Task")}</div>
+	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
 				<TextInput required label="Title" bind:value={title} />
@@ -217,14 +230,14 @@
 							{/each}
 						</select>
 					</div>
-					<div>
+					<div >
 						{$_('End date')}
-						<DateInput bind:value={end_date} min={new Date()} />
+						<DateInput bind:value={end_date} min={new Date()}   />
 					</div>
-					<Button type="submit">{$_('Create task')}</Button>
 				</div>
+				<Button type="submit">{$_('Create task')}</Button>
 				<StatusMessage Class="mt-2" bind:status />
 			</form>
 		</Loader>
 	</div>
-</div>
+</Modal>

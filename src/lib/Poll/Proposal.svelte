@@ -81,10 +81,10 @@
 	</div>
 	{#if editable}
 		<!-- TODO and also before proposal end date -->
-		<div on:click={() => (open = true)} class="cursor-pointer">
+		<div on:click={() => (open = true)} class="cursor-pointer" on:keydown>
 			<Fa icon={faPen} />
 		</div>
-		<div on:click={deleteProposal} class="cursor-pointer">
+		<div on:click={deleteProposal} class="cursor-pointer" on:keydown>
 			<Fa icon={faX} />
 		</div>
 	{/if}

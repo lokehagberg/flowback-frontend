@@ -262,7 +262,7 @@
 	};
 </script>
 
-<div class={`lg:bg-green-500 poll border border-gray-500 rounded ${unsaved && 'ring-2'}`}>
+<div class={`poll border border-gray-500 rounded ${unsaved && 'ring-2'}`}>
 	{#if new Date(votingStartTime) <= new Date()}
 		<div class="lg:w-1/2">
 			{#if new Date(votingStartTime) <= new Date()}

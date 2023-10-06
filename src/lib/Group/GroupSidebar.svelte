@@ -65,7 +65,10 @@
 
 <!-- TODO: Make it easier to add a sidebarbutton -->
 <nav
-	class={`${Class} ${innerWidth < 700 && `fixed right-0 top-[50%] h-[50%] ${clickedExpandSidebar && "overflow-y-scroll"}`} dark:!text-darkmodeText `}
+	class={`${Class} ${
+		innerWidth < 700 &&
+		`fixed right-0 top-[50%] h-[50%] ${clickedExpandSidebar && 'overflow-y-scroll'}`
+	} dark:!text-darkmodeText `}
 >
 	{#if innerWidth < 700 && !clickedExpandSidebar}
 		<div
@@ -86,9 +89,16 @@
 			</div>
 		{/if}
 		<div class="mb-6 w-full">
-			<div class="bg-secondary text-white shadow rounded flex flex-col">
+			<div class="bg-primary text-white shadow rounded flex flex-col">
 				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
 					<GroupSidebarButton text="Create Poll" icon={faCheckToSlot} isSelected={false} /></a
+				>
+			</div>
+		</div>
+		<div class="mb-6 w-full">
+			<div class="bg-secondary text-white shadow rounded flex flex-col">
+				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}&type=thread`}>
+					<GroupSidebarButton text="Create Thread" icon={faCheckToSlot} isSelected={false} /></a
 				>
 			</div>
 		</div>

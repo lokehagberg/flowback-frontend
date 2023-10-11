@@ -6,10 +6,8 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Prediction from './Prediction.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import DatePicker from 'date-picker-svelte/DatePicker.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import type { Phase, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
@@ -128,7 +126,7 @@
 	</ul>
 
 	{#if phase === 'prediction'}
-		<Button action={() => (addingPrediction = true)}>Add Prediction</Button>
+		<Button action={() => (addingPrediction = true)}>{$_("Add Prediction")}</Button>
 	{/if}
 
 	{#if predictions.length === 0}
@@ -137,16 +135,16 @@
 </Loader>
 
 <Modal bind:open={addingPrediction}>
-	<div slot="header">Add Prediction</div>
+	<div slot="header">{$_("Add Prediction")}</div>
 	<form slot="body" on:submit={createPredictionStatement}>
 		<Loader bind:loading>
-			End date for prediction
+			{$_("End date for prediction")}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
 				min={new Date()}
 				max={maxDatePickerYear}
 			/>
-			<span>Select Proposals to predict on</span>
+			<span>{$_("Select Proposals to predict on")}</span>
 			<Question
 				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 			/><br />
@@ -179,8 +177,8 @@
 			{/each}
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<StatusMessage bind:status={statusMessage} />
-			<Button type="submit">Submit</Button>
-			<Button buttonStyle="warning">Cancel</Button>
+			<Button type="submit">{$_("Submit")}</Button>
+			<Button buttonStyle="warning">{$_("Cancel")}</Button>
 		</Loader>
 	</form>
 </Modal>

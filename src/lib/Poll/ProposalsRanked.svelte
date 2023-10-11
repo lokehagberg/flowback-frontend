@@ -354,7 +354,7 @@
 
 <!-- TODO: Remove this and replace by allowing drag-drop
 and buttons at the same time without a toggle both. -->
-{#if phase !== 'pre-start' && phase !== 'proposals'}
+{#if phase === 'delegate-voting' || phase === 'voting'}
 	<div class="flex gap-3">
 		{$_('Enable buttons')}
 		<Toggle bind:checked />

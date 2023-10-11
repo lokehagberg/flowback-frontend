@@ -130,6 +130,10 @@
 	{#if phase === 'prediction'}
 		<Button action={() => (addingPrediction = true)}>Add Prediction</Button>
 	{/if}
+
+	{#if predictions.length === 0}
+		<div class="mt-5">{$_("There are currently no predictions")}</div>
+	{/if}
 </Loader>
 
 <Modal bind:open={addingPrediction}>

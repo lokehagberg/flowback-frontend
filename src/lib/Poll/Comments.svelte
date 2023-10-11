@@ -11,7 +11,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json'
+	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 
 	let comments: Comment[] = [],
 		show = false,
@@ -84,7 +84,10 @@
 
 <SuccessPoppup bind:show message={showMessage} />
 
-<div class="p-4 border border-gray-200 dark:border-gray-500 rounded darK:text-darktext" id="comments">
+<div
+	class="p-4 border border-gray-200 dark:border-gray-500 rounded darK:text-darktext"
+	id="comments"
+>
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
 	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} />
@@ -162,4 +165,7 @@
 			{/if}
 		{/each}
 	</div>
+	{#if comments.length === 0}
+		<div>{$_('There are currently no comments')}</div>
+	{/if}
 </div>

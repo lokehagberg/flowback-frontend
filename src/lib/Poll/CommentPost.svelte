@@ -116,6 +116,9 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
+	{#if message !== ""}
 	<Button Class="mt-4" type="submit" label="Send" />
+	{/if}
+	
 </form>
  

@@ -368,12 +368,12 @@ and buttons at the same time without a toggle both. -->
 
 <StatusMessage bind:status />
 
-{#if new Date(votingStartTime) <= new Date()}
+<!-- {#if phase === "delegate-voting" || phase === "voting"} -->
 	<Button action={saveVotings}
 		>{(selectedPage === 'You' && $_('Save Votings')) ||
 			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
 	>
-{/if}
+<!-- {/if} -->
 
 <style>
 	.container {

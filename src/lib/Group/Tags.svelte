@@ -37,7 +37,7 @@
 	const addTag = async () => {
 		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
-			tag_name: tagToAdd
+			name: tagToAdd
 		});
 		if (res.ok) {
 			getTags();

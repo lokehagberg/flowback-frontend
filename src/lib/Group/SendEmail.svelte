@@ -30,7 +30,7 @@
 	};
 </script>
 
-<div class="bg-white p-6 text-xl rounded shadow p-6">
+<div class="bg-white dark:bg-darkobject p-6 text-xl rounded shadow dark:text-darkmodeText">
 	<Loader bind:loading>
 		<form on:submit|preventDefault={sendEmail} class="flex flex-col gap-4">
 			<TextInput required label="Title" bind:value={title} />

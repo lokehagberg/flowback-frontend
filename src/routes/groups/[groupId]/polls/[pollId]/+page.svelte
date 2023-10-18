@@ -3,7 +3,6 @@
 	import Timeline from '$lib/Poll/Timeline.svelte';
 	import Comments from '$lib/Poll/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
-	import Tag from '$lib/Group/Tag.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
@@ -14,16 +13,13 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Results from '$lib/Poll/Results.svelte';
 	import ScheduledSubmission from '$lib/Poll/ScheduledSubmission.svelte';
-	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { groupUser } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
+	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -54,15 +50,21 @@
 	const getPhase = (): Phase => {
 		const now = new Date();
 		if (now < new Date(poll?.start_date)) return 'pre-start';
-		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.proposal_end_date))
+		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.area_vote_end_date))
+			return 'area_vote';
+		else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
-		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.vote_start_date))
-			return 'prediction';
-		else if (now >= new Date(poll?.vote_start_date) && now < new Date(poll?.delegate_vote_end_date))
+		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.prediction_statement_end_date))
+			return 'prediction-statement';
+		else if (now >= new Date(poll?.prediction_statement_end_date) && now < new Date(poll?.prediction_bet_end_date))
+			return 'prediction-betting';
+		else if (now >= new Date(poll?.prediction_bet_end_date) && now < new Date(poll?.delegate_vote_end_date))
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
 			return 'voting';
-		else return 'end';
+		else if (now >= new Date(poll?.end_date) && now < new Date(poll?.vote_end_date))
+			return 'results';
+		else return 'prediction-voting';
 	};
 
 	const getPollData = async () => {
@@ -115,48 +117,11 @@
 		<div
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
-			<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-			<div
-				class="border border-gray-200 dark:border-gray-500 rounded p-4 whitespace-pre-wrap break-words"
-				id="poll-description"
-			>
-				{poll.description}
-				<div class="flex h-8 justify-between">
-					<div class="flex items-baseline">
-						<Tag Class="w-32" tag={poll.tag_name} />
-						{#if pollType === 1}
-							<!-- TODO make it easy to change poll types e.t.c -->
-							<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
-						{:else if pollType === 3}
-							<HeaderIcon
-								Class="p-2 pl-2 cursor-default"
-								icon={faCalendarAlt}
-								text={'Scheduled Poll'}
-							/>
-						{/if}
-						<!-- Group Profile -->
-						<a
-							href={`/groups/${$page.params.groupId}`}
-							class:hover:underline={poll.group_joined}
-							class="text-black"
-						>
-							<img
-								class="h-8 w-8 inline rounded-full"
-								src={`${import.meta.env.VITE_API}${poll.group_image}`}
-								alt="group thumbnail"
-							/>
-							<span class="inline">{poll.group_name}</span>
-						</a>
-					</div>
-					<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
-					<NotificationOptions
-						id={poll.id}
-						api={`group/poll/${poll.id}`}
-						categories={['poll', 'timeline']}
-						labels={['Poll', 'Timeline']}
-					/>
-				</div>
-			</div>
+			<TitleDescription {pollType} {poll}/>
+
+
+			
+
 			{#if finished}
 				<Results {pollType} />
 			{:else}

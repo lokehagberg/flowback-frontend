@@ -25,12 +25,16 @@ export interface poll {
 	vote_start_date: string;
 	prediction_end_date: string;
 	delegate_vote_end_date: string;
+	area_vote_end_date: string;
+	prediction_statement_end_date: string;
+	prediction_bet_end_date: string;
+	vote_end_date: string;
 	group_name?: string;
 	group_image?: string;
 	joined: boolean;
 	group_joined: boolean;
 	total_comments: number;
-	pinned:boolean;
+	pinned: boolean;
 }
 
 export interface votings {
@@ -46,10 +50,19 @@ export interface Filter {
 	finishedSelection: 'all' | 'unfinished' | 'finished';
 	search: string;
 	order_by: 'start_date_asc' | 'start_date_desc';
-	tag:number | null
+	tag: number | null;
 }
 
-export type Phase = 'pre-start' | 'proposals' | 'prediction' | 'delegate-voting' | 'voting' | 'end';
+export type Phase =
+	| 'pre-start'
+	| 'area_vote'
+	| 'proposals'
+	| 'prediction-statement'
+	| 'prediction-betting'
+	| 'delegate-voting'
+	| 'voting'
+	| 'results'
+	| 'prediction-voting';
 
 export interface Comment {
 	author_id: number;

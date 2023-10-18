@@ -54,11 +54,20 @@
 			return 'area_vote';
 		else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
-		else if (now >= new Date(poll?.proposal_end_date) && now < new Date(poll?.prediction_statement_end_date))
+		else if (
+			now >= new Date(poll?.proposal_end_date) &&
+			now < new Date(poll?.prediction_statement_end_date)
+		)
 			return 'prediction-statement';
-		else if (now >= new Date(poll?.prediction_statement_end_date) && now < new Date(poll?.prediction_bet_end_date))
+		else if (
+			now >= new Date(poll?.prediction_statement_end_date) &&
+			now < new Date(poll?.prediction_bet_end_date)
+		)
 			return 'prediction-betting';
-		else if (now >= new Date(poll?.prediction_bet_end_date) && now < new Date(poll?.delegate_vote_end_date))
+		else if (
+			now >= new Date(poll?.prediction_bet_end_date) &&
+			now < new Date(poll?.delegate_vote_end_date)
+		)
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
 			return 'voting';
@@ -117,18 +126,13 @@
 		<div
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
-			<TitleDescription {pollType} {poll}/>
+			<TitleDescription {pollType} {poll} />
 
-
-			
-
-			{#if finished}
-				<Results {pollType} />
-			{:else}
-				{#if phase === 'delegate-voting' || phase === 'voting' || phase === 'end'}
-					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				{/if}
-				{#if phase !== "pre-start"}
+			{#if phase === 'pre-start'}
+				<div>dev</div>
+			{:else if phase === 'area_vote'}
+				<div>dev</div>
+			{:else if phase === 'proposals'}
 				<ProposalsRanked
 					{groupUser}
 					votingStartTime={poll.vote_start_date}
@@ -140,21 +144,76 @@
 					bind:abstained
 					bind:proposals
 				/>
+
+				{#if pollType === 1}
+					<!-- Ranked Poll -->
+					<ProposalSubmition bind:abstained />
+				{:else if pollType === 3}
+					<!-- Scheduled Poll -->
+					<ScheduledSubmission bind:abstained />
 				{/if}
-				<!-- TODO: Replace this if statement with phases -->
-				{#if phase === "proposals"}
-					{#if pollType === 1}
-						<!-- Ranked Poll -->
-						<ProposalSubmition bind:abstained />
-					{:else if pollType === 3}
-						<!-- Scheduled Poll -->
-						<ScheduledSubmission bind:abstained />
-					{/if}
-				{/if}
+			{:else if phase === 'prediction-statement'}
+				<ProposalsRanked
+					{groupUser}
+					votingStartTime={poll.vote_start_date}
+					pollType={poll.poll_type}
+					tag={poll.tag}
+					bind:phase
+					bind:votings
+					bind:selectedPage
+					bind:abstained
+					bind:proposals
+				/>
+				<Predictions bind:proposals bind:phase />
+			{:else if phase === 'prediction-betting'}
+				<ProposalsRanked
+					{groupUser}
+					votingStartTime={poll.vote_start_date}
+					pollType={poll.poll_type}
+					tag={poll.tag}
+					bind:phase
+					bind:votings
+					bind:selectedPage
+					bind:abstained
+					bind:proposals
+				/>
+				<Predictions bind:proposals bind:phase />
+			{:else if phase === 'delegate-voting'}
+				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				<ProposalsRanked
+					{groupUser}
+					votingStartTime={poll.vote_start_date}
+					pollType={poll.poll_type}
+					tag={poll.tag}
+					bind:phase
+					bind:votings
+					bind:selectedPage
+					bind:abstained
+					bind:proposals
+				/>
+				<Predictions bind:proposals bind:phase />
+			{:else if phase === 'voting'}
+				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				<ProposalsRanked
+					{groupUser}
+					votingStartTime={poll.vote_start_date}
+					pollType={poll.poll_type}
+					tag={poll.tag}
+					bind:phase
+					bind:votings
+					bind:selectedPage
+					bind:abstained
+					bind:proposals
+				/>
+				<Predictions bind:proposals bind:phase />
+			{:else if phase === 'results'}
+				<Predictions bind:proposals bind:phase />
+				<Results {pollType} />
+			{:else if phase === 'prediction-voting'}
+				<Predictions bind:proposals bind:phase />
+				<Results {pollType} />
 			{/if}
-			{#if phase === "prediction" || phase === "voting" || phase === "delegate-voting" || phase === "end"}
-					<Predictions bind:proposals bind:phase/>
-			{/if}
+
 			<Timeline
 				displayDetails={false}
 				dates={[

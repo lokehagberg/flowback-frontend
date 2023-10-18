@@ -3,8 +3,6 @@
 	import { _ } from 'svelte-i18n';
 
 	import { onMount } from 'svelte';
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion';
 	import Question from '$lib/Generic/Question.svelte';
 	// Or
 	// import Swappable from '@shopify/draggable/lib/swappable';
@@ -31,5 +29,16 @@
 		<li class="cursor-move p-6 bg-white">haii333</li>
 		<li class="cursor-move p-6 bg-white">haii4</li>
 		<li class="cursor-move p-6 bg-white">hi2</li>
+
+		
 	</ul>
 </Layout>
+
+
+
+<style>
+	.thing {
+		border:2px gray;
+		background: #000;
+	}
+</style>

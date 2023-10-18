@@ -176,7 +176,7 @@
 				/>
 			{/each}
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<StatusMessage bind:status={statusMessage} />
+			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_("Submit")}</Button>
 			<Button buttonStyle="warning">{$_("Cancel")}</Button>
 		</Loader>

@@ -245,8 +245,9 @@
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
-			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer"
+			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 			class:bg-gray-200={selectedChat === chatter.id}
+			on:keydown
 			on:click={async () => {
 				//TODO: Better fix than this! Fixes doubble clicking to remove notification
 				await setTimeout(() => {

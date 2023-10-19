@@ -12,6 +12,7 @@
 	import { DateInput } from 'date-picker-svelte';
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
@@ -84,9 +85,12 @@
 		selectedTag: TagType,
 		status: StatusMessageInfo,
 		start_date = new Date(),
-		delegate_vote_end_date = new Date(),
-		voting_start_date = new Date(),
+		area_vote_end_date = new Date(),
 		proposal_end_date = new Date(),
+		prediction_statement_end_date = new Date(),
+		prediction_bet_end_date = new Date(),
+		delegate_vote_end_date = new Date(),
+		vote_end_date = new Date(),
 		end_date = new Date(),
 		isPublic = false,
 		loading = false,
@@ -105,16 +109,16 @@
 		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
 			title,
 			description,
+
 			start_date,
-			delegate_vote_end_date,
-			vote_start_date: voting_start_date,
+			area_vote_end_date,
 			proposal_end_date,
-			voting_start_date,
+			prediction_statement_end_date,
+			prediction_bet_end_date,
+			delegate_vote_end_date,
+			vote_end_date,
 			end_date,
-			vote_end_date: end_date,
-			prediction_bet_end_date: voting_start_date,
-			area_vote_end_date: start_date,
-			prediction_statement_end_date:voting_start_date,
+
 			poll_type: selected_poll === defaultType ? 1 : 3,
 			tag: selectedTag.id,
 			dynamic: false,
@@ -144,15 +148,18 @@
 	const changedate = () => {
 		const now = new Date();
 		start_date = new Date();
+		area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		voting_start_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 	};
 
 	onMount(() => {
 		getGroupTags();
-		console.log($page.params.type, "TYPPPE")
+		console.log($page.params.type, 'TYPPPE');
 	});
 </script>
 
@@ -190,12 +197,42 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Proposal end date')}</h2>
+								<h2 class="mt-4">{$_('Tag voting')}</h2>
+								<DateInput
+									format="yyyy-MM-dd HH:mm"
+									closeOnSelection
+									bind:value={area_vote_end_date}
+									min={start_date}
+									max={maxDatePickerYear}
+								/>
+							</div>
+							<div>
+								<h2 class="mt-4">{$_('Tag voting')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
 									bind:value={proposal_end_date}
-									min={start_date}
+									min={area_vote_end_date}
+									max={maxDatePickerYear}
+								/>
+							</div>
+							<div>
+								<h2 class="mt-4">{$_('Prediction statement')}</h2>
+								<DateInput
+									format="yyyy-MM-dd HH:mm"
+									closeOnSelection
+									bind:value={prediction_statement_end_date}
+									min={proposal_end_date}
+									max={maxDatePickerYear}
+								/>
+							</div>
+							<div>
+								<h2 class="mt-4">{$_('Prediction statement')}</h2>
+								<DateInput
+									format="yyyy-MM-dd HH:mm"
+									closeOnSelection
+									bind:value={prediction_bet_end_date}
+									min={prediction_statement_end_date}
 									max={maxDatePickerYear}
 								/>
 							</div>
@@ -204,8 +241,18 @@
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
-									bind:value={voting_start_date}
-									min={proposal_end_date}
+									bind:value={delegate_vote_end_date}
+									min={prediction_bet_end_date}
+									max={maxDatePickerYear}
+								/>
+							</div>
+							<div>
+								<h2 class="mt-4">{$_('Voting start date')}</h2>
+								<DateInput
+									format="yyyy-MM-dd HH:mm"
+									closeOnSelection
+									bind:value={vote_end_date}
+									min={delegate_vote_end_date}
 									max={maxDatePickerYear}
 								/>
 							</div>
@@ -214,18 +261,8 @@
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
-									bind:value={delegate_vote_end_date}
-									min={voting_start_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
-							<div>
-								<h2 class="mt-4">{$_('End date')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
 									bind:value={end_date}
-									min={delegate_vote_end_date}
+									min={vote_end_date}
 									max={maxDatePickerYear}
 								/>
 							</div>

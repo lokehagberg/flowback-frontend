@@ -55,18 +55,15 @@
 		else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
 		else if (
-			now >= new Date(poll?.proposal_end_date) &&
-			now < new Date(poll?.prediction_statement_end_date)
+			now >= new Date(poll?.proposal_end_date) &&	now < new Date(poll?.prediction_statement_end_date)
 		)
 			return 'prediction-statement';
 		else if (
-			now >= new Date(poll?.prediction_statement_end_date) &&
-			now < new Date(poll?.prediction_bet_end_date)
+			now >= new Date(poll?.prediction_statement_end_date) &&	now < new Date(poll?.prediction_bet_end_date)
 		)
 			return 'prediction-betting';
 		else if (
-			now >= new Date(poll?.prediction_bet_end_date) &&
-			now < new Date(poll?.delegate_vote_end_date)
+			now >= new Date(poll?.prediction_bet_end_date) && now < new Date(poll?.delegate_vote_end_date)
 		)
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))

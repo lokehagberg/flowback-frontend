@@ -143,18 +143,31 @@
 		selectedTag = tags[0];
 	};
 
-	$: daysBetweenPhases && changedate();
+	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
-	const changedate = () => {
+	const changeDaysBetweenPhases = () => {
 		const now = new Date();
 		start_date = new Date();
-		area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-		end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+
+		//For debug purposes this puts one minute delay between each phase.
+		if (daysBetweenPhases === 0) {
+			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			proposal_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			prediction_statement_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			prediction_bet_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			delegate_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+		//For users to select over multiple days
+		} else {
+			area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		}
 	};
 
 	onMount(() => {
@@ -182,7 +195,13 @@
 						>{$_('Advanced time settings')}</Button
 					>
 					<h2 class="mt-4">{$_('Days between phases')}</h2>
-					<input type="number" bind:value={daysBetweenPhases} min="1" max="1000" />
+					<input
+						type="number"
+						class="dark:bg-darkbackground"
+						bind:value={daysBetweenPhases}
+						min="0"
+						max="1000"
+					/>
 
 					{#if advancedTimeSettings}
 						<div class="flex flex-wrap gap-6 justify-center">

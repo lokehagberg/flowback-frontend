@@ -6,7 +6,6 @@
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
-	import { onMount } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -14,14 +13,20 @@
 	export let dates: Date[] = [];
 	let datesDisplay: string[] = [];
 
-	let date = new Date();
-	// const dateLabels = ["Start", "Proposal end", "Delegate end", "End"]
-	const dateLabels = ['Start', 'Proposal end', 'Prediction end and vote start', 'Delegate lock-in', 'End'];
-	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
+	const dateLabels = [
+		'Tag',
+		'Proposals',
+		'Prediction statements',
+		'Prediction betting',
+		'Delegate lock-in',
+		'Voting',
+		'Results and Evaluation'
+	];
 
-	// Difference between now and start date
-	const toNowTime = date.getTime() - dates[0].getTime();
-	let progress = (100 * toNowTime) / totalTime;
+	const currentPhase = dates.findLastIndex((date:Date) => new Date(date) <= new Date())
+	const fraction = currentPhase / dates.length	
+
+	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 	let datePlacement: number[] = [];
 	dates.forEach((date, i) => {
@@ -30,23 +35,13 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
-
-	onMount(() => {
-		console.log(date.getTime() < dates[0].getTime());
-	});
 </script>
 
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
 			class="flex justify-between mt-2 rounded-md"
-			class:pre-start={date.getTime() < dates[0].getTime()}
-			class:proposals={date.getTime() < dates[1].getTime() && date.getTime() > dates[0].getTime()}
-			class:prediction={date.getTime() < dates[2].getTime() && date.getTime() > dates[1].getTime()}
-			class:delegate-voting={date.getTime() < dates[3].getTime() &&
-				date.getTime() > dates[2].getTime()}
-			class:voting={date.getTime() < dates[4].getTime() && date.getTime() > dates[3].getTime()}
-			class:end={date.getTime() >= dates[4].getTime()}
+			style={`background: linear-gradient(90deg, rgba(89, 158, 255, 1) ${fraction * 100 - 2}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">
@@ -89,29 +84,3 @@
 		</ul>
 	{/if}
 </div>
-
-<style>
-	.pre-start {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 0%);
-	}
-
-	.proposals {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 0%, rgba(191, 191, 191, 1) 15%);
-	}
-
-	.prediction {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 25%, rgba(191, 191, 191, 1) 40%);
-	}
-
-	.delegate-voting {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 50%, rgba(191, 191, 191, 1) 65%);
-	}
-
-	.voting {
-		background: linear-gradient(90deg, rgba(89, 158, 255, 1) 75%, rgba(191, 191, 191, 1) 85%);
-	}
-
-	.end {
-		background: rgba(89, 158, 255, 1);
-	}
-</style>

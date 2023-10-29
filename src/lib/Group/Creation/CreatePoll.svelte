@@ -84,6 +84,7 @@
 		defaultType: polltypes = 'Text Poll',
 		selectedTag: TagType,
 		status: StatusMessageInfo,
+
 		start_date = new Date(),
 		area_vote_end_date = new Date(),
 		proposal_end_date = new Date(),
@@ -91,6 +92,7 @@
 		prediction_bet_end_date = new Date(),
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
+		
 		end_date = new Date(),
 		isPublic = false,
 		loading = false,

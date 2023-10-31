@@ -4,6 +4,7 @@
 	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
 	import { faSquareFull } from '@fortawesome/free-solid-svg-icons/faSquareFull';
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 

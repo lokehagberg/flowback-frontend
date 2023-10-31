@@ -8,6 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/environment';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';

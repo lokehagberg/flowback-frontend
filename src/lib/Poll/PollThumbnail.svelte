@@ -6,6 +6,7 @@
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';

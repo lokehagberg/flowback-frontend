@@ -16,6 +16,7 @@
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import { page } from '$app/stores';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';

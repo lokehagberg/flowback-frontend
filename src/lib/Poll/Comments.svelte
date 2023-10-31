@@ -8,6 +8,7 @@
 	import type { Comment } from './interface';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { faReply } from '@fortawesome/free-solid-svg-icons/faReply';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';

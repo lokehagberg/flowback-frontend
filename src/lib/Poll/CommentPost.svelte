@@ -6,7 +6,10 @@
 	import { page } from '$app/stores';
 	import type { Comment } from './interface';
 	import type { proposal } from './interface';
-
+	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
+	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+	import About from '$lib/Group/About.svelte';
+	
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
 		parent_id: number | undefined = undefined,
@@ -18,16 +21,30 @@
 
 	let show = false,
 		showMessage = '',
-		recentlyTappedButton = '';
+		recentlyTappedButton = '',
+		attachments:File[] = [],
+		image:File;
 
-	const postComment = async () => {
+	// $: if(image !== null ) attachments.push(image)
+
+	const commentCreate = async () => {
+		const formData = new FormData();
+		formData.append("message", message);
+		//@ts-ignore
+		if(parent_id) formData.append("parent_id", parent_id);
+		// await console.log(await image.text())
+		formData.append("attachments", image)
+		
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/create`,
-			{
-				message,
-				parent_id
-			}
+			formData, true, false
+			// {
+			// 	message,
+			// 	parent_id,
+			// 	attachments:[await image.text()]
+			// }
 		);
 		if (res.ok) {
 			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
@@ -56,7 +73,7 @@
         replying = false;
 	};
 
-	const updateComment = async () => {
+	const commentUpdate = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${id}/update`,
@@ -93,7 +110,7 @@
 
 <form
 	class="mt-4 relative"
-	on:submit|preventDefault={() => (beingEdited ? updateComment() : postComment())}
+	on:submit|preventDefault={() => (beingEdited ? commentUpdate() : commentCreate())}
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
@@ -116,9 +133,10 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
-	{#if message !== ""}
+	<ImageUpload icon={faUser} bind:image label="Upload Image, recomended ratio 1:1" />
+	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
-	{/if}
+	<!-- {/if} -->
 	
 </form>
  

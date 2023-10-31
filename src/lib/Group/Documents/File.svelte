@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
 	export let name: string;

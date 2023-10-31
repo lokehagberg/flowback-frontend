@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';

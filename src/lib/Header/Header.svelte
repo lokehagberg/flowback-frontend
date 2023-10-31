@@ -16,6 +16,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	import {accountsStore} from '$lib/Account/stores';

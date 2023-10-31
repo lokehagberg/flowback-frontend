@@ -3,6 +3,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Phase } from '../interface';
 	import type { PredictionStatement } from './interfaces';

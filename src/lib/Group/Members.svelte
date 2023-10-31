@@ -7,6 +7,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { GroupUser, SelectablePages, User } from './interface';
 	import { _ } from 'svelte-i18n';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';

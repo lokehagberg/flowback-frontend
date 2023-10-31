@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';

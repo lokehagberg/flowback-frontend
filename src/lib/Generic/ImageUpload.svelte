@@ -1,10 +1,13 @@
 <script lang="ts">
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+
 	export let image: File | null = null,
 		label: string,
 		isCover = false,
-		icon:any;
+		icon: any;
+
 	let fileinput: HTMLInputElement;
 
 	const onFileSelected = (e: any) => {
@@ -32,7 +35,7 @@
 			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
 			alt=""
 		/> -->
-		<Fa icon={icon} size={'5x'} class="mt-6"/>
+		<Fa {icon} size={'5x'} class="mt-6" />
 	{/if}
 	<img
 		class="upload mt-4"
@@ -41,12 +44,14 @@
 		on:click={() => {
 			fileinput.click();
 		}}
+		on:keydown
 	/>
 	<div
 		class="chan"
 		on:click={() => {
 			fileinput.click();
 		}}
+		on:keydown
 	>
 		{$_('Choose Image')}
 	</div>

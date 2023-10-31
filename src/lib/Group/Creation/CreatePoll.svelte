@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	//@ts-ignore
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';

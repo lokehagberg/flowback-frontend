@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 

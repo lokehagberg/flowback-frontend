@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Proposal from './Proposal.svelte';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';

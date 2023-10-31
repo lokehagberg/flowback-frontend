@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 import File from './File.svelte';
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';

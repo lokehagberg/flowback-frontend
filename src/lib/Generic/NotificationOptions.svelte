@@ -2,6 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import { onMount } from 'svelte';
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import SuccessPoppup from './SuccessPoppup.svelte';

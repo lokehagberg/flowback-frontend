@@ -3,6 +3,7 @@
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
 	// @ts-ignore
+	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message, PreviewMessage } from './interfaces';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';

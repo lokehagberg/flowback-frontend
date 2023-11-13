@@ -93,7 +93,6 @@
 		</li>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
-				<!-- on:click={notification.action} -->
 				<li
 					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all "
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
@@ -101,7 +100,6 @@
 					<div
 						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {
-							console.log('HIAIAI Below');
 							if (notification.channel_sender_type === 'group')
 								window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
 							else if (notification.channel_sender_type === 'poll') {
@@ -122,6 +120,7 @@
 					</div>
 					<div
 						style="z-index: 1;"
+						class="mr-8"
 						on:click={() => {
 							readNotification(notification.id);
 							setTimeout(() => {

@@ -143,6 +143,7 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
+
 				/>
 
 				{#if pollType === 1}
@@ -190,6 +191,7 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
+					delegatesCanVote
 				/>
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}
@@ -204,6 +206,7 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
+					nonDelegatesCanVote
 				/>
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}

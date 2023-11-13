@@ -30,13 +30,16 @@
 		phase: Phase,
 		tag: number,
 		groupUser: groupUser,
-		proposals: proposal[] = [];
+		proposals: proposal[] = [],
+		delegatesCanVote = false,
+		nonDelegatesCanVote = false;
 
 	let ranked: proposal[] = [],
 		selected: proposal,
 		checked = false,
 		unsaved = false,
-		status: StatusMessageInfo;
+		status: StatusMessageInfo,
+		isDelegate = false;
 
 	$: selectedPage && setUpVotings();
 
@@ -46,6 +49,7 @@
 		setUpSortable();
 		await getProposals();
 		setUpVotings();
+		isDelegate = await getIsDelegate();
 	});
 
 	const setUpVotings = async () => {
@@ -183,6 +187,20 @@
 		else addToAbstained(proposal);
 	};
 
+	const getIsDelegate = async () => {
+		return (
+			(
+				await fetchRequest(
+					'GET',
+					`group/${$page.params.groupId}/users?user_id=${localStorage.getItem(
+						'userId'
+					)}&delegate=true`
+				)
+			).json.results.length > 0
+		);
+	};
+
+	
 	const saveVotings = async () => {
 		const proposals = document.querySelector('.container.ranked')?.children;
 		let votes: number[] = [];
@@ -202,19 +220,6 @@
 		);
 
 		status = statusMessageFormatter(res, json);
-		//TODO replace with svelte store
-		// const userId = (await fetchRequest('GET', 'user')).json.id;
-		const userId = localStorage.getItem('userId');
-
-		const isDelegate =
-			(
-				await fetchRequest(
-					'GET',
-					`group/${$page.params.groupId}/users?user_id=${localStorage.getItem(
-						'userId'
-					)}&delegate=true`
-				)
-			).json.results.length > 0;
 
 		if (isDelegate)
 			await fetchRequest(
@@ -376,11 +381,12 @@ and buttons at the same time without a toggle both. -->
 <!-- <StatusMessage bind:status /> -->
 
 <!-- {#if phase === "delegate-voting" || phase === "voting"} -->
+{#if (delegatesCanVote && isDelegate) || (nonDelegatesCanVote && !isDelegate)}
 <Button action={saveVotings}
 	>{(selectedPage === 'You' && $_('Save Votings')) ||
 		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
 >
-
+{/if}
 <!-- {/if} -->
 
 <style>

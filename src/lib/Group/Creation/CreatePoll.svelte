@@ -219,7 +219,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Tag voting')}</h2>
+								<h2 class="mt-4">{$_('Tag voting end')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -229,7 +229,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Tag voting')}</h2>
+								<h2 class="mt-4">{$_('Proposal end')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -239,7 +239,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Prediction statement')}</h2>
+								<h2 class="mt-4">{$_('Prediction statement end')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -249,7 +249,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Prediction statement')}</h2>
+								<h2 class="mt-4">{$_('Prediction bet end')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -259,7 +259,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Voting start date')}</h2>
+								<h2 class="mt-4">{$_('Delegate Voting end date')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -269,7 +269,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Voting start date')}</h2>
+								<h2 class="mt-4">{$_('Voting end date')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -279,7 +279,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('Delegate end date')}</h2>
+								<h2 class="mt-4">{$_('end date')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection

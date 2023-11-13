@@ -55,15 +55,18 @@
 		else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
 			return 'proposals';
 		else if (
-			now >= new Date(poll?.proposal_end_date) &&	now < new Date(poll?.prediction_statement_end_date)
+			now >= new Date(poll?.proposal_end_date) &&
+			now < new Date(poll?.prediction_statement_end_date)
 		)
 			return 'prediction-statement';
 		else if (
-			now >= new Date(poll?.prediction_statement_end_date) &&	now < new Date(poll?.prediction_bet_end_date)
+			now >= new Date(poll?.prediction_statement_end_date) &&
+			now < new Date(poll?.prediction_bet_end_date)
 		)
 			return 'prediction-betting';
 		else if (
-			now >= new Date(poll?.prediction_bet_end_date) && now < new Date(poll?.delegate_vote_end_date)
+			now >= new Date(poll?.prediction_bet_end_date) &&
+			now < new Date(poll?.delegate_vote_end_date)
 		)
 			return 'delegate-voting';
 		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
@@ -165,7 +168,7 @@
 			{:else if phase === 'prediction-betting'}
 				<ProposalsRanked
 					{groupUser}
-					votingStartTime={poll.vote_start_date}
+					votingStartTime={poll.prediction_bet_end_date}
 					pollType={poll.poll_type}
 					tag={poll.tag}
 					bind:phase
@@ -179,7 +182,7 @@
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				<ProposalsRanked
 					{groupUser}
-					votingStartTime={poll.vote_start_date}
+					votingStartTime={poll.prediction_bet_end_date}
 					pollType={poll.poll_type}
 					tag={poll.tag}
 					bind:phase
@@ -193,7 +196,7 @@
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				<ProposalsRanked
 					{groupUser}
-					votingStartTime={poll.vote_start_date}
+					votingStartTime={poll.prediction_bet_end_date}
 					pollType={poll.poll_type}
 					tag={poll.tag}
 					bind:phase

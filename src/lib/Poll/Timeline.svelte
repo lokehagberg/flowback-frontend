@@ -24,8 +24,8 @@
 		'Results and Evaluation'
 	];
 
-	const currentPhase = dates.findLastIndex((date:Date) => new Date(date) <= new Date())
-	const fraction = currentPhase / dates.length	
+	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
+	const fraction = (currentPhase + 1) / dates.length;
 
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
@@ -42,7 +42,9 @@
 	{#if displayTimeline}
 		<div
 			class="flex justify-between mt-2 rounded-md"
-			style={`background: linear-gradient(90deg, rgba(89, 158, 255, 1) ${fraction * 100 - 2}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
+			style={`background: linear-gradient(90deg, rgba(89, 158, 255, 1) ${
+				fraction * 100 - 2
+			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
 				<div class="h-6">

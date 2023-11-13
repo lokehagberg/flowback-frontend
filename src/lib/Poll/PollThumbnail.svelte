@@ -97,16 +97,17 @@
 	>
 
 	<Timeline
-		displayDetails={false}
-		Class="border-none pointer-default"
-		dates={[
-			new Date(poll.start_date),
-			new Date(poll.proposal_end_date),
-			new Date(poll.vote_start_date),
-			new Date(poll.delegate_vote_end_date),
-			new Date(poll.end_date)
-		]}
-	/>
+				displayDetails={false}
+				dates={[
+					new Date(poll.start_date),
+					new Date(poll.area_vote_end_date),
+					new Date(poll.proposal_end_date),
+					new Date(poll.prediction_statement_end_date),
+					new Date(poll.prediction_bet_end_date),
+					new Date(poll.delegate_vote_end_date),
+					new Date(poll.end_date)
+				]}
+			/>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>

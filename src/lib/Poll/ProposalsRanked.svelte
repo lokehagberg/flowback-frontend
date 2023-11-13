@@ -19,7 +19,7 @@
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { groupUser } from '$lib/Group/interface';
 	import Question from '$lib/Generic/Question.svelte';
-	import { proposals as proposalsLimit } from '../Generic/APILimits.json'
+	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 
 	export let votings: votings[],
 		selectedPage: 'You' | 'Delegate',
@@ -206,9 +206,15 @@
 		// const userId = (await fetchRequest('GET', 'user')).json.id;
 		const userId = localStorage.getItem('userId');
 
-		const isDelegate = (
-			await fetchRequest('GET', `group/${$page.params.groupId}/users?user_id=${userId}`)
-		).json.results[0].delegate;
+		const isDelegate =
+			(
+				await fetchRequest(
+					'GET',
+					`group/${$page.params.groupId}/users?user_id=${localStorage.getItem(
+						'userId'
+					)}&delegate=true`
+				)
+			).json.results.length > 0;
 
 		if (isDelegate)
 			await fetchRequest(
@@ -370,10 +376,11 @@ and buttons at the same time without a toggle both. -->
 <!-- <StatusMessage bind:status /> -->
 
 <!-- {#if phase === "delegate-voting" || phase === "voting"} -->
-	<Button action={saveVotings}
-		>{(selectedPage === 'You' && $_('Save Votings')) ||
-			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
-	>
+<Button action={saveVotings}
+	>{(selectedPage === 'You' && $_('Save Votings')) ||
+		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
+>
+
 <!-- {/if} -->
 
 <style>

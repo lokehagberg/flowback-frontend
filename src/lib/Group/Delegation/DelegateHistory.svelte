@@ -4,23 +4,22 @@
 	import { onMount } from 'svelte';
 	import json from './Delegationtest.json';
 	import { page } from '$app/stores';
-	import type { DelegatePool } from './interfaces';
+	import type { DelegatePool, VoteHistory } from './interfaces';
+	import { _ } from 'svelte-i18n';
 
 	export let history: null | number;
 
 	let loading = false,
-		delegatePool: DelegatePool;
+		delegatePool: DelegatePool,
+		votingHistory: VoteHistory[] = [];
 
 	const getDelegateHistory = async () => {
 		loading = true;
 		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
-		const json= await fetchRequest(
-			'GET',
-			`group/poll/pool/${history}/votes`
-			);
-			loading = false;
-		
-		// delegatePool = json.results[0];
+		const { json, res } = await fetchRequest('GET', `group/poll/pool/${history}/votes`);
+		loading = false;
+
+		votingHistory = json.results;
 	};
 
 	onMount(() => {
@@ -29,28 +28,28 @@
 </script>
 
 <Loader bind:loading>
-	<div class="p3">delegate history for {delegatePool?.delegates[0].user_id || ''}</div>
+	<div class="p3">{$_('delegate history for')} {delegatePool?.delegates[0].user_id || ''}</div>
 	<ul class="w-full">
-		{#each json as poll}
-			<li
-				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
-			>
+		{#each votingHistory as vote}
+		<li
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
+		>
 				<a
 					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
-					href={`group/${$page.params.groupId}/poll/${poll.poll_id}`}
+					href={`${$page.params.groupId}/polls/${vote.poll_id}`}
 				>
-					{poll.poll_title}</a
+					{vote.poll_title}</a
 				>
 			</li>
-			<ul class="w-full block ml-4">
-				{#each poll.vote as vote}
+			<!-- <ul class="w-full block ml-4">
+				{#each votingHistory as vote}
 					<li
 						class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
 					>
-						{vote.proposal_title}
+						{vote.poll_title}
 					</li>
 				{/each}
-			</ul>
+			</ul> -->
 		{/each}
 	</ul>
 </Loader>

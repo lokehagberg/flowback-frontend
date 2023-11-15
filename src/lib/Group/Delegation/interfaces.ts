@@ -8,3 +8,9 @@ export interface Delegate {
 	group_user_id: number;
 	user_id: number;
 }
+
+export interface VoteHistory {
+	poll_id: number;
+	poll_title: string;
+	vote: null;
+}

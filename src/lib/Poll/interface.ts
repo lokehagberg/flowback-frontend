@@ -79,6 +79,7 @@ export interface Comment {
 	//False if comment has been deleted
 	active: boolean;
 	edited: boolean;
+	attachments:{file:string}[];
 }
 
 export interface CommentEdited {}

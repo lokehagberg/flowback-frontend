@@ -123,6 +123,17 @@
 					<div class="text-xs text-gray-400 dark:text-darkmodeText">
 						{comment.edited ? '(edited)' : ''}
 					</div>
+					{#if comment.attachments.length > 0}
+					<div>
+						{#each comment.attachments as attachment}
+						<img
+							class=""
+							src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+							alt="attachment to the comment"
+						/>
+						{/each}
+					</div>
+					{/if}
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
 							<div

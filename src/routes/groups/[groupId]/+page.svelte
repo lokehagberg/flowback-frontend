@@ -24,6 +24,7 @@
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
+	import Threads from '$lib/Group/Threads.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -122,6 +123,8 @@
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
 						<Schedule type="group"/>
+					{:else if selectedPage === 'threads'}
+						<Threads />
 					{/if}
 				</div>
 

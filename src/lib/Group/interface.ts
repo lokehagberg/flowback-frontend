@@ -11,7 +11,8 @@ export type SelectablePage =
 	| 'tags'
 	| 'kanban'
 	| 'perms'
-	| 'schedule';
+	| 'schedule'
+	| 'threads';
 
 export interface User {
 	username: string;

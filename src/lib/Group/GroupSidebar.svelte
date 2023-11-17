@@ -110,6 +110,11 @@
 				isSelected={selectedPage === 'flow'}
 			/>
 			<GroupSidebarButton
+				action={() => (selectedPage = 'threads')}
+				text="Threads"
+				isSelected={selectedPage === 'threads'}
+			/>
+			<GroupSidebarButton
 				action={() => (selectedPage = 'delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Timeline from './Timeline.svelte';
-	import type { poll } from './interface';
+	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
@@ -14,11 +14,14 @@
 	import { faThumbtack } from '@fortawesome/free-solid-svg-icons/faThumbtack';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
+	import { onMount } from 'svelte';
+	import { getPhase } from './functions';
 
 	export let poll: poll,
 		isAdmin = false;
 
-	let onHoverGroup = false;
+	let onHoverGroup = false,
+	phase:Phase
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -26,6 +29,10 @@
 		});
 		if (res.ok) poll.pinned = !poll.pinned;
 	};
+
+	onMount(() => {
+		phase = getPhase(poll)
+	})
 </script>
 
 <div
@@ -133,4 +140,7 @@
 			<span class="inline">{poll.total_comments} {$_('comments')}</span>
 		</a>
 	</div>
+
+	current phase: {phase}
+
 </div>

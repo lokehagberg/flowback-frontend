@@ -20,6 +20,7 @@
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
+	import { getPhase } from '$lib/Poll/functions';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -41,40 +42,11 @@
 	onMount(async () => {
 		getGroupUser();
 		await getPollData();
-		phase = getPhase();
+		phase = getPhase(poll);
 		scrollToSection();
 		checkForLinks(poll.description, 'poll-description');
 		document.title = poll.title;
 	});
-
-	const getPhase = (): Phase => {
-		const now = new Date();
-		if (now < new Date(poll?.start_date)) return 'pre-start';
-		else if (now >= new Date(poll?.start_date) && now < new Date(poll?.area_vote_end_date))
-			return 'area_vote';
-		else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
-			return 'proposals';
-		else if (
-			now >= new Date(poll?.proposal_end_date) &&
-			now < new Date(poll?.prediction_statement_end_date)
-		)
-			return 'prediction-statement';
-		else if (
-			now >= new Date(poll?.prediction_statement_end_date) &&
-			now < new Date(poll?.prediction_bet_end_date)
-		)
-			return 'prediction-betting';
-		else if (
-			now >= new Date(poll?.prediction_bet_end_date) &&
-			now < new Date(poll?.delegate_vote_end_date)
-		)
-			return 'delegate-voting';
-		else if (now >= new Date(poll?.delegate_vote_end_date) && now < new Date(poll?.end_date))
-			return 'voting';
-		else if (now >= new Date(poll?.end_date) && now < new Date(poll?.vote_end_date))
-			return 'results';
-		else return 'prediction-voting';
-	};
 
 	const getPollData = async () => {
 		const { res, json } = await fetchRequest(

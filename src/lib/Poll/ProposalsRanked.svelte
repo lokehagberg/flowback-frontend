@@ -46,6 +46,7 @@
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
+		if (phase === 'delegate-voting' || phase === 'voting')
 		setUpSortable();
 		await getProposals();
 		setUpVotings();
@@ -301,7 +302,7 @@
 								proposals={ranked}
 								{groupUser}
 								Class={`${selectedPage === 'You' && ''} ${
-									!checked && selectedPage !== 'Delegate' && 'cursor-move'
+									(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting")) && 'cursor-pointer'
 								}`}
 							>
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
@@ -342,7 +343,7 @@
 						bind:proposals={abstained}
 						{groupUser}
 						Class={`${selectedPage === 'You'} ${
-							!checked && selectedPage !== 'Delegate' && 'cursor-move'
+							(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting"))&& 'cursor-move'
 						}`}
 					>
 						<div

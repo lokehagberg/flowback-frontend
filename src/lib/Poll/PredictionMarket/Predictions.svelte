@@ -36,7 +36,6 @@
 	export let proposals: proposal[], phase: Phase;
 
 	const getPredictionStatements = async () => {
-		// 	`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		loading = true;
 
 		const { res, json } = await fetchRequest(
@@ -94,27 +93,11 @@
 		loading = false;
 	};
 
-	const test = async () => {
-		// const { res, json } = await fetchRequest(
-		// 	'GET',
-		// 	`group/${$page.params.groupId}/poll/prediction/list`
-		// );
-		// const { res, json } = await fetchRequest(
-		// 	'POST',
-		// 	`group/poll/${1}/prediction/update`, {score:5}
-		// 	)
-		// const { res, json } = await fetchRequest(
-		// 	'POST',
-		// 	`group/poll/${1}/prediction/delete`
-		// 	)
-	};
-
 	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
 	});
 
-	const handleProposalCheckboxChange = async () => {};
 </script>
 
 <Loader bind:loading>
@@ -125,26 +108,26 @@
 		{/each}
 	</ul>
 
-	{#if phase === 'prediction'}
-		<Button action={() => (addingPrediction = true)}>{$_("Add Prediction")}</Button>
+	{#if phase === 'prediction-statement'}
+		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
 	{/if}
 
 	{#if predictions.length === 0}
-		<div class="mt-5">{$_("There are currently no predictions")}</div>
+		<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
 </Loader>
 
 <Modal bind:open={addingPrediction}>
-	<div slot="header">{$_("Add Prediction")}</div>
+	<div slot="header">{$_('Add Prediction')}</div>
 	<form slot="body" on:submit={createPredictionStatement}>
 		<Loader bind:loading>
-			{$_("End date for prediction")}
+			{$_('End date for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
 				min={new Date()}
 				max={maxDatePickerYear}
 			/>
-			<span>{$_("Select Proposals to predict on")}</span>
+			<span>{$_('Select Proposals to predict on')}</span>
 			<Question
 				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 			/><br />
@@ -173,12 +156,14 @@
 							});
 					}}
 					labels={['Neutral', 'Implemented', 'Not implemented']}
+					values={[null, 'Implemented', null]}
+					value={null}
 				/>
 			{/each}
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<!-- <StatusMessage bind:status={statusMessage} /> -->
-			<Button type="submit">{$_("Submit")}</Button>
-			<Button buttonStyle="warning">{$_("Cancel")}</Button>
+			<Button type="submit">{$_('Submit')}</Button>
+			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
 	</form>
 </Modal>

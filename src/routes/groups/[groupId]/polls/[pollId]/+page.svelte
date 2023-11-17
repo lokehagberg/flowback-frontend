@@ -99,6 +99,7 @@
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<TitleDescription {pollType} {poll} />
+			Current phase: {phase}
 
 			{#if phase === 'pre-start'}
 				<div>dev</div>
@@ -115,7 +116,7 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
-
+					
 				/>
 
 				{#if pollType === 1}
@@ -182,11 +183,11 @@
 				/>
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}
-				<Predictions bind:proposals bind:phase />
 				<Results {pollType} />
+				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-voting'}
-				<Predictions bind:proposals bind:phase />
 				<Results {pollType} />
+				<Predictions bind:proposals bind:phase />
 			{/if}
 
 			<Timeline

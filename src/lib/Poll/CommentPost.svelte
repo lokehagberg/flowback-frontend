@@ -33,6 +33,7 @@
 		//@ts-ignore
 		if(parent_id) formData.append("parent_id", parent_id);
 		// await console.log(await image.text())
+		if (image)
 		formData.append("attachments", image)
 		
 
@@ -61,7 +62,7 @@
 				reply_depth: replyDepth + 1,
 				active: true,
 				edited: false,
-
+				attachments:[],
 			});
 			comments = comments;
 			showMessage = 'Posted Comment';

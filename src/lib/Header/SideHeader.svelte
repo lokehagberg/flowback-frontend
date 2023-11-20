@@ -100,7 +100,7 @@
 
 <Modal bind:open={open_tos}>
 	<div slot="body">
-		<TermsOfService Class="!border-none !p-0 text-xs leading-7" />
+		<TermsOfService Class="!border-none !p-0 leading-7" />
 	</div>
 </Modal>
 

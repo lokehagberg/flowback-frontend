@@ -123,7 +123,7 @@
 					<div class="text-xs text-gray-400 dark:text-darkmodeText">
 						{comment.edited ? '(edited)' : ''}
 					</div>
-					{#if comment.attachments.length > 0}
+					{#if (comment.attachments?.length > 0)}
 					<div>
 						{#each comment.attachments as attachment}
 						<img

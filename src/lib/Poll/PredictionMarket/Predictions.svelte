@@ -13,9 +13,9 @@
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	// import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 
 	let loading = false,
@@ -30,7 +30,7 @@
 				is_true: boolean;
 			}[];
 		} = { segments: [] },
-		statusMessage: StatusMessageInfo,
+		// statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [];
 
 	export let proposals: proposal[], phase: Phase;
@@ -41,18 +41,24 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
-		);
-		loading = false;
-		predictions = json.results;
+			);
+			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
+			loading = false;
+			predictions = json.results;
+			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
 	};
+
+	$: console.log(predictions, "PREDICTI")
 
 	const getPredictionBets = async () => {
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/poll/prediction/list`
+			`group/${$page.params.groupId}/poll/prediction/statement/list`
 		);
+
+	
 		loading = false;
 		bets = json.results;
 	};
@@ -67,7 +73,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			statusMessage = statusMessageFormatter(res, json);
+			// statusMessage = statusMessageFormatter(res, json);
 			return;
 		}
 
@@ -99,7 +105,7 @@
 	});
 
 </script>
-
+<!-- {@debug predictions} -->
 <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">

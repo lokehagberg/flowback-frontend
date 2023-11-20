@@ -8,7 +8,7 @@
 	const getThreads = async () :Promise<any[]> => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`api/group/${$page.params.groupId}/thread/list`,
+			`group/${$page.params.groupId}/thread/list`,
 			{}
 		);
         return json.results

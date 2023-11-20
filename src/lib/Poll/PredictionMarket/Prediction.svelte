@@ -13,6 +13,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { userGroupInfo } from '$lib/Group/interface';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
@@ -32,10 +33,20 @@
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
 		);
-		loading = false;
+
+		console.log(json.results);
 
 		if (!res.ok) showPoppup = true;
-		else score = json.results[0].score;
+		else {
+			const previousBet = json.results.find(
+				(result: any) => result.created_by.id.toString() === localStorage.getItem('userId')
+			);
+
+			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
+			else score = 0;
+		}
+
+		console.log(score, 'SCOOORE');
 	};
 
 	const predictionBetCreate = async () => {
@@ -90,7 +101,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/statement/vote/delete`
+			`group/poll/prediction/${prediction.id}/bet/delete`
 		);
 		loading = false;
 
@@ -127,7 +138,7 @@
 	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer">
 		{prediction.description}</span
 	>
-	{#if phase === 'prediction'}
+	{#if phase === 'prediction-betting'}
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
@@ -135,13 +146,16 @@
 			onInput={async (e) => {
 				//@ts-ignore
 				const selectedScore = e?.target?.value;
+				if (selectedScore !== null) score = Number(selectedScore);
+				else score = null;
+
 				await predictionBetDelete();
 
 				if (selectedScore !== null) predictionBetCreate();
 			}}
 		/>
 	{/if}
-	{#if phase === 'end'}
+	{#if phase === 'results'}
 		<div class="flex">
 			<Button
 				action={() =>

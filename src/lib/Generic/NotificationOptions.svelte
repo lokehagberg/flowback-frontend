@@ -48,7 +48,7 @@
 		);
 	};
 
-	const handleNotificationSubscription = async (category: string) => {
+	const notificationSubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `${api}/subscribe`, {
 			categories: [category]
 		});
@@ -65,7 +65,7 @@
 		notifications = notifications;
 	};
 
-	const handleNotificationUnsubscription = async (category: string) => {
+	const notificationUnsubscription = async (category: string) => {
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
 			channel_sender_id: id,
@@ -109,8 +109,8 @@
 					)}
 					on:click={() => {
 						if (notifications.find((object) => object.channel_category === category))
-							handleNotificationUnsubscription(category);
-						else handleNotificationSubscription(category);
+							notificationUnsubscription(category);
+						else notificationSubscription(category);
 					}}
 				>
 					{$_(labels[i])}

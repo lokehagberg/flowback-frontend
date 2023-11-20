@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
 	import { onMount } from 'svelte';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -12,6 +13,8 @@
 		labels: string[],
 		api: string,
 		id: number;
+
+	let popupMessage: string = '';
 
 	interface NotificationObject {
 		channel_category: string;
@@ -49,13 +52,16 @@
 		const { res, json } = await fetchRequest('POST', `${api}/subscribe`, {
 			categories: [category]
 		});
-		if (res.ok)
+		if (res.ok) {
 			notifications.push({
 				channel_category: category,
 				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
-		else show = true;
+			console.log("SUCCES")
+			popupMessage = 'Subscribed';
+		} else popupMessage = 'Something went wrong';
+
 		notifications = notifications;
 	};
 
@@ -65,9 +71,10 @@
 			channel_sender_id: id,
 			channel_category: category
 		});
-		if (res.ok)
+		if (res.ok) {
 			notifications = notifications.filter((object) => object.channel_category !== category);
-		else show = true;
+			popupMessage = 'Unsubscribed';
+		} else popupMessage = 'Something went wrong';
 	};
 
 	onMount(() => {
@@ -115,7 +122,9 @@
 							? 'black'
 							: 'white'}
 						swapOpacity
-						icon={faBell}
+						icon={notifications?.find(
+							(notificationObject) => notificationObject.channel_category === category
+						) ? faBell : faBellSlash}
 						size={'1.4x'}
 					/>
 				</li>
@@ -124,4 +133,4 @@
 	{/if}
 </div>
 
-<SuccessPoppup bind:show message="Something went wrong" />
+<SuccessPoppup bind:show bind:message={popupMessage} />

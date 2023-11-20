@@ -7,10 +7,13 @@
 		show = true;
 		setTimeout(() => {
 			show = false;
+			message = ""
 		}, 2500);
 	};
 
 	$: show && successPoppupAnimation();
+
+	$: message && successPoppupAnimation();
 </script>
 
 <div class="fixed bottom-5 right-5 z-50" hidden={!show}>

@@ -6,7 +6,9 @@
 	export let image: File | null = null,
 		label: string,
 		isCover = false,
-		icon: any;
+		icon: any,
+		Class = "",
+		iconSize = '5x';
 
 	let fileinput: HTMLInputElement;
 
@@ -24,7 +26,7 @@
 					imgtag?.src = event.target.result;
 				};
 			}} -->
-<div class="image-upload">
+<div class={`image-upload ${Class}`}>
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
 	{#if image}
@@ -35,7 +37,7 @@
 			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
 			alt=""
 		/> -->
-		<Fa {icon} size={'5x'} class="mt-6" />
+		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
 	<img
 		class="upload mt-4"

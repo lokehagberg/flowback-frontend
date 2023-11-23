@@ -38,6 +38,8 @@
 		loading = true;
 		const formData = new FormData();
 
+		console.log(name)
+
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('direct_join', directJoin.toString());
@@ -56,7 +58,7 @@
 
 		if (groupToEdit === null) {
 			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
-				tag_name: 'Uncategorised' //Default
+				name: 'Uncategorised' //Default
 			});
 
 			if (res.ok) window.location.href = `/groups/${json}`;

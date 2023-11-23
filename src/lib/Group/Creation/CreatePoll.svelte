@@ -30,6 +30,9 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { tagsCreatePoll as tagsCreatePollLimit } from '$lib/Generic/APILimits.json';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
+	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
+	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+	import Select from '$lib/Generic/Select.svelte';
 
 	type polltypes =
 		| 'Ranking'
@@ -98,7 +101,9 @@
 		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
-		daysBetweenPhases = 1;
+		daysBetweenPhases = 1,
+
+		image:File;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -108,26 +113,29 @@
 			return;
 		}
 
+		console.log(selectedTag)
+
+		const formData = new FormData();
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("start_date", start_date.toISOString());
+		formData.append("area_vote_end_date", area_vote_end_date.toISOString());
+		formData.append("proposal_end_date", proposal_end_date.toISOString());
+		formData.append("prediction_statement_end_date", prediction_statement_end_date.toISOString());
+		formData.append("prediction_bet_end_date", prediction_bet_end_date.toISOString());
+		formData.append("delegate_vote_end_date", delegate_vote_end_date.toISOString());
+		formData.append("vote_end_date", vote_end_date.toISOString());
+		formData.append("end_date", end_date.toISOString());
+		formData.append("poll_type", (selected_poll === defaultType ? 1 : 3).toString());
+		formData.append("tag", selectedTag.id.toString());
+		formData.append("dynamic", "false");
+		formData.append("public", isPublic.toString());
+		formData.append("pinned", "false");
+		if (image)
+		formData.append("attachments", image)
+
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, {
-			title,
-			description,
-
-			start_date,
-			area_vote_end_date,
-			proposal_end_date,
-			prediction_statement_end_date,
-			prediction_bet_end_date,
-			delegate_vote_end_date,
-			vote_end_date,
-			end_date,
-
-			poll_type: selected_poll === defaultType ? 1 : 3,
-			tag: selectedTag.id,
-			dynamic: false,
-			public: isPublic,
-			pinned: false
-		});
+		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, formData,  true, false);
 
 		loading = false;
 		status = statusMessageFormatter(res, json);
@@ -305,16 +313,17 @@
 				</div>
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-					{$_('This polltype is not implemented yet')}
+				{$_('This polltype is not implemented yet')}
 				{/if}
 				<StatusMessage bind:status />
 				<Button
-					type="submit"
-					disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
-					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
+				type="submit"
+				disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
+				Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 						? '!bg-gray-200'
 						: 'bg-primary'}>{$_('Create Poll')}</Button
 				>
+				<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse"/>
 			</div>
 		</Loader>
 	</form>

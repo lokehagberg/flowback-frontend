@@ -165,7 +165,7 @@
 {/if}
 
 <!-- Viewing someone's profile -->
-<Layout centering={true}>
+<Layout centered>
 	{#if !isEditing}
 		<img
 			src={bannerImagePreview || DefaultBanner}

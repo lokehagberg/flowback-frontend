@@ -7,6 +7,7 @@ export interface proposal {
 }
 
 export interface poll {
+	attachments: { file: string }[];
 	created_by: number;
 	description: string;
 	dynamic: boolean;
@@ -79,7 +80,7 @@ export interface Comment {
 	//False if comment has been deleted
 	active: boolean;
 	edited: boolean;
-	attachments:{file:string}[];
+	attachments: { file: string }[];
 }
 
 export interface CommentEdited {}

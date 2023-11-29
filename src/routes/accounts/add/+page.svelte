@@ -37,7 +37,7 @@
 <svelte:head>
 	<title>Flowback: {$_("Adding an Account")}</title>
 </svelte:head>
-<Layout centering>
+<Layout centered>
 	<Loader bind:loading>
 		<AccountUpdater newOne={true}/>
 	</Loader>

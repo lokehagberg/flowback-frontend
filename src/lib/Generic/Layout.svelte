@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import Cookies from './Cookies.svelte';
 	import { TriggerDarkMode } from './DarkMode';
-	export let centering = false;
+	export let centered = false;
 
 	onMount(() => {
 		TriggerDarkMode();
@@ -15,7 +15,7 @@
 
 <Chat />
 
-<div class={`${centering ? 'flex justify-center flex-col items-center' : ''}`}>
+<div class={`${centered ? 'flex justify-center flex-col items-center' : ''}`}>
 	<slot />
 </div>
 <Cookies />

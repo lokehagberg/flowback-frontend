@@ -49,7 +49,7 @@
 	<title>Groups</title>
 </svelte:head>
 
-<Layout centering={true}>
+<Layout centered>
 	<!-- TODO: design of statusmessage is off -->
 	<Loader bind:loading>
 		<StatusMessage bind:status disableSuccess />

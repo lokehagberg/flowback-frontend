@@ -37,12 +37,12 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${import.meta.env.VITE_API}${json.profile_image}`;
+			profileImage = `${import.meta.env.VITE_API}/api${json.profile_image}`;
 	};
 
 	const checkForLedgerModule = async () => {
-		const accounts = await accountsStore.get();
-		ledgerExists = accounts.loaded;
+		// const accounts = await accountsStore.get();
+		// ledgerExists = accounts.loaded;
 	}
 </script>
 

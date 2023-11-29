@@ -23,10 +23,10 @@
 </script>
 
 <div class="relative flex justify-center">
-	<img class="cover" src={`${import.meta.env.VITE_API}${group.cover_image}`} alt="cover" />
+	<img class="cover" src={`${import.meta.env.VITE_API}/api${group.cover_image}`} alt="cover" />
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
-		src={group.image ? `${import.meta.env.VITE_API}${group.image}` : DefaultBanner}
+		src={group.image ? `${import.meta.env.VITE_API}/api${group.image}` : DefaultBanner}
 		alt="profile"
 	/>
 </div>

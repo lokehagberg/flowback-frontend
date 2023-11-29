@@ -96,7 +96,7 @@
 	<title>Creating a Group</title>
 </svelte:head>
 
-<Layout centering>
+<Layout centered>
 	<Loader bind:loading>
 		<form
 			on:submit|preventDefault={createGroup}

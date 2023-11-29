@@ -4,6 +4,6 @@
 	import { _ } from 'svelte-i18n';
 </script>
 
-<Layout centering={true}>
+<Layout centered>
 	<PollThumbnails infoToGet="public" Class="mt-6 sm:w-full md:w-4/5 md:max-w-[720px] justify-center" />
 </Layout>

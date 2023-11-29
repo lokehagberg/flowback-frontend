@@ -22,7 +22,7 @@
 <svelte:head>
 	<title>{$_("Accounts")}</title>
 </svelte:head>
-<Layout centering={true}>
+<Layout centered>
 	<Loader bind:loading>
 		<StatusMessage bind:status disableSuccess/>
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">

@@ -9,7 +9,7 @@
 	<title>Creating a Poll</title>
 </svelte:head>
 
-<Layout centering={true}>
+<Layout centered>
 	{#if $page.url.searchParams.get('type') === 'thread'}
 		<CreateThread />
 	{:else}

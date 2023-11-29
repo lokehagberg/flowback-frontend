@@ -116,7 +116,6 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
-					
 				/>
 
 				{#if pollType === 1}
@@ -224,10 +223,12 @@
 				>
 			{/if}
 		</div>
-		<img
-							class=""
-							src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}`}
-							alt="attachment to the comment"
-						/>
+		{#if poll.attachments && poll.attachments.length > 0}
+			<img
+				class=""
+				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+				alt="attachment to the comment"
+			/>
+		{/if}
 	</Layout>
 {/if}

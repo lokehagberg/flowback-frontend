@@ -137,3 +137,13 @@ export interface kanban {
 	priority: undefined | number;
 	end_date: null | string;
 }
+
+export interface Thread {
+	created_by: {
+		id: 1;
+		username: string;
+		profile_image: null | string;
+		banner_image: null | string;
+	};
+	title: string;
+}

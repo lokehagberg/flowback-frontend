@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
+	import type { Thread } from './interface';
 
 	let threads: any[] = [];
 
@@ -21,7 +22,11 @@
 
 <div>
 	{#each threads as thread}
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 cursor-pointer"
+			on:click={() => window.location.href = `${$page.params.groupId}/thread/${1}`}
+			on:keydown
+		>
 			{thread.title}
 		</div>
 	{/each}

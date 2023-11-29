@@ -12,30 +12,31 @@
 	};
 
 	const subscribeToGroup = async () => {
-		const {res, json} = await fetchRequest('POST', 'notification/group')
-	}
+		const { res, json } = await fetchRequest('POST', 'notification/group');
+	};
 </script>
 
 <div
 	on:click={goToGroup}
+	on:keydown
 	class={`w-4/6 md:w-2/5 max-w-[650px] bg-white relative shadow-md dark:bg-darkobject dark:text-darkmodeText ${
 		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
 	} transition-shadow rounded-2xl`}
 >
-	<div on:click={goToGroup}>
+	<div on:click={goToGroup} on:keydown>
 		<img
-			src={`${import.meta.env.VITE_API}${group.cover_image}`}
+			src={`${import.meta.env.VITE_API}/api${group.cover_image}`}
 			class="cover rounded-t-2xl"
 			alt="cover"
 		/>
 	</div>
 	<img
-		src={`${import.meta.env.VITE_API}${group.image}`}
+		src={`${import.meta.env.VITE_API}/api${group.image}`}
 		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		alt="profile"
 	/>
 
-	<div on:click={goToGroup}>
+	<div on:click={goToGroup} on:keydown>
 		<h1 class="text-2xl p-4 mt-10 text-center">
 			{group.name}
 		</h1>

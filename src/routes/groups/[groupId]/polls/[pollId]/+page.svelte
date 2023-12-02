@@ -201,7 +201,7 @@
 					new Date(poll.end_date)
 				]}
 			/>
-			<Comments bind:proposals />
+			<Comments bind:proposals api={'poll'}/>
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">

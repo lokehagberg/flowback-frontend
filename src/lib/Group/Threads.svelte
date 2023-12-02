@@ -24,7 +24,7 @@
 	{#each threads as thread}
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 cursor-pointer"
-			on:click={() => window.location.href = `${$page.params.groupId}/thread/${1}`}
+			on:click={() => window.location.href = `${$page.params.groupId}/thread/${thread.id}`}
 			on:keydown
 		>
 			{thread.title}

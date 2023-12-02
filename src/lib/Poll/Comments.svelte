@@ -18,12 +18,18 @@
 		show = false,
 		showMessage = '';
 
-	export let proposals: proposal[] = [];
+	export let proposals: proposal[] = [],
+		api: 'poll' | 'thread';
 
-	const getComments = async () => {
+		onMount(() => {
+		})
+		
+		const getComments = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/comment/list?limit=${pollCommentsLimit}`
+			`group/${api}/${
+				api === 'poll' ? $page.params.pollId : $page.params.threadId
+			}/comment/list?limit=${pollCommentsLimit}`
 		);
 
 		comments = json.results.map((comment: Comment) => {
@@ -36,7 +42,9 @@
 	const deleteComment = async (id: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${$page.params.pollId}/comment/${id}/delete`
+			`group/${api}/${
+				api === 'poll' ? $page.params.pollId : $page.params.threadId
+			}/comment/${id}/delete`
 		);
 		if (res.ok) {
 			show = true;
@@ -91,7 +99,7 @@
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
-	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} />
+	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} {api}/>
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
@@ -105,6 +113,7 @@
 					parent_id={comment.parent_id}
 					replyDepth={comment.reply_depth}
 					id={comment.id}
+					{api}
 				/>
 			{:else}
 				<div
@@ -123,16 +132,16 @@
 					<div class="text-xs text-gray-400 dark:text-darkmodeText">
 						{comment.edited ? '(edited)' : ''}
 					</div>
-					{#if (comment.attachments?.length > 0)}
-					<div>
-						{#each comment.attachments as attachment}
-						<img
-							class=""
-							src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
-							alt="attachment to the comment"
-						/>
-						{/each}
-					</div>
+					{#if comment.attachments?.length > 0}
+						<div>
+							{#each comment.attachments as attachment}
+								<img
+									class=""
+									src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+									alt="attachment to the comment"
+								/>
+							{/each}
+						</div>
 					{/if}
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
@@ -173,6 +182,7 @@
 					bind:replying={comment.being_replied}
 					parent_id={comment.id}
 					replyDepth={comment.reply_depth}
+					{api}
 				/>
 			{/if}
 		{/each}

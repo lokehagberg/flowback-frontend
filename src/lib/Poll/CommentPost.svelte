@@ -9,7 +9,7 @@
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import About from '$lib/Group/About.svelte';
-	
+
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
 		parent_id: number | undefined = undefined,
@@ -17,30 +17,31 @@
 		id = 0,
 		beingEdited = false,
 		message = '',
-        replying = false;
+		replying = false,
+		api: 'poll' | 'thread';
 
 	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '',
-		attachments:File[] = [],
-		image:File;
+		attachments: File[] = [],
+		image: File;
 
 	// $: if(image !== null ) attachments.push(image)
 
 	const commentCreate = async () => {
 		const formData = new FormData();
-		formData.append("message", message);
+		formData.append('message', message);
 		//@ts-ignore
-		if(parent_id) formData.append("parent_id", parent_id);
+		if (parent_id) formData.append('parent_id', parent_id);
 		// await console.log(await image.text())
-		if (image)
-		formData.append("attachments", image)
-		
+		if (image) formData.append('attachments', image);
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${$page.params.pollId}/comment/create`,
-			formData, true, false
+			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/comment/create`,
+			formData,
+			true,
+			false
 			// {
 			// 	message,
 			// 	parent_id,
@@ -62,7 +63,7 @@
 				reply_depth: replyDepth + 1,
 				active: true,
 				edited: false,
-				attachments:[],
+				attachments: []
 			});
 			comments = comments;
 			showMessage = 'Posted Comment';
@@ -71,13 +72,13 @@
 
 			subscribeToReplies();
 		}
-        replying = false;
+		replying = false;
 	};
 
 	const commentUpdate = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${$page.params.pollId}/comment/${id}/update`,
+			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/comment/${id}/update`,
 			{
 				message
 			}
@@ -101,7 +102,7 @@
 	const subscribeToReplies = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/${$page.params.pollId}/subscribe`,
+			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/subscribe`,
 			{
 				categories: ['comment_self']
 			}
@@ -134,10 +135,8 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse"/>
+	<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse" />
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->
-	
 </form>
- 

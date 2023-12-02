@@ -22,18 +22,33 @@
 		votingHistory = json.results;
 	};
 
+	const getDelegateInfo = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?id=${history}`
+		);
+		delegatePool = json.results[0];
+		console.log(json.results[0], 'JÄSON');
+	};
+
 	onMount(() => {
+		getDelegateInfo();
 		getDelegateHistory();
 	});
 </script>
 
 <Loader bind:loading>
-	<div class="p3">{$_('delegate history for')} {delegatePool?.delegates[0].user_id || ''}</div>
+	{#if delegatePool}
+		<div class="p3">
+			{$_('delegate history for')}
+			{delegatePool.delegates[0].group_user.user.username}
+		</div>
+	{/if}
 	<ul class="w-full">
 		{#each votingHistory as vote}
-		<li
-		class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
-		>
+			<li
+				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
+			>
 				<a
 					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
 					href={`${$page.params.groupId}/polls/${vote.poll_id}`}

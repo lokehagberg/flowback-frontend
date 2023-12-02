@@ -7,7 +7,7 @@
 	import Selected from './Selected.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';
-	import DelegateHistory from './DelegateHistory.svelte';
+	import History from './History.svelte';
 
 	let selectedPage: 'All' | 'Selected' | 'History' = 'All',
 		history: number | null = null;
@@ -24,6 +24,6 @@
 	{:else if selectedPage === 'All'}
 		<All bind:history bind:selectedPage/>
 	{:else if selectedPage === 'History'}
-		<DelegateHistory bind:history />
+		<History bind:history />
 	{/if}
 </div>

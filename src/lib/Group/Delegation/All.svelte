@@ -8,6 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
+	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -45,12 +46,13 @@
 		console.log(json)
 	};
 
-	const handleCreateDelegationButton = async () => {
+	const createDelegation = async () => {
 		await createDelegationPool();
+		await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
 
-	const handleDeleteDelegationButton = async () => {
+	const deleteDelegation = async () => {
 		await deleteDelegationPool();
 		getDelegatePools();
 		userIsDelegate = false;
@@ -105,9 +107,10 @@
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				console.log(delegatePool.delegates[0].user_id, 'ID');
+				const delegateId = delegatePool.delegates[0].group_user.id;
+				
 				const delegateUserData = await (
-					await fetchRequest('GET', `users?id=${delegatePool.delegates[0].user_id}`)
+					await fetchRequest('GET', `users?id=${delegateId}`)
 				).json.results[0];
 
 				const isInRelation = delegateRelationPoolIds.includes(delegatePool.id);
@@ -168,7 +171,7 @@
 				>
 					<img
 						src={delegate.profile_image
-							? `${import.meta.env.VITE_API}${delegate.profile_image}`
+							? `${import.meta.env.VITE_API}/api${delegate.profile_image}`
 							: DefaultPFP}
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
@@ -207,11 +210,11 @@
 {/if}
 
 {#if userIsDelegate}
-	<Button Class="mt-3 bg-red-500" action={handleDeleteDelegationButton}
+	<Button Class="mt-3 bg-red-500" action={deleteDelegation}
 		>{$_('Stop being delegate')}</Button
 	>
 {:else}
-	<Button Class="mt-3 bg-red-500" action={handleCreateDelegationButton}
+	<Button Class="mt-3 bg-red-500" action={createDelegation}
 		>{$_('Become delegate')}</Button
 	>
 {/if}

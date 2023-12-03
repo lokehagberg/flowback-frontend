@@ -52,7 +52,7 @@
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 		if (user.profile_image)
-			profileImagePreview = `${import.meta.env.VITE_API}${user.profile_image}`;
+			profileImagePreview = `${import.meta.env.VITE_API}/api${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
 
 

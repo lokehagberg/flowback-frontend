@@ -18,6 +18,7 @@
 		number: string = newOne ? '' : '...',
 		status: StatusMessageInfo,
 		loading: boolean = !newOne;
+
 	const updateAccount = async () => {
 		loading = true;
 		const formData = new FormData();
@@ -36,6 +37,7 @@
 		window.location.href = '/accounts';
 		loading = false;
 	};
+
 	onMount(async () => {
 		if (newOne) return;
 		//@ts-ignore

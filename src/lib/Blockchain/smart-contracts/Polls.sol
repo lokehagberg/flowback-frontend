@@ -1,10 +1,12 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
 import './RightToVote.sol';
 import './Delegations.sol';
 
 contract Polls is RightToVote, Delegations {
+
+    
     struct Poll {
         string title;
         string tag;
@@ -16,6 +18,7 @@ contract Polls is RightToVote, Delegations {
         uint endDate;
         uint pollId;
         uint proposalCount;
+        PollPhase phase;
     }
 
     struct Proposal {
@@ -23,6 +26,7 @@ contract Polls is RightToVote, Delegations {
         uint voteCount;
         uint proposalId;
         uint predictionCount;
+        PollPhase phase;
     }
 
     mapping(uint => Poll) public polls;
@@ -31,11 +35,15 @@ contract Polls is RightToVote, Delegations {
     //Ties proposals to polls by pollId
     mapping(uint => Proposal[]) public proposals;
 
+    enum PollPhase {createdPhase, predictionPhase, predictionBetPhase, completedPhase}
+
+    // event PollCreated(uint pollId, string title);
+
     event PollCreated(uint pollId, string title);
 
     function createPoll(
-        string memory _title,
-        string memory _tag,
+        string calldata _title,
+        string calldata _tag,
         uint _group,
         uint _pollStartDate,
         uint _proposalEndDate,
@@ -55,21 +63,26 @@ contract Polls is RightToVote, Delegations {
                 delegateEndDate: _delegateEndDate,
                 endDate: _endDate,
                 pollId: pollCount, 
-                proposalCount: 0
+                proposalCount: 0,
+                phase: PollPhase.createdPhase
             });
+
+            emit PollCreated(newPoll.pollId, newPoll.title);
 
             polls[pollCount] = newPoll;
 
-            emit PollCreated(pollCount, _title);
+            // emit PollCreated(pollCount, _title);
         }
 
     function requirePollToExist(uint _pollId) internal view {
         require(_pollId > 0 && _pollId <= pollCount, "Poll ID does not exist");
     }
 
-    event ProposalAdded(uint pollId, uint proposalId, string description, uint proposalCount);
+    event ProposalAdded(uint indexed pollId, uint proposalId, string description);
 
-    function addProposal(uint _pollId, string memory _description) public {
+    function addProposal(uint _pollId, string calldata _description) public {
+        bool rightPhase = polls[_pollId].phase == PollPhase.createdPhase;
+        require(rightPhase, "You can not place proposal right now");
         requirePollToExist(_pollId);
         polls[_pollId].proposalCount++;
         uint _proposalId = polls[_pollId].proposalCount;
@@ -78,15 +91,33 @@ contract Polls is RightToVote, Delegations {
             description: _description,
             voteCount: 0,
             proposalId: _proposalId,
-            predictionCount: 0
+            predictionCount: 0,
+            phase: PollPhase.predictionPhase
         }));
 
-        emit ProposalAdded(_pollId, _proposalId, _description, _proposalId);
+        emit ProposalAdded(_pollId, _proposalId, _description);
     }
 
     function getProposals(uint _pollId) external view returns(Proposal[] memory) {
         requirePollToExist(_pollId);
         return proposals[_pollId];
+    }
+
+    function getPollResults(uint _pollId) public view returns (string[] memory, uint[] memory) {
+        requirePollToExist(_pollId);
+
+        Proposal[] memory pollProposals = proposals[_pollId];
+
+        string[] memory proposalDescriptions = new string[](pollProposals.length);
+        uint[] memory voteCounts = new uint[](pollProposals.length);
+
+        for (uint i; i < pollProposals.length; i++) {
+            proposalDescriptions[i] = pollProposals[i].description;
+            voteCounts[i] = pollProposals[i].voteCount;
+        }
+
+        return (proposalDescriptions, voteCounts);
+
     }
 
     function userHasDelegatedInGroup(uint _pollGroup) private view returns(bool) {
@@ -117,9 +148,9 @@ contract Polls is RightToVote, Delegations {
         return false;
     }
 
-    event VoteSubmitted(uint indexed pollId, address indexed voter, bytes32 hashedVote, uint votesForProposal);
+    event VoteSubmitted(uint indexed pollId, address indexed voter, uint votesForProposal);
 
-    function vote(uint _pollId, uint _proposalId, bytes32 _hashedVote) public {
+    function vote(uint _pollId, uint _proposalId) public {
         uint _pollGroup = polls[_pollId].group;
         uint delegatedVotingPower;
 
@@ -137,7 +168,9 @@ contract Polls is RightToVote, Delegations {
 
         Proposal[] storage pollProposals = proposals[_pollId];
 
-        for (uint i; i < groupDelegates[_pollGroup].length;) {
+        uint pollGroupLength = groupDelegates[_pollGroup].length;
+
+        for (uint i; i < pollGroupLength;) {
             if (groupDelegates[_pollGroup][i].delegate == msg.sender) {
                 delegatedVotingPower = groupDelegates[_pollGroup][i].delegatedVotes;
             }
@@ -155,7 +188,7 @@ contract Polls is RightToVote, Delegations {
                 pollProposals[i].voteCount += delegatedVotingPower + 1;
                 _votesForProposal = pollProposals[i].voteCount;
                 votersForPoll[_pollId].push(msg.sender);
-                emit VoteSubmitted(_pollId, msg.sender, _hashedVote, _votesForProposal);
+                emit VoteSubmitted(_pollId, msg.sender, _votesForProposal);
                 return;
             }
             unchecked {
@@ -180,5 +213,4 @@ contract Polls is RightToVote, Delegations {
         }
         return false;
     }
-    
 }

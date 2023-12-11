@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 export const newWallet = () => {
 	const provider = new ethers.providers.InfuraProvider('sepolia', import.meta.env.INFURA_API_KEY);

@@ -2,6 +2,11 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { test } from '$lib/Blockchain/javascript/test.js';
 	import Button from '$lib/Generic/Button.svelte';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		test();
+	})
 </script>
 
 <Layout>

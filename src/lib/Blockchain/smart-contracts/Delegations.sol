@@ -22,7 +22,7 @@ contract Delegations is RightToVote {
     event NewDelegate(address indexed delegate, uint indexed groupId, uint delegatedVotes, address[] delegationsFrom, uint groupDelegateId);
 
     function becomeDelegate(uint _groupId) public {
-        require(!addressIsDelegate(_groupId, msg.sender), "You are already a delegate i specific group");
+        require(!addressIsDelegate(_groupId, msg.sender), "You are already a delegate in specific group");
         groupDelegateCount[_groupId]++;
 
         GroupDelegate memory newGroupDelegate = GroupDelegate({

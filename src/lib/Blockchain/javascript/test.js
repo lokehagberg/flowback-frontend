@@ -1,4 +1,4 @@
-import { delegate } from './delegationsBlockchain.ts';
+import { becomeMemberOfGroup, delegate } from './delegationsBlockchain.ts';
 import {newWallet} from './newWallet.js';
 
 export let test = () => {
@@ -8,5 +8,6 @@ export let test = () => {
 	// console.log('public key:', wallet.publicKey);
 	// console.log('private ke:', wallet.privateKey);
 
-	delegate(1, 1)
+	// delegate(1, 1)
+	becomeMemberOfGroup(1)
 };

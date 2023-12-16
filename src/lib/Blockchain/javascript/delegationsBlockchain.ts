@@ -29,7 +29,7 @@ export const delegate = async (groupId: number, reciever: any) => {
 export const becomeMemberOfGroup = async (groupId: number) => {
 	const contract = getContract();
 
-	const tx = await contract.giveRightToVote(groupId);
+	const tx = await contract.giveRightToVote(groupId.toLocaleString());
 
 	const txReceipt = await tx.wait();
 

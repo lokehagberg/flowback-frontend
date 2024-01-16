@@ -24,7 +24,7 @@
 		description: string,
 		image: File,
 		coverImage: File,
-		directJoin = true,
+		directJoin = false,
 		publicGroup = true,
 		loading = false;
 
@@ -42,7 +42,7 @@
 
 		formData.append('name', name);
 		formData.append('description', description);
-		formData.append('direct_join', directJoin.toString());
+		formData.append('direct_join', (!directJoin).toString());
 		formData.append('public', publicGroup.toString());
 		if (image) formData.append('image', image);
 		if (coverImage) formData.append('cover_image', coverImage);
@@ -113,7 +113,7 @@
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>
-				<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
+				<RadioButtons bind:Yes={directJoin} label={'Invitation Required?'} />
 				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 
 				<StatusMessage bind:status />

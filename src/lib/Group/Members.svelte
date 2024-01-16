@@ -13,7 +13,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
-	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json'
+	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
 
 	let users: GroupUser[] = [];
 	let loading = true;
@@ -23,13 +23,16 @@
 
 	onMount(async () => {
 		const token = localStorage.getItem('token') || '';
-		const { json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?limit=${groupMembersLimit}`);
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
+		);
 		users = json.results;
 		loading = false;
 
 		getInvitesList();
 
-		fetchRequest('GET', `group/${$page.params.groupId}/invites`)
+		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
 
 	const searchUsers = async (username: string) => {
@@ -40,12 +43,15 @@
 			return;
 		}
 
-		const { json } = await fetchRequest('GET', `users?limit=${groupMembersLimit}&username=${username}`);
+		const { json } = await fetchRequest(
+			'GET',
+			`users?limit=${groupMembersLimit}&username=${username}`
+		);
 		searchedUsers = json.results;
 	};
 
 	const getInvitesList = async () => {
-		const { json } = await fetchRequest('GET', `group/invites?group=${$page.params.groupId}`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -70,7 +76,9 @@
 </script>
 
 <Loader bind:loading>
-	<div class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText">
+	<div
+		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText"
+	>
 		<Tab
 			bind:selectedPage
 			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members', 'Invite']}
@@ -82,7 +90,7 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
-						<ProfilePicture user={user}/>
+						<ProfilePicture {user} />
 						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
@@ -93,7 +101,7 @@
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 					href={`/user?id=${user.id}`}
 				>
-					<ProfilePicture user={user}/>
+					<ProfilePicture {user} />
 					<div class="w-64 ml-10 hover">{user.user.username}</div>
 					<div class="w-64 ml-10 hover:underline">{$_('ACCEPT')}</div>
 				</a>
@@ -109,18 +117,30 @@
 					{#each searchedUsers as searchedUser}
 						<li class="text-black flex justify-between bg-white p-2 w-full mt-6">
 							<div class="flex">
-								<ProfilePicture user={searchedUser}/>
+								<ProfilePicture user={searchedUser} />
 								<div class="w-64 ml-10">{searchedUser.username}</div>
 							</div>
 
 							<div class="flex">
-								<div class="cursor-pointer" on:click={() => acceptInviteUser(searchedUser.id)}>
+								<div
+									class="cursor-pointer"
+									on:click={() => acceptInviteUser(searchedUser.id)}
+									on:keydown
+								>
 									<Fa size="2x" color="blue" icon={faCheck} />
 								</div>
-								<div class="ml-2 cursor-pointer" on:click={() => denyInviteUser(searchedUser.id)}>
+								<div
+									class="ml-2 cursor-pointer"
+									on:click={() => denyInviteUser(searchedUser.id)}
+									on:keydown
+								>
 									<Fa size="2x" color="#CC4444" icon={faX} />
 								</div>
-								<div class="ml-2 cursor-pointer" on:click={() => inviteUser(searchedUser.id)}>
+								<div
+									class="ml-2 cursor-pointer"
+									on:click={() => inviteUser(searchedUser.id)}
+									on:keydown
+								>
 									<Fa size="2x" icon={faEnvelope} />
 								</div>
 							</div>

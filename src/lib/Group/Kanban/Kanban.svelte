@@ -47,7 +47,7 @@
 		getKanbanEntries();
 		setInterval(() => {
 			interval = getKanbanEntries();
-		}, 30000);
+		}, 20000);
 	});
 
 	//TODO fix this
@@ -163,6 +163,7 @@
 	};
 </script>
 
+<!-- {@debug showSuccessPoppup} -->
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div
@@ -179,7 +180,7 @@
 				<div
 					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
-					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
+					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
@@ -194,12 +195,12 @@
 		<!-- {/await} -->
 	</div>
 	<div class="mt-4 ml-2 mb-4">
-		<Button action={() => (open = true)}>{$_("Create Task")}</Button>
+		<Button action={() => (open = true)}>{$_('Create Task')}</Button>
 	</div>
 </div>
 
 <Modal bind:open Class="!overflow-visible">
-	<div slot="header">{$_("Create Task")}</div>
+	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
@@ -230,9 +231,9 @@
 							{/each}
 						</select>
 					</div>
-					<div >
+					<div>
 						{$_('End date')}
-						<DateInput bind:value={end_date} min={new Date()}   />
+						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
 				</div>
 				<Button type="submit">{$_('Create task')}</Button>

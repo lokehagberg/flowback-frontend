@@ -89,7 +89,7 @@
 			profile_image: assignee?.user.profile_image || ''
 		};
 
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 		isEditing = false;
 	};
 
@@ -108,7 +108,7 @@
 		if (!res.ok) return;
 
 		kanban.tag = kanban.tag;
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 	};
 
 	const changeAssignee = (e: any) => {
@@ -133,7 +133,7 @@
 		if (!res.ok) return;
 
 		removeKanbanEntry(kanban.id);
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 	};
 
 	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
@@ -156,8 +156,8 @@
 	$: if (openModal && !isEditing)
 		checkForLinks(kanban.description, `kanban-${kanban.id}-description`);
 </script>
-
-<SuccessPoppup bind:show={showSuccessPoppup} />
+<!-- {@debug showSuccessPoppup} -->
+<!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 
 <li
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"

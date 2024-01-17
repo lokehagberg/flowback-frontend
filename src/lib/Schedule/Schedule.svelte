@@ -436,7 +436,7 @@
 	</div>
 </Modal>
 
-<SuccessPoppup bind:show />
+<!-- <SuccessPoppup bind:show /> -->
 
 <style>
 	.calendar {

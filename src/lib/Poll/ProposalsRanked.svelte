@@ -379,7 +379,7 @@ and buttons at the same time without a toggle both. -->
 	</div>
 {/if}
 
-<!-- <StatusMessage bind:status /> -->
+<StatusMessage bind:status />
 
 <!-- {#if phase === "delegate-voting" || phase === "voting"} -->
 {#if (delegatesCanVote && isDelegate) || (nonDelegatesCanVote && !isDelegate)}

@@ -177,7 +177,7 @@
 		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
 	<div
-		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
+		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() =>
 			(window.location.href =
 				type === 'group'

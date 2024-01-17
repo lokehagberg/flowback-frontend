@@ -22,18 +22,23 @@
 	let searchedUsers: User[] = [];
 
 	onMount(async () => {
-		const token = localStorage.getItem('token') || '';
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
-		);
-		users = json.results;
-		loading = false;
+		getUsers();
 
 		getInvitesList();
 
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
+
+	const getUsers = async () => {
+		const token = localStorage.getItem('token') || '';
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
+		);
+		console.log(json.results)
+		users = json.results;
+		loading = false;
+	}
 
 	const searchUsers = async (username: string) => {
 		//TODO: Search users
@@ -90,18 +95,18 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
-						<ProfilePicture {user} />
+						<ProfilePicture user={user.user} />
 						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-			{#each users as user}
+		{#each users as user}
 				<a
 					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
 					href={`/user?id=${user.id}`}
 				>
-					<ProfilePicture {user} />
+					<ProfilePicture user={user.user}  />
 					<div class="w-64 ml-10 hover">{user.user.username}</div>
 					<div class="w-64 ml-10 hover:underline">{$_('ACCEPT')}</div>
 				</a>

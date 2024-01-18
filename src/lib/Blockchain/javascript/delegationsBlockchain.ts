@@ -6,8 +6,11 @@ const getContract = () => {
 
 	const wallet = new ethers.Wallet(import.meta.env.VITE_SIGNER_PRIVATE_KEY, provider);
 
-	const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
-	// const contractAddress = '0x0f021dba3e86994176da8abb497e5a6380439147';
+	//GAS LIMIT
+	// const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+	
+	//REPLACEMENT FEE
+	const contractAddress = '0x0f021dba3e86994176da8abb497e5a6380439147';
 
 	return new ethers.Contract(contractAddress, contractABI, wallet);
 };
@@ -28,15 +31,17 @@ export const delegate = async (groupId: number, reciever: any) => {
 
 export const becomeMemberOfGroup = async (groupId: number) => {
 	const contract = getContract();
-
-	const tx = await contract.giveRightToVote(groupId.toLocaleString());
-
-	const txReceipt = await tx.wait();
+	console.log(contract.estimateGas, 'GAAAAS');
+	const tx = await contract.giveRightToVote(groupId.toLocaleString(), {gasLimit:500000, gasPrice: ethers.utils.parseUnits('20', 'gwei')});
+	console.log("here")
+	const txReceipt = await tx.wait(2000);
+	console.log("here")
 
 	if (txReceipt.status === 1) {
 		console.log('Transaction successful');
 		console.log(txReceipt);
 	}
+	else console.warn("Transaction failed")
 };
 
 export const becomeDelegate = async (groupId: number) => {

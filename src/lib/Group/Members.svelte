@@ -15,11 +15,12 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
 
-	let users: GroupUser[] = [];
-	let loading = true;
-	let selectedPage: SelectablePages = 'Members';
-	let searchUser = '';
-	let searchedUsers: User[] = [];
+	let users: GroupUser[] = [],
+		usersAskingForInvite: any[] = [],
+		loading = true,
+		selectedPage: SelectablePages = 'Members',
+		searchUser = '',
+		searchedUsers: User[] = [];
 
 	onMount(async () => {
 		getUsers();
@@ -35,10 +36,10 @@
 			'GET',
 			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
 		);
-		console.log(json.results)
+		console.log(json.results);
 		users = json.results;
 		loading = false;
-	}
+	};
 
 	const searchUsers = async (username: string) => {
 		//TODO: Search users
@@ -57,6 +58,7 @@
 
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
+		usersAskingForInvite = json.results;
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -69,12 +71,15 @@
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
 			to: userId
 		});
-	};
 
+		usersAskingForInvite = usersAskingForInvite.filter(user => user.id !== userId)
+	};
+	
 	const denyInviteUser = async (userId: number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/reject`, {
 			to: userId
 		});
+		usersAskingForInvite = usersAskingForInvite.filter(user => user.id !== userId)
 	};
 
 	$: if (selectedPage === 'Invite') searchUsers('');
@@ -84,10 +89,7 @@
 	<div
 		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText"
 	>
-		<Tab
-			bind:selectedPage
-			tabs={import.meta.env.VITE_MODE === 'DEV' ? ['Members', 'Invite'] : ['Members', 'Invite']}
-		/>
+		<Tab bind:selectedPage tabs={['Members', 'Pending Invites', 'Invite']} />
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}
@@ -95,21 +97,31 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
-						<ProfilePicture user={user.user} />
+						<ProfilePicture user={user.user}  />
 						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-		{#each users as user}
-				<a
-					class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full"
-					href={`/user?id=${user.id}`}
-				>
-					<ProfilePicture user={user.user}  />
-					<div class="w-64 ml-10 hover">{user.user.username}</div>
-					<div class="w-64 ml-10 hover:underline">{$_('ACCEPT')}</div>
-				</a>
+			{#each usersAskingForInvite as user}
+				<div class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject" >
+					<ProfilePicture {user} />
+					<div class="w-64 ml-10 hover">{user.username}</div>
+					<div
+						class="w-64 ml-10 hover:underline cursor-pointer"
+						on:click={() => acceptInviteUser(user.user)}
+						on:keydown
+					>
+						{$_('ACCEPT')}
+					</div>
+					<div
+						class="w-64 ml-10 hover:underline cursor-pointer"
+						on:click={() => denyInviteUser(user.user)}
+						on:keydown
+					>
+						{$_('DECLINE')}
+					</div>
+				</div>
 			{/each}
 		{:else if selectedPage === 'Invite'}
 			<div class="w-full p-6">

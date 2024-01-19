@@ -49,15 +49,11 @@
 		{#if !group.joined && pending === false}
 			<Button
 				action={async () => {
-					if (!group.direct_join) {
-						pending = true;
-						return;
-					}
-
-					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
+					const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 					if (res.ok) {
 						group.joined = !group.joined;
-						goToGroup();
+						if(group.direct_join)
+							goToGroup();
 					}
 				}}
 				Class="hover:bg-blue-800 bg-blue-600"

@@ -87,7 +87,7 @@
 
 <Loader bind:loading>
 	<div
-		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText"
+		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
 		<Tab bind:selectedPage tabs={['Members', 'Pending Invites', 'Invite']} />
 		{#if selectedPage === 'Members' && users.length > 0}
@@ -103,6 +103,9 @@
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
+		{#if usersAskingForInvite.length === 0}
+			{$_("There are currently no pending invites")}
+		{/if}
 			{#each usersAskingForInvite as user}
 				<div class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject" >
 					<ProfilePicture {user} />

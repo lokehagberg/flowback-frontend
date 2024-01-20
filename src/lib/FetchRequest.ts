@@ -36,7 +36,7 @@ export async function fetchRequest(
 
 	const res = await fetch(
 		//TODO: Make /api/ not hardcodd
-		api.includes(import.meta.env.VITE_API) ? `api/${api}` : `${import.meta.env.VITE_API}/api/${api}`,
+		api.includes(import.meta.env.VITE_API) ? `${api}` : `${import.meta.env.VITE_API}/${api}`,
 		toSend
 	);
 

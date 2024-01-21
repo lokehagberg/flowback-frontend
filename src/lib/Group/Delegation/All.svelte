@@ -9,6 +9,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -20,7 +21,9 @@
 		delegateRelations: any[] = [],
 		userIsDelegate: boolean = false,
 		userId: number,
-		loading = false;
+		loading = false,
+		show = false,
+		message = ""
 
 	export let history: number | null, selectedPage: 'All' | 'Selected' | 'History';
 
@@ -105,6 +108,14 @@
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
 
+		setTimeout(() => {
+			if (loading === true) {
+				loading = false
+				show = true
+				message = "Something went wrong"
+			}
+		}, 25000);
+
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
 				const delegateId = delegatePool.delegates[0].group_user.id;
@@ -118,6 +129,8 @@
 				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
+
+		console.log("managed to get over here")
 		loading = false;
 	};
 
@@ -218,3 +231,5 @@
 		>{$_('Become delegate')}</Button
 	>
 {/if}
+
+<SuccessPoppup bind:show bind:message/>

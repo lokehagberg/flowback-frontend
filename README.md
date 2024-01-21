@@ -187,6 +187,9 @@ It is recommended to install docker desktop.
 
 [Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
 
+### Environment variables
+Make sure you have updated your `.env` file to include the necessary variables.
+
 ### How to build the docker container:
 Go to root
 ```bash

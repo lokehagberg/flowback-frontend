@@ -19,13 +19,13 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
-	import {accountsStore} from '$lib/Account/stores';
+	import { accountsStore } from '$lib/Account/stores';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean | null = null,
 		ledgerExists: boolean = false;
-		//TODO: The <HeaderIcon> component should handle default darkMode
+	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
 		getProfileImage();
@@ -37,13 +37,15 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${import.meta.env.VITE_API}/api${json.profile_image}`;
+			profileImage = `${import.meta.env.VITE_API}${
+				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			}${json.profile_image}`;
 	};
 
 	const checkForLedgerModule = async () => {
 		// const accounts = await accountsStore.get();
 		// ledgerExists = accounts.loaded;
-	}
+	};
 </script>
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
@@ -59,7 +61,7 @@
 				alt="flowback logo"
 			/></a
 		>
-		<div class="!flex justify-between md:w-[80vw] ">
+		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->

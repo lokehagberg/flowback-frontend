@@ -23,7 +23,7 @@
 		userId: number,
 		loading = false,
 		show = false,
-		message = ""
+		message = '';
 
 	export let history: number | null, selectedPage: 'All' | 'Selected' | 'History';
 
@@ -46,7 +46,7 @@
 		);
 		if (json.results.length === 1) userIsDelegate = true;
 
-		console.log(json)
+		console.log(json);
 	};
 
 	const createDelegation = async () => {
@@ -108,18 +108,19 @@
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
 
+		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
 		setTimeout(() => {
 			if (loading === true) {
-				loading = false
-				show = true
-				message = "Something went wrong"
+				loading = false;
+				show = true;
+				message = 'Something went wrong';
 			}
 		}, 25000);
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				const delegateId = delegatePool.delegates[0].group_user.id;
-				
+				const delegateId = delegatePool.delegates[0].group_user_id;
+
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegateId}`)
 				).json.results[0];
@@ -130,7 +131,6 @@
 			})
 		);
 
-		console.log("managed to get over here")
 		loading = false;
 	};
 
@@ -184,7 +184,9 @@
 				>
 					<img
 						src={delegate.profile_image
-							? `${import.meta.env.VITE_API}/api${delegate.profile_image}`
+							? `${import.meta.env.VITE_API}${
+									import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+							  }${delegate.profile_image}`
 							: DefaultPFP}
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
@@ -223,13 +225,9 @@
 {/if}
 
 {#if userIsDelegate}
-	<Button Class="mt-3 bg-red-500" action={deleteDelegation}
-		>{$_('Stop being delegate')}</Button
-	>
+	<Button Class="mt-3 bg-red-500" action={deleteDelegation}>{$_('Stop being delegate')}</Button>
 {:else}
-	<Button Class="mt-3 bg-red-500" action={createDelegation}
-		>{$_('Become delegate')}</Button
-	>
+	<Button Class="mt-3 bg-red-500" action={createDelegation}>{$_('Become delegate')}</Button>
 {/if}
 
-<SuccessPoppup bind:show bind:message/>
+<SuccessPoppup bind:show bind:message />

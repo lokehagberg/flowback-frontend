@@ -163,15 +163,13 @@
 	};
 </script>
 
-<!-- {@debug showSuccessPoppup} -->
-<SuccessPoppup bind:show={showSuccessPoppup} />
+<SuccessPoppup bind:show={showSuccessPoppup}/>
 
 <div
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
 	<div class="flex overflow-x-auto">
-		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
@@ -237,7 +235,7 @@
 					</div>
 				</div>
 				<Button type="submit">{$_('Create task')}</Button>
-				<StatusMessage Class="mt-2" bind:status />
+				<!-- <StatusMessage Class="mt-2" bind:status /> -->
 			</form>
 		</Loader>
 	</div>

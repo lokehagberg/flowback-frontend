@@ -15,13 +15,13 @@
 	let datesDisplay: string[] = [];
 
 	const dateLabels = [
-		'Tag',
-		'Proposals',
-		'Prediction statements',
+		'Tag voting',
+		'Proposals creation',
+		'Prediction statements creation',
 		'Prediction betting',
-		'Delegate lock-in',
-		'Voting',
-		'Results and Evaluation'
+		'Delegate voting',
+		'Voting for non-delegates',
+		'Results and evaluation'
 	];
 
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());

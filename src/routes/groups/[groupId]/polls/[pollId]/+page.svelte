@@ -99,7 +99,8 @@
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<TitleDescription {pollType} {poll} />
-			Current phase: {phase}
+			{$_('Current phase:')}
+			{phase}
 
 			{#if phase === 'pre-start'}
 				<div>dev</div>
@@ -201,7 +202,7 @@
 					new Date(poll.end_date)
 				]}
 			/>
-			<Comments bind:proposals api={'poll'}/>
+			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">

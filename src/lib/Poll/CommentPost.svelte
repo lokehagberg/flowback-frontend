@@ -42,11 +42,6 @@
 			formData,
 			true,
 			false
-			// {
-			// 	message,
-			// 	parent_id,
-			// 	attachments:[await image.text()]
-			// }
 		);
 		if (res.ok) {
 			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
@@ -135,7 +130,7 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse" />
+	<ImageUpload icon={faUser} bind:image label="" iconSize={"2x"} Class="flex !flex-row-reverse" />
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->

@@ -7,6 +7,9 @@
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
+	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	//@ts-ignore
+	import Fa from 'svelte-fa/src/fa.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -23,9 +26,13 @@
 </script>
 
 <div class="relative flex justify-center">
-	<img class="cover" src={`${import.meta.env.VITE_API}${
-		import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-	}${group.cover_image}`} alt="cover" />
+	<img
+		class="cover"
+		src={`${import.meta.env.VITE_API}${
+			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+		}${group.cover_image}`}
+		alt="cover"
+	/>
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
 		src={group.image
@@ -64,13 +71,15 @@
 			{memberCount}
 			{$_('members')}
 		</p>
+		<div class="ml-3">
 		{#if typeof window !== 'undefined'}
 			{#if group.public}
-				<HeaderIcon icon={faGlobeEurope} text="Public" Class="cursor-auto" />
+				<Fa icon={faGlobeEurope} />
 			{:else}
-				<HeaderIcon icon={faLock} text="Private" Class="cursor-auto " />
+				<Fa icon={faLock} />
 			{/if}
 		{/if}
+	</div>
 	</div>
 </div>
 

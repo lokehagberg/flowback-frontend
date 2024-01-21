@@ -22,7 +22,7 @@
 
 <div>
 	{#if threads.length === 0}
-	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center">There's currently no threads</div>
+	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center">There are currently no threads in this group</div>
 	{/if}
 	{#each threads as thread}
 		<div

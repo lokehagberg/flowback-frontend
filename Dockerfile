@@ -12,10 +12,13 @@ COPY . .
 RUN npm run build
 
 FROM node:18-alpine AS run
-
+RUN adduser -D nodeuser
+RUN mkdir -p /app
+RUN chown nodeuser:nodeuser /app
+USER nodeuser
 WORKDIR /app
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/build ./build
+COPY --from=build --chown=nodeuser:nodeuser /app/package.json ./package.json
+COPY --from=build --chown=nodeuser:nodeuser /app/build ./build
 #RUN npm install --production
 RUN npm install --legacy-peer-deps
 ENTRYPOINT [ "node", "build" ]

@@ -70,7 +70,9 @@
 		>
 			<img
 				class="h-8 w-8 inline rounded-full"
-				src={`${import.meta.env.VITE_API}/api${poll.group_image}`}
+				src={`${import.meta.env.VITE_API}${
+					import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+				}${poll.group_image}`}
 				alt="group thumbnail"
 			/>
 			<span class="inline">{poll.group_name}</span>

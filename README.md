@@ -45,7 +45,7 @@ Remember to check the “Generic” folder before doing something that’s very 
 Check out the backend documentation here: https://docs.flowback.org/
 
 ## Generally good code practices:
-```{js}
+```js
 // Unnecessary nesting
 if (boolean) {
     // long statement...
@@ -174,4 +174,17 @@ const thingtoDo2Good = (thing) => {
 
 
 //Have paragraphs in functions to differentiate different operations
+```
+# Docker
+`docker-compose.yaml` can be found in the root.
+### How to build the docker container:
+Go to root
+```bash
+docker compose up -d
+```
+
+### How to manually build the docker image
+Go to root
+```bash
+docker build -t flowback-frontend .
 ```

@@ -191,7 +191,16 @@ It is recommended to install docker desktop.
 Make sure you have updated your `.env` file to include the necessary variables.
 
 ### How to build the docker container:
-Go to root
+Go to root.
+
+1. Build the container:
+```bash
+docker compose build
+```
+Only build the container if changes have been made in the application code or Dockerfile.
+
+
+2. Launch the container:
 ```bash
 docker compose up -d
 ```

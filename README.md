@@ -176,7 +176,17 @@ const thingtoDo2Good = (thing) => {
 //Have paragraphs in functions to differentiate different operations
 ```
 # Docker
-`docker-compose.yaml` can be found in the root.
+To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed.
+
+### Install docker
+It is recommended to install docker desktop.
+
+[Install on Mac](https://docs.docker.com/desktop/install/mac-install/)
+
+[Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
+
+[Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
+
 ### How to build the docker container:
 Go to root
 ```bash
@@ -188,3 +198,6 @@ Go to root
 ```bash
 docker build -t flowback-frontend .
 ```
+
+### Want to update the docker compose file?
+You can find `docker-compose.yaml` in the root.

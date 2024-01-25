@@ -5,7 +5,7 @@
 git clone https://github.com/lokehagberg/flowback-frontend.git
 
 #Then you install the dependencies
-npm install
+npm install --legacy-peer-deps
 ```
 
 Then the .env.example file will give you the information needed to connect it to a backend instance of flowback. Once that is done you can run it

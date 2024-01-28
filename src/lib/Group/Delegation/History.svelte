@@ -41,7 +41,7 @@
 	{#if delegatePool}
 		<div class="p3">
 			{$_('delegate history for')}
-			{delegatePool.delegates[0].group_user.user.username}
+			{delegatePool.delegates[0].group_user.username}
 		</div>
 	{/if}
 	<ul class="w-full">

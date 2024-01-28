@@ -1,8 +1,10 @@
 import { ethers } from 'ethers';
 
-export const newWallet = () => {
-	const provider = new ethers.providers.InfuraProvider('sepolia', import.meta.env.VITE_INFURA_API_KEY);
-	console.log(import.meta.env.VITE_INFURA_API_KEY)
+export const newWallet = async () => {
+	const provider = new ethers.providers.InfuraProvider(import.meta.env.INFURA_API_KEY);
+
+	const balance = await provider.getBalance("0x73BCEb1Cd57C711fwaC4224D062b0F6#338501e")
+	console.log(balance, "BALANCE")
 
 	const userWallet = ethers.Wallet.createRandom();
 	let wallet = new ethers.Wallet(userWallet.privateKey);

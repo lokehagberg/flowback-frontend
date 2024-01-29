@@ -18,6 +18,7 @@ const getContract = (privateKey:string) => {
 
 export const becomeMemberOfGroup = async (groupId: number, privateKey:string) => {
 	const contract = getContract(privateKey);
+	
 	// Set gasPrice value
 	const gasPrice = ethers.utils.parseUnits('20', 'gwei');
 	

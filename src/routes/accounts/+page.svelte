@@ -11,12 +11,23 @@
 
 	let loading: boolean = true,
 		accounts: any[] = [],
-		status: StatusMessageInfo;
-	onMount(async () => {
+		status: StatusMessageInfo,
+		aggregatedBalance:number = 0
+	
+		onMount(async () => {
 		//@ts-ignore
 		accounts = await accountsStore.get();
+		
+		totalBalance()
+		
 		loading = false;
 	});
+
+	const totalBalance = () => {
+		accounts.forEach(account => {
+			aggregatedBalance += account.balance
+		});
+	}
 </script>
 
 <svelte:head>
@@ -35,9 +46,10 @@
 						? '1 account'
 						: accounts.length + ' accounts'}
 				</p>
-				<ol class="md:grid lg:grid-cols-3 gap-6 2xl:grid-cols-5 ">
+				<p class="dark:text-darkmodeText">Aggregated Balance: {aggregatedBalance}</p>
+				<ol class="md:grid lg:grid-cols-3 gap-6 2xl:grid-cols-5">
 					{#each accounts as account}
-						<li> <AccountThumbnail {account} /></li>
+						<li><AccountThumbnail {account} /></li>
 					{/each}
 				</ol>
 			{/if}

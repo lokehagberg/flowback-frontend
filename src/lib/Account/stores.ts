@@ -37,7 +37,7 @@ Object.assign(accountsStore, {
 	async load() {
 		console.log(".load", this);
 		const {res, json} =
-			await fetchRequest('GET', 'ledger/accounts');
+			await fetchRequest('GET', 'ledgeraccounts');
 		const status = statusMessageFormatter(res, json);
 		if (!res.ok)
 			return {

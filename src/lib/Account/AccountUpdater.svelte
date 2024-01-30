@@ -25,7 +25,7 @@
 		if (newOne) formData.append('id', id.toString());
 		formData.append('account_name', name);
 		formData.append('account_number', number);
-		const path = 'ledger/accounts/' + (newOne ? 'create' : `${id}/update`);
+		const path = 'ledgeraccounts/' + (newOne ? 'create' : `${id}/update`);
 		const { res, json } = await fetchRequest('POST', path, formData, true, false);
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);

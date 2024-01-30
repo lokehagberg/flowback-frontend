@@ -12,7 +12,7 @@
 	
 	const removeAccount = async () => {
 		const {res, json} = await fetchRequest(
-			'POST', `ledger/accounts/${account.id}/delete`
+			'POST', `ledgeraccounts/${account.id}/delete`
 		);
 		const status = statusMessageFormatter(res, json);
 		if (res.ok)

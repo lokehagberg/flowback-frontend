@@ -21,7 +21,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			'api/ledger/accounts/create',
+			'api/ledger_accounts/create',
 			formData,
 			true,
 			false

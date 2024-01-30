@@ -43,7 +43,7 @@
 	};
 
 	const recordTransaction = async () => {
-		console.log("hello?")
+		console.log('hello?');
 		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -66,24 +66,29 @@
 	});
 </script>
 
-<Layout>
-	<h1>Transactions</h1>
-	<Loader bind:loading>
+<Layout centered>
+	<Button Class="mt-6" action={() => location.href = `/accounts`}>Go to all accounts</Button>
+	<div class="p-6 bg-white dark:bg-darkobject mt-6 shadow-lg rounded dark:text-darkmodeText">
+		<Loader bind:loading>
+		<h1>Transactions</h1>
+		<div class="flex flex-col gap-4">
 		{#if aOK && account}
+				<div>
+					Account: {account.account_name}
+					<code>{account.account_number}</code><br />
+					Balance: {account.balance}
+				</div>
+			{/if}
+			<Button action={recordTransaction}>Record Transaction</Button>
 			<div>
-				Account: {account.account_name}
-				<code>{account.account_number}</code><br />
-				Balance: {account.balance}
+				<p>
+					{#if tOK}
+						{transactions.length} transactions:
+					{/if}&nbsp;
+				</p>
+				<TransactionTable {transactions} />
 			</div>
-		{/if}
-		<Button action={recordTransaction}>Record Transaction</Button>
-		<div>
-			<p>
-				{#if tOK}
-					{transactions.length} transactions:
-				{/if}&nbsp;
-			</p>
-			<TransactionTable {transactions} />
 		</div>
 	</Loader>
+</div>
 </Layout>

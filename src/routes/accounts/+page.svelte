@@ -28,16 +28,16 @@
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
 			<Button href="accounts/add" Class="w-[40%] rounded-2xl">{$_('Add Account')}</Button>
 			{#if accounts}
-				<p>
+				<p class="dark:text-darkmodeText">
 					{!accounts.length
-						? '0 accounts.'
+						? 'There are no accounts currently'
 						: accounts.length === 1
-						? '1 account:'
-						: accounts.length + ' accounts:'}
+						? '1 account'
+						: accounts.length + ' accounts'}
 				</p>
-				<ol>
+				<ol class="md:grid lg:grid-cols-3 gap-6 2xl:grid-cols-5 ">
 					{#each accounts as account}
-						<li><AccountThumbnail {account} /></li>
+						<li> <AccountThumbnail {account} /></li>
 					{/each}
 				</ol>
 			{/if}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TransactionRow from '$lib/Account/Transaction/TransactionRow.svelte';
-	export let transactions = [];
+	export let transactions:any[] = [];
+
 	const fields = `
 		id,
 		debit_amount,

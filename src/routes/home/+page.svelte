@@ -8,15 +8,15 @@
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json'
+	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
 
 	interface Invitation {
 		external: boolean;
 		group: number;
 		user: number;
 		username: string;
-		group_name:string;
-		profile_image:string;
+		group_name: string;
+		profile_image: string;
 	}
 
 	let invitations: Invitation[] = [];
@@ -51,15 +51,20 @@
 <!-- TODO: stuck on loading when no polls -->
 <Layout centered>
 	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
-	<ul class="w-full mt-6 flex flex-col gap-6">
+	<ul class="w-full mt-6 flex flex-col gap-6 max-w-[700px]">
 		<!-- {#if import.meta.env.MODE === 'DEV'} -->
-			{#each invitations as invite}
-				<li class="bg-white p-6 shadow rounded">
-					<span>{$_("You have been invited to")} {invite.group_name}</span>
-					<Button action={() => acceptInvitation(invite.group)}>{$_("Accept")}</Button>
-					<Button action={() => rejectInvitation(invite.group)}>{$_("Reject")}</Button>
+		{#each invitations as invite}
+			{#if !invite.external}
+				<li class="bg-white p-6 shadow rounded dark:bg-darkobject dark:text-darkmodeText">
+					<span>{$_('You have been invited to')} {invite.group_name}</span>
+
+					<div class="mt-4">
+						<Button action={() => acceptInvitation(invite.group)}>{$_('Accept')}</Button>
+						<Button action={() => rejectInvitation(invite.group)}>{$_('Reject')}</Button>
+					</div>
 				</li>
-			{/each}
+			{/if}
+		{/each}
 		<!-- {/if} -->
 	</ul>
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />

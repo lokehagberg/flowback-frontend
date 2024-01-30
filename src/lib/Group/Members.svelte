@@ -72,14 +72,14 @@
 			to: userId
 		});
 
-		usersAskingForInvite = usersAskingForInvite.filter(user => user.id !== userId)
+		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 	};
-	
+
 	const denyInviteUser = async (userId: number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/reject`, {
 			to: userId
 		});
-		usersAskingForInvite = usersAskingForInvite.filter(user => user.id !== userId)
+		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 	};
 
 	$: if (selectedPage === 'Invite') searchUsers('');
@@ -97,34 +97,40 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
-						<ProfilePicture user={user.user}  />
+						<ProfilePicture user={user.user} />
 						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-		{#if usersAskingForInvite.length === 0}
-			{$_("There are currently no pending invites")}
-		{/if}
+			{#if usersAskingForInvite.length === 0}
+				{$_('There are currently no pending invites')}
+			{/if}
 			{#each usersAskingForInvite as user}
-				<div class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject" >
-					<ProfilePicture {user} />
-					<div class="w-64 ml-10 hover">{user.username}</div>
+				{#if user.external === true}
 					<div
-						class="w-64 ml-10 hover:underline cursor-pointer"
-						on:click={() => acceptInviteUser(user.user)}
-						on:keydown
+						class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 					>
-						{$_('ACCEPT')}
+						<ProfilePicture {user} />
+						<div class="w-64 ml-10 hover">{user.username}</div>
+						<!-- svelte-ignore a11y-no-static-element-interactions -->
+						<div
+							class="w-64 ml-10 hover:underline cursor-pointer"
+							on:click={() => acceptInviteUser(user.user)}
+							on:keydown
+						>
+							{$_('ACCEPT')}
+						</div>
+						<!-- svelte-ignore a11y-no-static-element-interactions -->
+						<div
+							class="w-64 ml-10 hover:underline cursor-pointer"
+							on:click={() => denyInviteUser(user.user)}
+							on:keydown
+						>
+							{$_('DECLINE')}
+						</div>
 					</div>
-					<div
-						class="w-64 ml-10 hover:underline cursor-pointer"
-						on:click={() => denyInviteUser(user.user)}
-						on:keydown
-					>
-						{$_('DECLINE')}
-					</div>
-				</div>
+				{/if}
 			{/each}
 		{:else if selectedPage === 'Invite'}
 			<div class="w-full p-6">
@@ -135,27 +141,32 @@
 				/>
 				<ul>
 					{#each searchedUsers as searchedUser}
-						<li class="text-black flex justify-between bg-white p-2 w-full mt-6">
+						<li
+							class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
+						>
 							<div class="flex">
 								<ProfilePicture user={searchedUser} />
 								<div class="w-64 ml-10">{searchedUser.username}</div>
 							</div>
 
 							<div class="flex">
-								<div
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<!-- <div
 									class="cursor-pointer"
 									on:click={() => acceptInviteUser(searchedUser.id)}
 									on:keydown
 								>
 									<Fa size="2x" color="blue" icon={faCheck} />
-								</div>
-								<div
+								</div> -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<!-- <div
 									class="ml-2 cursor-pointer"
 									on:click={() => denyInviteUser(searchedUser.id)}
 									on:keydown
 								>
 									<Fa size="2x" color="#CC4444" icon={faX} />
-								</div>
+								</div> -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
 									class="ml-2 cursor-pointer"
 									on:click={() => inviteUser(searchedUser.id)}

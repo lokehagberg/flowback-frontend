@@ -6,12 +6,14 @@
 	import { page } from '$app/stores';
 	import type { DelegatePool, VoteHistory } from './interfaces';
 	import { _ } from 'svelte-i18n';
+	import type { User } from '$lib/User/interfaces';
 
 	export let history: null | number;
 
 	let loading = false,
 		delegatePool: DelegatePool,
-		votingHistory: VoteHistory[] = [];
+		votingHistory: VoteHistory[] = [],
+		user: User;
 
 	const getDelegateHistory = async () => {
 		loading = true;
@@ -27,13 +29,23 @@
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		);
+
 		delegatePool = json.results[0];
-		console.log(json.results[0], 'JÄSON');
 	};
 
-	onMount(() => {
+	const getUserInfo = async () => {
+		const userId = delegatePool.delegates[0].user_id;
+
+		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
+
+		user = json.results[0];
+		console.log(user, 'USER');
+	};
+
+	onMount(async () => {
 		getDelegateInfo();
-		getDelegateHistory();
+		await getDelegateHistory();
+		getUserInfo();
 	});
 </script>
 
@@ -41,7 +53,7 @@
 	{#if delegatePool}
 		<div class="p3">
 			{$_('delegate history for')}
-			{delegatePool.delegates[0].group_user.username}
+			{user?.username}
 		</div>
 	{/if}
 	<ul class="w-full">

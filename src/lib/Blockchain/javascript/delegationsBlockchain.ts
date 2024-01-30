@@ -27,8 +27,8 @@ export const becomeMemberOfGroup = async (groupId: number, privateKey:string) =>
 	const tx = await contract.giveRightToVote(groupId.toLocaleString(), { gasLimit: 21204, gasPrice });
 	
 	
-	// Adjust the timeout based on your requirements
-	const txReceipt = await tx.wait({ timeout: 2000 }).catch((error:any) => {
+	// Timeout for when the transactions takes too long
+	const txReceipt = await tx.wait({ timeout: 20000 }).catch((error:any) => {
 		console.error('Error waiting for transaction:', error);
 	});
 	

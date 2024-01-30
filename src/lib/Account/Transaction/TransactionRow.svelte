@@ -20,8 +20,8 @@
 		.split(/,\s*/);
 
 	let open = false,
-		debit_amount: string = tx.debit_amount,
-		credit_amount: string = tx.credit_amount,
+		debit_amount: string = tx.debit_amount || 0,
+		credit_amount: string = 0 || tx.credit_amount,
 		description: string = tx.description,
 		verification_number: string = tx.verification_number,
 		date: Date = new Date(tx.date);
@@ -54,7 +54,7 @@
 
 <tr on:click={() => (open = !open)}>
 	{#each fields as field}
-		<td>{tx[field]}</td>
+		<td>{(tx[field])}</td>
 	{/each}
 </tr>
 

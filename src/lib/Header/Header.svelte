@@ -20,6 +20,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	import { accountsStore } from '$lib/Account/stores';
+	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -90,6 +91,12 @@
 					icon={faList}
 					text="My Kanban"
 					href="kanban"
+					color={darkMode ? 'white' : 'black'}
+				/>
+				<HeaderIcon
+					icon={faCoins}
+					text="Ledger"
+					href="accounts"
 					color={darkMode ? 'white' : 'black'}
 				/>
 				<!-- <HeaderIcon

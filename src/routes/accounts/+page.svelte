@@ -25,6 +25,7 @@
 		show_account = false,
 		show_poppup = false,
 		newTransaction = false,
+		showDeleteAccount = false,
 		amount: number = 0,
 		account_type: 'debit' | 'credit',
 		description: string,
@@ -49,12 +50,10 @@
 	});
 
 	const totalBalance = () => {
-		balance = 0
+		balance = 0;
 		transactions.forEach((account) => {
-			if (account.credit_amount !== "null")
-			balance -= Number(account.credit_amount);
-		if (account.debit_amount !== 'null')
-			balance += Number(account.debit_amount)
+			if (account.credit_amount !== 'null') balance -= Number(account.credit_amount);
+			if (account.debit_amount !== 'null') balance += Number(account.debit_amount);
 		});
 	};
 
@@ -138,17 +137,41 @@
 		} else {
 			show_poppup = true;
 			message = 'Successfully created account';
+			accounts.push({
+				//@ts-ignore
+				account_name, account_number, id:json, created_by: undefined
+			})
+			accounts = accounts
 		}
-
+		
+		
+		
 		// if (!res.ok) {
-		// 	status = statusMessageFormatter(res, json);
-		// 	loading = false;
-		// 	return;
-		// }
-
-		// window.location.href = '/accounts';
+			// 	status = statusMessageFormatter(res, json);
+			// 	loading = false;
+			// 	return;
+			// }
+			
+			// window.location.href = '/accounts';
+		};
+		
+		const deleteAccount = async () => {
+			loading = true;
+			const { res, json } = await fetchRequest('POST', `ledger/account/${account_id}/delete`);
+			loading = false;
+			
+			if (!res.ok) {
+				show_poppup = true;
+			message = 'Something went wrong';
+			return;
+		} else {
+			show_poppup = true;
+			message = 'Successfully deleted account';
+			accounts = accounts.filter(account => account_id !== account.id);
+			transactions = transactions.filter(transaction => transaction.account.id !== account_id)
+		}
 	};
-
+	
 	$: transactions && totalBalance();
 </script>
 
@@ -166,6 +189,7 @@
 				}}>Add Transaction</Button
 			>
 			<Button action={() => (show_account = true)}>Create Account</Button>
+			<Button action={() => (showDeleteAccount = true)}>Delete Account</Button>
 			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>
@@ -289,3 +313,26 @@
 	</div>
 </Modal>
 <SuccessPoppup bind:show={show_poppup} bind:message />
+
+<Modal bind:open={showDeleteAccount}>
+	<div slot="body">
+		<div class="mt-2">
+			<label for="account">Account</label>
+			<div>
+				<Select
+					labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
+					values={accounts.map((account) => account.id)}
+					bind:value={account_id}
+					onInput={(e) => {
+						//@ts-ignore
+						const selectedScore = e?.target?.value;
+						account_id = Number(selectedScore);
+					}}
+				/>
+			</div>
+		</div>
+	</div>
+	<div slot="footer">
+		<Button action={deleteAccount}>Delete Account</Button>
+	</div>
+</Modal>

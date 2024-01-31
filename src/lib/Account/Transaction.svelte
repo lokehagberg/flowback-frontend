@@ -13,21 +13,26 @@
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	// import { formatDate } from '$lib/Generic/DateFormatter';
 
-	export let transaction: Transaction, accounts: Account[];
+	export let transaction: Transaction, transactions: Transaction[], accounts: Account[];
 
 	let show = false,
-
 		description = transaction.description,
 		verification_number = transaction.verification_number,
 		date = new Date(transaction.date),
-		amount = transaction.debit_amount === "0" ? transaction.credit_amount : transaction.debit_amount,
-		account_type: 'debit' | 'credit' = transaction.debit_amount === "0" ? 'credit' : 'debit'
+		amount =
+			transaction.debit_amount === '0' ? transaction.credit_amount : transaction.debit_amount,
+		account_type: 'debit' | 'credit' = transaction.debit_amount === '0' ? 'credit' : 'debit';
 
 	const deleteTransaction = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			`ledger/account/${transaction.account.id}/transactions/${transaction.id}/delete`
 		);
+
+		if (res.ok) {
+			transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
+			console.log(transactions);
+		}
 	};
 
 	const updateTransaction = async () => {
@@ -55,12 +60,13 @@
 <div class="flex gap-2 ml-20">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click={() => (show = !show)} on:keydown>
-    <Fa icon={faScrewdriver} /></div>
+		<Fa icon={faScrewdriver} />
+	</div>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click={deleteTransaction} on:keydown>
-    <Fa icon={faTrash} /></div>
+		<Fa icon={faTrash} />
+	</div>
 </div>
-
 
 <Modal bind:open={show}>
 	<div slot="header">Adding Transaction</div>
@@ -128,6 +134,7 @@
 						onInput={(e) => {
 							//@ts-ignore
 							const selectedScore = e?.target?.value;
+							//@ts-ignore
 							account_id = Number(selectedScore);
 						}}
 					/>
@@ -157,7 +164,7 @@
 			</div>
 			<div>
 				<DateInput bind:value={date} /> -->
-			<!-- </div>
+<!-- </div>
 			<Select
 				labels={accounts.map((account) => account.account_name)}
 				values={accounts.map((account) => account.id)}

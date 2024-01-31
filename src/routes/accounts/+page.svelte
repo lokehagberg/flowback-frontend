@@ -34,22 +34,27 @@
 		account_number: string,
 		accounts: Account[] = [],
 		value: number,
-		message: string;
+		message: string,
+		balance = 0;
 
 	onMount(async () => {
 		//@ts-ignore
-		getTransactions();
+		getAccounts();
+		await getTransactions();
 
 		// console.log(transactions, 'TRANS');
-		// totalBalance();
-		getAccounts();
+		totalBalance();
 
 		loading = false;
 	});
 
 	const totalBalance = () => {
+		balance = 0
 		transactions.forEach((account) => {
-			// aggregatedBalance += account.balance;
+			if (account.credit_amount !== "null")
+			balance -= Number(account.credit_amount);
+		if (account.debit_amount !== 'null')
+			balance += Number(account.debit_amount)
 		});
 	};
 
@@ -144,7 +149,7 @@
 		// window.location.href = '/accounts';
 	};
 
-	$: console.log(account_type, 'TYPE');
+	$: transactions && totalBalance();
 </script>
 
 <svelte:head>
@@ -161,6 +166,7 @@
 				}}>Add Transaction</Button
 			>
 			<Button action={() => (show_account = true)}>Create Account</Button>
+			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>
 				<div class="font-bold">Account Number</div>
@@ -172,7 +178,7 @@
 				<div class="ml-20 font-bold">Edit/Delete</div>
 
 				{#each transactions as transaction}
-					<Transaction {transaction} {accounts} />
+					<Transaction bind:transaction bind:transactions bind:accounts />
 				{/each}
 			</div>
 		</Loader>

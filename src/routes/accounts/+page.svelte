@@ -8,33 +8,36 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import AccountThumbnail from '$lib/Account/AccountThumbnail.svelte';
 	import { accountsStore } from '$lib/Account/stores';
+	import TransactionTable from '$lib/Account/Transaction/TransactionTable.svelte';
+	import type { Transaction } from '$lib/Account/interface';
 
 	let loading: boolean = true,
-		accounts: any[] = [],
+		transactions: Transaction[] = [],
 		status: StatusMessageInfo,
-		aggregatedBalance:number = 0
-	
-		onMount(async () => {
+		aggregatedBalance: number = 0;
+
+	onMount(async () => {
 		//@ts-ignore
-		accounts = await accountsStore.get();
-		
-		totalBalance()
-		
+		transactions = await accountsStore.get();
+
+		console.log(transactions, 'TRANS');
+		// totalBalance();
+
 		loading = false;
 	});
 
 	const totalBalance = () => {
-		accounts.forEach(account => {
-			aggregatedBalance += account.balance
+		transactions.forEach((account) => {
+			// aggregatedBalance += account.balance;
 		});
-	}
+	};
 </script>
 
 <svelte:head>
 	<title>{$_('Accounts')}</title>
 </svelte:head>
 <Layout centered>
-	<Loader bind:loading>
+	<!-- <Loader bind:loading>
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
 			<Button href="accounts/add" Class="w-[40%] rounded-2xl">{$_('Add Account')}</Button>
@@ -54,5 +57,32 @@
 				</ol>
 			{/if}
 		</div>
-	</Loader>
+	</Loader> -->
+
+	<div class="p-6 mt-6 dark:text-darkmodeText">
+		<Loader bind:loading>
+			<h1>Transactions</h1>
+			<div class="grid grid-cols-7 gap-4 mt-3 bg-darkobject rounded shadow p-4">
+				{#each transactions as transaction}
+					<!-- <div>
+						Account: {transaction.account_name}
+						<code>{transaction.account_number}</code><br />
+						Balance: {transaction.balance}
+					</div> -->
+
+					<!-- {@debug transaction} -->
+					<!-- <div class="dark:bg-darkobject p-4 rounded shadow flex gap-10 mt-4"> -->
+						<div>{transaction.account.account_name}</div>
+						<div>{transaction.account.account_number}</div>
+						<div>{transaction.debit_amount}</div>
+						<div>{transaction.credit_amount}</div>
+						<div>{transaction.description}</div>
+						<div>{transaction.verification_number}</div>
+						<div>{transaction.date}</div>
+					<!-- </div> -->
+
+				{/each}
+			</div>
+		</Loader>
+	</div>
 </Layout>

@@ -3,7 +3,6 @@
 	export let transactions:any[] = [];
 
 	const fields = `
-		id,
 		debit_amount,
 		credit_amount,
 		description,

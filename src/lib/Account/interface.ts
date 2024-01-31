@@ -2,7 +2,12 @@ export interface Account {
 	id: number;
 	account_name: string;
 	account_number: string;
-	balance: number;
+	created_by : {
+		id:number,
+		username : string,
+		profile_image: null | 'string',
+		banner_image: null | 'string'
+	}
 }
 export interface Transaction {
 	id: number;

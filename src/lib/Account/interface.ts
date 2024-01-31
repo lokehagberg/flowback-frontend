@@ -10,10 +10,10 @@ export interface Account {
 	}
 }
 export interface Transaction {
-	id: number;
+	id: string;
 	account: Account;
-	debit_amount: number;
-	credit_amount: number;
+	debit_amount: string;
+	credit_amount: string;
 	description: string;
 	verification_number: string;
 	date: string;

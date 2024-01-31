@@ -4,25 +4,22 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import AccountThumbnail from '$lib/Account/AccountThumbnail.svelte';
 	import { accountsStore } from '$lib/Account/stores';
-	import TransactionTable from '$lib/Account/Transaction/TransactionTable.svelte';
-	import type { Transaction, Account } from '$lib/Account/interface';
+	import type { Transaction as TransactionType, Account } from '$lib/Account/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import { stringify } from 'postcss';
 	import Select from '$lib/Generic/Select.svelte';
+	import Transaction from '$lib/Account/Transaction.svelte';
 
 	let loading: boolean = true,
-		transactions: Transaction[] = [],
+		transactions: TransactionType[] = [],
 		status: StatusMessageInfo,
 		aggregatedBalance: number = 0,
-		account_id:number,
+		account_id: number,
 		show = false,
 		newTransaction = false,
 		debit_amount: string,
@@ -32,8 +29,8 @@
 		date: Date,
 		account_name: string,
 		account_number: string,
-		accounts : Account[] = [],
-		value:number;
+		accounts: Account[] = [],
+		value: number;
 
 	onMount(async () => {
 		//@ts-ignore
@@ -53,32 +50,11 @@
 	};
 
 	const getAccounts = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`ledger/account/list`
-		);
-		accounts = json.results
-		console.log(accounts.map(account => account.account_name), "ACCOUNTING")
-	}
-
-	const deleteTransaction = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`ledger/accounts/${$page.params.accountId}/transactions/${account_id}/delete`
-		);
-	};
-
-	const updateTransaction = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`ledger/account/${$page.params.accountId}/transactions/${account_id}/update`,
-			{
-				debit_amount,
-				credit_amount,
-				description,
-				verification_number,
-				date
-			}
+		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
+		accounts = json.results;
+		console.log(
+			accounts.map((account) => account.account_name),
+			'ACCOUNTING'
 		);
 	};
 
@@ -138,15 +114,9 @@
 					newTransaction = true;
 				}}>Add Transaction</Button
 			>
-			<div class="grid grid-cols-7 gap-4 mt-3 bg-darkobject rounded shadow p-4">
+			<div class="grid grid-cols-8 gap-4 mt-3 bg-darkobject rounded shadow p-4">
 				{#each transactions as transaction}
-					<div>{transaction.account.account_name}</div>
-					<div>{transaction.account.account_number}</div>
-					<div>{transaction.debit_amount}</div>
-					<div>{transaction.credit_amount}</div>
-					<div>{transaction.description}</div>
-					<div>{transaction.verification_number}</div>
-					<div>{transaction.date}</div>
+					<Transaction {transaction} {accounts} />
 				{/each}
 			</div>
 		</Loader>
@@ -171,21 +141,19 @@
 			<div>
 				<DateInput bind:value={date} />
 			</div>
-			<Select labels={accounts.map(account => account.account_name)} values={accounts.map(account => account.id)} bind:value={account_id}
-				onInput={e => {
+			<Select
+				labels={accounts.map((account) => account.account_name)}
+				values={accounts.map((account) => account.id)}
+				bind:value={account_id}
+				onInput={(e) => {
 					//@ts-ignore
 					const selectedScore = e?.target?.value;
-					account_id = Number(selectedScore)
+					account_id = Number(selectedScore);
 				}}
-				/>
+			/>
 		</form>
 	</div>
 	<div slot="footer">
-		{#if !newTransaction}
-			<Button action={deleteTransaction}>Delete Transaction</Button>
-			<Button action={updateTransaction}>Update Transaction</Button>
-		{:else}
-			<Button action={createTransaction}>Create Transaction</Button>
-		{/if}
+		<Button action={createTransaction}>Create Transaction</Button>
 	</div>
 </Modal>

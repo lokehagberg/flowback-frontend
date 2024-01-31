@@ -106,8 +106,8 @@
 			date: date.toString(),
 			id: '',
 			account: {
-				account_name,
-				account_number,
+				account_name: accounts.find(account => account.id === account_id)?.account_name || "",
+				account_number: accounts.find(account => account.id === account_id)?.account_number || "",
 				id: 9999999,
 				//@ts-ignore
 				created_by: null
@@ -189,7 +189,7 @@
 				}}>Add Transaction</Button
 			>
 			<Button action={() => (show_account = true)}>Create Account</Button>
-			<Button action={() => (showDeleteAccount = true)}>Delete Account</Button>
+			<Button action={() => (showDeleteAccount = true)} buttonStyle="warning">Delete Account</Button>
 			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>
@@ -333,6 +333,6 @@
 		</div>
 	</div>
 	<div slot="footer">
-		<Button action={deleteAccount}>Delete Account</Button>
+		<Button action={deleteAccount} buttonStyle="warning">Delete Account</Button>
 	</div>
 </Modal>

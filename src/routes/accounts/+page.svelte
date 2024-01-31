@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
@@ -22,6 +23,7 @@
 		account_id: number,
 		show = false,
 		show_account = false,
+		show_poppup = false,
 		newTransaction = false,
 		amount: number = 0,
 		account_type: 'debit' | 'credit',
@@ -31,7 +33,8 @@
 		account_name: string,
 		account_number: string,
 		accounts: Account[] = [],
-		value: number;
+		value: number,
+		message: string;
 
 	onMount(async () => {
 		//@ts-ignore
@@ -51,20 +54,23 @@
 	};
 
 	const getAccounts = async () => {
+		loading = true;
 		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
+		if (!res.ok) message = 'Something went wrong';
+		loading = false;
 		accounts = json.results;
-		console.log(
-			accounts.map((account) => account.account_name),
-			'ACCOUNTING'
-		);
 	};
 
 	const getTransactions = async () => {
+		loading = true;
 		const { res, json } = await fetchRequest('GET', 'ledger/transactions/list');
+		if (!res.ok) message = 'Something went wrong';
 		transactions = json.results;
+		loading = false;
 	};
 
 	const createTransaction = async () => {
+		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
 			`ledger/account/${account_id}/transactions/create`,
@@ -73,9 +79,37 @@
 				credit_amount: account_type === 'credit' ? amount : 0,
 				description,
 				verification_number,
-				date
+				date: date
 			}
 		);
+
+		loading = false;
+
+		if (!res.ok) {
+			show_poppup = true;
+			message = 'Something went wrong';
+			return;
+		} else {
+			show_poppup = true;
+			message = 'Successfully created transaction';
+		}
+
+		transactions.push({
+			debit_amount: (account_type === 'debit' ? amount : 0).toString(),
+			credit_amount: (account_type === 'credit' ? amount : 0).toString(),
+			description,
+			verification_number,
+			date: date.toString(),
+			id: '',
+			account: {
+				account_name,
+				account_number,
+				id: 9999999,
+				//@ts-ignore
+				created_by: null
+			}
+		});
+		transactions = transactions;
 	};
 
 	const createAccount = async () => {
@@ -90,6 +124,17 @@
 			account_number
 		});
 
+		loading = false;
+
+		if (!res.ok) {
+			show_poppup = true;
+			message = 'Something went wrong';
+			return;
+		} else {
+			show_poppup = true;
+			message = 'Successfully created account';
+		}
+
 		// if (!res.ok) {
 		// 	status = statusMessageFormatter(res, json);
 		// 	loading = false;
@@ -97,7 +142,6 @@
 		// }
 
 		// window.location.href = '/accounts';
-		loading = false;
 	};
 
 	$: console.log(account_type, 'TYPE');
@@ -123,7 +167,7 @@
 				<div class="font-bold">Debit</div>
 				<div class="font-bold">Credit</div>
 				<div class="font-bold">Description</div>
-				<div class="font-bold">Verification Name</div>
+				<div class="font-bold">Verification Number</div>
 				<div class="font-bold">Date</div>
 				<div class="ml-20 font-bold">Edit/Delete</div>
 
@@ -172,13 +216,23 @@
 				</div>
 			</div>
 			<div class="mt-3">
+				<label for="verification_number">Verification number</label>
+				<div>
+					<input
+						id="verification_number"
+						class="dark:bg-darkobject"
+						type="number"
+						bind:value={verification_number}
+						min={0}
+					/>
+				</div>
+			</div>
+
+			<div class="mt-3">
 				<TextInput label={'Description'} bind:value={description} />
 			</div>
 			<div class="mt-3">
-				<TextInput label={'Verification number'} bind:value={verification_number} />
-			</div>
-			<div class="mt-3">
-			<label for="date">Date</label>
+				<label for="date">Date</label>
 				<DateInput bind:value={date} />
 			</div>
 			<div class="mt-2">
@@ -211,7 +265,16 @@
 				<TextInput label={'Account name'} bind:value={account_name} />
 			</div>
 			<div class="mt-3">
-				<TextInput label={'Account number'} bind:value={account_number} />
+				<label for="account_number">Account number</label>
+				<div>
+					<input
+						id="account_number"
+						class="dark:bg-darkobject"
+						type="number"
+						bind:value={account_number}
+						min={0}
+					/>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -219,3 +282,4 @@
 		<Button action={createAccount}>Create Account</Button>
 	</div>
 </Modal>
+<SuccessPoppup bind:show={show_poppup} bind:message />

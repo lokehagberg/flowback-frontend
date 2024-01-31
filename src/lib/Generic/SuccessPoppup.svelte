@@ -6,7 +6,7 @@
 	const successPoppupAnimation = () => {
 		setTimeout(() => {
 			show = false;
-		}, 2500);
+		}, 3500);
 	};
 
 	$: show && successPoppupAnimation();

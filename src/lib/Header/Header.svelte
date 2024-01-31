@@ -74,7 +74,7 @@
 				/>
 				<HeaderIcon
 					icon={faCalendarWeek}
-					text="Schedule"
+					text="My Schedule"
 					href="schedule"
 					color={darkMode ? 'white' : 'black'}
 				/>
@@ -95,7 +95,7 @@
 				/>
 				<HeaderIcon
 					icon={faCoins}
-					text="Ledger"
+					text="My Ledger"
 					href="accounts"
 					color={darkMode ? 'white' : 'black'}
 				/>

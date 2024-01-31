@@ -19,7 +19,7 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
-	import { accountsStore } from '$lib/Account/stores';
+	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,

@@ -10,9 +10,10 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import { page } from '$app/stores';
 	import Select from '$lib/Generic/Select.svelte';
 	import Transaction from '$lib/Account/Transaction.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -22,8 +23,8 @@
 		show = false,
 		show_account = false,
 		newTransaction = false,
-		debit_amount: string,
-		credit_amount: string,
+		amount: number = 0,
+		account_type: 'debit' | 'credit',
 		description: string,
 		verification_number: string,
 		date: Date,
@@ -68,8 +69,8 @@
 			'POST',
 			`ledger/account/${account_id}/transactions/create`,
 			{
-				debit_amount,
-				credit_amount,
+				debit_amount: account_type === 'debit' ? amount : 0,
+				credit_amount: account_type === 'credit' ? amount : 0,
 				description,
 				verification_number,
 				date
@@ -84,14 +85,10 @@
 		// formData.append('account_name', name);
 		// formData.append('account_number', number);
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			'ledger/account/create',
-			{
-				account_name,
-				account_number
-			}
-		);
+		const { res, json } = await fetchRequest('POST', 'ledger/account/create', {
+			account_name,
+			account_number
+		});
 
 		// if (!res.ok) {
 		// 	status = statusMessageFormatter(res, json);
@@ -102,6 +99,8 @@
 		// window.location.href = '/accounts';
 		loading = false;
 	};
+
+	$: console.log(account_type, 'TYPE');
 </script>
 
 <svelte:head>
@@ -117,12 +116,17 @@
 					newTransaction = true;
 				}}>Add Transaction</Button
 			>
-			<Button
-				action={() => 
-					show_account = true
-				}>Create Account</Button
-			>
-			<div class="grid grid-cols-8 gap-4 mt-3 bg-darkobject rounded shadow p-4">
+			<Button action={() => (show_account = true)}>Create Account</Button>
+			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
+				<div class="font-bold">Account Name</div>
+				<div class="font-bold">Account Number</div>
+				<div class="font-bold">Debit</div>
+				<div class="font-bold">Credit</div>
+				<div class="font-bold">Description</div>
+				<div class="font-bold">Verification Name</div>
+				<div class="font-bold">Date</div>
+				<div class="ml-20 font-bold">Edit/Delete</div>
+
 				{#each transactions as transaction}
 					<Transaction {transaction} {accounts} />
 				{/each}
@@ -132,33 +136,66 @@
 </Layout>
 
 <Modal bind:open={show}>
-	<div slot="body">
+	<div slot="header">Adding Transaction</div>
+	<div slot="body" class="text-left">
 		<form>
-			<div>
-				<TextInput label={'debit_amount'} bind:value={debit_amount} />
+			<fieldset>
+				<legend>Account type</legend>
+
+				<div>
+					<input
+						type="radio"
+						id="debit"
+						name="account_type"
+						value="debit"
+						bind:group={account_type}
+						checked
+					/>
+					<label for="debit">Debit</label>
+				</div>
+
+				<div>
+					<input
+						type="radio"
+						id="credit"
+						name="account_type"
+						value="credit"
+						bind:group={account_type}
+					/>
+					<label for="credit">Credit</label>
+				</div>
+			</fieldset>
+			<div class="mt-3">
+				<label for="amount">Amount</label>
+				<div>
+					<input id="amount" class="dark:bg-darkobject" type="number" bind:value={amount} min={0} />
+				</div>
 			</div>
-			<div>
-				<TextInput label={'credit_amount'} bind:value={credit_amount} />
+			<div class="mt-3">
+				<TextInput label={'Description'} bind:value={description} />
 			</div>
-			<div>
-				<TextInput label={'description'} bind:value={description} />
+			<div class="mt-3">
+				<TextInput label={'Verification number'} bind:value={verification_number} />
 			</div>
-			<div>
-				<TextInput label={'verification_number'} bind:value={verification_number} />
-			</div>
-			<div>
+			<div class="mt-3">
+			<label for="date">Date</label>
 				<DateInput bind:value={date} />
 			</div>
-			<Select
-				labels={accounts.map((account) => account.account_name)}
-				values={accounts.map((account) => account.id)}
-				bind:value={account_id}
-				onInput={(e) => {
-					//@ts-ignore
-					const selectedScore = e?.target?.value;
-					account_id = Number(selectedScore);
-				}}
-			/>
+			<div class="mt-2">
+				<label for="account">Account</label>
+				<div>
+					<Select
+						labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
+						values={accounts.map((account) => account.id)}
+						bind:value={account_id}
+						onInput={(e) => {
+							//@ts-ignore
+							const selectedScore = e?.target?.value;
+							account_id = Number(selectedScore);
+						}}
+					/>
+				</div>
+			</div>
 		</form>
 	</div>
 	<div slot="footer">
@@ -167,13 +204,14 @@
 </Modal>
 
 <Modal bind:open={show_account}>
-	<div slot="body">
+	<div slot="header">Creating Account</div>
+	<div slot="body" class="text-left">
 		<form>
 			<div>
-				<TextInput label={'account_name'} bind:value={account_name} />
+				<TextInput label={'Account name'} bind:value={account_name} />
 			</div>
-			<div>
-				<TextInput label={'account_number'} bind:value={account_number} />
+			<div class="mt-3">
+				<TextInput label={'Account number'} bind:value={account_number} />
 			</div>
 		</form>
 	</div>

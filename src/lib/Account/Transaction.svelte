@@ -9,6 +9,8 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import { formatDate } from '$lib/Poll/functions';
+	// import { formatDate } from '$lib/Generic/DateFormatter';
 
 	export let transaction: Transaction, accounts: Account[];
 

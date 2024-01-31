@@ -5,7 +5,6 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import { accountsStore } from '$lib/Account/stores';
 	import type { Transaction as TransactionType, Account } from '$lib/Account/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';

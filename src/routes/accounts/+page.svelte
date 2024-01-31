@@ -21,6 +21,7 @@
 		aggregatedBalance: number = 0,
 		account_id: number,
 		show = false,
+		show_account = false,
 		newTransaction = false,
 		debit_amount: string,
 		credit_amount: string,
@@ -34,7 +35,7 @@
 
 	onMount(async () => {
 		//@ts-ignore
-		transactions = await accountsStore.get();
+		getTransactions();
 
 		// console.log(transactions, 'TRANS');
 		// totalBalance();
@@ -56,6 +57,11 @@
 			accounts.map((account) => account.account_name),
 			'ACCOUNTING'
 		);
+	};
+
+	const getTransactions = async () => {
+		const { res, json } = await fetchRequest('GET', 'ledger/transactions/list');
+		transactions = json.results;
 	};
 
 	const createTransaction = async () => {
@@ -85,9 +91,7 @@
 			{
 				account_name,
 				account_number
-			},
-			true,
-			false
+			}
 		);
 
 		// if (!res.ok) {
@@ -113,6 +117,11 @@
 					show = true;
 					newTransaction = true;
 				}}>Add Transaction</Button
+			>
+			<Button
+				action={() => 
+					show_account = true
+				}>Create Account</Button
 			>
 			<div class="grid grid-cols-8 gap-4 mt-3 bg-darkobject rounded shadow p-4">
 				{#each transactions as transaction}
@@ -155,5 +164,21 @@
 	</div>
 	<div slot="footer">
 		<Button action={createTransaction}>Create Transaction</Button>
+	</div>
+</Modal>
+
+<Modal bind:open={show_account}>
+	<div slot="body">
+		<form>
+			<div>
+				<TextInput label={'account_name'} bind:value={account_name} />
+			</div>
+			<div>
+				<TextInput label={'account_number'} bind:value={account_number} />
+			</div>
+		</form>
+	</div>
+	<div slot="footer">
+		<Button action={createAccount}>Create Account</Button>
 	</div>
 </Modal>

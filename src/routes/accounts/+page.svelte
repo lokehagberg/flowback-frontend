@@ -106,8 +106,8 @@
 			date: date.toString(),
 			id: '',
 			account: {
-				account_name: accounts.find(account => account.id === account_id)?.account_name || "",
-				account_number: accounts.find(account => account.id === account_id)?.account_number || "",
+				account_name: accounts.find((account) => account.id === account_id)?.account_name || '',
+				account_number: accounts.find((account) => account.id === account_id)?.account_number || '',
 				id: 9999999,
 				//@ts-ignore
 				created_by: null
@@ -139,39 +139,40 @@
 			message = 'Successfully created account';
 			accounts.push({
 				//@ts-ignore
-				account_name, account_number, id:json, created_by: undefined
-			})
-			accounts = accounts
+				account_name,
+				account_number,
+				id: json,
+				created_by: undefined
+			});
+			accounts = accounts;
 		}
-		
-		
-		
+
 		// if (!res.ok) {
-			// 	status = statusMessageFormatter(res, json);
-			// 	loading = false;
-			// 	return;
-			// }
-			
-			// window.location.href = '/accounts';
-		};
-		
-		const deleteAccount = async () => {
-			loading = true;
-			const { res, json } = await fetchRequest('POST', `ledger/account/${account_id}/delete`);
-			loading = false;
-			
-			if (!res.ok) {
-				show_poppup = true;
+		// 	status = statusMessageFormatter(res, json);
+		// 	loading = false;
+		// 	return;
+		// }
+
+		// window.location.href = '/accounts';
+	};
+
+	const deleteAccount = async () => {
+		loading = true;
+		const { res, json } = await fetchRequest('POST', `ledger/account/${account_id}/delete`);
+		loading = false;
+
+		if (!res.ok) {
+			show_poppup = true;
 			message = 'Something went wrong';
 			return;
 		} else {
 			show_poppup = true;
 			message = 'Successfully deleted account';
-			accounts = accounts.filter(account => account_id !== account.id);
-			transactions = transactions.filter(transaction => transaction.account.id !== account_id)
+			accounts = accounts.filter((account) => account_id !== account.id);
+			transactions = transactions.filter((transaction) => transaction.account.id !== account_id);
 		}
 	};
-	
+
 	$: transactions && totalBalance();
 </script>
 
@@ -189,7 +190,8 @@
 				}}>Add Transaction</Button
 			>
 			<Button action={() => (show_account = true)}>Create Account</Button>
-			<Button action={() => (showDeleteAccount = true)} buttonStyle="warning">Delete Account</Button>
+			<Button action={() => (showDeleteAccount = true)} buttonStyle="warning">Delete Account</Button
+			>
 			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>

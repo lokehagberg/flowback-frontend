@@ -21,7 +21,8 @@
 		date = new Date(transaction.date),
 		amount =
 			transaction.debit_amount === '0' ? transaction.credit_amount : transaction.debit_amount,
-		account_type: 'debit' | 'credit' = transaction.debit_amount === '0' ? 'credit' : 'debit';
+		account_type: 'debit' | 'credit' = transaction.debit_amount === '0' ? 'credit' : 'debit',
+		openDelete = false;
 
 	const deleteTransaction = async () => {
 		const { res, json } = await fetchRequest(
@@ -59,11 +60,11 @@
 <div>{transaction.date}</div>
 <div class="flex gap-2 ml-20">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click={() => (show = !show)} on:keydown>
+	<div on:click={() => (show = !show)} on:keydown class="cursor-pointer">
 		<Fa icon={faScrewdriver} />
 	</div>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click={deleteTransaction} on:keydown>
+	<div on:click={() => (openDelete = !openDelete)} on:keydown class="cursor-pointer">
 		<Fa icon={faTrash} />
 	</div>
 </div>
@@ -147,37 +148,10 @@
 	</div>
 </Modal>
 
-<!-- <Modal bind:open={show}>
+<Modal bind:open={openDelete}>
+	<div slot="header">Are you sure?</div>
 	<div slot="body">
-		<form>
-			<div>
-				<TextInput label={'debit_amount'} bind:value={debit_amount} />
-			</div>
-			<div>
-				<TextInput label={'credit_amount'} bind:value={credit_amount} />
-			</div>
-			<div>
-				<TextInput label={'description'} bind:value={description} />
-			</div>
-			<div>
-				<TextInput label={'verification_number'} bind:value={verification_number} />
-			</div>
-			<div>
-				<DateInput bind:value={date} /> -->
-<!-- </div>
-			<Select
-				labels={accounts.map((account) => account.account_name)}
-				values={accounts.map((account) => account.id)}
-				bind:value={transaction.account.id}
-				onInput={(e) => {
-					//@ts-ignore
-					const selectedScore = e?.target?.value;
-					transaction.account.id = Number(selectedScore);
-				}}
-			/>
-		</form>
+		<Button buttonStyle="warning" action={deleteTransaction}>Delete</Button>
+		<Button action={() => (openDelete = false)}>Cancel</Button>
 	</div>
-	<div slot="footer">
-		<Button action={updateTransaction}>Update Transaction</Button>
-	</div>
-</Modal> -->
+</Modal>

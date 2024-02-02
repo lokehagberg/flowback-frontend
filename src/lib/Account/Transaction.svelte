@@ -11,6 +11,8 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { formatDate } from '$lib/Poll/functions';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
+	import { deepCopy } from 'ethers/lib/utils';
+	import About from '$lib/Group/About.svelte';
 	// import { formatDate } from '$lib/Generic/DateFormatter';
 
 	export let transaction: Transaction, transactions: Transaction[], accounts: Account[];
@@ -22,7 +24,8 @@
 		amount =
 			transaction.debit_amount === '0' ? transaction.credit_amount : transaction.debit_amount,
 		account_type: 'debit' | 'credit' = transaction.debit_amount === '0' ? 'credit' : 'debit',
-		openDelete = false;
+		openDelete = false,
+		account_id: number = transaction.account.id;
 
 	const deleteTransaction = async () => {
 		const { res, json } = await fetchRequest(
@@ -32,11 +35,17 @@
 
 		if (res.ok) {
 			transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
-			console.log(transactions);
 		}
 	};
 
 	const updateTransaction = async () => {
+
+		const account = accounts.find((account) => account.id === account_id);
+
+		console.log(accounts, account_id)
+
+		if (!accounts || !account) return
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`ledger/account/${transaction.account.id}/transactions/${transaction.id}/update`,
@@ -45,9 +54,40 @@
 				credit_amount: account_type === 'credit' ? amount : 0,
 				description,
 				verification_number,
-				date
+				date,
+				account_type,
+				account
 			}
 		);
+
+		if (!res.ok) return;
+
+		// console.log(accounts, account_id,
+		// 	{
+		// 		debit_amount: account_type === 'debit' ? amount : 0,
+		// 		credit_amount: account_type === 'credit' ? amount : 0,
+		// 		description,
+		// 		verification_number,
+		// 		date,
+		// 		account_type,
+		// 		account
+		// 	},
+		// 	'HJELLO'
+		// );
+
+		let newTransaction = deepCopy(transactions);
+
+		newTransaction = newTransaction.filter((transaction_) => transaction_.id !== transaction.id);
+		newTransaction.push({
+			debit_amount: account_type === 'debit' ? amount : '0',
+			credit_amount: account_type === 'credit' ? amount : '0',
+			description,
+			verification_number,
+			date: date.toString(),
+			account,
+			id: json,
+		});
+		transactions = newTransactionå;
 	};
 </script>
 
@@ -128,14 +168,13 @@
 			<div class="mt-2">
 				<label for="account">Account</label>
 				<div>
+					<!-- value={accounts.find(account => account.id === account_id)} -->
 					<Select
 						labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
 						values={accounts.map((account) => account.id)}
-						bind:value={accounts}
 						onInput={(e) => {
 							//@ts-ignore
 							const selectedScore = e?.target?.value;
-							//@ts-ignore
 							account_id = Number(selectedScore);
 						}}
 					/>

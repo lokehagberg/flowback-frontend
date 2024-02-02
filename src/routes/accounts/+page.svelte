@@ -138,22 +138,14 @@
 			show_poppup = true;
 			message = 'Successfully created account';
 			accounts.push({
-				//@ts-ignore
 				account_name,
 				account_number,
 				id: json,
+				//@ts-ignore
 				created_by: undefined
 			});
 			accounts = accounts;
 		}
-
-		// if (!res.ok) {
-		// 	status = statusMessageFormatter(res, json);
-		// 	loading = false;
-		// 	return;
-		// }
-
-		// window.location.href = '/accounts';
 	};
 
 	const deleteAccount = async () => {

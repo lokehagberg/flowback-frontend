@@ -22,7 +22,7 @@
 	let kanbanEntries: kanban[] = [];
 	let description = '',
 		title = '',
-		assignee = 0,
+		assignee: number | null = null,
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
@@ -58,7 +58,7 @@
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
 			getKanbanEntriesGroup();
-			if (type === 'group') getGroupUsers();
+			getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
@@ -96,7 +96,7 @@
 			`group/${$page.params.groupId}/users?limit=${kanbanLimit}`
 		);
 		users = json.results;
-		assignee = users[0]?.user.id;
+		if (!assignee) assignee = users[0]?.user.id;
 	};
 
 	const createKanbanEntry = async () => {
@@ -130,7 +130,7 @@
 		if (!res.ok) return;
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
-		// if (userAssigned)
+		if (!assignee) return;
 		kanbanEntries.push({
 			assignee: {
 				id: assignee,
@@ -154,8 +154,8 @@
 
 		description = '';
 		title = '';
-		priority = 3
-		end_date = null
+		priority = 3;
+		end_date = null;
 
 		showSuccessPoppup = true;
 	};

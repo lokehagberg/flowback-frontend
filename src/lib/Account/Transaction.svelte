@@ -62,19 +62,6 @@
 
 		if (!res.ok) return;
 
-		// console.log(accounts, account_id,
-		// 	{
-		// 		debit_amount: account_type === 'debit' ? amount : 0,
-		// 		credit_amount: account_type === 'credit' ? amount : 0,
-		// 		description,
-		// 		verification_number,
-		// 		date,
-		// 		account_type,
-		// 		account
-		// 	},
-		// 	'HJELLO'
-		// );
-
 		let newTransaction = deepCopy(transactions);
 
 		newTransaction = newTransaction.filter((transaction_) => transaction_.id !== transaction.id);
@@ -85,9 +72,9 @@
 			verification_number,
 			date: date.toString(),
 			account,
-			id: json,
+			id: transaction.id,
 		});
-		transactions = newTransactionå;
+		transactions = newTransaction;
 	};
 </script>
 

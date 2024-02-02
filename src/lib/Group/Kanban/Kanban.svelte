@@ -154,6 +154,8 @@
 
 		description = '';
 		title = '';
+		priority = 3
+		end_date = null
 
 		showSuccessPoppup = true;
 	};
@@ -163,7 +165,7 @@
 	};
 </script>
 
-<SuccessPoppup bind:show={showSuccessPoppup}/>
+<SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +

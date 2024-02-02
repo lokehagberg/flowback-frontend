@@ -21,7 +21,7 @@
 		status: StatusMessageInfo,
 		aggregatedBalance: number = 0,
 		account_id: number,
-		show = false,
+		openNewTransaction = false,
 		show_account = false,
 		show_poppup = false,
 		newTransaction = false,
@@ -83,7 +83,7 @@
 				credit_amount: account_type === 'credit' ? amount : 0,
 				description,
 				verification_number,
-				date: date
+				date
 			}
 		);
 
@@ -114,6 +114,17 @@
 			}
 		});
 		transactions = transactions;
+
+		amount = 0,
+		account_type ='debit'
+		description = "",
+		verification_number = "",
+		date = new Date(),
+		account_name = "",
+		account_number = ""
+
+
+
 	};
 
 	const createAccount = async () => {
@@ -177,7 +188,7 @@
 			<h1>Transactions</h1>
 			<Button
 				action={() => {
-					show = true;
+					openNewTransaction = true;
 					newTransaction = true;
 				}}>Add Transaction</Button
 			>
@@ -203,7 +214,7 @@
 	</div>
 </Layout>
 
-<Modal bind:open={show}>
+<Modal bind:open={openNewTransaction}>
 	<div slot="header">Adding Transaction</div>
 	<div slot="body" class="text-left">
 		<form>

@@ -15,6 +15,7 @@
 	import Transaction from '$lib/Account/Transaction.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
+	import TransactionFilter from '$lib/Account/TransactionFilter.svelte';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -36,7 +37,8 @@
 		accounts: Account[] = [],
 		value: number,
 		message: string,
-		balance = 0;
+		balance = 0,
+		filter: { account_id: number | null } = { account_id: null };
 
 	onMount(async () => {
 		//@ts-ignore
@@ -67,7 +69,12 @@
 
 	const getTransactions = async () => {
 		loading = true;
-		const { res, json } = await fetchRequest('GET', 'ledger/transactions/list');
+
+		let api = `ledger/transactions/list?`;
+
+		if (filter.account_id !== null) api = api + `account_id=${filter.account_id}`;
+
+		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) message = 'Something went wrong';
 		transactions = json.results;
 		loading = false;
@@ -115,16 +122,12 @@
 		});
 		transactions = transactions;
 
-		amount = 0,
-		account_type ='debit'
-		description = "",
-		verification_number = "",
-		date = new Date(),
-		account_name = "",
-		account_number = ""
-
-
-
+		(amount = 0), (account_type = 'debit');
+		(description = ''),
+			(verification_number = ''),
+			(date = new Date()),
+			(account_name = ''),
+			(account_number = '');
 	};
 
 	const createAccount = async () => {
@@ -173,8 +176,11 @@
 			message = 'Successfully deleted account';
 			accounts = accounts.filter((account) => account_id !== account.id);
 			transactions = transactions.filter((transaction) => transaction.account.id !== account_id);
-			
 		}
+	};
+
+	const handleSearch = async () => {
+		getTransactions();
 	};
 
 	$: transactions && totalBalance();
@@ -196,6 +202,9 @@
 			<Button action={() => (show_account = true)}>Create Account</Button>
 			<Button action={() => (showDeleteAccount = true)} buttonStyle="warning">Delete Account</Button
 			>
+
+			<TransactionFilter bind:filter {handleSearch} bind:accounts />
+
 			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>

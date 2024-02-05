@@ -166,6 +166,7 @@
 	{#if kanban.end_date !== null && endDate}
 		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:click={() => {
 			openModal = true;
@@ -176,6 +177,7 @@
 	>
 		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() =>
@@ -197,6 +199,7 @@
 	<!-- Arrows -->
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3">
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
@@ -212,6 +215,7 @@
 
 			<KanbanIcons bind:priority={kanban.priority} />
 
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {

@@ -18,3 +18,7 @@ export interface Transaction {
 	verification_number: string;
 	date: string;
 }
+
+export interface Filter {
+	account_id: number | null 
+}

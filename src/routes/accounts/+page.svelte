@@ -41,7 +41,8 @@
 		filter: Filter = {
 			account_id: null,
 			date_after: null,
-			date_before: null
+			date_before: null,
+			description: null
 		};
 
 	onMount(async () => {
@@ -81,6 +82,8 @@
 		if(filter.date_after !== null) api += `&date_after=${formatDate(filter.date_after.toString())}`;
 
 		if(filter.date_before !== null) api += `&date_before=${formatDate(filter.date_before.toString())}`;
+
+		if (filter.description !== null) api += `&description=${filter.description}`
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) message = 'Something went wrong';

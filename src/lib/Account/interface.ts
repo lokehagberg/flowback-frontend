@@ -23,4 +23,5 @@ export interface Filter {
 	account_id: number | null;
 	date_before: Date | null;
 	date_after: Date | null;
+	description:string | null
 }

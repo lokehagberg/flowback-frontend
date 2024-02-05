@@ -3,6 +3,7 @@
 	import type { Account, Filter } from './interface';
 	import Select from '$lib/Generic/Select.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
 
 	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
@@ -35,6 +36,10 @@
 
 		<DateInput bind:value={filter.date_after} />
 		<DateInput bind:value={filter.date_before} />
+
+        <!-- {#if filter.description !== undefined} -->
+        <input type="text" bind:value={filter.description} />
+<!-- {/if} -->
 	</div>
 	<div />
 </form>

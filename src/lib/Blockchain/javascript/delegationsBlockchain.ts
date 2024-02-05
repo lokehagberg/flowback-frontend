@@ -7,10 +7,7 @@ const getContract = (privateKey:string) => {
 
 	const wallet = new ethers.Wallet(privateKey, provider);
 
-	//GAS LIMIT ERROR
-	// const contractAddress = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 
-	// const contractAddress = '0x0f021dba3e86994176da8abb497e5a6380439147';
 	const contractAddress = '0x616F8F6C731f805C4Ae7D0D315cD97877F99745a';
 
 	return new ethers.Contract(contractAddress, contractABI, wallet);
@@ -24,7 +21,7 @@ export const becomeMemberOfGroup = async (groupId: number, privateKey:string) =>
 	const gasPrice = ethers.utils.parseUnits('0.000000001', 'gwei');
 	
 	// Update transaction options with gasPrice
-	const tx = await contract.giveRightToVote(groupId.toLocaleString(), { gasLimit: 21204, gasPrice });
+	const tx = await contract.giveRightToVote(groupId, { gasLimit: 21204, gasPrice });
 	
 	
 	// Timeout for when the transactions takes too long

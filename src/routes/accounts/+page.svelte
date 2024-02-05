@@ -6,7 +6,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import type { Transaction as TransactionType, Account } from '$lib/Account/interface';
+	import type { Transaction as TransactionType, Account, Filter } from '$lib/Account/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
@@ -14,8 +14,8 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import Transaction from '$lib/Account/Transaction.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
-	import { formatDate } from '$lib/Generic/DateFormatter';
 	import TransactionFilter from '$lib/Account/TransactionFilter.svelte';
+	import formatDate from '$lib/Account/formatDate';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -38,7 +38,11 @@
 		value: number,
 		message: string,
 		balance = 0,
-		filter: { account_id: number | null } = { account_id: null };
+		filter: Filter = {
+			account_id: null,
+			date_after: null,
+			date_before: null
+		};
 
 	onMount(async () => {
 		//@ts-ignore
@@ -72,9 +76,11 @@
 
 		let api = `ledger/transactions/list?`;
 
-		// if (filter.account_id !== null) api += `account_id=${filter.account_id}`;
+		if (filter.account_id !== null) api += `account_id=${filter.account_id}`;
 
-		api += `date_after=2013-01-30`
+		if(filter.date_after !== null) api += `&date_after=${formatDate(filter.date_after.toString())}`;
+
+		if(filter.date_before !== null) api += `&date_before=${formatDate(filter.date_before.toString())}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) message = 'Something went wrong';
@@ -198,10 +204,12 @@
 			<div class="dark:bg-darkobject p-6">
 				Filtering
 				{#if filter.account_id !== null}
-				<Button action={() => {
-					filter.account_id = null
-					getTransactions();
-				}}>Clear Filter</Button>
+					<Button
+						action={() => {
+							filter.account_id = null;
+							getTransactions();
+						}}>Clear Filter</Button
+					>
 				{/if}
 				<TransactionFilter bind:filter {handleSearch} bind:accounts />
 

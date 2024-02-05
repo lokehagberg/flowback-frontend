@@ -12,6 +12,7 @@
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import { deepCopy } from 'ethers/lib/utils';
 	import About from '$lib/Group/About.svelte';
+	import formatDate from './formatDate';
 	// import { formatDate } from '$lib/Generic/DateFormatter';
 
 	export let transaction: Transaction, transactions: Transaction[], accounts: Account[];
@@ -76,13 +77,7 @@
 		transactions = newTransaction;
 	};
 
-	const formatDate = (date: string) => {
-		let _date = new Date(date);
 
-		return `${_date.getFullYear()}-${_date.getMonth() < 9 ? '0' : ''}${_date.getMonth() + 1}-${
-			_date.getDate() < 10 ? '0' : ''
-		}${_date.getDate()}`;
-	};
 </script>
 
 <div>{transaction.account.account_name}</div>

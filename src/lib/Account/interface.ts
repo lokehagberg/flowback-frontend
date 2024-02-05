@@ -2,12 +2,12 @@ export interface Account {
 	id: number;
 	account_name: string;
 	account_number: string;
-	created_by : {
-		id:number,
-		username : string,
-		profile_image: null | 'string',
-		banner_image: null | 'string'
-	}
+	created_by: {
+		id: number;
+		username: string;
+		profile_image: null | 'string';
+		banner_image: null | 'string';
+	};
 }
 export interface Transaction {
 	id: string;
@@ -20,5 +20,7 @@ export interface Transaction {
 }
 
 export interface Filter {
-	account_id: number | null 
+	account_id: number | null;
+	date_before: Date | null;
+	date_after: Date | null;
 }

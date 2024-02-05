@@ -77,7 +77,7 @@
 
 		let api = `ledger/transactions/list?`;
 
-		if (filter.account_id !== null) api += `account_id=${filter.account_id}`;
+		if (filter.account_id !== null) api += `&account_id=${filter.account_id}`;
 
 		if(filter.date_after !== null) api += `&date_after=${formatDate(filter.date_after.toString())}`;
 
@@ -206,10 +206,11 @@
 			<h1>Transactions</h1>
 			<div class="dark:bg-darkobject p-6">
 				Filtering
-				{#if filter.account_id !== null}
+				{#if !Object.values(filter).every(x => x === null) }
 					<Button
 						action={() => {
-							filter.account_id = null;
+							//@ts-ignore
+							for (var filt in filter) filter[filt] = null
 							getTransactions();
 						}}>Clear Filter</Button
 					>

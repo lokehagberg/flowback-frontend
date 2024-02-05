@@ -173,6 +173,7 @@
 			message = 'Successfully deleted account';
 			accounts = accounts.filter((account) => account_id !== account.id);
 			transactions = transactions.filter((transaction) => transaction.account.id !== account_id);
+			
 		}
 	};
 

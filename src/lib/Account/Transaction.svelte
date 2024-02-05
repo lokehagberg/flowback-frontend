@@ -35,6 +35,7 @@
 
 		if (res.ok) {
 			transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
+			openDelete = false
 		}
 	};
 

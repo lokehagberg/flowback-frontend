@@ -255,7 +255,7 @@
 				</select>
 				{$_('Priority')}
 				<select
-					class="border border-gray-600 bg-darkbackground"
+					class="border border-gray-600 dark:bg-darkbackground bg-white"
 					on:input={handleChangePriority}
 					value={kanban?.priority}
 				>

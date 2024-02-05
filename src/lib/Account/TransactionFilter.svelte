@@ -10,13 +10,13 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
-	import { homePolls as homePollsLimit } from '../Generic/APILimits.json'
+	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import type { Account, Filter } from './interface';
 	import Select from '$lib/Generic/Select.svelte';
 
-	export let filter: Filter, handleSearch: () => {}, accounts:Account[]
+	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
-	let searched = true
+	let searched = true;
 
 	const handleFinishedSelection = (e: any) => {
 		// filter.finishedSelection = e.target.value;
@@ -27,7 +27,6 @@
 		// filter.order_by = e.target.value;
 		handleSearch();
 	};
-
 </script>
 
 <form
@@ -38,19 +37,18 @@
 	}}
 >
 	<div class="w-full flex items-end">
+		<!-- <input type="number" bind:value={filter.account_id}> -->
 
-        <!-- <input type="number" bind:value={filter.account_id}> -->
-
-        <Select
-        labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
-        values={accounts.map((account) => account.id)}
-        bind:value={filter.account_id}
-        onInput={(e) => {
-            //@ts-ignore
-            const selectedScore = e?.target?.value;
-            filter.account_id = Number(selectedScore);
-        }}
-    />
+		<Select
+			labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
+			values={accounts.map((account) => account.id)}
+			bind:value={filter.account_id}
+			onInput={(e) => {
+				//@ts-ignore
+				const selectedScore = e?.target?.value;
+				filter.account_id = Number(selectedScore);
+			}}
+		/>
 
 		<!-- <TextInput
 			Class="w-4/5"
@@ -68,17 +66,5 @@
 			<Fa icon={faMagnifyingGlass} />
 		</Button>
 	</div>
-	<div>
-		<select on:input={handleFinishedSelection} class="dark:bg-darkobject">
-			<option value="all">{$_('All')}</option>
-			<option value="unfinished">{$_('Ongoing')}</option>
-			<option value="finished">{$_('Done')}</option>
-		</select>
-
-		<select on:input={handleSort} class="dark:bg-darkobject">
-			<option value="start_date_desc">{$_('Newest first')}</option>
-			<option value="start_date_asc">{$_('Oldest first')}</option>
-		</select>
-
-	</div>
+	<div />
 </form>

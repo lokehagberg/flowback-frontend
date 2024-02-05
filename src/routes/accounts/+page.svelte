@@ -72,7 +72,9 @@
 
 		let api = `ledger/transactions/list?`;
 
-		if (filter.account_id !== null) api = api + `account_id=${filter.account_id}`;
+		if (filter.account_id !== null) api += `account_id=${filter.account_id}`;
+
+		// api += `&date=${new Date()}`
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) message = 'Something went wrong';

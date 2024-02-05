@@ -195,17 +195,27 @@
 	<div class="p-6 mt-6 dark:text-darkmodeText">
 		<Loader bind:loading>
 			<h1>Transactions</h1>
-			<Button
-				action={() => {
-					openNewTransaction = true;
-					newTransaction = true;
-				}}>Add Transaction</Button
-			>
-			<Button action={() => (show_account = true)}>Create Account</Button>
-			<Button action={() => (showDeleteAccount = true)} buttonStyle="warning">Delete Account</Button
-			>
+			<div class="dark:bg-darkobject p-6">
+				Filtering
+				{#if filter.account_id !== null}
+				<Button action={() => {
+					filter.account_id = null
+					getTransactions();
+				}}>Clear Filter</Button>
+				{/if}
+				<TransactionFilter bind:filter {handleSearch} bind:accounts />
 
-			<TransactionFilter bind:filter {handleSearch} bind:accounts />
+				<Button
+					action={() => {
+						openNewTransaction = true;
+						newTransaction = true;
+					}}>Add Transaction</Button
+				>
+				<Button action={() => (show_account = true)}>Create Account</Button>
+				<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
+					>Delete Account</Button
+				>
+			</div>
 
 			<div class="mt-5">Total Balance: {balance}</div>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">

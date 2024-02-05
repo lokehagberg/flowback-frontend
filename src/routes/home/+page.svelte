@@ -24,6 +24,9 @@
 		status: StatusMessageInfo;
 
 	onMount(async () => {
+
+		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") location.href = 'groups/1'
+
 		getInvitations();
 		getPolls();
 	});

@@ -64,14 +64,19 @@
 		>
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
-				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-				<HeaderIcon
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
+					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
+					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+					<HeaderIcon
 					icon={faUserFriends}
 					text="Groups"
 					href="groups"
 					color={darkMode ? 'white' : 'black'}
-				/>
+					/>
+					{/if}
+					{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE"}
+					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
+				{/if}
 				<HeaderIcon
 					icon={faCalendarWeek}
 					text="My Schedule"
@@ -121,6 +126,7 @@
 				id="side-header"
 				class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
 			>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					class="dark:text-darkmodeText"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
@@ -138,6 +144,7 @@
 				</span>
 				<Notifications />
 
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}

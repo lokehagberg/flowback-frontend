@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -54,6 +53,7 @@
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
 			{#if isAdmin || poll.pinned}
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
 					<Fa
 						icon={faThumbtack}
@@ -120,6 +120,7 @@
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<p
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}

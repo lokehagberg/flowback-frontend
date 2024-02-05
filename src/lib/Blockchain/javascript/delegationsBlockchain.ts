@@ -13,7 +13,6 @@ const getContract = (privateKey:string) => {
 	return new ethers.Contract(contractAddress, contractABI, wallet);
 };
 
-
 export const becomeMemberOfGroup = async (groupId: number, privateKey:string) => {
 	const contract = getContract(privateKey);
 	

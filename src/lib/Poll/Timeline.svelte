@@ -10,8 +10,9 @@
 
 	export let displayDetails = true,
 		displayTimeline = true,
-		Class = '';
-	export let dates: Date[] = [];
+		Class = '',
+		dates: Date[] = [];
+
 	let datesDisplay: string[] = [];
 
 	const dateLabels = [
@@ -38,6 +39,7 @@
 	});
 </script>
 
+<!-- {@debug dates} -->
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
@@ -61,6 +63,7 @@
 	{/if}
 	{#if displayDetails}
 		<ul class="p-2">
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				on:keydown={() => {}}
 				class="hover:underline flex items-center gap-2 cursor-pointer"
@@ -77,6 +80,7 @@
 			{/each}
 		</ul>
 	{:else}
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<ul
 			on:keydown={() => {}}
 			class="hover:underline flex items-center gap-1 cursor-pointer text-xs mb-3"

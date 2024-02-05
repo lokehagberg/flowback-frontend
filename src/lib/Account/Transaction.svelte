@@ -9,7 +9,6 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import { formatDate } from '$lib/Poll/functions';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import { deepCopy } from 'ethers/lib/utils';
 	import About from '$lib/Group/About.svelte';
@@ -35,17 +34,16 @@
 
 		if (res.ok) {
 			transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
-			openDelete = false
+			openDelete = false;
 		}
 	};
 
 	const updateTransaction = async () => {
-
 		const account = accounts.find((account) => account.id === account_id);
 
-		console.log(accounts, account_id)
+		console.log(accounts, account_id);
 
-		if (!accounts || !account) return
+		if (!accounts || !account) return;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -73,9 +71,17 @@
 			verification_number,
 			date: date.toString(),
 			account,
-			id: transaction.id,
+			id: transaction.id
 		});
 		transactions = newTransaction;
+	};
+
+	const formatDate = (date: string) => {
+		let _date = new Date(date);
+
+		return `${_date.getFullYear()}-${_date.getMonth() < 9 ? '0' : ''}${
+			_date.getMonth() + 1
+		}-${_date.getDate() < 10 ? '0' : ''}${_date.getDate()}`;
 	};
 </script>
 
@@ -85,7 +91,7 @@
 <div>{transaction.credit_amount}</div>
 <div>{transaction.description}</div>
 <div>{transaction.verification_number}</div>
-<div>{transaction.date}</div>
+<div>{formatDate(transaction.date)}</div>
 <div class="flex gap-2 ml-20">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click={() => (show = !show)} on:keydown class="cursor-pointer">

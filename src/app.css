@@ -94,20 +94,17 @@ button {
 	font-family: inherit;
 }
 
-input[type='text'] {
-
-    background:white;
-
+/* @media (prefers-color-scheme: light) {
+	input[type='text'] {
+		background: white;
+	}
 }
 
-@media (prefers-color-scheme:dark){
-    
-    input[type='text'] {
-    
-        background:var(--darkmode-background-color);
-}    
-
-}
+@media (prefers-color-scheme: dark) {
+	input[type='text'] {
+		background: var(--darkmode-background-color);
+	} */
+/* } */
 
 button:focus:not(:focus-visible) {
 	outline: none;

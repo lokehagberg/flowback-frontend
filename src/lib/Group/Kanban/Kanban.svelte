@@ -178,7 +178,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl bg-white"
+					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl bg-white"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>

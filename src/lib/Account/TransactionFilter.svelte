@@ -9,7 +9,7 @@
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
 
-    $: filter && handleSearch()
+	$: filter && handleSearch();
 </script>
 
 <form
@@ -37,9 +37,11 @@
 		<DateInput bind:value={filter.date_after} />
 		<DateInput bind:value={filter.date_before} />
 
-        <!-- {#if filter.description !== undefined} -->
-        <input type="text" bind:value={filter.description} />
-<!-- {/if} -->
+		<input
+			type="text"
+			class="bg-gray-200 dark:bg-darkbackground outline outline-1 outline-gray-300"
+			bind:value={filter.description}
+		/>
 	</div>
 	<div />
 </form>

@@ -1,12 +1,12 @@
 <script lang="ts">
 
-    export let tag:string
+    export let tag:{name:string, id:number}
     export let Class:string = ""
     export let onclick = () => {}
 
 </script>
 
-<div class={"select-none text-xs tag text-center bg-gray-400 text-white pl-4 pr-4 pt-1 pb-1 break-words rounded " + Class} on:click={onclick}>{tag}</div>
+<div class={"select-none text-xs tag text-center bg-gray-400 text-white pl-4 pr-4 pt-1 pb-1 break-words rounded " + Class} on:click={onclick}>{tag.name}</div>
 
 <style>
     .tag{

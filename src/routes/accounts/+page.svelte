@@ -54,8 +54,6 @@
 		getAccounts();
 		await getUserInfo();
 		await getTransactions();
-
-		// console.log(transactions, 'TRANS');
 		calculateTotalBalance();
 
 		loading = false;
@@ -98,8 +96,6 @@
 			message = 'Something went wrong';
 			return;
 		}
-
-		// console.log(json.results[0].account.created_by.id, user.id, 'USERDIIDDID');
 
 		transactions = json.results.filter((transaction:Transaction) => transaction.account.created_by.id === user.id);
 		loading = false;
@@ -157,10 +153,6 @@
 
 	const createAccount = async () => {
 		loading = true;
-		const formData = new FormData();
-
-		// formData.append('account_name', name);
-		// formData.append('account_number', number);
 
 		const { res, json } = await fetchRequest('POST', 'ledger/account/create', {
 			account_name,

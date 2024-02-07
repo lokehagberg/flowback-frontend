@@ -284,14 +284,14 @@
 				<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
 					>Delete Account</Button
 				>
+				<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
+					>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
+						? 'between selected dates'
+						: ''}</Button
+				>
 			</div>
 
 			<div class="mt-5">Total Balance: {totalBalance}</div>
-			<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
-				>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
-					? 'between selected dates'
-					: ''}</Button
-			>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>
 				<div class="font-bold">Account Number</div>

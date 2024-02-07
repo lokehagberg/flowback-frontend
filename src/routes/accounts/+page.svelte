@@ -16,6 +16,7 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import TransactionFilter from '$lib/Account/TransactionFilter.svelte';
 	import formatDate from '$lib/Account/formatDate';
+	import { generateAndDownloadHTML } from '$lib/Account/HTML';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -37,7 +38,7 @@
 		accounts: Account[] = [],
 		value: number,
 		message: string,
-		balance = 0,
+		totalBalance = 0,
 		filter: Filter = {
 			account_id: null,
 			date_after: null,
@@ -51,16 +52,16 @@
 		await getTransactions();
 
 		// console.log(transactions, 'TRANS');
-		totalBalance();
+		calculateTotalBalance();
 
 		loading = false;
 	});
 
-	const totalBalance = () => {
-		balance = 0;
+	const calculateTotalBalance = () => {
+		totalBalance = 0;
 		transactions.forEach((account) => {
-			if (account.credit_amount !== 'null') balance -= Number(account.credit_amount);
-			if (account.debit_amount !== 'null') balance += Number(account.debit_amount);
+			if (account.credit_amount !== 'null') totalBalance -= Number(account.credit_amount);
+			if (account.debit_amount !== 'null') totalBalance += Number(account.debit_amount);
 		});
 	};
 
@@ -79,11 +80,13 @@
 
 		if (filter.account_id !== null) api += `&account_id=${filter.account_id}`;
 
-		if(filter.date_after !== null) api += `&date_after=${formatDate(filter.date_after.toString())}`;
+		if (filter.date_after !== null)
+			api += `&date_after=${formatDate(filter.date_after.toString())}`;
 
-		if(filter.date_before !== null) api += `&date_before=${formatDate(filter.date_before.toString())}`;
+		if (filter.date_before !== null)
+			api += `&date_before=${formatDate(filter.date_before.toString())}`;
 
-		if (filter.description !== null) api += `&description=${filter.description}`
+		if (filter.description !== null) api += `&description=${filter.description}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) message = 'Something went wrong';
@@ -194,7 +197,61 @@
 		getTransactions();
 	};
 
-	$: transactions && totalBalance();
+	const totalAccountBalance = (
+		account: Account,
+		after_date: Date | null = null,
+		before_date: Date | null = null
+	) => {
+		let total = 0;
+		transactions.forEach((transaction) => {
+			if (transaction.account.id !== account.id) return;
+			if (after_date !== null && new Date(transaction.date) <= after_date) return;
+			if (before_date !== null && new Date(transaction.date) >= before_date) return;
+
+			total += (Number(transaction.debit_amount) || 0) - (Number(transaction.credit_amount) || 0);
+		});
+
+		return total;
+	};
+
+	// Create a function to generate HTML content
+	const generateHTMLContent = () => {
+		let accountHTML = ``;
+
+		accounts.forEach((account) => {
+			accountHTML += `<div>${account.account_name}</div><div>${totalAccountBalance(
+				account,
+				filter.date_after,
+				filter.date_before
+			)}</div>`;
+		});
+
+		return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Generated HTML</title>
+        </head>
+        <body>
+            <h1 style="text:center">Sheet</h1>
+			<div>From: ${filter.date_after ? formatDate(filter.date_after.toString()) : 'Start'}</div>
+			<div>To: ${
+				filter.date_before
+					? formatDate(filter.date_before.toString())
+					: "End"
+			}</div>
+			<div style="display:grid; grid-template-columns:50% 50%; margin-top:10px">
+				${accountHTML}
+				<div style="font-weight:bold; margin-top:10px">Total balance </div> <div style="font-weight:bold; margin-top:10px"> ${totalBalance}</div>
+				<div />
+				</body>
+        </html>
+    `;
+	};
+
+	$: transactions && calculateTotalBalance();
 </script>
 
 <svelte:head>
@@ -206,11 +263,11 @@
 			<h1>Transactions</h1>
 			<div class="dark:bg-darkobject p-6">
 				Filtering
-				{#if !Object.values(filter).every(x => x === null) }
+				{#if !Object.values(filter).every((x) => x === null)}
 					<Button
 						action={() => {
 							//@ts-ignore
-							for (var filt in filter) filter[filt] = null
+							for (var filt in filter) filter[filt] = null;
 							getTransactions();
 						}}>Clear Filter</Button
 					>
@@ -229,7 +286,12 @@
 				>
 			</div>
 
-			<div class="mt-5">Total Balance: {balance}</div>
+			<div class="mt-5">Total Balance: {totalBalance}</div>
+			<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
+				>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
+					? 'between selected dates'
+					: ''}</Button
+			>
 			<div class="grid grid-cols-8 gap-4 mt-3 dark:bg-darkobject bg-white rounded shadow p-4">
 				<div class="font-bold">Account Name</div>
 				<div class="font-bold">Account Number</div>

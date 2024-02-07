@@ -177,6 +177,7 @@
 			<li
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200 flex justify-between items-center"
 			>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
@@ -193,6 +194,7 @@
 					/>
 					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"

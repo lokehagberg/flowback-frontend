@@ -17,6 +17,8 @@
 	import TransactionFilter from '$lib/Account/TransactionFilter.svelte';
 	import formatDate from '$lib/Account/formatDate';
 	import { generateAndDownloadHTML } from '$lib/Account/HTML';
+	import { page } from '$app/stores';
+	import type { User } from '$lib/User/interfaces';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -44,11 +46,13 @@
 			date_after: null,
 			date_before: null,
 			description: null
-		};
+		},
+		user: User;
 
 	onMount(async () => {
 		//@ts-ignore
 		getAccounts();
+		await getUserInfo();
 		await getTransactions();
 
 		// console.log(transactions, 'TRANS');
@@ -89,8 +93,15 @@
 		if (filter.description !== null) api += `&description=${filter.description}`;
 
 		const { res, json } = await fetchRequest('GET', api);
-		if (!res.ok) message = 'Something went wrong';
-		transactions = json.results;
+
+		if (!res.ok) {
+			message = 'Something went wrong';
+			return;
+		}
+
+		// console.log(json.results[0].account.created_by.id, user.id, 'USERDIIDDID');
+
+		transactions = json.results.filter((transaction:Transaction) => transaction.account.created_by.id === user.id);
 		loading = false;
 	};
 
@@ -189,7 +200,8 @@
 			show_poppup = true;
 			message = 'Successfully deleted account';
 			accounts = accounts.filter((account) => account_id !== account.id);
-			transactions = transactions.filter((transaction) => transaction.account.id !== account_id);
+			// transactions.filter((transaction) => transaction.account.id !== account_id);
+			// transactions = transactions
 		}
 	};
 
@@ -237,11 +249,7 @@
         <body>
             <h1 style="text:center">Sheet</h1>
 			<div>From: ${filter.date_after ? formatDate(filter.date_after.toString()) : 'Start'}</div>
-			<div>To: ${
-				filter.date_before
-					? formatDate(filter.date_before.toString())
-					: "End"
-			}</div>
+			<div>To: ${filter.date_before ? formatDate(filter.date_before.toString()) : 'End'}</div>
 			<div style="display:grid; grid-template-columns:50% 50%; margin-top:10px">
 				${accountHTML}
 				<div style="font-weight:bold; margin-top:10px">Total balance </div> <div style="font-weight:bold; margin-top:10px"> ${totalBalance}</div>
@@ -249,6 +257,15 @@
 				</body>
         </html>
     `;
+	};
+
+	export const getUserInfo = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`users?id=${localStorage.getItem('userId')}`
+		);
+
+		user = json.results[0];
 	};
 
 	$: transactions && calculateTotalBalance();

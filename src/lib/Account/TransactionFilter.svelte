@@ -4,6 +4,9 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import { onMount } from 'svelte';
+	import MultiSelect from '$lib/Generic/MultiSelect.svelte';
+	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 
 	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
@@ -20,7 +23,13 @@
 	}}
 >
 	<div class="w-full flex items-end">
-		<!-- <input type="number" bind:value={filter.account_id}> -->
+		<!-- <MultiSelect /> -->
+
+		<CheckboxButtons label="hi"
+			labels={accounts.map((account) => {
+				return { label: account.account_name, checked: false };
+			})}
+		/>
 
 		<Select
 			labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}

@@ -82,7 +82,7 @@ export interface GroupDetails {
 
 export interface Tag {
 	id: number;
-	tag_name: string;
+	name: string;
 	active: boolean;
 }
 

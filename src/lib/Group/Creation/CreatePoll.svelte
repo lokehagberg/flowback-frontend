@@ -33,6 +33,7 @@
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import Select from '$lib/Generic/Select.svelte';
+	import { faTachographDigital } from '@fortawesome/free-solid-svg-icons';
 
 	type polltypes =
 		| 'Ranking'
@@ -304,7 +305,7 @@
 					{#each tags as tag}
 						<Tag
 							onclick={() => (selectedTag = tag)}
-							tag={tag.tag_name}
+							tag={{name: tag.name, id:tag.id}}
 							Class={`cursor-pointer ${
 								selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
 							}`}

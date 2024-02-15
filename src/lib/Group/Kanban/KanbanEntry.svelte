@@ -40,7 +40,8 @@
 	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
-		removeKanbanEntry: (id: number) => void;
+		removeKanbanEntry: (id: number) => void,
+		anyoneIsOpen: boolean;
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
@@ -52,10 +53,11 @@
 		priority: kanban.priority
 	};
 
+	$: anyoneIsOpen = openModal || anyoneIsOpen
+
 	$: openModal &&
 		kanban.id !== selectedEntry &&
 		(() => {
-			console.log('HERE');
 			kanbanEdited = {
 				entry_id: kanban.id,
 				id: kanban.id,
@@ -148,6 +150,7 @@
 		TimeAgo.addDefaultLocale(en);
 		endDate = new TimeAgo('en');
 	};
+
 	onMount(async () => {
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 		if (kanban.end_date !== null) formatEndDate();
@@ -156,6 +159,7 @@
 	$: if (openModal && !isEditing)
 		checkForLinks(kanban.description, `kanban-${kanban.id}-description`);
 </script>
+
 <!-- {@debug showSuccessPoppup} -->
 <!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 
@@ -238,7 +242,7 @@
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
 			{:else}
-				{kanbanEdited.title}
+				{kanban.title}
 			{/if}
 		</div>
 
@@ -252,7 +256,11 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select on:input={changeAssignee} value={kanban?.assignee?.id} class="dark:bg-darkbackground">
+				<select
+					on:input={changeAssignee}
+					value={kanban?.assignee?.id}
+					class="dark:bg-darkbackground"
+				>
 					{#each users as user}
 						<option value={user.user.id}>{user.user.username}</option>
 					{/each}

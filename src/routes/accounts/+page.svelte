@@ -81,7 +81,7 @@
 		let api = `ledger/transactions/list?`;
 
 		// if (filter.account_id !== null) api += `&account_id=${filter.account_id}`;
-		if (filter.account_id !== null) api += `&account_ids=18`;
+		if (filter.account_id !== null) api += `&account_ids=${filter.account_id},20`;
 		// if (filter.account_id !== null) 
 		// api += `&blehh=haaa`;
 

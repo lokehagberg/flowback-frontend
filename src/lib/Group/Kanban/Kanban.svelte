@@ -38,27 +38,33 @@
 		end_date: null | Date = null,
 		loading = false,
 		interval: any,
-		open = false;
+		open = false,
+		anyoneIsOpen = false;
 
 	export let type: 'home' | 'group',
 		Class = '';
 
 	onMount(() => {
 		getKanbanEntries();
-		setInterval(() => {
-			interval = getKanbanEntries();
-		}, 20000);
+
+		interval = setInterval(() => {
+			console.log(anyoneIsOpen);
+
+			if (anyoneIsOpen) return;
+			getKanbanEntries();
+		}, 2000);
 	});
 
 	//TODO fix this
 	onDestroy(() => {
+		console.log('HERERE');
 		clearInterval(interval);
 	});
 
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-			getKanbanEntriesGroup();
 			getGroupUsers();
+			getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
@@ -78,6 +84,7 @@
 			'GET',
 			`user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
 		);
+
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -185,7 +192,7 @@
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} />
+								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} bind:anyoneIsOpen />
 							{/if}
 						{/each}
 					</ul>
@@ -199,6 +206,7 @@
 	</div>
 </div>
 
+<!-- Creating a new Kanban or Editing a new Kanban -->
 <Modal bind:open Class="!overflow-visible">
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">

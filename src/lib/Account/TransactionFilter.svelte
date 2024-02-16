@@ -39,25 +39,10 @@
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
-		// handleSearch();
 	}}
 >
 	<div class="w-full flex items-end">
-		<!-- <MultiSelect /> -->
-
 		<CheckboxButtons onChange={changingCheckbox} label="" labels={filter.account_ids} />
-
-		<!-- <Select
-			labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
-			values={accounts.map((account) => account.id)}
-			bind:value={filter.account_id}
-			onInput={(e) => {
-				//@ts-ignore
-				const selectedScore = e?.target?.value;
-				filter.account_id = Number(selectedScore);
-				// handleSearch();
-			}}
-		/> -->
 
 		<DateInput bind:value={filter.date_after} />
 		<DateInput bind:value={filter.date_before} />

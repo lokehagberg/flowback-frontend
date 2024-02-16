@@ -75,7 +75,7 @@
 		loading = false;
 		accounts = json.results;
 		filter.account_ids = json.results.map((result: Account) => {
-			return { id: result.id, checked: false, label:result.account_name };
+			return { id: result.id, checked: false, label: result.account_name };
 		});
 	};
 
@@ -83,10 +83,6 @@
 		loading = true;
 
 		let api = `ledger/transactions/list?`;
-
-		// if (filter.account_id !== null) api += `&account_ids=${filter.account_id}&account_ids=20`;
-
-		console.log('getting trans', filter);
 
 		if (filter.account_ids)
 			filter.account_ids.forEach((id) => {
@@ -205,8 +201,6 @@
 			show_poppup = true;
 			message = 'Successfully deleted account';
 			accounts = accounts.filter((account) => account_id !== account.id);
-			// transactions.filter((transaction) => transaction.account.id !== account_id);
-			// transactions = transactions
 		}
 	};
 

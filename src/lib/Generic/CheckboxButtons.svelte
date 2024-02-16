@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	export let labels:  {label:string, checked:boolean}[] = [{label:'Yes', checked:false}],
-		label: string;
+	export let labels: { label: string; checked: boolean; id: number }[] = [
+			{ label: 'Yes', checked: false, id: 0 }
+		],
+		label: string,
+		onChange = (id: number) => {};
 </script>
 
 <fieldset>
@@ -9,7 +12,12 @@
 	<div class={`mt-2`}>
 		{#each labels as label}
 			<label class="mr-5">
-				<input type="checkbox" name={label.label} value={label.checked} />
+				<input
+					type="checkbox"
+					name={label.label}
+					value={label.checked}
+					on:click={() => onChange(label.id)}
+				/>
 				{$_(label.label)}
 			</label>
 		{/each}

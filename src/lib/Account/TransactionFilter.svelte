@@ -10,7 +10,27 @@
 
 	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
-	let searched = true;
+	let searched = true,
+		labels: { label: string; checked: boolean; id: number }[] = [];
+
+	onMount(() => {
+		labels = accounts?.map((account) => {
+			return {
+				label: `${account.account_name} ${account.account_number}`,
+				checked: false,
+				id: account.id
+			};
+		});
+	});
+
+	const changingCheckbox = (id: number) => {
+		let changeChecbox = filter.account_ids.find((label) => label.id === id);
+		if (!changeChecbox) return;
+
+		changeChecbox.checked = !changeChecbox.checked;
+
+		filter.account_ids = filter.account_ids;
+	};
 
 	$: filter && handleSearch();
 </script>
@@ -25,13 +45,9 @@
 	<div class="w-full flex items-end">
 		<!-- <MultiSelect /> -->
 
-		<CheckboxButtons label="hi"
-			labels={accounts.map((account) => {
-				return { label: account.account_name, checked: false };
-			})}
-		/>
+		<CheckboxButtons onChange={changingCheckbox} label="" labels={filter.account_ids} />
 
-		<Select
+		<!-- <Select
 			labels={accounts.map((account) => `${account.account_name} ${account.account_number}`)}
 			values={accounts.map((account) => account.id)}
 			bind:value={filter.account_id}
@@ -41,7 +57,7 @@
 				filter.account_id = Number(selectedScore);
 				// handleSearch();
 			}}
-		/>
+		/> -->
 
 		<DateInput bind:value={filter.date_after} />
 		<DateInput bind:value={filter.date_before} />

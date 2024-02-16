@@ -19,6 +19,7 @@
 	import { generateAndDownloadHTML } from '$lib/Account/HTML';
 	import { page } from '$app/stores';
 	import type { User } from '$lib/User/interfaces';
+	import type { id } from 'ethers/lib/utils';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -42,7 +43,7 @@
 		message: string,
 		totalBalance = 0,
 		filter: Filter = {
-			account_id: null,
+			account_ids: [],
 			date_after: null,
 			date_before: null,
 			description: null
@@ -73,6 +74,9 @@
 		if (!res.ok) message = 'Something went wrong';
 		loading = false;
 		accounts = json.results;
+		filter.account_ids = json.results.map((result: Account) => {
+			return { id: result.id, checked: false, label:result.account_name };
+		});
 	};
 
 	const getTransactions = async () => {
@@ -80,10 +84,14 @@
 
 		let api = `ledger/transactions/list?`;
 
-		// if (filter.account_id !== null) api += `&account_id=${filter.account_id}`;
-		if (filter.account_id !== null) api += `&account_ids=${filter.account_id},20`;
-		// if (filter.account_id !== null) 
-		// api += `&blehh=haaa`;
+		// if (filter.account_id !== null) api += `&account_ids=${filter.account_id}&account_ids=20`;
+
+		console.log('getting trans', filter);
+
+		if (filter.account_ids)
+			filter.account_ids.forEach((id) => {
+				if (id.checked) api += `&account_ids=${id.id}`;
+			});
 
 		if (filter.date_after !== null)
 			api += `&date_after=${formatDate(filter.date_after.toString())}`;
@@ -100,7 +108,9 @@
 			return;
 		}
 
-		transactions = json.results.filter((transaction:Transaction) => transaction.account.created_by.id === user.id);
+		transactions = json.results.filter(
+			(transaction: Transaction) => transaction.account.created_by.id === user?.id
+		);
 		loading = false;
 	};
 
@@ -255,10 +265,7 @@
 	};
 
 	export const getUserInfo = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`users?id=${localStorage.getItem('userId')}`
-		);
+		const { res, json } = await fetchRequest('GET', `users?id=${localStorage.getItem('userId')}`);
 
 		user = json.results[0];
 	};

@@ -20,8 +20,8 @@ export interface Transaction {
 }
 
 export interface Filter {
-	account_id: number | null;
+	account_ids: { id: number; checked: boolean, label:string }[];
 	date_before: Date | null;
 	date_after: Date | null;
-	description:string | null
+	description: string | null;
 }

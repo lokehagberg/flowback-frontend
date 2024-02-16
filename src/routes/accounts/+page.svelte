@@ -74,6 +74,10 @@
 		if (!res.ok) message = 'Something went wrong';
 		loading = false;
 		accounts = json.results;
+		setAccountFilter(json);
+	};
+
+	const setAccountFilter = (json: any) => {
 		filter.account_ids = json.results.map((result: Account) => {
 			return { id: result.id, checked: false, label: result.account_name };
 		});
@@ -270,6 +274,7 @@
 <svelte:head>
 	<title>{$_('Accounts')}</title>
 </svelte:head>
+
 <Layout centered>
 	<div class="p-6 mt-6 dark:text-darkmodeText">
 		<Loader bind:loading>
@@ -279,9 +284,17 @@
 				{#if !Object.values(filter).every((x) => x === null)}
 					<Button
 						action={() => {
-							//@ts-ignore
-							for (var filt in filter) filter[filt] = null;
+							for (var filt in filter)
+								//@ts-ignore
+								if (filt !== 'account_ids') filter[filt] = null;
+								else getAccounts();
 							getTransactions();
+
+							filter.account_ids.forEach((account) => {
+								const acc = document.querySelector(`#input-${account.id}`);
+								//@ts-ignore
+								acc.checked = false;
+							});
 						}}>Clear Filter</Button
 					>
 				{/if}

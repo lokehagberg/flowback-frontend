@@ -17,6 +17,7 @@
 					name={label.label}
 					value={label.checked}
 					on:click={() => onChange(label.id)}
+					id={`input-${label.id}`}
 				/>
 				{$_(label.label)}
 			</label>

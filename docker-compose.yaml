@@ -11,3 +11,9 @@ services:
       - 3000:3000
     env_file:
       - .env
+    networks:
+      - flowback-network
+networks:
+  flowback-network:
+    name: flowback-network-1
+    driver: bridge

@@ -120,7 +120,8 @@
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				const delegateId = delegatePool.delegates[0].group_user_id;
+				console.log(delegatePool.delegates[0].group_user.id)
+				const delegateId = delegatePool.delegates[0].group_user.id;
 
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegateId}`)

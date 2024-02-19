@@ -51,7 +51,8 @@
 
 	const createDelegation = async () => {
 		await createDelegationPool();
-		await becomeDelegate(Number($page.params.groupId));
+		// TOOD-Blockchain: Set this up so it works 
+		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
 

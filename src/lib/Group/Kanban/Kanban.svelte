@@ -48,8 +48,6 @@
 		getKanbanEntries();
 
 		interval = setInterval(() => {
-			console.log(anyoneIsOpen);
-
 			if (anyoneIsOpen) return;
 			getKanbanEntries();
 		}, 2000);
@@ -57,7 +55,6 @@
 
 	//TODO fix this
 	onDestroy(() => {
-		console.log('HERERE');
 		clearInterval(interval);
 	});
 

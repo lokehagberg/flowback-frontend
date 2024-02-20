@@ -120,7 +120,6 @@
 
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
-				console.log(delegatePool.delegates[0].group_user.id)
 				const delegateId = delegatePool.delegates[0].group_user.id;
 
 				const delegateUserData = await (
@@ -201,7 +200,8 @@
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => {
-						history = delegate.delegate_pool_id;
+						console.log(delegate)
+						history = delegate.id;
 						selectedPage = 'History';
 					}}>{$_('See delegate history')}</span
 				>

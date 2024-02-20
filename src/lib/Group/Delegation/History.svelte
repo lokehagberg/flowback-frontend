@@ -2,7 +2,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
-	import json from './Delegationtest.json';
 	import { page } from '$app/stores';
 	import type { DelegatePool, VoteHistory } from './interfaces';
 	import { _ } from 'svelte-i18n';
@@ -34,7 +33,8 @@
 	};
 
 	const getUserInfo = async () => {
-		const userId = delegatePool.delegates[0].user_id;
+		//@ts-ignore
+		const userId = delegatePool.delegates[0].group_user.id;
 
 		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
 
@@ -43,9 +43,9 @@
 	};
 
 	onMount(async () => {
-		getDelegateInfo();
+		await getDelegateInfo();
 		await getDelegateHistory();
-		getUserInfo();
+		await getUserInfo();
 	});
 </script>
 

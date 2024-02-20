@@ -39,18 +39,26 @@
 		loading = false,
 		interval: any,
 		open = false,
-		anyoneIsOpen = false;
+		numberOfOpen = 0;
 
 	export let type: 'home' | 'group',
 		Class = '';
+		
+	const changeNumberOfOpen = (addOrSub : 'Addition' | 'Subtraction') => {
+		if (numberOfOpen < 0) numberOfOpen = 0
+
+		if (addOrSub === 'Addition') numberOfOpen += 1
+		if (addOrSub === 'Subtraction') numberOfOpen -= 1
+	}
 
 	onMount(() => {
 		getKanbanEntries();
 
 		interval = setInterval(() => {
-			if (anyoneIsOpen) return;
-			getKanbanEntries();
-		}, 2000);
+			// console.log(numberOfOpen, "OPEN")
+			if (numberOfOpen === 0)
+				getKanbanEntries();
+		}, 20000);
 	});
 
 	//TODO fix this
@@ -189,7 +197,7 @@
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} bind:anyoneIsOpen />
+								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>

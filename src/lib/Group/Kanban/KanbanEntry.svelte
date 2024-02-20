@@ -35,13 +35,14 @@
 			'Low priority',
 			'Very low priority'
 		],
-		isEditing = false;
+		isEditing = false,
+		changingOpens: null | 'Addition' | 'Subtraction' = null;
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
-		anyoneIsOpen: boolean;
+		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {};
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
@@ -53,7 +54,8 @@
 		priority: kanban.priority
 	};
 
-	$: anyoneIsOpen = openModal || anyoneIsOpen
+	$: if (openModal === true) changeNumberOfOpen('Addition');
+	else changeNumberOfOpen('Subtraction');
 
 	$: openModal &&
 		kanban.id !== selectedEntry &&

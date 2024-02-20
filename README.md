@@ -176,6 +176,11 @@ const thingtoDo2Good = (thing) => {
 //Have paragraphs in functions to differentiate different operations
 ```
 # Docker
+OBS! Currently, the vite environment variables are undefined. This can be solved by using a different environment package, see:
+1. https://github.com/sveltejs/kit/issues/3004 
+2. https://github.com/youtogether-online/frontend/issues/5
+3. https://joyofcode.xyz/sveltekit-environment-variables
+
 To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed.
 
 ### Install docker

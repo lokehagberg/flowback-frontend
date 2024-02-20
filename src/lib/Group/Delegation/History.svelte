@@ -6,6 +6,8 @@
 	import type { DelegatePool, VoteHistory } from './interfaces';
 	import { _ } from 'svelte-i18n';
 	import type { User } from '$lib/User/interfaces';
+	import { goto } from '$app/navigation';
+	import Comments from '$lib/Poll/Comments.svelte';
 
 	export let history: null | number;
 
@@ -39,13 +41,16 @@
 		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
 
 		user = json.results[0];
-		console.log(user, 'USER');
 	};
 
 	onMount(async () => {
 		await getDelegateInfo();
 		await getDelegateHistory();
 		await getUserInfo();
+
+		let query = new URLSearchParams($page.url.searchParams.toString());
+		query.set('history_id', delegatePool.id.toString());
+		goto(`?${query.toString()}`);
 	});
 </script>
 
@@ -55,6 +60,7 @@
 			{$_('delegate history for')}
 			{user?.username}
 		</div>
+		<Comments api="delegate-history" on:keydown={() => {}} />
 	{/if}
 	<ul class="w-full">
 		{#each votingHistory as vote}
@@ -68,6 +74,7 @@
 					{vote.poll_title}</a
 				>
 			</li>
+
 			<!-- <ul class="w-full block ml-4">
 				{#each votingHistory as vote}
 					<li

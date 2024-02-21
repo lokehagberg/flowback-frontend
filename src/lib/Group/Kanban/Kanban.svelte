@@ -16,6 +16,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import Filter from '$lib/Generic/Filter.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -39,25 +40,25 @@
 		loading = false,
 		interval: any,
 		open = false,
-		numberOfOpen = 0;
+		numberOfOpen = 0,
+		filter: { assignee: number | null } = { assignee: null };
 
 	export let type: 'home' | 'group',
 		Class = '';
-		
-	const changeNumberOfOpen = (addOrSub : 'Addition' | 'Subtraction') => {
-		if (numberOfOpen < 0) numberOfOpen = 0
 
-		if (addOrSub === 'Addition') numberOfOpen += 1
-		if (addOrSub === 'Subtraction') numberOfOpen -= 1
-	}
+	const changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {
+		if (numberOfOpen < 0) numberOfOpen = 0;
+
+		if (addOrSub === 'Addition') numberOfOpen += 1;
+		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
+	};
 
 	onMount(() => {
 		getKanbanEntries();
 
 		interval = setInterval(() => {
 			// console.log(numberOfOpen, "OPEN")
-			if (numberOfOpen === 0)
-				getKanbanEntries();
+			if (numberOfOpen === 0) getKanbanEntries();
 		}, 20000);
 	});
 
@@ -74,10 +75,11 @@
 	};
 
 	const getKanbanEntriesGroup = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
-		);
+		let api = `group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
+		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
+
+		const { res, json } = await fetchRequest('GET', api);
+
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -103,10 +105,9 @@
 	};
 
 	const getGroupUsers = async () => {
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?limit=${kanbanLimit}`
-		);
+		let api = `group/${$page.params.groupId}/users?limit=${kanbanLimit}`;
+
+		const { json } = await fetchRequest('GET', api);
 		users = json.results;
 		if (!assignee) assignee = users[0]?.user.id;
 	};
@@ -183,6 +184,13 @@
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
+	<Filter
+		bind:filter
+		handleSearch={getKanbanEntries}
+		iterables={users.map((user) => {
+			return { name: user.user.username, id: user.user.id };
+		})}
+	/>
 	<div class="flex overflow-x-auto">
 		<!-- {#await promise}
 			<div>Loading...</div>

@@ -101,7 +101,7 @@
 				<HeaderIcon
 					icon={faCoins}
 					text="My Ledger"
-					href="accounts"
+					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>
 				<!-- <HeaderIcon
@@ -115,7 +115,7 @@
 						<HeaderIcon
 							icon={faMoneyBill}
 							text="Account"
-							href="accounts"
+							href="ledger"
 							color={darkMode ? 'white' : 'black'}
 						/>
 					{/if}

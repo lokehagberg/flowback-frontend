@@ -5,7 +5,7 @@
 	import { faScrewdriver, faTrash } from '@fortawesome/free-solid-svg-icons';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Select from '$lib/Generic/Select.svelte';
-	import type { Account } from '$lib/Account/interface';
+	import type { Account } from '$lib/Ledger/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';

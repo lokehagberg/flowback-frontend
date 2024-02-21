@@ -279,42 +279,48 @@
 	<div class="p-6 mt-6 dark:text-darkmodeText">
 		<Loader bind:loading>
 			<h1>Transactions</h1>
-			<div class="dark:bg-darkobject p-6">
-				Filtering
-				{#if !Object.values(filter).every((x) => x === null)}
+
+			<div class="mt-4">
+				<div class="bg-white dark:bg-darkobject p-6">
+					Filtering
+					{#if !Object.values(filter).every((x) => x === null)}
+						<Button
+							action={() => {
+								//@ts-ignore
+								for (var filt in filter) {
+									//@ts-ignore
+									if (filt !== 'account_ids') filter[filt] = null;
+									else getAccounts();
+								}
+								getTransactions();
+
+								filter.account_ids.forEach((account) => {
+									const acc = document.querySelector(`#input-${account.id}`);
+									//@ts-ignore
+									acc.checked = false;
+								});
+							}}>Clear Filter</Button
+						>
+					{/if}
+					<TransactionFilter bind:filter {handleSearch} bind:accounts />
+				</div>
+				<div class="bg-white dark:bg-darkobject p-6 mt-6">
 					<Button
 						action={() => {
-							for (var filt in filter)
-								//@ts-ignore
-								if (filt !== 'account_ids') filter[filt] = null;
-								else getAccounts();
-							getTransactions();
-
-							filter.account_ids.forEach((account) => {
-								const acc = document.querySelector(`#input-${account.id}`);
-								//@ts-ignore
-								acc.checked = false;
-							});
-						}}>Clear Filter</Button
+							openNewTransaction = true;
+							newTransaction = true;
+						}}>Add Transaction</Button
 					>
-				{/if}
-				<TransactionFilter bind:filter {handleSearch} bind:accounts />
-
-				<Button
-					action={() => {
-						openNewTransaction = true;
-						newTransaction = true;
-					}}>Add Transaction</Button
-				>
-				<Button action={() => (show_account = true)}>Create Account</Button>
-				<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
-					>Delete Account</Button
-				>
-				<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
-					>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
-						? 'between selected dates'
-						: ''}</Button
-				>
+					<Button action={() => (show_account = true)}>Create Account</Button>
+					<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
+						>Delete Account</Button
+					>
+					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
+						>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
+							? 'between selected dates'
+							: ''}</Button
+					>
+				</div>
 			</div>
 
 			<div class="mt-5">Total Balance: {totalBalance}</div>

@@ -4,12 +4,13 @@
 			{ label: 'Yes', checked: false, id: 0 }
 		],
 		label: string,
-		onChange = (id: number) => {};
+		onChange = (id: number) => {},
+		Class = ""
 </script>
 
 <fieldset>
 	<h1 class="text-left text-sm">{$_(label)}</h1>
-	<div class={`mt-2`}>
+	<div class={`mt-2 ${Class}`}>
 		{#each labels as label}
 			<label class="mr-5">
 				<input

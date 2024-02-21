@@ -7,11 +7,13 @@
 	import { onMount } from 'svelte';
 	import MultiSelect from '$lib/Generic/MultiSelect.svelte';
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
-		labels: { label: string; checked: boolean; id: number }[] = [];
+		labels: { label: string; checked: boolean; id: number }[] = [], openFilterAccounts = false
 
 	onMount(() => {
 		labels = accounts?.map((account) => {
@@ -21,6 +23,7 @@
 				id: account.id
 			};
 		});
+		console.log(labels, accounts)
 	});
 
 	const changingCheckbox = (id: number) => {
@@ -42,8 +45,7 @@
 	}}
 >
 	<div class="w-full flex items-end">
-		<CheckboxButtons onChange={changingCheckbox} label="" labels={filter.account_ids} />
-
+		<Button action={() => openFilterAccounts = true}>Filter Accounts</Button>
 		<DateInput bind:value={filter.date_after} />
 		<DateInput bind:value={filter.date_before} />
 
@@ -55,3 +57,14 @@
 	</div>
 	<div />
 </form>
+
+<Modal bind:open={openFilterAccounts}>
+	<div slot="header">Filter Accounts</div>
+	<div slot="body">
+		<CheckboxButtons onChange={changingCheckbox} label="" labels={filter.account_ids} Class={"flex flex-col text-left"} />
+		<!-- {#each accounts as account}
+		
+			{account.account_name} {account.account_number} -->
+		<!-- {/each} -->
+	</div>
+</Modal>

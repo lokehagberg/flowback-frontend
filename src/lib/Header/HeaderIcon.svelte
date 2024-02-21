@@ -24,7 +24,6 @@
 	});
 
 	function checkIfSelected() {
-		console.log(window.location.pathname, '/' + href);
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>

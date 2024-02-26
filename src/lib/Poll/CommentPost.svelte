@@ -103,7 +103,7 @@
 	const subscribeToReplies = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${getId()}/subscribe`,
+			`group/${getId()}/subscribe`,
 			{
 				categories: ['comment_self']
 			}

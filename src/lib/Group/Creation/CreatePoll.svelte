@@ -216,7 +216,7 @@
 					/>
 
 					{#if advancedTimeSettings}
-						<div class="flex flex-wrap gap-6 justify-center">
+						<div class="grid grid-cols-2 gap-6 justify-center">
 							<div>
 								<h2 class="mt-4">{$_('Poll start')}</h2>
 								<DateInput

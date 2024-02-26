@@ -66,9 +66,10 @@
 	};
 
 	const notificationUnsubscription = async (category: string) => {
+		console.log(id)
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
-			channel_sender_id: id,
+			channel_sender_id: 2,
 			channel_category: category
 		});
 		if (res.ok) {

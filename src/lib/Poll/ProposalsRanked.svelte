@@ -46,8 +46,7 @@
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
-		if (phase === 'delegate-voting' || phase === 'voting')
-		setUpSortable();
+		if (phase === 'delegate-voting' || phase === 'voting') setUpSortable();
 		await getProposals();
 		setUpVotings();
 		isDelegate = await getIsDelegate();
@@ -201,7 +200,6 @@
 		);
 	};
 
-	
 	const saveVotings = async () => {
 		const proposals = document.querySelector('.container.ranked')?.children;
 		let votes: number[] = [];
@@ -216,7 +214,7 @@
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
-				votes
+				proposals:votes
 			}
 		);
 
@@ -302,7 +300,10 @@
 								proposals={ranked}
 								{groupUser}
 								Class={`${selectedPage === 'You' && ''} ${
-									(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting")) && 'cursor-pointer'
+									!checked &&
+									selectedPage !== 'Delegate' &&
+									(phase === 'voting' || phase == 'delegate-voting') &&
+									'cursor-pointer'
 								}`}
 							>
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
@@ -343,7 +344,10 @@
 						bind:proposals={abstained}
 						{groupUser}
 						Class={`${selectedPage === 'You'} ${
-							(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting"))&& 'cursor-move'
+							!checked &&
+							selectedPage !== 'Delegate' &&
+							(phase === 'voting' || phase == 'delegate-voting') &&
+							'cursor-move'
 						}`}
 					>
 						<div
@@ -382,12 +386,23 @@ and buttons at the same time without a toggle both. -->
 <StatusMessage bind:status />
 
 <!-- {#if phase === "delegate-voting" || phase === "voting"} -->
+<!-- {@debug nonDelegatesCanVote} -->
+<!-- 
+{#if delegatesCanVote && isDelegate}
+	<Button action={saveVotings}
+		>{(selectedPage === 'You' && $_('Save Votings')) ||
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
+	>
+{/if} -->
+
+{@debug delegatesCanVote}
 {#if (delegatesCanVote && isDelegate) || (nonDelegatesCanVote && !isDelegate)}
-<Button action={saveVotings}
-	>{(selectedPage === 'You' && $_('Save Votings')) ||
-		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
->
+	<Button action={saveVotings}
+		>{(selectedPage === 'You' && $_('Save Votings')) ||
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
+	>
 {/if}
+
 <!-- {/if} -->
 
 <style>

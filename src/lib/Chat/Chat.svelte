@@ -42,8 +42,8 @@
 	const testNewAPI = () => {
 		let socket = Socket.createSocket(user.id);
 		setTimeout(() => {
-			Socket.sendMessage(socket, 1, 'helloo :3');
-		},2000);
+			Socket.sendMessage(socket, 1, 'helloo :3', 1, 1, 1);
+		}, 2000);
 	};
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls

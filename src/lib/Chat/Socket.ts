@@ -41,18 +41,18 @@ const sendMessage = async (
 	socket: WebSocket,
 	channel_id: number,
 	message: string,
+	topic_id: number,
 	attachments_id: number | null = null,
 	parent_id: number | null = null,
-	topic_id: number | null = null
 ) => {
 	if (socket.readyState <= 1 && message.length > 0) 
 	await socket.send(
 		JSON.stringify({
 			channel_id,
 			message,
+			// topic_id,
 			attachments_id,
 			parent_id,
-			topic_id,
 			type: 'message_create'
 		})
 	);

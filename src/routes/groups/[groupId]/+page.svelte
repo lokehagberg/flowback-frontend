@@ -72,13 +72,26 @@
 		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
 		//@ts-ignore
 		selectedPage = page;
+
+		window.addEventListener('popstate', handleBackButton);
+
+		return () => {
+			window.removeEventListener('popstate', handleBackButton);
+		};
 	});
+
+	const handleBackButton = () => {
+		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
+		//@ts-ignore
+		selectedPage = page;
+	};
 
 	$: if (hasMounted) {
 		const searchParams = new URLSearchParams(window.location.search);
 		searchParams.set('page', selectedPage);
 		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
 	}
+
 </script>
 
 <svelte:head>
@@ -94,7 +107,9 @@
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
 					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] ${
-						selectedPage === 'kanban' || selectedPage === 'schedule' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
+						selectedPage === 'kanban' || selectedPage === 'schedule'
+							? 'xl:w-[1000px]'
+							: 'xl:w-[720px]'
 					}`}
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
@@ -122,7 +137,7 @@
 					{:else if selectedPage === 'perms'}
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
-						<Schedule type="group"/>
+						<Schedule type="group" />
 					{:else if selectedPage === 'threads'}
 						<Threads />
 					{/if}

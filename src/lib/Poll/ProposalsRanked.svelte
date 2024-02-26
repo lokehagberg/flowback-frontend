@@ -287,6 +287,7 @@
 				</div>
 				<ol class="container ranked lg:h-full">
 					{#each ranked as proposal, i}
+						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 						<li
 							id={`${proposal.id}`}
 							class="proposal"
@@ -306,7 +307,9 @@
 									'cursor-pointer'
 								}`}
 							>
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
+									<!-- svelte-ignore a11y-no-static-element-interactions -->
 									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer" on:keydown>
 										<Fa icon={faMinus} />
 									</div>
@@ -332,6 +335,7 @@
 		</div>
 		<ul class="container abstained lg:h-full">
 			{#each abstained as proposal}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<li
 					id={`${proposal.id}`}
 					class="proposal"
@@ -358,6 +362,7 @@
 								'invisible'
 							}`}
 						>
+							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer" on:keydown>
 								<Fa icon={faPlus} />
 							</div>

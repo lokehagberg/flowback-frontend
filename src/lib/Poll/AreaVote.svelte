@@ -15,7 +15,7 @@
 	const getTags = async () => {
 		const { json, res } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/tags?limit=1000`
+			`group/${$page.params.groupId}/tags?limit=1000&active=true`
 		);
 		if (!res.ok) {
 			show = true;

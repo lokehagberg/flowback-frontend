@@ -91,7 +91,6 @@
 		searchParams.set('page', selectedPage);
 		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
 	}
-
 </script>
 
 <svelte:head>

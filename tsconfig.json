@@ -9,7 +9,9 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"ignoreDeprecations": "5.0"
+		"ignoreDeprecations": "5.0",
+		// "verbatimModuleSyntax":true,
 		// "allowImportingTsExtensions":true
+		// "moduleResolution": "NodeNext"
 	}	
 }

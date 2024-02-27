@@ -105,7 +105,7 @@
 
 			{#if phase === 'pre-start'}
 				<div>dev</div>
-			{:else if phase === 'area_vote'}
+			{:else if phase === 'area-vote'}
 			
 				<AreaVote />
 			

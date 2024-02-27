@@ -20,7 +20,7 @@
 		isAdmin = false;
 
 	let onHoverGroup = false,
-	phase:Phase
+	phase:Phase;
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {

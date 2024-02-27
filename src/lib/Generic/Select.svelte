@@ -18,7 +18,7 @@
 		value = e?.target?.value;
 	}}
 	class="dark:bg-darkobject"
-	{value}
+	bind:value
 >
 	{#each labels as label, i}
 		<option value={values[i]} class="dark:bg-darkobject"> {label} </option>

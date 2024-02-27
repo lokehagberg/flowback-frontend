@@ -77,6 +77,7 @@
 	};
 
 	const getGroupToEdit = async () => {
+		//TODO: detail is outdated
 		const { res, json } = await fetchRequest('GET', `group/${groupToEdit}/detail`);
 		name = json.name;
 		description = json.description;

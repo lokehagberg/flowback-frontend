@@ -142,6 +142,7 @@
 
 	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
 	const getGroupKanbanIsFrom = async () => {
+		//TODO: detail is outdated
 		const { res, json } = await fetchRequest('GET', `group/${kanban.origin_id}/detail`);
 		kanban.group_name = json.name;
 	};

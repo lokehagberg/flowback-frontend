@@ -39,7 +39,12 @@
 		testNewAPI();
 	});
 
-	const testNewAPI = () => {
+	const testNewAPI = async () => {
+
+		const { json, res } = await fetchRequest('GET', `chat/message/channel/${1}/list`);
+		if (!res.ok) return;
+		
+
 		let socket = Socket.createSocket(user.id);
 		setTimeout(() => {
 			Socket.sendMessage(socket, 1, 'helloo :3', 1, 1, 1);

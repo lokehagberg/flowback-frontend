@@ -58,6 +58,7 @@
 	};
 
 	const getGroupInfo = async () => {
+		//TODO: detail is outdated
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
 		console.log(group, 'GROUPPP');

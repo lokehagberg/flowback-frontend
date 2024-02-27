@@ -10,7 +10,16 @@
 		value = values[0];
 </script>
 
-<select name={label} on:input={onInput} class="dark:bg-darkobject" {value}>
+<select
+	name={label}
+	on:input={(e) => {
+		onInput(e);
+		//@ts-ignore
+		value = e?.target?.value;
+	}}
+	class="dark:bg-darkobject"
+	{value}
+>
 	{#each labels as label, i}
 		<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
 	{/each}

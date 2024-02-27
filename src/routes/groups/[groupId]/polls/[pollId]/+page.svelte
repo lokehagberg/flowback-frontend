@@ -21,6 +21,7 @@
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
 	import { getPhase } from '$lib/Poll/functions';
+	import AreaVote from '$lib/Poll/AreaVote.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -105,7 +106,9 @@
 			{#if phase === 'pre-start'}
 				<div>dev</div>
 			{:else if phase === 'area_vote'}
-				<div>dev</div>
+			
+				<AreaVote />
+			
 			{:else if phase === 'proposals'}
 				<ProposalsRanked
 					{groupUser}

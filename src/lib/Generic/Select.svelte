@@ -7,7 +7,7 @@
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
-		value = values[1];
+		value = values[0];
 </script>
 
 <select name={label} on:input={onInput} class="dark:bg-darkobject" {value}>

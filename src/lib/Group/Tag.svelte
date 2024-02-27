@@ -1,5 +1,7 @@
 <script lang="ts">
-	export let tag: { name: string; id: number },
+	import type { Tag } from "./interface";
+
+	export let tag: Tag,
 		Class: string = '',
 		onclick = () => {};
 </script>
@@ -12,7 +14,7 @@
 		Class}
 	on:click={onclick}
 >
-	{tag.name}
+	{tag?.name}
 </div>
 
 <style>

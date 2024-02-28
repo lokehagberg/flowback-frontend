@@ -81,7 +81,7 @@
 			{proposal.description}
 		</p>
 	</div>
-	<input id="amount" class="dark:bg-darkobject" type="number"  min={0} />
+	<input id="amount" class="dark:bg-darkobject" type="number" min={0} />
 	
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->

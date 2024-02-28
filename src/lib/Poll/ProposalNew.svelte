@@ -3,11 +3,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';
-	import Modal from '$lib/Generic/Modal.svelte';
-	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { _ } from 'svelte-i18n';
-	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';

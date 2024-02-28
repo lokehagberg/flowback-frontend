@@ -88,7 +88,7 @@ export interface Tag {
 
 export interface groupUser extends User {
 	user_id: number;
-	delegate: boolean;
+	is_delegate: boolean;
 	is_admin: boolean;
 	permission_id: number;
 	permission_name: string;

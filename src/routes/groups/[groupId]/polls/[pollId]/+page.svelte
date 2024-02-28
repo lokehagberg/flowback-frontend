@@ -80,6 +80,7 @@
 					'GET',
 					`group/${$page.params.groupId}/users?user_id=${userId}`
 				);
+				console.log("GROUPPUSUUE", json)
 				if (res.ok) groupUser = json.results[0];
 			}
 		}
@@ -156,7 +157,7 @@
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalScoreVoting {proposals} />
+				<ProposalScoreVoting {proposals} {groupUser}/>
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}

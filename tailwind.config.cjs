@@ -10,10 +10,11 @@ module.exports = {
         extend: {
             colors: {
                 // These colors are findable in app.css
-                primary: 'var(--primary-color)',
-                secondary: 'var(--secondary-color)',
-                background: 'var(--background-color)',
-                accent: 'var(--accent-color)',
+                primary: 'var(--primary)',
+                secondary: 'var(--secondary)',
+                background: 'var(--background)',
+                accent: 'var(--accent)',
+                accentSecondary: 'var(--accent-secondary)',
                 darkmodeText: 'var(--darkmode-text-color)',
                 darkbackground: 'var(--darkmode-background-color)',
                 darkobject: 'var(--darkmode-object-color)',

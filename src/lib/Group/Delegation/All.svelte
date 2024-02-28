@@ -200,7 +200,6 @@
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => {
-						console.log(delegate)
 						history = delegate.id;
 						selectedPage = 'History';
 					}}>{$_('See delegate history')}</span

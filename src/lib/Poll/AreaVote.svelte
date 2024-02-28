@@ -36,11 +36,10 @@
 				vote: true
 			}
 		);
-		if (!res.ok) {
-			show = true;
-			message = 'Could not vote on tag';
-			return;
-		}
+		
+		show = true;
+		if (!res.ok) message = 'Could not vote on tag';
+		else message = 'Successfully voted for area';
 	};
 
 	onMount(() => {

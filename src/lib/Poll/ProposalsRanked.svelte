@@ -400,7 +400,7 @@ and buttons at the same time without a toggle both. -->
 	>
 {/if} -->
 
-{@debug delegatesCanVote}
+<!-- {@debug delegatesCanVote} -->
 {#if (delegatesCanVote && isDelegate) || (nonDelegatesCanVote && !isDelegate)}
 	<Button action={saveVotings}
 		>{(selectedPage === 'You' && $_('Save Votings')) ||

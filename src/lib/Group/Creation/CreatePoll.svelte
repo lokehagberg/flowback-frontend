@@ -305,7 +305,7 @@
 						</div>
 					{/if}
 				</div>
-				<h2>{$_('Select Tag')}</h2>
+				<!-- <h2>{$_('Select Tag')}</h2>
 				<div class="flex gap-4 flex-wrap">
 					{#each tags as tag}
 						<Tag
@@ -316,7 +316,7 @@
 							}`}
 						/>
 					{/each}
-				</div>
+				</div> -->
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					{$_('This polltype is not implemented yet')}

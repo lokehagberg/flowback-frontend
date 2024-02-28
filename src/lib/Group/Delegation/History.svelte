@@ -31,6 +31,8 @@
 			`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		);
 
+		console.log(json, 'JESOn');
+
 		delegatePool = json.results[0];
 	};
 

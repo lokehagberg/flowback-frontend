@@ -227,8 +227,9 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
+							{#if selected_poll !== "Date Poll"}
 							<div>
-								<h2 class="mt-4">{$_('Tag voting end')}</h2>
+								<h2 class="mt-4">{$_('Area voting end')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -237,6 +238,7 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
+							{/if}
 							<div>
 								<h2 class="mt-4">{$_('Proposal end')}</h2>
 								<DateInput
@@ -247,6 +249,7 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
+							{#if selected_poll !== "Date Poll"}
 							<div>
 								<h2 class="mt-4">{$_('Prediction statement end')}</h2>
 								<DateInput
@@ -277,6 +280,7 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
+							{/if}
 							<div>
 								<h2 class="mt-4">{$_('Voting end date')}</h2>
 								<DateInput
@@ -288,7 +292,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('end date')}</h2>
+								<h2 class="mt-4">{$_('End date')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -305,7 +309,7 @@
 					{#each tags as tag}
 						<Tag
 							onclick={() => (selectedTag = tag)}
-							tag={{name: tag.name, id:tag.id}}
+							tag={{name: tag.name, id:tag.id, active:true}}
 							Class={`cursor-pointer ${
 								selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
 							}`}

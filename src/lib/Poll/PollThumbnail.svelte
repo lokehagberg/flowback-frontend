@@ -20,7 +20,7 @@
 		isAdmin = false;
 
 	let onHoverGroup = false,
-	phase:Phase;
+		phase: Phase;
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -30,8 +30,8 @@
 	};
 
 	onMount(() => {
-		phase = getPhase(poll)
-	})
+		phase = getPhase(poll);
+	});
 </script>
 
 <div
@@ -39,7 +39,10 @@
 >
 	<div class="flex items-center justify-between mt-1">
 		<div>
-			<Tag tag={poll.tag_name} Class="inline cursor-default" />
+			<Tag
+				tag={{ name: poll.tag_name, id: poll.tag, active: true }}
+				Class="inline cursor-default"
+			/>
 			<div class="ml-2 inline-flex">
 				{#if poll.poll_type === 1}
 					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
@@ -85,7 +88,9 @@
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 		>
-			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">{poll.title}</h1>
+			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">
+				{poll.title}
+			</h1>
 		</a>
 		<NotificationOptions
 			id={poll.id}
@@ -106,17 +111,17 @@
 	>
 
 	<Timeline
-				displayDetails={false}
-				dates={[
-					new Date(poll.start_date),
-					new Date(poll.area_vote_end_date),
-					new Date(poll.proposal_end_date),
-					new Date(poll.prediction_statement_end_date),
-					new Date(poll.prediction_bet_end_date),
-					new Date(poll.delegate_vote_end_date),
-					new Date(poll.end_date)
-				]}
-			/>
+		displayDetails={false}
+		dates={[
+			new Date(poll.start_date),
+			new Date(poll.area_vote_end_date),
+			new Date(poll.proposal_end_date),
+			new Date(poll.prediction_statement_end_date),
+			new Date(poll.prediction_bet_end_date),
+			new Date(poll.delegate_vote_end_date),
+			new Date(poll.end_date)
+		]}
+	/>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>
@@ -145,5 +150,4 @@
 	</div>
 
 	current phase: {phase}
-
 </div>

@@ -39,11 +39,13 @@
 	};
 
 	const changingVote = (e: Event, proposalId: number) => {
-		//@ts-ignore
+        //@ts-ignore
 		let newScore = e?.target?.value;
 		const i = voting.findIndex((vote) => vote.proposal === proposalId);
+        console.log("HERE?", voting, newScore, i, proposalId)
 		voting[i].score = Number(newScore);
 		voting = voting;
+        console.log("HERE?", voting, newScore, i, proposalId)
 	};
 
 	onMount(() => {

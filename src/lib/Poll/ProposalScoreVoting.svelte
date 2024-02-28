@@ -14,8 +14,8 @@
 
 	const vote = () => {
 		fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
-			proposals: [5, 6, 7],
-			scores: [1, 2, 3]
+			proposals: voting.map(vote => vote.proposal),
+			scores: voting.map(vote => vote.score)
 		});
 	};
 
@@ -35,8 +35,6 @@
         voting[i].score = Number(newScore)
         voting = voting
     }
-
-    $: console.log(voting, "VOOOT")
 
     onMount(() => {
         getProposals()

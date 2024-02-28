@@ -3,11 +3,8 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { groupUser } from '$lib/Group/interface';
-	import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { _ } from 'svelte-i18n';
@@ -17,11 +14,8 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 
-	export let proposal: proposal,
-		Class = '',
-		groupUser: groupUser,
-		proposals: proposal[],
-		editable: boolean = false;
+
+	export let proposal: proposal, Class = "";
 
 	export const id: number = 0;
 
@@ -31,40 +25,13 @@
 		open = false,
 		show = false;
 
-	const deleteProposal = async () => {
-		const { res, json } = await fetchRequest('POST', `group/poll/proposal/${proposal.id}/delete`);
-		if (!res.ok) return;
-		proposals = proposals.filter((proposalInList) => proposalInList.id !== proposal.id);
-		proposals = proposals;
-		show = true;
-	};
-
 	//TODO: Actual Edit
-	const editProposal = async () => {
-		await deleteProposal();
-
-		let newProposal = proposal;
-		newProposal.title = newTitle;
-		newProposal.description = newDescription;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/proposal/create`,
-			newProposal
-		);
-
-		if (!res.ok) return;
-
-		proposals.push({ ...newProposal, title: newTitle, description: newDescription });
-		proposals = proposals;
-		proposal.title = newTitle;
-		proposal.description = newDescription;
-		show = true;
-	};
-
+	
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
+
+
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -82,19 +49,7 @@
 		</p>
 	</div>
 	<input id="amount" class="dark:bg-darkobject" type="number"  min={0} />
-	
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	{#if editable}
-		<!-- TODO and also before proposal end date -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div on:click={() => (open = true)} class="cursor-pointer" on:keydown>
-			<Fa icon={faPen} />
-		</div>
-		<div on:click={deleteProposal} class="cursor-pointer" on:keydown>
-			<Fa icon={faX} />
-		</div>
-	{/if}
+
 	<slot />
 </div>
 
@@ -104,7 +59,7 @@
 		<form
 			on:submit|preventDefault={() => {
 				open = false;
-				editProposal();
+			
 			}}
 		>
 			<TextInput label="Title" bind:value={newTitle} />

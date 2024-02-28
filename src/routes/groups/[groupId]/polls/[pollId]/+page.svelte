@@ -155,20 +155,9 @@
 				/>
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
-				<ProposalScoreVoting />
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.prediction_bet_end_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-					delegatesCanVote
-				/>
+				<ProposalScoreVoting {proposals} />
+
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />

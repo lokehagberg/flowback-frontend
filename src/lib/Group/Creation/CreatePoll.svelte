@@ -124,7 +124,7 @@
 		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
 		formData.append('vote_end_date', vote_end_date.toISOString());
 		formData.append('end_date', end_date.toISOString());
-		formData.append('poll_type', (selected_poll === defaultType ? 1 : 3).toString());
+		formData.append('poll_type', (selected_poll === defaultType ? 4 : 3).toString());
 		formData.append('tag', selectedTag.id.toString());
 		formData.append('dynamic', 'false');
 		formData.append('public', isPublic.toString());

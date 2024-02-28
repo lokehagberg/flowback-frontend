@@ -22,6 +22,7 @@
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
+	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -106,9 +107,7 @@
 			{#if phase === 'pre-start'}
 				<div>dev</div>
 			{:else if phase === 'area-vote'}
-			
 				<AreaVote />
-			
 			{:else if phase === 'proposals'}
 				<ProposalsRanked
 					{groupUser}
@@ -122,7 +121,7 @@
 					bind:proposals
 				/>
 
-				{#if pollType === 1}
+				{#if pollType === 4}
 					<!-- Ranked Poll -->
 					<ProposalSubmition bind:abstained />
 				{:else if pollType === 3}
@@ -156,6 +155,7 @@
 				/>
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
+				<ProposalScoreVoting />
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 				<ProposalsRanked
 					{groupUser}

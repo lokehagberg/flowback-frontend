@@ -3,8 +3,6 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';
-	import { fetchRequest } from '$lib/FetchRequest';
-	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { _ } from 'svelte-i18n';
@@ -14,29 +12,25 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 
-
-	export let proposal: proposal, Class = "";
+	export let proposal: proposal,
+		Class = '',
+		onChange = (e:Event) => {};
 
 	export const id: number = 0;
 
 	let isHoveredOver = false,
-		newTitle = proposal.title,
-		newDescription = proposal.description,
-		open = false,
 		show = false;
 
-	//TODO: Actual Edit
-	
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
-
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 dark:border-gray-500 lg:h-36 xl:h-40 ${Class}`}
+	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex 
+	justify-between items-center bg-white gap-8 p-4 border border-gray-200
+	 dark:border-gray-500 lg:h-36 xl:h-40 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
@@ -48,27 +42,10 @@
 			{proposal.description}
 		</p>
 	</div>
-	<input id="amount" class="dark:bg-darkobject" type="number"  min={0} />
+	<input id="amount" class="dark:bg-darkobject" type="number" on:change={(e) => onChange(e)} min={0} />
 
 	<slot />
 </div>
-
-<Modal bind:open>
-	<span slot="header">{$_('Edit proposal')}</span>
-	<div slot="body">
-		<form
-			on:submit|preventDefault={() => {
-				open = false;
-			
-			}}
-		>
-			<TextInput label="Title" bind:value={newTitle} />
-			<TextArea label="Description" bind:value={newDescription} />
-			<Button type="submit">{$_('Submit')}</Button>
-		</form>
-	</div>
-	<div slot="footer" />
-</Modal>
 
 <SuccessPoppup bind:show message="Successfully edited proposal" />
 

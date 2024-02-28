@@ -10,6 +10,8 @@
 
 	export let proposals: proposal[] = [];
 
+    let voting:{score: number, proposal:number}[] = proposals.map(proposal => ({score:0, proposal: proposal.id}))
+
 	const vote = () => {
 		fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
 			proposals: [5, 6, 7],
@@ -24,9 +26,17 @@
 		);
 
 		proposals = json.results;
-		
-	
 	};
+
+    const changingVote = (e:Event, proposalId:number) => {
+        //@ts-ignore
+        let newScore = e?.target?.value
+        const i = voting.findIndex(vote => vote.proposal === proposalId)
+        voting[i].score = Number(newScore)
+        voting = voting
+    }
+
+    $: console.log(voting, "VOOOT")
 
     onMount(() => {
         getProposals()
@@ -35,8 +45,8 @@
 
 <div>
 	{#each proposals as proposal}
-		<ProposalNew {proposal} />
+		<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} />
 	{/each}
 
-	<Button action={vote} />
+	<Button action={vote} >Save Votings</Button>
 </div>

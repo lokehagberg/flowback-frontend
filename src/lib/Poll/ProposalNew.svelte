@@ -38,7 +38,7 @@
 			{proposal.description}
 		</p>
 	</div>
-	<input id="amount" class="dark:bg-darkobject" type="number" on:change={(e) => onChange(e)} min={0} />
+	<input id="amount" class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2" type="number" on:change={(e) => onChange(e)} min={0} />
 
 	<slot />
 </div>

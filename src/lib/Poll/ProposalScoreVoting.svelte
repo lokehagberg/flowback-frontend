@@ -8,12 +8,20 @@
 	import { onMount } from 'svelte';
 	import type { groupUser } from '$lib/Group/interface';
 
-	export let proposals: proposal[] = [], groupUser:groupUser;
+	export let proposals: proposal[] = [],
+		groupUser: groupUser;
 
-	let voting: { score: number; proposal: number }[] = proposals.map((proposal) => ({
-		score: 0,
-		proposal: proposal.id
-	}));
+	let voting: { score: number; proposal: number }[] = [];
+
+	onMount(() => {
+		let interval = setInterval(() => {
+			voting = proposals.map((proposal) => ({
+				score: 0,
+				proposal: proposal.id
+			}));
+			if (voting.length > 0) clearInterval(interval);
+		}, 300);
+	});
 
 	const delegateVote = () => {
 		fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
@@ -39,13 +47,12 @@
 	};
 
 	const changingVote = (e: Event, proposalId: number) => {
-        //@ts-ignore
+		console.log(voting, proposals);
+		//@ts-ignore
 		let newScore = e?.target?.value;
 		const i = voting.findIndex((vote) => vote.proposal === proposalId);
-        console.log("HERE?", voting, newScore, i, proposalId)
 		voting[i].score = Number(newScore);
 		voting = voting;
-        console.log("HERE?", voting, newScore, i, proposalId)
 	};
 
 	onMount(() => {
@@ -58,5 +65,5 @@
 		<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} />
 	{/each}
 
-	<Button action={() =>  groupUser.is_delegate ? delegateVote() : vote()}>Save Votings</Button>
+	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())}>Save Votings</Button>
 </div>

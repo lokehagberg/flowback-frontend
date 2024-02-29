@@ -143,7 +143,7 @@
 					bind:abstained
 					bind:proposals
 				/> -->
-				<ProposalScoreVoting  {proposals} {groupUser} isVoting={false}/>
+				<ProposalScoreVoting  bind:proposals {groupUser} isVoting={false}/>
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-betting'}

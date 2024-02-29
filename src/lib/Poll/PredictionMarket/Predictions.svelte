@@ -41,14 +41,12 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
-			);
-			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
-			loading = false;
-			predictions = json.results;
-			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
+		);
+		console.log('hiiiiiiii', json.results, 'prediction', loading, predictions);
+		loading = false;
+		predictions = json.results;
+		console.log('hiiiiiiii', json.results, 'prediction', loading, predictions);
 	};
-
-	$: console.log(predictions, "PREDICTI")
 
 	const getPredictionBets = async () => {
 		loading = true;
@@ -58,7 +56,6 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list`
 		);
 
-	
 		loading = false;
 		bets = json.results;
 	};
@@ -103,8 +100,8 @@
 		getPredictionStatements();
 		getPredictionBets();
 	});
-
 </script>
+
 <!-- {@debug predictions} -->
 <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
@@ -137,36 +134,46 @@
 			<Question
 				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 			/><br />
-			{#each proposals as proposal}
-				<Select
-					label={proposal.title}
-					onInput={(e) => {
-						//@ts-ignore
-						if (e.target.value === 'Neutral')
-							newPredictionStatement.segments?.filter(
-								(segment) => segment.proposal_id === proposal.id
-							);
-						else if (
-							newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id)
-						)
-							newPredictionStatement.segments.map((segment) => {
-								if (segment.proposal_id === proposal.id)
+			<div class="grid grid-cols-1">
+				{#each proposals as proposal}
+					<Select
+						label={proposal.title}
+						Class="mt-2"
+						onInput={(e) => {
+							//@ts-ignore
+							if (e.target.value === 'Neutral')
+								newPredictionStatement.segments?.filter(
+									(segment) => segment.proposal_id === proposal.id
+								);
+							else if (
+								newPredictionStatement.segments.find(
+									(segment) => segment.proposal_id === proposal.id
+								)
+							)
+								newPredictionStatement.segments.map((segment) => {
+									if (segment.proposal_id === proposal.id)
+										//@ts-ignore
+										segment.is_true = e.target.value === 'Implemented' ? true : false;
+								});
+							else
+								newPredictionStatement.segments.push({
+									proposal_id: proposal.id,
 									//@ts-ignore
-									segment.is_true = e.target.value === 'Implemented' ? true : false;
-							});
-						else
-							newPredictionStatement.segments.push({
-								proposal_id: proposal.id,
-								//@ts-ignore
-								is_true: e.target.value === 'Implemented' ? true : false
-							});
-					}}
-					labels={['Neutral', 'Implemented', 'Not implemented']}
-					values={[null, 'Implemented', null]}
-					value={null}
-				/>
-			{/each}
-			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+									is_true: e.target.value === 'Implemented' ? true : false
+								});
+						}}
+						labels={['Neutral', 'Implemented', 'Not implemented']}
+						values={[null, 'Implemented', null]}
+						value={null}
+					/>
+				{/each}
+			</div>
+			<br/>
+			<TextArea
+				required
+				label="Description"
+				bind:value={newPredictionStatement.description}
+			/>
 			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_('Submit')}</Button>
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>

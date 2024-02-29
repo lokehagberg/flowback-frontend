@@ -47,7 +47,7 @@
 		}
 	};
 
-	const predictionBetCreate = async (score:string) => {
+	const predictionBetCreate = async (score: string) => {
 		loading = true;
 
 		if (!score) return;
@@ -64,7 +64,7 @@
 		if (!res.ok) showPoppup = true;
 	};
 
-	const predictionBetUpdate = async (score:string) => {
+	const predictionBetUpdate = async (score: string) => {
 		loading = true;
 
 		if (!score) return;
@@ -164,12 +164,12 @@
 				//@ts-ignore
 				const newScore = e?.target?.value;
 
-				console.log(newScore)
+				console.log(newScore);
 				if (!newScore) predictionBetDelete();
 				else if (score === null) {
 					predictionBetCreate(newScore);
 				} else predictionBetUpdate(newScore);
-				
+
 				score = Number(newScore);
 				// await predictionBetDelete();
 
@@ -180,7 +180,7 @@
 			}}
 		/>
 	{/if}
-	{#if phase === 'results'}
+	{#if phase === 'results' || phase === 'prediction-voting'}
 		<div class="flex">
 			<Button
 				action={() =>

@@ -121,8 +121,9 @@
 		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
 	{/if}
 
+	
 	{#if predictions.length === 0}
-		<div class="mt-5">{$_('There are currently no predictions')}</div>
+	<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
 </Loader>
 

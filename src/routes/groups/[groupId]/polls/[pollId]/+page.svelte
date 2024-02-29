@@ -93,8 +93,6 @@
 			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 		}, 1500);
 	};
-
-
 </script>
 
 {#if poll}
@@ -111,17 +109,7 @@
 			{:else if phase === 'area-vote'}
 				<AreaVote />
 			{:else if phase === 'proposals'}
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.vote_start_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/>
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 				{#if pollType === 4}
 					<!-- Ranked Poll -->
@@ -142,21 +130,11 @@
 					bind:abstained
 					bind:proposals
 				/> -->
-				<ProposalScoreVoting  bind:proposals {groupUser} isVoting={false}/>
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-betting'}
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.prediction_bet_end_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/>
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
 				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
@@ -165,7 +143,7 @@
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalScoreVoting {proposals} {groupUser} isVoting={!groupUser.is_delegate}/>
+				<ProposalScoreVoting {proposals} {groupUser} isVoting={!groupUser.is_delegate} />
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}

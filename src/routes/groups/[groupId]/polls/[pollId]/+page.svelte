@@ -113,23 +113,13 @@
 
 				{#if pollType === 4}
 					<!-- Ranked Poll -->
-					<ProposalSubmition bind:abstained />
+					<ProposalSubmition bind:proposals />
 				{:else if pollType === 3}
 					<!-- Scheduled Poll -->
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else if phase === 'prediction-statement'}
-				<!-- <ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.vote_start_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/> -->
+				
 				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 				<Predictions bind:proposals bind:phase />

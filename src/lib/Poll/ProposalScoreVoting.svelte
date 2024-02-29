@@ -9,22 +9,22 @@
 	import type { groupUser } from '$lib/Group/interface';
 
 	export let proposals: proposal[] = [],
-	 groupUser: groupUser,
+		groupUser: groupUser,
 		isVoting: boolean = false;
 
-	let voting: { score: number; proposal: number }[] = [];
+	let voting: { score: number; proposal: number }[] = [],
+		needsReload = 0;
 
-	onMount(() => {
+	onMount(async () => {
+		await getProposals();
 
-		getProposals();
+		voting = proposals.map((proposal) => ({
+			score: 0,
+			proposal: proposal.id
+		}));
 
-		let interval = setInterval(() => {
-			voting = proposals.map((proposal) => ({
-				score: 0,
-				proposal: proposal.id
-			}));
-			if (voting.length > 0) clearInterval(interval);
-		}, 300);
+		await getVotes();
+		needsReload++;
 	});
 
 	const getProposals = async () => {
@@ -34,6 +34,23 @@
 		);
 
 		proposals = json.results;
+	};
+
+	const getVotes = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
+		);
+
+		console.log(voting);
+		voting = voting.map((vote) => ({
+			score: (vote.score = json.results.find(
+				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
+			).raw_score),
+			proposal: vote.proposal
+		}));
+		console.log(voting, 'VOTING DONE');
+		voting = voting;
 	};
 
 	const delegateVote = () => {
@@ -57,16 +74,16 @@
 		voting[i].score = Number(newScore);
 		voting = voting;
 	};
-
 </script>
 
-
 <div>
-	{#each proposals as proposal}
-		<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} />
-	{/each}
-		
+	{#key needsReload}
+		{#each proposals as proposal}
+			<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
+		{/each}
+	{/key}
+
 	{#if isVoting}
 		<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())}>Save Votings</Button>
 	{/if}
-</div> 
+</div>

@@ -11,7 +11,8 @@
 	export let proposal: proposal,
 		Class = '',
 		onChange = (e: Event) => {},
-		isVoting = true;
+		isVoting = true,
+		voting: { score: number; proposal: number }[];
 
 	export const id: number = 0;
 
@@ -41,6 +42,7 @@
 	</div>
 	{#if isVoting}
 		<input
+			value={voting.find((vote) => vote.proposal === proposal.id)?.score}
 			id="amount"
 			class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2"
 			type="number"

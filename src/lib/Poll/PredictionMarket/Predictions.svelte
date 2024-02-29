@@ -17,6 +17,7 @@
 	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -31,7 +32,10 @@
 			}[];
 		} = { segments: [] },
 		// statusMessage: StatusMessageInfo,
-		bets: PredictionBet[] = [];
+		bets: PredictionBet[] = [],
+		show = false,
+		message = '',
+		resetsOfValues = 0;
 
 	export let proposals: proposal[], phase: Phase;
 
@@ -42,10 +46,8 @@
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
 		);
-		console.log('hiiiiiiii', json.results, 'prediction', loading, predictions);
 		loading = false;
 		predictions = json.results;
-		console.log('hiiiiiiii', json.results, 'prediction', loading, predictions);
 	};
 
 	const getPredictionBets = async () => {
@@ -68,13 +70,18 @@
 			newPredictionStatement
 		);
 		loading = false;
+		show = true;
 
 		if (!res.ok) {
-			// statusMessage = statusMessageFormatter(res, json);
+			message = json.detail[0];
 			return;
 		}
 
+		newPredictionStatement = { segments: [] };
+		resetsOfValues++;
 		addingPrediction = false;
+		message = 'Successfully created prediction statement';
+
 		getPredictionStatements();
 	};
 
@@ -102,7 +109,6 @@
 	});
 </script>
 
-<!-- {@debug predictions} -->
 <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
@@ -136,47 +142,47 @@
 			/><br />
 			<div class="grid grid-cols-1">
 				{#each proposals as proposal}
-					<Select
-						label={proposal.title}
-						Class="mt-2"
-						onInput={(e) => {
-							//@ts-ignore
-							if (e.target.value === 'Neutral')
-								newPredictionStatement.segments?.filter(
-									(segment) => segment.proposal_id === proposal.id
-								);
-							else if (
-								newPredictionStatement.segments.find(
-									(segment) => segment.proposal_id === proposal.id
+					{#key resetsOfValues}
+						<Select
+							label={proposal.title}
+							Class="mt-2"
+							onInput={(e) => {
+								//@ts-ignore
+								if (e.target.value === 'Neutral')
+									newPredictionStatement.segments?.filter(
+										(segment) => segment.proposal_id === proposal.id
+									);
+								else if (
+									newPredictionStatement.segments.find(
+										(segment) => segment.proposal_id === proposal.id
+									)
 								)
-							)
-								newPredictionStatement.segments.map((segment) => {
-									if (segment.proposal_id === proposal.id)
+									newPredictionStatement.segments.map((segment) => {
+										if (segment.proposal_id === proposal.id)
+											//@ts-ignore
+											segment.is_true = e.target.value === 'Implemented' ? true : false;
+									});
+								else
+									newPredictionStatement.segments.push({
+										proposal_id: proposal.id,
 										//@ts-ignore
-										segment.is_true = e.target.value === 'Implemented' ? true : false;
-								});
-							else
-								newPredictionStatement.segments.push({
-									proposal_id: proposal.id,
-									//@ts-ignore
-									is_true: e.target.value === 'Implemented' ? true : false
-								});
-						}}
-						labels={['Neutral', 'Implemented', 'Not implemented']}
-						values={[null, 'Implemented', "Not implemented"]}
-						value={null}
-					/>
+										is_true: e.target.value === 'Implemented' ? true : false
+									});
+							}}
+							labels={['Neutral', 'Implemented', 'Not implemented']}
+							values={[null, 'Implemented', 'Not implemented']}
+							value={null}
+						/>
+					{/key}
 				{/each}
 			</div>
-			<br/>
-			<TextArea
-				required
-				label="Description"
-				bind:value={newPredictionStatement.description}
-			/>
+			<br />
+			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_('Submit')}</Button>
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
 	</form>
 </Modal>
+
+<SuccessPoppup bind:message bind:show />

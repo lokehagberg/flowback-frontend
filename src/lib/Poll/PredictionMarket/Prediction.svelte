@@ -47,7 +47,7 @@
 		}
 	};
 
-	const predictionBetCreate = async () => {
+	const predictionBetCreate = async (score:string) => {
 		loading = true;
 
 		if (!score) return;
@@ -64,7 +64,7 @@
 		if (!res.ok) showPoppup = true;
 	};
 
-	const predictionBetUpdate = async () => {
+	const predictionBetUpdate = async (score:string) => {
 		loading = true;
 
 		if (!score) return;
@@ -162,15 +162,15 @@
 			bind:value={score}
 			onInput={async (e) => {
 				//@ts-ignore
-				const newScore = Number(e?.target?.value);
+				const newScore = e?.target?.value;
 
-				if (newScore === null) predictionBetDelete();
+				console.log(newScore)
+				if (!newScore) predictionBetDelete();
 				else if (score === null) {
-					score = newScore;
-					predictionBetCreate();
-				} else predictionBetUpdate();
-
-				score = newScore;
+					predictionBetCreate(newScore);
+				} else predictionBetUpdate(newScore);
+				
+				score = Number(newScore);
 				// await predictionBetDelete();
 
 				// if (selectedScore !== null) {

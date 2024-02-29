@@ -94,6 +94,8 @@
 			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 		}, 1500);
 	};
+
+	
 </script>
 
 {#if poll}

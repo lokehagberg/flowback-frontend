@@ -19,7 +19,7 @@
 			`group/poll/${$page.params.pollId}/proposals?limit=1000`
 		);
 
-		if (pollType === 1) proposals = json.results;
+		if (pollType === 4) proposals = json.results;
 		else if (pollType === 3)
 			proposals = [
 				{
@@ -40,7 +40,7 @@
 
 <div class="border border-gray- p-4 rounded">
 	<h1 class="text-4xl mb-6">{$_("Results")}</h1>
-	{#if pollType === 1}
+	{#if pollType === 4}
 		<Statistics bind:votes bind:labels />
 	{/if}
 	{#each proposals as proposal}

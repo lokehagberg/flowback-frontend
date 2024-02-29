@@ -65,7 +65,7 @@
 		);
 
 		//Ranked
-		if (pollType === 1) proposals = json.results;
+		if (pollType === 4) proposals = json.results;
 		//Scheduled
 		else if (pollType === 3)
 			proposals = json.results.map((proposal: any) => {
@@ -214,7 +214,7 @@
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
-				proposals:votes
+				proposals: votes
 			}
 		);
 

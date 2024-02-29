@@ -95,7 +95,7 @@
 		}, 1500);
 	};
 
-	
+
 </script>
 
 {#if poll}
@@ -132,7 +132,7 @@
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else if phase === 'prediction-statement'}
-				<ProposalsRanked
+				<!-- <ProposalsRanked
 					{groupUser}
 					votingStartTime={poll.vote_start_date}
 					pollType={poll.poll_type}
@@ -142,7 +142,9 @@
 					bind:selectedPage
 					bind:abstained
 					bind:proposals
-				/>
+				/> -->
+				<ProposalScoreVoting  {proposals} {groupUser} isVoting={false}/>
+
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-betting'}
 				<ProposalsRanked
@@ -159,12 +161,12 @@
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
 				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
-				<ProposalScoreVoting {proposals} {groupUser} />
+				<ProposalScoreVoting {proposals} {groupUser} isVoting={groupUser.is_delegate} />
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalScoreVoting {proposals} {groupUser} />
+				<ProposalScoreVoting {proposals} {groupUser} isVoting={!groupUser.is_delegate}/>
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}

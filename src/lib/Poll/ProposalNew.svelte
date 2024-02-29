@@ -10,7 +10,8 @@
 
 	export let proposal: proposal,
 		Class = '',
-		onChange = (e:Event) => {};
+		onChange = (e: Event) => {},
+		isVoting = true;
 
 	export const id: number = 0;
 
@@ -38,8 +39,18 @@
 			{proposal.description}
 		</p>
 	</div>
-	<input id="amount" class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2" type="number" on:change={(e) => onChange(e)} min={0} />
-
+	{#if isVoting}
+		<input
+			id="amount"
+			class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2"
+			type="number"
+			on:change={(e) => onChange(e)}
+			min={0}
+		/>
+	{:else}
+		<!-- Used to ensure flex design stays intact -->
+		<div />
+	{/if}
 	<slot />
 </div>
 

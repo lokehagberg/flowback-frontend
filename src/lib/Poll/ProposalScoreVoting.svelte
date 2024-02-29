@@ -9,7 +9,8 @@
 	import type { groupUser } from '$lib/Group/interface';
 
 	export let proposals: proposal[] = [],
-		groupUser: groupUser;
+		groupUser: groupUser,
+		isVoting: boolean;
 
 	let voting: { score: number; proposal: number }[] = [];
 
@@ -62,8 +63,10 @@
 
 <div>
 	{#each proposals as proposal}
-		<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} />
+		<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} />
 	{/each}
 
-	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())}>Save Votings</Button>
+	{#if isVoting}
+		<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())}>Save Votings</Button>
+	{/if}
 </div>

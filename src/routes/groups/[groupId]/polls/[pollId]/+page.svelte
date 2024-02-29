@@ -109,7 +109,7 @@
 			{:else if phase === 'area-vote'}
 				<AreaVote />
 			{:else if phase === 'proposals'}
-				<!-- <ProposalScoreVoting bind:proposals isVoting={false} /> -->
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 				{#if pollType === 4}
 					<!-- Ranked Poll -->
@@ -119,22 +119,21 @@
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else if phase === 'prediction-statement'}
-				<!-- <ProposalScoreVoting bind:proposals isVoting={false} /> -->
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-betting'}
-				<!-- <ProposalScoreVoting bind:proposals  isVoting={false} /> -->
+				<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
-				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<!-- <ProposalScoreVoting {proposals}  isVoting={groupUser.is_delegate} /> -->
+				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+				<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
 
 				<Predictions bind:proposals bind:phase />
-				<ProposalScoreVoting {groupUser} isVoting={true} {proposals}/>
 			{:else if phase === 'voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 
-				<!-- <ProposalScoreVoting proposals={proposals ? proposals : []} isVoting={!groupUser.is_delegate || false} /> -->
+				<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
 
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}

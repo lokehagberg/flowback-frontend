@@ -163,7 +163,7 @@
 								});
 						}}
 						labels={['Neutral', 'Implemented', 'Not implemented']}
-						values={[null, 'Implemented', null]}
+						values={[null, 'Implemented', "Not implemented"]}
 						value={null}
 					/>
 				{/each}

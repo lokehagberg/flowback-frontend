@@ -80,7 +80,6 @@
 					'GET',
 					`group/${$page.params.groupId}/users?user_id=${userId}`
 				);
-				console.log('GROUPPUSUUE', json);
 				if (res.ok) groupUser = json.results[0];
 			}
 		}

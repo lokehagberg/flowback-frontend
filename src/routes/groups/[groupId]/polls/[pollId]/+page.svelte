@@ -51,6 +51,8 @@
 	});
 
 	const getPollData = async () => {
+		if (!$page.params) return;
+
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
@@ -72,6 +74,8 @@
 
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
+		if (!$page.params) return;
+		
 		const { res, json } = await fetchRequest('GET', `user`);
 		if (res.ok) {
 			const userId = json.id;

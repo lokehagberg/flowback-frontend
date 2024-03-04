@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import {PUBLIC_WEBSOCKET_API_URI} from "$env/static/public";
 
 const messageStore = writable('');
 
@@ -7,7 +8,7 @@ const createSocket = (userId: number) => {
 
 	const token = localStorage.getItem('token') || '';
 
-	const link = `${import.meta.env.VITE_WEBSOCKET_API}${import.meta.env.VITE_HAS_API && '/api'}/chat/ws?token=${token}`;
+	const link = `${PUBLIC_WEBSOCKET_API_URI}${import.meta.env.VITE_HAS_API && '/api'}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 
@@ -45,7 +46,7 @@ const sendMessage = async (
 	attachments_id: number | null = null,
 	parent_id: number | null = null,
 ) => {
-	if (socket.readyState <= 1 && message.length > 0) 
+	if (socket.readyState <= 1 && message.length > 0)
 	await socket.send(
 		JSON.stringify({
 			channel_id,

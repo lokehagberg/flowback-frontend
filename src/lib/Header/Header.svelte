@@ -21,7 +21,7 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
-	import {PUBLIC_API_URL} from "$env/static/public";
+	import {PUBLIC_API_URL, PUBLIC_MODE} from "$env/static/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -85,7 +85,7 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if PUBLIC_MODE === 'DEV'}
 					<HeaderIcon
 						icon={faChartBar}
 						text="Prediction"
@@ -111,7 +111,7 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/> -->
-				{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if PUBLIC_MODE === 'DEV'}
 					{#if ledgerExists}
 						<HeaderIcon
 							icon={faMoneyBill}

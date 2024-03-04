@@ -14,9 +14,10 @@
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import {PUBLIC_MODE} from "$env/static/public";
 
 	// User Action variables
-	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
+	let message: string = PUBLIC_MODE === 'DEV' ? 'a' : '',
 		olderMessages: string,
 		newerMessages: string,
 		showEmoji = false,
@@ -116,7 +117,7 @@
 			});
 
 		messages = messages;
-		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
+		message = PUBLIC_MODE === 'DEV' ? message + 'a' : '';
 
 		setTimeStamp(selectedChat, selectedPage);
 	};
@@ -199,7 +200,7 @@
 				Class="w-full"
 			/>
 
-			{#if import.meta.env.VITE_MODE === 'DEV'}
+			{#if PUBLIC_MODE === 'DEV'}
 				<Button
 					action={() => (showEmoji = !showEmoji)}
 					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button

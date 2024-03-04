@@ -21,7 +21,7 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
-	import {PUBLIC_API_URL, PUBLIC_MODE} from "$env/static/public";
+	import {PUBLIC_API_URL, PUBLIC_LOGO, PUBLIC_MODE} from "$env/static/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -58,7 +58,7 @@
 	>
 		<a href="/home" class="md:w-auto flex justify-center md:flex-none"
 			><img
-				src={import.meta.env.VITE_LOGO === 'REFORUM' ? Reforum : Logo}
+				src={PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
 				class="w-32 cursor-pointer"
 				alt="flowback logo"
 			/></a

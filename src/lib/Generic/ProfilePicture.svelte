@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-	import {PUBLIC_API_URL} from "$env/static/public";
+	import {PUBLIC_API_URL, PUBLIC_IMAGE_HAS_API} from "$env/static/public";
 
 	export let user: any,
 		//TODO: Always display username, replace all instance of username with this file
@@ -13,7 +13,7 @@
 	{#if user?.profile_image}
 		<img
 			src={`${PUBLIC_API_URL}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+				PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.profile_image}`}
 			alt="avatar"
 			class={`w-10 h-10 rounded-full`}
@@ -21,7 +21,7 @@
 	{:else if user?.image}
 		<img
 			src={`${PUBLIC_API_URL}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+				PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.image}`}
 			alt="avatar"
 			class={`w-10 h-10 rounded-full`}

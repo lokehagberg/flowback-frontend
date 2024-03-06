@@ -15,7 +15,7 @@
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { onMount } from 'svelte';
 	import { getPhase } from './functions';
-	import {PUBLIC_API_URL} from "$env/static/public";
+	import {PUBLIC_API_URL, PUBLIC_IMAGE_HAS_API} from "$env/static/public";
 
 	export let poll: poll,
 		isAdmin = false;
@@ -75,7 +75,7 @@
 			<img
 				class="h-8 w-8 inline rounded-full"
 				src={`${PUBLIC_API_URL}${
-					import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+					PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 				}${poll.group_image}`}
 				alt="group thumbnail"
 			/>

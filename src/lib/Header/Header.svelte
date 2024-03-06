@@ -21,7 +21,13 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
-	import {PUBLIC_API_URL, PUBLIC_LOGO, PUBLIC_MODE} from "$env/static/public";
+	import {
+		PUBLIC_API_URL,
+		PUBLIC_IMAGE_HAS_API,
+		PUBLIC_LOGO,
+		PUBLIC_MODE,
+		PUBLIC_ONE_GROUP_FLOWBACK
+	} from "$env/static/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -40,7 +46,7 @@
 
 		if (res.ok && json.profile_image)
 			profileImage = `${PUBLIC_API_URL}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+					PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
 	};
 
@@ -65,7 +71,7 @@
 		>
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
+				{#if !(PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
 					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
@@ -75,7 +81,7 @@
 					color={darkMode ? 'white' : 'black'}
 					/>
 					{/if}
-					{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE"}
+					{#if PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
 					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
 				{/if}
 				<HeaderIcon

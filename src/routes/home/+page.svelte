@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
+	import {PUBLIC_ONE_GROUP_FLOWBACK} from "$env/static/public";
 
 	interface Invitation {
 		external: boolean;
@@ -25,7 +26,7 @@
 
 	onMount(async () => {
 
-		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") location.href = 'groups/1'
+		if (PUBLIC_ONE_GROUP_FLOWBACK === "TRUE") location.href = 'groups/1'
 
 		getInvitations();
 		getPolls();

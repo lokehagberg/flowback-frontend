@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import {PUBLIC_API_URL} from "$env/static/public";
+import {PUBLIC_API_URL, PUBLIC_HAS_API} from "$env/static/public";
 
 export async function fetchRequest(
 	method: 'GET' | 'POST',
@@ -40,7 +40,7 @@ export async function fetchRequest(
 		api.includes(PUBLIC_API_URL)
 			? `${api}`
 			: `${PUBLIC_API_URL}${
-					import.meta.env.VITE_HAS_API === 'TRUE' ? '/api/' : '/'
+				PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
 			  }${api}`,
 		toSend
 	);

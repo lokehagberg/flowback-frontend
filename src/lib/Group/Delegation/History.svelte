@@ -2,16 +2,19 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
-	import json from './Delegationtest.json';
 	import { page } from '$app/stores';
 	import type { DelegatePool, VoteHistory } from './interfaces';
 	import { _ } from 'svelte-i18n';
+	import type { User } from '$lib/User/interfaces';
+	import { goto } from '$app/navigation';
+	import Comments from '$lib/Poll/Comments.svelte';
 
 	export let history: null | number;
 
 	let loading = false,
 		delegatePool: DelegatePool,
-		votingHistory: VoteHistory[] = [];
+		votingHistory: VoteHistory[] = [],
+		user: User;
 
 	const getDelegateHistory = async () => {
 		loading = true;
@@ -27,13 +30,29 @@
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		);
+
+		console.log(json, 'JESOn');
+
 		delegatePool = json.results[0];
-		console.log(json.results[0], 'JÄSON');
 	};
 
-	onMount(() => {
-		getDelegateInfo();
-		getDelegateHistory();
+	const getUserInfo = async () => {
+		//@ts-ignore
+		const userId = delegatePool.delegates[0].group_user.id;
+
+		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
+
+		user = json.results[0];
+	};
+
+	onMount(async () => {
+		await getDelegateInfo();
+		await getDelegateHistory();
+		await getUserInfo();
+
+		let query = new URLSearchParams($page.url.searchParams.toString());
+		query.set('history_id', delegatePool.id.toString());
+		goto(`?${query.toString()}`);
 	});
 </script>
 
@@ -41,8 +60,9 @@
 	{#if delegatePool}
 		<div class="p3">
 			{$_('delegate history for')}
-			{delegatePool.delegates[0].group_user.user.username}
+			{user?.username}
 		</div>
+		<Comments api="delegate-history" on:keydown={() => {}} />
 	{/if}
 	<ul class="w-full">
 		{#each votingHistory as vote}
@@ -56,6 +76,7 @@
 					{vote.poll_title}</a
 				>
 			</li>
+
 			<!-- <ul class="w-full block ml-4">
 				{#each votingHistory as vote}
 					<li

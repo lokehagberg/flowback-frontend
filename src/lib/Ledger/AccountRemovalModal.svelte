@@ -3,16 +3,16 @@
 	import {fetchRequest} from '$lib/FetchRequest';
 	import Button         from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import type Account from '$lib/Group/interface';
 	import type {StatusMessageInfo} from '$lib/Generic/GenericFunctions';
 	import StatusMessage    from '$lib/Generic/StatusMessage.svelte';
 	import {statusMessageFormatter} from '$lib/Generic/StatusMessage';
+	import type { Account } from './interface';
 
-	export let open: bool = false, account: Account;
+	export let open: boolean = false, account: Account;
 	
 	const removeAccount = async () => {
 		const {res, json} = await fetchRequest(
-			'POST', `ledger/accounts/${account.id}/delete`
+			'POST', `ledgeraccounts/${account.id}/delete`
 		);
 		const status = statusMessageFormatter(res, json);
 		if (res.ok)

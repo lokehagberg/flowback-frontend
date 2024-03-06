@@ -19,13 +19,14 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
-	import {accountsStore} from '$lib/Account/stores';
+	// import { accountsStore } from '$lib/Account/stores';
+	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean | null = null,
 		ledgerExists: boolean = false;
-		//TODO: The <HeaderIcon> component should handle default darkMode
+	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
 		getProfileImage();
@@ -37,13 +38,15 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${import.meta.env.VITE_API}/api${json.profile_image}`;
+			profileImage = `${import.meta.env.VITE_API}${
+				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			}${json.profile_image}`;
 	};
 
 	const checkForLedgerModule = async () => {
 		// const accounts = await accountsStore.get();
 		// ledgerExists = accounts.loaded;
-	}
+	};
 </script>
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
@@ -59,19 +62,24 @@
 				alt="flowback logo"
 			/></a
 		>
-		<div class="!flex justify-between md:w-[80vw] ">
+		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
-				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-				<HeaderIcon
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
+					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
+					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+					<HeaderIcon
 					icon={faUserFriends}
 					text="Groups"
 					href="groups"
 					color={darkMode ? 'white' : 'black'}
-				/>
+					/>
+					{/if}
+					{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE"}
+					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
+				{/if}
 				<HeaderIcon
 					icon={faCalendarWeek}
-					text="Schedule"
+					text="My Schedule"
 					href="schedule"
 					color={darkMode ? 'white' : 'black'}
 				/>
@@ -90,6 +98,12 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/>
+				<HeaderIcon
+					icon={faCoins}
+					text="My Ledger"
+					href="ledger"
+					color={darkMode ? 'white' : 'black'}
+				/>
 				<!-- <HeaderIcon
 					icon={faList}
 					text="My Kanban"
@@ -101,7 +115,7 @@
 						<HeaderIcon
 							icon={faMoneyBill}
 							text="Account"
-							href="accounts"
+							href="ledger"
 							color={darkMode ? 'white' : 'black'}
 						/>
 					{/if}
@@ -112,6 +126,7 @@
 				id="side-header"
 				class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
 			>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					class="dark:text-darkmodeText"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
@@ -129,6 +144,7 @@
 				</span>
 				<Notifications />
 
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}

@@ -7,7 +7,7 @@ const createSocket = (userId: number) => {
 
 	const token = localStorage.getItem('token') || '';
 
-	const link = `${import.meta.env.VITE_WEBSOCKET_API}/chat/ws?token=${token}`;
+	const link = `${import.meta.env.VITE_WEBSOCKET_API}${import.meta.env.VITE_HAS_API && '/api'}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 
@@ -37,15 +37,35 @@ const createSocket = (userId: number) => {
 	return socket;
 };
 
-const sendMessage = async (socket: WebSocket) => {
-	//Returns true or false whenever a message is sent to the socket or not.
-	return async (message: string, target: number, target_type: 'direct' | 'group') => {
-		if (socket.readyState <= 1 && message.length > 0) {
-			await socket.send(JSON.stringify({ message, target, target_type }));
-			return true;
-		}
-		else return false
-	};
+const sendMessage = async (
+	socket: WebSocket,
+	channel_id: number,
+	message: string,
+	topic_id: number,
+	attachments_id: number | null = null,
+	parent_id: number | null = null,
+) => {
+	if (socket.readyState <= 1 && message.length > 0) 
+	await socket.send(
+		JSON.stringify({
+			channel_id,
+			message,
+			// topic_id,
+			// attachments_id,
+			// parent_id,
+			type: 'message_create'
+		})
+	);
 };
+
+// const sendMessage = async (socket: WebSocket) => {
+// 	//Returns true or false whenever a message is sent to the socket or not.
+// 	return async (message: string, target: number, target_type: 'direct' | 'group') => {
+// 		if (socket.readyState <= 1 && message.length > 0) {
+// 			await socket.send(JSON.stringify({ message, target, target_type }));
+// 			return true;
+// 		} else return false;
+// 	};
+// };
 
 export default { createSocket, subscribe: messageStore.subscribe, sendMessage };

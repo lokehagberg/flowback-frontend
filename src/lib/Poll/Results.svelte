@@ -5,7 +5,6 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
-	import { schedule as scheduleLimit } from '$lib/Generic/APILimits.json'
 
 	let proposals: any[] = [],
 		votes: number[] = [],
@@ -17,10 +16,10 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=10000`
+			`group/poll/${$page.params.pollId}/proposals?limit=1000`
 		);
 
-		if (pollType === 1) proposals = json.results;
+		if (pollType === 4) proposals = json.results;
 		else if (pollType === 3)
 			proposals = [
 				{
@@ -32,7 +31,6 @@
 
 		votes = proposals.map((proposal) => proposal.score) || [];
 		labels = proposals.map((proposal) => proposal.title) || [];
-        console.log(labels)
 	};
 
 	onMount(() => {
@@ -42,7 +40,7 @@
 
 <div class="border border-gray- p-4 rounded">
 	<h1 class="text-4xl mb-6">{$_("Results")}</h1>
-	{#if pollType === 1}
+	{#if pollType === 4}
 		<Statistics bind:votes bind:labels />
 	{/if}
 	{#each proposals as proposal}

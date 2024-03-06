@@ -21,6 +21,8 @@
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
 	import { getPhase } from '$lib/Poll/functions';
+	import AreaVote from '$lib/Poll/AreaVote.svelte';
+	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -49,6 +51,8 @@
 	});
 
 	const getPollData = async () => {
+		if (!$page.params) return;
+
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
@@ -70,6 +74,8 @@
 
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
+		if (!$page.params) return;
+		
 		const { res, json } = await fetchRequest('GET', `user`);
 		if (res.ok) {
 			const userId = json.id;
@@ -99,87 +105,40 @@
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<TitleDescription {pollType} {poll} />
-			Current phase: {phase}
+			{$_('Current phase:')}
+			{phase}
 
 			{#if phase === 'pre-start'}
 				<div>dev</div>
-			{:else if phase === 'area_vote'}
-				<div>dev</div>
+			{:else if phase === 'area-vote'}
+				<AreaVote />
 			{:else if phase === 'proposals'}
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.vote_start_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/>
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
-				{#if pollType === 1}
+				{#if pollType === 4}
 					<!-- Ranked Poll -->
-					<ProposalSubmition bind:abstained />
+					<ProposalSubmition bind:proposals />
 				{:else if pollType === 3}
 					<!-- Scheduled Poll -->
 					<ScheduledSubmission bind:abstained />
 				{/if}
 			{:else if phase === 'prediction-statement'}
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.vote_start_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/>
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'prediction-betting'}
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.prediction_bet_end_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-				/>
+				<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'delegate-voting'}
-				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.prediction_bet_end_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-					delegatesCanVote
-				/>
+				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+				<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'voting'}
 				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-				<ProposalsRanked
-					{groupUser}
-					votingStartTime={poll.prediction_bet_end_date}
-					pollType={poll.poll_type}
-					tag={poll.tag}
-					bind:phase
-					bind:votings
-					bind:selectedPage
-					bind:abstained
-					bind:proposals
-					nonDelegatesCanVote
-				/>
+
+				<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
+
 				<Predictions bind:proposals bind:phase />
 			{:else if phase === 'results'}
 				<Results {pollType} />
@@ -201,7 +160,7 @@
 					new Date(poll.end_date)
 				]}
 			/>
-			<Comments bind:proposals api={'poll'}/>
+			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
 				<div slot="body">

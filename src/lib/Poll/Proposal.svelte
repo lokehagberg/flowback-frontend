@@ -67,6 +67,7 @@
 	});
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 dark:border-gray-500 lg:h-36 xl:h-40 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
@@ -80,8 +81,13 @@
 			{proposal.description}
 		</p>
 	</div>
+	<input id="amount" class="dark:bg-darkobject" type="number" min={0} />
+	
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{#if editable}
 		<!-- TODO and also before proposal end date -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div on:click={() => (open = true)} class="cursor-pointer" on:keydown>
 			<Fa icon={faPen} />
 		</div>

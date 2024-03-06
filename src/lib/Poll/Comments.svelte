@@ -19,17 +19,18 @@
 		showMessage = '';
 
 	export let proposals: proposal[] = [],
-		api: 'poll' | 'thread';
+		api: 'poll' | 'thread' | 'delegate-history';
 
-		onMount(() => {
-		})
-		
-		const getComments = async () => {
+	onMount(() => {});
+
+	const getComments = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${api}/${
-				api === 'poll' ? $page.params.pollId : $page.params.threadId
-			}/comment/list?limit=${pollCommentsLimit}`
+			`group/${api}/${() => {
+				if (api === 'poll') return $page.params.pollId;
+				else if (api === 'thread') return $page.params.threadId;
+				else if (api === 'delegate-history') return '';
+			}}/comment/list?limit=${pollCommentsLimit}`
 		);
 
 		comments = json.results.map((comment: Comment) => {
@@ -42,9 +43,11 @@
 	const deleteComment = async (id: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${
-				api === 'poll' ? $page.params.pollId : $page.params.threadId
-			}/comment/${id}/delete`
+			`group/${api}/${() => {
+				if (api === 'poll') return $page.params.pollId;
+				else if (api === 'thread') return $page.params.threadId;
+				else if (api === 'delegate-history') return $page.params.page;
+			}}/comment/${id}/delete`
 		);
 		if (res.ok) {
 			show = true;
@@ -99,7 +102,7 @@
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
-	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} {api}/>
+	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} {api} />
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
@@ -145,6 +148,7 @@
 					{/if}
 					{#if comment.active}
 						<div class="flex gap-3 text-xs">
+							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<div
 								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 								on:click={() => (comment.being_replied = true)}
@@ -153,6 +157,7 @@
 								<Fa icon={faReply} />{$_('Reply')}
 							</div>
 							{#if Number(localStorage.getItem('userId')) === comment.author_id}
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
 									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 									on:click={() => deleteComment(comment.id)}
@@ -160,6 +165,7 @@
 								>
 									{$_('Delete')}
 								</div>
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
 									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 									on:click={() => {

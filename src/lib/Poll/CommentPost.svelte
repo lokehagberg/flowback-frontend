@@ -18,7 +18,7 @@
 		beingEdited = false,
 		message = '',
 		replying = false,
-		api: 'poll' | 'thread';
+		api: 'poll' | 'thread' | 'delegate-history';
 
 	let show = false,
 		showMessage = '',
@@ -27,6 +27,12 @@
 		image: File;
 
 	// $: if(image !== null ) attachments.push(image)
+
+	const getId = () => {
+		if (api === 'poll') return `poll/${$page.params.pollId}`;
+		else if (api === 'thread') return `thread/${$page.params.threadId}`;
+		else if (api === 'delegate-history') return `poll/1/delegate/${$page.url.searchParams.get('page')}`;
+	};
 
 	const commentCreate = async () => {
 		const formData = new FormData();
@@ -38,15 +44,10 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/comment/create`,
+			`group/${getId()}/comment/create`,
 			formData,
 			true,
 			false
-			// {
-			// 	message,
-			// 	parent_id,
-			// 	attachments:[await image.text()]
-			// }
 		);
 		if (res.ok) {
 			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
@@ -78,7 +79,7 @@
 	const commentUpdate = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/comment/${id}/update`,
+			`group/${api}/${getId()}/comment/${id}/update`,
 			{
 				message
 			}
@@ -102,7 +103,7 @@
 	const subscribeToReplies = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${api === 'poll' ? $page.params.pollId : $page.params.threadId}/subscribe`,
+			`group/${getId()}/subscribe`,
 			{
 				categories: ['comment_self']
 			}
@@ -121,6 +122,7 @@
 	>
 		<ul>
 			{#each proposals as proposal}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<li
 					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
 					on:click={() => {
@@ -135,7 +137,7 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse" />
+	<ImageUpload icon={faUser} bind:image label="" iconSize={'2x'} Class="flex !flex-row-reverse" />
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->

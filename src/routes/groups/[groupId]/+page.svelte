@@ -58,6 +58,7 @@
 	};
 
 	const getGroupInfo = async () => {
+		//TODO: detail is outdated
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
 		group = json;
 		console.log(group, 'GROUPPP');
@@ -72,7 +73,19 @@
 		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
 		//@ts-ignore
 		selectedPage = page;
+
+		window.addEventListener('popstate', handleBackButton);
+
+		return () => {
+			window.removeEventListener('popstate', handleBackButton);
+		};
 	});
+
+	const handleBackButton = () => {
+		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
+		//@ts-ignore
+		selectedPage = page;
+	};
 
 	$: if (hasMounted) {
 		const searchParams = new URLSearchParams(window.location.search);
@@ -93,8 +106,10 @@
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
-					class={`w-full sm:w-[300px] md:w-[500px] ${
-						selectedPage === 'kanban' || selectedPage === 'schedule' ? 'xl:w-[1000px]' : 'xl:w-[720px]'
+					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] ${
+						selectedPage === 'kanban' || selectedPage === 'schedule'
+							? 'xl:w-[1000px]'
+							: 'xl:w-[720px]'
 					}`}
 				>
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
@@ -122,7 +137,7 @@
 					{:else if selectedPage === 'perms'}
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
-						<Schedule type="group"/>
+						<Schedule type="group" />
 					{:else if selectedPage === 'threads'}
 						<Threads />
 					{/if}

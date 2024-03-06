@@ -16,13 +16,14 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import Filter from '$lib/Generic/Filter.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [];
 	let description = '',
 		title = '',
-		assignee = 0,
+		assignee: number | null = null,
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
 		showSuccessPoppup = false,
@@ -38,16 +39,27 @@
 		end_date: null | Date = null,
 		loading = false,
 		interval: any,
-		open = false;
+		open = false,
+		numberOfOpen = 0,
+		filter: { assignee: number | null } = { assignee: null };
 
 	export let type: 'home' | 'group',
 		Class = '';
 
+	const changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {
+		if (numberOfOpen < 0) numberOfOpen = 0;
+
+		if (addOrSub === 'Addition') numberOfOpen += 1;
+		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
+	};
+
 	onMount(() => {
 		getKanbanEntries();
-		setInterval(() => {
-			interval = getKanbanEntries();
-		}, 30000);
+
+		interval = setInterval(() => {
+			// console.log(numberOfOpen, "OPEN")
+			if (numberOfOpen === 0) getKanbanEntries();
+		}, 20000);
 	});
 
 	//TODO fix this
@@ -57,16 +69,17 @@
 
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
+			getGroupUsers();
 			getKanbanEntriesGroup();
-			if (type === 'group') getGroupUsers();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
 	const getKanbanEntriesGroup = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
-		);
+		let api = `group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
+		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
+
+		const { res, json } = await fetchRequest('GET', api);
+
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -78,6 +91,7 @@
 			'GET',
 			`user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
 		);
+
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
@@ -91,12 +105,11 @@
 	};
 
 	const getGroupUsers = async () => {
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?limit=${kanbanLimit}`
-		);
+		let api = `group/${$page.params.groupId}/users?limit=${kanbanLimit}`;
+
+		const { json } = await fetchRequest('GET', api);
 		users = json.results;
-		assignee = users[0]?.user.id;
+		if (!assignee) assignee = users[0]?.user.id;
 	};
 
 	const createKanbanEntry = async () => {
@@ -130,7 +143,7 @@
 		if (!res.ok) return;
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
-		// if (userAssigned)
+		if (!assignee) return;
 		kanbanEntries.push({
 			assignee: {
 				id: assignee,
@@ -154,6 +167,8 @@
 
 		description = '';
 		title = '';
+		priority = 3;
+		end_date = null;
 
 		showSuccessPoppup = true;
 	};
@@ -169,22 +184,28 @@
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
+	<Filter
+		bind:filter
+		handleSearch={getKanbanEntries}
+		iterables={users.map((user) => {
+			return { name: user.user.username, id: user.user.id };
+		})}
+	/>
 	<div class="flex overflow-x-auto">
-		<!-- <StatusMessage bind:status disableSuccess/> -->
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 bg-gray-100 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
+					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl bg-white"
 				>
-					<!-- "Tag" is the name for the titles on the kanban such as "To Do" e.tc -->
+					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} />
+								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>
@@ -194,12 +215,13 @@
 		<!-- {/await} -->
 	</div>
 	<div class="mt-4 ml-2 mb-4">
-		<Button action={() => (open = true)}>{$_("Create Task")}</Button>
+		<Button action={() => (open = true)}>{$_('Create Task')}</Button>
 	</div>
 </div>
 
+<!-- Creating a new Kanban or Editing a new Kanban -->
 <Modal bind:open Class="!overflow-visible">
-	<div slot="header">{$_("Create Task")}</div>
+	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
@@ -230,13 +252,13 @@
 							{/each}
 						</select>
 					</div>
-					<div >
+					<div>
 						{$_('End date')}
-						<DateInput bind:value={end_date} min={new Date()}   />
+						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
 				</div>
 				<Button type="submit">{$_('Create task')}</Button>
-				<StatusMessage Class="mt-2" bind:status />
+				<!-- <StatusMessage Class="mt-2" bind:status /> -->
 			</form>
 		</Loader>
 	</div>

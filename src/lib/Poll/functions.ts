@@ -11,7 +11,7 @@ export const getPhase = (poll:poll): Phase => {
 	const now = new Date();
 	if (now < new Date(poll?.start_date)) return 'pre-start';
 	else if (now >= new Date(poll?.start_date) && now < new Date(poll?.area_vote_end_date))
-		return 'area_vote';
+		return 'area-vote';
 	else if (now >= new Date(poll?.area_vote_end_date) && now < new Date(poll?.proposal_end_date))
 		return 'proposals';
 	else if (

@@ -13,7 +13,7 @@
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
-		selectedTag: TagType = { active: false, id: 0, tag_name: '' },
+		selectedTag: TagType = { active: false, id: 0, name: '' },
 		loading = false,
 		areYouSureModal = false;
 
@@ -28,7 +28,7 @@
 		if (res.ok) {
 			//Sorts tags alphabetically
 			tags = json.results.sort((tag1: TagType, tag2: TagType) =>
-				tag1.tag_name.localeCompare(tag2.tag_name)
+				tag1.name.localeCompare(tag2.name)
 			);
 		}
 		loading = false;
@@ -79,7 +79,7 @@
 		<div class="flex flex-wrap mt-2">
 			{#each tags as tag}
 				<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
-					<Tag tag={tag.tag_name} Class={tag.active ? '' : 'bg-blue-200'} />
+					<Tag {tag} Class={tag.active ? '' : 'bg-blue-200'} />
 					<div class="mt-2 w-full flex flex-col gap-2">
 						<Button disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
 							>{tag.active ? $_('Disable') : $_('Activate')}</Button
@@ -104,7 +104,7 @@
 	<div slot="body">
 		<span>{$_('Removing a tag removes all polls with that tag!')}</span>
 		<br />
-		<span>{$_('You are removing:')} {selectedTag.tag_name}</span>
+		<span>{$_('You are removing:')} {selectedTag?.name}</span>
 	</div>
 	<div slot="footer">
 		<Button action={() => removeTag(selectedTag)} Class="bg-red-500">{$_('Yes')}</Button>

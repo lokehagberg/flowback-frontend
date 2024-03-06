@@ -33,6 +33,7 @@
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import Select from '$lib/Generic/Select.svelte';
+	import { faTachographDigital } from '@fortawesome/free-solid-svg-icons';
 
 	type polltypes =
 		| 'Ranking'
@@ -88,7 +89,6 @@
 		defaultType: polltypes = 'Text Poll',
 		selectedTag: TagType,
 		status: StatusMessageInfo,
-
 		start_date = new Date(),
 		area_vote_end_date = new Date(),
 		proposal_end_date = new Date(),
@@ -96,14 +96,12 @@
 		prediction_bet_end_date = new Date(),
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
-		
 		end_date = new Date(),
 		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
-
-		image:File;
+		image: File;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -113,29 +111,34 @@
 			return;
 		}
 
-		console.log(selectedTag)
+		console.log(selectedTag);
 
 		const formData = new FormData();
-		formData.append("title", title);
-		formData.append("description", description);
-		formData.append("start_date", start_date.toISOString());
-		formData.append("area_vote_end_date", area_vote_end_date.toISOString());
-		formData.append("proposal_end_date", proposal_end_date.toISOString());
-		formData.append("prediction_statement_end_date", prediction_statement_end_date.toISOString());
-		formData.append("prediction_bet_end_date", prediction_bet_end_date.toISOString());
-		formData.append("delegate_vote_end_date", delegate_vote_end_date.toISOString());
-		formData.append("vote_end_date", vote_end_date.toISOString());
-		formData.append("end_date", end_date.toISOString());
-		formData.append("poll_type", (selected_poll === defaultType ? 1 : 3).toString());
-		formData.append("tag", selectedTag.id.toString());
-		formData.append("dynamic", "false");
-		formData.append("public", isPublic.toString());
-		formData.append("pinned", "false");
-		if (image)
-		formData.append("attachments", image)
+		formData.append('title', title);
+		formData.append('description', description);
+		formData.append('start_date', start_date.toISOString());
+		formData.append('area_vote_end_date', area_vote_end_date.toISOString());
+		formData.append('proposal_end_date', proposal_end_date.toISOString());
+		formData.append('prediction_statement_end_date', prediction_statement_end_date.toISOString());
+		formData.append('prediction_bet_end_date', prediction_bet_end_date.toISOString());
+		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
+		formData.append('vote_end_date', vote_end_date.toISOString());
+		formData.append('end_date', end_date.toISOString());
+		formData.append('poll_type', (selected_poll === defaultType ? 4 : 3).toString());
+		formData.append('tag', selectedTag.id.toString());
+		formData.append('dynamic', 'false');
+		formData.append('public', isPublic.toString());
+		formData.append('pinned', 'false');
+		if (image) formData.append('attachments', image);
 
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/create`, formData,  true, false);
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${groupId}/poll/create`,
+			formData,
+			true,
+			false
+		);
 
 		loading = false;
 		status = statusMessageFormatter(res, json);
@@ -169,7 +172,7 @@
 			delegate_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
 			vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
 			end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-		//For users to select over multiple days
+			//For users to select over multiple days
 		} else {
 			area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 			proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
@@ -198,7 +201,6 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea required label="Description" bind:value={description} />
-
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<Button
 						Class={`inline !bg-blue-600`}
@@ -215,7 +217,7 @@
 					/>
 
 					{#if advancedTimeSettings}
-						<div class="flex flex-wrap gap-6 justify-center">
+						<div class="grid grid-cols-2 gap-6 justify-center">
 							<div>
 								<h2 class="mt-4">{$_('Poll start')}</h2>
 								<DateInput
@@ -226,16 +228,18 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
-							<div>
-								<h2 class="mt-4">{$_('Tag voting end')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={area_vote_end_date}
-									min={start_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
+							{#if selected_poll !== 'Date Poll'}
+								<div>
+									<h2 class="mt-4">{$_('Area voting end')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={area_vote_end_date}
+										min={start_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+							{/if}
 							<div>
 								<h2 class="mt-4">{$_('Proposal end')}</h2>
 								<DateInput
@@ -246,36 +250,38 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
-							<div>
-								<h2 class="mt-4">{$_('Prediction statement end')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={prediction_statement_end_date}
-									min={proposal_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
-							<div>
-								<h2 class="mt-4">{$_('Prediction bet end')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={prediction_bet_end_date}
-									min={prediction_statement_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
-							<div>
-								<h2 class="mt-4">{$_('Delegate Voting end date')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={delegate_vote_end_date}
-									min={prediction_bet_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
+							{#if selected_poll !== 'Date Poll'}
+								<div>
+									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={prediction_statement_end_date}
+										min={proposal_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+								<div>
+									<h2 class="mt-4">{$_('Prediction bet end')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={prediction_bet_end_date}
+										min={prediction_statement_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+								<div>
+									<h2 class="mt-4">{$_('Delegate Voting end date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={delegate_vote_end_date}
+										min={prediction_bet_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+							{/if}
 							<div>
 								<h2 class="mt-4">{$_('Voting end date')}</h2>
 								<DateInput
@@ -287,7 +293,7 @@
 								/>
 							</div>
 							<div>
-								<h2 class="mt-4">{$_('end date')}</h2>
+								<h2 class="mt-4">{$_('End date')}</h2>
 								<DateInput
 									format="yyyy-MM-dd HH:mm"
 									closeOnSelection
@@ -299,31 +305,37 @@
 						</div>
 					{/if}
 				</div>
-				<h2>{$_('Select Tag')}</h2>
+				<!-- <h2>{$_('Select Tag')}</h2>
 				<div class="flex gap-4 flex-wrap">
 					{#each tags as tag}
 						<Tag
 							onclick={() => (selectedTag = tag)}
-							tag={tag.tag_name}
+							tag={{ name: tag.name, id: tag.id, active: true }}
 							Class={`cursor-pointer ${
 								selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
 							}`}
 						/>
 					{/each}
-				</div>
+				</div> -->
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
-				{$_('This polltype is not implemented yet')}
+					{$_('This polltype is not implemented yet')}
 				{/if}
 				<StatusMessage bind:status />
 				<Button
-				type="submit"
-				disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
-				Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
+					type="submit"
+					disabled={loading || disabled.includes(selected_poll) || disabled.includes(selected_time)}
+					Class={disabled.includes(selected_poll) || disabled.includes(selected_time)
 						? '!bg-gray-200'
 						: 'bg-primary'}>{$_('Create Poll')}</Button
 				>
-				<ImageUpload icon={faUser} bind:image label="" iconSize="2x" Class="flex !flex-row-reverse"/>
+				<ImageUpload
+					icon={faUser}
+					bind:image
+					label=""
+					iconSize="2x"
+					Class="flex !flex-row-reverse"
+				/>
 			</div>
 		</Loader>
 	</form>
@@ -334,15 +346,11 @@
 					<Button
 						disabled={loading}
 						action={() => (selected_poll = poll)}
-						buttonStyle={selected_poll === poll ? 'primary' : 'secondary'}
-						Class={`${
-							(!disabled.includes(poll) && selected_poll === poll
-								? '!bg-primary'
-								: '!bg-secondary') ||
-							(disabled.includes(poll) &&
-								(selected_poll === poll ? '!bg-gray-400' : '!bg-gray-200'))
-						}
-							${selected_poll === poll ? 'shadow-sm outline outline-primary' : 'shadow-xl'}
+						buttonStyle={(() => {
+							if (selected_poll === poll) return poll === 'Text Poll' ? 'primary' : 'accent';
+							else return poll === 'Text Poll' ? 'secondary' : 'accent-secondary';
+						})()}
+						Class={`${selected_poll === poll ? 'shadow-sm outline outline-0' : 'shadow-xl'}
 							`}
 					>
 						<div class="flex items-center text-center">

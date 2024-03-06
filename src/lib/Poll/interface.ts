@@ -56,7 +56,7 @@ export interface Filter {
 
 export type Phase =
 	| 'pre-start'
-	| 'area_vote'
+	| 'area-vote'
 	| 'proposals'
 	| 'prediction-statement'
 	| 'prediction-betting'

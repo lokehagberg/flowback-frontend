@@ -72,6 +72,7 @@
 	} dark:!text-darkmodeText `}
 >
 	{#if innerWidth < 700 && !clickedExpandSidebar}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
@@ -81,6 +82,7 @@
 		</div>
 	{:else}
 		{#if innerWidth < 700}
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"

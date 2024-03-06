@@ -43,13 +43,11 @@
 			);
 
 			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
-			else score = 0;
+			else score = null;
 		}
-
-		console.log(score, 'SCOOORE');
 	};
 
-	const predictionBetCreate = async () => {
+	const predictionBetCreate = async (score: string) => {
 		loading = true;
 
 		if (!score) return;
@@ -57,6 +55,23 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/create`,
+			{
+				score
+			}
+		);
+		loading = false;
+
+		if (!res.ok) showPoppup = true;
+	};
+
+	const predictionBetUpdate = async (score: string) => {
+		loading = true;
+
+		if (!score) return;
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/prediction/${prediction.id}/bet/update`,
 			{
 				score
 			}
@@ -74,8 +89,9 @@
 			`group/poll/prediction/${prediction.id}/bet/delete`
 		);
 
-		if (!res.ok) showPoppup = true;
 		loading = false;
+
+		if (!res.ok) return;
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -135,6 +151,7 @@
 </script>
 
 <div class="flex justify-between">
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer">
 		{prediction.description}</span
 	>
@@ -145,17 +162,25 @@
 			bind:value={score}
 			onInput={async (e) => {
 				//@ts-ignore
-				const selectedScore = e?.target?.value;
-				if (selectedScore !== null) score = Number(selectedScore);
-				else score = null;
+				const newScore = e?.target?.value;
 
-				await predictionBetDelete();
+				console.log(newScore);
+				if (!newScore) predictionBetDelete();
+				else if (score === null) {
+					predictionBetCreate(newScore);
+				} else predictionBetUpdate(newScore);
 
-				if (selectedScore !== null) predictionBetCreate();
+				score = Number(newScore);
+				// await predictionBetDelete();
+
+				// if (selectedScore !== null) {
+				// 	score = Number(selectedScore);
+				// 	predictionBetCreate();
+				// }
 			}}
 		/>
 	{/if}
-	{#if phase === 'results'}
+	{#if phase === 'results' || phase === 'prediction-voting'}
 		<div class="flex">
 			<Button
 				action={() =>

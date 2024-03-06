@@ -25,13 +25,17 @@
 >
 	<div on:click={goToGroup} on:keydown>
 		<img
-			src={`${import.meta.env.VITE_API}/api${group.cover_image}`}
+			src={`${import.meta.env.VITE_API}${
+				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			}${group.cover_image}`}
 			class="cover rounded-t-2xl"
 			alt="cover"
 		/>
 	</div>
 	<img
-		src={`${import.meta.env.VITE_API}/api${group.image}`}
+		src={`${import.meta.env.VITE_API}${
+			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+		}${group.image}`}
 		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		alt="profile"
 	/>
@@ -49,15 +53,10 @@
 		{#if !group.joined && pending === false}
 			<Button
 				action={async () => {
-					if (!group.direct_join) {
-						pending = true;
-						return;
-					}
-
-					const { res } = await fetchRequest('POST', `group/${group.id}/join`, {});
+					const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 					if (res.ok) {
 						group.joined = !group.joined;
-						goToGroup();
+						if (group.direct_join) goToGroup();
 					}
 				}}
 				Class="hover:bg-blue-800 bg-blue-600"

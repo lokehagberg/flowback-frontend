@@ -18,7 +18,7 @@
 		status: StatusMessageInfo,
 		show = false;
 
-	export let abstained: proposal[];
+	export let proposals: proposal[];
 
 	const addProposal = async () => {
 		loading = true;
@@ -38,7 +38,7 @@
 			show = true;
 
 			let created_by = await getUserInfo();
-			abstained.push({
+			proposals.push({
 				title,
 				description,
 				id,
@@ -46,7 +46,7 @@
 				poll: Number($page.params.pollId)
 			});
 
-			abstained = abstained;
+			proposals = proposals;
 			title = '';
 			description = '';
 		}

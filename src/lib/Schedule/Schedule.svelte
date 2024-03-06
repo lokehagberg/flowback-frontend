@@ -334,6 +334,7 @@
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<div
+						on:dblclick={() => (showCreateScheduleEvent = true)}
 						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
@@ -435,7 +436,7 @@
 	</div>
 </Modal>
 
-<SuccessPoppup bind:show />
+<!-- <SuccessPoppup bind:show /> -->
 
 <style>
 	.calendar {

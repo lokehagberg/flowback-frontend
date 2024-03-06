@@ -24,7 +24,7 @@
 		description: string,
 		image: File,
 		coverImage: File,
-		directJoin = true,
+		useInvite = false,
 		publicGroup = true,
 		loading = false;
 
@@ -38,11 +38,10 @@
 		loading = true;
 		const formData = new FormData();
 
-		console.log(name)
-
 		formData.append('name', name);
 		formData.append('description', description);
-		formData.append('direct_join', directJoin.toString());
+		formData.append('direct_join', (!useInvite).toString());
+		console.log((!useInvite).toString(), "DIRECT");
 		formData.append('public', publicGroup.toString());
 		if (image) formData.append('image', image);
 		if (coverImage) formData.append('cover_image', coverImage);
@@ -78,10 +77,11 @@
 	};
 
 	const getGroupToEdit = async () => {
+		//TODO: detail is outdated
 		const { res, json } = await fetchRequest('GET', `group/${groupToEdit}/detail`);
 		name = json.name;
 		description = json.description;
-		directJoin = json.direct_join;
+		useInvite = !json.direct_join;
 		publicGroup = json.public;
 	};
 
@@ -113,7 +113,7 @@
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>
-				<RadioButtons bind:Yes={directJoin} label={'Direct Join?'} />
+				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
 				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 
 				<StatusMessage bind:status />

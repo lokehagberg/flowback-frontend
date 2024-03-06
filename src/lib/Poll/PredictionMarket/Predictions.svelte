@@ -17,6 +17,7 @@
 	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -31,7 +32,10 @@
 			}[];
 		} = { segments: [] },
 		// statusMessage: StatusMessageInfo,
-		bets: PredictionBet[] = [];
+		bets: PredictionBet[] = [],
+		show = false,
+		message = '',
+		resetsOfValues = 0;
 
 	export let proposals: proposal[], phase: Phase;
 
@@ -41,14 +45,10 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
-			);
-			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
-			loading = false;
-			predictions = json.results;
-			console.log("hiiiiiiii", json.results, "prediction",loading, predictions)
+		);
+		loading = false;
+		predictions = json.results;
 	};
-
-	$: console.log(predictions, "PREDICTI")
 
 	const getPredictionBets = async () => {
 		loading = true;
@@ -58,7 +58,6 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list`
 		);
 
-	
 		loading = false;
 		bets = json.results;
 	};
@@ -71,13 +70,18 @@
 			newPredictionStatement
 		);
 		loading = false;
+		show = true;
 
 		if (!res.ok) {
-			// statusMessage = statusMessageFormatter(res, json);
+			message = json.detail[0];
 			return;
 		}
 
+		newPredictionStatement = { segments: [] };
+		resetsOfValues++;
 		addingPrediction = false;
+		message = 'Successfully created prediction statement';
+
 		getPredictionStatements();
 	};
 
@@ -103,9 +107,8 @@
 		getPredictionStatements();
 		getPredictionBets();
 	});
-
 </script>
-<!-- {@debug predictions} -->
+
 <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
@@ -118,8 +121,9 @@
 		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
 	{/if}
 
+	
 	{#if predictions.length === 0}
-		<div class="mt-5">{$_('There are currently no predictions')}</div>
+	<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
 </Loader>
 
@@ -137,35 +141,43 @@
 			<Question
 				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 			/><br />
-			{#each proposals as proposal}
-				<Select
-					label={proposal.title}
-					onInput={(e) => {
-						//@ts-ignore
-						if (e.target.value === 'Neutral')
-							newPredictionStatement.segments?.filter(
-								(segment) => segment.proposal_id === proposal.id
-							);
-						else if (
-							newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id)
-						)
-							newPredictionStatement.segments.map((segment) => {
-								if (segment.proposal_id === proposal.id)
-									//@ts-ignore
-									segment.is_true = e.target.value === 'Implemented' ? true : false;
-							});
-						else
-							newPredictionStatement.segments.push({
-								proposal_id: proposal.id,
+			<div class="grid grid-cols-1">
+				{#each proposals as proposal}
+					{#key resetsOfValues}
+						<Select
+							label={proposal.title}
+							Class="mt-2"
+							onInput={(e) => {
 								//@ts-ignore
-								is_true: e.target.value === 'Implemented' ? true : false
-							});
-					}}
-					labels={['Neutral', 'Implemented', 'Not implemented']}
-					values={[null, 'Implemented', null]}
-					value={null}
-				/>
-			{/each}
+								if (e.target.value === 'Neutral')
+									newPredictionStatement.segments?.filter(
+										(segment) => segment.proposal_id === proposal.id
+									);
+								else if (
+									newPredictionStatement.segments.find(
+										(segment) => segment.proposal_id === proposal.id
+									)
+								)
+									newPredictionStatement.segments.map((segment) => {
+										if (segment.proposal_id === proposal.id)
+											//@ts-ignore
+											segment.is_true = e.target.value === 'Implemented' ? true : false;
+									});
+								else
+									newPredictionStatement.segments.push({
+										proposal_id: proposal.id,
+										//@ts-ignore
+										is_true: e.target.value === 'Implemented' ? true : false
+									});
+							}}
+							labels={['Neutral', 'Implemented', 'Not implemented']}
+							values={[null, 'Implemented', 'Not implemented']}
+							value={null}
+						/>
+					{/key}
+				{/each}
+			</div>
+			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_('Submit')}</Button>
@@ -173,3 +185,5 @@
 		</Loader>
 	</form>
 </Modal>
+
+<SuccessPoppup bind:message bind:show />

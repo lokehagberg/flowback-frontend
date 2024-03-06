@@ -9,6 +9,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -20,7 +21,9 @@
 		delegateRelations: any[] = [],
 		userIsDelegate: boolean = false,
 		userId: number,
-		loading = false;
+		loading = false,
+		show = false,
+		message = '';
 
 	export let history: number | null, selectedPage: 'All' | 'Selected' | 'History';
 
@@ -43,12 +46,13 @@
 		);
 		if (json.results.length === 1) userIsDelegate = true;
 
-		console.log(json)
+		console.log(json);
 	};
 
 	const createDelegation = async () => {
 		await createDelegationPool();
-		await becomeDelegate(Number($page.params.groupId));
+		// TOOD-Blockchain: Set this up so it works 
+		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
 
@@ -105,10 +109,19 @@
 
 		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
 
+		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
+		setTimeout(() => {
+			if (loading === true) {
+				loading = false;
+				show = true;
+				message = 'Something went wrong';
+			}
+		}, 25000);
+
 		delegates = await Promise.all(
 			json.results.map(async (delegatePool: any) => {
 				const delegateId = delegatePool.delegates[0].group_user.id;
-				
+
 				const delegateUserData = await (
 					await fetchRequest('GET', `users?id=${delegateId}`)
 				).json.results[0];
@@ -118,6 +131,7 @@
 				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
+
 		loading = false;
 	};
 
@@ -164,6 +178,7 @@
 			<li
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200 flex justify-between items-center"
 			>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
@@ -171,18 +186,21 @@
 				>
 					<img
 						src={delegate.profile_image
-							? `${import.meta.env.VITE_API}/api${delegate.profile_image}`
+							? `${import.meta.env.VITE_API}${
+									import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+							  }${delegate.profile_image}`
 							: DefaultPFP}
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
 					/>
 					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => {
-						history = delegate.delegate_pool_id;
+						history = delegate.id;
 						selectedPage = 'History';
 					}}>{$_('See delegate history')}</span
 				>
@@ -210,11 +228,9 @@
 {/if}
 
 {#if userIsDelegate}
-	<Button Class="mt-3 bg-red-500" action={deleteDelegation}
-		>{$_('Stop being delegate')}</Button
-	>
+	<Button Class="mt-3 bg-red-500" action={deleteDelegation}>{$_('Stop being delegate')}</Button>
 {:else}
-	<Button Class="mt-3 bg-red-500" action={createDelegation}
-		>{$_('Become delegate')}</Button
-	>
+	<Button Class="mt-3 bg-red-500" action={createDelegation}>{$_('Become delegate')}</Button>
 {/if}
+
+<SuccessPoppup bind:show bind:message />

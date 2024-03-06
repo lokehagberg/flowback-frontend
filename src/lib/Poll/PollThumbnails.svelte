@@ -11,7 +11,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
-	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json'
+	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public';
@@ -31,32 +31,23 @@
 	const getPolls = async () => {
 		loading = true;
 
-		const finishedFilter =
-			filter.finishedSelection === 'all'
-				? ''
-				: filter.finishedSelection === 'finished'
-				? 'finished=true'
-				: 'finished=false';
-
 		let API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}&order_by=${filter.order_by}`
+				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}`
 				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}&order_by=${filter.order_by}`
+				? `home/polls?limit=${pollThumbnailsLimit}`
 				: //TODO remove public
 				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}`
+				? `home/polls?limit=${pollThumbnailsLimit}&public=true`
 				: '';
 
-		API = API + '&pinned=false';
+		if (filter.order_by) API += `&order_by=${filter.order_by}`;
 
-		if (filter.tag) API = API + `&tag=${filter.tag}`;
+		API += `&finished=${filter.finishedSelection}`;
+
+		API += '&pinned=false';
+
+		if (filter.tag) API += `&tag=${filter.tag}`;
 
 		const { json, res } = await fetchRequest('GET', API);
 
@@ -77,19 +68,15 @@
 
 		let API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}&order_by=${filter.order_by}`
+				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
 				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}&order_by=${filter.order_by}`
+				? `home/polls?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
 				: //TODO remove public
 				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true&title__icontains=${
-						filter.search || ''
-				  }&${finishedFilter}`
+				? `home/polls?limit=${pollThumbnailsLimit}&public=true&${finishedFilter}`
 				: '';
+
+		if (filter.search.length > 0) API += `&title__icontains=${filter.search || ''}`;
 
 		API = API + '&pinned=true';
 

@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -21,7 +20,7 @@
 		isAdmin = false;
 
 	let onHoverGroup = false,
-	phase:Phase
+		phase: Phase;
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -31,8 +30,8 @@
 	};
 
 	onMount(() => {
-		phase = getPhase(poll)
-	})
+		phase = getPhase(poll);
+	});
 </script>
 
 <div
@@ -40,7 +39,10 @@
 >
 	<div class="flex items-center justify-between mt-1">
 		<div>
-			<Tag tag={poll.tag_name} Class="inline cursor-default" />
+			<Tag
+				tag={{ name: poll.tag_name, id: poll.tag, active: true }}
+				Class="inline cursor-default"
+			/>
 			<div class="ml-2 inline-flex">
 				{#if poll.poll_type === 1}
 					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
@@ -54,6 +56,7 @@
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 			</div>
 			{#if isAdmin || poll.pinned}
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
 					<Fa
 						icon={faThumbtack}
@@ -70,7 +73,9 @@
 		>
 			<img
 				class="h-8 w-8 inline rounded-full"
-				src={`${import.meta.env.VITE_API}/api${poll.group_image}`}
+				src={`${import.meta.env.VITE_API}${
+					import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+				}${poll.group_image}`}
 				alt="group thumbnail"
 			/>
 			<span class="inline">{poll.group_name}</span>
@@ -83,7 +88,9 @@
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 		>
-			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">{poll.title}</h1>
+			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">
+				{poll.title}
+			</h1>
 		</a>
 		<NotificationOptions
 			id={poll.id}
@@ -104,20 +111,21 @@
 	>
 
 	<Timeline
-				displayDetails={false}
-				dates={[
-					new Date(poll.start_date),
-					new Date(poll.area_vote_end_date),
-					new Date(poll.proposal_end_date),
-					new Date(poll.prediction_statement_end_date),
-					new Date(poll.prediction_bet_end_date),
-					new Date(poll.delegate_vote_end_date),
-					new Date(poll.end_date)
-				]}
-			/>
+		displayDetails={false}
+		dates={[
+			new Date(poll.start_date),
+			new Date(poll.area_vote_end_date),
+			new Date(poll.proposal_end_date),
+			new Date(poll.prediction_statement_end_date),
+			new Date(poll.prediction_bet_end_date),
+			new Date(poll.delegate_vote_end_date),
+			new Date(poll.end_date)
+		]}
+	/>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<p
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
@@ -142,5 +150,4 @@
 	</div>
 
 	current phase: {phase}
-
 </div>

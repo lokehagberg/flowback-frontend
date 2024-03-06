@@ -46,8 +46,7 @@
 	/*The Draggable package does not like reactive states, 
 	so we use non-reactive code in this file.*/
 	onMount(async () => {
-		if (phase === 'delegate-voting' || phase === 'voting')
-		setUpSortable();
+		if (phase === 'delegate-voting' || phase === 'voting') setUpSortable();
 		await getProposals();
 		setUpVotings();
 		isDelegate = await getIsDelegate();
@@ -66,7 +65,7 @@
 		);
 
 		//Ranked
-		if (pollType === 1) proposals = json.results;
+		if (pollType === 4) proposals = json.results;
 		//Scheduled
 		else if (pollType === 3)
 			proposals = json.results.map((proposal: any) => {
@@ -201,7 +200,6 @@
 		);
 	};
 
-	
 	const saveVotings = async () => {
 		const proposals = document.querySelector('.container.ranked')?.children;
 		let votes: number[] = [];
@@ -216,7 +214,7 @@
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/vote/update`,
 			{
-				votes
+				proposals: votes
 			}
 		);
 
@@ -289,6 +287,7 @@
 				</div>
 				<ol class="container ranked lg:h-full">
 					{#each ranked as proposal, i}
+						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 						<li
 							id={`${proposal.id}`}
 							class="proposal"
@@ -302,10 +301,15 @@
 								proposals={ranked}
 								{groupUser}
 								Class={`${selectedPage === 'You' && ''} ${
-									(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting")) && 'cursor-pointer'
+									!checked &&
+									selectedPage !== 'Delegate' &&
+									(phase === 'voting' || phase == 'delegate-voting') &&
+									'cursor-pointer'
 								}`}
 							>
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div class={`${(selectedPage === 'Delegate' || !checked) && 'invisible'}`}>
+									<!-- svelte-ignore a11y-no-static-element-interactions -->
 									<div on:click={() => addToAbstained(proposal)} class="cursor-pointer" on:keydown>
 										<Fa icon={faMinus} />
 									</div>
@@ -331,6 +335,7 @@
 		</div>
 		<ul class="container abstained lg:h-full">
 			{#each abstained as proposal}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<li
 					id={`${proposal.id}`}
 					class="proposal"
@@ -343,7 +348,10 @@
 						bind:proposals={abstained}
 						{groupUser}
 						Class={`${selectedPage === 'You'} ${
-							(!checked && selectedPage !== 'Delegate' && (phase === 'voting' || phase=="delegate-voting"))&& 'cursor-move'
+							!checked &&
+							selectedPage !== 'Delegate' &&
+							(phase === 'voting' || phase == 'delegate-voting') &&
+							'cursor-move'
 						}`}
 					>
 						<div
@@ -354,6 +362,7 @@
 								'invisible'
 							}`}
 						>
+							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<div on:click={() => addToRanked(proposal)} class="cursor-pointer" on:keydown>
 								<Fa icon={faPlus} />
 							</div>
@@ -379,15 +388,26 @@ and buttons at the same time without a toggle both. -->
 	</div>
 {/if}
 
-<!-- <StatusMessage bind:status /> -->
+<StatusMessage bind:status />
 
 <!-- {#if phase === "delegate-voting" || phase === "voting"} -->
+<!-- {@debug nonDelegatesCanVote} -->
+<!-- 
+{#if delegatesCanVote && isDelegate}
+	<Button action={saveVotings}
+		>{(selectedPage === 'You' && $_('Save Votings')) ||
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
+	>
+{/if} -->
+
+<!-- {@debug delegatesCanVote} -->
 {#if (delegatesCanVote && isDelegate) || (nonDelegatesCanVote && !isDelegate)}
-<Button action={saveVotings}
-	>{(selectedPage === 'You' && $_('Save Votings')) ||
-		(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
->
+	<Button action={saveVotings}
+		>{(selectedPage === 'You' && $_('Save Votings')) ||
+			(selectedPage === 'Delegate' && $_('Sync with Delegate'))}</Button
+	>
 {/if}
+
 <!-- {/if} -->
 
 <style>

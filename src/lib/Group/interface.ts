@@ -45,10 +45,11 @@ export interface DelegatePools {
 }
 
 export interface Delegate {
+	username: string;
 	id: number;
 	pool_id: number;
 	profile_image: File;
-	username: string;
+
 	tags: { id: number; tag_name: string }[];
 }
 
@@ -81,13 +82,13 @@ export interface GroupDetails {
 
 export interface Tag {
 	id: number;
-	tag_name: string;
+	name: string;
 	active: boolean;
 }
 
 export interface groupUser extends User {
 	user_id: number;
-	delegate: boolean;
+	is_delegate: boolean;
 	is_admin: boolean;
 	permission_id: number;
 	permission_name: string;

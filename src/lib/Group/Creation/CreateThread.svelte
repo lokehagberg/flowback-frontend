@@ -4,6 +4,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
     import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let loading = false, title = ""
 
@@ -11,15 +12,17 @@
 		const { res, json } = await fetchRequest('POST', `group/${$page.url.searchParams.get('id')}/thread/create`, {
 			title
 		});
+
+		if(res.ok) window.location.href = `groups/${$page.url.searchParams.get('id')}/thread/${json}`
 	};
 </script>
 
 <div class="md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText bg-darkobject p-6">
-	<h1>Create Thread</h1>
+	<h1>{$_("Create Thread")}</h1>
 	<form on:submit|preventDefault={createThread} class="md:w-2/3 mt-2 w-full inline">
 		<Loader bind:loading>
 			<TextInput Class="w-full" label="Titel" required autofocus bind:value={title}/>
-            <Button Class="mt-2" type="submit">Submit</Button>
+            <Button Class="mt-2" type="submit">{$_("Submit")}</Button>
         </Loader>
 	</form>
 </div>

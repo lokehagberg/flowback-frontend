@@ -6,7 +6,7 @@
 
 	export let description: string;
 	export let creatorId: number;
-	let creator: any = { username: '' };
+	let creator: any = { user: { username: '' } };
 
 	onMount(() => {
 		getCreator();
@@ -23,5 +23,5 @@
 
 <div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 text-xl rounded shadow">
 	<p>{description}</p>
-	<span>{$_('Creator')}: {creator.username}</span>
+	<span>{$_('Creator')}: {creator.user.username}</span>
 </div>

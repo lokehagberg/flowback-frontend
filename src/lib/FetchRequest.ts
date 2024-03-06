@@ -18,7 +18,7 @@ export async function fetchRequest(
 
 	if (needs_authorization) {
 		const token = localStorage.getItem('token');
-		
+
 		// Redirect if no token
 		if (token === null) location.href = '/login';
 		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
@@ -36,7 +36,11 @@ export async function fetchRequest(
 
 	const res = await fetch(
 		//TODO: Make /api/ not hardcodd
-		api.includes(import.meta.env.VITE_API) ? `api/${api}` : `${import.meta.env.VITE_API}/api/${api}`,
+		api.includes(import.meta.env.VITE_API)
+			? `${api}`
+			: `${import.meta.env.VITE_API}${
+					import.meta.env.VITE_HAS_API === 'TRUE' ? '/api/' : '/'
+			  }${api}`,
 		toSend
 	);
 

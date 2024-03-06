@@ -4,11 +4,9 @@
 	export let show = false, message = "Task performed successfully";
 
 	const successPoppupAnimation = () => {
-		show = true;
 		setTimeout(() => {
 			show = false;
-			message = ""
-		}, 2500);
+		}, 3500);
 	};
 
 	$: show && successPoppupAnimation();

@@ -15,7 +15,6 @@
 	const getNotifications = async () => {
 		const { json, res } = await fetchRequest('GET', 'notification/list');
 		notifications = json.results;
-		console.log(notifications, 'NOTIS ME');
 	};
 
 	const closeWindowWhenClickingOutside = () => {
@@ -64,6 +63,7 @@
 	let notificationsOpen = false;
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	id="notifications-list"
 	class="small-notification relative"
@@ -84,6 +84,7 @@
 		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation"
 		id="notifications-list"
 	>
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
 			on:click={markAllAsRead}
 			on:keydown
@@ -93,10 +94,12 @@
 		</li>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<li
-					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all "
+					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
 						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {

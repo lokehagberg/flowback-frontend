@@ -35,12 +35,14 @@
 			'Low priority',
 			'Very low priority'
 		],
-		isEditing = false;
+		isEditing = false,
+		changingOpens: null | 'Addition' | 'Subtraction' = null;
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
-		removeKanbanEntry: (id: number) => void;
+		removeKanbanEntry: (id: number) => void,
+		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {};
 
 	// initializes the kanban to be edited when modal is opened
 	let kanbanEdited = {
@@ -52,10 +54,12 @@
 		priority: kanban.priority
 	};
 
+	$: if (openModal === true) changeNumberOfOpen('Addition');
+	else changeNumberOfOpen('Subtraction');
+
 	$: openModal &&
 		kanban.id !== selectedEntry &&
 		(() => {
-			console.log('HERE');
 			kanbanEdited = {
 				entry_id: kanban.id,
 				id: kanban.id,
@@ -89,7 +93,7 @@
 			profile_image: assignee?.user.profile_image || ''
 		};
 
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 		isEditing = false;
 	};
 
@@ -108,7 +112,7 @@
 		if (!res.ok) return;
 
 		kanban.tag = kanban.tag;
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 	};
 
 	const changeAssignee = (e: any) => {
@@ -133,11 +137,12 @@
 		if (!res.ok) return;
 
 		removeKanbanEntry(kanban.id);
-		showSuccessPoppup = true;
+		// showSuccessPoppup = true;
 	};
 
 	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
 	const getGroupKanbanIsFrom = async () => {
+		//TODO: detail is outdated
 		const { res, json } = await fetchRequest('GET', `group/${kanban.origin_id}/detail`);
 		kanban.group_name = json.name;
 	};
@@ -148,6 +153,7 @@
 		TimeAgo.addDefaultLocale(en);
 		endDate = new TimeAgo('en');
 	};
+
 	onMount(async () => {
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 		if (kanban.end_date !== null) formatEndDate();
@@ -157,7 +163,8 @@
 		checkForLinks(kanban.description, `kanban-${kanban.id}-description`);
 </script>
 
-<SuccessPoppup bind:show={showSuccessPoppup} />
+<!-- {@debug showSuccessPoppup} -->
+<!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 
 <li
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
@@ -166,6 +173,7 @@
 	{#if kanban.end_date !== null && endDate}
 		Ends {endDate.format(new Date(kanban.end_date))}
 	{/if}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:click={() => {
 			openModal = true;
@@ -176,8 +184,9 @@
 	>
 		<div class="p-1 py-3">{kanban.title}</div>
 	</div>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
-		class="flex mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
+		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() =>
 			(window.location.href =
 				type === 'group'
@@ -197,6 +206,7 @@
 	<!-- Arrows -->
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3">
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
@@ -212,6 +222,7 @@
 
 			<KanbanIcons bind:priority={kanban.priority} />
 
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				class="cursor-pointer hover:text-gray-500"
 				on:click={() => {
@@ -234,7 +245,7 @@
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
 			{:else}
-				{kanbanEdited.title}
+				{kanban.title}
 			{/if}
 		</div>
 
@@ -248,14 +259,18 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select on:input={changeAssignee} value={kanban?.assignee?.id} class="dark:bg-darkbackground">
+				<select
+					on:input={changeAssignee}
+					value={kanban?.assignee?.id}
+					class="dark:bg-darkbackground"
+				>
 					{#each users as user}
 						<option value={user.user.id}>{user.user.username}</option>
 					{/each}
 				</select>
 				{$_('Priority')}
 				<select
-					class="border border-gray-600 bg-darkbackground"
+					class="border border-gray-600 dark:bg-darkbackground bg-white"
 					on:input={handleChangePriority}
 					value={kanban?.priority}
 				>

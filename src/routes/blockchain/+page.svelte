@@ -1,6 +1,7 @@
 <script>
 	import Layout from '$lib/Generic/Layout.svelte';
-	import { test } from '$lib/Blockchain/javascript/test.js';
+	//@ts-ignore
+	import { test } from '$lib/Blockchain/javascript/test.ts';
 	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 

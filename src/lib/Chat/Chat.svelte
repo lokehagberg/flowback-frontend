@@ -11,10 +11,11 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
+	import Socket from './Socket';
 
 	let messages: Message[] = [],
 		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
-		User: User,
+		user: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number | null,
@@ -34,23 +35,37 @@
 
 	onMount(async () => {
 		await getUser();
-		await setUpMessageSending();
+		// await setUpMessageSending();
+		testNewAPI();
 	});
 
+	const testNewAPI = async () => {
+
+		const { json, res } = await fetchRequest('GET', `chat/message/channel/${1}/list`);
+		if (!res.ok) return;
+		
+
+		let socket = Socket.createSocket(user.id);
+		setTimeout(() => {
+			Socket.sendMessage(socket, 1, 'helloo :3', 1, 1, 1);
+		}, 2000);
+	};
+
+	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
 		const { json, res } = await fetchRequest('GET', 'user');
-		if (res.ok) User = json;
+		if (res.ok) user = json;
 	};
 
-	const setUpMessageSending = async () => {
-		//Must be imported here to avoid "document not found" error
-		const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-		socket = createSocket(User.id);
+	// const setUpMessageSending = async () => {
+	// 	//Must be imported here to avoid "document not found" error
+	// 	const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
+	// 	socket = createSocket(User.id);
 
-		sendMessageToSocket = await sendMessage(socket);
+	// 	sendMessageToSocket = await sendMessage(socket);
 
-		subscribe(getMessage);
-	};
+	// 	subscribe(getMessage);
+	// };
 
 	//There's one large socket that handles messages from everywhere, which is why
 	//this function which gets messages from the socket is placed here an not in
@@ -89,8 +104,8 @@
 				timestamp: new Date().toString(),
 				username: user.username,
 				user_id: user.id,
-				target_id: User.id,
-				target_username: User.username,
+				target_id: user.id,
+				target_username: user.username,
 				profile_image: '',
 				group_id: group
 			});
@@ -118,11 +133,11 @@
 	}
 
 	// $: if (document !== undefined) document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
-
 </script>
 
-<svelte:head
-	>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<svelte:head>
 	<!-- <title
 		>
 		{`${notifiedDirect.length > 0 ? '🟣' : ''}${
@@ -130,16 +145,20 @@
 		}`}
 		</title
 	> -->
-	</svelte:head
+</svelte:head>
+<div
+	class:invisible={!chatOpen}
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix"
 >
-<div class:invisible={!chatOpen} class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix">
 	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
 			<CrossButton />
 		</div>
 	</div>
-	<Preview
+	<!-- <Preview
 		bind:selectedChat
 		bind:selectedPage
 		bind:previewDirect
@@ -156,8 +175,10 @@
 		user={User}
 		bind:messages
 		bind:isLookingAtOlderMessages
-	/>
+	/> -->
 </div>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={() => (chatOpen = true)}
 	class:small-notification={notifiedDirect.length > 0}

@@ -24,7 +24,6 @@
 	});
 
 	function checkIfSelected() {
-		console.log(window.location.pathname, '/' + href);
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>
@@ -43,8 +42,8 @@
 				{size}
 				class="inline"
 				color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
-			/>
-		{/each}
+				/>
+				{/each}
 	</div>
 	<div
 		class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"

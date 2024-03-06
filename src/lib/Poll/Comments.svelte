@@ -13,6 +13,7 @@
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
+	import {PUBLIC_API_URL} from "$env/static/public";
 
 	let comments: Comment[] = [],
 		show = false,
@@ -140,7 +141,7 @@
 							{#each comment.attachments as attachment}
 								<img
 									class=""
-									src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+									src={`${PUBLIC_API_URL}/media/${attachment.file}`}
 									alt="attachment to the comment"
 								/>
 							{/each}

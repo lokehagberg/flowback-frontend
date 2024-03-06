@@ -21,6 +21,7 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import {PUBLIC_API_URL} from "$env/static/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -38,7 +39,7 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${import.meta.env.VITE_API}${
+			profileImage = `${PUBLIC_API_URL}${
 				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
 	};

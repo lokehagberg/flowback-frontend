@@ -23,6 +23,7 @@
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
+	import {PUBLIC_API_URL} from "$env/static/public";
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -75,7 +76,7 @@
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
 		if (!$page.params) return;
-		
+
 		const { res, json } = await fetchRequest('GET', `user`);
 		if (res.ok) {
 			const userId = json.id;
@@ -185,7 +186,7 @@
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img
 				class=""
-				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+				src={`${PUBLIC_API_URL}api/media/${poll.attachments[0].file}` || ''}
 				alt="attachment to the comment"
 			/>
 		{/if}

@@ -2,16 +2,22 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import Select from '$lib/Generic/Select.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { onMount } from 'svelte';
 
 	let prompt = '',
-		response: string[] = [];
+		poll_titles: string[] = [],
+		title_selected:string;
 
 	const getAI = async () => {
-		const { res, json } = await fetchRequest('POST', 'ai/test', { prompt });
-		response = json;
+		const { res, json } = await fetchRequest('POST', 'ai/titles', { prompt });
+		poll_titles = json.titles;
 	};
+
+	$: console.log(title_selected, "LE TITLE")
 </script>
 
 <Layout>
@@ -20,7 +26,8 @@
 	<TextInput label="AI prompt" bind:value={prompt} />
 	<Button action={getAI} />
 	<div>
-		{#each response as item}
+		<RadioButtons2 bind:labels={poll_titles} bind:values={poll_titles} bind:value={title_selected}/>
+		{#each poll_titles as item}
 			<div class="p-4 dark:bg-darkobject dark:text-white">
 				{item}
 			</div>

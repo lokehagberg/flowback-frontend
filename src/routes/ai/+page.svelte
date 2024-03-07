@@ -10,19 +10,22 @@
 
 	let prompt = '',
 		poll_titles: string[] = [],
-		areas:string[] = [],
+		areas: string[] = [],
 		title_selected: string,
-		area_selected:string;
+		area_selected: string;
 
 	const getAI = async () => {
 		const { res, json } = await fetchRequest('POST', 'ai/titles', { prompt });
 		poll_titles = json.titles;
-		areas = json.areas
+		areas = json.areas;
 	};
-	
+
 	const generatePoll = async () => {
-		const { res, json } = await fetchRequest('POST', 'ai/titles', { prompt });
-	}
+		const { res, json } = await fetchRequest('POST', 'ai/poll', {
+			area: area_selected,
+			title: title_selected
+		});
+	};
 </script>
 
 <Layout>

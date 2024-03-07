@@ -10,7 +10,8 @@
 		values: any[] = labels,
 		value = values[0],
 		Class = '',
-		centering = false;
+		centering = false,
+		ClassInput = '';
 </script>
 
 <div class={Class}>
@@ -23,7 +24,9 @@
 			}}
 		>
 			{#each labels as label}
-				<label> <input type="radio" name={'radio'} value={label} id={label} />{label}</label>
+				<div class={ClassInput}>
+					<label> <input type="radio" name={'radio'} value={label} id={label} />{label}</label>
+				</div>
 			{/each}
 		</fieldset>
 	</div>

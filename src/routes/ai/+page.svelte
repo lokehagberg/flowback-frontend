@@ -26,9 +26,9 @@
 	<TextInput label="AI prompt" bind:value={prompt} />
 	<Button action={getAI} />
 	<div>
-		<RadioButtons2 bind:labels={poll_titles} bind:values={poll_titles} bind:value={title_selected}/>
+		<RadioButtons2 Class="p-4 dark:bg-darkobject dark:text-white" ClassInput="mt-1 mb-1" bind:labels={poll_titles} bind:values={poll_titles} bind:value={title_selected}/>
 		{#each poll_titles as item}
-			<div class="p-4 dark:bg-darkobject dark:text-white">
+			<div class="">
 				{item}
 			</div>
 		{/each}

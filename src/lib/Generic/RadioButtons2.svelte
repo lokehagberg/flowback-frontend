@@ -11,7 +11,8 @@
 		value = values[0],
 		Class = '',
 		centering = false,
-		ClassInput = '';
+		ClassInput = '',
+        name:string;
 </script>
 
 <div class={Class}>
@@ -25,7 +26,7 @@
 		>
 			{#each labels as label}
 				<div class={ClassInput}>
-					<label> <input type="radio" name={'radio'} value={label} id={label} />{label}</label>
+					<label> <input type="radio" {name} value={label} id={label} />{label}</label>
 				</div>
 			{/each}
 		</fieldset>

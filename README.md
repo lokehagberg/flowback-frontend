@@ -176,7 +176,7 @@ const thingtoDo2Good = (thing) => {
 //Have paragraphs in functions to differentiate different operations
 ```
 # Docker
-To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed.
+To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed. Docker setup inspired from [self-hosted-sveltekit-demo](https://github.com/khromov/self-hosted-sveltekit-demo/tree/main)
 
 ### Install docker
 It is recommended to install docker desktop.
@@ -214,3 +214,6 @@ docker build -t flowback-frontend .
 
 ### Want to update the docker compose file?
 You can find `docker-compose.yaml` in the root.
+
+### Further reading
+https://www.youtube.com/watch?v=NLjolI9FwCU

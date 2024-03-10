@@ -45,7 +45,7 @@ Remember to check the “Generic” folder before doing something that’s very 
 Check out the backend documentation here: https://docs.flowback.org/
 
 ## Generally good code practices:
-```{js}
+```js
 // Unnecessary nesting
 if (boolean) {
     // long statement...
@@ -175,3 +175,45 @@ const thingtoDo2Good = (thing) => {
 
 //Have paragraphs in functions to differentiate different operations
 ```
+# Docker
+To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed. Docker setup inspired from [self-hosted-sveltekit-demo](https://github.com/khromov/self-hosted-sveltekit-demo/tree/main)
+
+### Install docker
+It is recommended to install docker desktop.
+
+[Install on Mac](https://docs.docker.com/desktop/install/mac-install/)
+
+[Install on Windows](https://docs.docker.com/desktop/install/windows-install/)
+
+[Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
+
+### Environment variables
+Make sure you have updated your `.env` file to include the necessary variables.
+Currently only variables that are imported dynamically work. [See more.](https://joyofcode.xyz/sveltekit-environment-variables#dynamic-for-variables-during-runtime)
+
+### How to build the docker container:
+Go to root.
+
+1. Build the container:
+```bash
+docker compose build
+```
+Only build the container if changes have been made in the application code or Dockerfile.
+
+
+2. Launch the container:
+```bash
+docker compose up -d
+```
+
+### How to manually build the docker image (not required)
+Go to root
+```bash
+docker build -t flowback-frontend .
+```
+
+### Want to update the docker compose file?
+You can find `docker-compose.yaml` in the root.
+
+### Further reading
+https://www.youtube.com/watch?v=NLjolI9FwCU

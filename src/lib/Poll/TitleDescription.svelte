@@ -6,6 +6,7 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import {env} from "$env/dynamic/public";
 
 	export let poll: poll, pollType: number;
 </script>
@@ -33,7 +34,7 @@
 			>
 				<img
 					class="h-8 w-8 inline rounded-full"
-					src={`${import.meta.env.VITE_API}${poll.group_image}`}
+					src={`${env.PUBLIC_API_URL}${poll.group_image}`}
 					alt="group thumbnail"
 				/>
 				<span class="inline">{poll.group_name}</span>

@@ -21,6 +21,9 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import {
+		env
+	} from "$env/dynamic/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -38,8 +41,8 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			profileImage = `${env.PUBLIC_API_URL}${
+					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
 	};
 
@@ -57,14 +60,14 @@
 	>
 		<a href="/home" class="md:w-auto flex justify-center md:flex-none"
 			><img
-				src={import.meta.env.VITE_LOGO === 'REFORUM' ? Reforum : Logo}
+				src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
 				class="w-32 cursor-pointer"
 				alt="flowback logo"
 			/></a
 		>
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
 					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
@@ -74,7 +77,7 @@
 					color={darkMode ? 'white' : 'black'}
 					/>
 					{/if}
-					{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE"}
+					{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
 					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
 				{/if}
 				<HeaderIcon
@@ -84,7 +87,7 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if env.PUBLIC_MODE === 'DEV'}
 					<HeaderIcon
 						icon={faChartBar}
 						text="Prediction"
@@ -110,7 +113,7 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/> -->
-				{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if env.PUBLIC_MODE === 'DEV'}
 					{#if ledgerExists}
 						<HeaderIcon
 							icon={faMoneyBill}

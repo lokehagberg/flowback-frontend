@@ -14,7 +14,6 @@
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
-	import {PUBLIC_MODE} from "$env/static/public";
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],

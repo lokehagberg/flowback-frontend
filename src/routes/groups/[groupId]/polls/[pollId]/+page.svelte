@@ -23,7 +23,7 @@
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
-	import {PUBLIC_API_URL} from "$env/static/public";
+	import {env} from "$env/dynamic/public";
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -186,7 +186,7 @@
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img
 				class=""
-				src={`${PUBLIC_API_URL}api/media/${poll.attachments[0].file}` || ''}
+				src={`${env.PUBLIC_API_URL}api/media/${poll.attachments[0].file}` || ''}
 				alt="attachment to the comment"
 			/>
 		{/if}

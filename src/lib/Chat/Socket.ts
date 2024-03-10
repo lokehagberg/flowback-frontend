@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import {PUBLIC_HAS_API, PUBLIC_WEBSOCKET_API_URI} from "$env/static/public";
+import {env} from "$env/dynamic/public";
 
 const messageStore = writable('');
 
@@ -8,7 +8,7 @@ const createSocket = (userId: number) => {
 
 	const token = localStorage.getItem('token') || '';
 
-	const link = `${PUBLIC_WEBSOCKET_API_URI}${PUBLIC_HAS_API && '/api'}/chat/ws?token=${token}`;
+	const link = `${env.PUBLIC_WEBSOCKET_API_URI}${env.PUBLIC_HAS_API && '/api'}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 

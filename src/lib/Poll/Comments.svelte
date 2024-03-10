@@ -13,7 +13,7 @@
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
-	import {PUBLIC_API_URL} from "$env/static/public";
+	import {env} from "$env/dynamic/public";
 
 	let comments: Comment[] = [],
 		show = false,
@@ -141,7 +141,7 @@
 							{#each comment.attachments as attachment}
 								<img
 									class=""
-									src={`${PUBLIC_API_URL}/media/${attachment.file}`}
+									src={`${env.PUBLIC_API_URL}/media/${attachment.file}`}
 									alt="attachment to the comment"
 								/>
 							{/each}

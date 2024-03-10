@@ -10,7 +10,7 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import {PUBLIC_API_URL, PUBLIC_IMAGE_HAS_API} from "$env/static/public";
+	import {env} from "$env/dynamic/public";
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -187,8 +187,8 @@
 				>
 					<img
 						src={delegate.profile_image
-							? `${PUBLIC_API_URL}${
-									PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+							? `${env.PUBLIC_API_URL}${
+									env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 							  }${delegate.profile_image}`
 							: DefaultPFP}
 						alt="avatar"

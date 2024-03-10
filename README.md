@@ -206,7 +206,7 @@ Only build the container if changes have been made in the application code or Do
 docker compose up -d
 ```
 
-### How to manually build the docker image
+### How to manually build the docker image (not required)
 Go to root
 ```bash
 docker build -t flowback-frontend .

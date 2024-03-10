@@ -1,24 +1,31 @@
-# OBS! remove use of --legacy-peer-deps and
-# use --production after solving the dependency issues
-FROM node:18-alpine AS build
+FROM node:18-alpine AS sk-build
+WORKDIR /usr/src/app
 
-WORKDIR /app
-COPY package*.json .
-RUN rm -rf node_modules
-RUN rm -rf build
-#RUN npm install
-RUN npm install --legacy-peer-deps
-COPY . .
+ARG TZ=Europe/Stockholm
+
+COPY . /usr/src/app
+RUN apk --no-cache add curl tzdata
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN npm install
 RUN npm run build
 
-FROM node:18-alpine AS run
-RUN adduser -D nodeuser
-RUN mkdir -p /app
-RUN chown nodeuser:nodeuser /app
-USER nodeuser
-WORKDIR /app
-COPY --from=build --chown=nodeuser:nodeuser /app/package.json ./package.json
-COPY --from=build --chown=nodeuser:nodeuser /app/build ./build
-#RUN npm install --production
-RUN npm install --legacy-peer-deps
-ENTRYPOINT [ "node", "build" ]
+FROM node:18-alpine
+WORKDIR /usr/src/app
+
+ARG TZ=Europe/Stockholm
+RUN apk --no-cache add curl tzdata
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY --from=sk-build /usr/src/app/package.json /usr/src/app/package.json
+COPY --from=sk-build /usr/src/app/package-lock.json /usr/src/app/package-lock.json
+
+# Should use "--only=production" but generates errors
+# best guess is that there are some outdated packaged,
+# but we don't know
+#RUN npm i --only=production
+RUN npm i
+
+COPY --from=sk-build /usr/src/app/build /usr/src/app/build
+
+EXPOSE 3000
+CMD ["node", "build/index.js"]

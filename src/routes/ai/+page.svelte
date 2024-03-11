@@ -66,32 +66,31 @@
 		</div>
 
 		<div class="p-4 dark:bg-darkobject dark:text-white">
-		{#if poll}
-			<div >
-				{#each poll.proposals as proposal}
-					<div>{proposal}</div>
-				{/each}
-			</div>
-			<div >
-				{#each poll.predictions as prediction}
-				<div>{prediction}</div>
-				{/each}
-			</div>
-			<div >
-				{#each poll.bets as bet}
-				<div>{bet}</div>
-				{/each}
-			</div>
-			<div >
-				{#each poll.voting as vote}
-				<div>{vote}</div>
-				{/each}
-			</div>
+			{#if poll}
+				<div>
+					{#each poll.proposals as proposal}
+						<div>{proposal}</div>
+					{/each}
+				</div>
+				<div>
+					{#each poll.predictions as prediction}
+						<div>{prediction}</div>
+					{/each}
+				</div>
+				<div>
+					{#each poll.bets as bet}
+						<div>{bet}</div>
+					{/each}
+				</div>
+				<div>
+					{#each poll.voting as vote}
+						<div>{vote}</div>
+					{/each}
+				</div>
 
-			<Statistics labels={poll.proposals} votes={[60,56,60,20,50]}/>
+				<Statistics labels={poll.proposals} votes={[60, 56, 60, 20, 50]} />
 			{/if}
 		</div>
-	<Button action={generatePoll}>Generate Poll</Button>
-
+		<Button action={generatePoll}>Generate Poll</Button>
 	</Loader>
 </Layout>

@@ -117,7 +117,7 @@
 
 				{#if pollType === 4}
 					<!-- Ranked Poll -->
-					<ProposalSubmition bind:proposals />
+					<ProposalSubmition bind:proposals {poll} />
 				{:else if pollType === 3}
 					<!-- Scheduled Poll -->
 					<ScheduledSubmission bind:abstained />

@@ -10,7 +10,8 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import type { proposal } from './interface';
+	import type { poll, proposal } from './interface';
+	import { getProposals } from '$lib/Generic/AI';
 
 	let title: string,
 		description: string,
@@ -18,7 +19,7 @@
 		status: StatusMessageInfo,
 		show = false;
 
-	export let proposals: proposal[];
+	export let proposals: proposal[], poll: poll;
 
 	const addProposal = async () => {
 		loading = true;
@@ -65,12 +66,20 @@
 </script>
 
 <SuccessPoppup bind:show />
-<form on:submit|preventDefault={addProposal} class="p-4 border border-gray-200 dark:border-gray-500 rounded">
+<form
+	on:submit|preventDefault={addProposal}
+	class="p-4 border border-gray-200 dark:border-gray-500 rounded"
+>
 	<Loader bind:loading>
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		<StatusMessage bind:status />
 		<Button type="submit" label="Add" />
+		{#if import.meta.env.VITE_FLOWBACK_API_MODULE === 'TRUE'}
+			<Button action={async () => (title = await getProposals(poll.title))}
+				>Generate with the help of AI</Button
+			>
+		{/if}
 	</Loader>
 </form>

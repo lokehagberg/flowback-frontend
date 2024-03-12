@@ -105,16 +105,15 @@
 	};
 
 	const getAIpredictionStatement = async () => {
-		let proposalsString = ""
-		proposals.forEach(proposal => {
-			proposalsString += `- ${proposal.title}\n`
+		let proposalsString = '';
+		proposals.forEach((proposal) => {
+			proposalsString += `- ${proposal.title}\n`;
 		});
 
 		const { res, json } = await fetchRequest('POST', 'ai/prediction_statement', {
 			prompt: proposalsString
 		});
-		newPredictionStatement.description = json.proposal
-		
+		newPredictionStatement.description = json.predictions;
 	};
 
 	onMount(() => {
@@ -195,7 +194,7 @@
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<Button type="submit">{$_('Submit')}</Button>
 			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
-			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 			{/if}
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>

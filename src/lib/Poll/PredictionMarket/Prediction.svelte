@@ -14,6 +14,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { userGroupInfo } from '$lib/Group/interface';
+	import { poll } from 'ethers/lib/utils';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
@@ -148,6 +149,16 @@
 
 		prediction.user_prediction_statement_vote = vote;
 	};
+
+	const getAIPredictionBets = async () => {
+
+		const {res, json} = await fetchRequest('POST', 'ai/prediction_bets', {
+			proposals:"Eat soup",
+			predictions: "You'll get full\n You'll get food poison"
+		})
+		
+		
+	}
 </script>
 
 <div class="flex justify-between">
@@ -156,6 +167,7 @@
 		{prediction.description}</span
 	>
 	{#if phase === 'prediction-betting'}
+	<Button action={getAIPredictionBets}>Let AI decide</Button>
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
@@ -179,6 +191,7 @@
 				// }
 			}}
 		/>
+		
 	{/if}
 	{#if phase === 'results' || phase === 'prediction-voting'}
 		<div class="flex">

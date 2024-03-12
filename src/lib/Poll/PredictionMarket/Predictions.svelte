@@ -103,6 +103,13 @@
 		loading = false;
 	};
 
+	const getAIpredictionStatement = async () => {
+		console.log(proposals[0])
+		const { res, json } = await fetchRequest('POST', 'ai/prediction_statement', {
+			prompt: proposals[0].title
+		});
+	};
+
 	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
@@ -121,12 +128,12 @@
 		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
 	{/if}
 
-	
 	{#if predictions.length === 0}
-	<div class="mt-5">{$_('There are currently no predictions')}</div>
+		<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
 </Loader>
 
+<!-- Actives whenever a prediction statement is being added -->
 <Modal bind:open={addingPrediction}>
 	<div slot="header">{$_('Add Prediction')}</div>
 	<form slot="body" on:submit={createPredictionStatement}>
@@ -181,6 +188,7 @@
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_('Submit')}</Button>
+			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
 	</form>

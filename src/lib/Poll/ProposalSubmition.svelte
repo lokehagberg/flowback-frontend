@@ -76,9 +76,9 @@
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		<StatusMessage bind:status />
 		<Button type="submit" label="Add" />
-		{#if import.meta.env.VITE_FLOWBACK_API_MODULE === 'TRUE'}
+		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button action={async () => (title = await getProposals(poll.title))}
-				>Generate with the help of AI</Button
+				>{$_("Generate with the help of AI")}</Button
 			>
 		{/if}
 	</Loader>

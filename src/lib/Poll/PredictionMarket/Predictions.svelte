@@ -18,6 +18,7 @@
 	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import Proposal from '../Proposal.svelte';
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -104,10 +105,16 @@
 	};
 
 	const getAIpredictionStatement = async () => {
-		console.log(proposals[0])
-		const { res, json } = await fetchRequest('POST', 'ai/prediction_statement', {
-			prompt: proposals[0].title
+		let proposalsString = ""
+		proposals.forEach(proposal => {
+			proposalsString += `- ${proposal.title}\n`
 		});
+
+		const { res, json } = await fetchRequest('POST', 'ai/prediction_statement', {
+			prompt: proposalsString
+		});
+		newPredictionStatement.description = json.proposal
+		
 	};
 
 	onMount(() => {
@@ -186,9 +193,10 @@
 			</div>
 			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<!-- <StatusMessage bind:status={statusMessage} /> -->
 			<Button type="submit">{$_('Submit')}</Button>
+			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
 			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+			{/if}
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
 	</form>

@@ -14,6 +14,7 @@
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import sendMessage  from './Socket';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -26,11 +27,15 @@
 		};
 
 	export let selectedChat: number | null,
-		sendMessageToSocket: (
-			message: string,
-			selectedChat: number,
-			selectedPage: 'direct' | 'group'
-		) => Promise<boolean>,
+		// sendMessage: (
+		// 	socket: WebSocket,
+		// 	channel_id: number,
+		// 	message: string,
+		// 	topic_id: number,
+		// 	attachments_id?: number | null,
+		// 	parent_id?: number | null
+		// ) => Promise<boolean>,
+		socket: WebSocket,
 		user: User,
 		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
@@ -70,7 +75,8 @@
 	//Runs when changing chats
 	const postMessage = async () => {
 		if (message.length === 0) return;
-		if (!selectedChat) return;
+		// if (!selectedChat) return;
+		console.log("HERE")
 		//If only spaces, return
 		if (message.match(/^\s+$/)) return;
 
@@ -105,7 +111,7 @@
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
+		const didSend = await sendMessage.sendMessage(socket, 1, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -138,7 +144,7 @@
 	}
 </script>
 
-{#if selectedChat !== null}
+{#if selectedChat !== null || true}
 	<ul
 		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
@@ -189,6 +195,7 @@
 				label=""
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
+						
 						postMessage();
 						e.preventDefault();
 					}
@@ -212,5 +219,5 @@
 		</form>
 	</div>
 {:else}
-	<div>{("No chat selected")}</div>
+	<div>{'No chat selected'}</div>
 {/if}

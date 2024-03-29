@@ -15,6 +15,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import sendMessage  from './Socket';
+	import { onMount } from 'svelte';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -45,6 +46,10 @@
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
+	onMount(() => {
+		getRecentMesseges()
+	})
+
 	//When messages are recieved and not looking at history, scroll.
 	$: messages &&
 		(async () => {
@@ -58,11 +63,23 @@
 		})();
 
 	const getRecentMesseges = async () => {
-		if (!selectedChat) return;
+		// if (!selectedChat) return;
+
+		{const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/1/topic/list?id=1`
+		);
+	}
+		
+	{const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/preview/list`
+		);
+	}
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
+			`chat/message/channel/1/list?order_by=created_at_desc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results.reverse();

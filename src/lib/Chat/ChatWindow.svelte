@@ -119,10 +119,10 @@
 				timestamp: new Date().toString(),
 				username: user.username,
 				user_id: user.id,
-				target_id: selectedPage === 'direct' ? selectedChat : 0,
+				// target_id: selectedPage === 'direct' ? selectedChat : 0,
 				target_username: user.username,
 				profile_image: '',
-				group_id: selectedPage === 'group' ? selectedChat : 0
+				// group_id: selectedPage === 'group' ? selectedChat : 0
 			});
 		}
 
@@ -141,7 +141,7 @@
 		messages = messages;
 		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
-		setTimeStamp(selectedChat, selectedPage);
+		// setTimeStamp(selectedChat, selectedPage);
 	};
 
 	const showOlderMessages = async () => {

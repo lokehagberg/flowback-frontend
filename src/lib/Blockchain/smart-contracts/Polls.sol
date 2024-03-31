@@ -1,43 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-import './RightToVote.sol';
-import './Delegations.sol';
+import {RightToVote} from './RightToVote.sol';
+import {Delegations} from './Delegations.sol';
+import {PollHelpers} from './PollHelpers.sol';
+import {ProposalHelpers} from './ProposalHelpers.sol';
+import {Predictions} from './Predictions.sol';
+import {PredictionHelpers} from './PredictionHelpers.sol';
+import {PredictionBetHelpers} from './PredictionBetHelpers.sol';
+import {PredictionBets} from './PredictionBets.sol';
 
-contract Polls is RightToVote, Delegations {
+// Contract needs to be deployed with the optimizer
 
-    
-    struct Poll {
-        string title;
-        string tag;
-        uint group;
-        uint pollStartDate;
-        uint proposalEndDate;
-        uint votingStartDate;
-        uint delegateEndDate;
-        uint endDate;
-        uint pollId;
-        uint proposalCount;
-        PollPhase phase;
-    }
-
-    struct Proposal {
-        string description;
-        uint voteCount;
-        uint proposalId;
-        uint predictionCount;
-        PollPhase phase;
-    }
-
-    mapping(uint => Poll) public polls;
-    uint public pollCount;
-
-    //Ties proposals to polls by pollId
-    mapping(uint => Proposal[]) public proposals;
-
-    enum PollPhase {createdPhase, predictionPhase, predictionBetPhase, completedPhase}
-
-    // event PollCreated(uint pollId, string title);
+contract Polls is RightToVote, Delegations, PollHelpers, ProposalHelpers, PredictionHelpers, Predictions, PredictionBetHelpers, PredictionBets {
 
     event PollCreated(uint pollId, string title);
 
@@ -63,27 +38,19 @@ contract Polls is RightToVote, Delegations {
                 delegateEndDate: _delegateEndDate,
                 endDate: _endDate,
                 pollId: pollCount, 
-                proposalCount: 0,
-                phase: PollPhase.createdPhase
+                proposalCount: 0
             });
 
             emit PollCreated(newPoll.pollId, newPoll.title);
 
             polls[pollCount] = newPoll;
-
-            // emit PollCreated(pollCount, _title);
         }
-
-    function requirePollToExist(uint _pollId) internal view {
-        require(_pollId > 0 && _pollId <= pollCount, "Poll ID does not exist");
-    }
 
     event ProposalAdded(uint indexed pollId, uint proposalId, string description);
 
     function addProposal(uint _pollId, string calldata _description) public {
-        bool rightPhase = polls[_pollId].phase == PollPhase.createdPhase;
-        require(rightPhase, "You can not place proposal right now");
         requirePollToExist(_pollId);
+        controlProposalEndDate(_pollId);
         polls[_pollId].proposalCount++;
         uint _proposalId = polls[_pollId].proposalCount;
 
@@ -91,8 +58,7 @@ contract Polls is RightToVote, Delegations {
             description: _description,
             voteCount: 0,
             proposalId: _proposalId,
-            predictionCount: 0,
-            phase: PollPhase.predictionPhase
+            predictionCount: 0
         }));
 
         emit ProposalAdded(_pollId, _proposalId, _description);
@@ -120,51 +86,24 @@ contract Polls is RightToVote, Delegations {
 
     }
 
-    function userHasDelegatedInGroup(uint _pollGroup) private view returns(bool) {
-        uint[] memory delegatedGroups = groupDelegationsByUser[msg.sender];
-
-        for (uint i; i < delegatedGroups.length;) {
-            if (delegatedGroups[i] == _pollGroup) {
-                return true;
-            }
-            unchecked {
-                ++i;
-            }
-        }
-        return false;
-    }
-
-    function userIsMemberOfPollGroup(uint _pollId) internal view returns(bool isInGroup) {
-        uint[] memory userGroups = voters[msg.sender].groups;
-
-        for (uint i; i < userGroups.length;) {
-            if (userGroups[i] == polls[_pollId].group) {
-                return true;
-            }
-            unchecked {
-                ++i;
-            }
-        }
-        return false;
-    }
-
     event VoteSubmitted(uint indexed pollId, address indexed voter, uint votesForProposal);
 
     function vote(uint _pollId, uint _proposalId) public {
         uint _pollGroup = polls[_pollId].group;
         uint delegatedVotingPower;
+        address[] memory delegatingAddresses;
 
         requirePollToExist(_pollId);
 
-        require(userIsMemberOfPollGroup(_pollId), "The user is not a member of poll group");
+        require(isUserMemberOfGroup(_pollId), "The user is not a member of poll group");
 
-        // require(block.timestamp <= polls[_pollId].endDate, "Voting is not allowed at this time");
+        isVotingOpen(_pollId);
         
         require(!hasVoted(_pollId), "Vote has already been cast");
 
-        require(_proposalId > 0 && _proposalId <= polls[_pollId].proposalCount, "Proposal does not exist");
+        require(requireProposalToExist(_pollId, _proposalId));
 
-        require(!userHasDelegatedInGroup(_pollGroup), "You have delegated your vote in the polls group.");
+        require(!hasDelegatedInGroup(_pollGroup), "You have delegated your vote in the polls group.");
 
         Proposal[] storage pollProposals = proposals[_pollId];
 
@@ -173,11 +112,25 @@ contract Polls is RightToVote, Delegations {
         for (uint i; i < pollGroupLength;) {
             if (groupDelegates[_pollGroup][i].delegate == msg.sender) {
                 delegatedVotingPower = groupDelegates[_pollGroup][i].delegatedVotes;
+                delegatingAddresses = groupDelegates[_pollGroup][i]. delegationsFrom;
             }
             unchecked {
                 ++i;
             }
-        } 
+        }
+
+        for (uint i; i < delegatingAddresses.length; i++) {
+            uint pollDelegateEndDate = polls[_pollId].delegateEndDate;
+
+            for (uint j = 0; j < groupDelegationsByUser[delegatingAddresses[i]].length; j++) {
+                if (groupDelegationsByUser[delegatingAddresses[i]][j].groupId == _pollGroup) {
+                    if (groupDelegationsByUser[delegatingAddresses[i]][j].timeOfDelegation > pollDelegateEndDate) {
+                        delegatedVotingPower = delegatedVotingPower > 0 ? delegatedVotingPower - 1: 0;
+                    }
+                    break;
+                }
+            }
+        }
 
         uint proposalsLength = pollProposals.length;
 
@@ -195,7 +148,7 @@ contract Polls is RightToVote, Delegations {
                 ++i;
             }
         }
-        revert("There is no such proposal for the specified pollId");
+        return;
     }
 
     mapping(uint => address[]) internal votersForPoll;
@@ -212,5 +165,10 @@ contract Polls is RightToVote, Delegations {
             }
         }
         return false;
+    }
+
+    function getPoll(uint _pollId) public view returns (Poll memory) {
+        requirePollToExist(_pollId);
+        return polls[_pollId];
     }
 }

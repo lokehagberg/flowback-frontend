@@ -7,8 +7,11 @@ const createSocket = (userId: number) => {
 
 	const token = localStorage.getItem('token') || '';
 
-	const link = `${import.meta.env.VITE_WEBSOCKET_API}${import.meta.env.VITE_HAS_API && '/api'}/chat/ws?token=${token}`;
+	const link = `${import.meta.env.VITE_WEBSOCKET_API}${
+		import.meta.env.VITE_HAS_API && '/api'
+	}/chat/ws?token=${token}`;
 
+	console.log(link, "THA LINK")
 	socket = new WebSocket(link);
 
 	socket.onopen = (event) => {
@@ -43,19 +46,22 @@ const sendMessage = async (
 	message: string,
 	topic_id: number,
 	attachments_id: number | null = null,
-	parent_id: number | null = null,
+	parent_id: number | null = null
 ) => {
-	if (socket.readyState <= 1 && message.length > 0) 
-	await socket.send(
-		JSON.stringify({
-			channel_id,
-			message,
-			// topic_id,
-			// attachments_id,
-			// parent_id,
-			type: 'message_create'
-		})
-	);
+	if (socket.readyState <= 1 && message.length > 0) {
+		const res = await socket.send(
+			JSON.stringify({
+				channel_id,
+				message,
+				// topic_id,
+				// attachments_id,
+				// parent_id,
+				type: 'message_create'
+			})
+		);
+		console.log(res, "RESULTS")
+	}
+	return true
 };
 
 // const sendMessage = async (socket: WebSocket) => {

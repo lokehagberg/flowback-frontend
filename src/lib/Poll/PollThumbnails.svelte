@@ -12,6 +12,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
+	import Pagination from '$lib/Generic/Pagination.svelte';
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public';
@@ -25,7 +26,9 @@
 			tag: null
 		},
 		loading = false,
-		isAdmin = false;
+		isAdmin = false,
+		next = "",
+		prev = ""
 
 	//TODO: Refactor this
 	const getPolls = async () => {
@@ -33,15 +36,18 @@
 
 		let API =
 			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}`
+				? `group/${$page.params.groupId}/poll/list?`
 				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}`
+				? `home/polls?`
 				: //TODO remove public
 				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true`
+				? `home/polls?public=true`
 				: '';
 
 		if (filter.order_by) API += `&order_by=${filter.order_by}`;
+
+		// API += `&limit=${pollThumbnailsLimit}`
+		API += `&limit=${2}`
 
 		API += `&finished=${filter.finishedSelection}`;
 
@@ -55,6 +61,9 @@
 		else polls = json.results;
 
 		loading = false;
+
+		next = json.next
+		prev = json.previous
 	};
 
 	//TODO: Remove this shit later
@@ -126,5 +135,6 @@
 				{/if}
 			{/if}
 		</div>
+		<Pagination bind:next bind:prev bind:polls/>
 	</Loader>
 </div>

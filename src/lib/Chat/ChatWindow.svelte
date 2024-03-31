@@ -14,6 +14,8 @@
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import sendMessage  from './Socket';
+	import { onMount } from 'svelte';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -26,11 +28,15 @@
 		};
 
 	export let selectedChat: number | null,
-		sendMessageToSocket: (
-			message: string,
-			selectedChat: number,
-			selectedPage: 'direct' | 'group'
-		) => Promise<boolean>,
+		// sendMessage: (
+		// 	socket: WebSocket,
+		// 	channel_id: number,
+		// 	message: string,
+		// 	topic_id: number,
+		// 	attachments_id?: number | null,
+		// 	parent_id?: number | null
+		// ) => Promise<boolean>,
+		socket: WebSocket,
 		user: User,
 		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
@@ -39,6 +45,10 @@
 		isLookingAtOlderMessages: boolean;
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();
+
+	onMount(() => {
+		getRecentMesseges()
+	})
 
 	//When messages are recieved and not looking at history, scroll.
 	$: messages &&
@@ -53,11 +63,23 @@
 		})();
 
 	const getRecentMesseges = async () => {
-		if (!selectedChat) return;
+		// if (!selectedChat) return;
+
+		{const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/1/topic/list?id=1`
+		);
+	}
+		
+	{const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/preview/list`
+		);
+	}
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
+			`chat/message/channel/1/list?order_by=created_at_desc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results.reverse();
@@ -70,7 +92,8 @@
 	//Runs when changing chats
 	const postMessage = async () => {
 		if (message.length === 0) return;
-		if (!selectedChat) return;
+		// if (!selectedChat) return;
+		console.log("HERE")
 		//If only spaces, return
 		if (message.match(/^\s+$/)) return;
 
@@ -96,16 +119,16 @@
 				timestamp: new Date().toString(),
 				username: user.username,
 				user_id: user.id,
-				target_id: selectedPage === 'direct' ? selectedChat : 0,
+				// target_id: selectedPage === 'direct' ? selectedChat : 0,
 				target_username: user.username,
 				profile_image: '',
-				group_id: selectedPage === 'group' ? selectedChat : 0
+				// group_id: selectedPage === 'group' ? selectedChat : 0
 			});
 		}
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
+		const didSend = await sendMessage.sendMessage(socket, 1, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -118,7 +141,7 @@
 		messages = messages;
 		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
-		setTimeStamp(selectedChat, selectedPage);
+		// setTimeStamp(selectedChat, selectedPage);
 	};
 
 	const showOlderMessages = async () => {
@@ -138,7 +161,7 @@
 	}
 </script>
 
-{#if selectedChat !== null}
+{#if selectedChat !== null || true}
 	<ul
 		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
@@ -189,6 +212,7 @@
 				label=""
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
+						
 						postMessage();
 						e.preventDefault();
 					}
@@ -212,5 +236,5 @@
 		</form>
 	</div>
 {:else}
-	<div>{("No chat selected")}</div>
+	<div>{'No chat selected'}</div>
 {/if}

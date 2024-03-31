@@ -31,7 +31,7 @@
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
-		else if (api === 'delegate-history') return `poll/1/delegate/${$page.url.searchParams.get('page')}`;
+		else if (api === 'delegate-history') return `poll/1/delegate/${$page.url.searchParams.get('history_id')}`;
 	};
 
 	const commentCreate = async () => {

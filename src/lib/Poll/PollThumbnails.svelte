@@ -135,6 +135,6 @@
 				{/if}
 			{/if}
 		</div>
-		<Pagination bind:next bind:prev bind:polls/>
+		<Pagination bind:next bind:prev bind:iterable={polls} Class={"flex gap-2 justify-around w-full"}/>
 	</Loader>
 </div>

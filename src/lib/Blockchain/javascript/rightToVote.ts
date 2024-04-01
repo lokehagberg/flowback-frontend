@@ -112,3 +112,18 @@ export const removeGroupMembership = async () => {
 	}
 	
 };
+export const isUserMemberInGroup = async () => {
+	const contract = await getContract();
+	const tx = await contract.isUserMemberOfGroup(1);  //group id
+	console.log(tx);
+};
+
+export const getGroupsUserIsMemberIn = async () => {
+    const contract = await getContract();
+	const tx = await contract.getGroupsUserIsMemberIn(); 
+	if (tx.length==0) {
+		console.log("No groups");
+	}else{
+		tx.map(groups => console.log(parseInt(groups)))
+	}
+};

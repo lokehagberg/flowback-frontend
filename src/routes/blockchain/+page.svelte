@@ -11,7 +11,18 @@
         vote,
 		getPollResults,
      } from '$lib/Blockchain/javascript/pollsBlockchain';
-    import { becomeMemberOfGroup, removeGroupMembership } from '$lib/Blockchain/javascript/rightToVote';
+    import {
+        createPrediction,
+        getPredictionsOnPoll,
+        createPredictionBet,
+        getPredictionBets
+    } from '$lib/Blockchain/javascript/predictionsBlockchain';
+    import { 
+        becomeMemberOfGroup, 
+        removeGroupMembership,
+        isUserMemberInGroup,
+        getGroupsUserIsMemberIn 
+    } from '$lib/Blockchain/javascript/rightToVote';
 
    
     
@@ -28,8 +39,7 @@
     let userAddress = '';
 
     async function connectWallet() {
- 
-        console.log("klick");
+
         if (typeof window.ethereum !== 'undefined') {
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -42,6 +52,13 @@
         }
     }
 </script>
+<style>
+    hr {
+        border: 0;
+        border-top: 1px solid #8a8a8a;
+        margin: 20px 0;
+    }
+</style>
 
 <Layout>
     <button on:click={connectWallet}>
@@ -51,16 +68,27 @@
             Connect Wallet
         {/if}
     </button>
+
     
     {#if userAddress}
         <p>Wallet Address: {userAddress}</p>
     {/if}
+    <hr>
+    <b>rightToVote</b>
     <div class="p-6">
         <button on:click={becomeMemberOfGroup}>Become member</button> 
     </div> 
     <div class="p-6">
         <button on:click={removeGroupMembership}>Resign as member</button> 
     </div> 
+    <div class="p-6">
+        <button on:click={isUserMemberInGroup}>Check if user is member of group</button> 
+    </div> 
+    <div class="p-6">
+        <button on:click={getGroupsUserIsMemberIn}>Get groups user is member in</button> 
+    </div> 
+    <hr>
+    <b>polls</b>
     <div class="p-6">
        
         <button on:click={createPoll}>Create poll</button> 
@@ -85,5 +113,27 @@
 
         <button on:click={vote}>vote</button> 
     </div>
+    <hr>
+    <b>prediction/predictionbets</b>
+    <div class="p-6">
+
+        <button on:click={createPrediction}>Create prediction</button> 
+    </div>
+    <div class="p-6">
+
+        <button on:click={getPredictionsOnPoll}>Get predictions on poll</button> 
+    </div>
+    <div class="p-6">
+
+        <button on:click={createPredictionBet}>Create prediction bet</button> 
+    </div>
+    <div class="p-6">
+
+        <button on:click={getPredictionBets}>Get prediction bets</button> 
+    </div>
+    
+    
+    <hr>
+    <b>delegations</b>
 </Layout>
 

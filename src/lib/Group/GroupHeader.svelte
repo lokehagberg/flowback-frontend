@@ -8,6 +8,7 @@
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	import {env} from "$env/dynamic/public";
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 
@@ -28,15 +29,15 @@
 <div class="relative flex justify-center">
 	<img
 		class="cover"
-		src={`${import.meta.env.VITE_API}${
-			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+		src={`${env.PUBLIC_API_URL}${
+			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 		}${group.cover_image}`}
 		alt="cover"
 	/>
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
 		src={group.image
-			? `${import.meta.env.VITE_API}${import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 					group.image
 			  }`
 			: DefaultBanner}

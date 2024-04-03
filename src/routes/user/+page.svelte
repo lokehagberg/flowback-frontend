@@ -15,6 +15,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import getCroppedImg from '$lib/Generic/Cropper/canvasUtils';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
+	import {env} from "$env/dynamic/public";
 
 	let user: User = {
 		banner_image: '',
@@ -52,8 +53,8 @@
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 		if (user.profile_image)
-			profileImagePreview = `${import.meta.env.VITE_API}/api${user.profile_image}`;
-		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
+			profileImagePreview = `${env.PUBLIC_API_URL}/api${user.profile_image}`;
+		if (user.banner_image) bannerImagePreview = `${PUBLIC_API_URL}${user.banner_image}`;
 
 
 

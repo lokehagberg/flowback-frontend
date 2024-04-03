@@ -3,6 +3,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
+	import {env} from "$env/dynamic/public";
 
 	export let group: Group;
 	let pending = false;
@@ -25,16 +26,16 @@
 >
 	<div on:click={goToGroup} on:keydown>
 		<img
-			src={`${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			src={`${env.PUBLIC_API_URL}${
+				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${group.cover_image}`}
 			class="cover rounded-t-2xl"
 			alt="cover"
 		/>
 	</div>
 	<img
-		src={`${import.meta.env.VITE_API}${
-			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+		src={`${env.PUBLIC_API_URL}${
+			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 		}${group.image}`}
 		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		alt="profile"

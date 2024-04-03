@@ -12,9 +12,10 @@
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
 	import Socket from './Socket';
+	import {env} from "$env/dynamic/public";
 
 	let messages: Message[] = [],
-		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
+		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
 		user: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
@@ -43,7 +44,7 @@
 
 		const { json, res } = await fetchRequest('GET', `chat/message/channel/${1}/list`);
 		if (!res.ok) return;
-		
+
 
 		let socket = Socket.createSocket(user.id);
 		setTimeout(() => {

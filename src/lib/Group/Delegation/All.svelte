@@ -10,6 +10,7 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import {env} from "$env/dynamic/public";
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -51,7 +52,7 @@
 
 	const createDelegation = async () => {
 		await createDelegationPool();
-		// TOOD-Blockchain: Set this up so it works 
+		// TOOD-Blockchain: Set this up so it works
 		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
@@ -186,8 +187,8 @@
 				>
 					<img
 						src={delegate.profile_image
-							? `${import.meta.env.VITE_API}${
-									import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+							? `${env.PUBLIC_API_URL}${
+									env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 							  }${delegate.profile_image}`
 							: DefaultPFP}
 						alt="avatar"

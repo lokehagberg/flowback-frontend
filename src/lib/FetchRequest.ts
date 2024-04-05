@@ -44,6 +44,8 @@ export async function fetchRequest(
 		toSend
 	);
 
+	console.log(api, res, "API", import.meta.env.VITE_API, import.meta.env.VITE_HAS_API)
+
 	try {
 		const json = await res.json();
 		return { res, json };

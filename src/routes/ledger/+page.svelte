@@ -20,6 +20,7 @@
 	import { page } from '$app/stores';
 	import type { User } from '$lib/User/interfaces';
 	import type { id } from 'ethers/lib/utils';
+	import Pagination from '$lib/Generic/Pagination.svelte';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -39,7 +40,8 @@
 		account_name: string,
 		account_number: string,
 		accounts: Account[] = [],
-		value: number,
+		next:string,
+		prev:string,
 		message: string,
 		totalBalance = 0,
 		filter: Filter = {
@@ -101,12 +103,17 @@
 
 		if (filter.description !== null) api += `&description=${filter.description}`;
 
+		api += '&limit=4'
+
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) {
 			message = 'Something went wrong';
 			return;
 		}
+
+		next = json.next
+		prev = json.previous
 
 		transactions = json.results.filter(
 			(transaction: Transaction) => transaction.account.created_by.id === user?.id
@@ -337,6 +344,8 @@
 				{#each transactions as transaction}
 					<Transaction bind:transaction bind:transactions bind:accounts />
 				{/each}
+
+				<Pagination bind:iterable={transactions} bind:next bind:prev/>
 			</div>
 		</Loader>
 	</div>

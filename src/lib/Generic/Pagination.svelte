@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import type { poll } from '$lib/Poll/interface';
 
-	export let prev: string, next: string, iterable: poll[], Class = ""
+	export let prev: string, next: string, iterable: any[], Class = ""
 
 	const request = async (api: string) => {
 		const { res, json } = await fetchRequest('GET', api);

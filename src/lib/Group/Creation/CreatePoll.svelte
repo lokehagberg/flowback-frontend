@@ -126,7 +126,7 @@
 		formData.append('end_date', end_date.toISOString());
 		formData.append('poll_type', (selected_poll === defaultType ? 4 : 3).toString());
 		formData.append('tag', selectedTag.id.toString());
-		formData.append('dynamic', 'false');
+		formData.append('dynamic', selected_poll === defaultType ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		if (image) formData.append('attachments', image);

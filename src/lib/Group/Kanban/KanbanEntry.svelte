@@ -21,6 +21,7 @@
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
+	import { DateInput, DatePicker } from 'date-picker-svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -51,7 +52,8 @@
 		description: kanban.description,
 		title: kanban.title,
 		assignee: kanban.assignee?.id,
-		priority: kanban.priority
+		priority: kanban.priority,
+		end_date: kanban.end_date ? new Date(kanban.end_date) : null
 	};
 
 	$: if (openModal === true) changeNumberOfOpen('Addition');
@@ -66,12 +68,14 @@
 				description: kanban.description,
 				title: kanban.title,
 				assignee: kanban.assignee?.id,
-				priority: kanban.priority
+				priority: kanban.priority,
+				end_date: kanban.end_date ? new Date(kanban.end_date) : null
 			};
 		})();
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
+		console.log(kanbanEdited)
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -293,6 +297,9 @@
 			{#if isEditing}
 				<Button action={updateKanbanContent}>{$_('Update')}</Button>
 				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
+				{#if kanban.end_date}
+					<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
+				{/if}
 			{:else}
 				<Button action={() => (isEditing = true)}>{$_('Edit')}</Button>
 			{/if}

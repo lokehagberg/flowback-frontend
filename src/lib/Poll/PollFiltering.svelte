@@ -84,7 +84,7 @@
 
 		{#if tagFiltering}
 		<select on:input={handleTags} class="dark:bg-darkobject">
-			<option value={null}>{$_("All")}</option>
+			<option value={null}>{$_("Any")}</option>
 			{#each tags as tag}
 				<option value={tag.id}>{tag.tag_name}</option>
 			{/each}

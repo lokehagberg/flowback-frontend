@@ -23,6 +23,7 @@
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
+	import TimePoll from '$lib/Poll/TimePoll.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -75,7 +76,7 @@
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
 		if (!$page.params) return;
-		
+
 		const { res, json } = await fetchRequest('GET', `user`);
 		if (res.ok) {
 			const userId = json.id;
@@ -108,46 +109,49 @@
 			{$_('Current phase:')}
 			{phase}
 
-			{#if phase === 'pre-start'}
-				<div>dev</div>
-			{:else if phase === 'area-vote'}
-				<AreaVote />
-			{:else if phase === 'proposals'}
-				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+			{#if pollType === 3}
+				{#if phase === 'pre-start'}
+					<div>dev</div>
+				{:else if phase === 'area-vote'}
+					<AreaVote />
+				{:else if phase === 'proposals'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
-				{#if pollType === 4}
-					<!-- Ranked Poll -->
-					<ProposalSubmition bind:proposals {poll} />
-				{:else if pollType === 3}
-					<!-- Scheduled Poll -->
-					<ScheduledSubmission bind:abstained />
+					<!-- {#if pollType === 4} -->
+						<!-- Ranked Poll -->
+						<ProposalSubmition bind:proposals {poll} />
+					<!-- {:else if pollType === 3} -->
+						<!-- Scheduled Poll -->
+						<ScheduledSubmission bind:abstained />
+					<!-- {/if} -->
+				{:else if phase === 'prediction-statement'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+
+					<Predictions bind:proposals bind:phase />
+				{:else if phase === 'prediction-betting'}
+					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
+					<Predictions bind:proposals bind:phase />
+				{:else if phase === 'delegate-voting'}
+					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+
+					<Predictions bind:proposals bind:phase />
+				{:else if phase === 'voting'}
+					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+
+					<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
+
+					<Predictions bind:proposals bind:phase />
+				{:else if phase === 'results'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase />
+				{:else if phase === 'prediction-voting'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase />
 				{/if}
-			{:else if phase === 'prediction-statement'}
-				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'prediction-betting'}
-				<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'delegate-voting'}
-				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
-				<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'voting'}
-				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-
-				<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'results'}
-				<Results {pollType} />
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'prediction-voting'}
-				<Results {pollType} />
-				<Predictions bind:proposals bind:phase />
+			{:else}
+				<TimePoll />
 			{/if}
-
 			<Timeline
 				displayDetails={false}
 				dates={[

@@ -109,7 +109,7 @@
 			{$_('Current phase:')}
 			{phase}
 
-			{#if pollType === 3}
+			{#if pollType === 4}
 				{#if phase === 'pre-start'}
 					<div>dev</div>
 				{:else if phase === 'area-vote'}
@@ -118,11 +118,11 @@
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 
 					<!-- {#if pollType === 4} -->
-						<!-- Ranked Poll -->
-						<ProposalSubmition bind:proposals {poll} />
+					<!-- Ranked Poll -->
+					<ProposalSubmition bind:proposals {poll} />
 					<!-- {:else if pollType === 3} -->
-						<!-- Scheduled Poll -->
-						<ScheduledSubmission bind:abstained />
+					<!-- Scheduled Poll -->
+					<ScheduledSubmission bind:abstained />
 					<!-- {/if} -->
 				{:else if phase === 'prediction-statement'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />

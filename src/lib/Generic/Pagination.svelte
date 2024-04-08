@@ -14,7 +14,7 @@
 </script>
 
 
-<div class={`${Class}`}>
+<div class={`${Class} text-white dark:text-darkmodeText`}>
 	{#if prev}
 		<button class="p-2 bg-primary cursor-pointer" on:click={() => request(prev)}>Previous</button>
 	{/if}

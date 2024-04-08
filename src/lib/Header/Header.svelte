@@ -20,7 +20,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
-	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import { faBurst, faCircle, faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -137,7 +137,7 @@
 					}}
 				>
 					{#if darkMode}
-						<Fa icon={faSun} />
+						<Fa icon={faBurst} />
 					{:else}
 						<Fa icon={faMoon} />
 					{/if}

@@ -205,7 +205,7 @@
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} {changeNumberOfOpen} />
+								<KanbanEntry bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>

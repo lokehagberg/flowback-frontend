@@ -37,7 +37,9 @@
 			'Very low priority'
 		],
 		isEditing = false,
-		changingOpens: null | 'Addition' | 'Subtraction' = null;
+		changingOpens: null | 'Addition' | 'Subtraction' = null,
+		innerWidth: number,
+		outerWidth: number;
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -174,6 +176,7 @@
 
 <!-- {@debug showSuccessPoppup} -->
 <!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
+<svelte:window bind:innerWidth bind:outerWidth />
 
 <li
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
@@ -198,9 +201,9 @@
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() =>
 			(window.location.href =
-				type === 'group'
-					? `/user?id=${kanban.assignee.id}`
-					: `groups/${kanban.origin_id}?page=kanban`)}
+				kanban.origin_type === 'group'
+					? `groups/${kanban.origin_id}?page=kanban`
+					: `user?id=${kanban.assignee.id}`)}
 		on:keydown
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
@@ -226,7 +229,11 @@
 				}}
 				on:keydown
 			>
-				<Fa icon={faArrowLeft} size="1.5x" />
+				{#if innerWidth >= 1280}
+					<Fa icon={faArrowLeft} size="1.5x" />
+				{:else}
+					<Fa icon={faArrowLeft} size="1x" />
+				{/if}
 			</div>
 
 			<KanbanIcons bind:priority={kanban.priority} />
@@ -242,7 +249,11 @@
 				}}
 				on:keydown
 			>
-				<Fa icon={faArrowRight} size="1.5x" />
+				{#if innerWidth >= 1280}
+					<Fa icon={faArrowRight} size="1.5x" />
+				{:else}
+					<Fa icon={faArrowRight} size="1x" />
+				{/if}
 			</div>
 		</div>
 	{/if}

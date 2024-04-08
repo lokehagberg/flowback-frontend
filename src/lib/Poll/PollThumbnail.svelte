@@ -44,13 +44,19 @@
 				Class="inline cursor-default"
 			/>
 			<div class="ml-2 inline-flex">
-				{#if poll.poll_type === 1}
-					<HeaderIcon Class="p-2 pl-0 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
-				{:else if poll.poll_type === 3}
+				{#if poll.poll_type === 3}
+					<HeaderIcon
+						Class="p-2 pl-0 cursor-default"
+						icon={faAlignLeft}
+						text={'Text Poll'}
+						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
+					/>
+				{:else if poll.poll_type === 4}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
 						icon={faCalendarAlt}
 						text={'Scheduled Poll'}
+						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->

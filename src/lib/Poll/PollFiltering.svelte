@@ -71,19 +71,19 @@
 		</Button>
 	</div>
 	<div>
-		<select on:input={handleFinishedSelection} class="dark:bg-darkobject">
+		<select on:input={handleFinishedSelection} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
 			<option value="all">{$_('All')}</option>
 			<option value="unfinished">{$_('Ongoing')}</option>
 			<option value="finished">{$_('Done')}</option>
 		</select>
 
-		<select on:input={handleSort} class="dark:bg-darkobject">
+		<select on:input={handleSort} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
 			<option value="start_date_desc">{$_('Newest first')}</option>
 			<option value="start_date_asc">{$_('Oldest first')}</option>
 		</select>
 
 		{#if tagFiltering}
-		<select on:input={handleTags} class="dark:bg-darkobject">
+		<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
 			<option value={null}>{$_("Any")}</option>
 			{#each tags as tag}
 				<option value={tag.id}>{tag.tag_name}</option>

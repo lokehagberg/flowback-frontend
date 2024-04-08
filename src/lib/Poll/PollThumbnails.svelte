@@ -27,8 +27,8 @@
 		},
 		loading = false,
 		isAdmin = false,
-		next = "",
-		prev = ""
+		next = '',
+		prev = '';
 
 	//TODO: Refactor this
 	const getPolls = async () => {
@@ -47,7 +47,7 @@
 		if (filter.order_by) API += `&order_by=${filter.order_by}`;
 
 		// API += `&limit=${pollThumbnailsLimit}`
-		API += `&limit=${2}`
+		API += `&limit=${2}`;
 
 		API += `&finished=${filter.finishedSelection}`;
 
@@ -57,13 +57,16 @@
 
 		const { json, res } = await fetchRequest('GET', API);
 
-		if (!res.ok) status = statusMessageFormatter(res, json);
-		else polls = json.results;
-
 		loading = false;
 
-		next = json.next
-		prev = json.previous
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
+
+		polls = json.results;
+		next = json.next;
+		prev = json.previous;
 	};
 
 	//TODO: Remove this shit later
@@ -135,6 +138,11 @@
 				{/if}
 			{/if}
 		</div>
-		<Pagination bind:next bind:prev bind:iterable={polls} Class={"flex gap-2 justify-around w-full"}/>
+		<Pagination
+			bind:next
+			bind:prev
+			bind:iterable={polls}
+			Class={'flex gap-2 justify-around w-full'}
+		/>
 	</Loader>
 </div>

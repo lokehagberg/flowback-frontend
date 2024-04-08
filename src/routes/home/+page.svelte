@@ -37,7 +37,6 @@
 	};
 
 	const acceptInvitation = async (id: number) => {
-		console.log(id);
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
 	};
 

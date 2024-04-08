@@ -12,13 +12,14 @@
 	let hovering = false;
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:mouseover={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:keydown
 	on:click={action}
-	class={`select-none flex item-center items-center hover:outline outline-gray-200 dark:outline-gray-700 hover:brightness-125 outline-1 cursor-pointer p-4 ${isSelected && "text-gray-300 dark:text-gray-500"}`}
+	class={`select-none flex item-center items-center hover:outline outline-gray-400 dark:outline-gray-700 dark:hover:brightness-125 hover:brightness-150 outline-1 cursor-pointer p-4 ${isSelected && "text-gray-300 dark:text-gray-500"}`}
 >
 	<Fa {icon}  />
 	<div class="ml-2">

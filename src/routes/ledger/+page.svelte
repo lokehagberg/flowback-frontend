@@ -319,8 +319,8 @@
 						}}>Add Transaction</Button
 					>
 					<Button action={() => (show_account = true)}>Create Account</Button>
-					<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
-						>Delete Account</Button
+					<Button action={() => (showDeleteAccount = true)}
+						>Delete An Account</Button
 					>
 					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
 						>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null

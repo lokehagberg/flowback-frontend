@@ -13,7 +13,9 @@
 	export let filter: Filter, handleSearch: () => {}, accounts: Account[];
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
-		labels: { label: string; checked: boolean; id: number }[] = [], openFilterAccounts = false
+		labels: { label: string; checked: boolean; id: number }[] = [],
+		openFilterAccounts = false,
+		filterOn = false;
 
 	onMount(() => {
 		labels = accounts?.map((account) => {
@@ -23,7 +25,7 @@
 				id: account.id
 			};
 		});
-		console.log(labels, accounts)
+		console.log(labels, accounts);
 	});
 
 	const changingCheckbox = (id: number) => {
@@ -39,29 +41,40 @@
 </script>
 
 <form
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
+	class="mt-6"
 	on:submit|preventDefault={() => {
 		searched = true;
 	}}
 >
-	<div class="w-full flex items-end">
-		<Button action={() => openFilterAccounts = true}>Filter Accounts</Button>
-		<DateInput bind:value={filter.date_after} />
-		<DateInput bind:value={filter.date_before} />
-
-		<input
-			type="text"
-			class="bg-gray-200 dark:bg-darkbackground outline outline-1 outline-gray-300"
-			bind:value={filter.description}
-		/>
-	</div>
-	<div />
+	{#if filterOn}
+		<div class="flex flex-col w-[150px] gap-2">
+			<Button action={() => (openFilterAccounts = true)}>Filter Accounts</Button>
+			<div>Earliest Date<DateInput bind:value={filter.date_after} /></div>
+			<div>Last Date<DateInput bind:value={filter.date_before} /></div>
+			<div>
+				<label for="ledger-search">Search</label>
+				<input
+					id="ledger-search"
+					type="text"
+					class="bg-gray-200 dark:bg-darkbackground outline outline-1 outline-gray-300"
+					bind:value={filter.description}
+				/>
+			</div>
+			<Button onClick={() => filterOn = false}>Close Filter Options</Button>
+		</div>
+	{:else}
+	<Button onClick={() => filterOn = true}>Open Filter Options</Button>
+	{/if}
 </form>
-
 <Modal bind:open={openFilterAccounts}>
 	<div slot="header">Filter Accounts</div>
 	<div slot="body">
-		<CheckboxButtons onChange={changingCheckbox} label="" labels={filter.account_ids} Class={"flex flex-col text-left"} />
+		<CheckboxButtons
+			onChange={changingCheckbox}
+			label=""
+			labels={filter.account_ids}
+			Class={'flex flex-col text-left'}
+		/>
 		<!-- {#each accounts as account}
 		
 			{account.account_name} {account.account_number} -->

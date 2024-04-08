@@ -75,7 +75,7 @@
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
-		console.log(kanbanEdited)
+		console.log(kanbanEdited);
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -130,6 +130,11 @@
 	// Delete kanban removes it from the database,
 	// remove kanban removes the displaying of the kanban.
 	const deleteKanbanEntry = async () => {
+		if (kanban.origin_type === 'group' && !$page.params.groupId) {
+			status = { message: 'Cannot remove kanban tasks from groups in My Kanban', success: false };
+			return;
+		}
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'

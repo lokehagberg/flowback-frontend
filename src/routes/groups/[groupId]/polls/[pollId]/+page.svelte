@@ -23,7 +23,7 @@
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
-	import TimePoll from '$lib/Poll/TimePoll.svelte';
+	import DatePoll from '$lib/Poll/DatePoll.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -150,7 +150,7 @@
 					<Predictions bind:proposals bind:phase />
 				{/if}
 			{:else}
-				<TimePoll />
+				<DatePoll />
 			{/if}
 			<Timeline
 				displayDetails={false}

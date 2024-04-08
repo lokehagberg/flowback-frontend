@@ -169,7 +169,7 @@
 	{#if !isEditing}
 		<img
 			src={bannerImagePreview || DefaultBanner}
-			class="bg-gray-200 w-full h-[40%] cover"
+			class="bg-gray-200 w-full cover max-h-[30vh] xl:max-h-[25vh]"
 			alt="banner"
 		/>
 		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText">

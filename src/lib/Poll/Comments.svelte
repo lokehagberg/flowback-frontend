@@ -24,14 +24,14 @@
 	onMount(() => {});
 
 	const getComments = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${api}/${() => {
-				if (api === 'poll') return $page.params.pollId;
-				else if (api === 'thread') return $page.params.threadId;
-				else if (api === 'delegate-history') return '';
-			}}/comment/list?limit=${pollCommentsLimit}`
-		);
+		let _api = `group/${api}/`;
+
+		if (api === 'poll') _api += `${$page.params.pollId}`;
+		else if (api === 'thread') _api += `${$page.params.threadId}`;
+
+		_api += `/comment/list?limit=${pollCommentsLimit}`;
+
+		const { res, json } = await fetchRequest('GET', _api);
 
 		comments = json.results.map((comment: Comment) => {
 			comment.being_edited = false;
@@ -41,14 +41,15 @@
 	};
 
 	const deleteComment = async (id: number) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/${api}/${() => {
-				if (api === 'poll') return $page.params.pollId;
-				else if (api === 'thread') return $page.params.threadId;
-				else if (api === 'delegate-history') return $page.params.page;
-			}}/comment/${id}/delete`
-		);
+		let _api = `group/${api}/`;
+
+		// if (api === 'poll') _api += `${$page.params.pollId}`;
+		// else if (api === 'thread') _api += `${$page.params.threadId}`;
+
+		_api += `comment/${id}/delete`;
+
+		const { res, json } = await fetchRequest('POST', _api);
+
 		if (res.ok) {
 			show = true;
 			showMessage = 'Comment Deleted';

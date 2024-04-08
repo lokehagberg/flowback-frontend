@@ -17,8 +17,8 @@
 	};
 </script>
 
-<div class="md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText bg-darkobject p-6">
-	<h1>{$_("Create Thread")}</h1>
+<div class="md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] bg-white rounded-sm dark:text-darkmodeText dark:bg-darkobject p-6">
+	<h1 class="text-2xl">{$_("Create Thread")}</h1>
 	<form on:submit|preventDefault={createThread} class="md:w-2/3 mt-2 w-full inline">
 		<Loader bind:loading>
 			<TextInput Class="w-full" label="Titel" required autofocus bind:value={title}/>

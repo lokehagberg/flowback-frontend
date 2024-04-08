@@ -22,9 +22,9 @@
 	<div class="font-bold text-center">6</div>
 	<div class="text-center">12:00</div>
 
-	<div class="flex flex-col items-center">
-		<Button Class="flex justify-center w-[90%]"><Fa icon={faCheck} /></Button>
-		<Button Class="flex justify-center w-[90%]"><Fa icon={faX} /></Button>
+	<div class="flex flex-col items-center rounded-none">
+		<Button Class="flex justify-center w-[90%] rounded-none"><Fa icon={faCheck} /></Button>
+		<Button Class="flex justify-center w-[90%] rounded-none" buttonStyle="secondary"><Fa icon={faX} /></Button>
 	</div>
 </div>
 

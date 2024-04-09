@@ -55,10 +55,7 @@
 			profileImagePreview = `${import.meta.env.VITE_API}/api${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
 
-
-
-		document.title = `${user.username}'s profile`
-
+		document.title = `${user.username}'s profile`;
 	});
 
 	const updateProfile = async () => {
@@ -102,7 +99,7 @@
 			status = { success: false, message: 'No filesize greater than 2MB' };
 			return;
 		}
-		status = undefined
+		status = undefined;
 		//Type string, for preview image
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 
@@ -172,7 +169,9 @@
 			class="bg-gray-200 w-full cover max-h-[30vh] xl:max-h-[25vh]"
 			alt="banner"
 		/>
-		<div class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText">
+		<div
+			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
+		>
 			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
 			<h1 class="inline ml-8">{user.username}</h1>
 			<a class={`block mt-6`} href={user.website || ''}>
@@ -191,6 +190,7 @@
 
 		<!-- Editing your own profile -->
 	{:else}
+		<!-- Banner Image -->
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
 				src={bannerImagePreview}

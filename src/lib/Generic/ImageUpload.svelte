@@ -30,7 +30,7 @@
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
 	{#if image}
-		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} />
+		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} src={URL.createObjectURL(image)} />
 	{:else}
 		<!-- <img
 			class="avatar"

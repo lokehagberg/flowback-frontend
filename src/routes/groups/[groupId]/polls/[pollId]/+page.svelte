@@ -109,7 +109,7 @@
 			{$_('Current phase:')}
 			{phase}
 
-			{#if pollType === 3}
+			{#if pollType === 4}
 				{#if phase === 'pre-start'}
 					<div>dev</div>
 				{:else if phase === 'area-vote'}
@@ -139,7 +139,7 @@
 					<Results {pollType} />
 					<Predictions bind:proposals bind:phase />
 				{/if}
-			{:else}
+			{:else if pollType === 3}
 				<DatePoll />
 			{/if}
 			<Timeline

@@ -5,7 +5,6 @@
 	export let open = false,
 		Class = '',
 		onClose = () => {},
-		isForm = false,
 		onSubmit = () => {};
 
 	$: if (!open) onClose();
@@ -24,7 +23,7 @@
 			<slot name="header" />
 			<CrossButton action={() => (open = false)} />
 		</div>
-		{#if isForm}
+		{#if onSubmit !== (() => {})}
 			<form on:submit={onSubmit}>
 				<div class="p-6 text-center">
 					<slot name="body" />

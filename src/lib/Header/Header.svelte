@@ -133,7 +133,7 @@
 			>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
-					class="dark:text-darkmodeText"
+					class="dark:text-darkmodeText p-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
 					on:click={() => {

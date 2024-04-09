@@ -12,7 +12,9 @@
 
 	let open = false,
 		date: Date,
-		proposals: Proposal[] = [];
+		proposals: Proposal[] = [],
+		daysFormatting = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+		votes: number[] = [];
 
 	let postProposal = async () => {
 		let end_date = new Date(date);
@@ -34,15 +36,42 @@
 		proposals = json.results;
 	};
 
+	let getProposalVote = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/poll/${$page.params.pollId}/proposal/votes`
+		);
+
+		votes = json.results.map((vote: any) => vote.proposal);
+	};
+
+	let updateProposalVote = async (id: number, adding: boolean) => {
+		if (adding && !votes.find(vote => vote === id)) votes.push(id);
+		else votes = votes.filter((vote) => vote !== id);
+		votes = votes
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/proposal/vote/update`,
+			{ proposals: votes }
+		);
+	};
+
+	let handlePostProposal = async () => {
+		await postProposal();
+		getProposals();
+	};
+
 	onMount(() => {
 		getProposals();
+		getProposalVote();
 	});
 </script>
 
 <div class="flex">
 	{#each proposals as proposal}
 		<div class="flex flex-col p-2">
-			<div class="text-center">{new Date(proposal.start_date).getDay()}</div>
+			<div class="text-center">{daysFormatting[new Date(proposal.start_date).getDay()]}</div>
 			<div class="font-bold text-center">
 				{new Date(proposal.start_date).getFullYear()}-{new Date(
 					proposal.start_date
@@ -53,10 +82,17 @@
 			</div>
 
 			<div class="flex flex-col items-center rounded-none">
-				<Button Class="flex justify-center w-[90%] rounded-none"><Fa icon={faCheck} /></Button>
-				<Button Class="flex justify-center w-[90%] rounded-none" buttonStyle="secondary"
-					><Fa icon={faX} /></Button
+				<Button
+					Class={`flex justify-center w-[90%] rounded-none ${
+						votes.find(vote => vote === proposal.id) ? 'bg-green-300' : 'bg-red-300'
+					}`}
+					action={() => updateProposalVote(proposal.id, true)}><Fa icon={faCheck} /></Button
 				>
+				<!-- <Button
+					Class="flex justify-center w-[90%] rounded-none"
+					buttonStyle="secondary"
+					action={() => updateProposalVote(proposal.id, false)}><Fa icon={faX} /></Button
+				> -->
 			</div>
 		</div>
 	{/each}
@@ -64,7 +100,7 @@
 
 <Button action={() => (open = true)}>Create Proposal</Button>
 
-<Modal bind:open onSubmit={postProposal}>
+<Modal bind:open onSubmit={handlePostProposal}>
 	<div slot="body">
 		<DateInput bind:value={date} />
 	</div>

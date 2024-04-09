@@ -31,7 +31,7 @@
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
-		else if (api === 'delegate-history') return `poll/1/delegate/${$page.url.searchParams.get('history_id')}`;
+		else if (api === 'delegate-history') return `${$page.params.groupId}/delegate/pool`;
 	};
 
 	const commentCreate = async () => {
@@ -77,6 +77,7 @@
 	};
 
 	const commentUpdate = async () => {
+		
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${api}/${getId()}/comment/${id}/update`,

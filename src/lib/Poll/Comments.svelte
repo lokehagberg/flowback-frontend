@@ -19,7 +19,8 @@
 		showMessage = '';
 
 	export let proposals: proposal[] = [],
-		api: 'poll' | 'thread' | 'delegate-history';
+		api: 'poll' | 'thread' | 'delegate-history',
+		delegate_pool_id: null | number = null;
 
 	onMount(() => {});
 
@@ -103,7 +104,14 @@
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
-	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} {api} />
+	<CommentPost
+		bind:proposals
+		bind:comments
+		parent_id={undefined}
+		replyDepth={-1}
+		{api}
+		{delegate_pool_id}
+	/>
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each comments as comment}
@@ -118,6 +126,7 @@
 					replyDepth={comment.reply_depth}
 					id={comment.id}
 					{api}
+					{delegate_pool_id}
 				/>
 			{:else}
 				<div

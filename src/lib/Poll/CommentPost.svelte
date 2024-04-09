@@ -18,7 +18,8 @@
 		beingEdited = false,
 		message = '',
 		replying = false,
-		api: 'poll' | 'thread' | 'delegate-history';
+		api: 'poll' | 'thread' | 'delegate-history',
+		delegate_pool_id: number | null = null;
 
 	let show = false,
 		showMessage = '',
@@ -31,7 +32,7 @@
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
-		else if (api === 'delegate-history') return `${$page.params.groupId}/delegate/pool`;
+		else if (api === 'delegate-history') return `group/delegate/pool/${delegate_pool_id}`;
 	};
 
 	const commentCreate = async () => {
@@ -77,7 +78,6 @@
 	};
 
 	const commentUpdate = async () => {
-		
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${api}/${getId()}/comment/${id}/update`,
@@ -102,13 +102,9 @@
 
 	//TODO: Optimize so that this doesn't fire every time a comment is made
 	const subscribeToReplies = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/${getId()}/subscribe`,
-			{
-				categories: ['comment_self']
-			}
-		);
+		const { res, json } = await fetchRequest('POST', `group/${getId()}/subscribe`, {
+			categories: ['comment_self']
+		});
 	};
 </script>
 

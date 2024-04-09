@@ -47,7 +47,7 @@
 		if (filter.order_by) API += `&order_by=${filter.order_by}`;
 
 		// API += `&limit=${pollThumbnailsLimit}`
-		API += `&limit=${2}`;
+		API += `&limit=${pollThumbnailsLimit}`;
 
 		API += `&finished=${filter.finishedSelection}`;
 

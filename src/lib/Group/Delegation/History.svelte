@@ -62,7 +62,7 @@
 			{$_('delegate history for')}
 			{user?.username}
 		</div>
-		<Comments api="delegate-history" on:keydown={() => {}} />
+		<Comments api="delegate-history" on:keydown={() => {}} delegate_pool_id={history} />
 	{/if}
 	<ul class="w-full">
 		{#each votingHistory as vote}

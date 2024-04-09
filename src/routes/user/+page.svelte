@@ -234,6 +234,8 @@
 					Class="mt-6 pt-8 pb-8 inline"
 				/>
 			{:else}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<h1
 					on:click={() => (currentlyEditing = 'name')}
 					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
@@ -250,6 +252,8 @@
 					Class="pt-8 pb-8 "
 				/>
 			{:else}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<p
 					on:click={() => (currentlyEditing = 'web')}
 					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
@@ -266,6 +270,8 @@
 					Class="pt-8 pb-8 whitespace-pre-wrap"
 				/>
 			{:else}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<p
 					on:click={() => (currentlyEditing = 'bio')}
 					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"

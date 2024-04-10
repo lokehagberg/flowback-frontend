@@ -86,7 +86,7 @@
 		<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
 			<option value={null}>{$_("Any")}</option>
 			{#each tags as tag}
-				<option value={tag.id}>{tag.tag_name}</option>
+				<option value={tag.id}>{tag.name}</option>
 			{/each}
 		</select>
 		{/if}

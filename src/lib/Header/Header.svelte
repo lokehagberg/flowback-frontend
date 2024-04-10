@@ -82,49 +82,26 @@
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
-				<HeaderIcon
-					icon={faCalendarWeek}
-					text="My Schedule"
-					href="schedule"
-					color={darkMode ? 'white' : 'black'}
-				/>
-
-				{#if import.meta.env.VITE_MODE === 'DEV'}
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon
-						icon={faChartBar}
-						text="Prediction"
-						href="prediction"
+						icon={faCalendarWeek}
+						text="My Schedule"
+						href="schedule"
+						color={darkMode ? 'white' : 'black'}
+					/>
+					<HeaderIcon
+						icon={faList}
+						text="My Kanban"
+						href="kanban"
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 				<HeaderIcon
-					icon={faList}
-					text="My Kanban"
-					href="kanban"
-					color={darkMode ? 'white' : 'black'}
-				/>
-				<HeaderIcon
 					icon={faCoins}
-					text="My Ledger"
+					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>
-				<!-- <HeaderIcon
-					icon={faList}
-					text="My Kanban"
-					href="kanban"
-					color={darkMode ? 'white' : 'black'}
-				/> -->
-				{#if import.meta.env.VITE_MODE === 'DEV'}
-					{#if ledgerExists}
-						<HeaderIcon
-							icon={faMoneyBill}
-							text="Account"
-							href="ledger"
-							color={darkMode ? 'white' : 'black'}
-						/>
-					{/if}
-				{/if}
 			</nav>
 
 			<div

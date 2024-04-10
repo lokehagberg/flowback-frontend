@@ -317,10 +317,14 @@
 						/>
 					{/each}
 				</div> -->
-				<RadioButtons bind:Yes={isPublic} label="Public?" />
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<RadioButtons bind:Yes={isPublic} label="Public?" />
+				{/if}
+
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					{$_('This polltype is not implemented yet')}
 				{/if}
+
 				<StatusMessage bind:status />
 				<Button
 					type="submit"

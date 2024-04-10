@@ -10,6 +10,8 @@ const createSocket = (userId: number) => {
 	const link = `${import.meta.env.VITE_WEBSOCKET_API}${
 		import.meta.env.VITE_HAS_API && '/api'
 	}/chat/ws?token=${token}`;
+	
+	// const link = `/chat/ws?token=${token}`;
 
 	console.log(link, "THA LINK")
 	socket = new WebSocket(link);

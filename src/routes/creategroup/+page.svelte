@@ -41,7 +41,7 @@
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('direct_join', (!useInvite).toString());
-		console.log((!useInvite).toString(), "DIRECT");
+		console.log((!useInvite).toString(), 'DIRECT');
 		formData.append('public', publicGroup.toString());
 		if (image) formData.append('image', image);
 		if (coverImage) formData.append('cover_image', coverImage);
@@ -113,8 +113,10 @@
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>
-				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
-				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
+					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
+				{/if}
 
 				<StatusMessage bind:status />
 				<Button type="submit" disabled={loading}
@@ -122,7 +124,7 @@
 						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Edit Group' : 'Create Group')}
 					</div>
 				</Button>
-				{#if groupToEdit !== null}
+				{#if groupToEdit !== null && !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<Modal bind:open={DeleteGroupModalShow}>
 						<div slot="header">{$_('Deleting group')}</div>
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>

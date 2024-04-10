@@ -146,18 +146,20 @@
 				icon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => (selectedPage = 'statistics')}
 				text="Statistics"
 				icon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
-			/>
-			<GroupSidebarButton
-				action={() => (selectedPage = 'about')}
-				text="About"
-				icon={faCircleInfo}
-				isSelected={selectedPage === 'about'}
-			/>
+			/> -->
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<GroupSidebarButton
+					action={() => (selectedPage = 'about')}
+					text="About"
+					icon={faCircleInfo}
+					isSelected={selectedPage === 'about'}
+				/>
+			{/if}
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
@@ -169,12 +171,14 @@
 			>
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 			<GroupSidebarButton
 				action={() => (areYouSureModal = true)}
 				text="Leave group"
 				icon={faPersonRunning}
 				isSelected={false}
 			/>
+			{/if}
 		</div>
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">

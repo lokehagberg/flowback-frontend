@@ -140,9 +140,9 @@
 </Loader>
 
 <!-- Actives whenever a prediction statement is being added -->
-<Modal bind:open={addingPrediction}>
+<Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}>
 	<div slot="header">{$_('Add Prediction')}</div>
-	<form slot="body" on:submit={createPredictionStatement}>
+	<div slot="body">
 		<Loader bind:loading>
 			{$_('End date for prediction')}
 			<DateInput
@@ -198,7 +198,7 @@
 			{/if}
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
-	</form>
+	</div>
 </Modal>
 
 <SuccessPoppup bind:message bind:show />

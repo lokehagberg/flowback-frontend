@@ -23,13 +23,20 @@
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,
-		profileImage = DefaultPFP,
+	profileImage = DefaultPFP,
 		darkMode: boolean | null = null,
 		ledgerExists: boolean = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
+		// if (!profileImage) getProfileImage();
+		// else {
+		// 	const pfpLink = localStorage.getItem('pfp-link');
+		// 	if (pfpLink) profileImage = pfpLink;
+		// }
+
 		getProfileImage();
+
 		darkMode = localStorage.theme === 'dark';
 		checkForLedgerModule();
 	});
@@ -41,6 +48,8 @@
 			profileImage = `${import.meta.env.VITE_API}${
 				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
+
+		localStorage.setItem('pfp-link', profileImage);
 	};
 
 	const checkForLedgerModule = async () => {

@@ -220,28 +220,31 @@
 </div>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
-<Modal bind:open Class="!overflow-visible">
+<Modal bind:open Class="!overflow-visible" onSubmit={createKanbanEntry}>
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>
-			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
+			<div on:submit|preventDefault={createKanbanEntry} class="mt-2">
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea required label="Description" bind:value={description} />
-				<div class="flex gap-6 justify-between mt-2">
+				<div class="flex gap-6 justify-between mt-2 flex-col">
 					{#if type === 'group'}
-						<select
-							on:input={handleChangeAssignee}
-							class="dark:bg-darkobject border border-gray-600"
-						>
-							{#each users as user}
-								<option value={user.user.id}>{user.user.username}</option>
-							{/each}
-						</select>
+						<div class="text-left">
+							Assignee
+							<select
+								on:input={handleChangeAssignee}
+								class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							>
+								{#each users as user}
+									<option value={user.user.id}>{user.user.username}</option>
+								{/each}
+							</select>
+						</div>
 					{/if}
-					<div>
+					<div class="text-left">
 						{$_('Priority')}
 						<select
-							class="border border-gray-600 dark:bg-darkobject"
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							on:input={handleChangePriority}
 							value={priority}
 						>
@@ -252,14 +255,16 @@
 							{/each}
 						</select>
 					</div>
-					<div>
+					<div class="text-left">
 						{$_('End date')}
 						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
 				</div>
-				<Button type="submit">{$_('Create task')}</Button>
 				<!-- <StatusMessage Class="mt-2" bind:status /> -->
-			</form>
+			</div>
 		</Loader>
+	</div>
+	<div slot="footer">
+		<Button Class="" type="submit">{$_('Create task')}</Button>
 	</div>
 </Modal>

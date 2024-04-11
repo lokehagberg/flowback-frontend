@@ -183,8 +183,10 @@
 	in:fade
 >
 	{#if kanban.end_date !== null && endDate}
-		Ends {endDate.format(new Date(kanban.end_date))}
-	{/if}
+		<div class="text-sm">
+			Ends {endDate.format(new Date(kanban.end_date))}
+		</div>
+		{/if}
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:click={() => {
@@ -260,7 +262,7 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="z-50 break-words">
+	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words" onClose={() => isEditing = false}>
 		<div slot="header" class="mt-7">
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />

@@ -24,6 +24,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -164,6 +165,7 @@
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 
+			
 			<a
 				class="text-inherit"
 				target="_blank"
@@ -178,6 +180,18 @@
 				icon={faPersonRunning}
 				isSelected={false}
 			/>
+			{:else }
+			<a
+			class="text-inherit"
+			target="_blank"
+			href={`accounts`}
+			>
+			<GroupSidebarButton
+				text="Group Ledger"
+				icon={faCoins}
+				isSelected={false}
+			/>
+		</a>
 			{/if}
 		</div>
 		{#if userIsOwner}

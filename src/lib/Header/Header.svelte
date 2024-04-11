@@ -95,13 +95,15 @@
 						href="kanban"
 						color={darkMode ? 'white' : 'black'}
 					/>
+					<HeaderIcon
+						icon={faCoins}
+						text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
+							? 'My Ledger'
+							: 'Group Ledger'}
+						href="ledger"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
-				<HeaderIcon
-					icon={faCoins}
-					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
-					href="ledger"
-					color={darkMode ? 'white' : 'black'}
-				/>
 			</nav>
 
 			<div

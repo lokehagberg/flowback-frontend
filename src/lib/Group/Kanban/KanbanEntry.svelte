@@ -279,25 +279,38 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select
-					on:input={changeAssignee}
-					value={kanban?.assignee?.id}
-					class="dark:bg-darkbackground"
-				>
-					{#each users as user}
-						<option value={user.user.id}>{user.user.username}</option>
-					{/each}
-				</select>
-				{$_('Priority')}
-				<select
-					class="border border-gray-600 dark:bg-darkbackground bg-white"
-					on:input={handleChangePriority}
-					value={kanban?.priority}
-				>
-					{#each priorities as i}
-						<option value={i}>{priorityText[priorityText.length - i]} </option>
-					{/each}
-				</select>
+				<div3 class="flex gap-6 justify-between mt-2 flex-col">
+					<div class="text-left">
+						Assignee
+						<select
+							on:input={changeAssignee}
+							value={kanban?.assignee?.id}
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						>
+							{#each users as user}
+								<option value={user.user.id}>{user.user.username}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="text-left">
+						{$_('Priority')}
+						<select
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							on:input={handleChangePriority}
+							value={kanban?.priority}
+						>
+							{#each priorities as i}
+								<option value={i}>{priorityText[priorityText.length - i]} </option>
+							{/each}
+						</select>
+					</div>
+					<div class="text-left w-[300px]">
+						<!-- {#if kanban.end_date} -->
+						End Date
+						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
+						<!-- {/if} -->
+					</div>
+				</div3>
 			{:else}
 				<div class="max-h-[40vh] overflow-y-auto" id={`kanban-${kanban.id}-description`}>
 					{kanban?.description}
@@ -313,9 +326,6 @@
 			{#if isEditing}
 				<Button action={updateKanbanContent}>{$_('Update')}</Button>
 				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
-				{#if kanban.end_date}
-					<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
-				{/if}
 			{:else}
 				<Button action={() => (isEditing = true)}>{$_('Edit')}</Button>
 			{/if}

@@ -21,8 +21,7 @@
 		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
 		const { json, res } = await fetchRequest('GET', `group/pool/${history}/votes`);
 		loading = false;
-
-		votingHistory = json.results;
+		if (res.ok) votingHistory = json.results;
 	};
 
 	const getDelegateInfo = async () => {

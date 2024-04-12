@@ -44,14 +44,14 @@
 				Class="inline cursor-default"
 			/>
 			<div class="ml-2 inline-flex">
-				{#if poll.poll_type === 3}
+				{#if poll.poll_type === 4}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
 						icon={faAlignLeft}
 						text={'Text Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
-				{:else if poll.poll_type === 4}
+				{:else if poll.poll_type === 3}
 					<HeaderIcon
 						Class="p-2 pl-0 cursor-default"
 						icon={faCalendarAlt}
@@ -118,21 +118,18 @@
 
 	<Timeline
 		displayDetails={false}
-		dates={// If text poll, have all phases. Date polls have fewer phases to display		
-		poll.poll_type === 3 ? [
-			new Date(poll.start_date),
-			new Date(poll.area_vote_end_date),
-			new Date(poll.proposal_end_date),
-			new Date(poll.prediction_statement_end_date),
-			new Date(poll.prediction_bet_end_date),
-			new Date(poll.delegate_vote_end_date),
-			new Date(poll.end_date)
-		] : [
-			new Date(poll.start_date),
-			new Date(poll.proposal_end_date),
-			new Date(poll.delegate_vote_end_date),
-			new Date(poll.end_date)
-		]}
+		dates={// If text poll, have all phases. Date polls have fewer phases to display
+		poll.poll_type === 4
+			? [
+					new Date(poll.start_date),
+					new Date(poll.area_vote_end_date),
+					new Date(poll.proposal_end_date),
+					new Date(poll.prediction_statement_end_date),
+					new Date(poll.prediction_bet_end_date),
+					new Date(poll.delegate_vote_end_date),
+					new Date(poll.end_date)
+			  ]
+			: [new Date(poll.start_date), new Date(poll.end_date)]}
 	/>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"

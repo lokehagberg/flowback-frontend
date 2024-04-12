@@ -144,15 +144,18 @@
 			{/if}
 			<Timeline
 				displayDetails={false}
-				dates={[
-					new Date(poll.start_date),
-					new Date(poll.area_vote_end_date),
-					new Date(poll.proposal_end_date),
-					new Date(poll.prediction_statement_end_date),
-					new Date(poll.prediction_bet_end_date),
-					new Date(poll.delegate_vote_end_date),
-					new Date(poll.end_date)
-				]}
+				dates={// If text poll, have all phases. Date polls have fewer phases to display
+				poll.poll_type === 4
+					? [
+							new Date(poll.start_date),
+							new Date(poll.area_vote_end_date),
+							new Date(poll.proposal_end_date),
+							new Date(poll.prediction_statement_end_date),
+							new Date(poll.prediction_bet_end_date),
+							new Date(poll.delegate_vote_end_date),
+							new Date(poll.end_date)
+					  ]
+					: [new Date(poll.start_date), new Date(poll.end_date)]}
 			/>
 			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>

@@ -160,7 +160,7 @@
 
 <div class="flex justify-between">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer">
+	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer overflow-scroll">
 		{prediction.description}</span
 	>
 	{#if phase === 'prediction-betting'}
@@ -219,7 +219,7 @@
 
 <Modal bind:open={showDetails}>
 	<div slot="body">
-		<div>{prediction.description}</div>
+		<div class="break-all">{prediction.description}</div>
 		<ul>
 			{#each prediction.segments as proposal}
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>

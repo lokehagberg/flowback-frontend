@@ -142,7 +142,7 @@
 			bind:next
 			bind:prev
 			bind:iterable={polls}
-			Class={'flex gap-2 justify-around w-full'}
+			Class={'flex gap-2 justify-around w-full mt-6'}
 		/>
 	</Loader>
 </div>

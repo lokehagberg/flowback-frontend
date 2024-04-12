@@ -21,7 +21,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import type { id } from 'ethers/lib/utils';
 	import Pagination from '$lib/Generic/Pagination.svelte';
-	import { transactions as transactionsLimit } from '$lib/Generic/APILimits.json'
+	import { transactions as transactionsLimit } from '$lib/Generic/APILimits.json';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -41,8 +41,8 @@
 		account_name: string,
 		account_number: string,
 		accounts: Account[] = [],
-		next:string,
-		prev:string,
+		next: string,
+		prev: string,
 		message: string,
 		totalBalance = 0,
 		filter: Filter = {
@@ -51,7 +51,8 @@
 			date_before: null,
 			description: null
 		},
-		user: User;
+		user: User,
+		limit = 20;
 
 	onMount(async () => {
 		//@ts-ignore
@@ -104,7 +105,7 @@
 
 		if (filter.description !== null) api += `&description=${filter.description}`;
 
-		api += `&limit=${transactionsLimit}`
+		api += `&limit=${limit}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 
@@ -113,8 +114,8 @@
 			return;
 		}
 
-		next = json.next
-		prev = json.previous
+		next = json.next;
+		prev = json.previous;
 
 		transactions = json.results.filter(
 			(transaction: Transaction) => transaction.account.created_by.id === user?.id
@@ -175,7 +176,7 @@
 	const createAccount = async () => {
 		loading = true;
 
-		const { res, json } = await fetchRequest('POST', 'ledger/account/create', {
+		const { res, json } = await fetchRequest('POST', 'ledger/account/creatfe', {
 			account_name,
 			account_number
 		});
@@ -320,14 +321,30 @@
 						}}>Add Transaction</Button
 					>
 					<Button action={() => (show_account = true)}>Create Account</Button>
-					<Button action={() => (showDeleteAccount = true)}
-						>Delete An Account</Button
-					>
+					<Button action={() => (showDeleteAccount = true)}>Delete An Account</Button>
 					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
 						>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
 							? 'between selected dates'
 							: ''}</Button
 					>
+					<div class="mt-4 flex gap-2">
+						Show on page:
+						<Select
+							labels={['20', '50', '100', 'All']}
+							values={[20, 50, 100, 10000]}
+							bind:value={limit}
+							onInput={(e) => {
+								//@ts-ignore
+								const selectedOptions = Array.from(
+									e.target?.selectedOptions,
+									(option) => option.value
+								);
+								//@ts-ignore
+								limit = selectedOptions;
+								getTransactions();
+							}}
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -346,7 +363,7 @@
 					<Transaction bind:transaction bind:transactions bind:accounts />
 				{/each}
 
-				<Pagination bind:iterable={transactions} bind:next bind:prev/>
+				<Pagination bind:iterable={transactions} bind:next bind:prev />
 			</div>
 		</Loader>
 	</div>

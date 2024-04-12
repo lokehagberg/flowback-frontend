@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
+	import Button from './Button.svelte';
 
 	export let prev: string, next: string, iterable: any[], Class = ""
 
@@ -16,10 +17,12 @@
 
 <div class={`${Class} text-white dark:text-darkmodeText`}>
 	{#if prev}
-		<button class="p-2 bg-primary cursor-pointer" on:click={() => request(prev)}>Previous</button>
+	<Button onClick={() => request(prev)}>Previous</Button>
+		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(prev)}>Previous</button> -->
 	{/if}
-	{#if next}
-		<button class="p-2 bg-primary cursor-pointer" on:click={() => request(next)}>Next</button>
+		{#if next}
+		<Button onClick={() => request(next)}>Next</Button>
+		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(next)}>Next</button> -->
 	{/if}
 
 	<!-- {#each [1,2,3,4,5] as number}

@@ -22,8 +22,6 @@
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null;
 
-	onMount(() => {});
-
 	const getComments = async () => {
 		let _api = `group/${api}/`;
 
@@ -64,11 +62,13 @@
 	const sortComments = () => {
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-
+		console.log("COMMENTÄR", childrenComments, parentComments)
+		
 		let sortedComments = parentComments.map((parent) => {
 			parent.reply_depth = 0;
 			return parent;
 		});
+		return;
 
 		while (childrenComments.length > 0) {
 			childrenComments.every((child, j) => {
@@ -87,12 +87,16 @@
 		comments = sortedComments;
 	};
 
-	onMount(async () => {
+	const commentSetup = async () => {
 		await getComments();
 		sortComments();
-		comments.forEach((comment) => {
-			checkForLinks(comment.message, `comment-${comment.id}`);
-		});
+		// comments.forEach((comment) => {
+		// 	checkForLinks(comment.message, `comment-${comment.id}`);
+		// });
+	};
+
+	onMount(() => {
+		commentSetup();
 	});
 </script>
 
@@ -111,6 +115,7 @@
 		replyDepth={-1}
 		{api}
 		{delegate_pool_id}
+		{commentSetup}
 	/>
 
 	<div class="flex flex-col gap-4 mt-6">
@@ -127,6 +132,7 @@
 					id={comment.id}
 					{api}
 					{delegate_pool_id}
+					{commentSetup}
 				/>
 			{:else}
 				<div
@@ -141,7 +147,7 @@
 						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
 						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 					</div>
-					<div class="text-md mt-1 mb-3" id={`comment-${comment.id}`}>{comment.message}</div>
+					<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>{comment.message}</div>
 					<div class="text-xs text-gray-400 dark:text-darkmodeText">
 						{comment.edited ? '(edited)' : ''}
 					</div>
@@ -177,7 +183,7 @@
 								</div>
 								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
-									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
+									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
 									on:click={() => {
 										comment.being_edited = true;
 										comment.being_edited_message = comment.message;
@@ -199,6 +205,7 @@
 					parent_id={comment.id}
 					replyDepth={comment.reply_depth}
 					{api}
+					{commentSetup}
 				/>
 			{/if}
 		{/each}

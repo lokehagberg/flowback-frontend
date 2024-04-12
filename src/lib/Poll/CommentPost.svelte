@@ -19,7 +19,8 @@
 		message = '',
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
-		delegate_pool_id: number | null = null;
+		delegate_pool_id: number | null = null,
+		commentSetup:() => {};
 
 	let show = false,
 		showMessage = '',
@@ -51,24 +52,25 @@
 			false
 		);
 		if (res.ok) {
-			const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
-			comments.splice(parentPosition + 1, 0, {
-				author_id: Number(localStorage.getItem('userId')) || 0,
-				author_name: localStorage.getItem('userName') || '',
-				author_thumbnail: '',
-				message,
-				parent_id: parent_id || undefined,
-				score: 0,
-				being_edited: false,
-				being_replied: false,
-				id: json,
-				reply_depth: replyDepth + 1,
-				active: true,
-				edited: false,
-				attachments: []
-			});
-			comments = comments;
-			showMessage = 'Posted Comment';
+			// const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
+			// comments.splice(parentPosition + 1, 0, {
+			// 	author_id: Number(localStorage.getItem('userId')) || 0,
+			// 	author_name: localStorage.getItem('userName') || '',
+			// 	author_thumbnail: '',
+			// 	message,
+			// 	parent_id: parent_id || undefined,
+			// 	score: 0,
+			// 	being_edited: false,
+			// 	being_replied: false,
+			// 	id: json,
+			// 	reply_depth: replyDepth + 1,
+			// 	active: true,
+			// 	edited: false,
+			// 	attachments: []
+			// });
+			// comments = comments;
+			commentSetup()
+			showMessage = 'Successfully posted comment';
 			show = true;
 			message = '';
 

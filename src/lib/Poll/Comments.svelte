@@ -23,10 +23,11 @@
 		delegate_pool_id: null | number = null;
 
 	const getComments = async () => {
-		let _api = `group/${api}/`;
+		let _api = "";
 
-		if (api === 'poll') _api += `${$page.params.pollId}`;
-		else if (api === 'thread') _api += `${$page.params.threadId}`;
+		if (api === 'poll') _api += `group/poll/${$page.params.pollId}`;
+		else if (api === 'thread') _api += `group/thread/${$page.params.threadId}`;
+		else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
 
 		_api += `/comment/list?limit=${pollCommentsLimit}`;
 
@@ -62,8 +63,8 @@
 	const sortComments = () => {
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-		console.log("COMMENTÄR", childrenComments, parentComments)
-		
+		console.log('COMMENTÄR', childrenComments, parentComments);
+
 		let sortedComments = parentComments.map((parent) => {
 			parent.reply_depth = 0;
 			return parent;
@@ -147,7 +148,9 @@
 						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
 						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 					</div>
-					<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>{comment.message}</div>
+					<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
+						{comment.message}
+					</div>
 					<div class="text-xs text-gray-400 dark:text-darkmodeText">
 						{comment.edited ? '(edited)' : ''}
 					</div>

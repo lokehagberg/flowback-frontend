@@ -14,13 +14,15 @@
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
+	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
 		loading = true,
 		selectedPage: SelectablePages = 'Members',
 		searchUser = '',
-		searchedUsers: User[] = [];
+		searchedUsers: User[] = [],
+		show = false;
 
 	onMount(async () => {
 		getUsers();
@@ -58,7 +60,8 @@
 
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
-		usersAskingForInvite = json.results;
+		if (res.ok) usersAskingForInvite = json.results;
+		else show = true
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -103,7 +106,7 @@
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-			{#if usersAskingForInvite.length === 0}
+			{#if usersAskingForInvite?.length === 0}
 				{$_('There are currently no pending invites')}
 			{/if}
 			{#each usersAskingForInvite as user}
@@ -182,3 +185,5 @@
 		{/if}
 	</div>
 </Loader>
+
+<SuccessPoppup message={"Something went wrong"} bind:show/>

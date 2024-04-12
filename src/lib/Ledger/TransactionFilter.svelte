@@ -58,8 +58,10 @@
 					bind:value={filter.description}
 				/>
 			</div>
-			<div class="mt-6">Earliest Date<DateInput bind:value={filter.date_after} /></div>
-			<div>Last Date<DateInput bind:value={filter.date_before} /></div>
+			<div class="flex gap-2 mt-6">
+				<div>Earliest Date<DateInput bind:value={filter.date_after} /></div>
+				<div>Last Date<DateInput bind:value={filter.date_before} /></div>
+			</div>
 			<div class="mt-8">
 				<Button action={() => (openFilterAccounts = true)}>Filter Accounts</Button>
 			</div>

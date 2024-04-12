@@ -289,7 +289,6 @@
 			<h1>Transactions</h1>
 
 			<div class="mt-4">
-				{@debug filter}
 				<div class="bg-white dark:bg-darkobject p-6">
 					Filtering
 					{#if !Object.values(filter).every((x) => x === null)}

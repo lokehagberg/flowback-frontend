@@ -21,6 +21,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import type { id } from 'ethers/lib/utils';
 	import Pagination from '$lib/Generic/Pagination.svelte';
+	import { transactions as transactionsLimit } from '$lib/Generic/APILimits.json'
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -103,7 +104,7 @@
 
 		if (filter.description !== null) api += `&description=${filter.description}`;
 
-		api += '&limit=4'
+		api += `&limit=${transactionsLimit}`
 
 		const { res, json } = await fetchRequest('GET', api);
 
@@ -288,13 +289,14 @@
 			<h1>Transactions</h1>
 
 			<div class="mt-4">
+				{@debug filter}
 				<div class="bg-white dark:bg-darkobject p-6">
 					Filtering
 					{#if !Object.values(filter).every((x) => x === null)}
 						<Button
 							action={() => {
 								//@ts-ignore
-								for (var filt in filter) {
+								for (const filt in filter) {
 									//@ts-ignore
 									if (filt !== 'account_ids') filter[filt] = null;
 									else getAccounts();

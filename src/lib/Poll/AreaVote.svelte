@@ -49,7 +49,7 @@
 	$: console.log(selectedTag);
 </script>
 
-<div>
+<div class="flex flex-col gap-3">
 	<Select
 		labels={tags.map((tag) => tag.name)}
 		values={tags.map((tag) => tag.id)}

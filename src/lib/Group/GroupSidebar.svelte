@@ -183,8 +183,8 @@
 			{:else }
 			<a
 			class="text-inherit"
-			target="_blank"
-			href={`accounts`}
+		
+			href={`/ledger`}
 			>
 			<GroupSidebarButton
 				text="Group Ledger"

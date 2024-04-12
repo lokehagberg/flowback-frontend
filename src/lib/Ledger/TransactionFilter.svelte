@@ -47,23 +47,25 @@
 	}}
 >
 	{#if filterOn}
-		<div class="flex flex-col w-[150px] gap-2">
-			<Button action={() => (openFilterAccounts = true)}>Filter Accounts</Button>
-			<div>Earliest Date<DateInput bind:value={filter.date_after} /></div>
-			<div>Last Date<DateInput bind:value={filter.date_before} /></div>
-			<div>
-				<label for="ledger-search">Search</label>
+		<Button onClick={() => (filterOn = false)}>Close Filter Options</Button>
+		<div class="mt-5">
+			<div class="mt-6">
+				<label class="block" for="ledger-search">Search</label>
 				<input
 					id="ledger-search"
 					type="text"
-					class="bg-gray-200 dark:bg-darkbackground outline outline-1 outline-gray-300"
+					class="bg-gray-200 dark:bg-darkbackground outline outline-1 outline-gray-300 w-full"
 					bind:value={filter.description}
 				/>
 			</div>
-			<Button onClick={() => filterOn = false}>Close Filter Options</Button>
+			<div class="mt-6">Earliest Date<DateInput bind:value={filter.date_after} /></div>
+			<div>Last Date<DateInput bind:value={filter.date_before} /></div>
+			<div class="mt-8">
+				<Button action={() => (openFilterAccounts = true)}>Filter Accounts</Button>
+			</div>
 		</div>
 	{:else}
-	<Button onClick={() => filterOn = true}>Open Filter Options</Button>
+		<Button onClick={() => (filterOn = true)}>Open Filter Options</Button>
 	{/if}
 </form>
 <Modal bind:open={openFilterAccounts}>

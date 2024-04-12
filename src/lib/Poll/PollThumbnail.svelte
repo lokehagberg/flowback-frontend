@@ -46,14 +46,14 @@
 			<div class="ml-2 inline-flex gap-3">
 				{#if poll.poll_type === 4}
 					<HeaderIcon
-						Class="!p-0 cursor-default"
+						Class="!p-0 !cursor-default"
 						icon={faAlignLeft}
 						text={'Text Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
 				{:else if poll.poll_type === 3}
 					<HeaderIcon
-						Class="!p-0 cursor-default"
+						Class="!p-0 !cursor-default"
 						icon={faCalendarAlt}
 						text={'Date Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}

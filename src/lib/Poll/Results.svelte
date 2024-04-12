@@ -10,7 +10,7 @@
 		votes: number[] = [],
 		labels: string[] = [];
 
-	//1 for ranking, 3 for scheduled
+	//1 for ranking, 3 for date
 	export let pollType = 1;
 
 	const getProposals = async () => {

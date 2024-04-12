@@ -66,7 +66,7 @@
 
 		//Ranked
 		if (pollType === 4) proposals = json.results;
-		//Scheduled
+		//Date
 		else if (pollType === 3)
 			proposals = json.results.map((proposal: any) => {
 				return { description: proposal.end_date, title: proposal.start_date, id: proposal.id };

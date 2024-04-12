@@ -55,7 +55,7 @@
 					<HeaderIcon
 						Class="!p-0 cursor-default"
 						icon={faCalendarAlt}
-						text={'Scheduled Poll'}
+						text={'Date Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
 				{/if}

@@ -23,7 +23,7 @@
 				<!-- TODO make it easy to change poll types e.t.c -->
 				<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
 			{:else if pollType === 3}
-				<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Scheduled Poll'} />
+				<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 			{/if}
 			<!-- Group Profile -->
 			<a

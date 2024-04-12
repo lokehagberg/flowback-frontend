@@ -7,6 +7,7 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+	import { dateLabels } from './functions';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -14,16 +15,6 @@
 		dates: Date[] = [];
 
 	let datesDisplay: string[] = [];
-
-	const dateLabels = [
-		'Tag voting',
-		'Proposals creation',
-		'Prediction statements creation',
-		'Prediction betting',
-		'Delegate voting',
-		'Voting for non-delegates',
-		'Results and evaluation'
-	];
 
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 	const fraction = (currentPhase + 1) / dates.length;

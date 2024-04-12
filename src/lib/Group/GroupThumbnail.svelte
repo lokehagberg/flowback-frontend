@@ -14,8 +14,17 @@
 	const subscribeToGroup = async () => {
 		const { res, json } = await fetchRequest('POST', 'notification/group');
 	};
+
+	const joinGroup = async () => {
+		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
+		if (res.ok) {
+			group.joined = !group.joined;
+			if (group.direct_join) goToGroup();
+		}
+	};
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={goToGroup}
 	on:keydown
@@ -51,15 +60,7 @@
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<Button
-				action={async () => {
-					const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
-					if (res.ok) {
-						group.joined = !group.joined;
-						if (group.direct_join) goToGroup();
-					}
-				}}
-				Class="hover:bg-blue-800 bg-blue-600"
+			<Button action={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
 		{:else if pending === true}

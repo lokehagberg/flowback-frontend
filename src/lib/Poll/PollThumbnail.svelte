@@ -14,7 +14,7 @@
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { onMount } from 'svelte';
-	import { getPhase } from './functions';
+	import { getPhase, getPhaseUserFriendlyName } from './functions';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -133,7 +133,7 @@
 			  ]
 			  : [new Date(poll.start_date), new Date(poll.end_date)]}
 	/>
-	<div class="text-sm">Current phase: {phase}</div>
+	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>

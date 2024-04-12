@@ -43,35 +43,42 @@
 				tag={{ name: poll.tag_name, id: poll.tag, active: true }}
 				Class="inline cursor-default"
 			/>
-			<div class="ml-2 inline-flex">
+			<div class="ml-2 inline-flex gap-3">
 				{#if poll.poll_type === 4}
 					<HeaderIcon
-						Class="p-2 pl-0 cursor-default"
+						Class="!p-0 cursor-default"
 						icon={faAlignLeft}
 						text={'Text Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
 				{:else if poll.poll_type === 3}
 					<HeaderIcon
-						Class="p-2 pl-0 cursor-default"
+						Class="!p-0 cursor-default"
 						icon={faCalendarAlt}
 						text={'Scheduled Poll'}
 						color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 					/>
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+				{#if isAdmin || poll.pinned}
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
+						<Fa
+							icon={faThumbtack}
+							color={poll.pinned ? 'Black' : '#BBB'}
+							rotate={poll.pinned ? '0' : '90'}
+						/>
+					</div>
+				{/if}
+				<NotificationOptions
+					id={poll.id}
+					api={`group/poll/${poll.id}`}
+					categories={['poll', 'timeline', 'comment_all']}
+					labels={['Poll', 'Timeline', 'Comments']}
+				/>
 			</div>
-			{#if isAdmin || poll.pinned}
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="inline" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
-					<Fa
-						icon={faThumbtack}
-						color={poll.pinned ? 'Black' : '#BBB'}
-						rotate={poll.pinned ? '0' : '90'}
-					/>
-				</div>
-			{/if}
 		</div>
+		{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
 		<a
 			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
 			class:hover:underline={poll.group_joined}
@@ -86,6 +93,7 @@
 			/>
 			<span class="inline">{poll.group_name}</span>
 		</a>
+		{/if}
 	</div>
 	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
 		<a
@@ -94,16 +102,10 @@
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 		>
-			<h1 class="text-left text-xl p-1 pl-0 dark:text-darkmodeText hover:underline">
+			<h1 class="text-left text-4xl mt-3 p-1 pl-0 dark:text-darkmodeText hover:underline">
 				{poll.title}
 			</h1>
 		</a>
-		<NotificationOptions
-			id={poll.id}
-			api={`group/poll/${poll.id}`}
-			categories={['poll', 'timeline', 'comment_all']}
-			labels={['Poll', 'Timeline', 'Comments']}
-		/>
 	</div>
 	<a
 		class="cursor-pointe text-black"
@@ -129,8 +131,9 @@
 					new Date(poll.delegate_vote_end_date),
 					new Date(poll.end_date)
 			  ]
-			: [new Date(poll.start_date), new Date(poll.end_date)]}
+			  : [new Date(poll.start_date), new Date(poll.end_date)]}
 	/>
+	<div class="text-sm">Current phase: {phase}</div>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>
@@ -158,5 +161,4 @@
 		</a>
 	</div>
 
-	current phase: {phase}
 </div>

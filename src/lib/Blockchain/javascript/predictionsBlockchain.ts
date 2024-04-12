@@ -19,7 +19,7 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
-	  const contractAddress = '0xE05D980037dae23116c2Af375D5caF2d7d5D55A6'; //use this address
+	  const contractAddress = '0xE05D980037dae2310x0fDD2AD1aEE84C91DEb80c25993c0bEde05987A36c2Af375D5caF2d7d5D55A6'; //use this address
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 

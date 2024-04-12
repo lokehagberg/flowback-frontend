@@ -20,7 +20,7 @@
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
-	import { getPhase } from '$lib/Poll/functions';
+	import { getPhase, getPhaseUserFriendlyName } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
@@ -107,7 +107,7 @@
 		>
 			<TitleDescription {pollType} {poll} />
 			{$_('Current phase:')}
-			{phase}
+			{getPhaseUserFriendlyName(phase)}
 
 			{#if pollType === 4}
 				{#if phase === 'pre-start'}

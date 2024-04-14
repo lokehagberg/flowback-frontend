@@ -13,6 +13,7 @@
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let comments: Comment[] = [],
 		show = false,
@@ -64,8 +65,9 @@
 		// Separates between comments which are not replying to other commments (parents) and those who do reply (children)
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-		console.log('COMMENTÄR', childrenComments, parentComments);
 		let i = 0;
+
+		console.log(parentComments);
 
 		// Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
 		let sortedComments = parentComments.map((parent) => {
@@ -73,27 +75,56 @@
 			return parent;
 		});
 
-		//Iterate over children commments by sorting them underneath their respective parent, with a reply depth increase of 1 compared to their parent.
-		while (childrenComments.length > 0 && i < 100000) {
-			for (let j = 0; j < childrenComments.length; j++) {
-				let child = childrenComments[j];
-
-				parentComments.forEach((parent, i) => {
-					if (parent.id === child.parent_id) {
+		while (i < 100000 && childrenComments.length > 0) {
+			childrenComments.forEach((child, childrenId) => {
+				parentComments.forEach((parent, parentId) => {
+					if (child.parent_id === parent.id) {
+						const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
 						child.reply_depth = parent.reply_depth + 1;
-						sortedComments.splice(i + 1, 0, child);
-						childrenComments.splice(j, 1);
-						j--;
-						return false;
+						sortedComments = sortedComments.splice(parentId, 0, child);
+						childrenComments = childrenComments.filter((_child) => _child !== child);
 					}
 				});
-			}
+			});
+			if (i === 99999) console.warn("Noooooo it's not supposed to do this");
 
-			parentComments = sortedComments;
 			i++;
 		}
 
 		comments = sortedComments;
+		// console.log('COMMENTÄR', childrenComments, parentComments, sortedComments);
+
+		// // Iterate over children commments by sorting them underneath their respective parent, with a reply depth increase of 1 compared to their parent.
+		// while (childrenComments.length > 0 && i < 100000) {
+		// 	for (let j = 0; j < childrenComments.length; j++) {
+		// 		let child = childrenComments[j];
+
+		// 		sortedComments.forEach((parent, i) => {
+		// 			if (parent.id === child.parent_id) {
+		// 				child.reply_depth = parent.reply_depth + 1;
+		// 				sortedComments.splice(i + 1, 0, child);
+		// 				childrenComments.splice(j, 1);
+		// 				j--;
+		// 				return false;
+		// 			}
+		// 		});
+		// 	}
+
+		// 	// parentComments = sortedComments;
+		// 	i++;
+		// }
+
+		// comments = sortedComments;
+	};
+
+	const insertItemAtIndex = (arr: any[], index: number, item: any) => {
+		if (index < 0 || index > arr.length) {
+			// Index out of bounds,
+			// return the original array
+			return arr;
+		}
+
+		return arr.slice(0, index).concat(item, arr.slice(index));
 	};
 
 	const commentSetup = async () => {
@@ -153,7 +184,8 @@
 				>
 					<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 					<div class="flex gap-2">
-						<img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" />
+						<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
+						<!-- <ProfilePicture user={comment}/> -->
 						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 					</div>
 					<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>

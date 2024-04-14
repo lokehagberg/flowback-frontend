@@ -1,10 +1,22 @@
 <script lang="ts">
+	import { fetchRequest } from '$lib/FetchRequest';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import { onMount } from 'svelte';
 
-	export let user: any,
+	export let user: any = null,
 		//TODO: Always display username, replace all instance of username with this file
 		displayName = false,
 		Class = '';
+
+	onMount(() => {
+		if (!user) getUser();
+	});
+
+	//TODO: Make sure get user doesn't get called from multiple profile picture requests at once.
+	const getUser = async () => {
+		const { res, json } = await fetchRequest('GET', 'user');
+		if (res.ok) user = json.results;
+	};
 </script>
 
 <!-- TODO: Simplify this function to only take images as input or include name -->

@@ -36,26 +36,29 @@
 				vote: true
 			}
 		);
-		
+
 		show = true;
 		if (!res.ok) message = 'Could not vote on tag';
 		else message = 'Successfully voted for area';
 	};
 
+	const changeSelect = (tag: Tag) => {
+		selectedTag = tag.id;
+		vote();
+	};
+
 	onMount(() => {
 		getTags();
 	});
-
-	$: console.log(selectedTag);
 </script>
 
-<div class="flex flex-col gap-3">
-	<Select
-		labels={tags.map((tag) => tag.name)}
-		values={tags.map((tag) => tag.id)}
-		bind:value={selectedTag}
-	/>
-	<Button action={vote}>Vote</Button>
+<div class={`grid grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
+	{#each tags as tag}
+		<Button
+			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
+			action={() => changeSelect(tag)}>{tag.name}</Button
+		>
+	{/each}
 </div>
 
 <SuccessPoppup bind:show bind:message />

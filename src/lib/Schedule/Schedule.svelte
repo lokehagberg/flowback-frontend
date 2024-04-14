@@ -107,7 +107,9 @@
 	const isEventOnDate = (date: Date) => {
 		let eventsOnDate = events;
 		eventsOnDate = eventsOnDate.filter((event) => {
-			return date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date);
+			return (
+				date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date)
+			);
 		});
 
 		return eventsOnDate.length > 0;
@@ -225,6 +227,10 @@
 		showEvent = true;
 	};
 
+	const getDate = (year: number, month: number, x: number, y: number) => {
+		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+	};
+
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
@@ -284,7 +290,7 @@
 									}:${
 										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
 									}`;
-								else return 'ongoing';
+								else return 'whole day';
 							})()}</span
 						>
 					</a>
@@ -296,6 +302,7 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year -= 1)}
@@ -304,6 +311,7 @@
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year += 1)}
@@ -314,6 +322,7 @@
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month -= 1)}
@@ -322,6 +331,7 @@
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month += 1)}
@@ -336,7 +346,9 @@
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
-						on:dblclick={() => {if(type==="user") showCreateScheduleEvent = true}}
+						on:dblclick={() => {
+							if (type === 'user') showCreateScheduleEvent = true;
+						}}
 						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
@@ -355,9 +367,17 @@
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
 
-							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
+							{#each events as event}
+								{#if new Date(event.start_date) <= getDate(year, month, x, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+									<div class="text-center">{event.title}</div>
+								{/if}
+
+								<!-- <div class="w-[20px] overflow-ellipsis whitespace-nowrap overflow-hidden">{event.title}</div> -->
+							{/each}
+
+							<!-- {#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
-							{/if}
+							{/if} -->
 						</div>
 					</div>
 				{/each}

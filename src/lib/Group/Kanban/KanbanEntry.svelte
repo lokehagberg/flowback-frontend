@@ -186,7 +186,7 @@
 		<div class="text-sm">
 			Ends {endDate.format(new Date(kanban.end_date))}
 		</div>
-		{/if}
+	{/if}
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:click={() => {
@@ -262,8 +262,12 @@
 </li>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words" onClose={() => isEditing = false}>
-		<div slot="header" class="mt-7">
+	<Modal
+		bind:open={openModal}
+		Class="min-w-[400px] z-50 break-words"
+		onClose={() => (isEditing = false)}
+	>
+		<div slot="header" class="">
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
 			{:else}
@@ -281,7 +285,7 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<div3 class="flex gap-6 justify-between mt-2 flex-col">
+				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						Assignee
 						<select
@@ -312,16 +316,21 @@
 						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
 						<!-- {/if} -->
 					</div>
-				</div3>
+				</div>
 			{:else}
-				<div class="max-h-[40vh] overflow-y-auto" id={`kanban-${kanban.id}-description`}>
+				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
 					{kanban?.description}
 				</div>
-				<span>
-					{kanban?.assignee?.username}
-				</span>
-				<!-- Don't ask why the class "table" works here -->
-				<PriorityIcons Class="ml-auto mr-auto table mt-4" priority={kanban?.priority} />
+				<div class="mt-6 text-left">
+					<span>
+						Assignee: {kanban?.assignee?.username}
+					</span>
+					<!-- Don't ask why the class "table" works here -->
+					<div class="flex gap-2 align-middle">
+						<span>Priority:</span>
+						<PriorityIcons Class="ruby" priority={kanban?.priority} />
+					</div>
+				</div>
 			{/if}
 		</div>
 		<div slot="footer">
@@ -334,3 +343,4 @@
 		</div>
 	</Modal>
 {/if}
+

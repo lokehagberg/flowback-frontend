@@ -226,7 +226,7 @@
 		<Loader bind:loading>
 			<div on:submit|preventDefault={createKanbanEntry} class="mt-2">
 				<TextInput required label="Title" bind:value={title} />
-				<TextArea required label="Description" bind:value={description} />
+				<TextArea label="Description" bind:value={description} />
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					{#if type === 'group'}
 						<div class="text-left">

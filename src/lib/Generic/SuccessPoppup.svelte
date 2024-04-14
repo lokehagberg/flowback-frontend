@@ -1,3 +1,4 @@
+<!-- Depricated, change to Poppup.svelte -->
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 
@@ -17,7 +18,7 @@
 <div class="fixed bottom-5 right-5 z-50" hidden={!show}>
 	<div
 		id="popup"
-		class="bg-primary text-white px-4 py-2 rounded-md shadow-md opacity-0 transition-opacity duration-300 transform translate-y-3"
+		class="bg-green-600 text-white px-4 py-2 rounded-md shadow-md opacity-0 transition-opacity duration-300 transform translate-y-3"
 		class:show
 	>
 		{$_(message)}

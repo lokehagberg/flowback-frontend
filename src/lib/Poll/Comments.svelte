@@ -23,7 +23,7 @@
 		delegate_pool_id: null | number = null;
 
 	const getComments = async () => {
-		let _api = "";
+		let _api = '';
 
 		if (api === 'poll') _api += `group/poll/${$page.params.pollId}`;
 		else if (api === 'thread') _api += `group/thread/${$page.params.threadId}`;
@@ -61,28 +61,36 @@
 	};
 
 	const sortComments = () => {
+		// Separates between comments which are not replying to other commments (parents) and those who do reply (children)
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
 		console.log('COMMENTÄR', childrenComments, parentComments);
+		let i = 0;
 
+		// Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
 		let sortedComments = parentComments.map((parent) => {
 			parent.reply_depth = 0;
 			return parent;
 		});
-		return;
 
-		while (childrenComments.length > 0) {
-			childrenComments.every((child, j) => {
+		//Iterate over children commments by sorting them underneath their respective parent, with a reply depth increase of 1 compared to their parent.
+		while (childrenComments.length > 0 && i < 100000) {
+			for (let j = 0; j < childrenComments.length; j++) {
+				let child = childrenComments[j];
+
 				parentComments.forEach((parent, i) => {
 					if (parent.id === child.parent_id) {
 						child.reply_depth = parent.reply_depth + 1;
 						sortedComments.splice(i + 1, 0, child);
 						childrenComments.splice(j, 1);
+						j--;
 						return false;
 					}
 				});
-			});
+			}
+
 			parentComments = sortedComments;
+			i++;
 		}
 
 		comments = sortedComments;
@@ -91,9 +99,9 @@
 	const commentSetup = async () => {
 		await getComments();
 		sortComments();
-		// comments.forEach((comment) => {
-		// 	checkForLinks(comment.message, `comment-${comment.id}`);
-		// });
+		comments.forEach((comment) => {
+			checkForLinks(comment.message, `comment-${comment.id}`);
+		});
 	};
 
 	onMount(() => {
@@ -104,7 +112,7 @@
 <SuccessPoppup bind:show message={showMessage} />
 
 <div
-	class="p-4 border border-gray-200 dark:border-gray-500 rounded darK:text-darktext"
+	class="p-4 border border-gray-200 dark:border-gray-500 rounded dark:text-darktext"
 	id="comments"
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>

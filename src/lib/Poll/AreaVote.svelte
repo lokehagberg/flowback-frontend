@@ -1,16 +1,14 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Select from '$lib/Generic/Select.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Tag from '$lib/Group/Tag.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	let tags: Tag[] = [],
 		selectedTag: number,
-		show = false,
-		message = '';
+		poppup = { show: false, message: '', success: true };
 
 	const getTags = async () => {
 		const { json, res } = await fetchRequest(
@@ -18,8 +16,8 @@
 			`group/${$page.params.groupId}/tags?limit=1000&active=true`
 		);
 		if (!res.ok) {
-			show = true;
-			message = 'Could not get tags';
+			poppup.show = true;
+			poppup.message = 'Could not get tags';
 			return;
 		}
 
@@ -37,9 +35,14 @@
 			}
 		);
 
-		show = true;
-		if (!res.ok) message = 'Could not vote on tag';
-		else message = 'Successfully voted for area';
+		poppup.show = true;
+		if (!res.ok) {
+			poppup.message = 'Could not vote on tag';
+			poppup.success = false;
+			return;
+		}
+		poppup.message = 'Successfully voted for area';
+		poppup.success = true;
 	};
 
 	const changeSelect = (tag: Tag) => {
@@ -61,4 +64,4 @@
 	{/each}
 </div>
 
-<SuccessPoppup bind:show bind:message />
+<Poppup bind:poppup />

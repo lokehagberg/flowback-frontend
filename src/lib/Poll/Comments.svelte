@@ -13,7 +13,6 @@
 	import type { proposal } from './interface';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
-	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let comments: Comment[] = [],
 		show = false,
@@ -67,7 +66,7 @@
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
 		let i = 0;
 
-		console.log(parentComments);
+		// console.log(parentComments);
 
 		// Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
 		let sortedComments = parentComments.map((parent) => {
@@ -75,13 +74,15 @@
 			return parent;
 		});
 
-		while (i < 100000 && childrenComments.length > 0) {
+		while (i < 10 && childrenComments.length > 0) {
 			childrenComments.forEach((child, childrenId) => {
-				parentComments.forEach((parent, parentId) => {
+				sortedComments.forEach((parent, parentId) => {
 					if (child.parent_id === parent.id) {
 						const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
 						child.reply_depth = parent.reply_depth + 1;
-						sortedComments = sortedComments.splice(parentId, 0, child);
+						sortedComments.splice(parentId, 0, child);
+						// sortedComments = sortedComments
+						console.log(child, parent, parentId, sortedComments, 'FAMILY PAIR');
 						childrenComments = childrenComments.filter((_child) => _child !== child);
 					}
 				});
@@ -92,6 +93,7 @@
 		}
 
 		comments = sortedComments;
+
 		// console.log('COMMENTÄR', childrenComments, parentComments, sortedComments);
 
 		// // Iterate over children commments by sorting them underneath their respective parent, with a reply depth increase of 1 compared to their parent.

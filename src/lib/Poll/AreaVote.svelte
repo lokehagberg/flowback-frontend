@@ -45,13 +45,24 @@
 		poppup.success = true;
 	};
 
+	const getAreaVote = async () => {
+		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
+
+		if (res.ok) {
+			const votedFor = json.results[0].tag_name;
+			const votedTag = tags.find((tag) => tag.tag_name === votedFor);
+			if (votedTag) selectedTag = votedTag.id;
+		}
+	};
+
 	const changeSelect = (tag: Tag) => {
 		selectedTag = tag.id;
 		vote();
 	};
 
-	onMount(() => {
-		getTags();
+	onMount(async () => {
+		await getTags();
+		getAreaVote();
 	});
 </script>
 

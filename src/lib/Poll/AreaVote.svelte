@@ -66,7 +66,7 @@
 	});
 </script>
 
-<div class={`grid grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
+<div class={`grid gap-2 grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
 	{#each tags as tag}
 		<Button
 			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}

@@ -64,7 +64,7 @@
 		// Separates between comments which are not replying to other commments (parents) and those who do reply (children)
 		let parentComments = comments.filter((comment) => comment.parent_id === null);
 		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-		let i = 0;
+		let k = 0;
 
 		// console.log(parentComments);
 
@@ -74,22 +74,28 @@
 			return parent;
 		});
 
-		while (i < 10 && childrenComments.length > 0) {
-			childrenComments.forEach((child, childrenId) => {
-				sortedComments.forEach((parent, parentId) => {
-					if (child.parent_id === parent.id) {
-						const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
-						child.reply_depth = parent.reply_depth + 1;
-						sortedComments.splice(parentId, 0, child);
-						// sortedComments = sortedComments
-						console.log(child, parent, parentId, sortedComments, 'FAMILY PAIR');
-						childrenComments = childrenComments.filter((_child) => _child !== child);
-					}
-				});
-			});
-			if (i === 99999) console.warn("Noooooo it's not supposed to do this");
+		while (k < 12 && childrenComments.length > 0) {
+			k++;
+			console.log(k, 'K');
 
-			i++;
+			for (let i = 0; i < childrenComments.length; i++) {
+				let child = childrenComments[i];
+
+				for (let j = 0; j < sortedComments.length; j++) {
+					let parent = sortedComments[j];
+					if (j >= 1000) return;
+							if (child.parent_id === parent.id) {
+								// const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
+								child.reply_depth = parent.reply_depth + 1;
+								// sortedComments.splice(j, 0, child);
+								console.log(child, parent, j, sortedComments, 'FAMILY PAIR');
+								childrenComments = childrenComments.filter((_child) => _child !== child);
+								j--
+							}
+				}
+			}
+
+			if (k === 11) console.warn("Noooooo it's not supposed to do this");
 		}
 
 		comments = sortedComments;
@@ -179,7 +185,8 @@
 			{:else}
 				<div
 					class={`p-3 text-sm border border-l-gray-400 ml-${
-						comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
+						comment.reply_depth * 3
+						// comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
 					}`}
 					class:bg-gray-100={comment.reply_depth % 2 === 1}
 					class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}

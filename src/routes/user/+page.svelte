@@ -43,7 +43,11 @@
 		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
 		status: StatusMessageInfo | undefined;
 
-	onMount(async () => {
+	onMount(() => {
+		getUser();
+	});
+
+	const getUser = async () => {
 		//The URL has no ID if the user is on their own profile
 		const userId = $page.url.searchParams.get('id');
 		isUser = userId ? false : true;
@@ -52,11 +56,11 @@
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 		if (user.profile_image)
-			profileImagePreview = `${import.meta.env.VITE_API}/api${user.profile_image}`;
+			profileImagePreview = `${import.meta.env.VITE_API}${!(import.meta.env.VITE_IMAGE_HAS_API === "TRUE") ? '' : '/api'}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
 
 		document.title = `${user.username}'s profile`;
-	});
+	}
 
 	const updateProfile = async () => {
 		const formData = new FormData();
@@ -64,7 +68,7 @@
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
 		if (userEdit.banner_image_file) formData.append('banner_image', userEdit.banner_image_file);
-		if (userEdit.profile_image_file) formData.append('profile_image', userEdit.profile_image_file);
+		if (userEdit.profile_image_file) formData.append('profile_image', files[0]);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
 		if (res.ok) {
@@ -74,7 +78,7 @@
 		status = statusMessageFormatter(res, json);
 	};
 	// TODO: Fix cropping
-	let currentlyCroppingProfile: false = false,
+	let currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
 		files: File[],
@@ -90,7 +94,7 @@
 		oldProfileImagePreview = profileImagePreview;
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 		files = Array.from(e.target.files);
-		// currentlyCroppingProfile = true;
+		currentlyCroppingProfile = true;
 	};
 
 	const handleProfileImageChange = async (e: any) => {
@@ -129,6 +133,7 @@
 	<CropperModal
 		confirmAction={() => {
 			profileImagePreview = croppedImage;
+			currentlyCroppingProfile = false
 		}}
 		cancelAction={() => (currentlyCroppingProfile = false)}
 		bind:croppedImage
@@ -221,7 +226,7 @@
 					name="file-ip-1"
 					id="file-ip-1"
 					accept="image/*"
-					on:change={handleProfileImageChange}
+					on:change={handleCropProfileImage}
 				/></label
 			>
 

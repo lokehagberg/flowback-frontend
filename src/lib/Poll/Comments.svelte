@@ -43,7 +43,7 @@
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
 
-		// if (api === 'poll') _api += `${$page.params.pollId}`;
+		if (api === 'poll') _api += `${$page.params.pollId}/`;
 		// else if (api === 'thread') _api += `${$page.params.threadId}`;
 
 		_api += `comment/${id}/delete`;
@@ -61,42 +61,73 @@
 	};
 
 	const sortComments = () => {
+	let parentComments = comments.filter(comment => comment.parent_id === null);
+    let childrenComments = comments.filter(comment => comment.parent_id !== null);
+    
+    let sortedComments = parentComments.map(parent => {
+        parent.reply_depth = 0;
+        return parent;
+    });
+  
+    while (childrenComments.length > 0) {
+        let len = childrenComments.length;
+        childrenComments = childrenComments.filter(child => {
+            let i = sortedComments.findIndex(parent => child.parent_id === parent.id);
+            if (i >= 0) {
+                child.reply_depth = sortedComments[i].reply_depth + 1;
+                sortedComments.splice(i+1, 0, child);
+                return false;  // if child comment has been sorted, it will be removed from childrenComments
+            }
+            return true; // True keeps the child in childrenComments for the next iteration
+        });
+        
+        if(len === childrenComments.length){ // if no child has been filtered, then there is an infinite loop
+            console.warn("No parent is found for some comments");
+            break;
+        }
+        
+    }
+    
+	comments = sortedComments 
+    return sortedComments;
+
+		return;
 		// Separates between comments which are not replying to other commments (parents) and those who do reply (children)
-		let parentComments = comments.filter((comment) => comment.parent_id === null);
-		let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-		let k = 0;
+		// let parentComments = comments.filter((comment) => comment.parent_id === null);
+		// let childrenComments = comments.filter((comment) => comment.parent_id !== null);
+		// let k = 0;
 
-		// console.log(parentComments);
+		// // console.log(parentComments);
 
-		// Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
-		let sortedComments = parentComments.map((parent) => {
-			parent.reply_depth = 0;
-			return parent;
-		});
+		// // Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
+		// let sortedComments = parentComments.map((parent) => {
+		// 	parent.reply_depth = 0;
+		// 	return parent;
+		// });
 
-		while (k < 12 && childrenComments.length > 0) {
-			k++;
-			console.log(k, 'K');
+		// while (k < 12 && childrenComments.length > 0) {
+		// 	k++;
+		// 	console.log(k, 'K');
 
-			for (let i = 0; i < childrenComments.length; i++) {
-				let child = childrenComments[i];
+		// 	for (let i = 0; i < childrenComments.length; i++) {
+		// 		let child = childrenComments[i];
 
-				for (let j = 0; j < sortedComments.length; j++) {
-					let parent = sortedComments[j];
-					if (j >= 1000) return;
-							if (child.parent_id === parent.id) {
-								// const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
-								child.reply_depth = parent.reply_depth + 1;
-								// sortedComments.splice(j, 0, child);
-								console.log(child, parent, j, sortedComments, 'FAMILY PAIR');
-								childrenComments = childrenComments.filter((_child) => _child !== child);
-								j--
-							}
-				}
-			}
+		// 		for (let j = 0; j < sortedComments.length; j++) {
+		// 			let parent = sortedComments[j];
+		// 			if (j >= 1000) return;
+		// 					if (child.parent_id === parent.id) {
+		// 						// const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
+		// 						child.reply_depth = parent.reply_depth + 1;
+		// 						sortedComments.splice(j, 0, child);
+		// 						console.log(child, parent, j, sortedComments, 'FAMILY PAIR');
+		// 						childrenComments = childrenComments.filter((_child) => _child !== child);
+		// 						j--
+		// 					}
+		// 		}
+		// 	}
 
-			if (k === 11) console.warn("Noooooo it's not supposed to do this");
-		}
+		// 	if (k === 11) console.warn("Noooooo it's not supposed to do this");
+		// }
 
 		comments = sortedComments;
 

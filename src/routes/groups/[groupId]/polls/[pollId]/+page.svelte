@@ -154,6 +154,7 @@
 							new Date(poll.end_date)
 					  ]
 					: [new Date(poll.start_date), new Date(poll.end_date)]}
+				{pollType}
 			/>
 			{$_('Current phase:')}
 			{getPhaseUserFriendlyName(phase)}

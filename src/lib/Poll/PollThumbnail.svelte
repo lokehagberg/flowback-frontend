@@ -120,6 +120,7 @@
 
 	<Timeline
 		displayDetails={false}
+		pollType={poll.poll_type}
 		dates={// If text poll, have all phases. Date polls have fewer phases to display
 		poll.poll_type === 4
 			? [

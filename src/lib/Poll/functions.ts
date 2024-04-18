@@ -37,7 +37,7 @@ export const getPhase = (poll: poll): Phase => {
 
 export const dateLabels = [
 	'Pre Start',
-	'Tag voting',
+	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
 	'Prediction betting',
@@ -45,6 +45,11 @@ export const dateLabels = [
 	'Voting for non-delegates',
 	'Results and evaluation'
 ];
+
+export const dateLabelsDatePoll = [
+	'Start',
+	'Results'
+]
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
 	if (phase === 'pre-start') return dateLabels[0];

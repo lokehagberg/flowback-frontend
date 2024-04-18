@@ -7,14 +7,16 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
-	import { dateLabels } from './functions';
+	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
 
 	export let displayDetails = true,
 		displayTimeline = true,
 		Class = '',
-		dates: Date[] = [];
+		dates: Date[] = [],
+		pollType: number;
 
-	let datesDisplay: string[] = [];
+	let datesDisplay: string[] = [],
+		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
 
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 	const fraction = (currentPhase + 1) / dates.length;

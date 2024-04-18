@@ -21,11 +21,13 @@
 	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
 
 	let sideHeaderOpen = false,
-	profileImage = DefaultPFP,
+		profileImage = DefaultPFP,
 		darkMode: boolean | null = null,
-		ledgerExists: boolean = false;
+		ledgerExists: boolean = false,
+		isAdmin = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
@@ -44,14 +46,33 @@
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 
-		if (res.ok && json.profile_image)
+		if (!res.ok) return;
+
+		if (res.ok && json?.profile_image)
 			profileImage = `${import.meta.env.VITE_API}${
 				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
 
 		localStorage.setItem('pfp-link', profileImage);
+
+		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
 
+	const getIsAdmin = async (userId: number) => {
+		const { res, json } = await fetchRequest('GET', 'group/list');
+		if (!res.ok) return;
+		const group: Group = json?.results[0];
+		{
+			const { res, json } = await fetchRequest('GET', `group/${group.id}/users`);
+			if (!res.ok) return;
+
+			const admins = json?.results.filter((user: GroupUser) => user.is_admin === true);
+
+			if (admins.find((admin: GroupUser) => admin.user.id === userId)) isAdmin = true;
+		}
+	};
+
+	//TODO: Add a check for ledger module
 	const checkForLedgerModule = async () => {
 		// const accounts = await accountsStore.get();
 		// ledgerExists = accounts.loaded;
@@ -104,15 +125,16 @@
 						href="kanban"
 						color={darkMode ? 'white' : 'black'}
 					/>
-					<HeaderIcon
-						icon={faCoins}
-						text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
-							? 'My Ledger'
-							: 'Group Ledger'}
-						href="ledger"
-						color={darkMode ? 'white' : 'black'}
-					/>
 				{/if}
+				<!-- {#if user} -->
+				<HeaderIcon
+					icon={faCoins}
+					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
+						? 'My Ledger'
+						: 'Group Ledger'}
+					href="ledger"
+					color={darkMode ? 'white' : 'black'}
+				/>
 			</nav>
 
 			<div

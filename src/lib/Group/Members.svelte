@@ -15,6 +15,7 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -22,7 +23,11 @@
 		selectedPage: SelectablePages = 'Members',
 		searchUser = '',
 		searchedUsers: User[] = [],
-		show = false;
+		poppup = {
+			show: false,
+			message: 'Something went wrong',
+			success: false
+		};
 
 	onMount(async () => {
 		getUsers();
@@ -61,13 +66,30 @@
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 		if (res.ok) usersAskingForInvite = json.results;
-		else show = true
+		else poppup.show = true;
 	};
 
 	const inviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+		loading = true;
+		const { res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
 			to: userId
 		});
+
+		loading = false;
+		if (!res.ok) {
+			poppup = {
+				success: false,
+				message: "Couldn't send invite",
+				show: true
+			}
+			return;
+		}
+
+		poppup = {
+				success: true,
+				message: "Successfully sent invite",
+				show: true
+			}
 	};
 
 	const acceptInviteUser = async (userId: number) => {
@@ -186,4 +208,4 @@
 	</div>
 </Loader>
 
-<SuccessPoppup message={"Something went wrong"} bind:show/>
+<Poppup bind:poppup />

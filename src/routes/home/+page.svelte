@@ -38,6 +38,13 @@
 
 	const acceptInvitation = async (id: number) => {
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
+		
+		if (!res.ok) {
+			return;
+		}
+
+		invitations = invitations.filter(invite => invite.group !== id)
+		invitations = invitations
 	};
 
 	const rejectInvitation = async (id: number) => {
@@ -71,3 +78,4 @@
 	</ul>
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>
+

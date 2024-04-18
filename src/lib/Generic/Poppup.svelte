@@ -13,7 +13,7 @@
 		}, 4000);
 	};
 
-	$: poppup.message && successPoppupAnimation();
+	$: poppup.show && successPoppupAnimation();
 </script>
 
 <div class="fixed bottom-5 right-5 z-50" hidden={!poppup.show}>

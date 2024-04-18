@@ -25,13 +25,13 @@
 				{ username: email, password },
 				false
 			);
-			status = statusMessageFormatter(res, json);
+			status = { message: 'Successfully registered', success: true };
 
 			if (res.ok) {
 				localStorage.setItem('token', json.token);
 				window.location.href = '/home';
 			}
-		} else status = statusMessageFormatter(res, json);
+		} else status = { message: 'Could not register', success: false };
 	};
 </script>
 

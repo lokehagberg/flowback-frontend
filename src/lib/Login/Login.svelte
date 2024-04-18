@@ -20,7 +20,7 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		if (!json) status = {message:"There was a problem logging in", success:false}
+		if (!res.ok) status = {message: "There was a problem logging in", success:false}
 		else if (json?.token) {
 			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
@@ -50,6 +50,7 @@
 		/>
 
 		<StatusMessage bind:status />
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			class="mb-4 cursor-pointer hover:underline"
 			on:click={() => (selectedPage = 'ForgotPassword')}

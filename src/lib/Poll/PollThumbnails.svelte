@@ -43,6 +43,7 @@
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
 
+		if (filter.search.length > 0)
 		API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')

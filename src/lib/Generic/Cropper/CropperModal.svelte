@@ -28,9 +28,7 @@
 			{ type: 'image/jpeg' }
 		);
 
-		// const imageToSend = await fetch(image).then((res) => console.log(res));
 		const imageToSend = await fetch(croppedImage).then((res) => res.blob());
-		console.log(image, imageToSend, "IMG")
 
 		confirmAction(imageToSend);
 	};

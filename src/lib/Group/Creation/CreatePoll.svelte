@@ -200,7 +200,7 @@
 			<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
-				<TextArea required label="Description" bind:value={description} />
+				<TextArea label="Description" bind:value={description} />
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<Button
 						Class={`inline !bg-blue-600`}

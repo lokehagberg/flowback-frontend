@@ -46,9 +46,9 @@
 	};
 
 	let updateProposalVote = async (id: number, adding: boolean) => {
-		if (adding && !votes.find(vote => vote === id)) votes.push(id);
+		if (adding && !votes.find((vote) => vote === id)) votes.push(id);
 		else votes = votes.filter((vote) => vote !== id);
-		votes = votes
+		votes = votes;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -70,6 +70,7 @@
 
 <div class="flex">
 	{#each proposals as proposal}
+		{@const hasVoted = votes.find((vote) => vote === proposal.id)}
 		<div class="flex flex-col p-2">
 			<div class="text-center">{daysFormatting[new Date(proposal.start_date).getDay()]}</div>
 			<div class="font-bold text-center">
@@ -84,10 +85,16 @@
 			<div class="flex flex-col items-center rounded-none">
 				<Button
 					Class={`flex justify-center w-[90%] rounded-none ${
-						votes.find(vote => vote === proposal.id) ? 'bg-green-300' : 'bg-red-300'
+						hasVoted ? 'bg-green-300' : 'bg-red-300'
 					}`}
-					action={() => updateProposalVote(proposal.id, true)}><Fa icon={faCheck} /></Button
+					action={() => updateProposalVote(proposal.id, true)}
 				>
+					{#if hasVoted}
+						<Fa icon={faCheck} />
+					{:else}
+						<Fa icon={faX} />
+					{/if}
+				</Button>
 				<!-- <Button
 					Class="flex justify-center w-[90%] rounded-none"
 					buttonStyle="secondary"

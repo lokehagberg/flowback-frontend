@@ -114,22 +114,11 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		const content = priority
-			? {
-					assignee,
-					description,
-					tag: 1,
-					title,
-					priority,
-					end_date
-			  }
-			: {
-					assignee,
-					description,
-					tag: 1,
-					title,
-					end_date
-			  };
+		let content: any = { assignee, tag: 1, title, priority, end_date };
+
+		if (description !== '') content.description = description;
+		if (priority) content.priority = priority;
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'

@@ -54,7 +54,7 @@
 			show = true;
 			showMessage = 'Comment Deleted';
 			let comment = comments.find((comment) => comment.id === id);
-			if (!comment) return;
+			if (comment === undefined) return;
 			comment.message = '[Deleted]';
 			comments = comments;
 		}

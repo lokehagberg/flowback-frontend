@@ -126,7 +126,7 @@
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
-				<!-- {#if user} -->
+				{#if (isAdmin && import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") || import.meta.env.VITE_ONE_GROUP_FLOWBACK !== "TRUE"}
 				<HeaderIcon
 					icon={faCoins}
 					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
@@ -135,6 +135,7 @@
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>
+				{/if}
 			</nav>
 
 			<div

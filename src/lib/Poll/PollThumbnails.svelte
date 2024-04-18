@@ -30,32 +30,36 @@
 		next = '',
 		prev = '';
 
-	//TODO: Refactor this
-	const getPolls = async () => {
-		loading = true;
+	const getAPI = () => {
+		let API = '';
 
-		let API =
-			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?`
-				: infoToGet === 'home'
-				? `home/polls?`
-				: //TODO remove public
-				infoToGet === 'public'
-				? `home/polls?public=true`
-				: '';
+		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
+		else if (infoToGet === 'home') API += `home/polls?`;
+		//TODO remove public
+		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
 		if (filter.order_by) API += `&order_by=${filter.order_by}`;
 
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
 
-		API += `&finished=${filter.finishedSelection}`;
+		API += `&title__icontains=${filter.search}`;
+
+		if (filter.finishedSelection !== 'all')
+			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
 
 		API += '&pinned=false';
 
-		if (filter.tag) API += `&tag=${filter.tag}`;
+		if (filter.tag) API += `&tag_id=${filter.tag}`;
 
-		const { json, res } = await fetchRequest('GET', API);
+		return API;
+	};
+
+	//TODO: Refactor this
+	const getPolls = async () => {
+		loading = true;
+
+		const { json, res } = await fetchRequest('GET', getAPI());
 
 		loading = false;
 
@@ -71,28 +75,11 @@
 
 	//TODO: Remove this shit later
 	const amendWithPinnedPolls = async () => {
-		const finishedFilter =
-			filter.finishedSelection === 'all'
-				? ''
-				: filter.finishedSelection === 'finished'
-				? 'finished=true'
-				: 'finished=false';
+		loading = true;
 
-		let API =
-			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
-				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
-				: //TODO remove public
-				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true&${finishedFilter}`
-				: '';
+		const { json, res } = await fetchRequest('GET', getAPI());
 
-		if (filter.search.length > 0) API += `&title__icontains=${filter.search || ''}`;
-
-		API = API + '&pinned=true';
-
-		const { json, res } = await fetchRequest('GET', API);
+		loading = false;
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		else polls = [...json.results, ...polls];

@@ -68,7 +68,8 @@
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
 		if (userEdit.banner_image_file) formData.append('banner_image', userEdit.banner_image_file);
-		if (userEdit.profile_image_file) formData.append('profile_image', files[0]);
+		if (files) formData.append('profile_image', files);
+		// if (userEdit.profile_image_file) formData.append('profile_image', files[0]);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
 		if (res.ok) {
@@ -81,20 +82,23 @@
 	let currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
-		files: File[],
+		files: File,
 		crop: any,
 		pixelCrop: any,
 		croppedImage: any;
 
-	$: console.log(crop);
 
 	// TODO: Fix cropping
 	const handleCropProfileImage = (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
-		files = Array.from(e.target.files);
+		// files = Array.from(e.target.files);
+		files = e.target.files[0]
 		currentlyCroppingProfile = true;
+		setTimeout(() => {
+			grabBlob();
+		}, 2000);
 	};
 
 	const handleProfileImageChange = async (e: any) => {
@@ -126,6 +130,11 @@
 		const files: File[] = Array.from(e.target.files);
 		userEdit.banner_image_file = files[0];
 	};
+
+	const grabBlob = () => {
+		const img:any = document.querySelector("#avatar")
+		console.log(img?.src)
+	}
 </script>
 
 {#if currentlyCroppingProfile}
@@ -177,7 +186,7 @@
 		<div
 			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
 		>
-			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" />
+			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" id="avatar"/>
 			<h1 class="inline ml-8">{user.username}</h1>
 			<a class={`block mt-6`} href={user.website || ''}>
 				{user.website || ''}
@@ -219,6 +228,7 @@
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
 					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 					alt="avatar"
+					id="avatar"
 				/>
 				<input
 					class="hidden"

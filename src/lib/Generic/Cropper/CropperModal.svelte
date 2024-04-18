@@ -70,10 +70,10 @@
 		
 		<img bind:this={profilePicture} class="prof-pic" src={image} alt="Profile example" {style} />
 	</div> -->
-	{#if croppedImage}
+	<!-- {#if croppedImage} -->
 		<!-- <h2>Cropped Output</h2>
 		<img src={croppedImage} alt="Cropped profile" /><br /> -->
-	{:else}
+	<!-- {:else} -->
 	<div class="mt-6 mb-2">
 		<Button
 			buttonStyle="primary"
@@ -94,7 +94,7 @@
 		>
 		<Button buttonStyle="secondary" action={cancelAction} Class="bg-gray-500">{$_("Cancel")}</Button>
 	</div>
-	{/if}
+	<!-- {/if} -->
 </div>
 
 <style>

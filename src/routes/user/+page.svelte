@@ -56,20 +56,27 @@
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 		if (user.profile_image)
-			profileImagePreview = `${import.meta.env.VITE_API}${!(import.meta.env.VITE_IMAGE_HAS_API === "TRUE") ? '' : '/api'}${user.profile_image}`;
+			profileImagePreview = `${import.meta.env.VITE_API}${
+				!(import.meta.env.VITE_IMAGE_HAS_API === 'TRUE') ? '' : '/api'
+			}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
 
 		document.title = `${user.username}'s profile`;
-	}
+	};
 
 	const updateProfile = async () => {
+		const imageToSend = await fetch(profileImagePreview)
+			.then((res) => res.blob())
+			.then((blob) => {
+				const file = new File([blob], 'dot.png', blob);
+				return file;
+			});
 		const formData = new FormData();
 		formData.append('username', userEdit.username);
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
 		if (userEdit.banner_image_file) formData.append('banner_image', userEdit.banner_image_file);
-		if (files) formData.append('profile_image', files);
-		// if (userEdit.profile_image_file) formData.append('profile_image', files[0]);
+		if (imageToSend) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
 		if (res.ok) {
@@ -82,47 +89,24 @@
 	let currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
-		files: File,
+		file: Blob,
 		crop: any,
 		pixelCrop: any,
 		croppedImage: any;
 
-
 	// TODO: Fix cropping
-	const handleCropProfileImage = (e: any) => {
+	const handleCropProfileImage = async (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
+
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
 		// files = Array.from(e.target.files);
-		files = e.target.files[0]
+		// files = e.target.files[0]
 		currentlyCroppingProfile = true;
 		setTimeout(() => {
 			grabBlob();
 		}, 2000);
 	};
-
-	const handleProfileImageChange = async (e: any) => {
-		//Max 2 MB filesize
-		if (e.target.files[0].size > 2097152) {
-			status = { success: false, message: 'No filesize greater than 2MB' };
-			return;
-		}
-		status = undefined;
-		//Type string, for preview image
-		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
-
-		//Type File, for sending to server
-		const files: File[] = Array.from(e.target.files);
-		userEdit.profile_image_file = files[0];
-
-		// @ts-ignore
-		// userEdit.profile_image_file = await getCroppedImg(profileImagePreview, pixelCrop);
-		// profileImagePreview = await getCroppedImg(profileImagePreview, crop.pixels)
-		currentlyCroppingProfile = false;
-		//Type File, for sending to server
-		// userEdit.profile_image_file = files[0];
-	};
-
 	const handleBannerImageChange = (e: any) => {
 		//Type string, for preview image
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
@@ -132,47 +116,24 @@
 	};
 
 	const grabBlob = () => {
-		const img:any = document.querySelector("#avatar")
-		console.log(img?.src)
-	}
+		const img: any = document.querySelector('#avatar');
+		console.log(img?.src);
+	};
 </script>
 
 {#if currentlyCroppingProfile}
 	<!-- Cropp image -->
 	<CropperModal
-		confirmAction={() => {
+		confirmAction={(image) => {
+			file = image;
 			profileImagePreview = croppedImage;
-			currentlyCroppingProfile = false
+			currentlyCroppingProfile = false;
 		}}
 		cancelAction={() => (currentlyCroppingProfile = false)}
 		bind:croppedImage
 		image={profileImagePreview}
 		bind:userEdit
 	/>
-	<!-- <div class="z-50 fixed p-4 bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-		<h1>Crop profile picture</h1>
-		<div class=" bg-white relative w-[30vw] aspect-square mb-6">
-			<Cropper
-				bind:crop
-				image={profileImagePreview}
-				showGrid={false}
-				cropShape={'round'}
-				zoomSpeed={0.1}
-				aspect={1}
-				on:cropcomplete={(e) => pixelCrop = e.detail.pixels}
-			/>
-		</div>
-		<Button buttonStyle="primary" action={handleProfileImageChange}>Confirm</Button>
-		<Button
-			buttonStyle="secondary"
-			action={() => {
-				currentlyCroppingProfile = false;
-				profileImagePreview = oldProfileImagePreview;
-				files = [];
-				// userEdit.profile_image_file = new File([], '');
-			}}>Cancel</Button
-		>
-	</div> -->
 {/if}
 
 <!-- Viewing someone's profile -->
@@ -186,7 +147,12 @@
 		<div
 			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
 		>
-			<img src={profileImagePreview} class="h-36 w-36 inline rounded-full profile" alt="avatar" id="avatar"/>
+			<img
+				src={profileImagePreview}
+				class="h-36 w-36 inline rounded-full profile"
+				alt="avatar"
+				id="avatar"
+			/>
 			<h1 class="inline ml-8">{user.username}</h1>
 			<a class={`block mt-6`} href={user.website || ''}>
 				{user.website || ''}

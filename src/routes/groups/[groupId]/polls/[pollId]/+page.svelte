@@ -138,7 +138,11 @@
 					<Predictions bind:proposals bind:phase />
 				{/if}
 			{:else if pollType === 3}
-				<DatePoll />
+				{#if phase !== 'results'}
+					<DatePoll />
+				{:else}
+					<Results {pollType} />
+				{/if}
 			{/if}
 			<Timeline
 				displayDetails={false}

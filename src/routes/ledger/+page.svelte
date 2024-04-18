@@ -176,7 +176,7 @@
 	const createAccount = async () => {
 		loading = true;
 
-		const { res, json } = await fetchRequest('POST', 'ledger/account/creatfe', {
+		const { res, json } = await fetchRequest('POST', 'ledger/account/create', {
 			account_name,
 			account_number
 		});

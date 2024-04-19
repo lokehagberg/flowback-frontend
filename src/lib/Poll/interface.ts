@@ -36,6 +36,7 @@ export interface poll {
 	group_joined: boolean;
 	total_comments: number;
 	pinned: boolean;
+	status: number;
 }
 
 export interface votings {

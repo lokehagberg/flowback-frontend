@@ -239,7 +239,7 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
-							{/if}
+							
 							<div>
 								<h2 class="mt-4">{$_('Proposal end')}</h2>
 								<DateInput
@@ -250,7 +250,7 @@
 									max={maxDatePickerYear}
 								/>
 							</div>
-							{#if selected_poll !== 'Date Poll'}
+							
 								<div>
 									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
 									<DateInput
@@ -281,17 +281,17 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
+								<div>
+									<h2 class="mt-4">{$_('Voting end date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={vote_end_date}
+										min={delegate_vote_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
 							{/if}
-							<div>
-								<h2 class="mt-4">{$_('Voting end date')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={vote_end_date}
-									min={delegate_vote_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
 							<div>
 								<h2 class="mt-4">{$_('End date')}</h2>
 								<DateInput

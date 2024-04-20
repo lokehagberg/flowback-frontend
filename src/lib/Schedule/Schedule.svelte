@@ -368,14 +368,13 @@
 							</div>
 
 							{#each events as event}
+								<!-- {@debug event} -->
 								{#if new Date(event.start_date) <= getDate(year, month, x, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
 									<div class="text-center">{event.title}</div>
 								{/if}
-
-								<!-- <div class="w-[20px] overflow-ellipsis whitespace-nowrap overflow-hidden">{event.title}</div> -->
 							{/each}
-
-							<!-- {#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
+							<!-- 
+							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
 							{/if} -->
 						</div>

@@ -6,9 +6,7 @@
 
 	let crop = { x: 0, y: 0 },
 		zoom = 1,
-		pixelCrop: any,
-		profilePicture: any,
-		style: any;
+		pixelCrop: any;
 
 	export let image: any,
 		userEdit: any,

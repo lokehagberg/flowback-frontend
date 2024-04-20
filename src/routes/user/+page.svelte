@@ -41,7 +41,13 @@
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
 		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
-		status: StatusMessageInfo | undefined;
+		status: StatusMessageInfo | undefined,
+		currentlyCroppingProfile: boolean = false,
+		currentlyCroppingBanner = false,
+		oldProfileImagePreview = '',
+		oldBannerImagePreview = '',
+		file: Blob,
+		croppedImage: any;
 
 	onMount(() => {
 		getUser();
@@ -85,16 +91,7 @@
 		}
 		status = statusMessageFormatter(res, json);
 	};
-	// TODO: Fix cropping
-	let currentlyCroppingProfile: boolean = false,
-		currentlyCroppingBanner = false,
-		oldProfileImagePreview = '',
-		file: Blob,
-		crop: any,
-		pixelCrop: any,
-		croppedImage: any;
 
-	// TODO: Fix cropping
 	const handleCropProfileImage = async (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
@@ -103,21 +100,16 @@
 		// files = Array.from(e.target.files);
 		// files = e.target.files[0]
 		currentlyCroppingProfile = true;
-		setTimeout(() => {
-			grabBlob();
-		}, 2000);
-	};
-	const handleBannerImageChange = (e: any) => {
-		//Type string, for preview image
-		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
-		//Type File, for sending to server
-		const files: File[] = Array.from(e.target.files);
-		userEdit.banner_image_file = files[0];
 	};
 
-	const grabBlob = () => {
-		const img: any = document.querySelector('#avatar');
-		console.log(img?.src);
+	const handleCropBanner = async (e: any) => {
+		//Type string, for preview image
+		oldBannerImagePreview = profileImagePreview;
+
+		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
+		// files = Array.from(e.target.files);
+		// files = e.target.files[0]
+		currentlyCroppingProfile = true;
 	};
 </script>
 
@@ -126,8 +118,11 @@
 	<CropperModal
 		confirmAction={(image) => {
 			file = image;
-			profileImagePreview = croppedImage;
+			if (currentlyCroppingProfile) profileImagePreview = croppedImage;
+			else if (currentlyCroppingBanner) bannerImagePreview = croppedImage;
+
 			currentlyCroppingProfile = false;
+			currentlyCroppingBanner = false;
 		}}
 		cancelAction={() => (currentlyCroppingProfile = false)}
 		bind:croppedImage
@@ -173,7 +168,7 @@
 		<!-- Banner Image -->
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
-				src={bannerImagePreview}
+				src={currentlyCroppingProfile ? oldBannerImagePreview : bannerImagePreview}
 				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
@@ -182,7 +177,7 @@
 				type="file"
 				id="file-ip-2"
 				accept="image/*"
-				on:change={handleBannerImageChange}
+				on:change={handleCropBanner}
 			/>
 		</label>
 		<form
@@ -190,6 +185,7 @@
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">
+				<!-- Profile PIcture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
 					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"

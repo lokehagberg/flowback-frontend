@@ -8,6 +8,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
+	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -36,18 +37,18 @@
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
-			class="flex justify-between mt-2 rounded-md"
-			style={`background: linear-gradient(90deg, rgba(89, 158, 255, 1) ${
+			class="flex justify-between mt-2 rounded-md max-h-4"
+			style={`background: linear-gradient(90deg, rgba(189, 208, 255, 1) ${
 				fraction * 100 - 2
 			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
-				<div class="h-6">
+				<div class="">
 					<HeaderIcon
-						Class="cursor-default !p-0"
-						size="1.5x"
+						Class="cursor-default !p-0 -translate-y-1"
+						size="1x"
 						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
-						icon={dates[i] <= new Date() ? faSquareCheck : faSquareFull}
+						icon={dates[i] <= new Date() ? faCircleCheck : faCircle}
 						color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 					/>
 				</div>

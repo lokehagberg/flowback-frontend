@@ -78,21 +78,21 @@
 				/>
 			</div>
 		</div>
-		{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE")}
-		<a
-			href={poll.group_joined ? `groups/${poll.group_id}` : ''}
-			class:hover:underline={poll.group_joined}
-			class="text-black dark:text-darkmodeText"
-		>
-			<img
-				class="h-8 w-8 inline rounded-full"
-				src={`${import.meta.env.VITE_API}${
-					import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-				}${poll.group_image}`}
-				alt="group thumbnail"
-			/>
-			<span class="inline">{poll.group_name}</span>
-		</a>
+		{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+			<a
+				href={poll.group_joined ? `groups/${poll.group_id}` : ''}
+				class:hover:underline={poll.group_joined}
+				class="text-black dark:text-darkmodeText"
+			>
+				<span class="inline">{poll.group_name}</span>
+				<img
+					class="h-8 w-8 inline rounded-full"
+					src={`${import.meta.env.VITE_API}${
+						import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+					}${poll.group_image}`}
+					alt="group thumbnail"
+				/>
+			</a>
 		{/if}
 	</div>
 	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
@@ -132,7 +132,7 @@
 					new Date(poll.delegate_vote_end_date),
 					new Date(poll.end_date)
 			  ]
-			  : [new Date(poll.start_date), new Date(poll.end_date)]}
+			: [new Date(poll.start_date), new Date(poll.end_date)]}
 	/>
 	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>
 	<div
@@ -161,5 +161,4 @@
 			<span class="inline">{poll.total_comments} {$_('comments')}</span>
 		</a>
 	</div>
-
 </div>

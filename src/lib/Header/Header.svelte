@@ -95,13 +95,20 @@
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
+					<HeaderIcon
+						icon={faHome}
+						text="Home"
+						href="home"
+						color={darkMode ? 'white' : 'black'}
+						Class={'p-4'}
+					/>
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
 						href="groups"
 						color={darkMode ? 'white' : 'black'}
+						Class="p-4"
 					/>
 				{/if}
 				{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE'}
@@ -110,6 +117,7 @@
 						text="Home"
 						href="groups/1"
 						color={darkMode ? 'white' : 'black'}
+						Class="p-4"
 					/>
 				{/if}
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
@@ -118,12 +126,14 @@
 						text="My Schedule"
 						href="schedule"
 						color={darkMode ? 'white' : 'black'}
+						Class="p-4"
 					/>
 					<HeaderIcon
 						icon={faList}
 						text="My Kanban"
 						href="kanban"
 						color={darkMode ? 'white' : 'black'}
+						Class="p-4"
 					/>
 				{/if}
 				<!-- {#if (isAdmin && import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") || import.meta.env.VITE_ONE_GROUP_FLOWBACK !== "TRUE"} -->
@@ -134,6 +144,7 @@
 						: 'Group Ledger'}
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
+					Class="p-4"
 				/>
 				<!-- {/if} -->
 			</nav>

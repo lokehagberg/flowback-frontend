@@ -115,7 +115,7 @@
 				{:else if phase === 'proposals'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<ProposalSubmition bind:proposals {poll} />
-					<ScheduledSubmission bind:abstained />
+					
 				{:else if phase === 'prediction-statement'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<Predictions bind:proposals bind:phase />

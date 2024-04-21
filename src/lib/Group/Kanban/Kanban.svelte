@@ -173,13 +173,13 @@
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<Filter
+	<!-- <Filter
 		bind:filter
 		handleSearch={getKanbanEntries}
 		iterables={users.map((user) => {
 			return { name: user.user.username, id: user.user.id };
 		})}
-	/>
+	/> -->
 	<div class="flex overflow-x-auto">
 		<!-- {#await promise}
 			<div>Loading...</div>

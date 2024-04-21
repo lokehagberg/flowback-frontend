@@ -84,6 +84,6 @@
 	{/key}
 
 	{#if isVoting}
-		<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())}>Save Votings</Button>
+		<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="mt-4">Save Votings</Button>
 	{/if}
 </div>

@@ -31,6 +31,8 @@
 
 		votes = proposals.map((proposal) => proposal.score) || [];
 		labels = proposals.map((proposal) => proposal.title) || [];
+
+
 	};
 
 	onMount(() => {

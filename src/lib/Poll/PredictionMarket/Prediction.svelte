@@ -164,7 +164,7 @@
 		{prediction.description}</span
 	>
 	{#if phase === 'prediction-betting'}
-		<Button action={getAIPredictionBets}>Let AI decide</Button>
+		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}

@@ -68,10 +68,12 @@
 
 <div class={`grid gap-2 grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
 	{#each tags as tag}
+		{#if tag.active}
 		<Button
 			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
 			action={() => changeSelect(tag)}>{tag.name}</Button
 		>
+		{/if}
 	{/each}
 </div>
 

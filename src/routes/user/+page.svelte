@@ -109,11 +109,11 @@
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
 		// files = Array.from(e.target.files);
 		// files = e.target.files[0]
-		currentlyCroppingProfile = true;
+		currentlyCroppingBanner = true;
 	};
 </script>
 
-{#if currentlyCroppingProfile}
+{#if currentlyCroppingProfile || currentlyCroppingBanner}
 	<!-- Cropp image -->
 	<CropperModal
 		confirmAction={(image) => {
@@ -124,10 +124,14 @@
 			currentlyCroppingProfile = false;
 			currentlyCroppingBanner = false;
 		}}
-		cancelAction={() => (currentlyCroppingProfile = false)}
+		cancelAction={() => {
+			currentlyCroppingProfile = false
+			currentlyCroppingBanner = false;
+		} }
 		bind:croppedImage
 		image={profileImagePreview}
 		bind:userEdit
+		bind:currentlyCroppingProfile
 	/>
 {/if}
 

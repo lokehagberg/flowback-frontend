@@ -12,7 +12,8 @@
 		userEdit: any,
 		cancelAction = () => {},
 		confirmAction = (image: Blob) => {},
-		croppedImage: any;
+		croppedImage: any,
+		currentlyCroppingProfile: boolean;
 
 	const previewCrop = (e: any) => {
 		pixelCrop = e.detail.pixels;
@@ -39,7 +40,7 @@
 	<div style="position: relative; width: 100%; height: 300px;">
 		<Cropper
 			showGrid={false}
-			cropShape="round"
+			cropShape={currentlyCroppingProfile ? 'round' : 'rect'}
 			{image}
 			bind:crop
 			bind:zoom

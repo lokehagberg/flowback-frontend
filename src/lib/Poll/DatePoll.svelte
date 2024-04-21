@@ -108,7 +108,7 @@
 <Button action={() => (open = true)}>Create Proposal</Button>
 
 <Modal bind:open onSubmit={handlePostProposal}>
-	<div slot="body">
+	<div slot="body" class="min-w-[400px] min-h-[300px]">
 		<DateInput bind:value={date} />
 	</div>
 	<div slot="footer">

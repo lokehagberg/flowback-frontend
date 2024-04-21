@@ -47,6 +47,7 @@
 
 	const getAreaVote = async () => {
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
+		console.log("HERERE", json, res)
 
 		if (res.ok) {
 			const votedFor = json.results[0].tag_name;

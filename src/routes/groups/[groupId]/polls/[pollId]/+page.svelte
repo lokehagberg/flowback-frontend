@@ -47,7 +47,7 @@
 		await getPollData();
 		phase = getPhase(poll);
 		scrollToSection();
-		checkForLinks(poll.description, 'poll-description');
+		checkForLinks(poll?.description, 'poll-description');
 		document.title = poll.title;
 	});
 
@@ -179,7 +179,8 @@
 			</Modal>
 			{#if groupUser?.is_admin}
 				<StatusMessage bind:status={deleteStatus} />
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500"
+				Mod Tools:
+				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
 					>{$_('Delete poll')}</Button
 				>
 			{/if}

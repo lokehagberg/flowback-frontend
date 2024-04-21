@@ -1,12 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/Generic/Button.svelte';
-	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import Tag from '$lib/Group/Tag.svelte';
-	import { onMount } from 'svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { DateInput } from 'date-picker-svelte';
@@ -28,12 +25,9 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import { tagsCreatePoll as tagsCreatePollLimit } from '$lib/Generic/APILimits.json';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import Select from '$lib/Generic/Select.svelte';
-	import { faTachographDigital } from '@fortawesome/free-solid-svg-icons';
 
 	type polltypes =
 		| 'Ranking'
@@ -146,16 +140,16 @@
 		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 
-	const getGroupTags = async () => {
-		loading = true;
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${groupId}/tags?limit=${tagsCreatePollLimit}`
-		);
-		loading = false;
-		tags = json.results;
-		selectedTag = tags[0];
-	};
+	// const getGroupTags = async () => {
+	// 	loading = true;
+	// 	const { json } = await fetchRequest(
+	// 		'GET',
+	// 		`group/${groupId}/tags?limit=${tagsCreatePollLimit}`
+	// 	);
+	// 	loading = false;
+	// 	tags = json.results;
+	// 	selectedTag = tags[0];
+	// };
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
@@ -183,11 +177,6 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
-
-	onMount(() => {
-		getGroupTags();
-		console.log($page.params.type, 'TYPPPE');
-	});
 </script>
 
 <div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
@@ -239,18 +228,18 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
-							
-							<div>
-								<h2 class="mt-4">{$_('Proposal end')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={proposal_end_date}
-									min={area_vote_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
-							
+
+								<div>
+									<h2 class="mt-4">{$_('Proposal end')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={proposal_end_date}
+										min={area_vote_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+
 								<div>
 									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
 									<DateInput

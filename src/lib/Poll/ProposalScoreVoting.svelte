@@ -76,14 +76,14 @@
 	};
 </script>
 
-<div>
+<div class="">
 	{#key needsReload}
 		{#each proposals as proposal}
 			<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
 		{/each}
 	{/key}
 
-	{#if isVoting}
-		<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="mt-4">Save Votings</Button>
-	{/if}
 </div>
+{#if isVoting}
+	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="">Save Votings</Button>
+{/if}

@@ -28,6 +28,7 @@
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+	import { onMount } from 'svelte';
 
 	type polltypes =
 		| 'Ranking'
@@ -95,17 +96,13 @@
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
-		image: File;
+		image: File,
+		isFF = true;
 
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
-		if (selectedTag === undefined) {
-			status = { message: 'Must select tag', success: false };
-			return;
-		}
-
-		console.log(selectedTag);
+		console.log('Here?');
 
 		const formData = new FormData();
 		formData.append('title', title);
@@ -118,8 +115,9 @@
 		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
 		formData.append('vote_end_date', vote_end_date.toISOString());
 		formData.append('end_date', end_date.toISOString());
+		formData.append('tag', tags[0].id.toString());
+		formData.append('allow_fast_forward', isFF.toString());
 		formData.append('poll_type', (selected_poll === defaultType ? 4 : 3).toString());
-		formData.append('tag', selectedTag.id.toString());
 		formData.append('dynamic', selected_poll === defaultType ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
@@ -140,16 +138,16 @@
 		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
 	};
 
-	// const getGroupTags = async () => {
-	// 	loading = true;
-	// 	const { json } = await fetchRequest(
-	// 		'GET',
-	// 		`group/${groupId}/tags?limit=${tagsCreatePollLimit}`
-	// 	);
-	// 	loading = false;
-	// 	tags = json.results;
-	// 	selectedTag = tags[0];
-	// };
+	const getGroupTags = async () => {
+		loading = true;
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${groupId}/tags?limit=${9999}`
+		);
+		loading = false;
+		tags = json.results;
+		selectedTag = tags[0];
+	};
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
@@ -177,6 +175,10 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
+
+	onMount(() => {
+		getGroupTags();
+	})
 </script>
 
 <div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
@@ -309,6 +311,8 @@
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{/if}
+
+				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
 
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					{$_('This polltype is not implemented yet')}

@@ -98,6 +98,25 @@
 			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 		}, 1500);
 	};
+
+	const nextPhase = async () => {
+		let _phase = ""
+
+		if (phase === "area-vote") _phase = "proposal"
+		else if (phase === "proposals") _phase = "prediction_statement"
+		else if (phase === "prediction-statement") _phase = "prediction_bet"
+		else if (phase === "prediction-betting") _phase = "delegate_vote"
+		else if (phase === "delegate-voting") _phase = "vote"
+		else if (phase === "voting") _phase = "prediction_vote"
+
+		const {res, json} = await fetchRequest('POST', `group/poll/${$page.params.pollId}/fast_forward` , { 
+			phase: _phase
+		 })
+
+		 if (res.ok)
+		 location.reload()
+
+	}
 </script>
 
 {#if poll}
@@ -115,7 +134,6 @@
 				{:else if phase === 'proposals'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<ProposalSubmition bind:proposals {poll} />
-					
 				{:else if phase === 'prediction-statement'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<Predictions bind:proposals bind:phase />
@@ -141,7 +159,7 @@
 				{#if poll.status === 0}
 					<DatePoll />
 				{:else}
-					<Results {pollType}  />
+					<Results {pollType} />
 				{/if}
 			{/if}
 			<Timeline
@@ -180,10 +198,12 @@
 			{#if groupUser?.is_admin}
 				<StatusMessage bind:status={deleteStatus} />
 				Mod Tools:
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-					>{$_('Delete poll')}</Button
-				>
-			{/if}
+				<div class="flexs gap-4">
+					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+						>{$_('Delete poll')}</Button
+					>
+					<Button action={nextPhase}>Next Phase</Button>
+				</div>{/if}
 		</div>
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img

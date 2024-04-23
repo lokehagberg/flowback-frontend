@@ -102,12 +102,14 @@
 	const nextPhase = async () => {
 		let _phase = '';
 
-		if (phase === 'area-vote') _phase = 'proposal';
-		else if (phase === 'proposals') _phase = 'prediction_statement';
-		else if (phase === 'prediction-statement') _phase = 'prediction_bet';
-		else if (phase === 'prediction-betting') _phase = 'delegate_vote';
-		else if (phase === 'delegate-voting') _phase = 'vote';
-		else if (phase === 'voting') _phase = 'prediction_vote';
+		if (pollType === 4) {
+			if (phase === 'area-vote') _phase = 'proposal';
+			else if (phase === 'proposals') _phase = 'prediction_statement';
+			else if (phase === 'prediction-statement') _phase = 'prediction_bet';
+			else if (phase === 'prediction-betting') _phase = 'delegate_vote';
+			else if (phase === 'delegate-voting') _phase = 'vote';
+			else if (phase === 'voting') _phase = 'prediction_vote';
+		} else if (pollType === 3) _phase = 'result';
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -158,7 +160,7 @@
 					<Predictions bind:proposals bind:phase />
 				{/if}
 			{:else if pollType === 3}
-				{#if poll.status === 0}
+				{#if !finished}
 					<DatePoll />
 				{:else}
 					<Results {pollType} />

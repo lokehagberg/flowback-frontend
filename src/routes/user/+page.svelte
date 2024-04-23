@@ -15,6 +15,8 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import getCroppedImg from '$lib/Generic/Cropper/canvasUtils';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let user: User = {
 		banner_image: '',
@@ -47,7 +49,8 @@
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
 		file: Blob,
-		croppedImage: any;
+		croppedImage: any,
+		t: poppup;
 
 	onMount(() => {
 		getUser();
@@ -125,9 +128,9 @@
 			currentlyCroppingBanner = false;
 		}}
 		cancelAction={() => {
-			currentlyCroppingProfile = false
+			currentlyCroppingProfile = false;
 			currentlyCroppingBanner = false;
-		} }
+		}}
 		bind:croppedImage
 		image={profileImagePreview}
 		bind:userEdit
@@ -269,6 +272,10 @@
 		</form>
 	{/if}
 </Layout>
+<Button action={() => (t = { message: (Math.random() * 1000).toString(), success: false })}
+	>cl</Button
+>
+<Poppup poppup={{ message: 'hi', success: true }} />
 
 <style>
 	img.cover {

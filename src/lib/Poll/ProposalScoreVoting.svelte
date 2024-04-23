@@ -55,11 +55,23 @@
 		voting = voting;
 	};
 
-	const delegateVote = () => {
-		fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
+	const delegateVote = async () => {
+		const {json, res} = await fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
 			proposals: voting.map((vote) => vote.proposal),
 			scores: voting.map((vote) => vote.score)
 		});
+
+		if (!res.ok) {
+			poppup = {
+				message: json.message,
+				success: false
+			};
+			return;
+		}
+		poppup = {
+			message: 'Successfully voted',
+			success: true
+		};
 	};
 
 	const vote = async () => {
@@ -101,11 +113,11 @@
 		{/each}
 	{/key}
 </div>
+
 {#if isVoting}
 	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class=""
 		>Save Votings</Button
 	>
-	<Poppup bind:poppup />
 {/if}
 
-
+<Poppup bind:poppup />

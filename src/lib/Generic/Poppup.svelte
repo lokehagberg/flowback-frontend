@@ -2,7 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { poppup } from './Poppup';
 
-	export let poppup: poppup;
+	export let poppup: poppup | null;
 
 	let show = false,
 		currentPoppup: NodeJS.Timeout;
@@ -14,6 +14,7 @@
 		clearTimeout(currentPoppup);
 		currentPoppup = setTimeout(() => {
 			show = false;
+			poppup = null
 		}, 4000);
 	};
 </script>

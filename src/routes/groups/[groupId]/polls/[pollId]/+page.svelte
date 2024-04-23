@@ -100,23 +100,25 @@
 	};
 
 	const nextPhase = async () => {
-		let _phase = ""
+		let _phase = '';
 
-		if (phase === "area-vote") _phase = "proposal"
-		else if (phase === "proposals") _phase = "prediction_statement"
-		else if (phase === "prediction-statement") _phase = "prediction_bet"
-		else if (phase === "prediction-betting") _phase = "delegate_vote"
-		else if (phase === "delegate-voting") _phase = "vote"
-		else if (phase === "voting") _phase = "prediction_vote"
+		if (phase === 'area-vote') _phase = 'proposal';
+		else if (phase === 'proposals') _phase = 'prediction_statement';
+		else if (phase === 'prediction-statement') _phase = 'prediction_bet';
+		else if (phase === 'prediction-betting') _phase = 'delegate_vote';
+		else if (phase === 'delegate-voting') _phase = 'vote';
+		else if (phase === 'voting') _phase = 'prediction_vote';
 
-		const {res, json} = await fetchRequest('POST', `group/poll/${$page.params.pollId}/fast_forward` , { 
-			phase: _phase
-		 })
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/fast_forward`,
+			{
+				phase: _phase
+			}
+		);
 
-		 if (res.ok)
-		 location.reload()
-
-	}
+		if (res.ok) location.reload();
+	};
 </script>
 
 {#if poll}
@@ -202,7 +204,9 @@
 					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
 						>{$_('Delete poll')}</Button
 					>
-					<Button action={nextPhase}>Next Phase</Button>
+					{#if !finished}
+						<Button action={nextPhase}>Next Phase</Button>
+					{/if}
 				</div>{/if}
 		</div>
 		{#if poll.attachments && poll.attachments.length > 0}

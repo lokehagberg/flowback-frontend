@@ -26,17 +26,15 @@
 	});
 
 	const getPredictionBet = async () => {
-		loading = true;
-
 		if (!score) return;
+		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
 		);
 
-		console.log(json.results);
-
+		loading = false;
 		if (!res.ok) showPoppup = true;
 		else {
 			const previousBet = json.results.find(
@@ -49,9 +47,8 @@
 	};
 
 	const predictionBetCreate = async (score: string) => {
-		loading = true;
-
 		if (!score) return;
+		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -66,9 +63,8 @@
 	};
 
 	const predictionBetUpdate = async (score: string) => {
-		loading = true;
-
 		if (!score) return;
+		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -160,7 +156,11 @@
 
 <div class="flex justify-between">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<span on:click={() => (showDetails = true)} on:keydown class="hover:underline cursor-pointer overflow-scroll">
+	<span
+		on:click={() => (showDetails = true)}
+		on:keydown
+		class="hover:underline cursor-pointer overflow-scroll"
+	>
 		{prediction.description}</span
 	>
 	{#if phase === 'prediction-betting'}

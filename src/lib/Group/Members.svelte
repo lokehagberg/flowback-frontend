@@ -9,13 +9,11 @@
 	import { _ } from 'svelte-i18n';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -23,11 +21,7 @@
 		selectedPage: SelectablePages = 'Members',
 		searchUser = '',
 		searchedUsers: User[] = [],
-		poppup = {
-			show: false,
-			message: 'Something went wrong',
-			success: false
-		};
+		poppup: poppup;
 
 	onMount(async () => {
 		getUsers();
@@ -43,7 +37,6 @@
 			'GET',
 			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
 		);
-		console.log(json.results);
 		users = json.results;
 		loading = false;
 	};
@@ -66,7 +59,7 @@
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 		if (res.ok) usersAskingForInvite = json.results;
-		else poppup.show = true;
+		else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -77,19 +70,14 @@
 
 		loading = false;
 		if (!res.ok) {
-			poppup = {
-				success: false,
-				message: "Couldn't send invite",
-				show: true
-			}
+			poppup = { message: "Couldn't get invites list", success: false };
 			return;
 		}
 
 		poppup = {
-				success: true,
-				message: "Successfully sent invite",
-				show: true
-			}
+			success: true,
+			message: 'Successfully sent invite'
+		};
 	};
 
 	const acceptInviteUser = async (userId: number) => {

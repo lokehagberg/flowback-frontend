@@ -49,8 +49,7 @@
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
 		file: Blob,
-		croppedImage: any,
-		t: poppup;
+		croppedImage: any;
 
 	onMount(() => {
 		getUser();
@@ -73,18 +72,26 @@
 		document.title = `${user.username}'s profile`;
 	};
 
-	const updateProfile = async () => {
-		const imageToSend = await fetch(profileImagePreview)
+	const blobifyImages = async (profileImagePreview: any) => {
+		const image = await fetch(profileImagePreview)
 			.then((res) => res.blob())
 			.then((blob) => {
 				const file = new File([blob], 'dot.png', blob);
 				return file;
 			});
+
+		return image;
+	};
+
+	const updateProfile = async () => {
+		const imageToSend = await blobifyImages(profileImagePreview);
+		const bannerImageToSend = await blobifyImages(bannerImagePreview);
+
 		const formData = new FormData();
 		formData.append('username', userEdit.username);
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
-		if (userEdit.banner_image_file) formData.append('banner_image', userEdit.banner_image_file);
+		if (bannerImageToSend) formData.append('banner_image', bannerImageToSend);
 		if (imageToSend) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
@@ -98,20 +105,14 @@
 	const handleCropProfileImage = async (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
-
 		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
-		// files = Array.from(e.target.files);
-		// files = e.target.files[0]
 		currentlyCroppingProfile = true;
 	};
 
 	const handleCropBanner = async (e: any) => {
 		//Type string, for preview image
 		oldBannerImagePreview = profileImagePreview;
-
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
-		// files = Array.from(e.target.files);
-		// files = e.target.files[0]
 		currentlyCroppingBanner = true;
 	};
 </script>
@@ -272,9 +273,7 @@
 		</form>
 	{/if}
 </Layout>
-<Button action={() => (t = { message: (Math.random() * 1000).toString(), success: false })}
-	>cl</Button
->
+
 <Poppup poppup={{ message: 'hi', success: true }} />
 
 <style>

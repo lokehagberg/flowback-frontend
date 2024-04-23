@@ -49,7 +49,7 @@
 		if (filter.finishedSelection !== 'all')
 			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
 
-		API += '&pinned=false';
+		// API += '&pinned=false';
 
 		if (filter.tag) API += `&tag_id=${filter.tag}`;
 
@@ -90,7 +90,7 @@
 
 	onMount(async () => {
 		await getPolls();
-		amendWithPinnedPolls();
+		// amendWithPinnedPolls();
 		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
 	});
 </script>
@@ -103,7 +103,7 @@
 				tagFiltering={infoToGet === 'group'}
 				handleSearch={async () => {
 					await getPolls();
-					amendWithPinnedPolls();
+					// amendWithPinnedPolls();
 					return {};
 				}}
 				bind:filter

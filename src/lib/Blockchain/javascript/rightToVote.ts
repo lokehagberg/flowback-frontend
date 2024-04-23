@@ -43,8 +43,8 @@ export const becomeMemberOfGroup = async () => {
 	
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.becomeMemberOfGroup(1);
-	const tx = await contract.becomeMemberOfGroup(1, { //group id
+	const estimatedGasLimit = await contract.estimateGas.becomeMemberOfGroup(2);
+	const tx = await contract.becomeMemberOfGroup(2, { //group id
     gasLimit: estimatedGasLimit, 
     maxPriorityFeePerGas: maxPriorityFeePerGas,
     });

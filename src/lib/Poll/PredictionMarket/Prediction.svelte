@@ -226,7 +226,7 @@
 			{/each}
 		</ul>
 		<!-- {@debug prediction} -->
-		<div>End date: {formatDate(prediction.end_date.toString())}</div>
+		<div>Deadline: {formatDate(prediction.end_date.toString())}</div>
 		<div>Aggregated Bet: {prediction.combined_bet}</div>
 	</div>
 </Modal>

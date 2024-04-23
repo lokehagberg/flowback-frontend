@@ -144,7 +144,7 @@
 	<div slot="header">{$_('Add Prediction')}</div>
 	<div slot="body">
 		<Loader bind:loading>
-			{$_('End date for prediction')}
+			{$_('Deadline for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
 				min={new Date()}

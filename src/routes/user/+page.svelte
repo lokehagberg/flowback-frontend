@@ -13,10 +13,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import getCroppedImg from '$lib/Generic/Cropper/canvasUtils';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
-	import Poppup from '$lib/Generic/Poppup.svelte';
-	import type { poppup } from '$lib/Generic/Poppup';
 
 	let user: User = {
 		banner_image: '',
@@ -176,7 +173,7 @@
 		<!-- Banner Image -->
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
-				src={currentlyCroppingProfile ? oldBannerImagePreview : bannerImagePreview}
+				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview}
 				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
 				alt="banner"
 			/>
@@ -273,8 +270,6 @@
 		</form>
 	{/if}
 </Layout>
-
-<Poppup poppup={{ message: 'hi', success: true }} />
 
 <style>
 	img.cover {

@@ -9,7 +9,6 @@
 		pixelCrop: any;
 
 	export let image: any,
-		userEdit: any,
 		cancelAction = () => {},
 		confirmAction = (image: Blob) => {},
 		croppedImage: any,
@@ -21,11 +20,6 @@
 
 	const handleCrop = async () => {
 		croppedImage = await getCroppedImg(image, pixelCrop);
-		userEdit.profile_image_file = new File(
-			[croppedImage],
-			Math.round(Math.random() * 1000000000000).toString() + '.jpg',
-			{ type: 'image/jpeg' }
-		);
 
 		const imageToSend = await fetch(croppedImage).then((res) => res.blob());
 

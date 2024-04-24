@@ -113,9 +113,10 @@
 		currentlyCroppingBanner = true;
 	};
 
-	let imageToBeCropped:any;
+	let imageToBeCropped: any;
 
-	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview; else if (currentlyCroppingBanner) imageToBeCropped = bannerImagePreview 
+	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview;
+	else if (currentlyCroppingBanner) imageToBeCropped = bannerImagePreview;
 </script>
 
 {#if currentlyCroppingProfile || currentlyCroppingBanner}
@@ -134,7 +135,6 @@
 			currentlyCroppingBanner = false;
 		}}
 		bind:croppedImage
-		bind:userEdit
 		bind:currentlyCroppingProfile
 		bind:image={imageToBeCropped}
 	/>

@@ -19,6 +19,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
+	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 
 	let name: string,
 		description: string,
@@ -113,6 +114,7 @@
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>
+
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
 					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />

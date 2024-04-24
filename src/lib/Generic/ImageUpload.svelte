@@ -2,19 +2,21 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+	import CropperModal from './Cropper/CropperModal.svelte';
 
 	export let image: File | null = null,
 		label: string,
 		isCover = false,
 		icon: any,
-		Class = "",
+		Class = '',
 		iconSize = '5x';
 
-	let fileinput: HTMLInputElement;
+	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
 		image = files[0];
+		currentlyCropping = true
 	};
 </script>
 
@@ -30,7 +32,12 @@
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
 	{#if image}
-		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} src={URL.createObjectURL(image)} />
+		<img
+			id="image"
+			class={`${isCover ? 'cover' : ''} avatar`}
+			alt={$_(label)}
+			src={URL.createObjectURL(image)}
+		/>
 	{:else}
 		<!-- <img
 			class="avatar"
@@ -65,6 +72,20 @@
 		bind:this={fileinput}
 	/>
 </div>
+
+{#if currentlyCropping}
+	<CropperModal
+		confirmAction={(_image) => {
+			currentlyCropping = false;
+		}}
+		cancelAction={() => {
+			currentlyCropping = false;
+		}}
+		bind:croppedImage={image}
+		bind:currentlyCroppingProfile={currentlyCropping}
+		bind:image
+	/>
+{/if}
 
 <style>
 	.image-upload {

@@ -40,6 +40,7 @@
 		/> -->
 		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<img
 		class="upload mt-4"
 		src="https://static.thenounproject.com/png/625182-200.png"
@@ -49,6 +50,7 @@
 		}}
 		on:keydown
 	/>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="chan"
 		on:click={() => {

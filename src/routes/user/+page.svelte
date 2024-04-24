@@ -108,10 +108,14 @@
 
 	const handleCropBanner = async (e: any) => {
 		//Type string, for preview image
-		oldBannerImagePreview = profileImagePreview;
+		oldBannerImagePreview = bannerImagePreview;
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
 		currentlyCroppingBanner = true;
 	};
+
+	let imageToBeCropped:any;
+
+	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview; else if (currentlyCroppingBanner) imageToBeCropped = bannerImagePreview 
 </script>
 
 {#if currentlyCroppingProfile || currentlyCroppingBanner}
@@ -130,9 +134,9 @@
 			currentlyCroppingBanner = false;
 		}}
 		bind:croppedImage
-		image={profileImagePreview}
 		bind:userEdit
 		bind:currentlyCroppingProfile
+		bind:image={imageToBeCropped}
 	/>
 {/if}
 

@@ -45,8 +45,7 @@
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
-		file: Blob,
-		croppedImage: any;
+		croppedImage: string;
 
 	onMount(() => {
 		getUser();
@@ -123,7 +122,6 @@
 	<!-- Cropp image -->
 	<CropperModal
 		confirmAction={(image) => {
-			file = image;
 			if (currentlyCroppingProfile) profileImagePreview = croppedImage;
 			else if (currentlyCroppingBanner) bannerImagePreview = croppedImage;
 

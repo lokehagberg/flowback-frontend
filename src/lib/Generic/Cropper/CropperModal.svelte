@@ -8,7 +8,7 @@
 		zoom = 1,
 		pixelCrop: any;
 
-	export let image: any,
+	export let image: string,
 		cancelAction = () => {},
 		confirmAction = (image: Blob) => {},
 		croppedImage: any,

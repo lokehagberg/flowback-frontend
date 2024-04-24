@@ -4,39 +4,33 @@
 	import { _ } from 'svelte-i18n';
 	import CropperModal from './Cropper/CropperModal.svelte';
 
-	export let image: File | null = null,
+	export let croppedImage: File | null = null,
 		label: string,
 		isCover = false,
 		icon: any,
 		Class = '',
 		iconSize = '5x';
 
-	let fileinput: HTMLInputElement, currentlyCropping: boolean;
+	let fileinput: HTMLInputElement, currentlyCropping: boolean, imageString: string;
 
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
-		image = files[0];
-		currentlyCropping = true
+		croppedImage = files[0];
+		currentlyCropping = true;
 	};
+
+	$: if (croppedImage) imageString = URL.createObjectURL(croppedImage);
 </script>
 
-<!-- on:change={() => {
-				const imgtag = document.getElementById("image");
-				const fr = new FileReader();
-				fr.onload = () => {
-					if (imgtag)
-					imgtag?.src = event.target.result;
-				};
-			}} -->
 <div class={`image-upload ${Class}`}>
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
-	{#if image}
+	{#if croppedImage}
 		<img
 			id="image"
 			class={`${isCover ? 'cover' : ''} avatar`}
 			alt={$_(label)}
-			src={URL.createObjectURL(image)}
+			src={URL.createObjectURL(croppedImage)}
 		/>
 	{:else}
 		<!-- <img
@@ -75,15 +69,16 @@
 
 {#if currentlyCropping}
 	<CropperModal
-		confirmAction={(_image) => {
+		confirmAction={() => {
+			console.log('hello?');
 			currentlyCropping = false;
 		}}
 		cancelAction={() => {
 			currentlyCropping = false;
 		}}
-		bind:croppedImage={image}
+		bind:croppedImage
 		bind:currentlyCroppingProfile={currentlyCropping}
-		bind:image
+		bind:image={imageString}
 	/>
 {/if}
 

@@ -107,10 +107,10 @@
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />
-				<ImageUpload icon={faUser} bind:image label="Upload Image, recomended ratio 1:1" />
+				<ImageUpload icon={faUser} bind:croppedImage={image} label="Upload Image, recomended ratio 1:1" />
 				<ImageUpload
 					icon={faFileImage}
-					bind:image={coverImage}
+					bind:croppedImage={coverImage}
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>

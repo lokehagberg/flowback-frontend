@@ -28,7 +28,7 @@
 </script>
 
 <div
-	class="z-50 w-[80%] md:w-1/2 max-w-2xl fixed p-4 bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow rounded-md"
+	class="z-50 w-[80%] md:w-1/2 max-w-2xl fixed p-4 bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow rounded-md dark:bg-darkbackground"
 >
 	<h1 class="text-2xl mb-4">{$_('Cropping')}</h1>
 	<div style="position: relative; width: 100%; height: 300px;">

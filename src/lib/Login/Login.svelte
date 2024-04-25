@@ -20,7 +20,9 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		if (!res.ok) status = {message: "There was a problem logging in", success:false}
+		console.log(json, json.detail.non_field_errors[0], 'DETAIl');
+
+		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
 			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
@@ -29,10 +31,9 @@
 				localStorage.setItem('userId', json.id);
 				localStorage.setItem('userName', json.username);
 			}
-			
+
 			window.location.href = '/home';
-		}
-		else {
+		} else {
 			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}
 	};

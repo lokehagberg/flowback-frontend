@@ -17,8 +17,10 @@
 	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import Proposal from '../Proposal.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+
+	export let proposals: proposal[], phase: Phase;
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -34,11 +36,8 @@
 		} = { segments: [] },
 		// statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [],
-		show = false,
-		message = '',
-		resetsOfValues = 0;
-
-	export let proposals: proposal[], phase: Phase;
+		resetsOfValues = 0,
+		poppup: poppup;
 
 	const getPredictionStatements = async () => {
 		loading = true;
@@ -71,17 +70,16 @@
 			newPredictionStatement
 		);
 		loading = false;
-		show = true;
 
 		if (!res.ok) {
-			message = json.detail[0];
+			poppup = { message: json.detail[0], success: false };
 			return;
 		}
 
 		newPredictionStatement = { segments: [] };
 		resetsOfValues++;
 		addingPrediction = false;
-		message = 'Successfully created prediction statement';
+		poppup = { message: 'Successfully created prediction statement', success: true };
 
 		getPredictionStatements();
 	};
@@ -139,7 +137,7 @@
 	{/if}
 </Loader>
 
-<!-- Actives whenever a prediction statement is being added -->
+<!-- Is displayed whenever a prediction statement is being added -->
 <Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}>
 	<div slot="header">{$_('Add Prediction')}</div>
 	<div slot="body">
@@ -201,4 +199,4 @@
 	</div>
 </Modal>
 
-<SuccessPoppup bind:message bind:show />
+<Poppup bind:poppup />

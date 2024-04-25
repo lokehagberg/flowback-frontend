@@ -293,7 +293,8 @@
 
 			<div class="mt-4">
 				<div class="bg-white dark:bg-darkobject p-6">
-					Filtering
+					<div class="mb-4">Filtering</div>
+					<!-- <div class="flex"> -->
 					{#if !Object.values(filter).every((x) => x === null)}
 						<Button
 							action={() => {
@@ -314,6 +315,7 @@
 						>
 					{/if}
 					<TransactionFilter bind:filter {handleSearch} bind:accounts />
+				<!-- </div> -->
 				</div>
 				<div class="bg-white dark:bg-darkobject p-6 mt-6">
 					<Button

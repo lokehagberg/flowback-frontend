@@ -5,9 +5,7 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
-	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
-	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 
@@ -28,9 +26,11 @@
 <div class="relative flex justify-center">
 	<img
 		class="cover"
-		src={`${import.meta.env.VITE_API}${
-			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${group.cover_image}`}
+		src={group.cover_image
+			? `${import.meta.env.VITE_API}${import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+					group.cover_image
+			  }`
+			: DefaultBanner}
 		alt="cover"
 	/>
 	<img
@@ -54,6 +54,7 @@
 			categories={groupNotificationCategories}
 			labels={groupNotificationCategories}
 		/>
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<h1
 			class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'flow')}
@@ -63,6 +64,7 @@
 		</h1>
 	</div>
 	<div class="flex items-center">
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<p
 			class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'members')}
@@ -72,14 +74,14 @@
 			{$_('members')}
 		</p>
 		<div class="ml-3">
-		{#if typeof window !== 'undefined'}
-			{#if group.public}
-				<Fa icon={faGlobeEurope} />
-			{:else}
-				<Fa icon={faLock} />
+			{#if typeof window !== 'undefined'}
+				{#if group.public}
+					<Fa icon={faGlobeEurope} />
+				{:else}
+					<Fa icon={faLock} />
+				{/if}
 			{/if}
-		{/if}
-	</div>
+		</div>
 	</div>
 </div>
 

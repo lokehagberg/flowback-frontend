@@ -20,8 +20,6 @@
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
 
-		console.log(json, json.detail.non_field_errors[0], 'DETAIl');
-
 		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
 			status = statusMessageFormatter(res, json, 'Successfully logged in');

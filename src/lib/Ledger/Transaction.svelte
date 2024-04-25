@@ -11,8 +11,9 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
 	import { deepCopy } from 'ethers/lib/utils';
-	import About from '$lib/Group/About.svelte';
 	import formatDate from './formatDate';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 	// import { formatDate } from '$lib/Generic/DateFormatter';
 
 	export let transaction: Transaction, transactions: Transaction[], accounts: Account[];
@@ -25,7 +26,8 @@
 			transaction.debit_amount === '0' ? transaction.credit_amount : transaction.debit_amount,
 		account_type: 'debit' | 'credit' = transaction.debit_amount === '0' ? 'credit' : 'debit',
 		openDelete = false,
-		account_id: number = transaction.account.id;
+		account_id: number = transaction.account.id,
+		poppup: poppup;
 
 	const deleteTransaction = async () => {
 		const { res, json } = await fetchRequest(
@@ -33,16 +35,18 @@
 			`ledger/account/${transaction.account.id}/transactions/${transaction.id}/delete`
 		);
 
-		if (res.ok) {
-			transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
-			openDelete = false;
+		if (!res.ok) {
+			poppup = { message: 'Something went wrong', success: false };
+			return;
 		}
+
+		poppup = { message: 'Successfully deleted transaction', success: true };
+		transactions = transactions.filter((transaction_) => transaction_.id !== transaction.id);
+		openDelete = false;
 	};
 
 	const updateTransaction = async () => {
 		const account = accounts.find((account) => account.id === account_id);
-
-		console.log(accounts, account_id);
 
 		if (!accounts || !account) return;
 
@@ -60,8 +64,12 @@
 			}
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Something went wrong', success: true };
+			return;
+		}
 
+		poppup = { message: 'Successfully updated transaction', success: true };
 		let newTransaction = deepCopy(transactions);
 
 		newTransaction = newTransaction.filter((transaction_) => transaction_.id !== transaction.id);
@@ -76,8 +84,6 @@
 		});
 		transactions = newTransaction;
 	};
-
-
 </script>
 
 <div>{transaction.account.account_name}</div>
@@ -183,3 +189,5 @@
 		<Button action={() => (openDelete = false)}>Cancel</Button>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />

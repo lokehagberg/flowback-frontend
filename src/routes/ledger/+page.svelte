@@ -22,6 +22,8 @@
 	import type { id } from 'ethers/lib/utils';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import { transactions as transactionsLimit } from '$lib/Generic/APILimits.json';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
@@ -43,7 +45,7 @@
 		accounts: Account[] = [],
 		next: string,
 		prev: string,
-		message: string,
+		poppup: poppup,
 		totalBalance = 0,
 		filter: Filter = {
 			account_ids: [],
@@ -75,7 +77,7 @@
 	const getAccounts = async () => {
 		loading = true;
 		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
-		if (!res.ok) message = 'Something went wrong';
+		if (!res.ok) poppup = { message: 'Something went wrong', success: false };
 		loading = false;
 		accounts = json.results;
 		setAccountFilter(json);
@@ -110,7 +112,7 @@
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) {
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
 
@@ -141,11 +143,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully created transaction';
+			poppup = { message: 'Successfully created transaction', success: true };
 		}
 
 		transactions.push({
@@ -185,11 +187,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully created account';
+			poppup = { message: 'Successfully created account', success: true };
 			accounts.push({
 				account_name,
 				account_number,
@@ -208,11 +210,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully deleted account';
+			poppup = { message: 'Successfully deleted account', success: true };
 			accounts = accounts.filter((account) => account_id !== account.id);
 		}
 	};
@@ -472,7 +474,8 @@
 		<Button action={createAccount}>Create Account</Button>
 	</div>
 </Modal>
-<SuccessPoppup bind:show={show_poppup} bind:message />
+
+<Poppup bind:poppup />
 
 <Modal bind:open={showDeleteAccount}>
 	<div slot="body">

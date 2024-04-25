@@ -17,12 +17,12 @@
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
 		croppedImage = files[0];
+		imageString = URL.createObjectURL(croppedImage);
 		currentlyCropping = true;
 	};
 
 	$: if (croppedImage) {
-		console.log(croppedImage, typeof croppedImage)
-		imageString = URL.createObjectURL(croppedImage);
+		// imageString = URL.createObjectURL(croppedImage);
 	} 
 </script>
 

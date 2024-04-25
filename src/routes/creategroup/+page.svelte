@@ -106,7 +106,7 @@
 			<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-6 md:w-2/5">
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
-				<TextArea label="Description" bind:value={description} required />
+				<TextArea label="Description" bind:value={description} />
 				<ImageUpload icon={faUser} bind:imageString={image} label="Upload Image, recomended ratio 1:1" />
 				<ImageUpload
 					icon={faFileImage}

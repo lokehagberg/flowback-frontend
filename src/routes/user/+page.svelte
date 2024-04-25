@@ -112,7 +112,7 @@
 {#if currentlyCroppingProfile || currentlyCroppingBanner}
 	<!-- Cropp image -->
 	<CropperModal
-		confirmAction={(image) => {
+		confirmAction={() => {
 			if (currentlyCroppingProfile) profileImagePreview = croppedImage;
 			else if (currentlyCroppingBanner) bannerImagePreview = croppedImage;
 

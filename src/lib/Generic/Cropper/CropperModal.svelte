@@ -10,7 +10,7 @@
 
 	export let image: string,
 		cancelAction = () => {},
-		confirmAction = (image: Blob) => {},
+		confirmAction = () => {},
 		croppedImage: any,
 		currentlyCroppingProfile: boolean;
 
@@ -23,7 +23,7 @@
 
 		const imageToSend = await fetch(croppedImage).then((res) => res.blob());
 
-		confirmAction(imageToSend);
+		confirmAction();
 	};
 </script>
 

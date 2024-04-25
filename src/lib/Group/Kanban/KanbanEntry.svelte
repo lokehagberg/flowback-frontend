@@ -201,11 +201,11 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
-		on:click={() =>
-			(window.location.href =
-				kanban.origin_type === 'group'
-					? `groups/${kanban.origin_id}?page=kanban`
-					: `user?id=${kanban.assignee.id}`)}
+		on:click={() => {
+			if ($page.params.groupId) window.location.href = `/user?id=${kanban.assignee.id}`;
+			else if (kanban.origin_type === 'group')
+				window.location.href = `/groups/${kanban.origin_id}?page=kanban`;
+		}}
 		on:keydown
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
@@ -343,4 +343,3 @@
 		</div>
 	</Modal>
 {/if}
-

@@ -13,7 +13,7 @@
 	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -23,8 +23,8 @@
 
 	let name: string,
 		description: string,
-		image: File,
-		coverImage: File,
+		image: string,
+		coverImage: string,
 		useInvite = false,
 		publicGroup = true,
 		loading = false;
@@ -44,8 +44,8 @@
 		formData.append('direct_join', (!useInvite).toString());
 		console.log((!useInvite).toString(), 'DIRECT');
 		formData.append('public', publicGroup.toString());
-		if (image) formData.append('image', image);
-		if (coverImage) formData.append('cover_image', coverImage);
+		if (image) formData.append('image', await blobifyImages(image));
+		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
 
 		let api = groupToEdit === null ? 'group/create' : `group/${groupToEdit}/update`;
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
@@ -107,10 +107,10 @@
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} required />
-				<ImageUpload icon={faUser} bind:croppedImage={image} label="Upload Image, recomended ratio 1:1" />
+				<ImageUpload icon={faUser} bind:imageString={image} label="Upload Image, recomended ratio 1:1" />
 				<ImageUpload
 					icon={faFileImage}
-					bind:croppedImage={coverImage}
+					bind:imageString={coverImage}
 					label="Upload Cover Image, recomended ratio 4:1"
 					isCover
 				/>

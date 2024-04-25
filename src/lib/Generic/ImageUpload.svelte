@@ -9,9 +9,10 @@
 		isCover = false,
 		icon: any,
 		Class = '',
-		iconSize = '5x';
+		iconSize = '5x',
+		imageString: string;
 
-	let fileinput: HTMLInputElement, currentlyCropping: boolean, imageString: string;
+	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
@@ -19,7 +20,10 @@
 		currentlyCropping = true;
 	};
 
-	$: if (croppedImage) imageString = URL.createObjectURL(croppedImage);
+	$: if (croppedImage) {
+		console.log(croppedImage, typeof croppedImage)
+		imageString = URL.createObjectURL(croppedImage);
+	} 
 </script>
 
 <div class={`image-upload ${Class}`}>
@@ -30,7 +34,7 @@
 			id="image"
 			class={`${isCover ? 'cover' : ''} avatar`}
 			alt={$_(label)}
-			src={URL.createObjectURL(croppedImage)}
+			src={imageString}
 		/>
 	{:else}
 		<!-- <img
@@ -72,13 +76,12 @@
 {#if currentlyCropping}
 	<CropperModal
 		confirmAction={() => {
-			console.log('hello?');
 			currentlyCropping = false;
 		}}
 		cancelAction={() => {
 			currentlyCropping = false;
 		}}
-		bind:croppedImage
+		bind:croppedImage={imageString}
 		bind:currentlyCroppingProfile={currentlyCropping}
 		bind:image={imageString}
 	/>

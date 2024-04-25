@@ -18,3 +18,14 @@ export const checkForLinks = (text:string, id:string) => {
 	const descriptionHtmlElement = document.getElementById(id)
 	if (descriptionHtmlElement !== null) descriptionHtmlElement.innerHTML = linkified
 };
+
+export const blobifyImages = async (profileImagePreview: any) => {
+	const image = await fetch(profileImagePreview)
+		.then((res) => res.blob())
+		.then((blob) => {
+			const file = new File([blob], 'dot.png', blob);
+			return file;
+		});
+
+	return image;
+};

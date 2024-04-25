@@ -10,7 +10,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
@@ -68,16 +68,7 @@
 		document.title = `${user.username}'s profile`;
 	};
 
-	const blobifyImages = async (profileImagePreview: any) => {
-		const image = await fetch(profileImagePreview)
-			.then((res) => res.blob())
-			.then((blob) => {
-				const file = new File([blob], 'dot.png', blob);
-				return file;
-			});
 
-		return image;
-	};
 
 	const updateProfile = async () => {
 		const imageToSend = await blobifyImages(profileImagePreview);

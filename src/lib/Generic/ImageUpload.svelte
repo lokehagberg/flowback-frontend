@@ -6,7 +6,7 @@
 
 	export let croppedImage: File | null = null,
 		label: string,
-		isCover = false,
+		isProfile = false,
 		icon: any,
 		Class = '',
 		iconSize = '5x',
@@ -32,7 +32,7 @@
 	{#if croppedImage}
 		<img
 			id="image"
-			class={`${isCover ? 'cover' : ''} avatar`}
+			class={`${isProfile ? 'rounded-full' : 'cover'} avatar`}
 			alt={$_(label)}
 			src={imageString}
 		/>
@@ -82,7 +82,7 @@
 			currentlyCropping = false;
 		}}
 		bind:croppedImage={imageString}
-		bind:currentlyCroppingProfile={currentlyCropping}
+		bind:currentlyCroppingProfile={isProfile}
 		bind:image={imageString}
 	/>
 {/if}

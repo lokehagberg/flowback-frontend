@@ -107,12 +107,11 @@
 				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} />
-				<ImageUpload icon={faUser} bind:imageString={image} label="Upload Image, recomended ratio 1:1" />
+				<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
 				<ImageUpload
 					icon={faFileImage}
 					bind:imageString={coverImage}
-					label="Upload Cover Image, recomended ratio 4:1"
-					isCover
+					label="Upload Banner"
 				/>
 
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}

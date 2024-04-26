@@ -33,10 +33,16 @@
 <div class="bg-white dark:bg-darkobject p-6 text-xl rounded shadow dark:text-darkmodeText">
 	<Loader bind:loading>
 		<form on:submit|preventDefault={sendEmail} class="flex flex-col gap-4">
+			<h1 class="text-3xl">Send Mail</h1>
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea required label="Message" bind:value={message} />
 			<StatusMessage bind:status />
-			<Button disabled={loading} type="submit" Class="mt-4" label="Send Mail" />
+			<div class="font-bold">
+				Warning: This will send a mail to {import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE'
+					? 'everyone'
+					: 'everyone in the group'}
+			</div>
+			<Button disabled={loading} type="submit" Class="" label="Send Mail" />
 		</form>
 	</Loader>
 </div>

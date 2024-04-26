@@ -31,7 +31,7 @@
         <th>Ban</th>
     </tr>
 	{#each roles as role}
-		<tr class="">
+		<tr class="font-light">
             <th>{role.role_name}</th>
             <Role role={role.invite_user}/>
             <Role role={role.create_poll}/>

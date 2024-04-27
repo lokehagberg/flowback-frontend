@@ -159,7 +159,7 @@
 	<span
 		on:click={() => (showDetails = true)}
 		on:keydown
-		class="hover:underline cursor-pointer overflow-scroll"
+		class="hover:underline cursor-pointer overflow-hidden"
 	>
 		{prediction.description}</span
 	>

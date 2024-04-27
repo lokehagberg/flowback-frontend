@@ -13,9 +13,6 @@
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	// import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -89,17 +86,6 @@
 			'POST',
 			`group/poll/prediction/${id}/statement/delete`
 		);
-	};
-
-	const addPrediction = async () => {
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${prediction_statement_id}/prediction/create`,
-			{}
-		);
-		loading = false;
 	};
 
 	const getAIpredictionStatement = async () => {

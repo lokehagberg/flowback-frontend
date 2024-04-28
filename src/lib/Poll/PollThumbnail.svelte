@@ -43,7 +43,7 @@
 				tag={{ name: poll.tag_name, id: poll.tag, active: true }}
 				Class="inline cursor-default"
 			/>
-			<div class="ml-2 inline-flex gap-3">
+			<div class="ml-2 inline-flex gap-3 items-center">
 				{#if poll.poll_type === 4}
 					<HeaderIcon
 						Class="!p-0 !cursor-default"
@@ -64,8 +64,9 @@
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
 						<Fa
-							icon={faThumbtack}
-							color={poll.pinned ? 'Black' : '#BBB'}
+						size="1.2x"
+						icon={faThumbtack}
+						color={poll.pinned ? '#999' : '#CCC'}
 							rotate={poll.pinned ? '0' : '90'}
 						/>
 					</div>

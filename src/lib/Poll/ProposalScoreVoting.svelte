@@ -115,7 +115,7 @@
 </div>
 
 {#if isVoting}
-	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class=""
+	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]"
 		>Save Votings</Button
 	>
 {/if}

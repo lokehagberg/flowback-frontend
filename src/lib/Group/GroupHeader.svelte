@@ -25,7 +25,7 @@
 
 <div class="relative flex justify-center">
 	<img
-		class="cover"
+		class="cover w-full"
 		src={group.cover_image
 			? `${import.meta.env.VITE_API}${import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 					group.cover_image

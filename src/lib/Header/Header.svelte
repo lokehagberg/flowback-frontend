@@ -151,11 +151,11 @@
 
 			<div
 				id="side-header"
-				class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
+				class="flex gap-4 items-center float-right hover:bg-grey-800"
 			>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
-					class="dark:text-darkmodeText p-2"
+					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
 					on:click={() => {
@@ -164,7 +164,7 @@
 					}}
 				>
 					{#if darkMode}
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="25" height="25">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
 							<!-- Sun rays -->
 							<line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="8" />
 							<line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="8" />

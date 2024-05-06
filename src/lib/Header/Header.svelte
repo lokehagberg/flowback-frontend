@@ -2,12 +2,9 @@
 	import HeaderIcon from './HeaderIcon.svelte';
 	//Temporary fix due to bug with Sveltekit, it should be "import {faHome, faGlobeEurope, ...} from @fortawesome/free-solid-svg-icons"
 	import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
-	import { faSun } from '@fortawesome/free-solid-svg-icons/faSun';
 	import { faUserFriends } from '@fortawesome/free-solid-svg-icons/faUserFriends';
 	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
-	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
-	import { faMoneyBill } from '@fortawesome/free-solid-svg-icons/faMoneyBill';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
@@ -22,6 +19,7 @@
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
+	import ImageLoading from '$lib/Generic/ImageLoading.svelte';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -149,10 +147,7 @@
 				<!-- {/if} -->
 			</nav>
 
-			<div
-				id="side-header"
-				class="flex gap-4 items-center float-right hover:bg-grey-800"
-			>
+			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					class="dark:text-darkmodeText cursor-pointer pl-2"
@@ -185,9 +180,9 @@
 
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
-					<img
-						class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}
+					<ImageLoading
 						src={profileImage}
+						Class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}
 						alt="default pfp"
 					/>
 				</div>

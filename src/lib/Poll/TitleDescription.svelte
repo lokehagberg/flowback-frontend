@@ -16,7 +16,7 @@
 	id="poll-description"
 >
 	{poll.description}
-	<div class="flex h-8 justify-between">
+	<div class="flex h-8 justify-between">	
 		<div class="flex items-baseline">
 			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true }} />
 			{#if pollType === 4}

@@ -135,7 +135,7 @@
 			{/each}
 		</ul>
 	</div>
-	<TextArea label="Comment" required bind:value={message} bind:recentlyTappedButton />
+	<TextArea label="Comment"  bind:value={message} bind:recentlyTappedButton />
 	<ImageUpload icon={faUser} shouldCrop={false} bind:croppedImage={image}  label="" iconSize={'2x'} Class="flex !flex-row-reverse" />
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />

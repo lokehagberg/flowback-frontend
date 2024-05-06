@@ -66,7 +66,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	id="notifications-list"
-	class="small-notification relative"
+	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 	on:keydown
 >

@@ -146,7 +146,7 @@
 				/>
 				<!-- {/if} -->
 			</nav>
-
+ 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
@@ -182,7 +182,7 @@
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<ImageLoading
 						src={profileImage}
-						Class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}
+						Class={`w-8 h-8 rounded-full cursor-pointer ${sideHeaderOpen && 'border-blue-500 border-4'}`}
 						alt="default pfp"
 					/>
 				</div>

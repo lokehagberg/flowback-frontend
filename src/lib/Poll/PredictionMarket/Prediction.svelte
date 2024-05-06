@@ -15,11 +15,14 @@
 	import { onMount } from 'svelte';
 	import { userGroupInfo } from '$lib/Group/interface';
 	import { poll } from 'ethers/lib/utils';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
 	let showPoppup = false,
-		showDetails = false;
+		showDetails = false,
+		poppup: poppup;
 
 	onMount(() => {
 		getPredictionBet();
@@ -92,31 +95,26 @@
 	};
 
 	const createEvaluation = async (vote: boolean) => {
-		loading = true;
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/statement/vote/create`,
 			{ vote }
 		);
 
-		loading = false;
 		if (!res.ok) {
-			showPoppup = true;
+			poppup = { message: 'Something went wrong', success: false, show: true };
 			return;
 		}
 
+		poppup = { message: 'Successfully evaluated prediction', success: true, show: true };
 		prediction.user_prediction_statement_vote = vote;
 	};
 
 	const deleteEvaluation = async () => {
-		loading = true;
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/delete`
 		);
-		loading = false;
 
 		if (!res.ok) {
 			showPoppup = true;
@@ -127,8 +125,6 @@
 	};
 
 	const changeEvaluation = async (vote: boolean) => {
-		loading = true;
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/statement/vote/update`,
@@ -137,11 +133,12 @@
 			}
 		);
 
-		loading = false;
 		if (!res.ok) {
-			showPoppup = true;
+			poppup = { message: 'Something went wrong', success: false, show: true };
 			return;
 		}
+
+		poppup = { message: 'Successfully evaluated prediction', success: true, show: true };
 
 		prediction.user_prediction_statement_vote = vote;
 	};
@@ -231,4 +228,5 @@
 	</div>
 </Modal>
 
-<SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} />
+<!-- <SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} /> -->
+<Poppup bind:poppup />

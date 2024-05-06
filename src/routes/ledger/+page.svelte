@@ -1,5 +1,4 @@
 <script lang="ts">
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
@@ -13,22 +12,16 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Select from '$lib/Generic/Select.svelte';
 	import Transaction from '$lib/Ledger/Transaction.svelte';
-	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import TransactionFilter from '$lib/Ledger/TransactionFilter.svelte';
 	import formatDate from '$lib/Ledger/formatDate';
 	import { generateAndDownloadHTML } from '$lib/Ledger/HTML';
-	import { page } from '$app/stores';
 	import type { User } from '$lib/User/interfaces';
-	import type { id } from 'ethers/lib/utils';
 	import Pagination from '$lib/Generic/Pagination.svelte';
-	import { transactions as transactionsLimit } from '$lib/Generic/APILimits.json';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
-		status: StatusMessageInfo,
-		aggregatedBalance: number = 0,
 		account_id: number,
 		openNewTransaction = false,
 		show_account = false,
@@ -57,13 +50,12 @@
 		limit = 20;
 
 	onMount(async () => {
-		//@ts-ignore
-		getAccounts();
+		loading = true
+		await getAccounts();
 		await getUserInfo();
 		await getTransactions();
-		calculateTotalBalance();
-
-		loading = false;
+		await calculateTotalBalance();
+		loading = false
 	});
 
 	const calculateTotalBalance = () => {
@@ -75,10 +67,10 @@
 	};
 
 	const getAccounts = async () => {
-		loading = true;
+		// loading = true;
 		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
 		if (!res.ok) poppup = { message: 'Something went wrong', success: false };
-		loading = false;
+		// loading = false;
 		accounts = json.results;
 		setAccountFilter(json);
 	};
@@ -90,7 +82,7 @@
 	};
 
 	const getTransactions = async () => {
-		loading = true;
+		// loading = true;
 
 		let api = `ledger/transactions/list?`;
 
@@ -122,7 +114,7 @@
 		transactions = json.results.filter(
 			(transaction: Transaction) => transaction.account.created_by.id === user?.id
 		);
-		loading = false;
+		// loading = false;
 	};
 
 	const createTransaction = async () => {
@@ -315,7 +307,7 @@
 						>
 					{/if}
 					<TransactionFilter bind:filter {handleSearch} bind:accounts />
-				<!-- </div> -->
+					<!-- </div> -->
 				</div>
 				<div class="bg-white dark:bg-darkobject p-6 mt-6">
 					<Button

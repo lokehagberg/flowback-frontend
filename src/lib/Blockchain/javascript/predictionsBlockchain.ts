@@ -28,7 +28,7 @@ export const createPrediction = async (id: number, propId: number) => {
 	const { provider } = await getContract();
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.createPrediction(1, 1, 'predicion');
+	const estimatedGasLimit = await contract.estimateGas.createPrediction(id, propId, 'predicion');
 	const tx = await contract.createPrediction(
 		id, //pollid
 		propId, //proposalid
@@ -82,7 +82,7 @@ export const createPredictionBet = async (id: number, predId: number) => {
 	const { provider } = await getContract();
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.placePredictionBet(1, 1, 1, 9, true);
+	const estimatedGasLimit = await contract.estimateGas.placePredictionBet(id, 1, predId, 9, true);
 	const tx = await contract.placePredictionBet(
 		id, //pollid
 		1, //proposalid

@@ -35,8 +35,8 @@ export const getPhase = (poll: poll): Phase => {
 	else return 'prediction-voting';
 };
 
+// Labesls for the circles on the timeline
 export const dateLabels = [
-	'Pre Start',
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',

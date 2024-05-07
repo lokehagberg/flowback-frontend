@@ -24,7 +24,7 @@
 		getGroupsUserIsMemberIn
 	} from '$lib/Blockchain/javascript/rightToVote';
 
-	let id = 6;
+	let id = 15;
 
 	onMount(() => {
 		// test(value); // Call test with group

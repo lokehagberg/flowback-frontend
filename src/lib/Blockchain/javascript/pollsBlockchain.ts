@@ -31,7 +31,7 @@ const getContract = async () => {
 
 export const createPoll = async () => {
 	const contract = await getContract();
-	const nowInMilliSeconds = new Date().getTime();
+	const nowInMilliSeconds = Math.floor(Date.now())
 	const oneDayInSeconds = 24 * 60 * 60;
 	const aminute = 60;
 	try {
@@ -43,7 +43,7 @@ export const createPoll = async () => {
 			nowInMilliSeconds + aminute, //proposalenddate
 			nowInMilliSeconds + 2 * aminute, //votingstartdate
 			nowInMilliSeconds + 3 * aminute, //delegateenddate
-			nowInMilliSeconds + 4 * aminute //enddate
+			nowInMilliSeconds + 4000 * aminute //enddate
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
@@ -81,6 +81,7 @@ export const getPoll = async (id: number) => {
 		console.log(`Title: ${tx.title}`);
 		console.log(`Tag: ${tx.tag}`);
 		console.log(`Startdate: ${tx.pollStartDate}`);
+		console.log(`Voting date: ${tx.votingStartDate}`);
 		console.log(`Enddate: ${tx.endDate}`);
 		console.log(`Proposalcount: ${tx.proposalCount}`);
 

@@ -33,7 +33,6 @@
 	});
 </script>
 
-<!-- {@debug dates} -->
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div

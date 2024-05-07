@@ -31,7 +31,7 @@
 			mailStore.set(email);
 			status = {message: "Successfully registered", success:true};
 			selectedPage = 'Verify';
-		} else status = {message: "Could not register", success:false};
+		} else status = {message: json.detail[0], success:false};
 	}
 </script>
 

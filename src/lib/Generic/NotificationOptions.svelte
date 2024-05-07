@@ -58,7 +58,7 @@
 				channel_sender_id: id,
 				channel_sender_type: 'group'
 			});
-			console.log("SUCCES")
+			console.log('SUCCES');
 			popupMessage = 'Subscribed';
 		} else popupMessage = 'Something went wrong';
 
@@ -66,7 +66,7 @@
 	};
 
 	const notificationUnsubscription = async (category: string) => {
-		console.log(id)
+		console.log(id);
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
 			channel_sender_type: 'group',
 			channel_sender_id: 2,
@@ -86,6 +86,7 @@
 </script>
 
 <div class="notifications-clickable-region">
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:click={() => {
 			notificationOpen = !notificationOpen;
@@ -99,6 +100,7 @@
 		<ul class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
 			<li class="text-xs p-2">{$_('Manage Subscriptions')}</li>
 			{#each categories as category, i}
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<li
 					on:keydown
 					class="bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
@@ -125,7 +127,9 @@
 						swapOpacity
 						icon={notifications?.find(
 							(notificationObject) => notificationObject.channel_category === category
-						) ? faBell : faBellSlash}
+						)
+							? faBell
+							: faBellSlash}
 						size={'1.4x'}
 					/>
 				</li>

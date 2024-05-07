@@ -60,7 +60,7 @@
 	const getGroupInfo = async () => {
 		//TODO: detail is outdated
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
-		loading = false
+		loading = false;
 		if (!res.ok) return;
 
 		group = json;
@@ -94,6 +94,11 @@
 		const searchParams = new URLSearchParams(window.location.search);
 		searchParams.set('page', selectedPage);
 		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
+		let backed = false;
+		window.onpopstate = (e) => {
+			if (!backed) history.back();
+			backed = true;
+		};
 	}
 </script>
 
@@ -109,11 +114,9 @@
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
-				class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
+					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
 				`}
 				>
-					
-					
 					<!-- ${
 						selectedPage === 'kanban' || selectedPage === 'schedule'
 							? 'xl:w-[1000px]'

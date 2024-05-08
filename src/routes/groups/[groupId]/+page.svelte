@@ -117,12 +117,11 @@
 					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
 				`}
 				>
-					<!-- ${
-						selectedPage === 'kanban' || selectedPage === 'schedule'
-							? 'xl:w-[1000px]'
-							: 'xl:w-[720px]'
-					} -->
+					<!-- Here is where the different pages on a group are selected and switched around with, such as "Flow" page which is 
+					here called Pollthumbnails. -->
+
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
+
 					{#if selectedPage === 'flow'}
 						<PollThumbnails
 							infoToGet="group"

@@ -9,6 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
 	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+	import { onDestroy } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -31,6 +32,10 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
+
+	onDestroy(() => {
+		console.log("Is it?")
+	})
 </script>
 
 <div class={`relative ${Class}`}>

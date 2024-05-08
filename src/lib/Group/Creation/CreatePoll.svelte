@@ -102,8 +102,6 @@
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
-		console.log('Here?');
-
 		const formData = new FormData();
 		formData.append('title', title);
 		formData.append('description', description);

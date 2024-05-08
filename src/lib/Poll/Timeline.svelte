@@ -20,6 +20,9 @@
 	let datesDisplay: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
 
+		$:console.log(pollType)
+
+
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 	const fraction = (currentPhase + 1) / dates.length;
 

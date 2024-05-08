@@ -2,25 +2,26 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from './Button.svelte';
 
-	export let prev: string, next: string, iterable: any[], Class = ""
+	export let prev: string,
+		next: string,
+		iterable: any[],
+		Class = '';
 
 	const request = async (api: string) => {
 		const { res, json } = await fetchRequest('GET', api);
 
-		console.log(res, json);
 		next = json.next;
 		prev = json.previous;
 		iterable = json.results;
 	};
 </script>
 
-
 <div class={`${Class} text-white dark:text-darkmodeText`}>
 	{#if prev}
-	<Button onClick={() => request(prev)}>Previous</Button>
+		<Button onClick={() => request(prev)}>Previous</Button>
 		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(prev)}>Previous</button> -->
 	{/if}
-		{#if next}
+	{#if next}
 		<Button onClick={() => request(next)}>Next</Button>
 		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(next)}>Next</button> -->
 	{/if}

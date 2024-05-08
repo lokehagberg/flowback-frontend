@@ -64,7 +64,7 @@
 		if (!res.ok) return;
 
 		group = json;
-		console.log(group, 'GROUPPP');
+		// console.log(group, 'GROUPPP');
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 		statusMessageFormatter(res, json);

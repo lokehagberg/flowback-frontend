@@ -43,8 +43,7 @@
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
 
-		if (filter.search.length > 0)
-		API += `&title__icontains=${filter.search}`;
+		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
 			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
@@ -58,17 +57,17 @@
 
 	const getPolls = async () => {
 		loading = true;
-		polls = []
-		
+		polls = [];
+
 		const { json, res } = await fetchRequest('GET', getAPI());
-		
+
 		loading = false;
-		
+
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
 			return;
 		}
-		
+
 		polls = json.results;
 		next = json.next;
 		prev = json.previous;
@@ -101,15 +100,17 @@
 				</div>
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
-				{#if polls.length > 0}
-					{#each polls as poll}
-						<PollThumbnail {poll} {isAdmin} />
-					{/each}
-				{:else}
-					<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-						{$_('No polls currently here')}
-					</div>
-				{/if}
+				{#key polls}
+					{#if polls.length > 0}
+						{#each polls as poll}
+							<PollThumbnail {poll} {isAdmin} />
+						{/each}
+					{:else}
+						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+							{$_('No polls currently here')}
+						</div>
+					{/if}
+				{/key}
 			{/if}
 		</div>
 		<Pagination

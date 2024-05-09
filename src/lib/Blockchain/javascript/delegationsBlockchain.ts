@@ -54,3 +54,36 @@ export const becomeDelegate = async () => {
 		console.error('Error becoming delegate', error);
 	}
 }
+
+export const delegate = async () => {
+	try {
+		const contract = await getContract();
+		const feeData = await contract.provider.getFeeData();
+		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+		const estimatedGasLimit = await contract.estimateGas.delegate(2, "0xb958d74A9BEe5b75f24404A41083cD62Fd285F88");
+		const tx = await contract.delegate(2, "0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", {
+			gasLimit: estimatedGasLimit,
+			maxPriorityFeePerGas: maxPriorityFeePerGas,
+		});
+
+		const txReceipt = await tx.wait({ timeout: 4000 });
+		if (txReceipt && txReceipt.status === 1) {
+			const logs = txReceipt.logs;
+			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
+			const NewDelegationEvent = parsedLogs.find(log => log.name === 'NewDelegation');
+			if (NewDelegationEvent) {
+				const delegate = NewDelegationEvent.args.to;
+				const delegater = NewDelegationEvent.args.from;
+				const groupId = NewDelegationEvent.args.groupId;
+				console.log(`New delegation from "${delegater}" to "${delegate} in group ${groupId}`);
+			} else {
+				console.warn('NewDelegation event not found in transaction logs');
+			}
+		} else {
+			console.warn('Transaction might have failed');
+			console.log(txReceipt);
+		}
+	} catch (error) {
+		console.error('Error delegating', error);
+	}
+}

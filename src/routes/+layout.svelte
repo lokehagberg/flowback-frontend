@@ -11,13 +11,15 @@
 <script lang="ts">
 	import '../app.css';
 	import { initializeLocalization } from '$lib/Localization/i18n';
+	import Header from '$lib/Header/Header.svelte';
 
 	initializeLocalization();
 	export const prerender = true
 </script>
 
 <main>
-	<slot />
+	<Header/>
+<slot />
 </main>
 
 <!-- <footer>  -->

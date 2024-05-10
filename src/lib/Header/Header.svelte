@@ -29,14 +29,11 @@
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
-		// if (!profileImage) getProfileImage();
-		// else {
-		// 	const pfpLink = localStorage.getItem('pfp-link');
-		// 	if (pfpLink) profileImage = pfpLink;
-		// }
-
-		getProfileImage();
-
+		if (!profileImage) getProfileImage();
+		else {
+			const pfpLink = localStorage.getItem('pfp-link');
+			if (pfpLink) profileImage = pfpLink;
+		}
 		darkMode = localStorage.theme === 'dark';
 		checkForLedgerModule();
 	});
@@ -79,7 +76,7 @@
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
 
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0">
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
@@ -100,7 +97,7 @@
 						color={darkMode ? 'white' : 'black'}
 						Class={'p-4'}
 					/>
-					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
@@ -134,7 +131,7 @@
 						Class="p-4"
 					/>
 				{/if}
-				<!-- {#if (isAdmin && import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") || import.meta.env.VITE_ONE_GROUP_FLOWBACK !== "TRUE"} -->
+
 				<HeaderIcon
 					icon={faCoins}
 					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
@@ -144,12 +141,11 @@
 					color={darkMode ? 'white' : 'black'}
 					Class="p-4"
 				/>
-				<!-- {/if} -->
 			</nav>
- 
+
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<span
+				 <!-- svelte-ignore a11y-no-static-element-interactions -->
+				 <span
 					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
@@ -160,7 +156,7 @@
 				>
 					{#if darkMode}
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
-							<!-- Sun rays -->
+							<!-- Sun Rays -->
 							<line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="8" />
 							<line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="8" />
 							<line x1="28" y1="28" x2="72" y2="72" stroke="white" stroke-width="8" />
@@ -169,7 +165,7 @@
 							<line x1="78" y1="78" x2="22" y2="22" stroke="white" stroke-width="8" />
 							<line x1="28" y1="72" x2="72" y2="28" stroke="white" stroke-width="8" />
 							<line x1="72" y1="72" x2="28" y2="28" stroke="white" stroke-width="8" />
-							<!-- Sun center -->
+							<!-- Sun body -->
 							<circle cx="50" cy="50" r="25" fill="white" />
 						</svg>
 					{:else}
@@ -178,14 +174,15 @@
 				</span>
 				<Notifications />
 
+				
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
-					<ImageLoading
+					<img
 						src={profileImage}
-						Class={`w-8 h-8 rounded-full cursor-pointer ${sideHeaderOpen && 'border-blue-500 border-4'}`}
+						class={`w-8 h-8 rounded-full cursor-pointer ${sideHeaderOpen && 'border-blue-500 border-4'}`}
 						alt="default pfp"
 					/>
-				</div>
+				</div> 
 			</div>
 		</div>
 	</header>

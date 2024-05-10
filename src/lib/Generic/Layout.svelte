@@ -9,15 +9,11 @@
 	onMount(() => {
 		let backed = false;
 		TriggerDarkMode();
-		// Odd solution to move back in history twice, since one has to doubble click otherwise
-		window.onpopstate = (e) => {
-			if (!backed) history.back();
-			backed = true;
-		};
+
 	});
 </script>
 
-<Header />
+<!-- <Header /> -->
 
 <!-- <Chat /> -->
 

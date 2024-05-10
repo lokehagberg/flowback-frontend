@@ -36,12 +36,29 @@
 
 		if (location.pathname !== '/login') getProfileImage();
 
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			darkMode = true;
-		}
-		
+		ensureDarkMode();
+
 		checkForLedgerModule();
 	});
+
+	const ensureDarkMode = () => {
+		if (localStorage.getItem('theme') === 'light') {
+			darkMode = false;
+			return;
+		} else if (localStorage.getItem('theme') === 'dark') {
+			darkMode = true;
+			return;
+		}
+
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			darkMode = true;
+			console.log('HEREHRE');
+		} else darkMode = false;
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+			// darkMode = event.matches;
+		});
+	};
 
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');

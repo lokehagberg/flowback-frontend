@@ -318,9 +318,11 @@
 					</div>
 				</div>
 			{:else}
-				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
-					{kanban?.description}
-				</div>
+				{#if kanban.description}
+					<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
+						{kanban?.description}
+					</div>
+				{/if}
 				<div class="mt-6 text-left">
 					<span>
 						Assignee: {kanban?.assignee?.username}

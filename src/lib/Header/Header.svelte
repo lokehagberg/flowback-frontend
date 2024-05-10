@@ -19,11 +19,10 @@
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
-	import ImageLoading from '$lib/Generic/ImageLoading.svelte';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
-		darkMode: boolean | null = null,
+		darkMode: boolean = false,
 		ledgerExists: boolean = false,
 		isAdmin = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
@@ -34,6 +33,9 @@
 			const pfpLink = localStorage.getItem('pfp-link');
 			if (pfpLink) profileImage = pfpLink;
 		}
+
+		if (location.pathname !== '/login')
+		getProfileImage();
 		darkMode = localStorage.theme === 'dark';
 		checkForLedgerModule();
 	});

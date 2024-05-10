@@ -34,9 +34,12 @@
 			if (pfpLink) profileImage = pfpLink;
 		}
 
-		if (location.pathname !== '/login')
-		getProfileImage();
-		darkMode = localStorage.theme === 'dark';
+		if (location.pathname !== '/login') getProfileImage();
+
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			darkMode = true;
+		}
+		
 		checkForLedgerModule();
 	});
 
@@ -146,8 +149,8 @@
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
-				 <!-- svelte-ignore a11y-no-static-element-interactions -->
-				 <span
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<span
 					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
@@ -176,15 +179,16 @@
 				</span>
 				<Notifications />
 
-				
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						src={profileImage}
-						class={`w-8 h-8 rounded-full cursor-pointer ${sideHeaderOpen && 'border-blue-500 border-4'}`}
+						class={`w-8 h-8 rounded-full cursor-pointer ${
+							sideHeaderOpen && 'border-blue-500 border-4'
+						}`}
 						alt="default pfp"
 					/>
-				</div> 
+				</div>
 			</div>
 		</div>
 	</header>

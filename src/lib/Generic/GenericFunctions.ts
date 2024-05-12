@@ -9,14 +9,16 @@ export type StatusMessageInfo = {
 	success: boolean;
 };
 
-export const checkForLinks = (text:string, id:string) => {
+export const checkForLinks = (text: string, id: string) => {
+	if (text === null) return '';
+
 	const linkPattern = /https?:\/\/[^\s]+/g;
 	const linkified = text.replace(linkPattern, (match) => {
 		return `<a href="${match}" target="_blank">${match}</a>`;
 	});
 
-	const descriptionHtmlElement = document.getElementById(id)
-	if (descriptionHtmlElement !== null) descriptionHtmlElement.innerHTML = linkified
+	const descriptionHtmlElement = document.getElementById(id);
+	if (descriptionHtmlElement !== null) descriptionHtmlElement.innerHTML = linkified;
 };
 
 export const blobifyImages = async (profileImagePreview: any) => {

@@ -318,16 +318,13 @@
 					</div>
 				</div>
 			{:else}
-				{#if kanban.description}
-					<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
-						{kanban?.description}
-					</div>
-				{/if}
+				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
+					{kanban?.description}
+				</div>
 				<div class="mt-6 text-left">
 					<span>
 						Assignee: {kanban?.assignee?.username}
 					</span>
-					<!-- Don't ask why the class "table" works here -->
 					<div class="flex gap-2 align-middle">
 						<span>Priority:</span>
 						<PriorityIcons Class="ruby" priority={kanban?.priority} />

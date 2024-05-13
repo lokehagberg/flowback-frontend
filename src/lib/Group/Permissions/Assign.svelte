@@ -10,7 +10,6 @@
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
-	import Permissions from './Permissions.svelte';
 
 	let roles: Permission[] = [];
 	let users: groupUser[] = [];

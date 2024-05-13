@@ -23,6 +23,10 @@
 		isUserMemberInGroup,
 		getGroupsUserIsMemberIn
 	} from '$lib/Blockchain/javascript/rightToVote';
+	import {
+		becomeDelegate,
+		delegate,
+	} from '$lib/Blockchain/javascript/delegationsBlockchain';
 
 	let id = 15;
 
@@ -110,9 +114,14 @@
 	<div class="p-6">
 		<button on:click={() => getPredictionBets(id, 1)}>Get prediction bets</button>
 	</div>
-
 	<hr />
 	<b>delegations</b>
+	<div class="p-6">
+		<button on:click={() => becomeDelegate()}>Become delegate</button>
+	</div>
+	<div class="p-6">
+		<button on:click={() => delegate()}>Delegate</button>
+	</div>
 </Layout>
 
 <style>

@@ -31,7 +31,7 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
-	  const contractAddress = '0x0fDD2AD1aEE84C91DEb80c25993c0bEde05987A3'; //use this address
+	  const contractAddress = '0x0436120E96bE6e31e0AE74462da9a103590c2ED5'; //use this address
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 
@@ -43,8 +43,8 @@ export const becomeMemberOfGroup = async () => {
 	
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.becomeMemberOfGroup(2);
-	const tx = await contract.becomeMemberOfGroup(2, { //group id
+	const estimatedGasLimit = await contract.estimateGas.becomeMemberOfGroup(1);
+	const tx = await contract.becomeMemberOfGroup(1, { //group id
     gasLimit: estimatedGasLimit, 
     maxPriorityFeePerGas: maxPriorityFeePerGas,
     });

@@ -28,7 +28,7 @@
 		delegate,
 	} from '$lib/Blockchain/javascript/delegationsBlockchain';
 
-	let id = 15;
+	let id = 16;
 
 	onMount(() => {
 		// test(value); // Call test with group

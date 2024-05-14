@@ -23,7 +23,7 @@ async function getUser() {
 
 const getContract = async () => {
 	const signer = await getUser();
-	const contractAddress = '0x0fDD2AD1aEE84C91DEb80c25993c0bEde05987A3'; //use this address
+	const contractAddress = '0x2752316A473aC7Be2f285eD0e132154072aDC955'; //use this address
 	return new ethers.Contract(contractAddress, contractABI, signer);
 };
 
@@ -31,7 +31,7 @@ const getContract = async () => {
 
 export const createPoll = async () => {
 	const contract = await getContract();
-	const nowInMilliSeconds = Math.floor(Date.now())
+	const nowInMilliSeconds = Math.floor(Date.now());
 	const oneDayInSeconds = 24 * 60 * 60;
 	const aminute = 60;
 	try {
@@ -40,9 +40,9 @@ export const createPoll = async () => {
 			'tag',
 			1, //group
 			nowInMilliSeconds, //pollstartdate
-			nowInMilliSeconds + aminute, //proposalenddate
-			nowInMilliSeconds + 2 * aminute, //votingstartdate
-			nowInMilliSeconds + 3 * aminute, //delegateenddate
+			nowInMilliSeconds, //proposalenddate
+			nowInMilliSeconds, //votingstartdate
+			nowInMilliSeconds, //delegateenddate
 			nowInMilliSeconds + 4000 * aminute //enddate
 		);
 
@@ -54,7 +54,7 @@ export const createPoll = async () => {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const pollCreatedEvents = parsedLogs.filter((log:any) => log.name === 'PollCreated');
+			const pollCreatedEvents = parsedLogs.filter((log: any) => log.name === 'PollCreated');
 			const PollCreatedEvent = pollCreatedEvents.length > 0 ? pollCreatedEvents[0] : undefined;
 
 			console.log(PollCreatedEvent);
@@ -81,6 +81,7 @@ export const getPoll = async (id: number) => {
 		console.log(`Title: ${tx.title}`);
 		console.log(`Tag: ${tx.tag}`);
 		console.log(`Startdate: ${tx.pollStartDate}`);
+		console.log(`Startdate: ${tx.proposalEndDate}`);
 		console.log(`Voting date: ${tx.votingStartDate}`);
 		console.log(`Enddate: ${tx.endDate}`);
 		console.log(`Proposalcount: ${tx.proposalCount}`);
@@ -110,7 +111,7 @@ export const createProposal = async (id: number) => {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const ProposalCreatedEvent = parsedLogs.find((log:any) => log.name === 'ProposalAdded');
+			const ProposalCreatedEvent = parsedLogs.find((log: any) => log.name === 'ProposalAdded');
 			if (ProposalCreatedEvent) {
 				const pollId = parseInt(ProposalCreatedEvent.args.pollId);
 				const proposalId = ProposalCreatedEvent.args.proposalId;
@@ -128,13 +129,13 @@ export const createProposal = async (id: number) => {
 		}
 	}
 };
-export const getProposalsOnPoll = async (id:number) => {
+export const getProposalsOnPoll = async (id: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.getProposals(id); //poll id 1
 		console.log(tx);
 		console.log('PROPOSALS ON POLLID ', id); //change when inputs is done
-		tx.forEach((element:any) => {
+		tx.forEach((element: any) => {
 			console.log(
 				`Proposal id ${element.proposalId}: "${element.description}" votes: ${element.voteCount}`
 			);
@@ -147,7 +148,7 @@ export const getProposalsOnPoll = async (id:number) => {
 		}
 	}
 };
-export const getPollResults = async (id:number) => {
+export const getPollResults = async (id: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.getPollResults(1); //poll id 1
@@ -160,11 +161,11 @@ export const getPollResults = async (id:number) => {
 		}
 	}
 };
-export const vote = async (id:number) => {
+export const vote = async (id: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.vote(
-			1, //pollid
+			id, //pollid
 			1 //proposalid
 		);
 
@@ -176,7 +177,7 @@ export const vote = async (id:number) => {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const VoteSubmittedCreatedEvent = parsedLogs.find((log:any) => log.name === 'VoteSubmitted');
+			const VoteSubmittedCreatedEvent = parsedLogs.find((log: any) => log.name === 'VoteSubmitted');
 			if (VoteSubmittedCreatedEvent) {
 				const pollId = parseInt(VoteSubmittedCreatedEvent.args.pollId);
 				const voter = VoteSubmittedCreatedEvent.args.voter;

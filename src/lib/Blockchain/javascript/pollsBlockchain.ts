@@ -29,7 +29,7 @@ const getContract = async () => {
 
 //----------------------------TODO update with inputs ---------------------------------------------------
 
-export const createPoll = async () => {
+export const createPoll = async (_groupId: number) => {
 	const contract = await getContract();
 	const nowInMilliSeconds = Math.floor(Date.now())
 	const oneDayInSeconds = 24 * 60 * 60;
@@ -38,11 +38,11 @@ export const createPoll = async () => {
 		const tx = await contract.createPoll(
 			'title',
 			'tag',
-			1, //group
+			_groupId, //group
 			nowInMilliSeconds, //pollstartdate
-			nowInMilliSeconds + aminute, //proposalenddate
-			nowInMilliSeconds + 2 * aminute, //votingstartdate
-			nowInMilliSeconds + 3 * aminute, //delegateenddate
+			nowInMilliSeconds + 2000 * aminute, //proposalenddate
+			nowInMilliSeconds + 3000 * aminute, //votingstartdate
+			nowInMilliSeconds + 3500 * aminute, //delegateenddate
 			nowInMilliSeconds + 4000 * aminute //enddate
 		);
 
@@ -94,11 +94,11 @@ export const getPoll = async (id: number) => {
 		}
 	}
 };
-export const createProposal = async (id: number) => {
+export const createProposal = async (_pollId: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.addProposal(
-			id, //pollid
+			_pollId, //pollid
 			'description' //description
 		);
 
@@ -160,12 +160,12 @@ export const getPollResults = async (id:number) => {
 		}
 	}
 };
-export const vote = async (id:number) => {
+export const vote = async (_pollId: number, proposalId: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.vote(
-			1, //pollid
-			1 //proposalid
+			_pollId, //pollid
+			proposalId //proposalid
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {

@@ -36,7 +36,7 @@ interface Window {
 	};
 
 
-export const becomeMemberOfGroup = async () => {
+export const becomeMemberOfGroup = async (_groupId: number) => {
 	
 	const contract = await getContract();
 	const { provider } = await getContract();
@@ -44,7 +44,7 @@ export const becomeMemberOfGroup = async () => {
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
 	const estimatedGasLimit = await contract.estimateGas.becomeMemberOfGroup(2);
-	const tx = await contract.becomeMemberOfGroup(2, { //group id
+	const tx = await contract.becomeMemberOfGroup(_groupId, { //group id
     gasLimit: estimatedGasLimit, 
     maxPriorityFeePerGas: maxPriorityFeePerGas,
     });

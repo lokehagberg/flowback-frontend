@@ -98,9 +98,9 @@
 	</div>
 </Modal>
 
-<Modal bind:open={open_tos}>
-	<div slot="body">
-		<TermsOfService Class="!border-none !p-0 leading-7" />
+<Modal bind:open={open_tos} Class="h-[90%] overflow-y-scroll">
+	<div slot="body" class="">
+		<TermsOfService Class="!border-none !p-0 leading-8" />
 	</div>
 </Modal>
 

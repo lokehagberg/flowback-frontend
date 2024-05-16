@@ -19,27 +19,46 @@
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
-	import ImageLoading from '$lib/Generic/ImageLoading.svelte';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
-		darkMode: boolean | null = null,
+		darkMode: boolean = false,
 		ledgerExists: boolean = false,
 		isAdmin = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
-		// if (!profileImage) getProfileImage();
-		// else {
-		// 	const pfpLink = localStorage.getItem('pfp-link');
-		// 	if (pfpLink) profileImage = pfpLink;
-		// }
+		if (!profileImage) getProfileImage();
+		else {
+			const pfpLink = localStorage.getItem('pfp-link');
+			if (pfpLink) profileImage = pfpLink;
+		}
 
-		getProfileImage();
+		if (location.pathname !== '/login') getProfileImage();
 
-		darkMode = localStorage.theme === 'dark';
+		ensureDarkMode();
+
 		checkForLedgerModule();
 	});
+
+	const ensureDarkMode = () => {
+		if (localStorage.getItem('theme') === 'light') {
+			darkMode = false;
+			return;
+		} else if (localStorage.getItem('theme') === 'dark') {
+			darkMode = true;
+			return;
+		}
+
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			darkMode = true;
+			console.log('HEREHRE');
+		} else darkMode = false;
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+			// darkMode = event.matches;
+		});
+	};
 
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
@@ -79,7 +98,7 @@
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
 
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0">
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
@@ -100,7 +119,7 @@
 						color={darkMode ? 'white' : 'black'}
 						Class={'p-4'}
 					/>
-					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
@@ -134,7 +153,7 @@
 						Class="p-4"
 					/>
 				{/if}
-				<!-- {#if (isAdmin && import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") || import.meta.env.VITE_ONE_GROUP_FLOWBACK !== "TRUE"} -->
+
 				<HeaderIcon
 					icon={faCoins}
 					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
@@ -144,9 +163,8 @@
 					color={darkMode ? 'white' : 'black'}
 					Class="p-4"
 				/>
-				<!-- {/if} -->
 			</nav>
- 
+
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
@@ -160,7 +178,7 @@
 				>
 					{#if darkMode}
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
-							<!-- Sun rays -->
+							<!-- Sun Rays -->
 							<line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="8" />
 							<line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="8" />
 							<line x1="28" y1="28" x2="72" y2="72" stroke="white" stroke-width="8" />
@@ -169,7 +187,7 @@
 							<line x1="78" y1="78" x2="22" y2="22" stroke="white" stroke-width="8" />
 							<line x1="28" y1="72" x2="72" y2="28" stroke="white" stroke-width="8" />
 							<line x1="72" y1="72" x2="28" y2="28" stroke="white" stroke-width="8" />
-							<!-- Sun center -->
+							<!-- Sun body -->
 							<circle cx="50" cy="50" r="25" fill="white" />
 						</svg>
 					{:else}
@@ -180,9 +198,11 @@
 
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
-					<ImageLoading
+					<img
 						src={profileImage}
-						Class={`w-8 h-8 rounded-full cursor-pointer ${sideHeaderOpen && 'border-blue-500 border-4'}`}
+						class={`w-8 h-8 rounded-full cursor-pointer ${
+							sideHeaderOpen && 'border-blue-500 border-4'
+						}`}
 						alt="default pfp"
 					/>
 				</div>

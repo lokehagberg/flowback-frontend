@@ -19,7 +19,9 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
+
 	  const contractAddress = '0xDeE004347e6C7D2c7B2E2e26ef9Cdab1B1838F52'; //use this address
+
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 
@@ -86,6 +88,7 @@ export const delegate = async () => {
 	} catch (error) {
 		console.error('Error delegating', error);
 	}
+
 }
 
 export const removeDelegation = async () => {
@@ -109,4 +112,5 @@ export const removeDelegation = async () => {
 	} catch (error) {
 		console.error('Error delegating', error);
 	}
+
 }

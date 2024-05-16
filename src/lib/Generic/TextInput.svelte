@@ -9,7 +9,8 @@
 		onInput = () => {},
 		Class = '',
 		onBlur = () => {},
-		inputClass = '';
+		inputClass = '',
+		placeholder = '';
 
 	import { _ } from 'svelte-i18n';
 
@@ -35,5 +36,6 @@
 		id={`textinput-${label}`}
 		on:input={onInput}
 		max="100"
+		{placeholder}
 	/></label
 >

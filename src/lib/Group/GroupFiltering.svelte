@@ -17,7 +17,7 @@
 	};
     
 	const handleSearch = (e: any) => {
-        console.log(filter)
+        // console.log(filter)
         // filter.search = e.target.value;
         getGroups();
     };

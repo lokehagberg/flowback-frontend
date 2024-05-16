@@ -151,6 +151,7 @@
 					onInput={() => searchUsers(searchUser)}
 					bind:value={searchUser}
 					label="User to invite"
+					placeholder="Username"
 				/>
 				<ul>
 					{#each searchedUsers as searchedUser}

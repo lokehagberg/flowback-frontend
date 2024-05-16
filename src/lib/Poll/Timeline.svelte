@@ -9,6 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
 	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+	import { onDestroy } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -18,6 +19,9 @@
 
 	let datesDisplay: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
+
+		$:console.log(pollType)
+
 
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 	const fraction = (currentPhase + 1) / dates.length;
@@ -31,6 +35,10 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
+
+	onDestroy(() => {
+		console.log("Is it?")
+	})
 </script>
 
 <div class={`relative ${Class}`}>

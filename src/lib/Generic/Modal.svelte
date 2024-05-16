@@ -8,11 +8,11 @@
 		onClose = () => {},
 		onSubmit = () => {};
 	$: if (!open) onClose();
+	$: console.log(open);
 </script>
 
 <div id="overlay" class="overlay" class:hidden={!open}>
 	<div
-		
 		id="popup-modal"
 		tabindex="-1"
 		class={`bg-transparent overflow-y-auto overflow-x-hidden fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal ${Class}`}

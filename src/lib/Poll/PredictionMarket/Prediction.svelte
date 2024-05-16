@@ -102,11 +102,11 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Something went wrong', success: false, show: true };
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true, show: true };
+		poppup = { message: 'Successfully evaluated prediction', success: true };
 		prediction.user_prediction_statement_vote = vote;
 	};
 
@@ -117,10 +117,10 @@
 		);
 
 		if (!res.ok) {
-			showPoppup = true;
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
-
+		
 		prediction.user_prediction_statement_vote = null;
 	};
 
@@ -134,20 +134,33 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Something went wrong', success: false, show: true };
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true, show: true };
+		poppup = { message: 'Successfully evaluated prediction', success: true };
 
 		prediction.user_prediction_statement_vote = vote;
 	};
 
+	//TODO: Fix AI integration
 	const getAIPredictionBets = async () => {
 		const { res, json } = await fetchRequest('POST', 'ai/prediction_bets', {
 			proposals: 'Eat soup',
-			predictions: "You'll get full\n You'll get food poison"
+			predictions: "You'll get fed\n You'll get food poison"
 		});
+	};
+
+	const handleChangeBetScore = async (e: any) => {
+		//@ts-ignore
+		const newScore = e?.target?.value;
+
+		if (!newScore) predictionBetDelete();
+		else if (score === null) {
+			predictionBetCreate(newScore);
+		} else predictionBetUpdate(newScore);
+
+		score = Number(newScore);
 	};
 </script>
 
@@ -166,24 +179,7 @@
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
 			bind:value={score}
-			onInput={async (e) => {
-				//@ts-ignore
-				const newScore = e?.target?.value;
-
-				console.log(newScore);
-				if (!newScore) predictionBetDelete();
-				else if (score === null) {
-					predictionBetCreate(newScore);
-				} else predictionBetUpdate(newScore);
-
-				score = Number(newScore);
-				// await predictionBetDelete();
-
-				// if (selectedScore !== null) {
-				// 	score = Number(selectedScore);
-				// 	predictionBetCreate();
-				// }
-			}}
+			onInput={handleChangeBetScore}
 		/>
 	{/if}
 	{#if phase === 'results' || phase === 'prediction-voting'}

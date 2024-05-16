@@ -13,8 +13,10 @@
 		hovered: number[] = [];
 
 	const getNotifications = async () => {
+		//Prevents infinite reload in /login where <Header /> is hidden
+		if (location.pathname === '/login') return;
 		const { json, res } = await fetchRequest('GET', 'notification/list');
-		notifications = json.results;
+		if (res.ok) notifications = json.results;
 	};
 
 	const closeWindowWhenClickingOutside = () => {
@@ -73,7 +75,7 @@
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
 		class:hidden={notifications?.length === 0 || notifications?.length === undefined}
-		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white  bg-secondary"
+		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white bg-secondary"
 	>
 		<span class="">{notifications?.length}</span>
 	</div>

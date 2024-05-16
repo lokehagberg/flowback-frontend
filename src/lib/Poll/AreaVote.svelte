@@ -47,7 +47,6 @@
 
 	const getAreaVote = async () => {
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
-		console.log("HERERE", json, res)
 
 		if (res.ok) {
 			const votedFor = json.results[0].tag_name;
@@ -69,12 +68,12 @@
 
 <div class={`grid gap-2 grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
 	{#each tags as tag}
-		{#if tag.active}
+		<!-- {#if tag.active} -->
 		<Button
 			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
 			action={() => changeSelect(tag)}>{tag.name}</Button
 		>
-		{/if}
+		<!-- {/if} -->
 	{/each}
 </div>
 

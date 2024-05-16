@@ -43,8 +43,7 @@
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
 
-		if (filter.search.length > 0)
-		API += `&title__icontains=${filter.search}`;
+		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
 			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
@@ -56,9 +55,9 @@
 		return API;
 	};
 
-	//TODO: Refactor this
 	const getPolls = async () => {
 		loading = true;
+		polls = [];
 
 		const { json, res } = await fetchRequest('GET', getAPI());
 
@@ -74,23 +73,10 @@
 		prev = json.previous;
 	};
 
-	//TODO: Remove this shit later
-	const amendWithPinnedPolls = async () => {
-		loading = true;
-
-		const { json, res } = await fetchRequest('GET', getAPI());
-
-		loading = false;
-
-		if (!res.ok) status = statusMessageFormatter(res, json);
-		else polls = [...json.results, ...polls];
-	};
-
 	let status: StatusMessageInfo;
 
 	onMount(async () => {
 		await getPolls();
-		// amendWithPinnedPolls();
 		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
 	});
 </script>
@@ -114,16 +100,17 @@
 				</div>
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
-
-				{#if polls.length > 0}
-					{#each polls as poll}
-						<PollThumbnail {poll} {isAdmin} />
-					{/each}
-				{:else}
-					<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-						{$_('No polls currently here')}
-					</div>
-				{/if}
+				{#key polls}
+					{#if polls.length > 0}
+						{#each polls as poll}
+							<PollThumbnail {poll} {isAdmin} />
+						{/each}
+					{:else}
+						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+							{$_('No polls currently here')}
+						</div>
+					{/if}
+				{/key}
 			{/if}
 		</div>
 		<Pagination

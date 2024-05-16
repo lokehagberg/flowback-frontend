@@ -13,14 +13,16 @@
 	import { faThumbtack } from '@fortawesome/free-solid-svg-icons/faThumbtack';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyName } from './functions';
 
 	export let poll: poll,
 		isAdmin = false;
 
 	let onHoverGroup = false,
-		phase: Phase;
+		phase: Phase,
+		// If text poll, have all phases. Date polls have fewer phases to display
+		dates: Date[];
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -32,6 +34,24 @@
 	onMount(() => {
 		phase = getPhase(poll);
 	});
+
+	onDestroy(() => {
+		console.log("problem")
+	})
+
+	$: if (poll)
+		dates =
+			poll.poll_type === 4
+				? [
+						new Date(poll.start_date),
+						new Date(poll.area_vote_end_date),
+						new Date(poll.proposal_end_date),
+						new Date(poll.prediction_statement_end_date),
+						new Date(poll.prediction_bet_end_date),
+						new Date(poll.delegate_vote_end_date),
+						new Date(poll.end_date)
+				  ]
+				: [new Date(poll.start_date), new Date(poll.end_date)];
 </script>
 
 <div
@@ -64,9 +84,9 @@
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
 						<Fa
-						size="1.2x"
-						icon={faThumbtack}
-						color={poll.pinned ? '#999' : '#CCC'}
+							size="1.2x"
+							icon={faThumbtack}
+							color={poll.pinned ? '#999' : '#CCC'}
 							rotate={poll.pinned ? '0' : '90'}
 						/>
 					</div>
@@ -119,22 +139,7 @@
 		</p></a
 	>
 
-	<Timeline
-		displayDetails={false}
-		pollType={poll.poll_type}
-		dates={// If text poll, have all phases. Date polls have fewer phases to display
-		poll.poll_type === 4
-			? [
-					new Date(poll.start_date),
-					new Date(poll.area_vote_end_date),
-					new Date(poll.proposal_end_date),
-					new Date(poll.prediction_statement_end_date),
-					new Date(poll.prediction_bet_end_date),
-					new Date(poll.delegate_vote_end_date),
-					new Date(poll.end_date)
-			  ]
-			: [new Date(poll.start_date), new Date(poll.end_date)]}
-	/>
+	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"

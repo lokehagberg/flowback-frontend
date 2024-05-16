@@ -325,7 +325,6 @@
 					<span>
 						Assignee: {kanban?.assignee?.username}
 					</span>
-					<!-- Don't ask why the class "table" works here -->
 					<div class="flex gap-2 align-middle">
 						<span>Priority:</span>
 						<PriorityIcons Class="ruby" priority={kanban?.priority} />

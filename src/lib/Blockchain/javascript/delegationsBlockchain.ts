@@ -19,7 +19,9 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
-	  const contractAddress = '0x0fDD2AD1aEE84C91DEb80c25993c0bEde05987A3'; //use this address
+
+	  const contractAddress = '0xDeE004347e6C7D2c7B2E2e26ef9Cdab1B1838F52'; //use this address
+
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 
@@ -86,4 +88,29 @@ export const delegate = async () => {
 	} catch (error) {
 		console.error('Error delegating', error);
 	}
+
+}
+
+export const removeDelegation = async () => {
+	try {
+		const contract = await getContract();
+		const feeData = await contract.provider.getFeeData();
+		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+		const estimatedGasLimit = await contract.estimateGas.removeDelegation("0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", 2);
+		const tx = await contract.removeDelegation("0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", 2, {
+			gasLimit: estimatedGasLimit,
+			maxPriorityFeePerGas: maxPriorityFeePerGas,
+		});
+
+		const txReceipt = await tx.wait({ timeout: 4000 });
+		if (txReceipt && txReceipt.status === 1) {
+			console.log('Transaction successful')
+		} else {
+			console.warn('Transaction might have failed');
+			console.log(txReceipt);
+		}
+	} catch (error) {
+		console.error('Error delegating', error);
+	}
+
 }

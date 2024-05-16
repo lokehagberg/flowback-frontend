@@ -46,32 +46,50 @@ export const createPoll = async () => {
 			nowInMilliSeconds + 4000 * aminute //enddate
 		);
 
-		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
+	const contract = await getContract();
+	  const nowInSeconds = Math.floor(Date.now() / 1000);
+	  const oneDayInSeconds = 24 * 60 * 60; 
+	  try {
+			const tx = await contract.createPoll(
+			  "title",
+			  "tag",
+			  1, //group
+			  nowInSeconds, //pollstartdate
+			  nowInSeconds + oneDayInSeconds, //proposalenddate
+			  nowInSeconds + 2 * oneDayInSeconds, //votingstartdate
+			  nowInSeconds + 3 * oneDayInSeconds, //delegateenddate
+			  nowInSeconds + 4 * oneDayInSeconds, //enddate
+			);
+	
+			const txReceipt = await tx.wait({ timeout: 40000 }).catch((error:any) => {
 			console.error('Error waiting for transaction:', error);
-		});
-
-		if (txReceipt && txReceipt.status === 1) {
+		  });
+	
+		  if (txReceipt && txReceipt.status === 1) {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const pollCreatedEvents = parsedLogs.filter((log: any) => log.name === 'PollCreated');
-			const PollCreatedEvent = pollCreatedEvents.length > 0 ? pollCreatedEvents[0] : undefined;
 
-			console.log(PollCreatedEvent);
-			if (PollCreatedEvent) {
-				const pollId = parseInt(PollCreatedEvent.args.pollId);
-				const title = PollCreatedEvent.args.title;
-				console.log(`Poll created with title ${title} and id ${pollId}`);
+			const pollCreatedEvents = parsedLogs.filter(log => log.name === 'PollCreated');
+
+			const PollCreatedEvent = pollCreatedEvents.length > 0 ? pollCreatedEvents[0] : undefined;
+	
+			console.log(PollCreatedEvent)
+				if (PollCreatedEvent) {
+					const pollId = parseInt(PollCreatedEvent.args.pollId);
+					const title = PollCreatedEvent.args.title;
+					console.log(`Poll created with title ${title} and id ${pollId}`);
+				}
 			}
-		}
-	} catch (error) {
+	  } catch (error) {
+	
 		if (error instanceof Error) {
-			console.error('Error waiting for transaction:', error.message);
+		  console.error('Error waiting for transaction:', error.message);
 		} else {
-			console.error('An unexpected error occurred:', error);
+		  console.error('An unexpected error occurred:', error);
 		}
-	}
-};
+	  }
+	};
 
 export const getPoll = async (id: number) => {
 	const contract = await getContract();
@@ -95,11 +113,11 @@ export const getPoll = async (id: number) => {
 		}
 	}
 };
-export const createProposal = async (id: number) => {
+export const createProposal = async (_pollId: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.addProposal(
-			id, //pollid
+			_pollId, //pollid
 			'description' //description
 		);
 
@@ -161,12 +179,15 @@ export const getPollResults = async (id: number) => {
 		}
 	}
 };
-export const vote = async (id: number) => {
+
+export const vote = async (_pollId: number, proposalId: number) => {
+	console.log('poll id from vote function', _pollId);
 	const contract = await getContract();
 	try {
 		const tx = await contract.vote(
-			id, //pollid
-			1 //proposalid
+			_pollId, //pollid
+			proposalId //proposalid
+
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {

@@ -28,7 +28,6 @@
 		delegate,
 	} from '$lib/Blockchain/javascript/delegationsBlockchain';
 
-	let id = 16;
 
 	onMount(() => {
 		// test(value); // Call test with group
@@ -39,6 +38,10 @@
 	// }
 
 	let userAddress = '';
+	let id = '';
+	let groupId = '';
+	let pollId = '';
+	let proposalId = '';
 
 	async function connectWallet() {
 		if (typeof window.ethereum !== 'undefined') {
@@ -69,7 +72,8 @@
 	<hr />
 	<b>rightToVote</b>
 	<div class="p-6">
-		<button on:click={becomeMemberOfGroup}>Become member</button>
+		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
+		<button on:click={becomeMemberOfGroup(groupId)}>Become member</button>
 	</div>
 	<div class="p-6">
 		<button on:click={removeGroupMembership}>Resign as member</button>
@@ -83,22 +87,27 @@
 	<hr />
 	<b>polls</b>
 	<div class="p-6">
-		<button on:click={createPoll}>Create poll</button>
+		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
+		<button on:click={createPoll(groupId)}>Create poll</button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => getPoll(id)}>Get poll</button>
 	</div>
 	<div class="p-6">
-		<button on:click={() => createProposal(id)}>Create proposal</button>
+		<input type="text" bind:value={pollId} placeholder="Enter Poll Id">
+		<button on:click={() => createProposal(pollId)}>Create proposal</button>
 	</div>
 	<div class="p-6">
-		<button on:click={() => getProposalsOnPoll(id)}>Get proposals </button>
+		<input type="text" bind:value={pollId} placeholder="Enter Poll Id">
+		<button on:click={() => getProposalsOnPoll(pollId)}>Get proposals </button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => getPollResults(id)}>Get pollresult</button>
 	</div>
 	<div class="p-6">
-		<button on:click={() => vote(id)}>vote</button>
+		<input type="text" bind:value={pollId} placeholder="Enter Poll Id">
+		<input type="text" bind:value={proposalId} placeholder="Enter Proposal Id">
+		<button on:click={() => vote(pollId, proposalId)}>vote</button>
 	</div>
 	<hr />
 	<b>prediction/predictionbets</b>

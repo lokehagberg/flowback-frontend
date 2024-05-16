@@ -16,35 +16,35 @@
 	id="poll-description"
 >
 	{poll.description}
-	<div class="flex h-8 justify-between">	
-		<div class="flex items-baseline">
-			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true }} />
-			{#if pollType === 4}
-				<!-- TODO make it easy to change poll types e.t.c -->
-				<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
-			{:else if pollType === 3}
-				<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
-			{/if}
-			<!-- Group Profile -->
-			<a
-				href={`/groups/${$page.params.groupId}`}
-				class:hover:underline={poll.group_joined}
-				class="text-black"
-			>
-				<img
-					class="h-8 w-8 inline rounded-full"
-					src={`${import.meta.env.VITE_API}${poll.group_image}`}
-					alt="group thumbnail"
-				/>
-				<span class="inline">{poll.group_name}</span>
-			</a>
-		</div>
-		<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
-		<NotificationOptions
-			id={poll.id}
-			api={`group/poll/${poll.id}`}
-			categories={['poll', 'timeline']}
-			labels={['Poll', 'Timeline']}
-		/>
+</div>
+<div class="flex h-8 justify-between">	
+	<div class="flex items-baseline">
+		<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true }} />
+		{#if pollType === 4}
+			<!-- TODO make it easy to change poll types e.t.c -->
+			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+		{:else if pollType === 3}
+			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
+		{/if}
+		<!-- Group Profile -->
+		<a
+			href={`/groups/${$page.params.groupId}`}
+			class:hover:underline={poll.group_joined}
+			class="text-black"
+		>
+			<img
+				class="h-8 w-8 inline rounded-full"
+				src={`${import.meta.env.VITE_API}${poll.group_image}`}
+				alt="group thumbnail"
+			/>
+			<span class="inline">{poll.group_name}</span>
+		</a>
 	</div>
+	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+	<NotificationOptions
+		id={poll.id}
+		api={`group/poll/${poll.id}`}
+		categories={['poll', 'timeline', 'comments_all']}
+		labels={['Poll', 'Timeline', 'Comments']}
+	/>
 </div>

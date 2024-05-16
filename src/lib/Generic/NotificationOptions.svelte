@@ -49,6 +49,7 @@
 	};
 
 	const notificationSubscription = async (category: string) => {
+		console.log(category)
 		const { res, json } = await fetchRequest('POST', `${api}/subscribe`, {
 			categories: [category]
 		});
@@ -56,9 +57,8 @@
 			notifications.push({
 				channel_category: category,
 				channel_sender_id: id,
-				channel_sender_type: 'group'
+				channel_sender_type: 'poll'
 			});
-			console.log('SUCCES');
 			popupMessage = 'Subscribed';
 		} else popupMessage = 'Something went wrong';
 
@@ -66,10 +66,9 @@
 	};
 
 	const notificationUnsubscription = async (category: string) => {
-		console.log(id);
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
-			channel_sender_type: 'group',
-			channel_sender_id: 2,
+			channel_sender_type: 'poll',
+			channel_sender_id: id,
 			channel_category: category
 		});
 		if (res.ok) {

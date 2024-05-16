@@ -38,10 +38,10 @@
 	// }
 
 	let userAddress = '';
-	let id = '';
-	let groupId = '';
-	let pollId = '';
-	let proposalId = '';
+	let id = 8;
+	let groupId = 1;
+	let pollId = 8;
+	let proposalId = 1;
 
 	async function connectWallet() {
 		if (typeof window.ethereum !== 'undefined') {
@@ -73,7 +73,7 @@
 	<b>rightToVote</b>
 	<div class="p-6">
 		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
-		<button on:click={becomeMemberOfGroup(groupId)}>Become member</button>
+		<button on:click={() => becomeMemberOfGroup(groupId)}>Become member</button>
 	</div>
 	<div class="p-6">
 		<button on:click={removeGroupMembership}>Resign as member</button>
@@ -88,7 +88,7 @@
 	<b>polls</b>
 	<div class="p-6">
 		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
-		<button on:click={createPoll(groupId)}>Create poll</button>
+		<button on:click={() => createPoll(groupId)}>Create poll</button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => getPoll(id)}>Get poll</button>
@@ -126,7 +126,7 @@
 	<hr />
 	<b>delegations</b>
 	<div class="p-6">
-		<button on:click={() => becomeDelegate()}>Become delegate</button>
+		<button on:click={() => becomeDelegate(groupId)}>Become delegate</button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => delegate()}>Delegate</button>

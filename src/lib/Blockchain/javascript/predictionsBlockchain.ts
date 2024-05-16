@@ -19,7 +19,7 @@ async function getUser() {
 
 const getContract = async () => {
 	const signer = await getUser();
-	const contractAddress = '0x0fDD2AD1aEE84C91DEb80c25993c0bEde05987A3'; //use this address
+	const contractAddress = '0xDeE004347e6C7D2c7B2E2e26ef9Cdab1B1838F52'; //use this address
 	return new ethers.Contract(contractAddress, contractABI, signer);
 };
 

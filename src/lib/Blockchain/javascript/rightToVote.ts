@@ -31,7 +31,7 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
-	  const contractAddress = '0x0436120E96bE6e31e0AE74462da9a103590c2ED5'; //use this address
+	  const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 
@@ -57,7 +57,7 @@ export const becomeMemberOfGroup = async (_groupId: number) => {
 		if (txReceipt && txReceipt.status===1) {
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const GroupMembershipChangedEvent = parsedLogs.find(log => log.name === 'GroupMembershipChanged');
+			const GroupMembershipChangedEvent = parsedLogs.find((log:any) => log.name === 'GroupMembershipChanged');
             if (GroupMembershipChangedEvent) {
 				// indexed user, uint indexed group, bool isMember
                 const user = GroupMembershipChangedEvent.args.user;
@@ -97,7 +97,7 @@ export const removeGroupMembership = async () => {
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
 
-			const GroupMembershipChangedEvent = parsedLogs.find(log => log.name === 'GroupMembershipChanged');
+			const GroupMembershipChangedEvent = parsedLogs.find((log:any) => log.name === 'GroupMembershipChanged');
             if (GroupMembershipChangedEvent) {
 				// indexed user, uint indexed group, bool isMember
                 const user = GroupMembershipChangedEvent.args.user;
@@ -126,6 +126,6 @@ export const getGroupsUserIsMemberIn = async () => {
 	if (tx.length==0) {
 		console.log("No groups");
 	}else{
-		tx.map(groups => console.log(parseInt(groups)))
+		tx.map((groups:any) => console.log(parseInt(groups)))
 	}
 };

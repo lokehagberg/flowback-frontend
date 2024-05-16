@@ -20,18 +20,18 @@ interface Window {
 	const getContract = async () => {
 	  const signer = await getUser();
 
-	  const contractAddress = '0xDeE004347e6C7D2c7B2E2e26ef9Cdab1B1838F52'; //use this address
+	  const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
 
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 
-export const becomeDelegate = async () => {
+export const becomeDelegate = async (groupId:number) => {
 	try {
 		const contract = await getContract();
 		const feeData = await contract.provider.getFeeData();
 		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-		const estimatedGasLimit = await contract.estimateGas.becomeDelegate(2);
-		const tx = await contract.becomeDelegate(2, {
+		const estimatedGasLimit = await contract.estimateGas.becomeDelegate(groupId);
+		const tx = await contract.becomeDelegate(groupId, {
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas,
 		});
@@ -40,7 +40,7 @@ export const becomeDelegate = async () => {
 		if (txReceipt && txReceipt.status === 1) {
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const NewDelegateEvent = parsedLogs.find(log => log.name === 'NewDelegate');
+			const NewDelegateEvent = parsedLogs.find((log:any) => log.name === 'NewDelegate');
 			if (NewDelegateEvent) {
 				const delegate = NewDelegateEvent.args.delegate;
 				const groupId = NewDelegateEvent.args.groupId;
@@ -57,13 +57,13 @@ export const becomeDelegate = async () => {
 	}
 }
 
-export const delegate = async () => {
+export const delegate = async (groupId:number) => {
 	try {
 		const contract = await getContract();
 		const feeData = await contract.provider.getFeeData();
 		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-		const estimatedGasLimit = await contract.estimateGas.delegate(2, "0xb958d74A9BEe5b75f24404A41083cD62Fd285F88");
-		const tx = await contract.delegate(2, "0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", {
+		const estimatedGasLimit = await contract.estimateGas.delegate(groupId, import.meta.env.VITE_SIGNER_ADDRESS);
+		const tx = await contract.delegate(groupId, import.meta.env.VITE_SIGNER_ADDRESS, {
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas,
 		});
@@ -72,7 +72,7 @@ export const delegate = async () => {
 		if (txReceipt && txReceipt.status === 1) {
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const NewDelegationEvent = parsedLogs.find(log => log.name === 'NewDelegation');
+			const NewDelegationEvent = parsedLogs.find((log:any) => log.name === 'NewDelegation');
 			if (NewDelegationEvent) {
 				const delegate = NewDelegationEvent.args.to;
 				const delegater = NewDelegationEvent.args.from;
@@ -96,8 +96,8 @@ export const removeDelegation = async () => {
 		const contract = await getContract();
 		const feeData = await contract.provider.getFeeData();
 		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-		const estimatedGasLimit = await contract.estimateGas.removeDelegation("0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", 2);
-		const tx = await contract.removeDelegation("0xb958d74A9BEe5b75f24404A41083cD62Fd285F88", 2, {
+		const estimatedGasLimit = await contract.estimateGas.removeDelegation(import.meta.env.VITE_SIGNER_ADDRESS, 2);
+		const tx = await contract.removeDelegation(import.meta.env.VITE_SIGNER_ADDRESS, 2, {
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas,
 		});

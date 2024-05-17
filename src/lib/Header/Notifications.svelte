@@ -83,7 +83,7 @@
 
 {#if notificationsOpen}
 	<ul
-		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation"
+		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation z-[60]"
 		id="notifications-list"
 	>
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

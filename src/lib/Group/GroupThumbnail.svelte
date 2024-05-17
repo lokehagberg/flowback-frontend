@@ -75,7 +75,7 @@
 	}
 
 	img.cover {
-		aspect-ratio: 4;
+		aspect-ratio: 5;
 		width: 100%;
 	}
 </style>

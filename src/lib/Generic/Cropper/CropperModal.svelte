@@ -38,7 +38,7 @@
 			{image}
 			bind:crop
 			bind:zoom
-			aspect={currentlyCroppingProfile ? 1 : 3}
+			aspect={currentlyCroppingProfile ? 1 : 5}
 			on:cropcomplete={previewCrop}
 		/>
 	</div>

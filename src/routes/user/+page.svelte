@@ -134,7 +134,7 @@
 	{#if !isEditing}
 		<img
 			src={bannerImagePreview || DefaultBanner}
-			class="bg-gray-200 w-full cover max-h-[30vh] xl:max-h-[25vh]"
+			class="bg-gray-200 w-full cover aspect-ratio-5"
 			alt="banner"
 		/>
 		<div
@@ -266,12 +266,16 @@
 
 <style>
 	img.cover {
-		aspect-ratio: 4;
+		aspect-ratio: 5;
 		/* width: 100%; */
 	}
 
 	img.profile {
 		width: 100px;
 		height: 100px;
+	}
+
+	.aspect-ratio-5 {
+		aspect-ratio: 5;
 	}
 </style>

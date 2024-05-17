@@ -102,7 +102,9 @@
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
-		<a href="/home" class="md:w-auto flex justify-center md:flex-none"
+		<a
+			href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+			class="md:w-auto flex justify-center md:flex-none"
 			><img
 				src={import.meta.env.VITE_LOGO === 'REFORUM' ? Reforum : Logo}
 				class="w-32 cursor-pointer"
@@ -115,7 +117,7 @@
 					<HeaderIcon
 						icon={faHome}
 						text="Home"
-						href="home"
+						href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
 						color={darkMode ? 'white' : 'black'}
 						Class={'p-4'}
 					/>

@@ -130,6 +130,19 @@
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<TitleDescription {pollType} {poll} />
+			<!-- Mod Tools -->
+			{#if groupUser?.is_admin}
+				<StatusMessage bind:status={deleteStatus} />
+				<div class="flex gap-4 align-middle">
+					<div class="">Mod Tools:</div>
+					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+						>{$_('Delete poll')}</Button
+					>
+					{#if !finished}
+						<Button action={nextPhase}>Next Phase</Button>
+					{/if}
+				</div>
+			{/if}
 
 			{#if pollType === 4}
 				{#if phase === 'pre-start'}
@@ -183,8 +196,13 @@
 					: [new Date(poll.start_date), new Date(poll.end_date)]}
 				{pollType}
 			/>
-			{$_('Current phase:')}
-			{getPhaseUserFriendlyName(phase)}
+
+			<!-- Current Phase -->
+			<div>
+				{$_('Current phase:')}
+				{getPhaseUserFriendlyName(phase)}
+			</div>
+
 			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
@@ -200,17 +218,6 @@
 					</div>
 				</div>
 			</Modal>
-			{#if groupUser?.is_admin}
-				<StatusMessage bind:status={deleteStatus} />
-				Mod Tools:
-				<div class="flexs gap-4">
-					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-						>{$_('Delete poll')}</Button
-					>
-					{#if !finished}
-						<Button action={nextPhase}>Next Phase</Button>
-					{/if}
-				</div>{/if}
 		</div>
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img

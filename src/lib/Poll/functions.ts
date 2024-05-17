@@ -37,6 +37,7 @@ export const getPhase = (poll: poll): Phase => {
 
 // Labesls for the circles on the timeline
 export const dateLabels = [
+	'Pre Start',
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
@@ -52,6 +53,7 @@ export const dateLabelsDatePoll = [
 ]
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
+	console.log(phase, phase === 'prediction-voting')
 	if (phase === 'pre-start') return dateLabels[0];
 	else if (phase === 'area-vote') return dateLabels[1];
 	else if (phase === 'proposals') return dateLabels[2];

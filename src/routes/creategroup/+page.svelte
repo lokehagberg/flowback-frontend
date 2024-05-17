@@ -66,6 +66,7 @@
 		} else status = statusMessageFormatter(res, json);
 
 		loading = false;
+		location.href = `/groups/${groupToEdit}`
 	};
 
 	const deleteGroup = async () => {
@@ -84,6 +85,9 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
+		console.log(json.image, json.cover_image, "IMAGE")
+		image = json.image
+		coverImage = json.cover_image
 	};
 
 	onMount(() => {
@@ -104,7 +108,7 @@
 			class="dark:text-darkmodeText mt-6 mb-6 absolute left-1/2 -translate-x-1/2 flex items-start justify-center gap-8 md:mt-8 w-[1500px]"
 		>
 			<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-6 md:w-2/5">
-				<h1 class="text-2xl">{$_(groupToEdit ? 'Edit Group' : 'Create a Group')}</h1>
+				<h1 class="text-2xl">{$_(groupToEdit ? 'Update' : 'Create a Group')}</h1>
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} />
 				<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
@@ -122,7 +126,7 @@
 				<StatusMessage bind:status />
 				<Button type="submit" disabled={loading}
 					><div class="flex justify-center gap-3 items-center">
-						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Edit Group' : 'Create Group')}
+						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}
 					</div>
 				</Button>
 				{#if groupToEdit !== null && !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}

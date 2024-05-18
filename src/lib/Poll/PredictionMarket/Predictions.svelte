@@ -115,7 +115,7 @@
 	</ul>
 
 	{#if phase === 'prediction-statement'}
-		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
+		<Button action={() => (addingPrediction = true)}>{$_('New Prediction')}</Button>
 	{/if}
 
 	{#if predictions.length === 0}
@@ -125,7 +125,7 @@
 
 <!-- Is displayed whenever a prediction statement is being added -->
 <Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}>
-	<div slot="header">{$_('Add Prediction')}</div>
+	<div slot="header">{$_('New Prediction')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			{$_('Deadline for prediction')}

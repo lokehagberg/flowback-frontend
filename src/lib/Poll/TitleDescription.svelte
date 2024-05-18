@@ -10,14 +10,7 @@
 	export let poll: poll, pollType: number;
 </script>
 
-<h1 class="text-left text-5xl p-4 mt-auto mb-auto">{poll.title}</h1>
-<div
-	class="border border-gray-200 dark:border-gray-500 rounded p-4 whitespace-pre-wrap break-words"
-	id="poll-description"
->
-	{poll.description}
-</div>
-<div class="flex h-8 justify-between">	
+<div class="flex h-8 justify-between items-center">
 	<div class="flex items-baseline">
 		<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true }} />
 		{#if pollType === 4}
@@ -30,7 +23,7 @@
 		<a
 			href={`/groups/${$page.params.groupId}`}
 			class:hover:underline={poll.group_joined}
-			class="text-black"
+			class="text-black dark:text-darkmodeText"
 		>
 			<img
 				class="h-8 w-8 inline rounded-full"
@@ -47,4 +40,11 @@
 		categories={['poll', 'timeline', 'comments_all']}
 		labels={['Poll', 'Timeline', 'Comments']}
 	/>
+</div>
+<h1 class="text-left text-5xl mt-auto mb-auto">{poll.title}</h1>
+<div
+	class="border border-gray-200 dark:border-gray-500 rounded p-4 whitespace-pre-wrap break-words"
+	id="poll-description"
+>
+	{poll.description}
 </div>

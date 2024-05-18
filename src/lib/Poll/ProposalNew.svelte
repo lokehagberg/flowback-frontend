@@ -1,3 +1,4 @@
+<!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
@@ -48,6 +49,7 @@
 			type="number"
 			on:change={(e) => onChange(e)}
 			min={0}
+			max={100}
 		/>
 	{:else}
 		<!-- Used to ensure flex design stays intact -->

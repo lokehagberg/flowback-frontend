@@ -105,7 +105,7 @@
 	{/each}
 </div>
 
-<Button action={() => (open = true)}>Create Proposal</Button>
+<Button action={() => (open = true)}>New Proposal</Button>
 
 <Modal bind:open onSubmit={handlePostProposal}>
 	<div slot="body" class="min-w-[400px] min-h-[300px]">

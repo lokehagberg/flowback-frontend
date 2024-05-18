@@ -125,7 +125,7 @@
 					{#if selectedPage === 'flow'}
 						<PollThumbnails
 							infoToGet="group"
-							Class={`sm:w-full md:w-[80%] md:max-w-[600px] mx-auto my-0`}
+							Class={`w-full mx-auto my-0`}
 						/>
 					{:else if selectedPage === 'delegation'}
 						<Delegation />

@@ -327,6 +327,7 @@
 				<ImageUpload
 					icon={faUser}
 					bind:image
+					minimalist
 					label=""
 					iconSize="2x"
 					Class="flex !flex-row-reverse"

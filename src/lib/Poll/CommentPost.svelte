@@ -136,7 +136,7 @@
 		</ul>
 	</div>
 	<TextArea label="Comment"  bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload icon={faUser} shouldCrop={false} bind:croppedImage={image}  label="" iconSize={'2x'} Class="flex !flex-row-reverse" />
+	<ImageUpload icon={faUser} shouldCrop={false} bind:croppedImage={image}  label="" iconSize={'2x'} Class="flex !flex-row-reverse" minimalist/>
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->

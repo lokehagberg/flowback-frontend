@@ -3,6 +3,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import CropperModal from './Cropper/CropperModal.svelte';
+	import { faCamera, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 	export let croppedImage: File | null = null,
 		label: string,
@@ -10,8 +11,9 @@
 		icon: any,
 		Class = '',
 		iconSize = '5x',
-		imageString: string = "",
-		shouldCrop:boolean = true;
+		imageString: string = '',
+		shouldCrop: boolean = true,
+		minimalist = false;
 
 	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
@@ -24,7 +26,7 @@
 
 	$: if (croppedImage) {
 		// imageString = URL.createObjectURL(croppedImage);
-	} 
+	}
 </script>
 
 <div class={`image-upload ${Class}`}>
@@ -37,7 +39,7 @@
 			alt={$_(label)}
 			src={imageString}
 		/>
-	{:else}
+	{:else if !minimalist}
 		<!-- <img
 			class="avatar"
 			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
@@ -46,15 +48,22 @@
 		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<img
-		class="upload mt-4"
-		src="https://static.thenounproject.com/png/625182-200.png"
-		alt=""
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="cursor-pointer"
 		on:click={() => {
 			fileinput.click();
 		}}
 		on:keydown
-	/>
+	>
+		<Fa icon={faUpload} size="2.5x" />
+	</div>
+	<!-- <img
+		class="upload mt-4"
+		src="https://static.thenounproject.com/png/625182-200.png"
+		alt=""
+		
+	/> -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="chan"
@@ -63,7 +72,9 @@
 		}}
 		on:keydown
 	>
-		{$_('Choose Image')}
+		{#if !minimalist}
+			{$_('Choose Image')}
+		{/if}
 	</div>
 	<input
 		style="display:none"

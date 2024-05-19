@@ -114,7 +114,7 @@
 		{/each}
 	</ul>
 
-	{#if phase === 'prediction-statement'}
+	{#if phase === 'prediction_statement'}
 		<Button action={() => (addingPrediction = true)}>{$_('New Prediction')}</Button>
 	{/if}
 

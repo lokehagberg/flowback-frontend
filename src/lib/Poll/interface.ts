@@ -56,15 +56,15 @@ export interface Filter {
 }
 
 export type Phase =
-	| 'pre-start'
-	| 'area-vote'
-	| 'proposals'
-	| 'prediction-statement'
-	| 'prediction-betting'
-	| 'delegate-voting'
-	| 'voting'
-	| 'results'
-	| 'prediction-voting';
+	| 'pre_start'
+	| 'area_vote'
+	| 'proposal'
+	| 'prediction_statement'
+	| 'prediction_bet'
+	| 'delegate_vote'
+	| 'vote'
+	| 'result'
+	| 'prediction_vote';
 
 export interface Comment {
 	author_id: number;

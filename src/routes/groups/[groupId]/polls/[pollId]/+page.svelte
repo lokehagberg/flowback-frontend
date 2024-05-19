@@ -102,15 +102,16 @@
 	};
 
 	const nextPhase = async () => {
-		let _phase = '';
+		let _phase: Phase = 'pre_start';
 
 		if (pollType === 4) {
-			if (phase === 'area-vote') _phase = 'proposal';
-			else if (phase === 'proposals') _phase = 'prediction_statement';
-			else if (phase === 'prediction-statement') _phase = 'prediction_bet';
-			else if (phase === 'prediction-betting') _phase = 'delegate_vote';
-			else if (phase === 'delegate-voting') _phase = 'vote';
-			else if (phase === 'voting') _phase = 'prediction_vote';
+			console.log(phase);
+			if (phase === 'area_vote') _phase = 'proposal';
+			else if (phase === 'proposal') _phase = 'prediction_statement';
+			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
+			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
+			else if (phase === 'delegate_vote') _phase = 'vote';
+			else if (phase === 'vote') _phase = 'prediction_vote';
 		} else if (pollType === 3) _phase = 'result';
 
 		const { res, json } = await fetchRequest(
@@ -121,7 +122,7 @@
 			}
 		);
 
-		if (res.ok) location.reload();
+		if (res.ok) phase = _phase;
 	};
 </script>
 
@@ -146,31 +147,31 @@
 			{/if}
 
 			{#if pollType === 4}
-				{#if phase === 'pre-start'}
+				{#if phase === 'pre_start'}
 					<div>dev</div>
-				{:else if phase === 'area-vote'}
+				{:else if phase === 'area_vote'}
 					<AreaVote />
-				{:else if phase === 'proposals'}
+				{:else if phase === 'proposal'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<ProposalSubmition bind:proposals {poll} />
-				{:else if phase === 'prediction-statement'}
+				{:else if phase === 'prediction_statement'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 					<Predictions bind:proposals bind:phase />
-				{:else if phase === 'prediction-betting'}
+				{:else if phase === 'prediction_bet'}
 					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
 					<Predictions bind:proposals bind:phase />
-				{:else if phase === 'delegate-voting'}
+				{:else if phase === 'delegate_vote'}
 					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
 					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
 					<Predictions bind:proposals bind:phase />
-				{:else if phase === 'voting'}
+				{:else if phase === 'vote'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 					<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
 					<Predictions bind:proposals bind:phase />
-				{:else if phase === 'results'}
+				{:else if phase === 'result'}
 					<Results {pollType} />
 					<Predictions bind:proposals bind:phase />
-				{:else if phase === 'prediction-voting'}
+				{:else if phase === 'prediction_vote'}
 					<Results {pollType} />
 					<Predictions bind:proposals bind:phase />
 				{/if}
@@ -181,6 +182,7 @@
 					<Results {pollType} />
 				{/if}
 			{/if}
+
 			<Timeline
 				displayDetails={false}
 				dates={// If text poll, have all phases. Date polls have fewer phases to display

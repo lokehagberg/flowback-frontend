@@ -173,7 +173,7 @@
 	>
 		{prediction.description}</span
 	>
-	{#if phase === 'prediction-betting'}
+	{#if phase === 'prediction_bet'}
 		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
 		<Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
@@ -182,7 +182,7 @@
 			onInput={handleChangeBetScore}
 		/>
 	{/if}
-	{#if phase === 'results' || phase === 'prediction-voting'}
+	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex">
 			<Button
 				action={() =>

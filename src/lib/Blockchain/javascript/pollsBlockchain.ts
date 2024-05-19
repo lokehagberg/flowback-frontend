@@ -38,9 +38,9 @@ export const createPoll = async (_groupId: number) => {
 			'tag',
 			_groupId, //group
 			nowInMilliSeconds, //pollstartdate
-			nowInMilliSeconds + 2000 * aminute, //proposalenddate
-			nowInMilliSeconds + 3000 * aminute, //votingstartdate
-			nowInMilliSeconds + 3500 * aminute, //delegateenddate
+			nowInMilliSeconds, //proposalenddate
+			nowInMilliSeconds, //votingstartdate
+			nowInMilliSeconds, //delegateenddate
 			nowInMilliSeconds + 4000 * aminute //enddate
 		);
 

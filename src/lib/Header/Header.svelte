@@ -23,7 +23,6 @@
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean = false,
-		ledgerExists: boolean = false,
 		isAdmin = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
@@ -37,8 +36,6 @@
 		if (location.pathname !== '/login') getProfileImage();
 
 		ensureDarkMode();
-
-		checkForLedgerModule();
 	});
 
 	const ensureDarkMode = () => {
@@ -87,12 +84,6 @@
 
 			if (admins.find((admin: GroupUser) => admin.user.id === userId)) isAdmin = true;
 		}
-	};
-
-	//TODO: Add a check for ledger module
-	const checkForLedgerModule = async () => {
-		// const accounts = await accountsStore.get();
-		// ledgerExists = accounts.loaded;
 	};
 </script>
 

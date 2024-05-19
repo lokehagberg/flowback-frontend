@@ -14,8 +14,8 @@
 		clearTimeout(currentPoppup);
 		currentPoppup = setTimeout(() => {
 			show = false;
-			poppup = null
-		}, 4000);
+			poppup = null;
+		}, 7000);
 	};
 </script>
 

@@ -36,10 +36,6 @@
 		phase = getPhase(poll);
 	});
 
-	onDestroy(() => {
-		console.log("problem")
-	})
-
 	$: if (poll)
 		dates =
 			poll.poll_type === 4
@@ -150,7 +146,7 @@
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
 			on:mouseleave={() => (onHoverGroup = false)}
-			on:click={() => (goto('/groups/1'))}
+			on:click={() => goto('/groups/1')}
 			on:focus
 			on:keydown
 		/>

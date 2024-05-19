@@ -347,7 +347,7 @@
 							if (selected_poll === poll) return poll === 'Text Poll' ? 'primary' : 'accent';
 							else return poll === 'Text Poll' ? 'secondary' : 'accent-secondary';
 						})()}
-						Class={`${selected_poll === poll ? 'shadow-sm outline outline-0 brightness-115' : 'shadow-xl brightness-90 saturate-50'}
+						Class={`${selected_poll === poll ? 'shadow-sm outline outline-0 brightness-115' : 'shadow-xl brightness-90 saturate-0'}
 							`}
 					>
 						<div class="flex items-center text-center">

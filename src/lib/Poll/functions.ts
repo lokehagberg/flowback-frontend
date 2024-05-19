@@ -53,7 +53,6 @@ export const dateLabelsDatePoll = [
 ]
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
-	console.log(phase, phase === 'prediction-voting')
 	if (phase === 'pre-start') return dateLabels[0];
 	else if (phase === 'area-vote') return dateLabels[1];
 	else if (phase === 'proposals') return dateLabels[2];

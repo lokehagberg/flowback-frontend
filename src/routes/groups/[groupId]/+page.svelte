@@ -85,20 +85,26 @@
 	});
 
 	const handleBackButton = () => {
-		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
+		// const page = new URLSearchParams(window.location.search).get('page') || 'flow';
 		//@ts-ignore
-		selectedPage = page;
+		// selectedPage = page;
 	};
 
 	$: if (hasMounted) {
-		const searchParams = new URLSearchParams(window.location.search);
-		searchParams.set('page', selectedPage);
-		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
-		let backed = false;
-		window.onpopstate = (e) => {
-			if (!backed) history.back();
-			backed = true;
-		};
+		const searchParams = new URLSearchParams(location.search);
+		if (selectedPage === 'flow') {
+			// searchParams.delete('page');
+			// window.history.pushState({}, '', `${location.pathname}`);
+		}
+		else {
+			// searchParams.set('page', selectedPage);
+			// window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
+		}
+		// let backed = false;
+		// window.onpopstate = (e) => {
+		// 	if (!backed) history.back();
+		// 	backed = true;
+		// };
 	}
 </script>
 
@@ -123,10 +129,7 @@
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 
 					{#if selectedPage === 'flow'}
-						<PollThumbnails
-							infoToGet="group"
-							Class={`w-full mx-auto my-0`}
-						/>
+						<PollThumbnails infoToGet="group" Class={`w-full mx-auto my-0`} />
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}

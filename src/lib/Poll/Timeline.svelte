@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faSquareCheck } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
-	import { faSquareFull } from '@fortawesome/free-solid-svg-icons/faSquareFull';
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
 	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-	import { onDestroy } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
@@ -19,9 +16,6 @@
 
 	let datesDisplay: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
-
-		$:console.log(pollType)
-
 
 	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 	const fraction = (currentPhase + 1) / dates.length;
@@ -35,10 +29,6 @@
 		datePlacement[i] = (100 * toDateTime) / totalTime;
 		datesDisplay[i] = formatDate(date.toString());
 	});
-
-	onDestroy(() => {
-		console.log("Is it?")
-	})
 </script>
 
 <div class={`relative ${Class}`}>

@@ -30,8 +30,10 @@
 		next = '',
 		prev = '';
 
-	const getAPI = () => {
+	const getAPI = async () => {
 		let API = '';
+
+		console.log("PARAMS", $page.params.groupId, location.href)
 
 		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'home') API += `home/polls?`;
@@ -59,7 +61,7 @@
 		loading = true;
 		polls = [];
 
-		const { json, res } = await fetchRequest('GET', getAPI());
+		const { json, res } = await fetchRequest('GET', await getAPI());
 
 		loading = false;
 

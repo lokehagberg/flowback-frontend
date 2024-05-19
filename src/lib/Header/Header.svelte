@@ -108,7 +108,7 @@
 					<HeaderIcon
 						icon={faHome}
 						text="Home"
-						href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+						href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? 'groups/1' : 'home'}
 						color={darkMode ? 'white' : 'black'}
 						Class={'p-4'}
 					/>

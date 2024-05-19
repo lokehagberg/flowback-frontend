@@ -25,6 +25,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Group/Threads.svelte';
+	import { pushState } from '$app/navigation';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -90,22 +91,8 @@
 		// selectedPage = page;
 	};
 
-	$: if (hasMounted) {
-		const searchParams = new URLSearchParams(location.search);
-		if (selectedPage === 'flow') {
-			// searchParams.delete('page');
-			// window.history.pushState({}, '', `${location.pathname}`);
-		}
-		else {
-			// searchParams.set('page', selectedPage);
-			// window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
-		}
-		// let backed = false;
-		// window.onpopstate = (e) => {
-		// 	if (!backed) history.back();
-		// 	backed = true;
-		// };
-	}
+
+
 </script>
 
 <svelte:head>

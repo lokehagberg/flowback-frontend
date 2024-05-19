@@ -8,6 +8,7 @@
 	import TextInput from '../Generic/TextInput.svelte';
 	import { mailStore } from './stores';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { goto } from '$app/navigation';
 
 	let verification_code: string,
 		password: string,
@@ -47,7 +48,7 @@
 					});
 				}
 
-				window.location.href = '/home';
+				goto('/home');
 			} else status = { message: 'Account was created but was unable to sign in', success: true };
 		} else {
 			loading = false;

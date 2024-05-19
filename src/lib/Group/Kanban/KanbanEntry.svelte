@@ -22,6 +22,7 @@
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import { goto } from '$app/navigation';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -202,9 +203,9 @@
 	<div
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
-			if ($page.params.groupId) window.location.href = `/user?id=${kanban.assignee.id}`;
+			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
 			else if (kanban.origin_type === 'group')
-				window.location.href = `/groups/${kanban.origin_id}?page=kanban`;
+				goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 		on:keydown
 	>

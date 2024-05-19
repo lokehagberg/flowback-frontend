@@ -25,6 +25,7 @@
 	import { _ } from 'svelte-i18n';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -53,7 +54,7 @@
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
-		if (res.ok) window.location.href = '/home';
+		if (res.ok) goto('/home');
 	};
 
 	onMount(() => {
@@ -215,7 +216,7 @@
 					isSelected={selectedPage === 'perms'}
 				/>
 				<GroupSidebarButton
-					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
+					action={() => (goto(`/creategroup?group=${$page.params.groupId}`))}
 					text="Edit Group"
 					icon={faCog}
 					isSelected={false}

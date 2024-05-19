@@ -20,6 +20,7 @@
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
+	import { goto } from '$app/navigation';
 
 	let name: string,
 		description: string,
@@ -61,12 +62,12 @@
 				name: 'Uncategorised' //Default
 			});
 
-			if (res.ok) window.location.href = `/groups/${json}`;
+			if (res.ok) goto(`/groups/${json}`);
 			else status = statusMessageFormatter(res, json);
 		} else status = statusMessageFormatter(res, json);
 
 		loading = false;
-		location.href = `/groups/${groupToEdit}`
+		goto(`/groups/${groupToEdit}`)
 	};
 
 	const deleteGroup = async () => {
@@ -74,7 +75,7 @@
 
 		//Rederict to group
 		if (res.ok) {
-			window.location.href = '/groups';
+			goto('/groups');
 		}
 	};
 

@@ -6,6 +6,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { goto } from '$app/navigation';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
@@ -30,7 +31,7 @@
 				localStorage.setItem('userName', json.username);
 			}
 
-			window.location.href = '/home';
+			goto('/home');
 		} else {
 			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}

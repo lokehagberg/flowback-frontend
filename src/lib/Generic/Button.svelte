@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	export let action = () => {},
@@ -13,7 +14,7 @@
 	onMount(() => {
 		if (href !== '')
 			action = () => {
-				window.location.href = href;
+				goto(href);
 			};
 	});
 

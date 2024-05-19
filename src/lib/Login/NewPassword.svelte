@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
@@ -29,7 +30,7 @@
 
 			if (res.ok) {
 				localStorage.setItem('token', json.token);
-				window.location.href = '/home';
+				goto('/home');
 			}
 		} else status = { message: 'Could not register', success: false };
 	};

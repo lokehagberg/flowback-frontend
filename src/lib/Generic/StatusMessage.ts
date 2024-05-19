@@ -1,3 +1,5 @@
+import { goto } from "$app/navigation";
+
 //This function is a bit cursed due to problems with error codes from the backend
 export const statusMessageFormatter = (res: any, json: any, successMessage: string = 'Success') => {
 	if (res.ok) {
@@ -10,7 +12,7 @@ export const statusMessageFormatter = (res: any, json: any, successMessage: stri
 			json.detail === 'Invalid token header. No credentials provided.'
 		) {
 			if (localStorage.getItem('token')) localStorage.removeItem('token');
-			window.location.href = '/login';
+			goto('/login');
 			// return { message: 'Invalid token.', success: false };
 		}
 		const messages = json.detail;

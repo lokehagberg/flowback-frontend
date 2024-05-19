@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { Thread } from './interface';
 	import Pagination from '$lib/Generic/Pagination.svelte';
+	import { goto } from '$app/navigation';
 
 	let threads: any[] = [],
 	prev = "", next = ""
@@ -34,7 +35,7 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 cursor-pointer"
-			on:click={() => window.location.href = `${$page.params.groupId}/thread/${thread.id}`}
+			on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 			on:keydown
 		>
 			{thread.title}

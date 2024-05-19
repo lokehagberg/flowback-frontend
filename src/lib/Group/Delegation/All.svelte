@@ -10,6 +10,7 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { goto } from '$app/navigation';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -182,7 +183,7 @@
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
-					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
+					on:click={() => (goto(`/user?id=${delegate.id}`))}
 				>
 					<img
 						src={delegate.profile_image

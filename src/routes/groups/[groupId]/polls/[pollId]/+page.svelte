@@ -25,6 +25,7 @@
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Tag from '$lib/Group/Tag.svelte';
+	import { goto } from '$app/navigation';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -70,7 +71,7 @@
 
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
-		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
+		if (res.ok) goto(`/groups/${$page.params.groupId}`);
 		else deleteStatus = statusMessageFormatter(res, json, '');
 	};
 

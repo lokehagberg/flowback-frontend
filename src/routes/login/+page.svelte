@@ -9,6 +9,7 @@
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import { _ } from 'svelte-i18n';
+	import { goto } from '$app/navigation';
 
 	let selectedPage = 'Login';
 
@@ -16,7 +17,7 @@
 	let email = ''
 
 	onMount(() => {
-		if (localStorage.getItem('token')) window.location.href = '/home';
+		if (localStorage.getItem('token')) goto('/home');
 	});
 </script>
 

@@ -15,6 +15,7 @@
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { onDestroy, onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyName } from './functions';
+	import { goto } from '$app/navigation';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -149,7 +150,7 @@
 			class="hover:underline"
 			on:mouseover={() => (onHoverGroup = true)}
 			on:mouseleave={() => (onHoverGroup = false)}
-			on:click={() => (window.location.href = '/groups/1')}
+			on:click={() => (goto('/groups/1'))}
 			on:focus
 			on:keydown
 		/>

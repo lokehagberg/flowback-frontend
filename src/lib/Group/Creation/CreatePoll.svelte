@@ -29,6 +29,7 @@
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	type polltypes =
 		| 'Ranking'
@@ -133,7 +134,7 @@
 		loading = false;
 		status = statusMessageFormatter(res, json);
 
-		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
+		if (res.ok) goto(`groups/${groupId}/polls/${json}`);
 	};
 
 	const getGroupTags = async () => {

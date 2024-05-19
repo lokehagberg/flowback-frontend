@@ -8,6 +8,7 @@
 	import type { notification } from './Notification';
 	import TimeAgo from 'javascript-time-ago';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+	import { goto } from '$app/navigation';
 
 	let notifications: notification[],
 		hovered: number[] = [];
@@ -106,14 +107,14 @@
 						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {
 							if (notification.channel_sender_type === 'group')
-								window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
+								goto(`groups/${notification.channel_id}?page=${notification.channel_category}`);
 							else if (notification.channel_sender_type === 'poll') {
 								const { res, json } = await fetchRequest(
 									'GET',
 									`home/polls?id=${notification.channel_sender_id}`
 								);
 								const groupId = json.results[0].group_id;
-								window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
+								goto(`/groups/${groupId}/polls/${notification.channel_sender_id}`);
 							}
 						}}
 						on:keydown

@@ -3,6 +3,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { onMount } from 'svelte';
 	import TermsOfService from '$lib/Login/TermsOfService.svelte';
+	import { goto } from '$app/navigation';
 
 	export let sideHeaderOpen = false;
 
@@ -12,7 +13,7 @@
 
 	const logOut = () => {
 		localStorage.removeItem('token');
-		window.location.href = '/';
+		goto('/');
 	};
 
 	//TODO: Implement codocument creation
@@ -34,7 +35,7 @@
 	const navs = [
 		{
 			title: 'User Profile',
-			action: () => (window.location.href = '/user')
+			action: () => (goto('/user'))
 		},
 		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },

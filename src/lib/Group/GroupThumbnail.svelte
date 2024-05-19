@@ -1,14 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
 
 	export let group: Group;
-	let pending = false;
+	let pending:boolean = false;
 
 	const goToGroup = () => {
-		if (group.joined) window.location.href = `/groups/${group.id}`;
+		if (group.joined) goto(`/groups/${group.id}`);
 	};
 
 	const subscribeToGroup = async () => {
@@ -63,7 +64,7 @@
 			<Button action={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
-		{:else if pending === true}
+		{:else if pending}
 			<div>{$_('Pending invite')}</div>
 		{/if}
 	</div>

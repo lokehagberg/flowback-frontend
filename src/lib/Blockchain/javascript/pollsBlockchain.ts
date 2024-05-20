@@ -12,7 +12,6 @@ async function getUser() {
 		const signer = provider.getSigner();
 		const address = await signer.getAddress();
 		console.log('Address:', address);
-		//console.log("GetCode:", await provider.getCode("0xf43205cD2E7Ab7416D73cCcFC30cD5d980c9A31a"));
 
 		return signer;
 	} else {
@@ -23,53 +22,56 @@ async function getUser() {
 
 const getContract = async () => {
 	const signer = await getUser();
-	const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
+	const contractAddress = '0xDeE004347e6C7D2c7B2E2e26ef9Cdab1B1838F52'; //use this address
 	return new ethers.Contract(contractAddress, contractABI, signer);
 };
 
 //----------------------------TODO update with inputs ---------------------------------------------------
-export const createPoll = async (_groupId: number) => {
-	const contract = await getContract();
-	const nowInMilliSeconds = Math.floor(Date.now())
-	const aminute = 600;
-	try {
-		const tx = await contract.createPoll(
-			'title',
-			'tag',
-			_groupId, //group
-			nowInMilliSeconds, //pollstartdate
-			nowInMilliSeconds, //proposalenddate
-			nowInMilliSeconds, //votingstartdate
-			nowInMilliSeconds, //delegateenddate
-			nowInMilliSeconds + 4000 * aminute //enddate
-		);
 
-		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
-			console.error('Error waiting for transaction:', error);
-		});
+export const createPoll= async () => {
 
-		if (txReceipt && txReceipt.status === 1) {
-			console.log('Transaction successful');
-			const logs = txReceipt.logs;
-			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
+  const contract = await getContract();
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    const oneDayInSeconds = 24 * 60 * 60; 
+    try {
+          const tx = await contract.createPoll(
+            "title",
+            "tag",
+            1, //group
+            nowInSeconds, //pollstartdate
+            nowInSeconds + oneDayInSeconds, //proposalenddate
+            nowInSeconds, //votingstartdate
+            nowInSeconds + 3 * oneDayInSeconds, //delegateenddate
+            nowInSeconds + 4 * oneDayInSeconds, //enddate
+          );
+  
+          const txReceipt = await tx.wait({ timeout: 40000 }).catch((error:any) => {
+          console.error('Error waiting for transaction:', error);
+        });
+  
+        if (txReceipt && txReceipt.status === 1) {
+          console.log('Transaction successful');
+          const logs = txReceipt.logs;
+          const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
 			const pollCreatedEvents = parsedLogs.filter((log:any) => log.name === 'PollCreated');
-			const PollCreatedEvent = pollCreatedEvents.length > 0 ? pollCreatedEvents[0] : undefined;
-
-			console.log(PollCreatedEvent);
-			if (PollCreatedEvent) {
-				const pollId = parseInt(PollCreatedEvent.args.pollId);
-				const title = PollCreatedEvent.args.title;
+          const PollCreatedEvent = pollCreatedEvents.length > 0 ? pollCreatedEvents[0] : undefined;
+  
+          console.log(PollCreatedEvent)
+              if (PollCreatedEvent) {
+                  const pollId = parseInt(PollCreatedEvent.args.pollId);
+                  const title = PollCreatedEvent.args.title;
 				console.log(`Poll created with title ${title} and id ${pollId}`);
-			}
-		}
-	} catch (error) {
-		if (error instanceof Error) {
-			console.error('Error waiting for transaction:', error.message);
-		} else {
-			console.error('An unexpected error occurred:', error);
-		}
-	}
-};
+              }
+          }
+    } catch (error) {
+  
+      if (error instanceof Error) {
+        console.error('Error waiting for transaction:', error.message);
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
+  };
 
 export const getPoll = async (id: number) => {
 	const contract = await getContract();
@@ -79,7 +81,6 @@ export const getPoll = async (id: number) => {
 		console.log(`Title: ${tx.title}`);
 		console.log(`Tag: ${tx.tag}`);
 		console.log(`Startdate: ${tx.pollStartDate}`);
-		console.log(`Startdate: ${tx.proposalEndDate}`);
 		console.log(`Voting date: ${tx.votingStartDate}`);
 		console.log(`Enddate: ${tx.endDate}`);
 		console.log(`Proposalcount: ${tx.proposalCount}`);
@@ -109,7 +110,7 @@ export const createProposal = async (_pollId: number) => {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const ProposalCreatedEvent = parsedLogs.find((log: any) => log.name === 'ProposalAdded');
+			const ProposalCreatedEvent = parsedLogs.find((log:any) => log.name === 'ProposalAdded');
 			if (ProposalCreatedEvent) {
 				const pollId = parseInt(ProposalCreatedEvent.args.pollId);
 				const proposalId = ProposalCreatedEvent.args.proposalId;
@@ -127,13 +128,13 @@ export const createProposal = async (_pollId: number) => {
 		}
 	}
 };
-export const getProposalsOnPoll = async (id: number) => {
+export const getProposalsOnPoll = async (id:number) => {
 	const contract = await getContract();
 	try {
-		const tx = await contract.getProposals(id); //poll id 1
+		const tx = await contract.getProposals(id);
 		console.log(tx);
 		console.log('PROPOSALS ON POLLID ', id); //change when inputs is done
-		tx.forEach((element: any) => {
+		tx.forEach((element:any) => {
 			console.log(
 				`Proposal id ${element.proposalId}: "${element.description}" votes: ${element.voteCount}`
 			);
@@ -146,10 +147,10 @@ export const getProposalsOnPoll = async (id: number) => {
 		}
 	}
 };
-export const getPollResults = async (id: number) => {
+export const getPollResults = async (id:number) => {
 	const contract = await getContract();
 	try {
-		const tx = await contract.getPollResults(1); //poll id 1
+		const tx = await contract.getPollResults(id);
 		console.log(tx);
 	} catch (error) {
 		if (error instanceof Error) {
@@ -160,13 +161,12 @@ export const getPollResults = async (id: number) => {
 	}
 };
 
-export const vote = async (_pollId: number, proposalId: number) => {
-	console.log('poll id from vote function: ', _pollId);
+export const vote = async (_pollId: number, _proposalId: number) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.vote(
 			_pollId, //pollid
-			proposalId //proposalid
+			_proposalId //proposalid
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
@@ -177,13 +177,14 @@ export const vote = async (_pollId: number, proposalId: number) => {
 			console.log('Transaction successful');
 			const logs = txReceipt.logs;
 			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-			const VoteSubmittedCreatedEvent = parsedLogs.find((log: any) => log.name === 'VoteSubmitted');
-			if (VoteSubmittedCreatedEvent) {
-				const pollId = parseInt(VoteSubmittedCreatedEvent.args.pollId);
-				const voter = VoteSubmittedCreatedEvent.args.voter;
-				const votesForProposal = VoteSubmittedCreatedEvent.args.votesForProposal;
+			const VoteSubmittedEvent = parsedLogs.find((log:any) => log.name === 'VoteSubmitted');
+			if (VoteSubmittedEvent) {
+        console.log(VoteSubmittedEvent.args)
+				const pollId = parseInt(VoteSubmittedEvent.args.pollId);
+				const voter = VoteSubmittedEvent.args.voter;
+				const votesForProposal = VoteSubmittedEvent.args.votesForProposal;
 				console.log(
-					`Vote has been cast on poll with id ${pollId} by voter: ${voter}, votes for proposal is now ${votesForProposal}`
+					`Vote has been cast on a proposal on poll with id ${pollId} by voter: ${voter}, votes for that proposal is now ${votesForProposal}`
 				);
 			}
 		}

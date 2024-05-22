@@ -64,10 +64,8 @@
 
 			if (res.ok) goto(`/groups/${json}`);
 			else status = statusMessageFormatter(res, json);
-		} else status = statusMessageFormatter(res, json);
-
+		} else goto(`/groups/${groupToEdit}`);
 		loading = false;
-		goto(`/groups/${groupToEdit}`)
 	};
 
 	const deleteGroup = async () => {
@@ -86,9 +84,9 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
-		console.log(json.image, json.cover_image, "IMAGE")
-		image = json.image
-		coverImage = json.cover_image
+		console.log(json.image, json.cover_image, 'IMAGE');
+		image = json.image;
+		coverImage = json.cover_image;
 	};
 
 	onMount(() => {
@@ -113,11 +111,7 @@
 				<TextInput label="Title" bind:value={name} required />
 				<TextArea label="Description" bind:value={description} />
 				<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
-				<ImageUpload
-					icon={faFileImage}
-					bind:imageString={coverImage}
-					label="Upload Banner"
-				/>
+				<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />

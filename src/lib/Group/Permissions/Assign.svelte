@@ -37,7 +37,7 @@
 		});
 		
 		//@ts-ignore
-		users.find(user => user.id === userId)!.permission_name = roles.find(role => role.id === roleId)?.role_name
+		users.find(user => user.user.id === userId)!.permission_name = roles.find(role => role.id === roleId)?.role_name
 		users = users
 	};
 
@@ -61,9 +61,9 @@
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
-					class:selected={selected === user.id}
+					class:selected={selected === user.user.id}
 					class="faPlus ml-auto cursor-pointer"
-					on:click={() => (selected === user.id ? (selected = -1) : (selected = user.id))}
+					on:click={() => (selected === user.user.id ? (selected = -1) : (selected = user.user.id))}
 					on:keydown
 				>
 					<Fa icon={faPlus} size="2x" />
@@ -71,7 +71,7 @@
 			</div>
 			<div
 				class="p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
-				class:hidden={selected !== user.id}
+				class:hidden={selected !== user.user.id}
 			>
 				<h1 class="text-xl">{user.user.username}</h1>
 				<!-- <TextInput label="Search" /> -->
@@ -80,12 +80,12 @@
 						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 						<li
 							class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-							on:click={() => updateUserRoles(role.id, user.id)}
+							on:click={() => updateUserRoles(role.id, user.user.id)}
 							on:keydown
 						>
 							<Tag
 								tag={{active:true, id:1, name:role.role_name}}
-								Class={`cursor-pointer ${user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
+								Class={`cursor-pointer ${user.user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
 							/>
 						</li>
 					{/each}

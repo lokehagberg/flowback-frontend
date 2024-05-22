@@ -9,8 +9,8 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Loader from '$lib/Generic/Loader.svelte';
 
-	let status:StatusMessageInfo,
-	loading = false
+	let status: StatusMessageInfo,
+		loading = false;
 
 	const perms = [
 		{
@@ -26,44 +26,62 @@
 			title: 'Kick users',
 			description: 'Allows user to kick users from the group'
 		},
-		{ title: 'Ban users', description: 'Allows user to ban users from the group' }
+		{ title: 'Ban users', description: 'Allows user to ban users from the group' },
+		{ title: 'poll_fast_forward', description: 'Allows user to ban users from the group' },
+		{ title: 'create_proposal', description: 'Allows user to ban users from the group' },
+		{ title: 'update_proposal', description: 'Allows user to ban users from the group' },
+		{ title: 'delete_proposal', description: 'Allows user to ban users from the group' },
+		{ title: 'force_delete_poll', description: 'Allows user to ban users from the group' },
+		{ title: 'force_delete_proposal', description: 'Allows user to ban users from the group' },
+		{ title: 'force_delete_comment', description: 'Allows user to ban users from the group' }
 	];
 
 	let roleName = '';
-	let rolePerms = [false, false, false, false, false];
+	let rolePerms = new Array(perms.length).fill(false);
 
 	const createRole = async () => {
-		loading = true
-		const {json, res} = await fetchRequest('POST', `group/${$page.params.groupId}/permission/create`, {
-			role_name: roleName,
-			invite_user: rolePerms[0],
-			create_poll: rolePerms[1],
-			allow_vote: rolePerms[2],
-			kick_members: rolePerms[3],
-			ban_members: rolePerms[4]
-		});
-		
-		loading = false
-		status = statusMessageFormatter(res, json, "Successfully created role")
+		loading = true;
+		const { json, res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/permission/create`,
+			{
+				role_name: roleName,
+				invite_user: rolePerms[0],
+				create_poll: rolePerms[1],
+				allow_vote: rolePerms[2],
+				kick_members: rolePerms[3],
+				ban_members: rolePerms[4],
+				poll_fast_forward: rolePerms[5],
+				create_proposal: rolePerms[6],
+				update_proposal: rolePerms[7],
+				delete_proposal: rolePerms[8],
+				force_delete_poll: rolePerms[9],
+				force_delete_proposal: rolePerms[10],
+				force_delete_comment: rolePerms[11]
+			}
+		);
+
+		loading = false;
+		status = statusMessageFormatter(res, json, 'Successfully created role');
 	};
 </script>
 
 <Loader bind:loading>
-<div class="p-6 rounded">
-	<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
-		<TextInput label="Role name" bind:value={roleName} required />
-		<h1 class="text-xl">Permissions</h1>
-		{#each perms as perm, i}
-			<div class="flex justify-between">
-				<details>
-					<summary>{perm.title}</summary>
-					{perm.description}
-				</details>
-				<Toggle bind:checked={rolePerms[i]} />
-			</div>
-		{/each}
-		<StatusMessage bind:status/>
-		<Button type="submit">Create Role</Button>
-	</form>
-</div>
+	<div class="p-6 rounded">
+		<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
+			<TextInput label="Role name" bind:value={roleName} required />
+			<h1 class="text-xl">Permissions</h1>
+			{#each perms as perm, i}
+				<div class="flex justify-between">
+					<details>
+						<summary>{perm.title}</summary>
+						{perm.description}
+					</details>
+					<Toggle bind:checked={rolePerms[i]} />
+				</div>
+			{/each}
+			<StatusMessage bind:status />
+			<Button type="submit">Create Role</Button>
+		</form>
+	</div>
 </Loader>

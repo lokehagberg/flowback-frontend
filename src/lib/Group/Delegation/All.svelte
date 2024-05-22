@@ -52,7 +52,7 @@
 
 	const createDelegation = async () => {
 		await createDelegationPool();
-		// TOOD-Blockchain: Set this up so it works 
+		// TOOD-Blockchain: Set this up so it works
 		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
@@ -133,6 +133,7 @@
 			})
 		);
 
+
 		loading = false;
 	};
 
@@ -183,7 +184,7 @@
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
-					on:click={() => (goto(`/user?id=${delegate.id}`))}
+					on:click={() => goto(`/user?id=${delegate.id}`)}
 				>
 					<img
 						src={delegate.profile_image

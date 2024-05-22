@@ -27,13 +27,16 @@
 			description: 'Allows user to kick users from the group'
 		},
 		{ title: 'Ban users', description: 'Allows user to ban users from the group' },
-		{ title: 'poll_fast_forward', description: 'Allows user to ban users from the group' },
-		{ title: 'create_proposal', description: 'Allows user to ban users from the group' },
-		{ title: 'update_proposal', description: 'Allows user to ban users from the group' },
-		{ title: 'delete_proposal', description: 'Allows user to ban users from the group' },
-		{ title: 'force_delete_poll', description: 'Allows user to ban users from the group' },
-		{ title: 'force_delete_proposal', description: 'Allows user to ban users from the group' },
-		{ title: 'force_delete_comment', description: 'Allows user to ban users from the group' }
+		{ title: 'Fast Forward Poll', description: 'Allows user to change timeline phase on a poll' },
+		{
+			title: 'Create Proposal',
+			description: 'Allows user to create proposals in polls during proposal phase'
+		},
+		{ title: 'Update Proposal', description: 'Allows user to change any proposal in a poll' },
+		{ title: 'Delete Proposal', description: 'Allows user to remove any proposal in a poll' },
+		{ title: 'Delete Poll', description: 'Allows user to delete any poll' },
+		{ title: 'Delete Proposal', description: 'Allows user to delete any proposal' },
+		{ title: 'Delete Comment', description: 'Allows user to delete any comment' }
 	];
 
 	let roleName = '';

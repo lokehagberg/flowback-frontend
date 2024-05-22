@@ -23,7 +23,6 @@
 
 		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
-			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
 			{
 				const { json } = await fetchRequest('GET', 'user');

@@ -96,7 +96,7 @@
 				}}
 				bind:filter
 			/>
-			{#if polls.length === 0}
+			{#if polls.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No polls currently here')}
 				</div>
@@ -107,7 +107,7 @@
 						{#each polls as poll}
 							<PollThumbnail {poll} {isAdmin} />
 						{/each}
-					{:else}
+					{:else if !loading}
 						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
 							{$_('No polls currently here')}
 						</div>

@@ -115,9 +115,10 @@
 </div>
 
 {#if isVoting}
-	<Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]"
+	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]"
 		>Save Votings</Button
-	>
+		>
+		<!-- <Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]" -->
 {/if}
 
 <Poppup bind:poppup />

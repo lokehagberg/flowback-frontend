@@ -166,7 +166,7 @@
 					<Predictions bind:proposals bind:phase />
 				{:else if phase === 'vote'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-					<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
+					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
 					<Predictions bind:proposals bind:phase />
 				{:else if phase === 'result'}
 					<Results {pollType} />

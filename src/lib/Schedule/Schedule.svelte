@@ -95,7 +95,7 @@
 	const setUpScheduledPolls = async () => {
 		const { json, res } = await fetchRequest(
 			'GET',
-			groupId ? `group/${groupId}/schedule` : 'user/schedule?limit=1000'
+			groupId ? `group/${groupId}/schedule?limit=1000` : 'user/schedule?limit=1000'
 		);
 		events = json.results;
 	};

@@ -204,18 +204,20 @@
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
 			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
-			else if (kanban.origin_type === 'group')
-				goto(`/groups/${kanban.origin_id}?page=kanban`);
+			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 		on:keydown
 	>
 		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
 		<div class="break-all text-xs">
-			{type === 'group'
-				? kanban.assignee?.username
-				: kanban.origin_type === 'user'
-				? 'My own'
-				: kanban.group_name}
+				{#if type === 'group'}
+					{kanban.assignee?.username}
+				{:else if kanban.origin_type === 'user'}
+					My own
+				{:else}
+					{kanban.group_name}
+				{/if}
+		
 		</div>
 	</div>
 	<!-- Arrows -->

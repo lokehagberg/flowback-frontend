@@ -58,7 +58,7 @@ const sendMessage = async (
 				// topic_id,
 				// attachments_id,
 				// parent_id,
-				type: 'message_create'
+				method: 'message_create'
 			})
 		);
 		console.log(res, "RESULTS")

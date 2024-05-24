@@ -14,7 +14,7 @@
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import sendMessage  from './Socket';
+	import sendMessage, { messageStore } from './Socket';
 	import { onMount } from 'svelte';
 
 	// User Action variables
@@ -47,8 +47,9 @@
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
 	onMount(() => {
-		getRecentMesseges()
-	})
+		getRecentMesseges();
+		recieveMessage();
+	});
 
 	//When messages are recieved and not looking at history, scroll.
 	$: messages &&
@@ -65,21 +66,21 @@
 	const getRecentMesseges = async () => {
 		// if (!selectedChat) return;
 
-		{const { res, json } = await fetchRequest(
-			'GET',
-			`chat/message/channel/1/topic/list?id=1`
-		);
-	}
-		
-	{const { res, json } = await fetchRequest(
-			'GET',
-			`chat/message/channel/preview/list`
-		);
-	}
+		// 	{const { res, json } = await fetchRequest(
+		// 		'GET',
+		// 		`chat/message/channel/1/topic/list?id=1`
+		// 	);
+		// }
+
+		// {const { res, json } = await fetchRequest(
+		// 		'GET',
+		// 		`chat/message/channel/preview/list`
+		// 	);
+		// }
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/1/list?order_by=created_at_desc&limit=${25}`
+			`chat/message/channel/1/list?order_by=created_at_asc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results.reverse();
@@ -93,7 +94,7 @@
 	const postMessage = async () => {
 		if (message.length === 0) return;
 		// if (!selectedChat) return;
-		console.log("HERE")
+		console.log('HERE');
 		//If only spaces, return
 		if (message.match(/^\s+$/)) return;
 
@@ -121,7 +122,7 @@
 				user_id: user.id,
 				// target_id: selectedPage === 'direct' ? selectedChat : 0,
 				target_username: user.username,
-				profile_image: '',
+				profile_image: ''
 				// group_id: selectedPage === 'group' ? selectedChat : 0
 			});
 		}
@@ -153,6 +154,22 @@
 		olderMessages = json.next;
 
 		messages = json.results.reverse();
+	};
+
+	const recieveMessage = () => {
+		messageStore.subscribe((_message: any) => {
+			const message = JSON.parse(_message);
+			messages.push({
+				message: message.message,
+				user: {
+					id: message.id,
+					username: message.user.username,
+					profile_image: message.profile_image
+				}
+			});
+
+			messages = messages;
+		});
 	};
 
 	$: {
@@ -212,7 +229,6 @@
 				label=""
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
-						
 						postMessage();
 						e.preventDefault();
 					}

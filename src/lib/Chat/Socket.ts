@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-const messageStore = writable('');
+export const messageStore = writable('');
 
 const createSocket = (userId: number) => {
 	let socket: WebSocket;
@@ -11,9 +11,6 @@ const createSocket = (userId: number) => {
 		import.meta.env.VITE_HAS_API === "TRUE" ? '/api' : ''
 	}/chat/ws?token=${token}`;
 	
-	// const link = `/chat/ws?token=${token}`;
-
-	console.log(link, "THA LINK")
 	socket = new WebSocket(link);
 
 	socket.onopen = (event) => {

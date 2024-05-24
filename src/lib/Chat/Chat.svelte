@@ -41,17 +41,6 @@
 		// testNewAPI();
 	});
 
-	const testNewAPI = async () => {
-
-		const { json, res } = await fetchRequest('GET', `chat/message/channel/${1}/list`);
-		if (!res.ok) return;
-		
-
-		let socket = Socket.createSocket(user.id);
-		setTimeout(() => {
-			Socket.sendMessage(socket, 1, 'helloo :3', 1, 1, 1);
-		}, 2000);
-	};
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {

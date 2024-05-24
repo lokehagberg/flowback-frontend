@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 
+	let mounted = false;
+
 	onMount(() => {
 		const header = document.getElementById('header');
 		if (!header) return;
 
 		header!.style.display = 'none';
+		mounted = true;
 	});
 
 	onDestroy(() => {
-		const header = document.getElementById('header');
-		if (!header) return;
+		if (mounted) {
+			const header = document.getElementById('header');
+			if (!header) return;
 
-		header!.style.display = 'block';
+			header!.style.display = 'block';
+		}
 	});
 </script>
 

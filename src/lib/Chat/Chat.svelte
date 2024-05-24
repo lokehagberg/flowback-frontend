@@ -156,7 +156,7 @@
 		bind:previewGroup
 		bind:notifiedDirect
 		bind:notifiedGroup
-	/>-->
+	/> -->
 	<ChatWindow
 		bind:previewDirect
 		bind:previewGroup

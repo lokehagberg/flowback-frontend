@@ -156,6 +156,7 @@
 		messages = json.results.reverse();
 	};
 
+	//Uses svelte stores to recieve messages
 	const recieveMessage = () => {
 		messageStore.subscribe((_message: any) => {
 			const message = JSON.parse(_message);

@@ -53,7 +53,7 @@
 		{/each}
 	{:else if pollType === 3}
 	<div>
-		Results in Group Calendar
+		Results in Group Schedule
 	</div>
 	{/if}
 </div>

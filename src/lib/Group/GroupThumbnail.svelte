@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
 
 	export let group: Group;
-	let pending:boolean = false;
+	let pending: boolean = false;
 
 	const goToGroup = () => {
 		if (group.joined) goto(`/groups/${group.id}`);
@@ -20,6 +21,7 @@
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
 			group.joined = !group.joined;
+			becomeMemberOfGroup(group.id);
 			if (group.direct_join) goToGroup();
 		}
 	};

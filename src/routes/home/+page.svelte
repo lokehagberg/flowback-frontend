@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
+	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
 
 	interface Invitation {
 		external: boolean;
@@ -45,6 +46,7 @@
 
 		invitations = invitations.filter(invite => invite.group !== id)
 		invitations = invitations
+		becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {

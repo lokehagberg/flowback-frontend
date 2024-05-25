@@ -16,6 +16,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import sendMessage, { messageStore } from './Socket';
 	import { onMount } from 'svelte';
+	import Socket from './Socket';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -25,7 +26,8 @@
 		status: {
 			message: any;
 			success: boolean;
-		};
+		},
+		socket: WebSocket;
 
 	export let selectedChat: number | null,
 		// sendMessage: (
@@ -36,7 +38,7 @@
 		// 	attachments_id?: number | null,
 		// 	parent_id?: number | null
 		// ) => Promise<boolean>,
-		socket: WebSocket,
+
 		user: User,
 		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
@@ -78,6 +80,7 @@
 
 	//Runs when changing chats
 	const postMessage = async () => {
+		if (!selectedChat) return;
 		if (message.length === 0) return;
 		// if (!selectedChat) return;
 		console.log('HERE');
@@ -115,7 +118,7 @@
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		const didSend = await sendMessage.sendMessage(socket, 1, message, 1);
+		const didSend = await sendMessage.sendMessage(socket, selectedChat, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -178,6 +181,8 @@
 				d?.scroll(0, 100000);
 			}, 100);
 		})();
+
+	$: if (user) socket = Socket.createSocket(user.id);
 </script>
 
 {#if selectedChat !== null || true}

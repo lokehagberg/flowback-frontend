@@ -58,7 +58,7 @@ const sendMessage = async (
 				method: 'message_create'
 			})
 		);
-		console.log(res, "RESULTS")
+		// console.log(res, "RESULTS")
 	}
 	return true
 };

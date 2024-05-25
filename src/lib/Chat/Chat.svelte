@@ -11,7 +11,6 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
-	import Socket from './Socket';
 
 	let messages: Message[] = [],
 		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
@@ -19,13 +18,6 @@
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number | null,
-		//Websocket utility functions and variables
-		socket: WebSocket,
-		sendMessageToSocket: (
-			message: string,
-			selectedChat: number,
-			selectedPage: 'direct' | 'group'
-		) => Promise<boolean>,
 		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
@@ -39,7 +31,7 @@
 		await getUser();
 		// await setUpMessageSending();
 		// console.log(socket, user, user.id, 'IDD');
-		socket = Socket.createSocket(user.id);
+
 		// testNewAPI();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
@@ -148,7 +140,7 @@
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix h-[100wh]"
 >
 	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
@@ -171,7 +163,6 @@
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		bind:socket
 		{user}
 		bind:messages
 		bind:isLookingAtOlderMessages

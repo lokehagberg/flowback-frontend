@@ -103,6 +103,7 @@
 		}
 
 		//Switches chat shown to the right of the screen to chatter
+		console.log("HELLO??")
 		if (selectedChat !== chatter.id) selectedChat = chatter.id;
 
 		setTimeStamp(chatter.id, selectedPage);
@@ -251,9 +252,9 @@
 			on:keydown
 			on:click={async () => {
 				//TODO: Better fix than this! Fixes doubble clicking to remove notification
-				await setTimeout(() => {
-					clickedChatter(chatter);
-				}, 100);
+				// await setTimeout(() => {
+				// 	clickedChatter(chatter);
+				// }, 100);
 				clickedChatter(chatter);
 			}}
 		>

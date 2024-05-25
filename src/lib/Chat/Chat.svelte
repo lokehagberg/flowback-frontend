@@ -24,7 +24,6 @@
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [],
 		isLookingAtOlderMessages = false,
-		headerHeight = 0,
 		chatDiv: HTMLDivElement;
 
 	onMount(async () => {

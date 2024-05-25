@@ -7,8 +7,8 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import { chatPreview as chatLimit } from '../Generic/APILimits.json'
-	
+	import { chatPreview as chatLimit } from '../Generic/APILimits.json';
+
 	let groups: Group[] = [],
 		directs: any[] = [],
 		user: User,
@@ -103,7 +103,7 @@
 		}
 
 		//Switches chat shown to the right of the screen to chatter
-		console.log("HELLO??")
+		console.log('HELLO??');
 		if (selectedChat !== chatter.id) selectedChat = chatter.id;
 
 		setTimeStamp(chatter.id, selectedPage);
@@ -230,7 +230,7 @@
 		bind:selectedPage
 		tabs={['direct', 'group']}
 		displayNames={['Direct', 'Groups']}
-	/> 
+	/>
 </div>
 
 <ul
@@ -267,7 +267,9 @@
 			{/if}
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
-				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis">{chatter.name || chatter.username}</span>
+				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"
+					>{chatter.name || chatter.username}</span
+				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
 					{getMessage(chatter)}
 				</span>

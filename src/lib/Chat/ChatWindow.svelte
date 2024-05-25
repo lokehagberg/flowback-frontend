@@ -47,7 +47,6 @@
 		isLookingAtOlderMessages: boolean;
 
 	onMount(() => {
-		getRecentMesseges();
 		recieveMessage();
 	});
 
@@ -68,7 +67,7 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/1/list?order_by=created_at_asc&limit=${25}`
+			`chat/message/channel/${selectedChat}/list?order_by=created_at_asc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results.reverse();
@@ -77,6 +76,8 @@
 		olderMessages = json.next;
 		newerMessages = '';
 	};
+
+	$: if (selectedChat) getRecentMesseges()
 
 	//Runs when changing chats
 	const postMessage = async () => {

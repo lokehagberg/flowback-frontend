@@ -15,7 +15,7 @@
 
 <!-- <Header /> -->
 
-<Chat />
+<!-- <Chat /> -->
 
 <div class={`${centered ? 'flex justify-center flex-col items-center' : ''}`}>
 	<slot />

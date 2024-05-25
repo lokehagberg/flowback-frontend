@@ -36,11 +36,10 @@
 	onMount(async () => {
 		await getUser();
 		// await setUpMessageSending();
-		console.log(socket, user, user.id, "IDD")
+		console.log(socket, user, user.id, 'IDD');
 		socket = Socket.createSocket(user.id);
 		// testNewAPI();
 	});
-
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
@@ -149,14 +148,14 @@
 			<CrossButton />
 		</div>
 	</div>
-	<!-- <Preview
+	<Preview
 		bind:selectedChat
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
 		bind:notifiedDirect
 		bind:notifiedGroup
-	/> -->
+	/>
 	<ChatWindow
 		bind:previewDirect
 		bind:previewGroup
@@ -166,7 +165,7 @@
 		{user}
 		bind:messages
 		bind:isLookingAtOlderMessages
-	/> 
+	/>  
 </div>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->

@@ -44,24 +44,10 @@
 		previewGroup: PreviewMessage[] = [],
 		isLookingAtOlderMessages: boolean;
 
-	$: (selectedPage || selectedChat) && getRecentMesseges();
-
 	onMount(() => {
 		getRecentMesseges();
 		recieveMessage();
 	});
-
-	//When messages are recieved and not looking at history, scroll.
-	$: messages &&
-		(async () => {
-			if (newerMessages) return;
-			if (!browser) return;
-
-			await setTimeout(() => {
-				const d = document.querySelector('#chat-window');
-				d?.scroll(0, 100000);
-			}, 100);
-		})();
 
 	const getRecentMesseges = async () => {
 		// if (!selectedChat) return;
@@ -158,7 +144,8 @@
 
 	//Uses svelte stores to recieve messages
 	const recieveMessage = () => {
-		messageStore.subscribe((_message: any) => {
+		messageStore.subscribe((_message: string) => {
+			if (!_message) return;
 			const message = JSON.parse(_message);
 			messages.push({
 				message: message.message,
@@ -173,10 +160,24 @@
 		});
 	};
 
+	$: (selectedPage || selectedChat) && getRecentMesseges();
+
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
 	}
+
+	//When messages are recieved and not looking at history, scroll.
+	$: messages &&
+		(async () => {
+			if (newerMessages) return;
+			if (!browser) return;
+
+			await setTimeout(() => {
+				const d = document.querySelector('#chat-window');
+				d?.scroll(0, 100000);
+			}, 100);
+		})();
 </script>
 
 {#if selectedChat !== null || true}

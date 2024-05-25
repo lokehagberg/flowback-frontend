@@ -47,10 +47,10 @@
 	const getPreview = async (selectedPage: 'direct' | 'group') => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/${selectedPage}/preview?order_by=created_at_desc`
+			`chat/message/channel/preview/list?order_by=created_at_desc`
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) return [];
 
 		return json.results;
 	};
@@ -167,7 +167,7 @@
 	}
 
 	const sortChat = (chatters: Direct[] | Group[], previews: PreviewMessage[]) => {
-		if (user)
+		if (user && previews)
 			chatters.sort((chatter1, chatter2) => {
 				const preview1: any = previews.find((preview) =>
 					preview.group_id === chatter1.id
@@ -229,7 +229,7 @@
 		bind:selectedPage
 		tabs={['direct', 'group']}
 		displayNames={['Direct', 'Groups']}
-	/>
+	/> 
 </div>
 
 <ul
@@ -241,6 +241,7 @@
 		Class="mt-1 ml-2 mb-2 w-7/12"
 	/>
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())

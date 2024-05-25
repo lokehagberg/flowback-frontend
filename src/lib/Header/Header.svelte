@@ -19,6 +19,7 @@
 	// import { accountsStore } from '$lib/Account/stores';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
+	import Chat from '$lib/Chat/Chat.svelte';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -86,6 +87,10 @@
 		}
 	};
 </script>
+
+<!-- TODO: Move <Chat /> to somewhere more appropriate -->
+<Chat />
+
 
 <!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
 

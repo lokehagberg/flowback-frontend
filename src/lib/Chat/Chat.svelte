@@ -31,15 +31,24 @@
 		previewGroup: PreviewMessage[] = [],
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [],
-		isLookingAtOlderMessages = false;
+		isLookingAtOlderMessages = false,
+		headerHeight = 0,
+		chatDiv: HTMLDivElement;
 
 	onMount(async () => {
 		await getUser();
 		// await setUpMessageSending();
-		console.log(socket, user, user.id, 'IDD');
+		// console.log(socket, user, user.id, 'IDD');
 		socket = Socket.createSocket(user.id);
 		// testNewAPI();
+		correctMarginRelativeToHeader();
+		window.addEventListener('resize', correctMarginRelativeToHeader);
 	});
+
+	const correctMarginRelativeToHeader = () => {
+		const _headerHeight = document.querySelector('#header')?.clientHeight;
+		if (_headerHeight) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
+	};
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
@@ -137,6 +146,7 @@
 	> -->
 </svelte:head>
 <div
+	bind:this={chatDiv}
 	class:invisible={!chatOpen}
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix"
 >
@@ -157,15 +167,15 @@
 		bind:notifiedGroup
 	/>
 	<ChatWindow
-		bind:previewDirect
-		bind:previewGroup
 		bind:selectedChat
 		bind:selectedPage
+		bind:previewDirect
+		bind:previewGroup
 		bind:socket
 		{user}
 		bind:messages
 		bind:isLookingAtOlderMessages
-	/>  
+	/>
 </div>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->

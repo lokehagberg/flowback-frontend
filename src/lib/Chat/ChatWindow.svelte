@@ -151,6 +151,8 @@
 		messageStore.subscribe((_message: string) => {
 			if (!_message) return;
 			const message = JSON.parse(_message);
+			if (message.channel_id !== selectedChat) return;
+			console.log(message)
 			messages.push({
 				message: message.message,
 				user: {
@@ -201,7 +203,7 @@
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
 		{#each messages as message}
-			<li class="p-3 hover:bg-gray-200">
+			<li class="p-3 hover:bg-gray-200 hover:dark:bg-darkbackground">
 				<span>{message.user?.username || message.username}</span>
 				<span class="text-[14px] text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 				<p>{message.message}</p>

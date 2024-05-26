@@ -28,7 +28,7 @@ const getContract = async () => {
 
 //----------------------------TODO update with inputs ---------------------------------------------------
 
-export const createPoll= async () => {
+export const createPoll= async (groupId:number) => {
 
   const contract = await getContract();
     const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -37,7 +37,7 @@ export const createPoll= async () => {
           const tx = await contract.createPoll(
             "title",
             "tag",
-            1, //group
+            groupId, //group
             nowInSeconds, //pollstartdate
             nowInSeconds + oneDayInSeconds, //proposalenddate
             nowInSeconds, //votingstartdate

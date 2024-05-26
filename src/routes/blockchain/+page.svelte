@@ -76,7 +76,7 @@
 		<button on:click={() => becomeMemberOfGroup(groupId)}>Become member</button>
 	</div>
 	<div class="p-6">
-		<button on:click={removeGroupMembership}>Resign as member</button>
+		<button on:click={() => removeGroupMembership(groupId)}>Resign as member</button>
 	</div>
 	<div class="p-6">
 		<button on:click={isUserMemberInGroup}>Check if user is member of group</button>
@@ -88,7 +88,7 @@
 	<b>polls</b>
 	<div class="p-6">
 		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
-		<button on:click={() => createPoll()}>Create poll</button>
+		<button on:click={() => createPoll(groupId)}>Create poll</button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => getPoll(pollId)}>Get poll</button>
@@ -129,7 +129,7 @@
 		<button on:click={() => becomeDelegate(groupId)}>Become delegate</button>
 	</div>
 	<div class="p-6">
-		<button on:click={() => delegate()}>Delegate</button>
+		<button on:click={() => delegate(groupId)}>Delegate</button>
 	</div>
 </Layout>
 

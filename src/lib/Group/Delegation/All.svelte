@@ -77,6 +77,7 @@
 
 		loading = false;
 		userIsDelegate = true;
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION) becomeDelegate(Number($page.params.groupId))
 		// userIsDelegateStore.update((value) => (value = true));
 	};
 

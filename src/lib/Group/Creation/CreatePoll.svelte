@@ -30,6 +30,7 @@
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
 
 	type polltypes =
 		| 'Ranking'
@@ -134,15 +135,16 @@
 		loading = false;
 		status = statusMessageFormatter(res, json);
 
-		if (res.ok) goto(`groups/${groupId}/polls/${json}`);
+		if (res.ok && groupId) {
+			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+				createPollBlockchain(Number(groupId));
+			goto(`groups/${groupId}/polls/${json}`);
+		}
 	};
 
 	const getGroupTags = async () => {
 		loading = true;
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${groupId}/tags?limit=${9999}`
-		);
+		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=${9999}`);
 		loading = false;
 		tags = json.results;
 		selectedTag = tags[0];
@@ -177,7 +179,7 @@
 
 	onMount(() => {
 		getGroupTags();
-	})
+	});
 </script>
 
 <div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
@@ -347,7 +349,11 @@
 							if (selected_poll === poll) return poll === 'Text Poll' ? 'primary' : 'accent';
 							else return poll === 'Text Poll' ? 'secondary' : 'accent-secondary';
 						})()}
-						Class={`${selected_poll === poll ? 'shadow-sm outline outline-0 brightness-115' : 'shadow-xl brightness-90 saturate-0'}
+						Class={`${
+							selected_poll === poll
+								? 'shadow-sm outline outline-0 brightness-115'
+								: 'shadow-xl brightness-90 saturate-0'
+						}
 							`}
 					>
 						<div class="flex items-center text-center">

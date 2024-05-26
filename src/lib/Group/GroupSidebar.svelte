@@ -26,6 +26,7 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
+	import { removeGroupMembership } from '$lib/Blockchain/javascript/rightToVote';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -54,7 +55,10 @@
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
-		if (res.ok) goto('/home');
+		if (res.ok) {
+			removeGroupMembership(Number($page.params.groupId))
+			goto('/home');		
+		} 
 	};
 
 	onMount(() => {

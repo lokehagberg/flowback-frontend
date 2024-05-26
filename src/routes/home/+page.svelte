@@ -25,8 +25,7 @@
 		status: StatusMessageInfo;
 
 	onMount(async () => {
-
-		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === "TRUE") location.href = 'groups/1'
+		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') location.href = 'groups/1';
 
 		getInvitations();
 		getPolls();
@@ -39,14 +38,14 @@
 
 	const acceptInvitation = async (id: number) => {
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
-		
+
 		if (!res.ok) {
 			return;
 		}
 
-		invitations = invitations.filter(invite => invite.group !== id)
-		invitations = invitations
-		becomeMemberOfGroup(id);
+		invitations = invitations.filter((invite) => invite.group !== id);
+		invitations = invitations;
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {
@@ -80,4 +79,3 @@
 	</ul>
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>
-

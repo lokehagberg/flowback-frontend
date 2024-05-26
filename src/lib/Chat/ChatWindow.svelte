@@ -70,14 +70,12 @@
 			`chat/message/channel/${selectedChat}/list?order_by=created_at_asc&limit=${25}`
 		);
 
-		if (res.ok) messages = json.results.reverse();
+		if (res.ok) messages = json.results;
 
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
 		newerMessages = '';
 	};
-
-	$: if (selectedChat) getRecentMesseges()
 
 	//Runs when changing chats
 	const postMessage = async () => {

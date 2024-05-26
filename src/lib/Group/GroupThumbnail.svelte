@@ -21,7 +21,7 @@
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
 			group.joined = !group.joined;
-			becomeMemberOfGroup(group.id);
+			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(group.id);
 			if (group.direct_join) goToGroup();
 		}
 	};

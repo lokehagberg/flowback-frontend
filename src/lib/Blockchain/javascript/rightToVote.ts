@@ -75,7 +75,7 @@ export const becomeMemberOfGroup = async (_groupId: number) => {
 	
 };
 
-export const removeGroupMembership = async () => {
+export const removeGroupMembership = async (groupId:number) => {
 	
 	const contract = await getContract();
 	const { provider } = await getContract();
@@ -84,8 +84,8 @@ export const removeGroupMembership = async () => {
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
 	
 
-	const estimatedGasLimit = await contract.estimateGas.removeGroupMembership(1);
-	const tx = await contract.removeGroupMembership(1, { //group id
+	const estimatedGasLimit = await contract.estimateGas.removeGroupMembership(groupId);
+	const tx = await contract.removeGroupMembership(groupId, { //group id
     gasLimit: estimatedGasLimit, 
     maxPriorityFeePerGas: maxPriorityFeePerGas,
     });

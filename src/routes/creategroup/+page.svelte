@@ -21,6 +21,7 @@
 	import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { goto } from '$app/navigation';
+	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
 
 	let name: string,
 		description: string,
@@ -62,7 +63,10 @@
 				name: 'Uncategorised' //Default
 			});
 
-			if (res.ok) goto(`/groups/${json}`);
+			if (res.ok) {
+				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(json)
+				goto(`/groups/${json}`);
+			} 
 			else status = statusMessageFormatter(res, json);
 		} else goto(`/groups/${groupToEdit}`);
 		loading = false;

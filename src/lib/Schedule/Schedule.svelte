@@ -62,7 +62,8 @@
 		end_date: Date | null,
 		title: string,
 		description: string,
-		event_id: number | undefined;
+		event_id: number | undefined,
+		deleteSelection = () => {};
 
 	export let type: 'user' | 'group';
 
@@ -89,13 +90,10 @@
 		}
 	};
 
-	//This function is defined in onMount, prevents "document not found" error
-	let deleteSelection = () => {};
-
 	const setUpScheduledPolls = async () => {
 		const { json, res } = await fetchRequest(
 			'GET',
-			groupId ? `group/${groupId}/schedule?limit=1000` : 'user/schedule?limit=1000'
+			groupId ? `group/${groupId}/schedule?limit=100` : 'user/schedule?limit=100'
 		);
 		events = json.results;
 	};
@@ -366,10 +364,9 @@
 							<div class="text-center">
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
-
 							{#each events as event}
-								<!-- {@debug event} -->
-								{#if new Date(event.start_date) <= getDate(year, month, x, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+
+								{#if new Date(event.start_date) <= getDate(year, month, x+1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
 									<div class="text-center">{event.title}</div>
 								{/if}
 							{/each}
@@ -431,12 +428,7 @@
 	</div>
 </Modal>
 
-<Modal
-	bind:open={showEditScheduleEvent}
-	onClose={() => {
-		console.log('WHY HERE?!');
-	}}
->
+<Modal bind:open={showEditScheduleEvent}>
 	<div slot="header">{$_('Edit Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>

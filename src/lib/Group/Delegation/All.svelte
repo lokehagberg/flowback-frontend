@@ -77,7 +77,7 @@
 
 		loading = false;
 		userIsDelegate = true;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION) becomeDelegate(Number($page.params.groupId))
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeDelegate(Number($page.params.groupId));
 		// userIsDelegateStore.update((value) => (value = true));
 	};
 
@@ -133,7 +133,6 @@
 				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
 			})
 		);
-
 
 		loading = false;
 	};

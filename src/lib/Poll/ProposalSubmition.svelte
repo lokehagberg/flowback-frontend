@@ -12,6 +12,7 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
+	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
 
 	let title: string,
 		description: string,
@@ -33,26 +34,30 @@
 		);
 
 		const id = json;
-		statusMessageFormatter(res, json);
-
-		if (res.ok) {
-			show = true;
-
-			let created_by = await getUserInfo();
-			proposals.push({
-				title,
-				description,
-				id,
-				created_by,
-				poll: Number($page.params.pollId)
-			});
-
-			proposals = proposals;
-			title = '';
-			description = '';
-		}
+		statusMessageFormatter(res, id);
 
 		loading = false;
+		if (!res.ok) return;
+
+		show = true;
+
+		console.log(import.meta.env.VITE_BLOCKCHAIN_INTEGRATION)
+		//TODO FIX
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") createProposal(poll.id);
+		
+		let created_by = await getUserInfo();
+
+		proposals.push({
+			title,
+			description,
+			id,
+			created_by,
+			poll: Number($page.params.pollId)
+		});
+		proposals = proposals;
+		
+		title = '';
+		description = '';
 	};
 
 	//TODO: Multiple places in the codebase uses this rather than local storage for group-user info
@@ -78,7 +83,7 @@
 		<Button type="submit" label="Add" />
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button action={async () => (title = await getProposals(poll.title))}
-				>{$_("Generate with the help of AI")}</Button
+				>{$_('Generate with the help of AI')}</Button
 			>
 		{/if}
 	</Loader>

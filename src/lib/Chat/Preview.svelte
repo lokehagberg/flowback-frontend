@@ -47,7 +47,7 @@
 	const getPreview = async (selectedPage: 'direct' | 'group') => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/preview/list?order_by=created_at_desc`
+			`chat/message/channel/preview/list`
 		);
 
 		if (!res.ok) return [];

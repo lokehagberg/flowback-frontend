@@ -45,6 +45,7 @@
 	const getUser = async () => {
 		const { json, res } = await fetchRequest('GET', 'user');
 		if (res.ok) user = json;
+		if (!res.ok) return;
 	};
 
 	// const setUpMessageSending = async () => {
@@ -143,8 +144,7 @@
 >
 	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+
 		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
 			<CrossButton />
 		</div>
@@ -167,8 +167,6 @@
 		bind:isLookingAtOlderMessages
 	/>
 </div>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={() => (chatOpen = true)}
 	class:small-notification={notifiedDirect.length > 0}

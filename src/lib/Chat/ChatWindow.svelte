@@ -77,6 +77,11 @@
 		newerMessages = '';
 	};
 
+	const getChannelId = async (id: number) => {
+		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		return json;
+	};
+
 	//Runs when changing chats
 	const postMessage = async () => {
 		if (!selectedChat) return;
@@ -117,7 +122,11 @@
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		const didSend = await sendMessage.sendMessage(socket, selectedChat, message, 1);
+
+		const channelId = (await getChannelId(selectedChat)).id;
+		console.log("HERE 2")
+
+		const didSend = await sendMessage.sendMessage(socket, channelId, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -150,7 +159,7 @@
 			if (!_message) return;
 			const message = JSON.parse(_message);
 			if (message.channel_id !== selectedChat) return;
-			console.log(message)
+			console.log(message);
 			messages.push({
 				message: message.message,
 				user: {

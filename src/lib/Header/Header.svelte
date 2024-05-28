@@ -24,7 +24,8 @@
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean = false,
-		isAdmin = false;
+		isAdmin = false,
+		hidden = true
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
@@ -34,7 +35,10 @@
 			if (pfpLink) profileImage = pfpLink;
 		}
 
-		if (location.pathname !== '/login') getProfileImage();
+		if (location.pathname !== '/login') {
+			getProfileImage();
+			hidden = false;
+		} 
 
 		ensureDarkMode();
 	});
@@ -92,9 +96,7 @@
 <Chat />
 
 
-<!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
-
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0 hidden" id="header">
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header" class:hidden>
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>

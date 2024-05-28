@@ -20,7 +20,7 @@ export async function fetchRequest(
 		const token = localStorage.getItem('token');
 
 		// Redirect if no token
-		const atLogin = location.href.search("/login") !== -1
+		const atLogin = location.pathname === '/login'
 		if (token === null && !atLogin) location.href = '/login';
 		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 	}

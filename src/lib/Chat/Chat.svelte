@@ -102,18 +102,11 @@
 			messages = [...messages, { message, user, created_at: new Date().toString() }];
 	};
 
-	//White screen when changing between direct and groups
-	$: selectedPage &&
-		(() => {
-			selectedChat = null;
-		})();
-
 	$: if (chatOpen === false) {
 		selectedChat = null;
 		// selectedPage === 'direct';
 	}
 
-	// $: if (document !== undefined) document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

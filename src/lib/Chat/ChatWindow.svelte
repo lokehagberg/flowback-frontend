@@ -122,9 +122,8 @@
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-
-		const channelId = (await getChannelId(selectedChat)).id;
-		console.log("HERE 2")
+		let channelId = selectedChat
+		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
 		const didSend = await sendMessage.sendMessage(socket, channelId, message, 1);
 

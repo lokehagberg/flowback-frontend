@@ -48,16 +48,6 @@
 		if (!res.ok) return;
 	};
 
-	// const setUpMessageSending = async () => {
-	// 	//Must be imported here to avoid "document not found" error
-	// 	const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-	// 	socket = createSocket(User.id);
-
-	// 	sendMessageToSocket = await sendMessage(socket);
-
-	// 	subscribe(getMessage);
-	// };
-
 	//There's one large socket that handles messages from everywhere, which is why
 	//this function which gets messages from the socket is placed here an not in
 	//ChatWindow.svelte
@@ -129,13 +119,13 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:head>
-	<!-- <title
+	<title
 		>
 		{`${notifiedDirect.length > 0 ? '🟣' : ''}${
 			notifiedGroup.length > 0 ? '🔵' : ''
 		}`}
 		</title
-	> -->
+	>
 </svelte:head>
 <div
 	bind:this={chatDiv}
@@ -154,8 +144,6 @@
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		bind:notifiedDirect
-		bind:notifiedGroup
 	/>
 	<ChatWindow
 		bind:selectedChat

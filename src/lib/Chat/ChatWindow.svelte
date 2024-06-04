@@ -17,6 +17,7 @@
 	import sendMessage, { messageStore } from './Socket';
 	import { onMount } from 'svelte';
 	import Socket from './Socket';
+	import { updateUserData } from './functions';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -86,8 +87,6 @@
 	const postMessage = async () => {
 		if (!selectedChat) return;
 		if (message.length === 0) return;
-		// if (!selectedChat) return;
-		console.log('HERE');
 		//If only spaces, return
 		if (message.match(/^\s+$/)) return;
 
@@ -122,7 +121,7 @@
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		let channelId = selectedChat
+		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
 		const didSend = await sendMessage.sendMessage(socket, channelId, message, 1);
@@ -138,14 +137,13 @@
 		messages = messages;
 		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
-		// setTimeStamp(selectedChat, selectedPage);
+		updateUserData(selectedChat, new Date());
 	};
 
 	const showOlderMessages = async () => {
 		const { res, json } = await fetchRequest('GET', olderMessages);
 
 		if (!res.ok) return;
-		// nextMessagesAPI = json.next
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
@@ -158,7 +156,6 @@
 			if (!_message) return;
 			const message = JSON.parse(_message);
 			if (message.channel_id !== selectedChat) return;
-			console.log(message);
 			messages.push({
 				message: message.message,
 				user: {

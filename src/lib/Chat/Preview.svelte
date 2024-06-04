@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { chatPreview as chatLimit } from '../Generic/APILimits.json';
+	import { updateUserData } from './functions';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
@@ -57,7 +58,9 @@
 	};
 
 	const clickedChatter = (chatter: any) => {
+		if (selectedChat) updateUserData(selectedChat, null, new Date());
 		//Gets rid of existing notification when clicked on new chat
+
 		if (selectedPage === 'direct') {
 			//TODO-user more advanced typescript features to make sure I don't have to use ts-ignore here
 			//@ts-ignore

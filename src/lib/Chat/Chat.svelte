@@ -11,6 +11,7 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
+	import { updateUserData } from './functions';
 
 	let messages: Message[] = [],
 		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
@@ -48,77 +49,19 @@
 		if (!res.ok) return;
 	};
 
-	//There's one large socket that handles messages from everywhere, which is why
-	//this function which gets messages from the socket is placed here an not in
-	//ChatWindow.svelte
-
-	const getMessage = async (e: any) => {
-		//Try-catch to prevent error end at JSON string
-		try {
-			var { message, user, group, target_type } = JSON.parse(e);
-		} catch (err) {
-			return;
-		}
-
-		if (isLookingAtOlderMessages) return;
-
-		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
-		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
-			(previewMessage) =>
-				(target_type === 'direct' &&
-					(previewMessage.user_id === user.id || previewMessage.target_id === user.id)) ||
-				(target_type === 'group' && previewMessage.group_id === group)
-		);
-
-		if (previewMessage) {
-			previewMessage.message = message;
-			previewMessage.created_at = new Date().toString();
-
-			if (selectedChat === previewMessage.user_id) {
-				previewMessage.timestamp = new Date().toString();
-			}
-		} else {
-			//For brand new chats, create new preview message
-			(target_type === 'direct' ? previewDirect : previewGroup).push({
-				created_at: new Date().toString(),
-				message,
-				timestamp: new Date().toString(),
-				username: user.username,
-				user_id: user.id,
-				target_id: user.id,
-				target_username: user.username,
-				profile_image: '',
-				group_id: group
-			});
-		}
-
-		previewGroup = previewGroup;
-		previewDirect = previewDirect;
-
-		if (
-			(selectedPage === 'direct' && target_type === 'direct' && user && user.id === selectedChat) ||
-			(selectedPage === 'group' && target_type === 'group' && group === selectedChat)
-		)
-			messages = [...messages, { message, user, created_at: new Date().toString() }];
-	};
-
 	$: if (chatOpen === false) {
+		if (selectedChat) updateUserData(selectedChat, null, new Date());
 		selectedChat = null;
 		// selectedPage === 'direct';
 	}
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:head>
-	<title
-		>
-		{`${notifiedDirect.length > 0 ? '🟣' : ''}${
-			notifiedGroup.length > 0 ? '🔵' : ''
-		}`}
-		</title
-	>
+	<title>
+		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
+	</title>
 </svelte:head>
 <div
 	bind:this={chatDiv}
@@ -128,16 +71,12 @@
 	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
 
-		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)} on:keydown>
 			<CrossButton />
 		</div>
 	</div>
-	<Preview
-		bind:selectedChat
-		bind:selectedPage
-		bind:previewDirect
-		bind:previewGroup
-	/>
+	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
 	<ChatWindow
 		bind:selectedChat
 		bind:selectedPage
@@ -148,8 +87,10 @@
 		bind:isLookingAtOlderMessages
 	/>
 </div>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={() => (chatOpen = true)}
+	on:keydown
 	class:small-notification={notifiedDirect.length > 0}
 	class:small-notification-group={notifiedGroup.length > 0}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"

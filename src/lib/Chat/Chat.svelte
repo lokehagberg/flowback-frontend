@@ -39,7 +39,7 @@
 
 	const correctMarginRelativeToHeader = () => {
 		const _headerHeight = document.querySelector('#header')?.clientHeight;
-		if (_headerHeight) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
+		if (_headerHeight && chatDiv) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
 	};
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls

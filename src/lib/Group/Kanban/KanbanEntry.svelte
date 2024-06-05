@@ -179,37 +179,38 @@
 <!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 <svelte:window bind:innerWidth bind:outerWidth />
 
-<li
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
-	in:fade
->
-	{#if kanban.end_date !== null && endDate}
-		<div class="text-sm">
-			Ends {endDate.format(new Date(kanban.end_date))}
+{#if (kanban.origin_type === "group" && kanban.group_name) || kanban.origin_type === "user"}
+	<li
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+		in:fade
+	>
+		{#if kanban.end_date !== null && endDate}
+			<div class="text-sm">
+				Ends {endDate.format(new Date(kanban.end_date))}
+			</div>
+		{/if}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			on:click={() => {
+				openModal = true;
+				selectedEntry = kanban.id;
+			}}
+			class="cursor-pointer hover:underline"
+			on:keydown
+		>
+			<div class="p-1 py-3">{kanban.title}</div>
 		</div>
-	{/if}
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		on:click={() => {
-			openModal = true;
-			selectedEntry = kanban.id;
-		}}
-		class="cursor-pointer hover:underline"
-		on:keydown
-	>
-		<div class="p-1 py-3">{kanban.title}</div>
-	</div>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
-		on:click={() => {
-			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
-			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
-		}}
-		on:keydown
-	>
-		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
-		<div class="break-all text-xs">
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
+			on:click={() => {
+				if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+				else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
+			}}
+			on:keydown
+		>
+			<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
+			<div class="break-all text-xs">
 				{#if type === 'group'}
 					{kanban.assignee?.username}
 				{:else if kanban.origin_type === 'user'}
@@ -217,52 +218,52 @@
 				{:else}
 					{kanban.group_name}
 				{/if}
-		
-		</div>
-	</div>
-	<!-- Arrows -->
-	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
-		<div class="flex justify-between mt-3">
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
-				class="cursor-pointer hover:text-gray-500"
-				on:click={() => {
-					if (kanban.tag > 0) {
-						updateKanbanTag(kanban.tag - 1);
-						kanban.tag -= 1;
-					}
-				}}
-				on:keydown
-			>
-				{#if innerWidth >= 1280}
-					<Fa icon={faArrowLeft} size="1.5x" />
-				{:else}
-					<Fa icon={faArrowLeft} size="1x" />
-				{/if}
-			</div>
-
-			<KanbanIcons bind:priority={kanban.priority} />
-
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
-				class="cursor-pointer hover:text-gray-500"
-				on:click={() => {
-					if (kanban.tag < tags.length) {
-						updateKanbanTag(kanban.tag + 1);
-						kanban.tag += 1;
-					}
-				}}
-				on:keydown
-			>
-				{#if innerWidth >= 1280}
-					<Fa icon={faArrowRight} size="1.5x" />
-				{:else}
-					<Fa icon={faArrowRight} size="1x" />
-				{/if}
 			</div>
 		</div>
-	{/if}
-</li>
+		<!-- Arrows -->
+		{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
+			<div class="flex justify-between mt-3">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="cursor-pointer hover:text-gray-500"
+					on:click={() => {
+						if (kanban.tag > 0) {
+							updateKanbanTag(kanban.tag - 1);
+							kanban.tag -= 1;
+						}
+					}}
+					on:keydown
+				>
+					{#if innerWidth >= 1280}
+						<Fa icon={faArrowLeft} size="1.5x" />
+					{:else}
+						<Fa icon={faArrowLeft} size="1x" />
+					{/if}
+				</div>
+
+				<KanbanIcons bind:priority={kanban.priority} />
+
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="cursor-pointer hover:text-gray-500"
+					on:click={() => {
+						if (kanban.tag < tags.length) {
+							updateKanbanTag(kanban.tag + 1);
+							kanban.tag += 1;
+						}
+					}}
+					on:keydown
+				>
+					{#if innerWidth >= 1280}
+						<Fa icon={faArrowRight} size="1.5x" />
+					{:else}
+						<Fa icon={faArrowRight} size="1x" />
+					{/if}
+				</div>
+			</div>
+		{/if}
+	</li>
+{/if}
 
 {#if kanban.id === selectedEntry}
 	<Modal

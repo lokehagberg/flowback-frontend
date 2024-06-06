@@ -8,7 +8,7 @@
 		zoom = 1,
 		pixelCrop: any;
 
-	export let image: string,
+	export let image: string | null,
 		cancelAction = () => {},
 		confirmAction = () => {},
 		croppedImage: any,
@@ -32,15 +32,17 @@
 >
 	<h1 class="text-2xl mb-4">{$_('Cropping')}</h1>
 	<div style="position: relative; width: 100%; height: 300px;">
-		<Cropper
-			showGrid={false}
-			cropShape={currentlyCroppingProfile ? 'round' : 'rect'}
-			{image}
-			bind:crop
-			bind:zoom
-			aspect={currentlyCroppingProfile ? 1 : 5}
-			on:cropcomplete={previewCrop}
-		/>
+		{#if image}
+			<Cropper
+				showGrid={false}
+				cropShape={currentlyCroppingProfile ? 'round' : 'rect'}
+				{image}
+				bind:crop
+				bind:zoom
+				aspect={currentlyCroppingProfile ? 1 : 5}
+				on:cropcomplete={previewCrop}
+			/>
+		{/if}
 	</div>
 
 	<div class="prof-pic-wrapper hidden">

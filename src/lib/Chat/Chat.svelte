@@ -82,9 +82,9 @@
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		{user}
 		bind:messages
 		bind:isLookingAtOlderMessages
+		{user}
 	/>
 </div>
 <!-- svelte-ignore a11y-no-static-element-interactions -->

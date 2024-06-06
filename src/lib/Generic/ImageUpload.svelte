@@ -11,7 +11,7 @@
 		icon: any,
 		Class = '',
 		iconSize = '5x',
-		imageString: string = '',
+		imageString: string | null = null,
 		shouldCrop: boolean = true,
 		minimalist = false;
 
@@ -23,16 +23,12 @@
 		imageString = URL.createObjectURL(croppedImage);
 		currentlyCropping = true;
 	};
-
-	$: if (croppedImage) {
-		// imageString = URL.createObjectURL(croppedImage);
-	}
 </script>
 
 <div class={`image-upload ${Class}`}>
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
-	{#if croppedImage}
+	{#if imageString}
 		<img
 			id="image"
 			class={`${isProfile ? 'rounded-full' : 'cover'} avatar`}

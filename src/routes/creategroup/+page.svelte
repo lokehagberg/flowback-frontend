@@ -88,8 +88,9 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
+		
 		console.log(json.image, json.cover_image, 'IMAGE');
-		image = json.image;
+		image = `${import.meta.env.VITE_API}${json.image}`;
 		coverImage = json.cover_image;
 	};
 

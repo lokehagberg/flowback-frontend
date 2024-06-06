@@ -13,8 +13,7 @@
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
 	import { updateUserData } from './functions';
 
-	let messages: Message[] = [],
-		chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
+	let chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
 		user: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
@@ -82,7 +81,6 @@
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		bind:messages
 		bind:isLookingAtOlderMessages
 		{user}
 	/>

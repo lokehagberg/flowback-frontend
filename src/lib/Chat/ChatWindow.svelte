@@ -28,6 +28,7 @@
 			message: any;
 			success: boolean;
 		},
+		messages: Message[] = [],
 		socket: WebSocket;
 
 	export let selectedChat: number | null,
@@ -41,7 +42,6 @@
 		// ) => Promise<boolean>,
 
 		user: User,
-		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
@@ -52,23 +52,11 @@
 	});
 
 	const getRecentMesseges = async () => {
-		// if (!selectedChat) return;
-
-		// 	{const { res, json } = await fetchRequest(
-		// 		'GET',
-		// 		`chat/message/channel/1/topic/list?id=1`
-		// 	);
-		// }
-
-		// {const { res, json } = await fetchRequest(
-		// 		'GET',
-		// 		`chat/message/channel/preview/list`
-		// 	);
-		// }
+		if (!selectedChat) return;
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${selectedChat}/list?order_by=created_at_asc&limit=${25}`
+			`chat/message/channel/${selectedChat}/list?order_by=created_at_desc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results;
@@ -104,20 +92,23 @@
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
-		} else {
-			//For brand new chats, create new preview message
-			(selectedPage === 'direct' ? previewDirect : previewGroup).push({
-				created_at: new Date().toString(),
-				message,
-				timestamp: new Date().toString(),
-				username: user.username,
-				user_id: user.id,
-				// target_id: selectedPage === 'direct' ? selectedChat : 0,
-				target_username: user.username,
-				profile_image: ''
-				// group_id: selectedPage === 'group' ? selectedChat : 0
-			});
-		}
+		} 
+		// else {
+		// 	//For brand new chats, create new preview message
+		// 	(selectedPage === 'direct' ? previewDirect : previewGroup).push({
+		// 		id: 1,
+		// 		created_at: new Date().toString(),
+		// 		message,
+		// 		timestamp: new Date().toString(),
+		// 		username: user.username,
+		// 		user_id: user.id,
+		// 		notified: false,
+		// 		// target_id: selectedPage === 'direct' ? selectedChat : 0,
+		// 		target_username: user.username,
+		// 		profile_image: ''
+		// 		// group_id: selectedPage === 'group' ? selectedChat : 0
+		// 	});
+		// }
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
@@ -147,15 +138,27 @@
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
-		messages = json.results.reverse();
+		// messages = json.results.reverse();
 	};
 
 	//Uses svelte stores to recieve messages
 	const recieveMessage = () => {
 		messageStore.subscribe((_message: string) => {
 			if (!_message) return;
+
 			const message = JSON.parse(_message);
-			if (message.channel_id !== selectedChat) return;
+
+			// If recieving message where I'm not currently at, give notification
+			// if (message.channel_id !== selectedChat) {
+			if (selectedPage === 'group') {
+				let notifiedChannel = previewGroup.find(
+					(groupInfo) => groupInfo.channel_id === message.channel_id
+				);
+				if (notifiedChannel) notifiedChannel.notified = true;
+				previewGroup = previewGroup;
+				return;
+			}
+
 			messages.push({
 				message: message.message,
 				user: {

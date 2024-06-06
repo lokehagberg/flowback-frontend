@@ -119,6 +119,8 @@
 			)?.message || ''
 		);
 	};
+
+	$: console.log(previewGroup, "LÖE CHANGE?")
 </script>
 
 <!-- // ${
@@ -157,20 +159,15 @@
 			class:bg-gray-200={selectedChat === chatter.id}
 			on:keydown
 			on:click={async () => {
-				//TODO: Better fix than this! Fixes doubble clicking to remove notification
-				// await setTimeout(() => {
-				// 	clickedChatter(chatter);
-				// }, 100);
 				clickedChatter(chatter);
 			}}
 		>
-			<!-- {#if (selectedPage === 'direct' ? notifiedDirect : notifiedGroup).includes(chatter.id)}
-				<div
-					class="p-1 rounded-full"
-					class:bg-purple-400={selectedPage === 'direct'}
-					class:bg-blue-300={selectedPage === 'group'}
-				/>
-			{/if} -->
+			<!-- {@debug chatter} -->
+			{#key chatter.notified}
+			{#if chatter.notified === undefined}
+				<div class="p-1 rounded-full bg-blue-300" />
+			{/if}
+			{/key}
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"

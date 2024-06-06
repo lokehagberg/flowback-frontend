@@ -120,7 +120,7 @@
 		);
 	};
 
-	$: console.log(previewGroup, "LÖE CHANGE?")
+	$: console.log(previewGroup, 'LÖE CHANGE?');
 </script>
 
 <!-- // ${
@@ -162,15 +162,18 @@
 				clickedChatter(chatter);
 			}}
 		>
-		{#key previewGroup}
-			{previewGroup.find(group => group.id === chatter.id)?.channel_id}
-		{/key}
-			<!-- {@debug chatter} -->
+			<!-- {previewGroup.find((group) => {
+				console.log(group, chatter, 'GORUPSCHATER');
+				group.id === chatter.id;
+			})}
+
+			
 			{#key chatter.notified}
-			{#if chatter.notified === undefined}
-				<div class="p-1 rounded-full bg-blue-300" />
-			{/if}
+				{#if chatter.notified === undefined}
+					<div class="p-1 rounded-full bg-blue-300" />
+				{/if}
 			{/key}
+ -->
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"

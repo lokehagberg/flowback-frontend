@@ -64,10 +64,9 @@
 			});
 
 			if (res.ok) {
-				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(json)
+				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(json);
 				goto(`/groups/${json}`);
-			} 
-			else status = statusMessageFormatter(res, json);
+			} else status = statusMessageFormatter(res, json);
 		} else goto(`/groups/${groupToEdit}`);
 		loading = false;
 	};
@@ -88,10 +87,8 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
-		
-		console.log(json.image, json.cover_image, 'IMAGE');
 		image = `${import.meta.env.VITE_API}${json.image}`;
-		coverImage = json.cover_image;
+		coverImage = `${import.meta.env.VITE_API}${json.cover_image}`;
 	};
 
 	onMount(() => {

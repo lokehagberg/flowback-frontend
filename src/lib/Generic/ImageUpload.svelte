@@ -3,7 +3,7 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import CropperModal from './Cropper/CropperModal.svelte';
-	import { faCamera, faUpload } from '@fortawesome/free-solid-svg-icons';
+	import { faUpload } from '@fortawesome/free-solid-svg-icons';
 
 	export let croppedImage: File | null = null,
 		label: string,
@@ -36,11 +36,6 @@
 			src={imageString}
 		/>
 	{:else if !minimalist}
-		<!-- <img
-			class="avatar"
-			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
-			alt=""
-		/> -->
 		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -54,12 +49,6 @@
 	>
 		<Fa icon={faUpload} size="2.5x" />
 	</div>
-	<!-- <img
-		class="upload mt-4"
-		src="https://static.thenounproject.com/png/625182-200.png"
-		alt=""
-		
-	/> -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="chan"
@@ -92,7 +81,7 @@
 		bind:croppedImage={imageString}
 		bind:currentlyCroppingProfile={isProfile}
 		bind:image={imageString}
-	/>
+		/>
 {/if}
 
 <style>

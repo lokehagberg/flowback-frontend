@@ -154,8 +154,10 @@
 				let notifiedChannel = previewGroup.find(
 					(groupInfo) => groupInfo.channel_id === message.channel_id
 				);
+				console.log(notifiedChannel, "CHANNELLLÖÖ")
 				if (notifiedChannel) notifiedChannel.notified = true;
 				previewGroup = previewGroup;
+				console.log(previewGroup, "CHANNELLLÖÖ")
 				return;
 			}
 

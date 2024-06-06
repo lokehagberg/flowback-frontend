@@ -19,12 +19,17 @@ export interface PreviewMessage {
 	timestamp: string;
 	user_id: number;
 	id:number;
-	username: string;
 	notified:boolean;
 	//For group/preview
 	group_id?: number;
 	channel_id?: number;
 	//For direct/preview
+	user: {
+		id:number,
+		username:string,
+		profile_image:string|null,
+		banner_image:string|null
+	};
 	target_id?: number;
 	target_username?: string;
 }

@@ -162,6 +162,9 @@
 				clickedChatter(chatter);
 			}}
 		>
+		{#key previewGroup}
+			{previewGroup.find(group => group.id === chatter.id)?.channel_id}
+		{/key}
 			<!-- {@debug chatter} -->
 			{#key chatter.notified}
 			{#if chatter.notified === undefined}

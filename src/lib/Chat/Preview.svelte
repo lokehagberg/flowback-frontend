@@ -61,30 +61,31 @@
 	};
 
 	const clickedChatter = (chatter: any) => {
+		//Update when user last saw message after clicking on channel
 		if (selectedChat) updateUserData(selectedChat, null, new Date());
-		//Gets rid of existing notification when clicked on new chat
 
 		if (selectedPage === 'direct') {
-			//TODO-user more advanced typescript features to make sure I don't have to use ts-ignore here
-			//@ts-ignore
 			let message = previewDirect?.find(
 				(message) => message.target_id === selectedChat || message.user_id === selectedChat
 			);
+
 			if (message) {
 				message.timestamp = new Date().toString();
 				previewDirect = previewDirect;
+				//Gets rid of existing notification when clicked on new chat
+				message.notified = false;
 			}
+			selectedChat = chatter.id;
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.group_id === selectedChat);
-			if (message) message.timestamp = new Date().toString();
+			let message = previewGroup.find((message) => message.channel_id === selectedChat);
+			if (message) {
+				message.timestamp = new Date().toString();
+				//Gets rid of existing notification when clicked on new chat
+				message.notified = false;
+			}
 			previewGroup = previewGroup;
+			selectedChat = chatter.chat_id;
 		}
-
-		//Switches chat shown to the right of the screen to chatter
-		if (selectedPage === 'direct') selectedChat = chatter.id;
-		else if (selectedPage === 'group') selectedChat = chatter.chat_id;
-
-		// setTimeStamp(chatter.id, selectedPage);
 	};
 
 	//Puts chats with notification circle at the top
@@ -92,28 +93,6 @@
 	//Puts empty chats at the bottom
 	//Siamand is doing this, to be changed drastically
 	const sort = (chatter: Group[] | any[], preview: PreviewMessage[]) => {
-		// preview.sort(
-		// 	(a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-		// );
-		// preview = preview
-
-		// const reduced = preview.reduce((pv:any, item, i) => {
-		// 	pv[item.channel_id || 0] = i;
-		// 	return pv;
-		// });
-
-		// chatter.sort((a, b) => {
-		// 	//@ts-ignore
-		// 	const indexA = reduced[a.chat_id];
-		// 	//@ts-ignore
-		// 	const indexB = reduced[b.chat_id];
-		// 	return indexA - indexB;
-		// });
-		// chatter = chatter
-
-		// console.log(chatter, preview, reduced);
-		// return chatter;
-
 		chatter.sort((a, b) => {
 			let notifiedMsgA = preview.find((notified) => notified.channel_id === a.chat_id);
 			let notifiedMsgB = preview.find((notified) => notified.channel_id === b.chat_id);

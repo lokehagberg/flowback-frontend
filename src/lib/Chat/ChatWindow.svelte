@@ -138,7 +138,7 @@
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
-		// messages = json.results.reverse();
+		messages = json.results
 	};
 
 	//Uses svelte stores to recieve messages
@@ -146,31 +146,29 @@
 		messageStore.subscribe((_message: string) => {
 			if (!_message) return;
 
-			const message:Message1 = JSON.parse(_message);
+			const message: Message1 = JSON.parse(_message);
 
-			// If recieving message where I'm not currently at, give notification
-			// if (message.channel_id !== selectedChat) {
-			if (message.channel_origin_name === 'group') {
+			// If recieving message where I'm not currently at, give chat notification
+			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
 				let notifiedChannel = previewGroup.find((groupInfo) => {
 					return groupInfo.channel_id === message.channel_id;
 				});
-				if (!notifiedChannel) console.warn('Not found notifiedChannel');
+				if (!notifiedChannel) console.warn('notifiedChannel not found');
 				else {
 					notifiedChannel.notified = true;
 					previewGroup = previewGroup;
-					// console.log(previewGroup, 'PREVIEWGROUPPP');
 				}
 			}
 
 			if (message.channel_id === selectedChat)
-			messages.push({
-				message: message.message,
-				user: {
-					id: message.id,
-					username: message.user.username,
-					profile_image: message.user.profile_image
-				}
-			});
+				messages.push({
+					message: message.message,
+					user: {
+						id: message.id,
+						username: message.user.username,
+						profile_image: message.user.profile_image
+					}
+				});
 
 			messages = messages;
 		});

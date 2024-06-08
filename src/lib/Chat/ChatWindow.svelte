@@ -1,6 +1,6 @@
 <script lang="ts">
 	// @ts-ignore
-	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
+	import { setTimeStamp, type Message, type Message1, type PreviewMessage } from './interfaces';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -92,7 +92,7 @@
 		if (previewMessage) {
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
-		} 
+		}
 		// else {
 		// 	//For brand new chats, create new preview message
 		// 	(selectedPage === 'direct' ? previewDirect : previewGroup).push({
@@ -146,18 +146,20 @@
 		messageStore.subscribe((_message: string) => {
 			if (!_message) return;
 
-			const message = JSON.parse(_message);
+			const message:Message1 = JSON.parse(_message);
 
 			// If recieving message where I'm not currently at, give notification
 			// if (message.channel_id !== selectedChat) {
-			if (selectedPage === 'group') {
-				let notifiedChannel = previewGroup.find(
-					(groupInfo) => groupInfo.channel_id === message.channel_id
-				);
-				console.log(notifiedChannel, "CHANNELLLÖÖ")
-				if (notifiedChannel) notifiedChannel.notified = true;
-				previewGroup = previewGroup;
-				console.log(previewGroup, "CHANNELLLÖÖ")
+			if (message.channel_origin_name === 'group') {
+				let notifiedChannel = previewGroup.find((groupInfo) => {
+					return groupInfo.channel_id === message.channel_id;
+				});
+				if (!notifiedChannel) console.warn('Not found notifiedChannel');
+				else {
+					notifiedChannel.notified = true;
+					previewGroup = previewGroup;
+					// console.log(previewGroup, 'PREVIEWGROUPPP');
+				}
 				return;
 			}
 
@@ -166,7 +168,7 @@
 				user: {
 					id: message.id,
 					username: message.user.username,
-					profile_image: message.profile_image
+					profile_image: message.user.profile_image
 				}
 			});
 

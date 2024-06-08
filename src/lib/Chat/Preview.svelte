@@ -33,7 +33,10 @@
 	};
 
 	const getPreview = async (selectedPage: 'direct' | 'group') => {
-		const { res, json } = await fetchRequest('GET', `chat/message/channel/preview/list`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/preview/list?origin_name=group`
+		);
 
 		if (!res.ok) return [];
 
@@ -120,7 +123,6 @@
 		);
 	};
 
-	$: console.log(previewGroup, 'LÖE CHANGE?');
 </script>
 
 <!-- // ${
@@ -166,14 +168,18 @@
 				console.log(group, chatter, 'GORUPSCHATER');
 				group.id === chatter.id;
 			})}
-
-			
-			{#key chatter.notified}
-				{#if chatter.notified === undefined}
+ -->
+			<!-- {@debug previewGroup} -->
+			{#key previewGroup}
+				{#if previewGroup.find((group) => 
+					group.notified === true
+					)}
 					<div class="p-1 rounded-full bg-blue-300" />
+				<!-- {:else } -->
+					<!-- IT WORKKS ITS TRUE -->
 				{/if}
 			{/key}
- -->
+
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"

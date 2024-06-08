@@ -55,10 +55,12 @@ export interface Delegate {
 
 export interface Group {
 	active: boolean;
+	chat_id: number;
 	cover_image: string;
 	created_by: number;
 	description: string;
 	direct_join: boolean;
+	hide_poll_users:boolean;
 	id: number;
 	image: string;
 	joined: boolean;

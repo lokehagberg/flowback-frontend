@@ -160,9 +160,9 @@
 					previewGroup = previewGroup;
 					// console.log(previewGroup, 'PREVIEWGROUPPP');
 				}
-				return;
 			}
 
+			if (message.channel_id === selectedChat)
 			messages.push({
 				message: message.message,
 				user: {

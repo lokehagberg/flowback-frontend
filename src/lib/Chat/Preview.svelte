@@ -91,17 +91,40 @@
 	//Puts chats with message between
 	//Puts empty chats at the bottom
 	//Siamand is doing this, to be changed drastically
-	const sort = (chatter: any[], preview: PreviewMessage[], notified: number[]) => {
-		chatter.sort((direct) => {
-			let notifiedMsg = notified.find((notified) => notified === direct.id);
+	const sort = (chatter: Group[] | any[], preview: PreviewMessage[]) => {
+		// preview.sort(
+		// 	(a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+		// );
+		// preview = preview
 
-			if (notifiedMsg) return -1;
+		// const reduced = preview.reduce((pv:any, item, i) => {
+		// 	pv[item.channel_id || 0] = i;
+		// 	return pv;
+		// });
+
+		// chatter.sort((a, b) => {
+		// 	//@ts-ignore
+		// 	const indexA = reduced[a.chat_id];
+		// 	//@ts-ignore
+		// 	const indexB = reduced[b.chat_id];
+		// 	return indexA - indexB;
+		// });
+		// chatter = chatter
+
+		// console.log(chatter, preview, reduced);
+		// return chatter;
+
+		chatter.sort((direct) => {
+			let notifiedMsg = preview.find((notified) => notified.channel_id === direct.chat_id);
+
+			if (notifiedMsg?.notified) return -1;
 
 			var previewMsg = preview?.find(
 				(preview) =>
 					(preview.target_id === direct.id && preview.user_id === user.id) ||
 					(preview.target_id === user.id && preview.user_id === direct.id)
 			);
+			
 			if (previewMsg) return 0;
 			return 1;
 		});
@@ -123,7 +146,7 @@
 		);
 	};
 
-	$: console.log(previewGroup, 'LÖE CHANGE?');
+	$: groups = sort(groups, previewGroup);
 </script>
 
 <!-- // ${
@@ -165,22 +188,9 @@
 				clickedChatter(chatter);
 			}}
 		>
-			<!-- {previewGroup.find((group) => {
-				console.log(group, chatter, 'GORUPSCHATER');
-				group.id === chatter.id;
-			})}
- -->
-			<!-- {@debug previewGroup} -->
-			{#key previewGroup}
-				{#if previewGroup.find((group) => 
-					group.channel_id === chatter.chat_id
-					&& group.notified === true
-					)}
-					<div class="p-1 rounded-full bg-blue-300" />
-				<!-- {:else } -->
-					<!-- IT WORKKS ITS TRUE -->
-				{/if}
-			{/key}
+			{#if previewGroup.find((group) => group.channel_id === chatter.chat_id && group.notified === true)}
+				<div class="p-1 rounded-full bg-blue-300" />
+			{/if}
 
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">

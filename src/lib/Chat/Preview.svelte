@@ -123,6 +123,7 @@
 		);
 	};
 
+	$: console.log(previewGroup, 'LÖE CHANGE?');
 </script>
 
 <!-- // ${
@@ -172,7 +173,8 @@
 			<!-- {@debug previewGroup} -->
 			{#key previewGroup}
 				{#if previewGroup.find((group) => 
-					group.notified === true
+					group.channel_id === chatter.chat_id
+					&& group.notified === true
 					)}
 					<div class="p-1 rounded-full bg-blue-300" />
 				<!-- {:else } -->

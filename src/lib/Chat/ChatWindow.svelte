@@ -149,6 +149,7 @@
 			const message: Message1 = JSON.parse(_message);
 
 			// If recieving message where I'm not currently at, give chat notification
+			console.log(message, message.channel_id, selectedChat)
 			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
 				let notifiedChannel = previewGroup.find((groupInfo) => {
 					return groupInfo.channel_id === message.channel_id;

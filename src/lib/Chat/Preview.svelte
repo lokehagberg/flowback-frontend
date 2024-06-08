@@ -114,19 +114,16 @@
 		// console.log(chatter, preview, reduced);
 		// return chatter;
 
-		chatter.sort((direct) => {
-			let notifiedMsg = preview.find((notified) => notified.channel_id === direct.chat_id);
+		chatter.sort((a, b) => {
+			let notifiedMsgA = preview.find((notified) => notified.channel_id === a.chat_id);
+			let notifiedMsgB = preview.find((notified) => notified.channel_id === b.chat_id);
 
-			if (notifiedMsg?.notified) return -1;
+			// Handle cases where notifiedMsg might be undefined
+			let notifiedA = notifiedMsgA?.notified || false;
+			let notifiedB = notifiedMsgB?.notified || false;
 
-			var previewMsg = preview?.find(
-				(preview) =>
-					(preview.target_id === direct.id && preview.user_id === user.id) ||
-					(preview.target_id === user.id && preview.user_id === direct.id)
-			);
-			
-			if (previewMsg) return 0;
-			return 1;
+			if (notifiedA === notifiedB) return 0; // If both are the same, they are considered equal
+			return notifiedA ? -1 : 1; // If notifiedA is true, it should come before notifiedBF
 		});
 		return chatter;
 	};

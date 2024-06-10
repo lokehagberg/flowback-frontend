@@ -59,7 +59,7 @@
 			`chat/message/channel/${selectedChat}/list?order_by=created_at_desc&limit=${25}`
 		);
 
-		if (res.ok) messages = json.results;
+		if (res.ok) messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
@@ -138,7 +138,16 @@
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
-		messages = json.results
+		messages = json.results.reverse();
+	};
+
+	const showEarlierMessages = async () => {
+		const { res, json } = await fetchRequest('GET', newerMessages);
+
+		olderMessages = json.next;
+		newerMessages = json.previous;
+
+		messages = json.results.reverse();
 	};
 
 	//Uses svelte stores to recieve messages
@@ -149,7 +158,7 @@
 			const message: Message1 = JSON.parse(_message);
 
 			// If recieving message where I'm not currently at, give chat notification
-			console.log(message, message.channel_id, selectedChat)
+			console.log(message, message.channel_id, selectedChat);
 			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
 				let notifiedChannel = previewGroup.find((groupInfo) => {
 					return groupInfo.channel_id === message.channel_id;
@@ -220,16 +229,8 @@
 		{/each}
 		{#if newerMessages}
 			<li class="text-center mt-6 mb-6">
-				<Button
-					action={async () => {
-						const { res, json } = await fetchRequest('GET', newerMessages);
-
-						olderMessages = json.next;
-						newerMessages = json.previous;
-
-						messages = json.results.reverse();
-					}}
-					buttonStyle="secondary">{$_('Show earlier messages')}</Button
+				<Button action={showEarlierMessages} buttonStyle="secondary"
+					>{$_('Show earlier messages')}</Button
 				>
 			</li>
 		{/if}

@@ -71,9 +71,9 @@
 
 			if (message) {
 				message.timestamp = new Date().toString();
-				previewDirect = previewDirect;
 				//Gets rid of existing notification when clicked on new chat
 				message.notified = false;
+				previewDirect = previewDirect;
 			}
 			selectedChat = chatter.id;
 		} else if (selectedPage === 'group') {
@@ -123,6 +123,8 @@
 	};
 
 	$: groups = sort(groups, previewGroup);
+
+	$: console.log(previewGroup, 'LÖ CHANGe');
 </script>
 
 <!-- // ${
@@ -162,8 +164,14 @@
 			on:keydown
 			on:click={async () => {
 				clickedChatter(chatter);
+				setTimeout(() => {
+					// Fixes having to doubble click to get rid of chat notificattion
+					clickedChatter(chatter);
+				}, 300);
 			}}
 		>
+			<!-- {@debug  previewGroup} -->
+			<!-- Notification Symbol -->
 			{#if previewGroup.find((group) => group.channel_id === chatter.chat_id && group.notified === true)}
 				<div class="p-1 rounded-full bg-blue-300" />
 			{/if}

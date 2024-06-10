@@ -158,19 +158,36 @@
 			const message: Message1 = JSON.parse(_message);
 
 			// If recieving message where I'm not currently at, give chat notification
-			console.log(message, message.channel_id, selectedChat);
 			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
 				let notifiedChannel = previewGroup.find((groupInfo) => {
 					return groupInfo.channel_id === message.channel_id;
 				});
-				if (!notifiedChannel) console.warn('notifiedChannel not found');
+
+				if (!notifiedChannel) {
+
+					previewGroup.push({
+						created_at:message.created_at.toString(),
+						id:message.id,
+						message:message.message,
+						notified:true,
+						profile_image:message.user.profile_image,
+						timestamp:new Date().toString(),
+						user:message.user,
+						user_id:message.user.id,
+						channel_id:message.channel_id,
+
+					})
+					previewGroup = previewGroup
+
+				}
 				else {
 					notifiedChannel.notified = true;
 					previewGroup = previewGroup;
 				}
 			}
 
-			if (message.channel_id === selectedChat)
+			else if (message.channel_id === selectedChat) {
+
 				messages.push({
 					message: message.message,
 					user: {
@@ -181,6 +198,10 @@
 				});
 
 			messages = messages;
+			}
+
+			
+
 		});
 	};
 

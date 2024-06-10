@@ -168,9 +168,8 @@
 			{/if}
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			<!-- These two are link tags so people are able to open them in new window/tab -->
-
 			
+			<!-- These two are link tags so people are able to open them in new window/tab -->
 			<a
 				class="text-inherit"
 				target="_blank"

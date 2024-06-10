@@ -156,16 +156,17 @@
 			if (!_message) return;
 
 			const message: Message1 = JSON.parse(_message);
+			let preview = message.channel_origin_name === "group" ? previewGroup : previewDirect
 
 			// If recieving message where I'm not currently at, give chat notification
 			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
-				let notifiedChannel = previewGroup.find((groupInfo) => {
+				let notifiedChannel = preview.find((groupInfo) => {
 					return groupInfo.channel_id === message.channel_id;
 				});
 
 				if (!notifiedChannel) {
 
-					previewGroup.push({
+					preview.push({
 						created_at:message.created_at.toString(),
 						id:message.id,
 						message:message.message,
@@ -177,12 +178,12 @@
 						channel_id:message.channel_id,
 
 					})
-					previewGroup = previewGroup
+					preview = preview
 
 				}
 				else {
 					notifiedChannel.notified = true;
-					previewGroup = previewGroup;
+					preview = preview;
 				}
 			}
 

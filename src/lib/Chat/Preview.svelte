@@ -28,14 +28,14 @@
 	});
 
 	const setUpPreview = async () => {
-		previewDirect = await getPreview('direct');
+		previewDirect = await getPreview('user');
 		previewGroup = await getPreview('group');
 	};
 
-	const getPreview = async (selectedPage: 'direct' | 'group') => {
+	const getPreview = async (selectedPage: 'user' | 'group') => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/preview/list?origin_name=group`
+			`chat/message/channel/preview/list?origin_name=${selectedPage}`
 		);
 
 		if (!res.ok) return [];

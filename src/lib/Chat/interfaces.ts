@@ -15,7 +15,7 @@ export interface Message1 {
 	active: boolean;
 	attachments: null | File;
 	channel_id: number;
-	channel_origin_name: 'group';
+	channel_origin_name: 'group' | 'user';
 	created_at: String;
 	id: number;
 	message: string;

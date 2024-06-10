@@ -175,6 +175,10 @@
 				<div class="p-1 rounded-full bg-blue-300" />
 			{/if}
 
+			{#if previewDirect.find((user) => user.channel_id === selectedChat && user.notified === true)}
+				<div class="p-1 rounded-full bg-accentSecondary" />
+			{/if}
+
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"

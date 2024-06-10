@@ -82,7 +82,7 @@
 		if (newerMessages) getRecentMesseges();
 
 		//Updates preview window to display recently typed chat message
-		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
+		let previewMessage = (selectedPage === 'group' ? previewGroup : previewDirect).find(
 			(previewMessage) =>
 				(selectedPage === 'direct' &&
 					((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
@@ -156,54 +156,53 @@
 			if (!_message) return;
 
 			const message: Message1 = JSON.parse(_message);
-			let preview = message.channel_origin_name === "group" ? previewGroup : previewDirect
+			let preview = message.channel_origin_name === 'group' ? previewGroup : previewDirect;
 
-			// If recieving message where I'm not currently at, give chat notification
-			if (message.channel_origin_name === 'group' && message.channel_id !== selectedChat) {
-				let notifiedChannel = preview.find((groupInfo) => {
-					return groupInfo.channel_id === message.channel_id;
-				});
-
-				if (!notifiedChannel) {
-
-					preview.push({
-						created_at:message.created_at.toString(),
-						id:message.id,
-						message:message.message,
-						notified:true,
-						profile_image:message.user.profile_image,
-						timestamp:new Date().toString(),
-						user:message.user,
-						user_id:message.user.id,
-						channel_id:message.channel_id,
-
-					})
-					preview = preview
-
-				}
-				else {
-					notifiedChannel.notified = true;
-					preview = preview;
-				}
+			if (message.channel_origin_name === 'group') {
+				handleRecieveMessage(previewGroup, message);
+				previewGroup = previewGroup;
+			} else if (message.channel_origin_name === 'user') {
+				handleRecieveMessage(previewDirect, message);
+				previewDirect = previewDirect;
 			}
-
-			else if (message.channel_id === selectedChat) {
-
-				messages.push({
-					message: message.message,
-					user: {
-						id: message.id,
-						username: message.user.username,
-						profile_image: message.user.profile_image
-					}
-				});
-
-			messages = messages;
-			}
-
-			
-
 		});
+	};
+
+	const handleRecieveMessage = (preview: PreviewMessage[], message: Message1) => {
+		if (message.channel_id !== selectedChat) {
+			let notifiedChannel = preview.find((info) => {
+				return info.channel_id === message.channel_id;
+			});
+
+			// If no channel has started yet, start it. New chats will work like this
+			if (!notifiedChannel) {
+				preview.push({
+					created_at: message.created_at.toString(),
+					id: message.id,
+					message: message.message,
+					notified: true,
+					profile_image: message.user.profile_image,
+					timestamp: new Date().toString(),
+					user: message.user,
+					user_id: message.user.id,
+					channel_id: message.channel_id
+				});
+				preview = preview;
+			} else {
+				notifiedChannel.notified = true;
+				preview = preview;
+			}
+		} else if (message.channel_id === selectedChat) {
+			messages.push({
+				message: message.message,
+				user: {
+					id: message.id,
+					username: message.user.username,
+					profile_image: message.user.profile_image
+				}
+			});
+			messages = messages;
+		}
 	};
 
 	$: (selectedPage || selectedChat) && getRecentMesseges();

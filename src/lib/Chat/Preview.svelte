@@ -124,7 +124,6 @@
 
 	$: groups = sort(groups, previewGroup);
 
-	$: console.log(previewGroup, 'LÖ CHANGe');
 </script>
 
 <!-- // ${

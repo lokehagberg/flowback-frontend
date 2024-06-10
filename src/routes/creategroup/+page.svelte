@@ -40,12 +40,14 @@
 	const createGroup = async () => {
 		loading = true;
 		const formData = new FormData();
+		const blockchain_id = Math.floor((1 + Math.random()) * 1000000 * name.length * description.length);
 
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('direct_join', (!useInvite).toString());
-		console.log((!useInvite).toString(), 'DIRECT');
 		formData.append('public', publicGroup.toString());
+		formData.append('blockchain_id', blockchain_id.toString());
+
 		if (image) formData.append('image', await blobifyImages(image));
 		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
 
@@ -64,7 +66,8 @@
 			});
 
 			if (res.ok) {
-				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(json);
+				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+					becomeMemberOfGroup(blockchain_id);
 				goto(`/groups/${json}`);
 			} else status = statusMessageFormatter(res, json);
 		} else goto(`/groups/${groupToEdit}`);
@@ -121,6 +124,7 @@
 				{/if}
 
 				<StatusMessage bind:status />
+
 				<Button type="submit" disabled={loading}
 					><div class="flex justify-center gap-3 items-center">
 						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}

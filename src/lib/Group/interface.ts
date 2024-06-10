@@ -58,9 +58,10 @@ export interface Group {
 	chat_id: number;
 	cover_image: string;
 	created_by: number;
+	blockchain_id: number;
 	description: string;
 	direct_join: boolean;
-	hide_poll_users:boolean;
+	hide_poll_users: boolean;
 	id: number;
 	image: string;
 	joined: boolean;

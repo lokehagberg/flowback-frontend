@@ -65,25 +65,25 @@
 		if (selectedChat) updateUserData(selectedChat, null, new Date());
 
 		if (selectedPage === 'direct') {
-			let message = previewDirect?.find(
-				(message) => message.target_id === selectedChat || message.user_id === selectedChat
-			);
+			let message = previewDirect.find((message) => message.channel_id === selectedChat);
 
 			if (message) {
-				message.timestamp = new Date().toString();
 				//Gets rid of existing notification when clicked on new chat
+				message.timestamp = new Date().toString();
 				message.notified = false;
+
 				previewDirect = previewDirect;
 			}
 			selectedChat = chatter.id;
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === selectedChat);
 			if (message) {
-				message.timestamp = new Date().toString();
 				//Gets rid of existing notification when clicked on new chat
+				message.timestamp = new Date().toString();
 				message.notified = false;
+
+				previewGroup = previewGroup;
 			}
-			previewGroup = previewGroup;
 			selectedChat = chatter.chat_id;
 		}
 	};
@@ -142,7 +142,7 @@
 				? previewGroup.find((group) => group.channel_id === chatter.chat_id)
 				: previewDirect.find((direct) => direct.channel_id === chatter.id)}
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
@@ -170,7 +170,7 @@
 					>{chatter.name || chatter.username}</span
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
-					{previewObject?.message || ""}
+					{previewObject?.message || ''}
 				</span>
 			</div>
 		</li>

@@ -44,9 +44,9 @@
 		
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain) await createProposal(poll.id);
 		
-		loading = false;
-
 		let created_by = await getUserInfo();
+		
+		loading = false;
 
 		proposals.push({
 			title,

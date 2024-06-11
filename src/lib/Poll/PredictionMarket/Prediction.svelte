@@ -120,7 +120,7 @@
 			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
-		
+
 		prediction.user_prediction_statement_vote = null;
 	};
 
@@ -220,7 +220,9 @@
 		</ul>
 		<!-- {@debug prediction} -->
 		<div>Deadline: {formatDate(prediction.end_date.toString())}</div>
-		<div>Aggregated Bet: {prediction.combined_bet}</div>
+		{#if prediction.combined_bet}
+			<div>Aggregated Bet: {prediction.combined_bet}</div>
+		{/if}
 	</div>
 </Modal>
 

@@ -16,6 +16,9 @@
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 
 	export let proposals: proposal[], phase: Phase;
 
@@ -34,7 +37,8 @@
 		// statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [],
 		resetsOfValues = 0,
-		poppup: poppup;
+		poppup: poppup,
+		pushToBlockchain = true;
 
 	const getPredictionStatements = async () => {
 		loading = true;
@@ -61,6 +65,19 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain)
+			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
+				try {
+					await createPredictionBlockchain(
+						Number($page.params.groupId),
+						newPredictionStatement.segments[i].proposal_id
+					);
+				} catch {
+					poppup = { message: 'Could not push to Blockchain', success: false };
+				}
+			}
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/prediction/statement/create`,
@@ -176,6 +193,7 @@
 			</div>
 			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+			<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
 			<Button type="submit">{$_('Submit')}</Button>
 			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
 				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>

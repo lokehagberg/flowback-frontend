@@ -107,21 +107,6 @@
 		return chatter;
 	};
 
-	const getMessage = (chatter: any) => {
-		return (
-			(selectedPage === 'direct' ? previewDirect : previewGroup).find(
-				(message) =>
-					(user.id !== message.target_id &&
-						message.target_id === chatter.id &&
-						selectedPage === 'direct') ||
-					(user.id !== message.user_id &&
-						message.user_id === chatter.id &&
-						selectedPage === 'direct') ||
-					(message.group_id === chatter.id && selectedPage === 'group')
-			)?.message || ''
-		);
-	};
-
 	$: groups = sort(groups, previewGroup);
 </script>
 

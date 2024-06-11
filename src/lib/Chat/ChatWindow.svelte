@@ -189,6 +189,7 @@
 				preview = preview;
 			} else {
 				notifiedChannel.notified = true;
+				notifiedChannel.message = message.message
 				preview = preview;
 			}
 		} else if (message.channel_id === selectedChat) {

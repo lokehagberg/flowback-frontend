@@ -105,6 +105,7 @@
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
+		loading = true
 		const formData = new FormData();
 		let blockchain_id;
 
@@ -132,7 +133,6 @@
 
 		if (image) formData.append('attachments', image);
 
-		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${groupId}/poll/create`,

@@ -13,12 +13,14 @@
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
 	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 
 	let title: string,
 		description: string,
 		loading = false,
 		status: StatusMessageInfo,
-		show = false;
+		show = false,
+		blockchain = true;
 
 	export let proposals: proposal[], poll: poll;
 
@@ -36,15 +38,14 @@
 		const id = json;
 		statusMessageFormatter(res, id);
 
-		loading = false;
 		if (!res.ok) return;
 
 		show = true;
-
-		console.log(import.meta.env.VITE_BLOCKCHAIN_INTEGRATION)
-		//TODO FIX
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") createProposal(poll.id);
 		
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain) await createProposal(poll.id);
+		
+		loading = false;
+
 		let created_by = await getUserInfo();
 
 		proposals.push({
@@ -55,7 +56,7 @@
 			poll: Number($page.params.pollId)
 		});
 		proposals = proposals;
-		
+
 		title = '';
 		description = '';
 	};
@@ -79,6 +80,10 @@
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
+		{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
+		{/if}
+
 		<StatusMessage bind:status />
 		<Button type="submit" label="Add" />
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}

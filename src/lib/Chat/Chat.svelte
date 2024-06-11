@@ -71,8 +71,8 @@
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
 
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)} on:keydown>
-			<CrossButton />
+		<div class="w-full h-full" on:keydown>
+			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)}/>
 		</div>
 	</div>
 	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />

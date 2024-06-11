@@ -156,7 +156,6 @@
 			if (!_message) return;
 
 			const message: Message1 = JSON.parse(_message);
-			let preview = message.channel_origin_name === 'group' ? previewGroup : previewDirect;
 
 			if (message.channel_origin_name === 'group') {
 				handleRecieveMessage(previewGroup, message);

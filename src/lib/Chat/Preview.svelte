@@ -123,7 +123,6 @@
 	};
 
 	$: groups = sort(groups, previewGroup);
-
 </script>
 
 <!-- // ${
@@ -175,7 +174,7 @@
 				<div class="p-1 rounded-full bg-blue-300" />
 			{/if}
 
-			{#if previewDirect.find((user) => user.channel_id === selectedChat && user.notified === true)}
+			{#if previewDirect.find((user) => user.channel_id === chatter.channel_id && user.notified === true)}
 				<div class="p-1 rounded-full bg-accentSecondary" />
 			{/if}
 
@@ -185,7 +184,9 @@
 					>{chatter.name || chatter.username}</span
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
-					{getMessage(chatter)}
+					{#if previewGroup.find((group) => group.channel_id === chatter.chat_id)}
+						{chatter.message}
+					{/if}
 				</span>
 			</div>
 		</li>

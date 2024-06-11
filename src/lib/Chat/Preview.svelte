@@ -151,7 +151,12 @@
 		bind:value={chatSearch}
 		Class="mt-1 ml-2 mb-2 w-7/12"
 	/>
-	{#each selectedPage === 'direct' ? directs : groups as chatter}
+	{#each selectedPage === 'group' ? groups : directs as chatter}
+		{@const previewObject =
+			selectedPage === 'group'
+				? previewGroup.find((group) => group.channel_id === chatter.chat_id)
+				: previewDirect.find((direct) => direct.channel_id === chatter.chat_id)}
+
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
 			class:hidden={selectedPage === 'direct'
@@ -170,12 +175,8 @@
 		>
 			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
-			{#if previewGroup.find((group) => group.channel_id === chatter.chat_id && group.notified === true)}
+			{#if previewObject?.notified}
 				<div class="p-1 rounded-full bg-blue-300" />
-			{/if}
-
-			{#if previewDirect.find((user) => user.channel_id === chatter.channel_id && user.notified === true)}
-				<div class="p-1 rounded-full bg-accentSecondary" />
 			{/if}
 
 			<ProfilePicture user={chatter} />
@@ -185,7 +186,7 @@
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
 					{#if previewGroup.find((group) => group.channel_id === chatter.chat_id)}
-						{chatter.message}
+						{previewObject?.message}
 					{/if}
 				</span>
 			</div>

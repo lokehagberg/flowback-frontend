@@ -99,12 +99,20 @@
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
 		image: File,
-		isFF = true;
+		isFF = true,
+		pushToBlockchain = true;
 
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
 		const formData = new FormData();
+		let blockchain_id;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
+			blockchain_id = await createPollBlockchain(Number(groupId), title);
+			if (blockchain_id) formData.append('blockchain_id', blockchain_id.toString());
+		}
+
 		formData.append('title', title);
 		formData.append('description', description);
 		formData.append('start_date', start_date.toISOString());
@@ -121,6 +129,7 @@
 		formData.append('dynamic', selected_poll === defaultType ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
+
 		if (image) formData.append('attachments', image);
 
 		loading = true;
@@ -136,8 +145,6 @@
 		status = statusMessageFormatter(res, json);
 
 		if (res.ok && groupId) {
-			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
-				createPollBlockchain(Number(groupId));
 			goto(`groups/${groupId}/polls/${json}`);
 		}
 	};
@@ -182,7 +189,9 @@
 	});
 </script>
 
-<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
+<div
+	class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 sm:w-[80%] lg:w-[900px] dark:text-darkmodeText"
+>
 	<form
 		on:submit|preventDefault={() =>
 			!disabled.includes(selected_poll) && !disabled.includes(selected_time) ? createPoll() : null}
@@ -315,6 +324,11 @@
 
 				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
 
+				{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+					<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
+					<!-- <Button action={() => createPollBlockchain(Number($page.url.searchParams.get('id')), "title")}>Push to Blockchain?</Button> -->
+				{/if}
+
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					{$_('This polltype is not implemented yet')}
 				{/if}
@@ -329,7 +343,7 @@
 				>
 				<ImageUpload
 					icon={faUser}
-					bind:image
+					bind:croppedImage={image}
 					minimalist
 					label=""
 					iconSize="2x"

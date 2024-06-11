@@ -155,9 +155,9 @@
 		{@const previewObject =
 			selectedPage === 'group'
 				? previewGroup.find((group) => group.channel_id === chatter.chat_id)
-				: previewDirect.find((direct) => direct.channel_id === chatter.chat_id)}
+				: previewDirect.find((direct) => direct.channel_id === chatter.id)}
 
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
@@ -185,9 +185,7 @@
 					>{chatter.name || chatter.username}</span
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
-					{#if previewGroup.find((group) => group.channel_id === chatter.chat_id)}
-						{previewObject?.message}
-					{/if}
+					{previewObject?.message || ""}
 				</span>
 			</div>
 		</li>

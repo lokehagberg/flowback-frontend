@@ -129,7 +129,7 @@
 </div>
 
 <ul
-	class="row-start-2 row-end-4 overflow-hidden bg-white dark:bg-darkobject flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll"
+	class="row-start-2 row-end-4 overflow-hidden bg-white dark:bg-darkobject flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll pb-[40px]"
 >
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}

@@ -26,13 +26,18 @@
 
 	const addProposal = async () => {
 		loading = true;
+
+		let blockchain_id;
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain)
+			blockchain_id = await createProposal(poll.id);
+
+		let proposal: any = { title, description };
+		if (blockchain_id) proposal.blockchain_id = blockchain_id;
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/create`,
-			{
-				title,
-				description
-			}
+			proposal
 		);
 
 		const id = json;
@@ -41,11 +46,9 @@
 		if (!res.ok) return;
 
 		show = true;
-		
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain) await createProposal(poll.id);
-		
+
 		let created_by = await getUserInfo();
-		
+
 		loading = false;
 
 		proposals.push({

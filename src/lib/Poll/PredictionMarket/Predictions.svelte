@@ -25,10 +25,10 @@
 	let loading = false,
 		predictions: PredictionStatement[] = [],
 		addingPrediction = false,
-		prediction_statement_id = 0,
 		newPredictionStatement: {
 			description?: string;
 			end_date?: Date;
+			blockchain_id?: number;
 			segments: {
 				proposal_id: number;
 				is_true: boolean;
@@ -65,14 +65,21 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
+		let prediction_blockchain_id;
 
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain)
 			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
 				try {
-					await createPredictionBlockchain(
-						Number($page.params.groupId),
-						newPredictionStatement.segments[i].proposal_id
+					const proposal = proposals.find(
+						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
 					);
+					if (proposal?.blockchain_id) {
+						prediction_blockchain_id = await createPredictionBlockchain(
+							Number($page.params.groupId),
+							proposal.blockchain_id
+						);
+					}
+					newPredictionStatement.blockchain_id = prediction_blockchain_id;
 				} catch {
 					poppup = { message: 'Could not push to Blockchain', success: false };
 				}

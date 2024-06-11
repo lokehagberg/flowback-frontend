@@ -4,6 +4,7 @@ export interface proposal {
 	id: number;
 	created_by: number;
 	poll: number;
+	blockchain_id?: number;
 }
 
 export interface poll {

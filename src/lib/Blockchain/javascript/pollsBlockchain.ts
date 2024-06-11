@@ -115,6 +115,7 @@ export const createProposal = async (_pollId: number) => {
 				console.log(
 					`Proposal with id ${proposalId} created on poll with id ${pollId}: PROPOSAL: ${description}`
 				);
+				return Number(proposalId)
 			}
 		}
 	} catch (error) {

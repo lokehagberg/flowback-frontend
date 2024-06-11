@@ -55,6 +55,8 @@ export const createPrediction = async (id: number, propId: number) => {
 				console.log(
 					`Prediction with id ${predictionId} is now created on pollid ${pollId}, proposal id ${proposalId}! PREDICTION: "${prediction}"`
 				);
+
+				return predictionId
 			}
 		} else {
 			console.warn('Transaction might have failed');

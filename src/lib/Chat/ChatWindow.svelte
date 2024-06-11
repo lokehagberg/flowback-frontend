@@ -229,7 +229,7 @@
 
 {#if selectedChat !== null || true}
 	<ul
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
+		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-[100%] overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 	>
 		{#if messages.length === 0}
@@ -295,3 +295,4 @@
 {:else}
 	<div>{'No chat selected'}</div>
 {/if}
+

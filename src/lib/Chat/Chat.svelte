@@ -62,17 +62,18 @@
 		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
 	</title>
 </svelte:head>
+
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix h-[100wh]"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix grid-sizing h-[100vh]"
 >
-	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
+	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2 h-[100vh]">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
 
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="w-full h-full" on:keydown>
-			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)}/>
+			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 		</div>
 	</div>
 	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
@@ -125,5 +126,9 @@
 		background-color: rgb(147, 197, 235);
 		border-radius: 100%;
 		padding: 10px;
+	}
+
+	.grid-sizing {
+		grid-template-rows: 8% 77% 15%;
 	}
 </style>

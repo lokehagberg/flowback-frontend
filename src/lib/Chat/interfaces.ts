@@ -33,6 +33,7 @@ export interface PreviewMessage {
 	profile_image: string;
 	timestamp: string;
 	user_id: number;
+	updated_at?:string;
 	id: number;
 	notified: boolean;
 	//For group/preview

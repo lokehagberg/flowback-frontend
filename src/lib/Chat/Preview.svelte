@@ -176,7 +176,10 @@
 			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
 			{#if previewObject?.notified}
-				<div class="p-1 rounded-full bg-blue-300" />
+				<div class="p-1 rounded-full"
+				class:bg-blue-300={selectedPage === "group"}
+				class:bg-purple-300={selectedPage === "direct"}
+				/>
 			{/if}
 
 			<ProfilePicture user={chatter} />

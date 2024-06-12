@@ -45,6 +45,7 @@ export const becomeDelegate = async (groupId:number) => {
 				const delegate = NewDelegateEvent.args.delegate;
 				const groupId = NewDelegateEvent.args.groupId;
 				console.log(`New delegate "${delegate}" added to group ${groupId}`);
+				return delegate;
 			} else {
 				console.warn('NewDelegate event not found in transaction logs');
 			}

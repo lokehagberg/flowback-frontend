@@ -8,9 +8,9 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
-	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { goto } from '$app/navigation';
+	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -68,16 +68,24 @@
 	 */
 	const createDelegationPool = async () => {
 		loading = true;
+
+		let blockchain_id;
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			blockchain_id = becomeDelegate(Number($page.params.groupId));
+
 		const { res } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/delegate/pool/create`
+			`group/${$page.params.groupId}/delegate/pool/create`,
+			{
+				blockchain_id
+			}
 		);
 
 		if (!res.ok) return;
 
 		loading = false;
 		userIsDelegate = true;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeDelegate(Number($page.params.groupId));
+
 		// userIsDelegateStore.update((value) => (value = true));
 	};
 

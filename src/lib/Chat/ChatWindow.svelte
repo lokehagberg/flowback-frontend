@@ -1,6 +1,6 @@
 <script lang="ts">
 	// @ts-ignore
-	import { setTimeStamp, type Message, type Message1, type PreviewMessage } from './interfaces';
+	import { type Message, type Message1, type PreviewMessage } from './interfaces';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -12,7 +12,6 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import sendMessage, { messageStore } from './Socket';
 	import { onMount } from 'svelte';
@@ -48,6 +47,9 @@
 		isLookingAtOlderMessages: boolean;
 
 	onMount(() => {
+
+		
+
 		recieveMessage();
 	});
 
@@ -152,10 +154,9 @@
 
 	//Uses svelte stores to recieve messages
 	const recieveMessage = () => {
-		messageStore.subscribe((_message: string) => {
-			if (!_message) return;
-
-			const message: Message1 = JSON.parse(_message);
+		messageStore.subscribe((message: Message1) => {
+			console.log("HELLO???", message)
+			if (!message) return;
 
 			if (message.channel_origin_name === 'group') {
 				handleRecieveMessage(previewGroup, message);

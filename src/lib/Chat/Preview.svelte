@@ -40,6 +40,14 @@
 
 		if (!res.ok) return [];
 
+		// let preview = json.results.map((prev: PreviewMessage) => {
+		// 	console.log(prev.timestamp, prev.created_at, prev.updated_at, new Date(prev.timestamp) < new Date(prev.created_at));
+		// 	prev.notified = new Date(prev.timestamp) < new Date(prev.created_at);
+		// 	return prev;
+		// });
+
+		// console.log(preview, 'PREIVIEI');
+
 		return json.results;
 	};
 

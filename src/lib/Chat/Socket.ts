@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
+import { type Message1 } from './interfaces';
 
-export const messageStore = writable('');
+export const messageStore = writable<Message1>();
 
 const createSocket = (userId: number) => {
 	let socket: WebSocket;
@@ -19,9 +20,11 @@ const createSocket = (userId: number) => {
 
 	socket.onmessage = (event) => {
 		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
-		const messageId = JSON.parse(event.data).user.id;
-		if (messageId !== userId) messageStore.set(event.data);
-		// console.log(`[message] Data received from server: ${event.data}`);
+		const parsedMessage = JSON.parse(event.data)
+		const messageId = parsedMessage.user.id;
+		if (messageId !== userId) messageStore.set(parsedMessage);
+		console.log(`[message] Data received from server:`);
+		console.log(JSON.parse(event.data));
 	};
 
 	socket.onclose = (event) => {

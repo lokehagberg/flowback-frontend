@@ -40,8 +40,14 @@
 
 		if (!res.ok) return [];
 
+		//TODO Make sure people see notifications as they enter
 		let preview = json.results.map((prev: PreviewMessage) => {
-			console.log(prev.timestamp, prev.created_at, prev.updated_at, new Date(prev.timestamp) < new Date(prev.created_at));
+			console.log(
+				prev.timestamp,
+				prev.created_at,
+				prev.updated_at,
+				new Date(prev.timestamp) < new Date(prev.created_at)
+			);
 			prev.notified = new Date(prev.timestamp) < new Date(prev.created_at);
 			return prev;
 		});
@@ -118,15 +124,16 @@
 	$: groups = sort(groups, previewGroup);
 </script>
 
-<!-- // ${
-// 	notifiedDirect.length && notifiedGroup.length
-// 		? 'both-message-bg'
-// 		: notifiedDirect.length > 0
-// 		? 'direct-message-bg'
-// 		: notifiedGroup.length > 0
-// 		? 'group-message-bg'
-// 		: 'bg-white'
-// }` -->
+<!-- ${
+	(previewDirect.find(preview => preview.notified) && previewGroup.find(preview => preview.notified))
+		? 'both-message-bg'
+		: previewDirect.find(preview => preview.notified)
+		? 'direct-message-bg'
+		: previewGroup.find(preview => preview.notified)
+		? 'group-message-bg'
+		: ''}
+		
+		`} -->
 <div class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject`}>
 	<Tab
 		Class={``}

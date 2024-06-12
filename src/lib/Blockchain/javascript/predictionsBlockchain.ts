@@ -56,7 +56,7 @@ export const createPrediction = async (id: number, propId: number) => {
 					`Prediction with id ${predictionId} is now created on pollid ${pollId}, proposal id ${proposalId}! PREDICTION: "${prediction}"`
 				);
 
-				return predictionId
+				return predictionId;
 			}
 		} else {
 			console.warn('Transaction might have failed');
@@ -79,14 +79,20 @@ export const getPredictionsOnPoll = async (id: number, propId: number) => {
 //-------------------PREDICTIONBETS----------------------------
 //-------------------------------------------------------------
 
-export const createPredictionBet = async (id: number, predId: number) => {
+export const createPredictionBet = async (pollId: number, predId: number) => {
 	const contract = await getContract();
 	const { provider } = await getContract();
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.placePredictionBet(id, 1, predId, 9, true);
+	const estimatedGasLimit = await contract.estimateGas.placePredictionBet(
+		pollId,
+		1,
+		predId,
+		9,
+		true
+	);
 	const tx = await contract.placePredictionBet(
-		id, //pollid
+		pollId, //pollid
 		1, //proposalid
 		predId, //predictionid
 		9, //likelihood

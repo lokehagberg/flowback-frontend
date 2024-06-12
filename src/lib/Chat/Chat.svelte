@@ -90,8 +90,8 @@
 <div
 	on:click={() => (chatOpen = true)}
 	on:keydown
-	class:small-notification={notifiedDirect.length > 0}
-	class:small-notification-group={notifiedGroup.length > 0}
+	class:small-notification={previewDirect.find((preview) => preview.notified)}
+	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
 	<Fa icon={faComment} size="1.3x" />

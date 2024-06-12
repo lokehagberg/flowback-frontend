@@ -17,6 +17,7 @@
 	import { poll } from 'ethers/lib/utils';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 
 	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
 
@@ -159,6 +160,8 @@
 		else if (score === null) {
 			predictionBetCreate(newScore);
 		} else predictionBetUpdate(newScore);
+
+		createPredictionBetBlockchain(Number($page.params.groupId), prediction.id)
 
 		score = Number(newScore);
 	};

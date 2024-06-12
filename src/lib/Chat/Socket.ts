@@ -23,8 +23,6 @@ const createSocket = (userId: number) => {
 		const parsedMessage = JSON.parse(event.data)
 		const messageId = parsedMessage.user.id;
 		if (messageId !== userId) messageStore.set(parsedMessage);
-		console.log(`[message] Data received from server:`);
-		console.log(JSON.parse(event.data));
 	};
 
 	socket.onclose = (event) => {

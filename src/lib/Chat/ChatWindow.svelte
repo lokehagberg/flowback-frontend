@@ -17,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import Socket from './Socket';
 	import { updateUserData } from './functions';
+	import { writable } from 'svelte/store';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -48,7 +49,13 @@
 
 	onMount(() => {
 
-		
+		const a = writable("a")
+		setTimeout(() => {
+			a.set("HOWDY")
+		})
+		a.subscribe(msg => {
+			console.log(msg)
+		})
 
 		recieveMessage();
 	});
@@ -155,7 +162,6 @@
 	//Uses svelte stores to recieve messages
 	const recieveMessage = () => {
 		messageStore.subscribe((message: Message1) => {
-			console.log("HELLO???", message)
 			if (!message) return;
 
 			if (message.channel_origin_name === 'group') {

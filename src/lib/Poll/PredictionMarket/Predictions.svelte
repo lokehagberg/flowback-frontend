@@ -19,6 +19,7 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import { getGroupInfo } from '../functions';
 
 	export let proposals: proposal[], phase: Phase;
 
@@ -73,9 +74,10 @@
 					const proposal = proposals.find(
 						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
 					);
+					const { json, res } = await getGroupInfo($page.params.groupId);
 					if (proposal?.blockchain_id) {
 						prediction_blockchain_id = await createPredictionBlockchain(
-							Number($page.params.groupId),
+							json[0].blockchain_id,
 							proposal.blockchain_id
 						);
 					}

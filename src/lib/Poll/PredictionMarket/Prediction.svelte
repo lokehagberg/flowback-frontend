@@ -161,7 +161,7 @@
 			predictionBetCreate(newScore);
 		} else predictionBetUpdate(newScore);
 
-		createPredictionBetBlockchain(Number($page.params.groupId), prediction.id)
+		createPredictionBetBlockchain(Number($page.params.groupId), prediction.id);
 
 		score = Number(newScore);
 	};

@@ -46,8 +46,6 @@
 			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 		if (json.results.length === 1) userIsDelegate = true;
-
-		console.log(json);
 	};
 
 	const createDelegation = async () => {

@@ -1,3 +1,4 @@
+import { fetchRequest } from '$lib/FetchRequest';
 import type { Phase, poll } from './interface';
 
 export const formatDate = (dateInput: string) => {
@@ -35,7 +36,7 @@ export const getPhase = (poll: poll): Phase => {
 	else return 'prediction_vote';
 };
 
-// Labesls for the circles on the timeline
+// Labels for the circles on the timeline
 export const dateLabels = [
 	'Pre Start',
 	'Area voting',
@@ -47,10 +48,7 @@ export const dateLabels = [
 	'Results and evaluation'
 ];
 
-export const dateLabelsDatePoll = [
-	'Start',
-	'Results'
-]
+export const dateLabelsDatePoll = ['Start', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
 	if (phase === 'pre_start') return dateLabels[0];
@@ -61,4 +59,11 @@ export const getPhaseUserFriendlyName = (phase: Phase) => {
 	else if (phase === 'delegate_vote') return dateLabels[5];
 	else if (phase === 'vote') return dateLabels[6];
 	else if (phase === 'prediction_vote' || phase === 'result') return dateLabels[7];
+};
+
+//TODO: To prevent many API calls, use svelte stores to transfer information between files about groups
+export const getGroupInfo = async (id: number | string) => {
+	id = Number(id)
+	const { res, json } = await fetchRequest('GET', `group/list?id=${id}`);
+	return { res, json };
 };

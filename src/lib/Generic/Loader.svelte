@@ -12,13 +12,12 @@
 		currentTimer = setTimeout(() => {
 			if (loading) {
 				isLoading = true;
-				// loading = false;
 			}
 		}, delay);
 
 	$: if (!loading) {
 		clearTimeout(currentTimer);
-		isLoading = false
+		isLoading = false;
 	}
 </script>
 

@@ -39,7 +39,7 @@
 		bets: PredictionBet[] = [],
 		resetsOfValues = 0,
 		poppup: poppup,
-		pushToBlockchain = true;
+		pushingToBlockchain = true;
 
 	const getPredictionStatements = async () => {
 		loading = true;
@@ -66,26 +66,8 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
-		let prediction_blockchain_id;
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain)
-			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
-				try {
-					const proposal = proposals.find(
-						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
-					);
-					const { json, res } = await getGroupInfo($page.params.groupId);
-					if (proposal?.blockchain_id) {
-						prediction_blockchain_id = await createPredictionBlockchain(
-							json[0].blockchain_id,
-							proposal.blockchain_id
-						);
-					}
-					newPredictionStatement.blockchain_id = prediction_blockchain_id;
-				} catch {
-					poppup = { message: 'Could not push to Blockchain', success: false };
-				}
-			}
+		pushToBlockchain();
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -112,6 +94,36 @@
 			'POST',
 			`group/poll/prediction/${id}/statement/delete`
 		);
+	};
+
+	//Go through every proposal that the prediction statement is predicting on.
+	// If the proposal is pushed to blockchain, push the prediction on that proposal to blockchain
+	const pushToBlockchain = async () => {
+		let prediction_blockchain_id;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
+			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
+				try {
+					const proposal = proposals.find(
+						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
+					);
+
+					const { json, res } = await getGroupInfo($page.params.groupId);
+					const group = json.results[0];
+
+					if (proposal?.blockchain_id && json[0].blockchain_id) {
+						prediction_blockchain_id = await createPredictionBlockchain(
+							json[0].blockchain_id,
+							proposal.blockchain_id
+						);
+					}
+					newPredictionStatement.blockchain_id = prediction_blockchain_id;
+				} catch {
+					poppup = { message: 'Could not push to Blockchain', success: false };
+				}
+			}
+
+		
 	};
 
 	const getAIpredictionStatement = async () => {
@@ -202,7 +214,7 @@
 			</div>
 			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
+			<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 			<Button type="submit">{$_('Submit')}</Button>
 			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
 				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>

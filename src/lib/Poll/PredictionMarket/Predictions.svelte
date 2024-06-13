@@ -122,8 +122,6 @@
 					poppup = { message: 'Could not push to Blockchain', success: false };
 				}
 			}
-
-		
 	};
 
 	const getAIpredictionStatement = async () => {

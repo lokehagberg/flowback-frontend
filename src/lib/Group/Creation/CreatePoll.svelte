@@ -105,7 +105,7 @@
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
-		loading = true
+		loading = true;
 		const formData = new FormData();
 		let blockchain_id;
 
@@ -202,6 +202,15 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
+				<ImageUpload
+					icon={faUser}
+					bind:croppedImage={image}
+					minimalist
+					label=""
+					iconSize="2x"
+					Class="flex !flex-row-reverse"
+				/>
+				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<Button
 						Class={`inline !bg-blue-600`}
@@ -306,18 +315,7 @@
 						</div>
 					{/if}
 				</div>
-				<!-- <h2>{$_('Select Tag')}</h2>
-				<div class="flex gap-4 flex-wrap">
-					{#each tags as tag}
-						<Tag
-							onclick={() => (selectedTag = tag)}
-							tag={{ name: tag.name, id: tag.id, active: true }}
-							Class={`cursor-pointer ${
-								selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
-							}`}
-						/>
-					{/each}
-				</div> -->
+				
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{/if}
@@ -341,17 +339,11 @@
 						? '!bg-gray-200'
 						: 'bg-primary'}>{$_('Create Poll')}</Button
 				>
-				<ImageUpload
-					icon={faUser}
-					bind:croppedImage={image}
-					minimalist
-					label=""
-					iconSize="2x"
-					Class="flex !flex-row-reverse"
-				/>
 			</div>
 		</Loader>
 	</form>
+
+	<!-- To the right, where one selects which type of poll to pick -->
 	<div class="md:w-1/3">
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl rounded">
 			<div class="flex flex-col gap-6">

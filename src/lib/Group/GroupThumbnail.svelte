@@ -30,7 +30,7 @@
 		}
 	};
 
-	const onThumbnailError = (event: any, picture:string) => {
+	const onThumbnailError = (event: any, picture: string) => {
 		if (!(event && event.target)) return;
 		event.target.src = picture;
 		event.onerror = null;

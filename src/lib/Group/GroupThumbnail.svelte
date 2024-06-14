@@ -5,6 +5,8 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
+	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultBanner from '$lib/assets/default_banner_group.png';
 
 	export let group: Group;
 	let pending: boolean = false;
@@ -20,11 +22,18 @@
 	const joinGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
-			console.log(group, import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE", "BLOCKY")
+			console.log(group, import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
 			group.joined = !group.joined;
-			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(group.blockchain_id);
+			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+				becomeMemberOfGroup(group.blockchain_id);
 			if (group.direct_join) goToGroup();
 		}
+	};
+
+	const onThumbnailError = (event: any, picture:string) => {
+		if (!(event && event.target)) return;
+		event.target.src = picture;
+		event.onerror = null;
 	};
 </script>
 
@@ -43,6 +52,7 @@
 			}${group.cover_image}`}
 			class="cover rounded-t-2xl"
 			alt="cover"
+			on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		/>
 	</div>
 	<img
@@ -50,6 +60,7 @@
 			import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 		}${group.image}`}
 		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+		on:error={(e) => onThumbnailError(e, DefaultPFP)}
 		alt="profile"
 	/>
 

@@ -132,6 +132,13 @@
 			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 		>
 			<TitleDescription {poll} />
+			{#if poll.attachments && poll.attachments.length > 0}
+				<img
+					class=""
+					src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
+					alt="attachment to the poll"
+				/>
+			{/if}
 			<!-- Mod Tools -->
 			{#if groupUser?.is_admin}
 				<StatusMessage bind:status={deleteStatus} />
@@ -144,13 +151,6 @@
 						<Button action={nextPhase}>Next Phase</Button>
 					{/if}
 				</div>
-			{/if}
-			{#if poll.attachments && poll.attachments.length > 0}
-				<img
-					class=""
-					src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
-					alt="attachment to the poll"
-				/>
 			{/if}
 
 			{#if pollType === 4}

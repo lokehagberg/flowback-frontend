@@ -5,8 +5,8 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
+	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 
 	export let group: Group;
 	let pending: boolean = false;
@@ -28,12 +28,6 @@
 				becomeMemberOfGroup(group.blockchain_id);
 			if (group.direct_join) goToGroup();
 		}
-	};
-
-	const onThumbnailError = (event: any, picture: string) => {
-		if (!(event && event.target)) return;
-		event.target.src = picture;
-		event.onerror = null;
 	};
 </script>
 

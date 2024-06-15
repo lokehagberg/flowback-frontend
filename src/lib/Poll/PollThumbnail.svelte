@@ -16,7 +16,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyName } from './functions';
 	import { goto } from '$app/navigation';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultBanner from '$lib/assets/default_banner_group.png';
+	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -31,12 +32,6 @@
 			pinned: !poll.pinned
 		});
 		if (res.ok) poll.pinned = !poll.pinned;
-	};
-
-	const onThumbnailError = (event: any) => {
-		if (!(event && event.target)) return;
-		event.target.src = DefaultPFP;
-		event.onerror = null;
 	};
 
 	onMount(() => {
@@ -115,7 +110,7 @@
 					src={`${import.meta.env.VITE_API}${
 						import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 					}${poll.group_image}`}
-					on:error={onThumbnailError}
+					on:error={(e) => onThumbnailError(e, DefaultBanner)}
 					alt={'Poll Thumbnail'}
 				/>
 			</a>

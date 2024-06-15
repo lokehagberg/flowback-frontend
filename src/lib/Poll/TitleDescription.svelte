@@ -6,8 +6,11 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import DefaultBanner from '$lib/assets/default_banner_group.png';
 
 	export let poll: poll;
+
 </script>
 
 <div class="flex h-8 justify-between items-center">
@@ -29,6 +32,7 @@
 				class="h-8 w-8 inline rounded-full"
 				src={`${import.meta.env.VITE_API}${poll.group_image}`}
 				alt="group thumbnail"
+				on:error={(e) => onThumbnailError(e, DefaultBanner)}
 			/>
 			<span class="inline">{poll.group_name}</span>
 		</a>

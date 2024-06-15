@@ -145,6 +145,13 @@
 					{/if}
 				</div>
 			{/if}
+			{#if poll.attachments && poll.attachments.length > 0}
+				<img
+					class=""
+					src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+					alt="attachment to the poll"
+				/>
+			{/if}
 
 			{#if pollType === 4}
 				{#if phase === 'pre_start'}
@@ -222,12 +229,5 @@
 				</div>
 			</Modal>
 		</div>
-		{#if poll.attachments && poll.attachments.length > 0}
-			<img
-				class=""
-				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
-				alt="attachment to the comment"
-			/>
-		{/if}
 	</Layout>
 {/if}

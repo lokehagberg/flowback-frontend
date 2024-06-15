@@ -11,6 +11,7 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { goto } from '$app/navigation';
 	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
+	import { isNumber } from 'chart.js/helpers';
 
 	// TODO: fix multiple instances of Delegate interface
 	interface Delegate extends User {
@@ -66,17 +67,21 @@
 	 */
 	const createDelegationPool = async () => {
 		loading = true;
+		let toSend:any = {}
 
-		let blockchain_id;
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
-			blockchain_id = becomeDelegate(Number($page.params.groupId));
+			try {
+				const blockchain_id = becomeDelegate($page.params.groupId);
+				if (isNumber(blockchain_id))
+				toSend.blockchain_id = blockchain_id 
+			} catch {
+				console.warn('Error');
+			}
 
 		const { res } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/delegate/pool/create`,
-			{
-				blockchain_id
-			}
+			toSend
 		);
 
 		if (!res.ok) return;

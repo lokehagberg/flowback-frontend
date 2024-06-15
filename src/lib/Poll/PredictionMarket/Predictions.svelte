@@ -104,16 +104,18 @@
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
 				try {
+
 					const proposal = proposals.find(
 						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
 					);
-
+					
 					const { json, res } = await getGroupInfo($page.params.groupId);
 					const group = json.results[0];
+					console.log(group, 'LESEGMENTO 2');
 
-					if (proposal?.blockchain_id && json[0].blockchain_id) {
+					if (proposal?.blockchain_id && group.blockchain_id) {
 						prediction_blockchain_id = await createPredictionBlockchain(
-							json[0].blockchain_id,
+							group.blockchain_id,
 							proposal.blockchain_id
 						);
 					}

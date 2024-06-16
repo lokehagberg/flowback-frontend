@@ -49,7 +49,7 @@ interface UserInfo {
 	user: User;
 	permission?: Permission;
 	groupuser?: GroupUser;
-	groupId?: number
+	groupId?: number;
 }
 
 // User data is stored as the user navigates the site
@@ -57,10 +57,27 @@ interface UserInfo {
 export let userInfo = writable<UserInfo>();
 
 export const getUserInfo = async () => {
+	const { res, json } = await fetchRequest('GET', `user`);
+	return json;
+};
+
+export const getGroupUserInfo = async (groupId: number | string) => {
+	groupId = Number(groupId);
+
 	const { res, json } = await fetchRequest(
 		'GET',
-		`user`
+		`group/${groupId}/users?user_id=${localStorage.getItem('userId')}`
 	);
-	console.log(json, "LE JSON")
-	return json
+	return json.results[0];
+};
+
+export const getPermissions = async (groupId: number | string, permissionId: number | string) => {
+	groupId = Number(groupId);
+	permissionId = Number(permissionId);
+
+	const { res, json } = await fetchRequest(
+		'GET',
+		`group/${groupId}/permissions?id=${permissionId}`
+	);
+	return json.results[0];
 };

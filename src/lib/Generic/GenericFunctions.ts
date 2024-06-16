@@ -49,6 +49,7 @@ interface UserInfo {
 	user: User;
 	permission?: Permission;
 	groupuser?: GroupUser;
+	groupId?: number
 }
 
 // User data is stored as the user navigates the site
@@ -60,5 +61,6 @@ export const getUserInfo = async () => {
 		'GET',
 		`user`
 	);
-	return json.results
+	console.log(json, "LE JSON")
+	return json
 };

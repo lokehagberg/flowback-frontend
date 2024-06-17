@@ -74,7 +74,6 @@
 
 	const commentSetup = async () => {
 		await getComments();
-		// sortComments();
 		comments.map((comment) => (comment.reply_depth = getCommentDepth(comment)));
 		comments.forEach((comment) => {
 			checkForLinks(comment.message, `comment-${comment.id}`);

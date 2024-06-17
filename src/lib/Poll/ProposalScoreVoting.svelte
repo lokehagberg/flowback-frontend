@@ -46,6 +46,8 @@
 			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
 		);
 
+		if (!json.results || json.results.length === 0) return;
+
 		voting = voting.map((vote) => ({
 			score: (vote.score = json.results.find(
 				(score: { score: number; proposal: number }) => score.proposal === vote.proposal

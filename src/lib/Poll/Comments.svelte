@@ -60,118 +60,26 @@
 		}
 	};
 
-	const sortComments = () => {
-	let parentComments = comments.filter(comment => comment.parent_id === null);
-    let childrenComments = comments.filter(comment => comment.parent_id !== null);
-    
-    let sortedComments = parentComments.map(parent => {
-        parent.reply_depth = 0;
-        return parent;
-    });
-  
-    while (childrenComments.length > 0) {
-        let len = childrenComments.length;
-        childrenComments = childrenComments.filter(child => {
-            let i = sortedComments.findIndex(parent => child.parent_id === parent.id);
-            if (i >= 0) {
-                child.reply_depth = sortedComments[i].reply_depth + 1;
-                sortedComments.splice(i+1, 0, child);
-                return false;  // if child comment has been sorted, it will be removed from childrenComments
-            }
-            return true; // True keeps the child in childrenComments for the next iteration
-        });
-        
-        if(len === childrenComments.length){ // if no child has been filtered, then there is an infinite loop
-            console.warn("No parent is found for some comments");
-            break;
-        }
-        
-    }
-    
-	comments = sortedComments 
-    return sortedComments;
+	const getCommentDepth = (comment: Comment): number => {
+		let depth: number = 0;
 
-		return;
-		// Separates between comments which are not replying to other commments (parents) and those who do reply (children)
-		// let parentComments = comments.filter((comment) => comment.parent_id === null);
-		// let childrenComments = comments.filter((comment) => comment.parent_id !== null);
-		// let k = 0;
-
-		// // console.log(parentComments);
-
-		// // Sorted Comments will be the list that gets rendered. We give parents a new property, "reply depth", which indicates how deep the comment is
-		// let sortedComments = parentComments.map((parent) => {
-		// 	parent.reply_depth = 0;
-		// 	return parent;
-		// });
-
-		// while (k < 12 && childrenComments.length > 0) {
-		// 	k++;
-		// 	console.log(k, 'K');
-
-		// 	for (let i = 0; i < childrenComments.length; i++) {
-		// 		let child = childrenComments[i];
-
-		// 		for (let j = 0; j < sortedComments.length; j++) {
-		// 			let parent = sortedComments[j];
-		// 			if (j >= 1000) return;
-		// 					if (child.parent_id === parent.id) {
-		// 						// const parentId = sortedComments.findIndex((comment) => comment.id === parent.id);
-		// 						child.reply_depth = parent.reply_depth + 1;
-		// 						sortedComments.splice(j, 0, child);
-		// 						console.log(child, parent, j, sortedComments, 'FAMILY PAIR');
-		// 						childrenComments = childrenComments.filter((_child) => _child !== child);
-		// 						j--
-		// 					}
-		// 		}
-		// 	}
-
-		// 	if (k === 11) console.warn("Noooooo it's not supposed to do this");
-		// }
-
-		comments = sortedComments;
-
-		// console.log('COMMENTÄR', childrenComments, parentComments, sortedComments);
-
-		// // Iterate over children commments by sorting them underneath their respective parent, with a reply depth increase of 1 compared to their parent.
-		// while (childrenComments.length > 0 && i < 100000) {
-		// 	for (let j = 0; j < childrenComments.length; j++) {
-		// 		let child = childrenComments[j];
-
-		// 		sortedComments.forEach((parent, i) => {
-		// 			if (parent.id === child.parent_id) {
-		// 				child.reply_depth = parent.reply_depth + 1;
-		// 				sortedComments.splice(i + 1, 0, child);
-		// 				childrenComments.splice(j, 1);
-		// 				j--;
-		// 				return false;
-		// 			}
-		// 		});
-		// 	}
-
-		// 	// parentComments = sortedComments;
-		// 	i++;
-		// }
-
-		// comments = sortedComments;
-	};
-
-	const insertItemAtIndex = (arr: any[], index: number, item: any) => {
-		if (index < 0 || index > arr.length) {
-			// Index out of bounds,
-			// return the original array
-			return arr;
+		if (comment.parent_id === null) return 0;
+		else {
+			let parentComment = comments.find((_comment) => _comment.id === comment.parent_id);
+			if (parentComment) return getCommentDepth(parentComment) + 1;
 		}
 
-		return arr.slice(0, index).concat(item, arr.slice(index));
+		return depth;
 	};
 
 	const commentSetup = async () => {
 		await getComments();
-		sortComments();
+		// sortComments();
+		comments.map((comment) => (comment.reply_depth = getCommentDepth(comment)));
 		comments.forEach((comment) => {
 			checkForLinks(comment.message, `comment-${comment.id}`);
 		});
+		comments = comments;
 	};
 
 	onMount(() => {

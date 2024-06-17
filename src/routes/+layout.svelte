@@ -56,7 +56,7 @@
 	});
 
 	onMount(() => {
-		userInfo.subscribe((info) => console.log('LE INFO:', info));
+		// userInfo.subscribe((info) => console.log('LE INFO:', info));
 	});
 </script>
 

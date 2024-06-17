@@ -66,7 +66,9 @@
 		if (comment.parent_id === null) return 0;
 		else {
 			let parentComment = comments.find((_comment) => _comment.id === comment.parent_id);
-			if (parentComment) return getCommentDepth(parentComment) + 1;
+			if (parentComment)
+				if (parentComment.reply_depth) return parentComment.reply_depth + 1;
+				else return getCommentDepth(parentComment) + 1;
 		}
 
 		return depth;

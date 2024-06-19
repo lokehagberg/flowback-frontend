@@ -29,19 +29,30 @@
 		phase: Phase,
 		// If text poll, have all phases. Date polls have fewer phases to display
 		dates: Date[],
-		tags: TagType[] = [];
+		tags: TagType[] = [],
+		selectedTag: number;
 
 	const pinPoll = async () => {
-		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
+		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
 			pinned: !poll.pinned
 		});
 		if (res.ok) poll.pinned = !poll.pinned;
 	};
 
+	const vote = async (tag: number) => {
+		console.log(tag, 'TAGGo');
+		const { json, res } = await fetchRequest('POST', `group/poll/${poll.group_id}/area/update`, {
+			tag,
+			vote: true
+		});
+	};
+
 	onMount(async () => {
 		phase = getPhase(poll);
-		if (phase === 'area_vote') tags = await getTags($page.params.groupId, 'limit=1000');
+		if (phase === 'area_vote') tags = await getTags($page.params.groupId);
 	});
+
+	$: if (selectedTag) vote(selectedTag);
 
 	$: if (poll)
 		dates =
@@ -144,12 +155,17 @@
 		</p></a
 	>
 
+	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
-		<Select labels={tags.map((tag) => tag.name)} values={tags.map((tag) => tag.id)} />
+		<Select
+			labels={tags.map((tag) => tag.name)}
+			values={tags.map((tag) => tag.id)}
+			bind:value={selectedTag}
+		/>
 	{/if}
 
 	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
-	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>
+	<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>

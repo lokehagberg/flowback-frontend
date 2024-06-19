@@ -25,7 +25,6 @@
 	};
 
 	const vote = async () => {
-		console.log(selectedTag);
 		const { json, res } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/area/update`,

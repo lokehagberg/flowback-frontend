@@ -26,7 +26,10 @@
 </script>
 
 <label class={`w-full ${Class}`}
-	><p class="text-md mb-1 dark:text-darkmodeText">{$_(label)}</p>
+	><p class="text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
+	{#if required}
+	<p class="inline text-red-600">*</p>
+{/if}
 	<input
 		{required}
 		on:blur={onBlur}

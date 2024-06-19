@@ -45,7 +45,10 @@
 </script>
 
 <label class={`${Class}`} {id}
-	><p class="text-sm mb-1">{$_(label)}</p>
+	><p class="text-sm mb-1 inline">{$_(label)}</p>
+	{#if required}
+		<p class="inline text-red-600">*</p>
+	{/if}
 	<!-- on:input={expandTextArea} -->
 	<textarea
 		bind:value

@@ -18,6 +18,7 @@
 	import { goto } from '$app/navigation';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -138,6 +139,10 @@
 			{poll.description}
 		</p></a
 	>
+
+		<Select 
+			labels={["hi"]}
+		/>
 
 	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>

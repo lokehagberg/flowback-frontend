@@ -142,6 +142,7 @@
 		);
 
 		loading = false;
+		if (!res.ok)
 		status = statusMessageFormatter(res, json);
 
 		if (res.ok && groupId) {

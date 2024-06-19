@@ -26,6 +26,8 @@
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Tag from '$lib/Group/Tag.svelte';
 	import { goto } from '$app/navigation';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -229,5 +231,8 @@
 				</div>
 			</Modal>
 		</div>
+		<!-- <div class="fixed left-0 top-0 z-50">
+			<Fa icon={faArrowLeft}/>
+		</div> -->
 	</Layout>
 {/if}

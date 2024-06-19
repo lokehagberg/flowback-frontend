@@ -19,6 +19,8 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
+	import { getTags } from '$lib/Group/functions';
+	import type { Tag as TagType } from '$lib/Group/interface';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -26,7 +28,8 @@
 	let onHoverGroup = false,
 		phase: Phase,
 		// If text poll, have all phases. Date polls have fewer phases to display
-		dates: Date[];
+		dates: Date[],
+		tags: TagType[] = [];
 
 	const pinPoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -35,8 +38,9 @@
 		if (res.ok) poll.pinned = !poll.pinned;
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		phase = getPhase(poll);
+		if (phase === 'area_vote') tags = await getTags($page.params.groupId, 'limit=1000');
 	});
 
 	$: if (poll)
@@ -140,9 +144,9 @@
 		</p></a
 	>
 
-		<Select 
-			labels={["hi"]}
-		/>
+	{#if phase === 'area_vote'}
+		<Select labels={tags.map((tag) => tag.name)} values={tags.map((tag) => tag.id)} />
+	{/if}
 
 	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 	<div class="text-sm">Current phase: {getPhaseUserFriendlyName(phase)}</div>

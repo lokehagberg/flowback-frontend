@@ -8,7 +8,6 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { tags as tagLimit } from '../Generic/APILimits.json';
 	import { getTags } from './functions';
 	import Tag from './Tag.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -27,7 +26,7 @@
 
 	const getTagsLocal = async () => {
 		loading = true;
-		tags = await getTags($page.params.groupId, `limit=${tagLimit}`);
+		tags = await getTags($page.params.groupId);
 		if (!tags) poppup = { message: 'Could not get poppups', success: false };
 		loading = false;
 	};

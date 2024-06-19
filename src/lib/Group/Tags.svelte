@@ -8,19 +8,29 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { tags as tagLimit } from '../Generic/APILimits.json'
+	import { tags as tagLimit } from '../Generic/APILimits.json';
 	import { getTags } from './functions';
 	import Tag from './Tag.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
 		selectedTag: TagType = { active: false, id: 0, name: '' },
 		loading = false,
-		areYouSureModal = false;
+		areYouSureModal = false,
+		poppup: poppup;
 
 	onMount(async () => {
-		tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
+		getTagsLocal();
 	});
+
+	const getTagsLocal = async () => {
+		loading = true;
+		tags = await getTags($page.params.groupId, `limit=${tagLimit}`);
+		if (!tags) poppup = { message: 'Could not get poppups', success: false };
+		loading = false;
+	};
 
 	const addTag = async () => {
 		loading = true;
@@ -28,7 +38,7 @@
 			name: tagToAdd
 		});
 		if (res.ok) {
-			tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
+			getTagsLocal();
 			tagToAdd = '';
 		} else loading = false;
 	};
@@ -41,7 +51,7 @@
 		});
 		//TODO: Just update DOM instead of re-getting tags
 		if (res.ok) {
-			tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
+			getTagsLocal();
 			areYouSureModal = false;
 		} else loading = false;
 	};
@@ -52,7 +62,7 @@
 			tag: tag.id,
 			active: !tag.active
 		});
-		if (res.ok) tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
+		if (res.ok) getTagsLocal();
 		else loading = false;
 	};
 </script>
@@ -99,3 +109,5 @@
 		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />

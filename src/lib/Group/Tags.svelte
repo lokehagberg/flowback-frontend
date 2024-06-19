@@ -4,12 +4,13 @@
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import Tag from './Tag.svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { tags as tagLimit } from '../Generic/APILimits.json'
+	import { getTags } from './functions';
+	import Tag from './Tag.svelte';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
@@ -18,21 +19,8 @@
 		areYouSureModal = false;
 
 	onMount(async () => {
-		getTags();
+		tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
 	});
-
-	const getTags = async () => {
-		loading = true;
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=${tagLimit}`);
-
-		if (res.ok) {
-			//Sorts tags alphabetically
-			tags = json.results.sort((tag1: TagType, tag2: TagType) =>
-				tag1.name.localeCompare(tag2.name)
-			);
-		}
-		loading = false;
-	};
 
 	const addTag = async () => {
 		loading = true;
@@ -40,7 +28,7 @@
 			name: tagToAdd
 		});
 		if (res.ok) {
-			getTags();
+			tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
 			tagToAdd = '';
 		} else loading = false;
 	};
@@ -53,7 +41,7 @@
 		});
 		//TODO: Just update DOM instead of re-getting tags
 		if (res.ok) {
-			getTags();
+			tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
 			areYouSureModal = false;
 		} else loading = false;
 	};
@@ -64,7 +52,7 @@
 			tag: tag.id,
 			active: !tag.active
 		});
-		if (res.ok) getTags();
+		if (res.ok) tags = await getTags($page.params.groupId, `limit=${tagLimit}`)
 		else loading = false;
 	};
 </script>

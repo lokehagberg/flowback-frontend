@@ -22,9 +22,12 @@ export const getTags = async (groupId: string | number, params: string, sort = t
 	if (res.ok && sort) {
 		//Sorts tags alphabetically
 		tags = json.results.sort((tag1: Tag, tag2: Tag) => tag1.name.localeCompare(tag2.name));
-	} else if (!sort) return tags;
-	else if (!res.ok) {
-		let poppup: poppup = { show: true, message: 'Could not get tags', success: false };
-		return poppup;
-	}
+	} 
+
+	// else if (!res.ok) {
+	// 	let poppup: poppup = { show: true, message: 'Could not get tags', success: false };
+	// 	return poppup;
+	// }
+
+    return tags;
 };

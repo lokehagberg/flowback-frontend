@@ -11,7 +11,7 @@
 		onBlur = () => {},
 		inputClass = '',
 		placeholder = '',
-		max = 50;
+		max = 100;
 
 	import { _ } from 'svelte-i18n';
 

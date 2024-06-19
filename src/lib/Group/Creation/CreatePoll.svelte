@@ -212,19 +212,21 @@
 				/>
 				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
+					<div>
+						<h2 class="">{$_('Days between phases')}</h2>
+						<input
+							type="number"
+							class="dark:bg-darkbackground"
+							bind:value={daysBetweenPhases}
+							min="0"
+							max="1000"
+						/>
+					</div>
 					<Button
-						Class={`inline !bg-blue-600`}
+						Class={`!bg-blue-600 mt-4 !block`}
 						action={() => (advancedTimeSettings = !advancedTimeSettings)}
-						>{$_('Advanced time settings')}</Button
+						buttonStyle="secondary">{$_('Advanced time settings')}</Button
 					>
-					<h2 class="mt-4">{$_('Days between phases')}</h2>
-					<input
-						type="number"
-						class="dark:bg-darkbackground"
-						bind:value={daysBetweenPhases}
-						min="0"
-						max="1000"
-					/>
 
 					{#if advancedTimeSettings}
 						<div class="grid grid-cols-2 gap-6 justify-center">
@@ -315,7 +317,7 @@
 						</div>
 					{/if}
 				</div>
-				
+
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{/if}

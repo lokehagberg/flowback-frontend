@@ -8,7 +8,7 @@
 		Class = '',
 		onBlur = () => {},
 		autofocus = false,
-		max = 2000,
+		max = 5000,
 		onKeyPress = (e: any) => {},
 		inputClass = '',
 		rows = 2,

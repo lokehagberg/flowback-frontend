@@ -42,7 +42,7 @@ https://svelte.dev/tutorial/basics
 Remember to check the “Generic” folder before doing something that’s very common.
 
 
-Check out the backend documentation here: https://docs.flowback.org/
+Check out the backend documentation here: https://digitaldemocracy.flowback.org/api/schema/redoc/
 
 ## Generally good code practices:
 ```js

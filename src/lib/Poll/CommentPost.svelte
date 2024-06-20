@@ -8,7 +8,6 @@
 	import type { proposal } from './interface';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import About from '$lib/Group/About.svelte';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -52,23 +51,6 @@
 			false
 		);
 		if (res.ok) {
-			// const parentPosition = comments.findIndex((parent) => parent.id === parent_id);
-			// comments.splice(parentPosition + 1, 0, {
-			// 	author_id: Number(localStorage.getItem('userId')) || 0,
-			// 	author_name: localStorage.getItem('userName') || '',
-			// 	author_thumbnail: '',
-			// 	message,
-			// 	parent_id: parent_id || undefined,
-			// 	score: 0,
-			// 	being_edited: false,
-			// 	being_replied: false,
-			// 	id: json,
-			// 	reply_depth: replyDepth + 1,
-			// 	active: true,
-			// 	edited: false,
-			// 	attachments: []
-			// });
-			// comments = comments;
 			commentSetup()
 			showMessage = 'Successfully posted comment';
 			show = true;
@@ -82,7 +64,7 @@
 	const commentUpdate = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/${api}/${getId()}/comment/${id}/update`,
+			`group/${getId()}/comment/${id}/update`,
 			{
 				message
 			}

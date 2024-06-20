@@ -10,7 +10,6 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 
 	export let poll: poll;
-
 </script>
 
 <div class="flex h-8 justify-between items-center">
@@ -23,19 +22,21 @@
 			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 		{/if}
 		<!-- Group Profile -->
-		<a
-			href={`/groups/${$page.params.groupId}`}
-			class:hover:underline={poll.group_joined}
-			class="text-black dark:text-darkmodeText"
-		>
-			<img
-				class="h-8 w-8 inline rounded-full"
-				src={`${import.meta.env.VITE_API}${poll.group_image}`}
-				alt="group thumbnail"
-				on:error={(e) => onThumbnailError(e, DefaultBanner)}
-			/>
-			<span class="inline">{poll.group_name}</span>
-		</a>
+		{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK !== 'TRUE'}
+			<a
+				href={`/groups/${$page.params.groupId}`}
+				class:hover:underline={poll.group_joined}
+				class="text-black dark:text-darkmodeText"
+			>
+				<img
+					class="h-8 w-8 inline rounded-full"
+					src={`${import.meta.env.VITE_API}${poll.group_image}`}
+					alt="group thumbnail"
+					on:error={(e) => onThumbnailError(e, DefaultBanner)}
+				/>
+				<span class="inline">{poll.group_name}</span>
+			</a>
+		{/if}
 	</div>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 	<NotificationOptions

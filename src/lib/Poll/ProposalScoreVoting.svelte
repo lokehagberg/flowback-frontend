@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { proposal } from '$lib/Poll/interface';
-	import ProposalNew from './ProposalNew.svelte';
+	import Proposal2 from './Proposal2.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
 	import type { groupUser } from '$lib/Group/interface';
@@ -111,7 +111,7 @@
 <div class="">
 	{#key needsReload}
 		{#each proposals as proposal}
-			<ProposalNew {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
+			<Proposal2 {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
 		{/each}
 	{/key}
 </div>

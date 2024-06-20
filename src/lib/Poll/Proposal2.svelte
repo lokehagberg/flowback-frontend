@@ -1,8 +1,6 @@
 <!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
 	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
@@ -34,7 +32,7 @@
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
 >
-	<div><Fa icon={faBars} /></div>
+	<!-- <div><Fa icon={faBars} /></div> -->
 	<div class="h-full w-2/3">
 		<h1 class="text-lg text-left">{proposal.title}</h1>
 		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>

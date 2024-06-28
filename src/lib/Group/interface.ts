@@ -144,10 +144,11 @@ export interface kanban {
 
 export interface Thread {
 	created_by: {
-		id: 1;
+		id: number;
 		username: string;
 		profile_image: null | string;
 		banner_image: null | string;
 	};
 	title: string;
+	id: number;
 }

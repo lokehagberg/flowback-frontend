@@ -6,8 +6,9 @@
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import { goto } from '$app/navigation';
 
-	let threads: any[] = [],
-	prev = "", next = ""
+	let threads: Thread[] = [],
+		prev = '',
+		next = '';
 
 	const getThreads = async () => {
 		const { res, json } = await fetchRequest(
@@ -16,20 +17,23 @@
 			{}
 		);
 
-		next = json.next
-		prev = json.previous
-
+		next = json.next;
+		prev = json.previous;
 		threads = json.results;
 	};
 
-	onMount( () => {
+	onMount(() => {
 		getThreads();
 	});
 </script>
 
 <div>
 	{#if threads.length === 0}
-	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center">There are currently no threads in this group</div>
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"
+		>
+			There are currently no threads in this group
+		</div>
 	{/if}
 	{#each threads as thread}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -41,5 +45,5 @@
 			{thread.title}
 		</div>
 	{/each}
-	<Pagination bind:prev bind:next bind:iterable={threads}/>
+	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

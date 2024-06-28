@@ -47,7 +47,7 @@
 		}}
 		on:keydown
 	>
-		<Fa icon={faUpload} size="2.5x" />
+		<Fa {icon} size={iconSize} />
 	</div>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div

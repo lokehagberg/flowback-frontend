@@ -31,6 +31,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	type polltypes =
 		| 'Ranking'
@@ -203,14 +204,7 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
-				<ImageUpload
-					icon={faUser}
-					bind:croppedImage={image}
-					minimalist
-					label=""
-					iconSize="2x"
-					Class="flex !flex-row-reverse"
-				/>
+				<FileUploads bind:image/>
 				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<div>

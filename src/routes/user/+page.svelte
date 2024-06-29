@@ -54,7 +54,8 @@
 	const getUser = async () => {
 		//The URL has no ID if the user is on their own profile
 		const userId = $page.url.searchParams.get('id');
-		isUser = userId ? false : true;
+		if (!userId) isUser = true;
+		else isUser = userId === localStorage.getItem('userId');
 
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
@@ -67,8 +68,6 @@
 
 		document.title = `${user.username}'s profile`;
 	};
-
-
 
 	const updateProfile = async () => {
 		const imageToSend = await blobifyImages(profileImagePreview);

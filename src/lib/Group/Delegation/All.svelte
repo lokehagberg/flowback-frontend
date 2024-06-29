@@ -206,6 +206,7 @@
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
 					/>
+							  {@debug delegate}
 					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->

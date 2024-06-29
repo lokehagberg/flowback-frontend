@@ -13,7 +13,8 @@
 		iconSize = '5x',
 		imageString: string | null = null,
 		shouldCrop: boolean = true,
-		minimalist = false;
+		minimalist = false,
+		onCrop = () => {};
 
 	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
@@ -74,6 +75,7 @@
 	<CropperModal
 		confirmAction={() => {
 			currentlyCropping = false;
+			onCrop();
 		}}
 		cancelAction={() => {
 			currentlyCropping = false;

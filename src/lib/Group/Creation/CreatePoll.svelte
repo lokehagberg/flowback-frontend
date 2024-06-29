@@ -99,7 +99,7 @@
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
-		image: File,
+		images: File[],
 		isFF = true,
 		pushToBlockchain = true;
 
@@ -132,7 +132,9 @@
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 
-		if (image) formData.append('attachments', image);
+		images.forEach((image) => {
+			formData.append('attachments', image);
+		});
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -143,8 +145,7 @@
 		);
 
 		loading = false;
-		if (!res.ok)
-		status = statusMessageFormatter(res, json);
+		if (!res.ok) status = statusMessageFormatter(res, json);
 
 		if (res.ok && groupId) {
 			goto(`groups/${groupId}/polls/${json}`);
@@ -204,7 +205,7 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
-				<FileUploads bind:image/>
+				<FileUploads bind:images />
 				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<div>

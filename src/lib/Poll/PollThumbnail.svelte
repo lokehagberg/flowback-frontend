@@ -49,7 +49,7 @@
 
 	onMount(async () => {
 		phase = getPhase(poll);
-		if (phase === 'area_vote') tags = await getTags($page.params.groupId);
+		if (phase === 'area_vote') tags = await getTags(poll.group_id);
 	});
 
 	$: if (selectedTag) vote(selectedTag);

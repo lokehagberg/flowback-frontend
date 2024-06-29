@@ -54,7 +54,10 @@
 			show = true;
 			showMessage = 'Comment Deleted';
 			comments = comments.map((comment) => {
-				if (comment.id === id) comment.message = '[Deleted]';
+				if (comment.id !== id) return comment 
+				
+				comment.message = '[Deleted]';
+				comment.active = false;
 				return comment;
 			});
 

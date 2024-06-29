@@ -99,8 +99,8 @@
 		if (!section) return;
 		setTimeout(() => {
 			const scrollTo = document.getElementById(section);
-			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-		}, 1500);
+			scrollTo?.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
+		}, 200);
 	};
 
 	const nextPhase = async () => {

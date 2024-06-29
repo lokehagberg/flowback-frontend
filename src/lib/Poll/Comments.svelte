@@ -53,9 +53,14 @@
 		if (res.ok) {
 			show = true;
 			showMessage = 'Comment Deleted';
-			let comment = comments.find((comment) => comment.id === id);
-			if (comment === undefined) return;
-			comment.message = '[Deleted]';
+			comments = comments.map((comment) => {
+				if (comment.id === id) comment.message = '[Deleted]';
+				return comment;
+			});
+
+			// console.log("THE COMMENT", comment, id)
+			// if (comment === undefined) return;
+			// comment.message = '[Deleted]';
 			comments = comments;
 		}
 	};
@@ -107,6 +112,7 @@
 	/>
 
 	<div class="flex flex-col gap-4 mt-6">
+		{#key comments}
 		{#each comments as comment}
 			{#if comment.being_edited}
 				<!-- TODO: Finish comment refactoring -->
@@ -201,6 +207,7 @@
 				/>
 			{/if}
 		{/each}
+		{/key}
 	</div>
 	{#if comments.length === 0}
 		<div>{$_('There are currently no comments')}</div>

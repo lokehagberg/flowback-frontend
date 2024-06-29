@@ -141,19 +141,6 @@
 					alt="attachment to the poll"
 				/>
 			{/if}
-			<!-- Mod Tools -->
-			{#if groupUser?.is_admin}
-				<StatusMessage bind:status={deleteStatus} />
-				<div class="flex gap-4 align-middle">
-					<div class="">Mod Tools:</div>
-					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-						>{$_('Delete poll')}</Button
-					>
-					{#if !finished}
-						<Button action={nextPhase}>Next Phase</Button>
-					{/if}
-				</div>
-			{/if}
 
 			{#if pollType === 4}
 				{#if phase === 'pre_start'}
@@ -214,6 +201,20 @@
 				{$_('Current phase:')}
 				{getPhaseUserFriendlyName(phase)}
 			</div>
+
+			<!-- Mod Tools -->
+			{#if groupUser?.is_admin}
+				<StatusMessage bind:status={deleteStatus} />
+				<div class="flex gap-4 align-middle">
+					<div class="">Mod Tools:</div>
+					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+						>{$_('Delete poll')}</Button
+					>
+					{#if !finished}
+						<Button action={nextPhase}>Next Phase</Button>
+					{/if}
+				</div>
+			{/if}
 
 			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>

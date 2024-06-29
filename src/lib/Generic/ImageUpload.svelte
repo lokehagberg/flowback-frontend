@@ -14,7 +14,8 @@
 		imageString: string | null = null,
 		shouldCrop: boolean = true,
 		minimalist = false,
-		onCrop = () => {};
+		onCrop = () => {},
+		disableImagePreview = false;
 
 	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
@@ -29,7 +30,7 @@
 <div class={`image-upload ${Class}`}>
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
-	{#if imageString}
+	{#if imageString && !disableImagePreview}
 		<img
 			id="image"
 			class={`${isProfile ? 'rounded-full' : 'cover'} avatar`}

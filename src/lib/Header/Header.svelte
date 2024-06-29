@@ -24,8 +24,7 @@
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean = false,
-		isAdmin = false,
-		hidden = true
+		isAdmin = false;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
@@ -37,7 +36,6 @@
 
 		if (location.pathname !== '/login') {
 			getProfileImage();
-			hidden = false;
 		} 
 
 		ensureDarkMode();
@@ -54,7 +52,6 @@
 
 		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 			darkMode = true;
-			console.log('HEREHRE');
 		} else darkMode = false;
 
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
@@ -92,11 +89,7 @@
 	};
 </script>
 
-<!-- TODO: Move <Chat /> to somewhere more appropriate -->
-<Chat />
-
-
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header" class:hidden>
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>

@@ -13,11 +13,15 @@
 	import { onMount } from 'svelte';
 	import type { GroupUser } from '$lib/Group/interface';
 	import type { Permission } from '$lib/Group/Permissions/interface';
+	import Chat from '$lib/Chat/Chat.svelte';
 
-	initializeLocalization();
 	export const prerender = true;
 
-	onNavigate(async () => {
+	let showUI = false;
+
+	initializeLocalization();
+
+	const updateUserInfo = async () => {
 		let userNeedsUpdate = false;
 		let groupId = Number($page.params.groupId);
 
@@ -46,21 +50,31 @@
 				if (user && !user.permission && groupId) user.permission = permissions;
 
 				if (!groupId) {
-					user.groupuser = undefined
-					user.groupId = undefined
-					user.permission = undefined
+					user.groupuser = undefined;
+					user.groupId = undefined;
+					user.permission = undefined;
 				}
 				return user;
 			});
 		}
+	};
+
+	onNavigate(() => {
+		updateUserInfo();
+		showUI = window?.location?.pathname !== '/login';
 	});
 
 	onMount(() => {
-		// userInfo.subscribe((info) => console.log('LE INFO:', info));
+		updateUserInfo();
+		showUI = window?.location?.pathname !== '/login';
 	});
 </script>
 
 <main class="h-[100wh]">
-	<Header />
+	{#if showUI}
+		<Chat />
+		<Header />
+	{/if}
+
 	<slot />
 </main>

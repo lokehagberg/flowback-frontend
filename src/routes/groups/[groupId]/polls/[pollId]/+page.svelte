@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ProposalsRanked from '$lib/Poll/ProposalsRanked.svelte';
 	import Timeline from '$lib/Poll/Timeline.svelte';
 	import Comments from '$lib/Poll/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';

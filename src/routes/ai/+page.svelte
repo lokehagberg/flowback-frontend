@@ -7,7 +7,6 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import ProposalsRanked from '$lib/Poll/ProposalsRanked.svelte';
 	import Results from '$lib/Poll/Results.svelte';
 	import Statistics from '$lib/Poll/Statistics.svelte';
 	import { onMount } from 'svelte';

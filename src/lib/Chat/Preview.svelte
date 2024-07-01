@@ -21,6 +21,7 @@
 		previewGroup: PreviewMessage[] = [];
 
 	onMount(async () => {
+		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
 		await getChattable();
@@ -39,22 +40,12 @@
 		);
 
 		if (!res.ok) return [];
-
-		//TODO Make sure people see notifications as they enter
-		let preview = json.results.map((prev: PreviewMessage) => {
-			console.log(
-				prev.timestamp,
-				prev.created_at,
-				prev.updated_at,
-				new Date(prev.timestamp) < new Date(prev.created_at)
-			);
-			prev.notified = new Date(prev.timestamp) < new Date(prev.created_at);
-			return prev;
-		});
-
-		// console.log(preview, 'PREIVIEI');
-
 		return json.results;
+	};
+
+	const getChannelId = async (id: number) => {
+		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		return json.id;
 	};
 
 	const getChattable = async () => {
@@ -71,7 +62,12 @@
 
 	const getPeople = async () => {
 		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
-		return json.results.filter((chatter: any) => chatter.id !== user.id);
+		let chatters = json.results.filter((chatter: any) => chatter.id !== user.id);
+		chatters.map(async (chatter: any) => {
+			chatter.channel_id = await getChannelId(chatter.id);
+			return chatter;
+		});
+		return chatters;
 	};
 
 	const clickedChatter = (chatter: any) => {
@@ -151,11 +147,11 @@
 		bind:value={chatSearch}
 		Class="mt-1 ml-2 mb-2 w-7/12"
 	/>
-	{#each selectedPage === 'group' ? groups : directs as chatter}
+	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		{@const previewObject =
-			selectedPage === 'group'
-				? previewGroup.find((group) => group.channel_id === chatter.chat_id)
-				: previewDirect.find((direct) => direct.channel_id === chatter.id)}
+			selectedPage === 'direct'
+				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
+				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<li
@@ -176,18 +172,19 @@
 			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
 			{#if previewObject?.notified}
-				<div class="p-1 rounded-full"
-				class:bg-blue-300={selectedPage === "group"}
-				class:bg-purple-300={selectedPage === "direct"}
+				<div
+					class="p-1 rounded-full"
+					class:bg-blue-300={selectedPage === 'group'}
+					class:bg-purple-300={selectedPage === 'direct'}
 				/>
 			{/if}
-
 			<ProfilePicture user={chatter} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"
 					>{chatter.name || chatter.username}</span
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
+					<!-- {@debug previewObject} -->
 					{previewObject?.message || ''}
 				</span>
 			</div>

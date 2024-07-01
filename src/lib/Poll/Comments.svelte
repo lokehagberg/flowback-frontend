@@ -14,13 +14,13 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 
-	let comments: Comment[] = [],
-		show = false,
-		showMessage = '';
-
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null;
+
+	let comments: Comment[] = [],
+		show = false,
+		showMessage = '';
 
 	const getComments = async () => {
 		let _api = '';
@@ -54,8 +54,8 @@
 			show = true;
 			showMessage = 'Comment Deleted';
 			comments = comments.map((comment) => {
-				if (comment.id !== id) return comment 
-				
+				if (comment.id !== id) return comment;
+
 				comment.message = '[Deleted]';
 				comment.active = false;
 				return comment;
@@ -115,90 +115,87 @@
 	/>
 
 	<div class="flex flex-col gap-4 mt-6">
-		{#key comments}
-		{#each comments as comment}
-			{#if comment.being_edited}
-				<!-- TODO: Finish comment refactoring -->
-				<CommentPost
-					bind:proposals
-					bind:comments
-					bind:beingEdited={comment.being_edited}
-					message={comment.message}
-					parent_id={comment.parent_id}
-					replyDepth={comment.reply_depth}
-					id={comment.id}
-					{api}
-					{delegate_pool_id}
-					{commentSetup}
-				/>
-			{:else}
-				<div
-					class={`p-3 text-sm border border-l-gray-400 ml-${
-						comment.reply_depth * 3
-						// comment.reply_depth < 5 ? comment.reply_depth * 2 : 10
-					}`}
-					class:bg-gray-100={comment.reply_depth % 2 === 1}
-					class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}
-				>
-					<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
-					<div class="flex gap-2">
-						<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
-						<!-- <ProfilePicture user={comment}/> -->
-						<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
-					</div>
-					<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
-						{comment.message}
-					</div>
-					<div class="text-xs text-gray-400 dark:text-darkmodeText">
-						{comment.edited ? '(edited)' : ''}
-					</div>
-					{#if comment.attachments?.length > 0}
-						<div>
-							{#each comment.attachments as attachment}
-								<img
-									class=""
-									src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
-									alt="attachment to the comment"
-								/>
-							{/each}
+			{#each comments as comment}
+				{#if comment.being_edited}
+					<!-- TODO: Finish comment refactoring -->
+					<CommentPost
+						bind:proposals
+						bind:comments
+						bind:beingEdited={comment.being_edited}
+						message={comment.message}
+						parent_id={comment.parent_id}
+						replyDepth={comment.reply_depth}
+						id={comment.id}
+						{api}
+						{delegate_pool_id}
+						{commentSetup}
+					/>
+				{:else}
+					<div
+						class={`p-3 text-sm border border-l-gray-400`}
+						style:margin-left={`${comment.reply_depth * 10}px`}
+						class:bg-gray-100={comment.reply_depth % 2 === 1}
+						class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}
+					>
+						<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
+						<div class="flex gap-2">
+							<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
+							<!-- <ProfilePicture user={comment}/> -->
+							<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
 						</div>
-					{/if}
-					{#if comment.active}
-						<div class="flex gap-3 text-xs">
-							<!-- svelte-ignore a11y-no-static-element-interactions -->
-							<div
-								class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
-								on:click={() => (comment.being_replied = true)}
-								on:keydown
-							>
-								<Fa icon={faReply} />{$_('Reply')}
+						<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
+							{comment.message}
+						</div>
+						<div class="text-xs text-gray-400 dark:text-darkmodeText">
+							{comment.edited ? '(edited)' : ''}
+						</div>
+						{#if comment.attachments?.length > 0}
+							<div>
+								{#each comment.attachments as attachment}
+									<img
+										class=""
+										src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+										alt="attachment to the comment"
+									/>
+								{/each}
 							</div>
-							{#if Number(localStorage.getItem('userId')) === comment.author_id}
+						{/if}
+						{#if comment.active}
+							<div class="flex gap-3 text-xs">
 								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
-									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
-									on:click={() => deleteComment(comment.id)}
+									class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+									on:click={() => (comment.being_replied = true)}
 									on:keydown
 								>
-									{$_('Delete')}
+									<Fa icon={faReply} />{$_('Reply')}
 								</div>
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<div
-									class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
-									on:click={() => {
-										comment.being_edited = true;
-										comment.being_edited_message = comment.message;
-									}}
-									on:keydown
-								>
-									{$_('Edit')}
-								</div>
-							{/if}
-						</div>
-					{/if}
-				</div>
-			{/if}
-			{#if comment.being_replied}
+								{#if Number(localStorage.getItem('userId')) === comment.author_id}
+									<!-- svelte-ignore a11y-no-static-element-interactions -->
+									<div
+										class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
+										on:click={() => deleteComment(comment.id)}
+										on:keydown
+									>
+										{$_('Delete')}
+									</div>
+									<!-- svelte-ignore a11y-no-static-element-interactions -->
+									<div
+										class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
+										on:click={() => {
+											comment.being_edited = true;
+											comment.being_edited_message = comment.message;
+										}}
+										on:keydown
+									>
+										{$_('Edit')}
+									</div>
+								{/if}
+							</div>
+						{/if}
+					</div>
+				{/if}
+				{#if comment.being_replied}
 				<CommentPost
 					bind:proposals
 					bind:comments
@@ -209,8 +206,7 @@
 					{commentSetup}
 				/>
 			{/if}
-		{/each}
-		{/key}
+			{/each}
 	</div>
 	{#if comments.length === 0}
 		<div>{$_('There are currently no comments')}</div>

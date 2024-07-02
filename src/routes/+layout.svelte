@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { initializeLocalization } from '$lib/Localization/i18n';
 	import Header from '$lib/Header/Header.svelte';
-	import { onNavigate } from '$app/navigation';
+	import { goto, onNavigate } from '$app/navigation';
 	import {
 		getGroupUserInfo,
 		getUserInfo,
@@ -59,14 +59,37 @@
 		}
 	};
 
+	const shouldShowUI = () => {
+		let pathname = window?.location?.pathname;
+
+		if (pathname === '/login') return false;
+		else if (pathname === '/') return false;
+		else if (
+			window.localStorage.getItem('token') === undefined ||
+			window.localStorage.getItem('userId') === undefined
+		)
+			return false;
+
+		return true;
+	};
+
+	const redirect = () => {
+		let pathname = window?.location?.pathname;
+		if (pathname === '/')
+			if (window.localStorage.getItem('token') === undefined) goto('/login');
+			else goto('/home');
+	};
+
 	onNavigate(() => {
 		updateUserInfo();
-		showUI = window?.location?.pathname !== '/login';
+		showUI = shouldShowUI();
+		redirect();
 	});
 
 	onMount(() => {
 		updateUserInfo();
-		showUI = window?.location?.pathname !== '/login' && window.localStorage.getItem('token') !== undefined;
+		showUI = shouldShowUI();
+		redirect();
 	});
 </script>
 

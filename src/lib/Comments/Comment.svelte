@@ -48,7 +48,7 @@
 			}
 		);
 
-        if (res.ok) userUpVote = vote
+		if (res.ok) userUpVote = vote;
 	};
 </script>
 
@@ -105,7 +105,7 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
-                    on:click={() => commentVote(true)}
+					on:click={() => commentVote(true)}
 					on:keydown
 				>
 					<Fa icon={faArrowUp} color={userUpVote === true ? 'blue' : ''} />

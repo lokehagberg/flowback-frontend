@@ -29,6 +29,7 @@
 		coverImage: string,
 		useInvite = false,
 		publicGroup = true,
+		hiddenGroup = false,
 		loading = false;
 
 	//This page also supports the edit of groups
@@ -47,6 +48,7 @@
 		formData.append('direct_join', (!useInvite).toString());
 		formData.append('public', publicGroup.toString());
 		formData.append('blockchain_id', blockchain_id.toString());
+		formData.append('hide_poll_users', hiddenGroup.toString());
 
 		if (image) formData.append('image', await blobifyImages(image));
 		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
@@ -121,6 +123,7 @@
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
 					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
+					<RadioButtons bind:Yes={hiddenGroup} label={'Hidden?'} />
 				{/if}
 
 				<StatusMessage bind:status />

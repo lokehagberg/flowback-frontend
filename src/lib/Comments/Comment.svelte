@@ -36,7 +36,6 @@
 </script>
 
 {#if comment.being_edited}
-	<!-- TODO: Finish comment refactoring -->
 	<CommentPost
 		bind:proposals
 		bind:comments

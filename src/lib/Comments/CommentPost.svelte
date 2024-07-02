@@ -8,7 +8,7 @@
 	import type { proposal } from '../Poll/interface';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import { commentSetup } from './functions';
+	import { commentSetup, getCommentDepth } from './functions';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -50,7 +50,33 @@
 			false
 		);
 		if (res.ok) {
-			commentSetup(comments)
+			let newComment: Comment = {
+				active: true,
+				author_id: Number(window.localStorage.getItem('userId')) || 0,
+				author_name: window.localStorage.getItem('userName') || '',
+				being_edited: false,
+				being_replied: false,
+				score: 0,
+				edited: false,
+				attachments: [],
+				message,
+				id: json,
+				parent_id,
+				author_thumbnail: window.localStorage.getItem('pfp-link') || '',
+				being_edited_message: '',
+				reply_depth: 0
+			};
+
+			newComment.reply_depth = getCommentDepth(newComment, comments);
+
+			const i = comments.findIndex((comment) => comment.id === parent_id);
+			comments.splice(i+1, 0, newComment);
+
+			comments = comments;
+
+			console.log(comments);
+
+			// comments = await commentSetup(comments);
 			showMessage = 'Successfully posted comment';
 			show = true;
 			message = '';
@@ -61,13 +87,9 @@
 	};
 
 	const commentUpdate = async () => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/${getId()}/comment/${id}/update`,
-			{
-				message
-			}
-		);
+		const { res, json } = await fetchRequest('POST', `group/${getId()}/comment/${id}/update`, {
+			message
+		});
 		if (res.ok) {
 			show = true;
 			showMessage = 'Edited Comment';
@@ -116,8 +138,16 @@
 			{/each}
 		</ul>
 	</div>
-	<TextArea label="Comment"  bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload icon={faUser} shouldCrop={false} bind:croppedImage={image}  label="" iconSize={'2x'} Class="flex !flex-row-reverse" minimalist/>
+	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton />
+	<ImageUpload
+		icon={faUser}
+		shouldCrop={false}
+		bind:croppedImage={image}
+		label=""
+		iconSize={'2x'}
+		Class="flex !flex-row-reverse"
+		minimalist
+	/>
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->

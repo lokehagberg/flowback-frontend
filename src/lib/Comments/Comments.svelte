@@ -7,9 +7,8 @@
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
-	import { commentSetup } from './functions';
-	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
-	import { fetchRequest } from '$lib/FetchRequest';
+	import { commentSetup, getComments } from './functions';
+
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -19,26 +18,10 @@
 		show = false,
 		showMessage = '';
 
-	const getComments = async (id: number | string) => {
-		let _api = '';
-
-		if (api === 'poll') _api += `group/poll/${id}`;
-		else if (api === 'thread') _api += `group/thread/${id}`;
-		else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
-
-		_api += `/comment/list?limit=${pollCommentsLimit}`;
-
-		const { res, json } = await fetchRequest('GET', _api);
-
-		comments = json.results.map((comment: CommentType) => {
-			comment.being_edited = false;
-			comment.being_replied = false;
-			return comment;
-		});
-	};
+	
 
 	onMount(async () => {
-		await getComments($page.params.pollId)
+		comments = await getComments($page.params.pollId, api)
 		comments = await commentSetup(comments);
 	});
 </script>

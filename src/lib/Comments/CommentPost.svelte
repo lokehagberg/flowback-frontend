@@ -4,8 +4,8 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
-	import type { Comment } from './interface';
-	import type { proposal } from './interface';
+	import type { Comment } from '../Poll/interface';
+	import type { proposal } from '../Poll/interface';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 

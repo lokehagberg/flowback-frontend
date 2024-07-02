@@ -7,7 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { User } from '$lib/User/interfaces';
 	import { goto } from '$app/navigation';
-	import Comments from '$lib/Poll/Comments.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 
 	export let history: null | number;
 

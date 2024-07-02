@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Timeline from '$lib/Poll/Timeline.svelte';
-	import Comments from '$lib/Poll/Comments.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';

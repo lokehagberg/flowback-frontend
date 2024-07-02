@@ -28,7 +28,6 @@
 				return comment;
 			});
 
-			// console.log("THE COMMENT", comment, id)
 			// if (comment === undefined) return;
 			// comment.message = '[Deleted]';
 			comments = comments;

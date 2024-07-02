@@ -20,7 +20,6 @@
 		showMessage = '';
 
 	const getComments = async (id: number | string) => {
-		id = Number(id);
 		let _api = '';
 
 		if (api === 'poll') _api += `group/poll/${id}`;
@@ -39,8 +38,8 @@
 	};
 
 	onMount(async () => {
-		await getComments($page.params.groupId)
-		commentSetup(comments);
+		await getComments($page.params.pollId)
+		comments = await commentSetup(comments);
 	});
 </script>
 

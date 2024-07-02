@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Comment, proposal } from '$lib/Poll/interface';
-	import { faReply } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowDown, faArrowUp, faReply } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import CommentPost from './CommentPost.svelte';
 
-	export let comment: Comment, comments: Comment[], api: 'poll' | 'thread' | 'delegate-history', proposals:proposal[]
+	export let comment: Comment,
+		comments: Comment[],
+		api: 'poll' | 'thread' | 'delegate-history',
+		proposals: proposal[];
+
+	let userUpVote: boolean | null = null;
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
@@ -32,6 +37,18 @@
 			// comment.message = '[Deleted]';
 			comments = comments;
 		}
+	};
+
+	const commentVote = async (vote: boolean) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/comment/${comment.id}/vote`,
+			{
+				vote
+			}
+		);
+
+        if (res.ok) userUpVote = vote
 	};
 </script>
 
@@ -84,6 +101,22 @@
 					on:keydown
 				>
 					<Fa icon={faReply} />{$_('Reply')}
+				</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+                    on:click={() => commentVote(true)}
+					on:keydown
+				>
+					<Fa icon={faArrowUp} color={userUpVote === true ? 'blue' : ''} />
+				</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+					on:click={() => commentVote(false)}
+					on:keydown
+				>
+					<Fa icon={faArrowDown} color={userUpVote === false ? 'blue' : ''} />
 				</div>
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<!-- svelte-ignore a11y-no-static-element-interactions -->

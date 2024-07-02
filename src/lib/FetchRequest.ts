@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 export async function fetchRequest(
 	method: 'GET' | 'POST',
@@ -21,7 +22,7 @@ export async function fetchRequest(
 
 		// Redirect if no token
 		const atLogin = location.pathname === '/login'
-		if (token === null && !atLogin) location.href = '/login';
+		if (token === null && !atLogin) goto('/login');
 		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
 	}
 

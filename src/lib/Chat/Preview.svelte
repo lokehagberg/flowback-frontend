@@ -70,11 +70,11 @@
 		return chatters;
 	};
 
-	const clickedChatter = (chatter: any) => {
+	const clickedChatter = async (chatter: any) => {
 		//Update when user last saw message after clicking on channel
-		if (selectedChat) updateUserData(selectedChat, null, new Date());
 
 		if (selectedPage === 'direct') {
+			if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
 			let message = previewDirect.find((message) => message.channel_id === selectedChat);
 
 			if (message) {

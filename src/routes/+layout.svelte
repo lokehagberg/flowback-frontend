@@ -66,7 +66,7 @@
 
 	onMount(() => {
 		updateUserInfo();
-		showUI = window?.location?.pathname !== '/login';
+		showUI = window?.location?.pathname !== '/login' && window.localStorage.getItem('token') !== undefined;
 	});
 </script>
 

@@ -11,8 +11,8 @@ export const statusMessageFormatter = (res: any, json: any, successMessage: stri
 			json.detail === 'Invalid token.' ||
 			json.detail === 'Invalid token header. No credentials provided.'
 		) {
-			if (localStorage.getItem('token')) localStorage.removeItem('token');
-			goto('/login');
+			// if (localStorage.getItem('token')) localStorage.removeItem('token');
+			// goto('/login');
 			// return { message: 'Invalid token.', success: false };
 		}
 		const messages = json.detail;

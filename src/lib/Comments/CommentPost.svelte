@@ -8,18 +8,17 @@
 	import type { proposal } from '../Poll/interface';
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+	import { commentSetup } from './functions';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
 		parent_id: number | undefined = undefined,
-		replyDepth: number,
 		id = 0,
 		beingEdited = false,
 		message = '',
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
-		delegate_pool_id: number | null = null,
-		commentSetup:() => {};
+		delegate_pool_id: number | null = null;
 
 	let show = false,
 		showMessage = '',
@@ -51,7 +50,7 @@
 			false
 		);
 		if (res.ok) {
-			commentSetup()
+			commentSetup(comments)
 			showMessage = 'Successfully posted comment';
 			show = true;
 			message = '';

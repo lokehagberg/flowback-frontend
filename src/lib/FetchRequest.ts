@@ -20,10 +20,8 @@ export async function fetchRequest(
 	if (needs_authorization) {
 		const token = localStorage.getItem('token');
 
-		// Redirect if no token
-		const atLogin = location.pathname === '/login'
-		if (token === null && !atLogin) goto('/login');
-		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+		if (token !== null) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+		else goto('/login')
 	}
 
 	if (needs_json) {

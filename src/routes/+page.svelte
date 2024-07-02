@@ -46,8 +46,6 @@
 		const username = params.getAll('username')[0];
 		const password = params.getAll('password')[0];
 		if (username && password) logIn(username, password);
-		// else if (localStorage.getItem('token')) goto('/home');
-		// else goto('/login');
 	});
 </script>
 

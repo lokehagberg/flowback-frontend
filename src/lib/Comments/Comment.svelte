@@ -18,10 +18,7 @@
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
-
 		if (api === 'poll') _api += `${$page.params.pollId}/`;
-		// else if (api === 'thread') _api += `${$page.params.threadId}`;
-
 		_api += `comment/${id}/delete`;
 
 		const { res, json } = await fetchRequest('POST', _api);
@@ -34,9 +31,6 @@
 				comment.active = false;
 				return comment;
 			});
-
-			// if (comment === undefined) return;
-			// comment.message = '[Deleted]';
 			comments = comments;
 		}
 	};
@@ -56,19 +50,23 @@
 			}
 		);
 
-		if (res.ok)
-			if (userUpVote === _vote) userUpVote = 0;
-			else userUpVote = _vote;
+		if (res.ok) {
+			if (userUpVote === _vote) {
+				userUpVote = 0;
+				if (_vote === 1) comment.score += -1;
+				else if (_vote === -1) comment.score += 1;
+			} else {
+				userUpVote = _vote;
+				comment.score += _vote;
+			}
+		}
 	};
 
-
 	onMount(() => {
-		if(comment.user_vote === null) userUpVote = 0
-		else if(comment.user_vote === true) userUpVote = 1
-		else if(comment.user_vote === false) userUpVote = -1
-		
-
-	})
+		if (comment.user_vote === null) userUpVote = 0;
+		else if (comment.user_vote === true) userUpVote = 1;
+		else if (comment.user_vote === false) userUpVote = -1;
+	});
 </script>
 
 {#if comment.being_edited}
@@ -140,7 +138,7 @@
 				>
 					<Fa icon={faArrowDown} color={userUpVote === -1 ? 'blue' : ''} />
 				</div>
-				{comment.score + userUpVote}
+				{comment.score}
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div

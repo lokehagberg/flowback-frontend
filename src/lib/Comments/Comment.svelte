@@ -54,7 +54,9 @@
 			}
 		);
 
-		if (res.ok) userUpVote = _vote;
+		if (res.ok)
+			if (userUpVote === _vote) userUpVote = 0;
+			else userUpVote = _vote;
 	};
 </script>
 

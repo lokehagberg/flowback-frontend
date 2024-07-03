@@ -12,7 +12,7 @@
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[];
 
-	let userUpVote: boolean | null = null;
+	let userUpVote: -1 | 0 | 1 = 0;
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
@@ -39,7 +39,13 @@
 		}
 	};
 
-	const commentVote = async (vote: boolean) => {
+	const commentVote = async (_vote: -1 | 1) => {
+		let vote;
+
+		if (userUpVote === _vote) vote = null;
+		else if (_vote === -1) vote = false;
+		else if (_vote === 1) vote = true;
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${comment.id}/vote`,
@@ -48,7 +54,7 @@
 			}
 		);
 
-		if (res.ok) userUpVote = vote;
+		if (res.ok) userUpVote = _vote;
 	};
 </script>
 
@@ -105,19 +111,20 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
-					on:click={() => commentVote(true)}
+					on:click={() => commentVote(1)}
 					on:keydown
 				>
-					<Fa icon={faArrowUp} color={userUpVote === true ? 'blue' : ''} />
+					<Fa icon={faArrowUp} color={userUpVote === 1 ? 'blue' : ''} />
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
-					on:click={() => commentVote(false)}
+					on:click={() => commentVote(-1)}
 					on:keydown
 				>
-					<Fa icon={faArrowDown} color={userUpVote === false ? 'blue' : ''} />
+					<Fa icon={faArrowDown} color={userUpVote === -1 ? 'blue' : ''} />
 				</div>
+				{comment.score + userUpVote}
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div

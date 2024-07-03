@@ -83,6 +83,7 @@ export interface Comment {
 	active: boolean;
 	edited: boolean;
 	attachments: { file: string }[];
+	user_vote: boolean | null;
 }
 
 export interface CommentEdited {}

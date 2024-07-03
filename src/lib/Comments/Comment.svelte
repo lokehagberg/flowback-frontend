@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	import CommentPost from './CommentPost.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import { onMount } from 'svelte';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -59,6 +60,15 @@
 			if (userUpVote === _vote) userUpVote = 0;
 			else userUpVote = _vote;
 	};
+
+
+	onMount(() => {
+		if(comment.user_vote === null) userUpVote = 0
+		else if(comment.user_vote === true) userUpVote = 1
+		else if(comment.user_vote === false) userUpVote = -1
+		
+
+	})
 </script>
 
 {#if comment.being_edited}

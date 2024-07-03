@@ -81,15 +81,15 @@
 	};
 
 	onNavigate(() => {
-		updateUserInfo();
 		showUI = shouldShowUI();
 		redirect();
+		if (showUI) updateUserInfo();
 	});
 
 	onMount(() => {
-		updateUserInfo();
 		showUI = shouldShowUI();
 		redirect();
+		if (showUI) updateUserInfo();
 	});
 </script>
 

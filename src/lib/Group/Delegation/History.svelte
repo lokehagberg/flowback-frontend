@@ -36,9 +36,9 @@
 	const getUserInfo = async () => {
 		//@ts-ignore
 		const userId = delegatePool.delegates[0].group_user.id;
-
 		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
 
+		if (!res.ok) return {};
 		user = json.results[0];
 	};
 

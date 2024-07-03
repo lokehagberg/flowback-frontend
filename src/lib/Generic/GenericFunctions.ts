@@ -58,7 +58,7 @@ export let userInfo = writable<UserInfo>();
 
 export const getUserInfo = async () => {
 	const { res, json } = await fetchRequest('GET', `user`);
-	if (!res.ok) return;
+	if (!res.ok) return {};
 	return json;
 };
 

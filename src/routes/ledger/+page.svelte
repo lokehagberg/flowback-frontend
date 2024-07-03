@@ -4,7 +4,6 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { Transaction as TransactionType, Account, Filter } from '$lib/Ledger/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -270,7 +269,7 @@
 
 	export const getUserInfo = async () => {
 		const { res, json } = await fetchRequest('GET', `users?id=${localStorage.getItem('userId')}`);
-
+		if (!res.ok) return {};
 		user = json.results[0];
 	};
 

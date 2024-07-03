@@ -35,10 +35,12 @@
 		}
 	};
 
+	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
 		let vote;
+		let regretting = userUpVote === _vote;
 
-		if (userUpVote === _vote) vote = null;
+		if (regretting) vote = null;
 		else if (_vote === -1) vote = false;
 		else if (_vote === 1) vote = true;
 
@@ -50,15 +52,16 @@
 			}
 		);
 
-		if (res.ok) {
-			if (userUpVote === _vote) {
-				userUpVote = 0;
-				if (_vote === 1) comment.score += -1;
-				else if (_vote === -1) comment.score += 1;
-			} else {
-				userUpVote = _vote;
-				comment.score += _vote;
-			}
+		if (!res.ok) return;
+
+		if (regretting) {
+			userUpVote = 0;
+			if (_vote === 1) comment.score += -1;
+			else if (_vote === -1) comment.score += 1;
+		} else {
+			userUpVote = _vote;
+			if (comment.score !== 0) comment.score += 2 * _vote;
+			else comment.score += _vote;
 		}
 	};
 

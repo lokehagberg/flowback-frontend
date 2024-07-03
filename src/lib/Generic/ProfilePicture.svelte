@@ -23,7 +23,7 @@
 </script>
 
 <!-- TODO: Simplify this function to only take images as input or include name -->
-<div class={Class}>
+<div class={`flex gap-2 ${Class}`}>
 	{#if user?.profile_image}
 		<img
 			src={`${import.meta.env.VITE_API}${

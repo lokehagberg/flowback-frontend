@@ -75,9 +75,9 @@
 
 	const redirect = () => {
 		let pathname = window?.location?.pathname;
-		if (pathname === '/')
-			if (window.localStorage.getItem('token') === undefined) goto('/login');
-			else goto('/home');
+
+		if (window.localStorage.getItem('token') === undefined) goto('/login');
+		else if (pathname === '/') goto('/home');
 	};
 
 	onNavigate(() => {

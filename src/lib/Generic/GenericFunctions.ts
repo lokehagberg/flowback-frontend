@@ -58,6 +58,7 @@ export let userInfo = writable<UserInfo>();
 
 export const getUserInfo = async () => {
 	const { res, json } = await fetchRequest('GET', `user`);
+	if (!res.ok) return;
 	return json;
 };
 
@@ -68,6 +69,8 @@ export const getGroupUserInfo = async (groupId: number | string) => {
 		'GET',
 		`group/${groupId}/users?user_id=${localStorage.getItem('userId')}`
 	);
+
+	if (!res.ok) return;
 	return json.results[0];
 };
 

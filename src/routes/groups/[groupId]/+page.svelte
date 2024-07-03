@@ -53,6 +53,7 @@
 
 	const setUserGroupInfo = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
+		if (!res.ok) return;
 		userIsDelegateStore.set(json.results[0].delegate);
 		statusMessageFormatter(res, json);
 		loading = false;
@@ -90,9 +91,6 @@
 		//@ts-ignore
 		// selectedPage = page;
 	};
-
-
-
 </script>
 
 <svelte:head>

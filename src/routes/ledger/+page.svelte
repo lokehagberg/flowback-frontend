@@ -50,12 +50,12 @@
 		limit = 20;
 
 	onMount(async () => {
-		loading = true
+		loading = true;
 		await getAccounts();
 		await getUserInfo();
 		await getTransactions();
 		await calculateTotalBalance();
-		loading = false
+		loading = false;
 	});
 
 	const calculateTotalBalance = () => {
@@ -69,7 +69,10 @@
 	const getAccounts = async () => {
 		// loading = true;
 		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
-		if (!res.ok) poppup = { message: 'Something went wrong', success: false };
+		if (!res.ok) {
+			poppup = { message: 'Something went wrong', success: false };
+			return;
+		}
 		// loading = false;
 		accounts = json.results;
 		setAccountFilter(json);
@@ -330,9 +333,10 @@
 							values={[20, 50, 100, 10000]}
 							bind:value={limit}
 							onInput={(e) => {
-								//@ts-ignore
 								const selectedOptions = Array.from(
+									//@ts-ignore
 									e.target?.selectedOptions,
+									//@ts-ignore
 									(option) => option.value
 								);
 								//@ts-ignore

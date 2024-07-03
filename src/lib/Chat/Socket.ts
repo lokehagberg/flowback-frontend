@@ -6,12 +6,14 @@ export const messageStore = writable<Message1>();
 const createSocket = (userId: number) => {
 	let socket: WebSocket;
 
-	const token = localStorage.getItem('token') || '';
+	const token = localStorage.getItem('token');
+
+	if (token === undefined) return;
 
 	const link = `${import.meta.env.VITE_WEBSOCKET_API}${
-		import.meta.env.VITE_HAS_API === "TRUE" ? '/api' : ''
+		import.meta.env.VITE_HAS_API === 'TRUE' ? '/api' : ''
 	}/chat/ws?token=${token}`;
-	
+
 	socket = new WebSocket(link);
 
 	socket.onopen = (event) => {
@@ -20,7 +22,7 @@ const createSocket = (userId: number) => {
 
 	socket.onmessage = (event) => {
 		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
-		const parsedMessage = JSON.parse(event.data)
+		const parsedMessage = JSON.parse(event.data);
 		const messageId = parsedMessage.user.id;
 		if (messageId !== userId) messageStore.set(parsedMessage);
 	};
@@ -61,7 +63,7 @@ const sendMessage = async (
 		);
 		// console.log(res, "RESULTS")
 	}
-	return true
+	return true;
 };
 
 // const sendMessage = async (socket: WebSocket) => {

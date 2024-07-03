@@ -57,11 +57,12 @@
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=${chatLimit}`);
-		return json.results;
+		if (res.ok) return json.results;
 	};
 
 	const getPeople = async () => {
 		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
+		if (!res.ok) return;
 		let chatters = json.results.filter((chatter: any) => chatter.id !== user.id);
 		chatters.map(async (chatter: any) => {
 			chatter.channel_id = await getChannelId(chatter.id);

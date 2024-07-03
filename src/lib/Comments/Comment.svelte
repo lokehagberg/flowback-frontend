@@ -6,6 +6,7 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import CommentPost from './CommentPost.svelte';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -80,8 +81,11 @@
 		<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 		<div class="flex gap-2">
 			<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
-			<!-- <ProfilePicture user={comment}/> -->
-			<div class="text-gray-700 dark:text-darkmodeText">{comment.author_name}</div>
+			<ProfilePicture
+				profilePicture={comment.author_thumbnail}
+				username={comment.author_name}
+				displayName
+			/>
 		</div>
 		<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
 			{comment.message}

@@ -4,9 +4,12 @@
 	import { onMount } from 'svelte';
 
 	export let user: any = null,
+		username = '',
+		profilePicture = '',
 		//TODO: Always display username, replace all instance of username with this file
 		displayName = false,
-		Class = '';
+		Class = '',
+		size = 6
 
 	onMount(() => {
 		if (!user) getUser();
@@ -27,7 +30,15 @@
 				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.profile_image}`}
 			alt="avatar"
-			class={`w-10 h-10 rounded-full`}
+			class={`w-${size} h-${size} rounded-full`}
+		/>
+	{:else if profilePicture}
+		<img
+			src={`${import.meta.env.VITE_API}${
+				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			}${profilePicture}`}
+			alt="avatar"
+			class={`w-${size} h-${size} rounded-full`}
 		/>
 	{:else if user?.image}
 		<img
@@ -35,15 +46,19 @@
 				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.image}`}
 			alt="avatar"
-			class={`w-10 h-10 rounded-full`}
+			class={`w-${size} h-${size} rounded-full`}
 		/>
 	{:else}
-		<img src={DefaultPFP} alt="avatar" class={`w-10 h-10 rounded-full`} />
+		<img src={DefaultPFP} alt="avatar" class={`w-${size} h-${size} rounded-full`} />
 	{/if}
 
 	<!-- TODO: Make default name default on everywhere-->
 	{#if displayName}
-		{user?.username}
+		{#if user?.username}
+			{user?.username}
+		{:else}
+			{username}
+		{/if}
 	{/if}
 </div>
 

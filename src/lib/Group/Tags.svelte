@@ -22,14 +22,7 @@
 
 	onMount(async () => {
 		await getTagsLocal();
-		getMeanAbsoluteError();
 	});
-
-	const getMeanAbsoluteError = async () => {
-		tags.forEach(async tag => {
-			const {res, json} = await fetchRequest('GET', `group/tag/${tag.id}/imae`);
-		})
-	}
 
 	const getTagsLocal = async () => {
 		loading = true;

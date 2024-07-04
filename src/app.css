@@ -17,8 +17,10 @@
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--darkmode-text-color: #e1e1e1;
-	--darkmode-object-color: rgb(51 65 85);
-	--darkmode-background-color: rgb(71 85 105);
+	--darkmode-object-color: rgb(35, 35, 35);
+	--darkmode-background-color: rgb(29, 29, 29);
+	/* --darkmode-object-color: rgb(40, 40, 40);
+	--darkmode-background-color: rgb(30, 30, 32); */
 	overflow-x: hidden;
 }
 

@@ -87,6 +87,7 @@ export interface Tag {
 	id: number;
 	name: string;
 	active: boolean;
+	mae:number;
 }
 
 export interface groupUser extends User {

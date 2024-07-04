@@ -88,7 +88,7 @@
 	<b>polls</b>
 	<div class="p-6">
 		<input type="text" bind:value={groupId} placeholder="Enter Group ID">
-		<button on:click={() => createPoll(groupId)}>Create poll</button>
+		<button on:click={() => createPoll(groupId, "le title")}>Create poll</button>
 	</div>
 	<div class="p-6">
 		<button on:click={() => getPoll(pollId)}>Get poll</button>

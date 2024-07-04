@@ -79,6 +79,7 @@
 
 	onMount(async () => {
 		await getPolls();
+		//TODO: Part of refactoring with svelte stores includes thsi
 		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
 	});
 </script>

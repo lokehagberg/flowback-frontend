@@ -30,11 +30,6 @@
 		await getDelegateRelations();
 		getDelegatePools();
 		getUserInfo();
-
-		// userIsDelegateStore.subscribe((info) => {
-		// 	userIsDelegate = info;
-		// 	console.log(info, 'INFO');
-		// });
 	});
 
 	const getUserInfo = async () => {
@@ -48,7 +43,12 @@
 	const createDelegation = async () => {
 		await createDelegationPool();
 		// TOOD-Blockchain: Set this up so it works
-		// await becomeDelegate(Number($page.params.groupId));
+		loading = true;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			await becomeDelegate($page.params.groupId);
+
+		loading = false;
 		getDelegatePools();
 	};
 
@@ -155,8 +155,9 @@
 
 		loading = false;
 		if (res.ok)
-			delegates[delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)].isInRelation =
-				true;
+			delegates[
+				delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+			].isInRelation = true;
 	};
 
 	const deleteDelegateRelation = async (delegate_pool_id: number) => {
@@ -167,8 +168,9 @@
 
 		loading = false;
 		if (res.ok)
-			delegates[delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)].isInRelation =
-				false;
+			delegates[
+				delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+			].isInRelation = false;
 	};
 </script>
 
@@ -184,7 +186,11 @@
 					on:keydown
 					on:click={() => goto(`/user?id=${delegate.pool_id}`)}
 				>
-					<ProfilePicture displayName username={delegate.user.username} profilePicture={delegate.user.profile_image}  />
+					<ProfilePicture
+						displayName
+						username={delegate.user.username}
+						profilePicture={delegate.user.profile_image}
+					/>
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
@@ -201,7 +207,7 @@
 						<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
 							>{$_('Remove as delegate')}</Button
 						>
-					{:else}
+					{:else if delegate.user.id !== Number(window.localStorage.getItem('userId'))}
 						<Button action={() => createDelegateRelation(delegate.pool_id)}
 							>{$_('Add as delegate')}</Button
 						>

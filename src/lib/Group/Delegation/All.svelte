@@ -207,6 +207,7 @@
 						<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
 							>{$_('Remove as delegate')}</Button
 						>
+						<!-- If not self, display "add as delegate" button -->
 					{:else if delegate.user.id !== Number(window.localStorage.getItem('userId'))}
 						<Button action={() => createDelegateRelation(delegate.pool_id)}
 							>{$_('Add as delegate')}</Button

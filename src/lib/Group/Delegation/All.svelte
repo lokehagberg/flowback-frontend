@@ -154,10 +154,13 @@
 		});
 
 		loading = false;
-		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
-			].isInRelation = true;
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = true;
+
+		delegate($page.params.groupId);
 	};
 
 	const deleteDelegateRelation = async (delegate_pool_id: number) => {
@@ -167,10 +170,11 @@
 		});
 
 		loading = false;
-		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
-			].isInRelation = false;
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = false;
 	};
 </script>
 

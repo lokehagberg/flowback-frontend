@@ -125,7 +125,7 @@
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
 					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
-					<RadioButtons bind:Yes={hiddenGroup} label={'Hidden?'} />
+					<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} />
 				{/if}
 
 				<StatusMessage bind:status />

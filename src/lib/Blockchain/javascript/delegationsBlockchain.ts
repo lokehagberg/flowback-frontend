@@ -26,8 +26,8 @@ const getContract = async () => {
 };
 
 export const becomeDelegate = async (groupId: number | string) => {
-	groupId = Number(groupId)
-	
+	groupId = Number(groupId);
+
 	try {
 		const contract = await getContract();
 		const feeData = await contract.provider.getFeeData();
@@ -60,7 +60,9 @@ export const becomeDelegate = async (groupId: number | string) => {
 	}
 };
 
-export const delegate = async (groupId: number) => {
+export const delegate = async (groupId: number | string) => {
+	groupId = Number(groupId);
+
 	try {
 		const contract = await getContract();
 		const feeData = await contract.provider.getFeeData();

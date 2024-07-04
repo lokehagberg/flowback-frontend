@@ -203,7 +203,7 @@
 
 			<!-- Mod Tools -->
 			<!-- TODO: Fix as part of svelte store information this place -->
-			<!-- {#if groupUser?.is_admin} -->
+			{#if groupUser?.is_admin}
 				<StatusMessage bind:status={deleteStatus} />
 				<div class="flex gap-4 align-middle">
 					<div class="">Mod Tools:</div>
@@ -214,7 +214,7 @@
 						<Button action={nextPhase}>Next Phase</Button>
 					{/if}
 				</div>
-			<!-- {/if} -->
+			{/if}
 
 			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>

@@ -12,12 +12,8 @@
 	import { goto } from '$app/navigation';
 	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import { isNumber } from 'chart.js/helpers';
-
-	// TODO: fix multiple instances of Delegate interface
-	interface Delegate extends User {
-		delegate_pool_id: number;
-		isInRelation: boolean;
-	}
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import type { Delegate } from './interfaces';
 
 	let delegates: Delegate[] = [],
 		delegateRelations: any[] = [],
@@ -67,13 +63,12 @@
 	 */
 	const createDelegationPool = async () => {
 		loading = true;
-		let toSend:any = {}
+		let toSend: any = {};
 
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
 			try {
 				const blockchain_id = becomeDelegate($page.params.groupId);
-				if (isNumber(blockchain_id))
-				toSend.blockchain_id = blockchain_id 
+				if (isNumber(blockchain_id)) toSend.blockchain_id = blockchain_id;
 			} catch {
 				console.warn('Error');
 			}
@@ -115,7 +110,7 @@
 	*/
 	const getDelegatePools = async () => {
 		loading = true;
-		const { json } = await fetchRequest(
+		const { json, res } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
 		);
@@ -131,19 +126,13 @@
 			}
 		}, 25000);
 
-		delegates = await Promise.all(
-			json.results.map(async (delegatePool: any) => {
-				const delegateId = delegatePool.delegates[0].group_user.id;
+		if (!res.ok) return;
 
-				const delegateUserData = await (
-					await fetchRequest('GET', `users?id=${delegateId}`)
-				).json.results[0];
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
 
-				const isInRelation = delegateRelationPoolIds.includes(delegatePool.id);
-
-				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
-			})
-		);
+		console.log(delegates, 'Finished delegates');
 
 		loading = false;
 	};
@@ -166,9 +155,8 @@
 
 		loading = false;
 		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
-			].isInRelation = true;
+			delegates[delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)].isInRelation =
+				true;
 	};
 
 	const deleteDelegateRelation = async (delegate_pool_id: number) => {
@@ -179,9 +167,8 @@
 
 		loading = false;
 		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
-			].isInRelation = false;
+			delegates[delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)].isInRelation =
+				false;
 	};
 </script>
 
@@ -195,39 +182,27 @@
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
-					on:click={() => goto(`/user?id=${delegate.id}`)}
+					on:click={() => goto(`/user?id=${delegate.pool_id}`)}
 				>
-					<img
-						src={delegate.profile_image
-							? `${import.meta.env.VITE_API}${
-									import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-							  }${delegate.profile_image}`
-							: DefaultPFP}
-						alt="avatar"
-						class="w-10 h-10 rounded-full"
-					/>
-							  {@debug delegate}
-					<span class="ml-4 mr-4">{delegate.username}</span>
+					<ProfilePicture displayName username={delegate.user.username} profilePicture={delegate.user.profile_image}  />
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => {
-						history = delegate.id;
+						history = delegate.pool_id;
 						selectedPage = 'History';
 					}}>{$_('See delegate history')}</span
 				>
-				{#if userId !== delegate.id}
+				{#if userId !== delegate.pool_id}
 					<div />
 					{#if delegate.isInRelation}
-						<Button
-							Class={'bg-red-500'}
-							action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
+						<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
 							>{$_('Remove as delegate')}</Button
 						>
 					{:else}
-						<Button action={() => createDelegateRelation(delegate.delegate_pool_id)}
+						<Button action={() => createDelegateRelation(delegate.pool_id)}
 							>{$_('Add as delegate')}</Button
 						>
 					{/if}

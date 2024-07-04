@@ -9,12 +9,14 @@
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 
-	export let poll: poll;
+	export let poll: poll, displayTag = false;
 </script>
 
 <div class="flex h-8 justify-between items-center">
 	<div class="flex items-baseline">
-		<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true }} />
+		{#if displayTag}
+			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true, mae: 0 }} />
+		{/if}
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
 			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />

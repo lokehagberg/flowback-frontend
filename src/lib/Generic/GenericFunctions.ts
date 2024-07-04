@@ -29,6 +29,7 @@ export const checkForLinks = (text: string, id: string) => {
 };
 
 export const blobifyImages = async (profileImagePreview: any) => {
+	console.log(profileImagePreview, "IMAGE")
 	const image = await fetch(profileImagePreview)
 		.then((res) => res.blob())
 		.then((blob) => {

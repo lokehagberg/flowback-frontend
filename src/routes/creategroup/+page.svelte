@@ -41,7 +41,9 @@
 	const createGroup = async () => {
 		loading = true;
 		const formData = new FormData();
-		const blockchain_id = Math.floor((1 + Math.random()) * 1000000 * name.length * description.length);
+		const blockchain_id = Math.floor(
+			(1 + Math.random()) * 1000000 * name.length * description.length
+		);
 
 		formData.append('name', name);
 		formData.append('description', description);
@@ -92,8 +94,8 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
-		image = `${import.meta.env.VITE_API}${json.image}`;
-		coverImage = `${import.meta.env.VITE_API}${json.cover_image}`;
+		if (image) image = `${import.meta.env.VITE_API}${json.image}`;
+		if (coverImage) coverImage = `${import.meta.env.VITE_API}${json.cover_image}`;
 	};
 
 	onMount(() => {

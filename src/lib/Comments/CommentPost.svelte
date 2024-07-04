@@ -9,6 +9,7 @@
 	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { commentSetup, getCommentDepth } from './functions';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -24,7 +25,7 @@
 		showMessage = '',
 		recentlyTappedButton = '',
 		attachments: File[] = [],
-		image: File;
+		images: File[];
 
 	// $: if(image !== null ) attachments.push(image)
 
@@ -40,7 +41,10 @@
 		//@ts-ignore
 		if (parent_id) formData.append('parent_id', parent_id);
 		// await console.log(await image.text())
-		if (image) formData.append('attachments', image);
+		if (images) images.forEach(image => {
+			formData.append('attachments', image);
+		}); 
+		
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -51,6 +55,7 @@
 		);
 		if (res.ok) {
 			let newComment: Comment = {
+				user_vote:null,
 				active: true,
 				author_id: Number(window.localStorage.getItem('userId')) || 0,
 				author_name: window.localStorage.getItem('userName') || '',
@@ -58,6 +63,7 @@
 				being_replied: false,
 				score: 0,
 				edited: false,
+				//TODO Fix so attachments show up immediately
 				attachments: [],
 				message,
 				id: json,
@@ -139,7 +145,11 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton />
-	<ImageUpload
+<FileUploads 
+
+bind:images
+/>
+	<!-- <ImageUpload
 		icon={faUser}
 		shouldCrop={false}
 		bind:croppedImage={image}
@@ -147,7 +157,7 @@
 		iconSize={'2x'}
 		Class="flex !flex-row-reverse"
 		minimalist
-	/>
+	/> -->
 	<!-- {#if message !== "" || attachments.length > 0} -->
 	<Button Class="mt-4" type="submit" label="Send" />
 	<!-- {/if} -->

@@ -5,10 +5,13 @@
 	import type { Thread } from './interface';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import { goto } from '$app/navigation';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let threads: Thread[] = [],
 		prev = '',
-		next = '';
+		next = '',
+		poppup: poppup;
 
 	const getThreads = async () => {
 		const { res, json } = await fetchRequest(
@@ -16,6 +19,11 @@
 			`group/${$page.params.groupId}/thread/list?limit=2`,
 			{}
 		);
+
+		if (!res.ok) {
+			poppup = { message: 'Could not load threads', success: false };
+			return;
+		}
 
 		next = json.next;
 		prev = json.previous;
@@ -47,3 +55,5 @@
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>
+
+<Poppup bind:poppup />

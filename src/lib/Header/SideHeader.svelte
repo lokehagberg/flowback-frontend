@@ -49,6 +49,7 @@
 </script>
 
 <!-- TODO: Relative works great for phones -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class:invisible={!sideHeaderOpen}
 	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
@@ -58,7 +59,7 @@
 >
 	{#each navs as nav}
 		<div
-			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"
+			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 			on:click={nav.action}
 			on:keydown
 		>
@@ -93,6 +94,7 @@
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</div>
 			</div>
 		</div>

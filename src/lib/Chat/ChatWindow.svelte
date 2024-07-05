@@ -48,14 +48,13 @@
 		isLookingAtOlderMessages: boolean;
 
 	onMount(() => {
-
-		const a = writable("a")
+		const a = writable('a');
 		setTimeout(() => {
-			a.set("HOWDY")
-		})
-		a.subscribe(msg => {
+			a.set('HOWDY');
+		});
+		a.subscribe((msg) => {
 			// console.log(msg)
-		})
+		});
 
 		recieveMessage();
 	});
@@ -196,7 +195,7 @@
 				preview = preview;
 			} else {
 				notifiedChannel.notified = true;
-				notifiedChannel.message = message.message
+				notifiedChannel.message = message.message;
 				preview = preview;
 			}
 		} else if (message.channel_id === selectedChat) {
@@ -231,6 +230,7 @@
 			}, 100);
 		})();
 
+	//@ts-ignore
 	$: if (user) socket = Socket.createSocket(user.id);
 </script>
 
@@ -302,4 +302,3 @@
 {:else}
 	<div>{'No chat selected'}</div>
 {/if}
-

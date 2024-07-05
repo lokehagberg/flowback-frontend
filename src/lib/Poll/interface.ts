@@ -19,7 +19,7 @@ export interface poll {
 	poll_type: number;
 	result: boolean;
 	start_date: string;
-	tag: number;
+	tag_id: number;
 	tag_name: string;
 	title: string;
 	group_id: number;

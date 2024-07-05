@@ -13,7 +13,7 @@
 
 	const logOut = () => {
 		localStorage.removeItem('token');
-		goto('/');
+		goto('/login');
 	};
 
 	//TODO: Implement codocument creation

@@ -11,7 +11,7 @@
 		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imae`);
 		if (!res.ok) return
 
-		tag.mae  = json?.results
+		tag.imae  = json
 	};
 
 	onMount(() => {
@@ -28,9 +28,10 @@
 	on:click={onclick}
 >
 	{tag?.name}
+	
 
-	{#if tag?.mae}
-		{tag?.mae}
+	{#if tag?.imae}
+		({tag?.imae})
 	{/if}
 </div>
 

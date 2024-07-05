@@ -15,7 +15,7 @@
 <div class="flex h-8 justify-between items-center">
 	<div class="flex items-baseline">
 		{#if displayTag}
-			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true, mae: 0 }} />
+			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true, imae: 0 }} />
 		{/if}
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->

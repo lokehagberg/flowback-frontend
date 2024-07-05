@@ -54,7 +54,7 @@
 			a.set("HOWDY")
 		})
 		a.subscribe(msg => {
-			console.log(msg)
+			// console.log(msg)
 		})
 
 		recieveMessage();

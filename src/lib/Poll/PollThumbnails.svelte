@@ -33,8 +33,6 @@
 	const getAPI = async () => {
 		let API = '';
 
-		console.log("PARAMS", $page.params.groupId, location.href)
-
 		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'home') API += `home/polls?`;
 		//TODO remove public
@@ -80,7 +78,7 @@
 	onMount(async () => {
 		await getPolls();
 		//TODO: Part of refactoring with svelte stores includes thsi
-		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
+		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId) || false;
 	});
 </script>
 

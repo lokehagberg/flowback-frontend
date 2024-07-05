@@ -6,9 +6,12 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let loading = false,
-		title = '';
+		title = '',
+		poppup: poppup;
 
 	const createThread = async () => {
 		const { res, json } = await fetchRequest(
@@ -18,7 +21,9 @@
 				title
 			}
 		);
-
+		if (!res.ok) {
+			poppup = { message: "Couldn't create Thread", success: false };
+		}
 		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
 </script>
@@ -34,3 +39,4 @@
 		</Loader>
 	</form>
 </div>
+<Poppup bind:poppup />

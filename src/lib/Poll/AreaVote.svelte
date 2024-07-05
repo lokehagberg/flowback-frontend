@@ -5,10 +5,11 @@
 	import Tag from '$lib/Group/Tag.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let tags: Tag[] = [],
 		selectedTag: number,
-		poppup = { show: false, message: '', success: true };
+		poppup: poppup;
 
 	const getTags = async () => {
 		const { json, res } = await fetchRequest(
@@ -16,8 +17,7 @@
 			`group/${$page.params.groupId}/tags?limit=1000&active=true`
 		);
 		if (!res.ok) {
-			poppup.show = true;
-			poppup.message = 'Could not get tags';
+			poppup = { message: 'Could not get tags', success: false };
 			return;
 		}
 
@@ -34,23 +34,22 @@
 			}
 		);
 
-		poppup.show = true;
 		if (!res.ok) {
-			poppup.message = 'Could not vote on tag';
-			poppup.success = false;
+			poppup = { message: 'Could not vote on tag', success: false };
 			return;
 		}
-		poppup.message = 'Successfully voted for area';
-		poppup.success = true;
+
+		poppup = { message: 'Successfully voted for area', success: true };
 	};
 
 	const getAreaVote = async () => {
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
 
-		if (res.ok) {
-			const votedFor = json.results[0].tag_name;
-			const votedTag = tags.find((tag) => tag.tag_name === votedFor);
-			if (votedTag) selectedTag = votedTag.id;
+		if (!res.ok) return;
+
+		if (json.results[0].user_vote) {
+			let selectedTagName = json.results[0].tags[0].tag_name;
+			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id;
 		}
 	};
 
@@ -70,8 +69,10 @@
 		<!-- {#if tag.active} -->
 		<Button
 			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
-			action={() => changeSelect(tag)}>{tag.name}</Button
+			action={() => changeSelect(tag)}
 		>
+			{tag.name}
+		</Button>
 		<!-- {/if} -->
 	{/each}
 </div>

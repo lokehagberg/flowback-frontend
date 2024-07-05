@@ -27,9 +27,9 @@
 
 	onMount(async () => {
 		userId = (await fetchRequest('GET', 'user')).json.id;
-		await getDelegateRelations();
-		getDelegatePools();
+		await getDelegatePools();
 		getUserInfo();
+		getDelegateRelations();
 	});
 
 	const getUserInfo = async () => {
@@ -56,6 +56,37 @@
 		await deleteDelegationPool();
 		getDelegatePools();
 		userIsDelegate = false;
+	};
+
+	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		loading = true;
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
+		);
+
+		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
+
+		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
+		setTimeout(() => {
+			if (loading === true) {
+				loading = false;
+				show = true;
+				message = 'Something went wrong';
+			}
+		}, 25000);
+
+		if (!res.ok) return;
+
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
+
+		loading = false;
 	};
 
 	/*
@@ -104,39 +135,6 @@
 		// userIsDelegateStore.update((value) => (value = false));
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		loading = true;
-		const { json, res } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
-		);
-
-		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
-
-		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
-		setTimeout(() => {
-			if (loading === true) {
-				loading = false;
-				show = true;
-				message = 'Something went wrong';
-			}
-		}, 25000);
-
-		if (!res.ok) return;
-
-		delegates = json.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-
-		console.log(delegates, 'Finished delegates');
-
-		loading = false;
-	};
-
 	const getDelegateRelations = async () => {
 		loading = true;
 		const { json } = await fetchRequest(
@@ -144,6 +142,14 @@
 			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
+
+		//Determines whether to show the "remove as delegate" or "add as delegate" buttons, depening on if user already has delegated or not earlier. 
+		json.results.forEach((relation: any) => {
+			delegates.map((delegate) => {
+				if (delegate.pool_id === relation.delegate_pool_id) delegate.isInRelation = true;
+				return delegate;
+			});
+		});
 		delegateRelations = json.results;
 	};
 

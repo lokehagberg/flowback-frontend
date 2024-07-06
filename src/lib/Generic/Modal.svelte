@@ -1,22 +1,43 @@
-<!-- TODO: Make the design nicer and larger, make it draggable, add more options -->
-
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import CrossButton from './CrossButton.svelte';
+	//TODO: Make the design nicer and larger, make it draggable, add more options
 
 	export let open = false,
 		Class = '',
+		onOpen = () => {},
 		onClose = () => {},
 		onSubmit = () => {};
-	$: if (!open) onClose();
 
-	function closeModal(event: MouseEvent) {
+	const closeModal = (event: MouseEvent) => {
 		event.stopPropagation();
 		open = false;
-	}
+	};
 
-	function stopPropagation(event: MouseEvent) {
+	const stopPropagation = (event: MouseEvent) => {
 		event.stopPropagation();
-	}
+	};
+
+	const hideScrollbar = (hide: boolean) => {
+		const html = document.querySelector('html');
+		if (!html) return;
+
+		html.style.overflowY = hide ? 'hidden' : 'visible';
+	};
+
+	const onOpenModal = () => {
+		hideScrollbar(true);
+
+		onOpen();
+	};
+
+	const onCloseModal = () => {
+		hideScrollbar(false);
+		onClose();
+	};
+
+	$: if (open) onOpenModal();
+	$: if (!open) onCloseModal();
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

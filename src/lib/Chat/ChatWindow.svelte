@@ -17,7 +17,6 @@
 	import { onMount } from 'svelte';
 	import Socket from './Socket';
 	import { updateUserData } from './functions';
-	import { writable } from 'svelte/store';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -32,15 +31,6 @@
 		socket: WebSocket;
 
 	export let selectedChat: number | null,
-		// sendMessage: (
-		// 	socket: WebSocket,
-		// 	channel_id: number,
-		// 	message: string,
-		// 	topic_id: number,
-		// 	attachments_id?: number | null,
-		// 	parent_id?: number | null
-		// ) => Promise<boolean>,
-
 		user: User,
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
@@ -48,14 +38,6 @@
 		isLookingAtOlderMessages: boolean;
 
 	onMount(() => {
-		const a = writable('a');
-		setTimeout(() => {
-			a.set('HOWDY');
-		});
-		a.subscribe((msg) => {
-			// console.log(msg)
-		});
-
 		recieveMessage();
 	});
 
@@ -101,22 +83,6 @@
 			previewMessage.message = message;
 			previewMessage.created_at = new Date().toString();
 		}
-		// else {
-		// 	//For brand new chats, create new preview message
-		// 	(selectedPage === 'direct' ? previewDirect : previewGroup).push({
-		// 		id: 1,
-		// 		created_at: new Date().toString(),
-		// 		message,
-		// 		timestamp: new Date().toString(),
-		// 		username: user.username,
-		// 		user_id: user.id,
-		// 		notified: false,
-		// 		// target_id: selectedPage === 'direct' ? selectedChat : 0,
-		// 		target_username: user.username,
-		// 		profile_image: ''
-		// 		// group_id: selectedPage === 'group' ? selectedChat : 0
-		// 	});
-		// }
 
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 

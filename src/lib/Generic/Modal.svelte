@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import CrossButton from './CrossButton.svelte';
 	//TODO: Make the design nicer and larger, make it draggable, add more options
 
@@ -27,7 +26,6 @@
 
 	const onOpenModal = () => {
 		hideScrollbar(true);
-
 		onOpen();
 	};
 
@@ -46,7 +44,8 @@
 	<div
 		id="popup-modal"
 		tabindex="-1"
-		class={`dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal ${Class}`}
+		class={`dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
+		border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal ${Class}`}
 		on:click={stopPropagation}
 	>
 		<div class="dark:text-darkmodeText relative p-4 w-full max-w-md h-full">

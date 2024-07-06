@@ -37,19 +37,17 @@
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
-		let vote;
+		let vote = {};
 		let regretting = userUpVote === _vote;
 
-		if (regretting) vote = null;
-		else if (_vote === -1) vote = false;
-		else if (_vote === 1) vote = true;
+		// if (regretting) vote = null;
+		if (_vote === -1) vote = { vote: false };
+		else if (_vote === 1) vote = { vote: true };
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/comment/${comment.id}/vote`,
-			{
-				vote
-			}
+			vote
 		);
 
 		if (!res.ok) return;
@@ -66,7 +64,7 @@
 	};
 
 	onMount(() => {
-		if (comment.user_vote === null) userUpVote = 0;
+		if (comment.user_vote === null || comment.user_vote === undefined) userUpVote = 0;
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
 	});

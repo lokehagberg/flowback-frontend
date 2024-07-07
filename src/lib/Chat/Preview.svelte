@@ -89,7 +89,7 @@
 			}
 			selectedChat = chatter.channel_id;
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.channel_id === selectedChat);
+			let message = previewGroup.find((message) => message.id === selectedChat);
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
@@ -97,7 +97,7 @@
 
 				previewGroup = previewGroup;
 			}
-			selectedChat = chatter.chat_id;
+			selectedChat = chatter.id;
 		}
 	};
 
@@ -163,6 +163,7 @@
 				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 			class:bg-gray-200={selectedChat === chatter.id}
+			class:dark:bg-gray-700={selectedChat === chatter.id}
 			on:keydown
 			on:click={async () => {
 				clickedChatter(chatter);

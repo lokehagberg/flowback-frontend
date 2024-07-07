@@ -57,9 +57,8 @@
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=${chatLimit}`);
-		if (!res.ok) return []; 
+		if (!res.ok) return [];
 		return json.results;
-		
 	};
 
 	const getPeople = async () => {
@@ -77,8 +76,9 @@
 		//Update when user last saw message after clicking on channel
 
 		if (selectedPage === 'direct') {
+			console.log(chatter, 'CHATTY');
 			if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
-			let message = previewDirect.find((message) => message.channel_id === selectedChat);
+			let message = previewDirect.find((message) => message.channel_id === chatter.channel_id);
 
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
@@ -87,7 +87,7 @@
 
 				previewDirect = previewDirect;
 			}
-			selectedChat = chatter.id;
+			selectedChat = chatter.channel_id;
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === selectedChat);
 			if (message) {
@@ -169,7 +169,7 @@
 				setTimeout(() => {
 					// Fixes having to doubble click to get rid of chat notificattion
 					clickedChatter(chatter);
-				}, 300);
+				}, 200);
 			}}
 		>
 			<!-- {@debug  previewGroup} -->
@@ -188,7 +188,11 @@
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10vw]">
 					<!-- {@debug previewObject} -->
-					{previewObject?.message || ''}
+
+					{#if previewObject}
+						{previewObject.user.username}:
+						{previewObject.message}
+					{/if}
 				</span>
 			</div>
 		</li>

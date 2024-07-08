@@ -6,6 +6,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { toPercentage } from 'chart.js/helpers';
 
 	let tags: Tag[] = [],
 		selectedTag: number,
@@ -46,9 +47,10 @@
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
 
 		if (!res.ok) return;
+		
+		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
 
-		if (json.results[0].user_vote) {
-			let selectedTagName = json.results[0].tags[0].tag_name;
+		if (selectedTagName) {
 			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id;
 		}
 	};
@@ -66,14 +68,14 @@
 
 <div class={`grid gap-2 grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
 	{#each tags as tag}
-		<!-- {#if tag.active} -->
-		<Button
-			buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
-			action={() => changeSelect(tag)}
-		>
-			{tag.name}
-		</Button>
-		<!-- {/if} -->
+		{#if tag.active}
+			<Button
+				buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
+				action={() => changeSelect(tag)}
+			>
+				{tag.name}
+			</Button>
+		{/if}
 	{/each}
 </div>
 

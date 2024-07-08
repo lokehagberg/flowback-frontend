@@ -24,7 +24,8 @@
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [],
 		isLookingAtOlderMessages = false,
-		chatDiv: HTMLDivElement;
+		chatDiv: HTMLDivElement,
+		selectedChatChannelId: number | null;
 
 	onMount(async () => {
 		await getUser();
@@ -76,9 +77,16 @@
 			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 		</div>
 	</div>
-	<Preview bind:selectedChat bind:selectedPage bind:previewDirect bind:previewGroup />
+	<Preview
+		bind:selectedChat
+		bind:selectedPage
+		bind:previewDirect
+		bind:previewGroup
+		bind:selectedChatChannelId
+	/>
 	<ChatWindow
 		bind:selectedChat
+		bind:selectedChatChannelId
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup

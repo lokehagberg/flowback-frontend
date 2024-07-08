@@ -31,6 +31,7 @@
 		socket: WebSocket;
 
 	export let selectedChat: number | null,
+		selectedChatChannelId : number | null,
 		user: User,
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
@@ -42,11 +43,13 @@
 	});
 
 	const getRecentMesseges = async () => {
-		if (!selectedChat) return;
+		console.log(selectedChatChannelId
+		)
+		// if (!selectedChatChannelId) return;
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${selectedChat}/list?order_by=created_at_desc&limit=${25}`
+			`chat/message/channel/${4}/list?order_by=created_at_desc&limit=${25}`
 		);
 
 		if (res.ok) messages = json.results.reverse();
@@ -89,7 +92,7 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
-		const didSend = await sendMessage.sendMessage(socket, channelId, message, 1);
+		const didSend = await sendMessage.sendMessage(socket, 4, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else

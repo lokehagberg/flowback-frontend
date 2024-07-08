@@ -16,6 +16,7 @@
 		chatSearch = '';
 
 	export let selectedChat: number | null,
+		selectedChatChannelId: number | null,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [];
@@ -89,7 +90,8 @@
 			}
 			selectedChat = chatter.channel_id;
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.id === selectedChat);
+			console.log(previewGroup, selectedChat);
+			let message = previewGroup.find((message) => message.id === chatter.id);
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
@@ -97,7 +99,13 @@
 
 				previewGroup = previewGroup;
 			}
+
+
+			console.log(chatter);
 			selectedChat = chatter.id;
+
+			if (message?.channel_id)
+			selectedChatChannelId = message.channel_id;
 		}
 	};
 

@@ -313,15 +313,15 @@
 							</div>
 						</div>
 						<TimelineTemplate
-							area_vote_end_date_delta={area_vote_end_date.getTime() - start_date.getTime()}
-							proposal_end_date_delta={proposal_end_date.getTime() - area_vote_end_date.getTime()}
-							prediction_statement_end_date_delta={prediction_statement_end_date.getTime() -
+							area_vote_time_delta={area_vote_end_date.getTime() - start_date.getTime()}
+							proposal_time_delta={proposal_end_date.getTime() - area_vote_end_date.getTime()}
+							prediction_statement_time_delta={prediction_statement_end_date.getTime() -
 								proposal_end_date.getTime()}
-							prediction_bet_end_date_delta={prediction_bet_end_date.getTime() -
+							prediction_bet_time_delta={prediction_bet_end_date.getTime() -
 								prediction_statement_end_date.getTime()}
-							delegate_vote_end_date_delta={delegate_vote_end_date.getTime() -
+							delegate_vote_time_delta={delegate_vote_end_date.getTime() -
 								prediction_bet_end_date.getTime()}
-							vote_end_date_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
+							vote_time_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
 							end_time_delta={end_date.getTime() - vote_end_date.getTime()}
 							poll_type={selected_poll === defaultType ? 4 : 3}
 						/>

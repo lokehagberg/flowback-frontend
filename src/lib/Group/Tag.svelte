@@ -7,11 +7,12 @@
 		Class: string = '',
 		onclick = () => {};
 
+	//Interval Mean Absolute Correctness
 	const getMeanAbsoluteError = async () => {
 		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imac`);
 		if (!res.ok) return
 
-		tag.imae  = json
+		tag.imac  = json
 	};
 
 	onMount(() => {
@@ -30,8 +31,8 @@
 	{tag?.name}
 	
 
-	{#if tag?.imae}
-		({tag?.imae})
+	{#if tag?.imac}
+		({tag?.imac})
 	{/if}
 </div>
 

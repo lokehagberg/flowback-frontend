@@ -75,7 +75,7 @@
 	<div class="flex items-center justify-between mt-1">
 		<div class="flex gap-2">
 			<Tag
-				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imae:0}}
+				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac:0}}
 				Class="inline cursor-default"
 			/>
 			

@@ -87,7 +87,7 @@ export interface Tag {
 	id: number;
 	name: string;
 	active: boolean;
-	imae:number;
+	imac:number;
 }
 
 export interface groupUser extends User {

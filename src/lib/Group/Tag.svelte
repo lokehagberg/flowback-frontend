@@ -8,7 +8,7 @@
 		onclick = () => {};
 
 	const getMeanAbsoluteError = async () => {
-		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imae`);
+		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imac`);
 		if (!res.ok) return
 
 		tag.imae  = json

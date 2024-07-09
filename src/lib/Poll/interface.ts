@@ -31,6 +31,7 @@ export interface poll {
 	prediction_statement_end_date: string;
 	prediction_bet_end_date: string;
 	vote_end_date: string;
+	blockchain_id:number|null;
 	group_name?: string;
 	group_image?: string;
 	joined: boolean;

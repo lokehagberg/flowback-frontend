@@ -28,8 +28,8 @@
 		loading = true;
 
 		let blockchain_id;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain)
-			blockchain_id = await createProposal(poll.id);
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
+			blockchain_id = await createProposal(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
 		if (blockchain_id) proposal.blockchain_id = blockchain_id;

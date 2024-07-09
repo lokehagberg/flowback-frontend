@@ -92,12 +92,12 @@ export const getPoll = async (id: number) => {
 	}
 };
 
-export const createProposal = async (_pollId: number) => {
+export const createProposal = async (pollId: number, title:string) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.addProposal(
-			_pollId, //pollid
-			'description' //description
+			pollId, 
+			title
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {

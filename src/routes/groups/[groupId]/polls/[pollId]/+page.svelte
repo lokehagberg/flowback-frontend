@@ -151,24 +151,24 @@
 					<ProposalSubmition bind:proposals {poll} />
 				{:else if phase === 'prediction_statement'}
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'prediction_bet'}
 					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll/>
 				{:else if phase === 'delegate_vote'}
 					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
 					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll/>
 				{:else if phase === 'vote'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll/>
 				{:else if phase === 'result'}
 					<Results {pollType} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll/>
 				{:else if phase === 'prediction_vote'}
 					<Results {pollType} />
-					<Predictions bind:proposals bind:phase />
+					<Predictions bind:proposals bind:phase bind:poll/>
 				{/if}
 			{:else if pollType === 3}
 				{#if !finished}

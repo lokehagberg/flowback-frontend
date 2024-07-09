@@ -9,7 +9,7 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
-	import type { Phase, proposal } from '../interface';
+	import type { Phase, poll, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
@@ -22,7 +22,7 @@
 	import { getGroupInfo } from '../functions';
 	import type { Group } from '$lib/Group/interface';
 
-	export let proposals: proposal[], phase: Phase;
+	export let proposals: proposal[], phase: Phase, poll:poll
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -108,15 +108,11 @@
 				const proposal = proposals.find(
 					(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
 				);
-
 				
-				const { json, res } = await getGroupInfo($page.params.groupId);
-				const group:Group = json.results[0];
-				
-				// console.log(proposal?.blockchain_id, json.results[0], "HI I'm MISTER FROG")
-				if (proposal?.blockchain_id && group.blockchain_id) {
+				// if (proposal?.blockchain_id && group.blockchain_id) {
+				if (proposal?.blockchain_id && poll.blockchain_id) {
 					prediction_blockchain_id = await createPredictionBlockchain(
-						group.blockchain_id,
+						poll.blockchain_id,
 						proposal.blockchain_id,
 						newPredictionStatement.description || ''
 					);

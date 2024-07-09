@@ -28,6 +28,7 @@
 		loading = true;
 
 		let blockchain_id;
+		console.log(poll.blockchain_id)
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
 			blockchain_id = await createProposal(poll.blockchain_id, title);
 

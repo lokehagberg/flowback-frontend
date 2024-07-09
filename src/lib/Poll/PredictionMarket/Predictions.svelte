@@ -20,6 +20,7 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 	import { getGroupInfo } from '../functions';
+	import type { Group } from '$lib/Group/interface';
 
 	export let proposals: proposal[], phase: Phase;
 
@@ -67,7 +68,8 @@
 	const createPredictionStatement = async () => {
 		loading = true;
 
-		pushToBlockchain();
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
+			pushToBlockchain();
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -100,30 +102,30 @@
 	// If the proposal is pushed to blockchain, push the prediction on that proposal to blockchain
 	const pushToBlockchain = async () => {
 		let prediction_blockchain_id;
+		
+		for (let i = 0; i < newPredictionStatement.segments.length; i++) {
+			try {
+				const proposal = proposals.find(
+					(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
+				);
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
-			for (let i = 0; i < newPredictionStatement.segments.length; i++) {
-				try {
-
-					const proposal = proposals.find(
-						(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
+				
+				const { json, res } = await getGroupInfo($page.params.groupId);
+				const group:Group = json.results[0];
+				
+				// console.log(proposal?.blockchain_id, json.results[0], "HI I'm MISTER FROG")
+				if (proposal?.blockchain_id && group.blockchain_id) {
+					prediction_blockchain_id = await createPredictionBlockchain(
+						group.blockchain_id,
+						proposal.blockchain_id,
+						newPredictionStatement.description || ''
 					);
-					
-					const { json, res } = await getGroupInfo($page.params.groupId);
-					const group = json.results[0];
-					console.log(group, 'LESEGMENTO 2');
-
-					if (proposal?.blockchain_id && group.blockchain_id) {
-						prediction_blockchain_id = await createPredictionBlockchain(
-							group.blockchain_id,
-							proposal.blockchain_id
-						);
-					}
-					newPredictionStatement.blockchain_id = prediction_blockchain_id;
-				} catch {
-					poppup = { message: 'Could not push to Blockchain', success: false };
 				}
+				newPredictionStatement.blockchain_id = prediction_blockchain_id;
+			} catch {
+				poppup = { message: 'Could not push to Blockchain', success: false };
 			}
+		}
 	};
 
 	const getAIpredictionStatement = async () => {

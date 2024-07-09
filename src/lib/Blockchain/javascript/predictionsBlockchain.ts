@@ -23,16 +23,16 @@ const getContract = async () => {
 	return new ethers.Contract(contractAddress, contractABI, signer);
 };
 
-export const createPrediction = async (id: number, propId: number) => {
+export const createPrediction = async (pollId: number, propId: number, prediction:string) => {
 	const contract = await getContract();
 	const { provider } = await getContract();
 	const feeData = await provider.getFeeData();
 	const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-	const estimatedGasLimit = await contract.estimateGas.createPrediction(id, propId, 'predicion');
+	const estimatedGasLimit = await contract.estimateGas.createPrediction(pollId, propId, prediction);
 	const tx = await contract.createPrediction(
-		id, //pollid
+		pollId, //pollid
 		propId, //proposalid
-		'predictiontxt', //prediction
+		prediction, //prediction
 		{
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas

@@ -27,7 +27,7 @@
 	});
 
 	const getPredictionBet = async () => {
-		if (!score) return;
+		// if (!score) return;
 		loading = true;
 
 		const { res, json } = await fetchRequest(

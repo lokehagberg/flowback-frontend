@@ -101,6 +101,7 @@
 				const blockchain_id = becomeDelegate($page.params.groupId);
 				if (isNumber(blockchain_id)) toSend.blockchain_id = blockchain_id;
 			} catch {
+				toSend.blockchain_id = 4
 				console.warn('Error');
 			}
 

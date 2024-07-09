@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 
 	let threads: Thread[] = [],
 		prev = '',
@@ -52,6 +53,7 @@
 		>
 			{thread.title}
 		</div>
+			<NotificationOptions api={`group/thread/${thread.id}`} categories={["comment"]} id={thread.id} labels={["comment"]} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

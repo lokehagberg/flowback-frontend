@@ -22,7 +22,7 @@
 	import { getGroupInfo } from '../functions';
 	import type { Group } from '$lib/Group/interface';
 
-	export let proposals: proposal[], phase: Phase, poll:poll
+	export let proposals: proposal[], phase: Phase, poll: poll;
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -50,6 +50,7 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
 		);
 		loading = false;
+		console.log(json.results);
 		predictions = json.results;
 	};
 
@@ -77,16 +78,17 @@
 			newPredictionStatement
 		);
 		loading = false;
-
+		
 		if (!res.ok) {
 			poppup = { message: json.detail[0], success: false };
 			return;
 		}
-
+		
 		newPredictionStatement = { segments: [] };
 		resetsOfValues++;
 		addingPrediction = false;
 		poppup = { message: 'Successfully created prediction statement', success: true };
+		return;
 
 		getPredictionStatements();
 	};
@@ -102,13 +104,13 @@
 	// If the proposal is pushed to blockchain, push the prediction on that proposal to blockchain
 	const pushToBlockchain = async () => {
 		let prediction_blockchain_id;
-		
+
 		for (let i = 0; i < newPredictionStatement.segments.length; i++) {
 			try {
 				const proposal = proposals.find(
 					(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
 				);
-				
+
 				// if (proposal?.blockchain_id && group.blockchain_id) {
 				if (proposal?.blockchain_id && poll.blockchain_id) {
 					prediction_blockchain_id = await createPredictionBlockchain(
@@ -117,7 +119,7 @@
 						newPredictionStatement.description || ''
 					);
 				}
-				console.log(`${prediction_blockchain_id}`)
+				console.log(`${prediction_blockchain_id}`);
 				newPredictionStatement.blockchain_id = Number(`${prediction_blockchain_id}`);
 			} catch {
 				poppup = { message: 'Could not push to Blockchain', success: false };
@@ -147,7 +149,7 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
 		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading score={2} bind:phase bind:poll/></li>
+			<li><Prediction {prediction} bind:loading score={2} bind:phase bind:poll /></li>
 		{/each}
 	</ul>
 

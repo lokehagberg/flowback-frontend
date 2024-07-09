@@ -69,7 +69,7 @@
 		loading = true;
 
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
-			pushToBlockchain();
+			await pushToBlockchain();
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -117,8 +117,8 @@
 						newPredictionStatement.description || ''
 					);
 				}
-				console.log(prediction_blockchain_id)
-				newPredictionStatement.blockchain_id = prediction_blockchain_id;
+				console.log(`${prediction_blockchain_id}`)
+				newPredictionStatement.blockchain_id = Number(`${prediction_blockchain_id}`);
 			} catch {
 				poppup = { message: 'Could not push to Blockchain', success: false };
 			}

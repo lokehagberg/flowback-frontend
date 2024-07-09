@@ -64,6 +64,7 @@
 	};
 
 	onMount(() => {
+		console.log(comment, 'LE COMMENT');
 		if (comment.user_vote === null || comment.user_vote === undefined) userUpVote = 0;
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;

@@ -91,6 +91,7 @@ export const getPoll = async (id: number) => {
 		}
 	}
 };
+
 export const createProposal = async (_pollId: number) => {
 	const contract = await getContract();
 	try {

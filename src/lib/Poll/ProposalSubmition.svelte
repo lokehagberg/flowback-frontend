@@ -46,9 +46,7 @@
 		if (!res.ok) return;
 
 		show = true;
-
 		let created_by = await getUserInfo();
-
 		loading = false;
 
 		proposals.push({

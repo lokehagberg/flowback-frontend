@@ -15,6 +15,7 @@ export interface PredictionStatement {
 		};
 	};
 
+	blockchain_id: number | null;
 	description: string;
 	id: number;
 	prediction_statement_id: number;

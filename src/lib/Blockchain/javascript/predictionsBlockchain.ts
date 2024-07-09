@@ -79,7 +79,7 @@ export const getPredictionsOnPoll = async (id: number, propId: number) => {
 //-------------------PREDICTIONBETS----------------------------
 //-------------------------------------------------------------
 
-export const createPredictionBet = async (pollId: number, predId: number) => {
+export const createPredictionBet = async (pollId: number, predId: number, score:number) => {
 	const contract = await getContract();
 	const { provider } = await getContract();
 	const feeData = await provider.getFeeData();
@@ -88,7 +88,7 @@ export const createPredictionBet = async (pollId: number, predId: number) => {
 		pollId,
 		1,
 		predId,
-		9,
+		score,
 		true
 	);
 	const tx = await contract.placePredictionBet(

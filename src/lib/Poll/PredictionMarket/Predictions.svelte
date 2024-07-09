@@ -117,6 +117,7 @@
 						newPredictionStatement.description || ''
 					);
 				}
+				console.log(prediction_blockchain_id)
 				newPredictionStatement.blockchain_id = prediction_blockchain_id;
 			} catch {
 				poppup = { message: 'Could not push to Blockchain', success: false };
@@ -146,7 +147,7 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
 		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading score={2} bind:phase /></li>
+			<li><Prediction {prediction} bind:loading score={2} bind:phase bind:poll/></li>
 		{/each}
 	</ul>
 

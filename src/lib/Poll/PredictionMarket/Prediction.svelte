@@ -2,10 +2,9 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Select from '$lib/Generic/Select.svelte';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { Phase } from '../interface';
+	import type { Phase, poll } from '../interface';
 	import type { PredictionStatement } from './interfaces';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
@@ -13,13 +12,11 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { userGroupInfo } from '$lib/Group/interface';
-	import { poll } from 'ethers/lib/utils';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 
-	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase;
+	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase, poll:poll;
 
 	let showPoppup = false,
 		showDetails = false,
@@ -161,7 +158,9 @@
 			predictionBetCreate(newScore);
 		} else predictionBetUpdate(newScore);
 
-		createPredictionBetBlockchain(Number($page.params.groupId), prediction.id);
+		console.log(import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', poll.blockchain_id, prediction)
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && poll.blockchain_id && prediction.blockchain_id && score)
+		createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
 
 		score = Number(newScore);
 	};

@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import type { template } from './interface';
 
 	export let area_vote_time_delta: number,
 		proposal_time_delta: number,
@@ -11,18 +12,22 @@
 		prediction_bet_time_delta: number,
 		delegate_vote_time_delta: number,
 		vote_time_delta: number,
-        end_time_delta:number,
-		poll_type: 3 | 4;
+		end_time_delta: number,
+		poll_type: 3 | 4,
+		handleSelectTemplate = (template: template) => {};
 
-	let name: string;
+	let name: string,
+		templates: template[] = [];
 
 	const templateList = async () => {
 		const groupId = $page.url.searchParams.get('id');
-        console.log(groupId, "HEI");
-        
+		console.log(groupId, 'HEI');
+
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/poll/template/list`);
 
 		if (!res.ok) return;
+
+		templates = json.results;
 	};
 
 	const templateCreate = async () => {
@@ -52,3 +57,9 @@
 	<TextInput label="name" required bind:value={name} />
 	<Button type="submit">Save Timetemplate</Button>
 </form>
+
+{#each templates as template}
+	<div on:click={() => handleSelectTemplate(template)} on:keydown >
+	{template.name}
+	</div>
+{/each}

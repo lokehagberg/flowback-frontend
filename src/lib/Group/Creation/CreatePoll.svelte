@@ -26,13 +26,12 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
-	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import TimelineTemplate from './TimelineTemplate.svelte';
+	import type { template } from './interface';
 
 	type polltypes =
 		| 'Ranking'
@@ -188,6 +187,26 @@
 		}
 	};
 
+	const handleSelectTemplate = (template: template) => {
+		console.log(template);
+		const now = new Date().getTime();
+		start_date = new Date();
+
+		area_vote_end_date = new Date(now + template.area_vote_time_delta);
+		proposal_end_date = new Date(area_vote_end_date.getTime() + template.proposal_time_delta);
+		prediction_statement_end_date = new Date(
+			proposal_end_date.getTime() + template.prediction_statement_time_delta
+		);
+		prediction_bet_end_date = new Date(
+			prediction_statement_end_date.getTime() + template.prediction_bet_time_delta
+		);
+		delegate_vote_end_date = new Date(
+			prediction_bet_end_date.getTime() + template.delegate_vote_time_delta
+		);
+		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
+		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
+	};
+
 	onMount(() => {
 		getGroupTags();
 	});
@@ -324,6 +343,7 @@
 							vote_time_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
 							end_time_delta={end_date.getTime() - vote_end_date.getTime()}
 							poll_type={selected_poll === defaultType ? 4 : 3}
+							{handleSelectTemplate}
 						/>
 					{/if}
 				</div>

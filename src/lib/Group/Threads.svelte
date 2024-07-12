@@ -47,13 +47,20 @@
 	{#each threads as thread}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 cursor-pointer"
-			on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-			on:keydown
+			class="bg-white flex justify-between dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6"
 		>
-			{thread.title}
+			<span
+				class="cursor-pointer hover:underline"
+				on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
+				on:keydown>{thread.title}</span
+			>
+			<NotificationOptions
+				api={`group/thread/${thread.id}`}
+				categories={['comment']}
+				id={thread.id}
+				labels={['comment']}
+			/>
 		</div>
-			<NotificationOptions api={`group/thread/${thread.id}`} categories={["comment"]} id={thread.id} labels={["comment"]} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

@@ -8,26 +8,32 @@
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
 	import { commentSetup, getComments } from './functions';
+	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null;
 
-	let comments: CommentType[] = [],
+	let _comments: CommentType[] = [],
 		show = false,
 		showMessage = '',
-		offset = 0;
+		offset = 0,
+		showReadMore = true;
 
 	onMount(async () => {
-		comments = await getComments($page.params.pollId, api, offset);
-		comments = await commentSetup(comments);
+		const { comments, next } = await getComments($page.params.pollId, api, offset);
+		_comments = await commentSetup(comments);
+		showReadMore = next !== null;
 	});
 
 	const readMore = async () => {
-		offset++;
-		comments = comments.concat(await getComments($page.params.pollId, api, offset));
-		comments = await commentSetup(comments);
-		comments = comments;
+		offset += pollCommentsLimit;
+		const { comments, next } = await getComments($page.params.pollId, api, offset);
+		_comments = _comments.concat(comments);
+		_comments = await commentSetup(_comments);
+		_comments = _comments;
+		console.log(next, 'NXT');
+		showReadMore = next !== null;
 	};
 </script>
 
@@ -39,16 +45,24 @@
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
 	<!-- Add Comment -->
-	<CommentPost bind:proposals bind:comments parent_id={undefined} {api} {delegate_pool_id} />
+	<CommentPost
+		bind:proposals
+		bind:comments={_comments}
+		parent_id={undefined}
+		{api}
+		{delegate_pool_id}
+	/>
 
 	<div class="flex flex-col gap-4 mt-6">
-		{#each comments as comment}
-			<Comment {comment} bind:comments bind:api bind:proposals />
+		{#each _comments as comment}
+			<Comment {comment} bind:comments={_comments} bind:api bind:proposals />
 		{/each}
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div on:click={readMore} on:keydown>Read more</div>
+		{#if showReadMore}
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div on:click={readMore} on:keydown>Read more</div>
+		{/if}
 	</div>
-	{#if comments.length === 0}
+	{#if _comments.length === 0}
 		<div>{$_('There are currently no comments')}</div>
 	{/if}
 </div>

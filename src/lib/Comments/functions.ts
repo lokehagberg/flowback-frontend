@@ -38,13 +38,16 @@ export const getComments = async (
 	else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
 
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
-	_api += `&offset=${offset}`
+	_api += `&offset=${offset}`;
 
 	const { res, json } = await fetchRequest('GET', _api);
 
-	return json.results.map((comment: Comment) => {
-		comment.being_edited = false;
-		comment.being_replied = false;
-		return comment;
-	});
+	return {
+		comments: json.results.map((comment: Comment) => {
+			comment.being_edited = false;
+			comment.being_replied = false;
+			return comment;
+		}),
+		next: json.next
+	};
 };

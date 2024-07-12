@@ -32,7 +32,7 @@
 
 	const templateCreate = async () => {
 		const groupId = $page.url.searchParams.get('id');
-		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/template/create`, {
+		const template = {
 			area_vote_time_delta,
 			proposal_time_delta,
 			prediction_statement_time_delta,
@@ -43,9 +43,14 @@
 			poll_type,
 			name,
 			poll_is_dynamic: false
-		});
+		}
+
+		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/template/create`, template);
 
 		if (!res.ok) return;
+
+		templates.push(template)
+		templates = templates
 	};
 
 	onMount(() => {
@@ -59,6 +64,7 @@
 </form>
 
 {#each templates as template}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click={() => handleSelectTemplate(template)} on:keydown >
 	{template.name}
 	</div>

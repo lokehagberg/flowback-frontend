@@ -1,5 +1,5 @@
 export type template = {
-	created_by_group_user: {
+	created_by_group_user?: {
 		id: number;
 		user: { id: number; username: string; profile_image: null|string; banner_image: null|string };
 		is_admin: boolean;

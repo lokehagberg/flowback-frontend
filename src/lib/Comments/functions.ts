@@ -28,7 +28,8 @@ export const getCommentDepth = (comment: Comment, comments: Comment[]): number =
 
 export const getComments = async (
 	id: number | string,
-	api: 'poll' | 'thread' | 'delegate-history'
+	api: 'poll' | 'thread' | 'delegate-history',
+	offset = 0
 ) => {
 	let _api = '';
 
@@ -37,6 +38,7 @@ export const getComments = async (
 	else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
 
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
+	_api += `&offset=${offset}`
 
 	const { res, json } = await fetchRequest('GET', _api);
 

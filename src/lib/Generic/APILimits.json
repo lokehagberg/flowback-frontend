@@ -6,7 +6,7 @@
     "delegation":1000,
     "kanban":1000,
     "permissions":1000,
-    "pollComments":1000,
+    "pollComments":1,
     "proposals":1000,
     "results":1000,
     "schedule":1000,

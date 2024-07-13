@@ -232,7 +232,7 @@
 						<h2 class="">{$_('Days between phases')}</h2>
 						<input
 							type="number"
-							class="dark:bg-darkbackground"
+							class="dark:bg-darkbackground show-buttons-all-times"
 							bind:value={daysBetweenPhases}
 							min="0"
 							max="1000"
@@ -442,3 +442,10 @@
 			</div> -->
 	</div>
 </div>
+
+<style>
+	.show-buttons-all-times::-webkit-inner-spin-button,
+	.show-buttons-all-times::-webkit-outer-spin-button {
+		opacity: 1;
+	}
+</style>

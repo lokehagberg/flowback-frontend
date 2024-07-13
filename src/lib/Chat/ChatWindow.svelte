@@ -17,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import Socket from './Socket';
 	import { updateUserData } from './functions';
+	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 
 	// User Action variables
 	let message: string = import.meta.env.VITE_MODE === 'DEV' ? 'a' : '',
@@ -31,7 +32,7 @@
 		socket: WebSocket;
 
 	export let selectedChat: number | null,
-		selectedChatChannelId : number | null,
+		selectedChatChannelId: number | null,
 		user: User,
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
@@ -43,16 +44,14 @@
 	});
 
 	const getRecentMesseges = async () => {
-		console.log(selectedChatChannelId
-		)
-		// if (!selectedChatChannelId) return;
+		if (!selectedChatChannelId) return;
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${4}/list?order_by=created_at_desc&limit=${25}`
+			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_asc&limit=${chatWindowLimit}`
 		);
 
-		if (res.ok) messages = json.results.reverse();
+		if (res.ok) messages = json.results;
 
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
@@ -180,8 +179,10 @@
 		}
 	};
 
+	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
+	//Behavior is differnet when looking at older chat messages
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;

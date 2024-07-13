@@ -3,6 +3,7 @@
     "tags":1000,
     "groupMembers":1000,
     "chatPreview":1000,
+    "chatWindow":25,
     "delegation":1000,
     "kanban":1000,
     "permissions":1000,

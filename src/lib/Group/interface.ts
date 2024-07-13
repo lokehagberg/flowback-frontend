@@ -152,4 +152,5 @@ export interface Thread {
 	};
 	title: string;
 	id: number;
+	total_comments:number;
 }

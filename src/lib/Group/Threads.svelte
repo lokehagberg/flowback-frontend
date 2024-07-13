@@ -8,6 +8,8 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import Fa from 'svelte-fa';
+	import { faComment } from '@fortawesome/free-solid-svg-icons';
 
 	let threads: Thread[] = [],
 		prev = '',
@@ -46,20 +48,34 @@
 	{/if}
 	{#each threads as thread}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="bg-white flex justify-between dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6"
-		>
-			<span
-				class="cursor-pointer hover:underline"
-				on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-				on:keydown>{thread.title}</span
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
+			<div class="flex justify-between">
+				<span
+					class="cursor-pointer hover:underline"
+					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
+					on:keydown>{thread.title}</span
+				>
+				<NotificationOptions
+					api={`group/thread/${thread.id}`}
+					categories={['comment']}
+					id={thread.id}
+					labels={['comment']}
+				/>
+			</div>
+
+			<div
+				class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText mt-3"
 			>
-			<NotificationOptions
-				api={`group/thread/${thread.id}`}
-				categories={['comment']}
-				id={thread.id}
-				labels={['comment']}
-			/>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<a
+					class="text-black dark:text-darkmodeText"
+					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
+					on:keydown
+				>
+					<Fa class="inline" icon={faComment} />
+					<span class="inline">{thread.total_comments} {'comments'}</span>
+				</a>
+			</div>
 		</div>
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />

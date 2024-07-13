@@ -48,10 +48,10 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_asc&limit=${chatWindowLimit}`
+			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
 
-		if (res.ok) messages = json.results;
+		if (res.ok) messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
 		olderMessages = json.next;
@@ -91,7 +91,9 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
-		const didSend = await sendMessage.sendMessage(socket, 4, message, 1);
+		if (!selectedChatChannelId) return;
+		console.log(selectedChatChannelId, selectedChat)
+		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
 
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else

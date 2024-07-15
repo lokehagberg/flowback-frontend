@@ -18,7 +18,7 @@
 	export const prerender = true;
 
 	let showUI = false,
-		scrolledY = 0;
+		scrolledY = '';
 
 	initializeLocalization();
 
@@ -82,15 +82,17 @@
 	};
 
 	beforeNavigate(() => {
-		console.log(window.scrollY, 'SCROLLY');
-		scrolledY = window.scrollY;
+		scrolledY = $page.params.pollId;
 	});
 
 	onNavigate(() => {
-		window.scrollTo({top:scrolledY})
 		showUI = shouldShowUI();
 		redirect();
 		if (showUI) updateUserInfo();
+		setTimeout(() => {
+			const html = document.getElementById(`poll-thumbnail-${scrolledY}`);
+			html?.scrollIntoView();
+		}, 200);
 	});
 
 	onMount(() => {

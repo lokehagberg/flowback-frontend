@@ -23,7 +23,7 @@
 		checkIfSelected();
 	});
 
-	function checkIfSelected() {
+	const checkIfSelected = () => {
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>

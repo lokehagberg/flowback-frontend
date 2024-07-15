@@ -71,7 +71,8 @@
 
 <div
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
->
+	id={`poll-thumbnail-${poll.id.toString()}`}
+	>
 	<div class="flex items-center justify-between mt-1">
 		<div class="flex gap-2">
 			<Tag

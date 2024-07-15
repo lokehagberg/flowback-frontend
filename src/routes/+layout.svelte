@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { initializeLocalization } from '$lib/Localization/i18n';
 	import Header from '$lib/Header/Header.svelte';
-	import { goto, onNavigate } from '$app/navigation';
+	import { beforeNavigate, goto, onNavigate } from '$app/navigation';
 	import {
 		getGroupUserInfo,
 		getUserInfo,
@@ -17,7 +17,8 @@
 
 	export const prerender = true;
 
-	let showUI = false;
+	let showUI = false,
+		scrolledY = 0;
 
 	initializeLocalization();
 
@@ -80,7 +81,13 @@
 		else if (pathname === '/') goto('/home');
 	};
 
+	beforeNavigate(() => {
+		console.log(window.scrollY, 'SCROLLY');
+		scrolledY = window.scrollY;
+	});
+
 	onNavigate(() => {
+		window.scrollTo({top:scrolledY})
 		showUI = shouldShowUI();
 		redirect();
 		if (showUI) updateUserInfo();

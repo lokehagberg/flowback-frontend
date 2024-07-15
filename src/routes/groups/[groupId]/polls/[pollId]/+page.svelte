@@ -26,7 +26,7 @@
 	import Tag from '$lib/Group/Tag.svelte';
 	import { goto } from '$app/navigation';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faBackspace } from '@fortawesome/free-solid-svg-icons';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -129,10 +129,19 @@
 
 {#if poll}
 	<Layout centered>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+		class="cursor-pointer p-1 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			on:click={() => goto(`/groups/${$page.params.groupId}`)}
 		>
-			<TitleDescription {poll} displayTag={phase !== 'area_vote'}/>
+		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
+			<Fa icon={faArrowLeft} />
+		</div>
+		<div
+			class="p-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+		>
+			<TitleDescription {poll} displayTag={phase !== 'area_vote'} />
 			{#if poll.attachments && poll.attachments.length > 0}
 				<img
 					class=""
@@ -154,21 +163,21 @@
 					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'prediction_bet'}
 					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
-					<Predictions bind:proposals bind:phase bind:poll/>
+					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'delegate_vote'}
 					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
 					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-					<Predictions bind:proposals bind:phase bind:poll/>
+					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'vote'}
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
-					<Predictions bind:proposals bind:phase bind:poll/>
+					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'result'}
 					<Results {pollType} />
-					<Predictions bind:proposals bind:phase bind:poll/>
+					<Predictions bind:proposals bind:phase bind:poll />
 				{:else if phase === 'prediction_vote'}
 					<Results {pollType} />
-					<Predictions bind:proposals bind:phase bind:poll/>
+					<Predictions bind:proposals bind:phase bind:poll />
 				{/if}
 			{:else if pollType === 3}
 				{#if !finished}

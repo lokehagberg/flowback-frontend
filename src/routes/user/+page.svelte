@@ -254,7 +254,6 @@
 				</p>
 			{/if}
 			<StatusMessage Class="mt-4" bind:status />
-			<span>{$_('Recommended ratios for images: 1:1 for profile, 4:1 for banner')}</span>
 			<div class="mt-6">
 				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>
 				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button>

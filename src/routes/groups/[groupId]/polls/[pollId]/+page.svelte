@@ -106,7 +106,6 @@
 		let _phase: Phase = 'pre_start';
 
 		if (pollType === 4) {
-			console.log(phase);
 			if (phase === 'area_vote') _phase = 'proposal';
 			else if (phase === 'proposal') _phase = 'prediction_statement';
 			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
@@ -132,10 +131,10 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-		class="cursor-pointer p-1 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			class="cursor-pointer p-1 m-6 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
 			on:click={() => goto(`/groups/${$page.params.groupId}`)}
 		>
-		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
+			<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 			<Fa icon={faArrowLeft} />
 		</div>
 		<div
@@ -144,11 +143,16 @@
 			<TitleDescription {poll} displayTag={phase !== 'area_vote'} />
 			{#if poll.attachments && poll.attachments.length > 0}
 				<img
-					class=""
 					src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
 					alt="attachment to the poll"
 				/>
 			{/if}
+
+			<!-- Current Phase -->
+			<div>
+				{$_('Current phase:')}
+				{getPhaseUserFriendlyName(phase)}
+			</div>
 
 			{#if pollType === 4}
 				{#if phase === 'pre_start'}
@@ -203,12 +207,6 @@
 					: [new Date(poll.start_date), new Date(poll.end_date)]}
 				{pollType}
 			/>
-
-			<!-- Current Phase -->
-			<div>
-				{$_('Current phase:')}
-				{getPhaseUserFriendlyName(phase)}
-			</div>
 
 			<!-- Mod Tools -->
 			<!-- TODO: Fix as part of svelte store information this place -->

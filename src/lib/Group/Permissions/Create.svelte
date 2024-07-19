@@ -36,7 +36,12 @@
 		{ title: 'Delete Proposal', description: 'Allows user to remove any proposal in a poll' },
 		{ title: 'Delete Poll', description: 'Allows user to delete any poll' },
 		{ title: 'Delete Proposal', description: 'Allows user to delete any proposal' },
-		{ title: 'Delete Comment', description: 'Allows user to delete any comment' }
+		{ title: 'Delete Comment', description: 'Allows user to delete any comment' },
+		{ title: 'prediction_statement_create', description: '' },
+		{ title: 'prediction_statement_delete', description: '' },
+		{ title: 'prediction_bet_create', description: '' },
+		{ title: 'prediction_bet_update', description: '' },
+		{ title: 'prediction_bet_delete', description: '' }
 	];
 
 	let roleName = '';
@@ -60,7 +65,12 @@
 				delete_proposal: rolePerms[8],
 				force_delete_poll: rolePerms[9],
 				force_delete_proposal: rolePerms[10],
-				force_delete_comment: rolePerms[11]
+				force_delete_comment: rolePerms[11],
+				prediction_statement_create: rolePerms[12],
+				prediction_statement_delete: rolePerms[13],
+				prediction_bet_create: rolePerms[14],
+				prediction_bet_update: rolePerms[15],
+				prediction_bet_delete: rolePerms[16]
 			}
 		);
 

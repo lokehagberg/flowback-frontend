@@ -17,11 +17,12 @@
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Filter from '$lib/Generic/Filter.svelte';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
-	let kanbanEntries: kanban[] = [];
-	let description = '',
+	let kanbanEntries: kanban[] = [],
+		description = '',
 		title = '',
 		assignee: number | null = null,
 		users: GroupUser[] = [],
@@ -41,7 +42,8 @@
 		interval: any,
 		open = false,
 		numberOfOpen = 0,
-		filter: { assignee: number | null } = { assignee: null };
+		filter: { assignee: number | null } = { assignee: null },
+		images: File[];
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -114,18 +116,35 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		let content: any = { assignee, tag: 1, title, priority, end_date };
 
-		if (description !== '') content.description = description;
-		if (priority) content.priority = priority;
+		// let content: any = { assignee, tag: 1, title, priority, end_date };
+
+		const formData = new FormData();
+		formData.append('tag', '1');
+		formData.append('title', title);
+		if (assignee) formData.append('assignee', assignee.toString());
+		if (priority) formData.append('priority', priority.toString());
+		if (end_date) formData.append('end_date', end_date.toString());
+		if (description !== '') formData.append('description', description);
+
+		console.log(formData);
+		
+		if (images)
+			images.forEach((image) => {
+				console.log(image, 'IMAGOOO');
+				formData.append('attachments', image);
+			});
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/create`
 				: 'user/kanban/entry/create',
-			content
+			formData,
+			true,
+			false
 		);
+
 		status = statusMessageFormatter(res, json);
 		loading = false;
 
@@ -249,6 +268,7 @@
 						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
 				</div>
+				<FileUploads bind:images />
 				<!-- <StatusMessage Class="mt-2" bind:status /> -->
 			</div>
 		</Loader>

@@ -21,7 +21,7 @@ export async function fetchRequest(
 		const token = localStorage.getItem('token');
 
 		if (token !== null) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
-		else goto('/login')
+		else goto('/login');
 	}
 
 	if (needs_json) {

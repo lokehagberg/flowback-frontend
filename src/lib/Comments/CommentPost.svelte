@@ -41,10 +41,10 @@
 		//@ts-ignore
 		if (parent_id) formData.append('parent_id', parent_id);
 		// await console.log(await image.text())
-		if (images) images.forEach(image => {
-			formData.append('attachments', image);
-		}); 
-		
+		if (images)
+			images.forEach((image) => {
+				formData.append('attachments', image);
+			});
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -55,7 +55,7 @@
 		);
 		if (res.ok) {
 			let newComment: Comment = {
-				user_vote:null,
+				user_vote: null,
 				active: true,
 				author_id: Number(window.localStorage.getItem('userId')) || 0,
 				author_name: window.localStorage.getItem('userName') || '',
@@ -76,7 +76,7 @@
 			newComment.reply_depth = getCommentDepth(newComment, comments);
 
 			const i = comments.findIndex((comment) => comment.id === parent_id);
-			comments.splice(i+1, 0, newComment);
+			comments.splice(i + 1, 0, newComment);
 
 			comments = comments;
 
@@ -145,10 +145,7 @@
 		</ul>
 	</div>
 	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton />
-<FileUploads 
-
-bind:images
-/>
+	<FileUploads bind:images />
 	<!-- <ImageUpload
 		icon={faUser}
 		shouldCrop={false}

@@ -35,8 +35,6 @@ export async function fetchRequest(
 
 	if (method !== 'GET') toSend.body = data;
 
-	console.log(env.PUBLIC_API_URL, api.includes(env.PUBLIC_API_URL));
-	
 	const res = await fetch(
 		api.includes(env.PUBLIC_API_URL)
 			? `${api}`

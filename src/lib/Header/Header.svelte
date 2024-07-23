@@ -113,7 +113,7 @@
 			/></a
 		>
 		<div class="!flex justify-between md:w-[80vw]">
-			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
+			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
@@ -145,7 +145,6 @@
 						text="My Kanban"
 						href="kanban"
 						color={darkMode ? 'white' : 'black'}
-						Class="p-4"
 					/>
 				{/if}
 
@@ -156,24 +155,7 @@
 						: 'Group Ledger'}
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
-					Class="p-4"
 				/>
-				<!-- <HeaderIcon
-					icon={faList}
-					text="My Kanban"
-					href="kanban"
-					color={darkMode ? 'white' : 'black'}
-				/> -->
-				<!-- {#if env.PUBLIC_MODE === 'DEV'}
-					{#if ledgerExists}
-						<HeaderIcon
-							icon={faMoneyBill}
-							text="Account"
-							href="ledger"
-							color={darkMode ? 'white' : 'black'}
-						/>
-					{/if}
-				{/if} -->
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">

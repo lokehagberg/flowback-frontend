@@ -51,7 +51,7 @@
 			vote: true
 		});
 
-		// if (!res.ok) return;
+		if (!res.ok) return;
 
 		voting = false;
 	};
@@ -62,12 +62,6 @@
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
 	});
-
-	$: selectedTag &&
-		(() => {
-			console.log("HERE")
-			if (!voting) voting = true;
-		});
 
 	$: if (poll)
 		dates =
@@ -197,8 +191,7 @@
 			{#if voting}
 				<Button type="submit" Class="w-[45%]">Save Vote</Button>
 			{:else}
-			<p class="w-[45%] text-center pt-6">
-				Successfully saved voting!</p>
+				<p class="w-[45%] text-center pt-6">Successfully saved voting!</p>
 			{/if}
 		</form>
 	{/if}

@@ -10,9 +10,9 @@
 	//Interval Mean Absolute Correctness
 	const getMeanAbsoluteError = async () => {
 		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imac`);
-		if (!res.ok) return
+		if (!res.ok) return;
 
-		tag.imac  = json
+		tag.imac = json;
 	};
 
 	onMount(() => {
@@ -23,17 +23,21 @@
 <!-- {@debug tag} -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class={'select-none text-xs tag text-center bg-gray-400 text-white pl-4 pr-4 pt-1 pb-1 break-words rounded ' +
-		Class}
-	on:click={onclick}
->
-	{tag?.name}
-	
-
-	{#if tag?.imac}
-		({tag?.imac})
-	{/if}
+<div class="flex">
+	<div
+		class={'w-[100%] select-none text-xs tag text-center bg-gray-300 text-black pl-4 pr-4 pt-1 pb-1 break-words rounded ' +
+			Class}
+		on:click={onclick}
+	>
+		{tag?.name}
+	</div>
+	<div class="border-gray-300 pl-1 pr-1 border-2 w-[20%] text-center">
+		{#if tag?.imac}
+			({tag?.imac})
+		{:else}
+			??
+		{/if}
+	</div>
 </div>
 
 <style>

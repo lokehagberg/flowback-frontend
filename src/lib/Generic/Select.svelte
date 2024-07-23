@@ -8,7 +8,8 @@
 		labels: string[] = [],
 		values: any[] = labels,
 		value = values[0],
-		Class = '';
+		Class = '',
+		classInner = '';
 </script>
 
 <div class={`${Class}`}>
@@ -22,7 +23,7 @@
 			//@ts-ignore
 			value = e?.target?.value;
 		}}
-		class={`dark:bg-darkobject`}
+		class={`dark:bg-darkobject ${classInner}`}
 		bind:value
 	>
 		{#each labels as label, i}

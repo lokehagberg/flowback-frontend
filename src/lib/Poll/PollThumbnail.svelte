@@ -23,6 +23,7 @@
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { env } from '$env/dynamic/public';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -33,7 +34,8 @@
 		dates: Date[],
 		tags: TagType[] = [],
 		selectedTag: number,
-		darkMode: boolean;
+		darkMode: boolean,
+		readMore = false;
 
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -168,28 +170,62 @@
 		/>
 		<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
 	</div>
-	<a
-		class="cursor-pointe text-black"
-		href={onHoverGroup
-			? '/groups/1'
-			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-	>
-		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText hover:underline">
-			{poll.description}
-		</p></a
-	>
+
+	<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText">
+		{#if readMore}
+			<a
+				class="cursor-pointe text-black hover:underline"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+			>
+				{poll.description}
+			</a>
+			{#if poll.description.length > 500}
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<span
+					class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
+					on:click={() => (readMore = false)}>Show less...</span
+				>
+			{/if}
+		{:else}
+			<a
+				class="cursor-pointe text-black hover:underline"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+			>
+				{poll.description.slice(0, 500)}
+			</a>
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			{#if poll.description.length > 500}
+				<span
+					class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
+					on:click={() => (readMore = true)}>Show more...</span
+				>
+			{/if}
+		{/if}
+	</p>
+
+	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
-		<Select
-			label={'Select Area'}
-			labels={tags.map((tag) => tag.name)}
-			values={tags.map((tag) => tag.id)}
-			bind:value={selectedTag}
-		/>
+		<div class="flex">
+			<Select
+				label={''}
+				labels={tags.map((tag) => tag.name)}
+				values={tags.map((tag) => tag.id)}
+				bind:value={selectedTag}
+				classInner="w-full"
+				Class="w-[50%]"
+			/>
+			<Button Class="w-[50%]">Hello</Button>
+		</div>
 	{/if}
 
-	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>

@@ -1,10 +1,5 @@
 <script lang="ts">
 	import HeaderIcon from './HeaderIcon.svelte';
-	//Temporary fix due to bug with Sveltekit, it should be "import {faHome, faGlobeEurope, ...} from @fortawesome/free-solid-svg-icons"
-	import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
-	import { faUserFriends } from '@fortawesome/free-solid-svg-icons/faUserFriends';
-	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
-	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
@@ -15,12 +10,16 @@
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
-	// import { accountsStore } from '$lib/Account/stores';
-	import { faCoins } from '@fortawesome/free-solid-svg-icons';
-	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
-	import Chat from '$lib/Chat/Chat.svelte';
+	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
+	import {
+		faCalendarWeek,
+		faCoins,
+		faHome,
+		faList,
+		faMoon,
+		faUserFriends
+	} from '@fortawesome/free-solid-svg-icons';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -29,7 +28,6 @@
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
-		
 		if (location.pathname !== '/login') {
 			getProfileImage();
 			setPfP();
@@ -37,11 +35,9 @@
 
 		ensureDarkMode();
 
-		pfpStore.subscribe(s => {
-			// console.log(s)
+		pfpStore.subscribe((s) => {
 			getProfileImage();
-		})
-
+		});
 	});
 
 	const setPfP = () => {

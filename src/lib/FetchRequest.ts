@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
+import {env} from "$env/dynamic/public";
 
 export async function fetchRequest(
 	method: 'GET' | 'POST',
@@ -36,10 +37,10 @@ export async function fetchRequest(
 
 	const res = await fetch(
 		//TODO: Make /api/ not hardcodd
-		api.includes(import.meta.env.VITE_API)
+		api.includes(env.PUBLIC_API_URL)
 			? `${api}`
-			: `${import.meta.env.VITE_API}${
-					import.meta.env.VITE_HAS_API === 'TRUE' ? '/api/' : '/'
+			: `${env.PUBLIC_API_URL}${
+				env.PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
 			  }${api}`,
 		toSend
 	);

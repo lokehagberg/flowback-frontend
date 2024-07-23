@@ -2,6 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { onMount } from 'svelte';
+	import {env} from "$env/dynamic/public";
 
 	export let user: any = null,
 		username = '',
@@ -26,8 +27,8 @@
 <div class={`flex gap-2 ${Class}`}>
 	{#if user?.profile_image}
 		<img
-			src={`${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			src={`${env.PUBLIC_API_URL}${
+				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.profile_image}`}
 			alt="avatar"
 			class={`w-${size} h-${size} rounded-full`}
@@ -42,8 +43,8 @@
 		/>
 	{:else if user?.image}
 		<img
-			src={`${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			src={`${env.PUBLIC_API_URL}${
+				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${user.image}`}
 			alt="avatar"
 			class={`w-${size} h-${size} rounded-full`}

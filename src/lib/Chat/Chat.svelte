@@ -12,8 +12,11 @@
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
 	import { updateUserData } from './functions';
+	import Socket from './Socket';
+	import { env } from '$env/dynamic/public';
 
-	let chatOpen = import.meta.env.VITE_MODE === 'DEV' ? false : false,
+	let messages: Message[] = [],
+		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
 		user: User,
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',

@@ -22,11 +22,6 @@
 	import { getPhase, getPhaseUserFriendlyName } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
-	import DatePoll from '$lib/Poll/DatePoll.svelte';
-	import Tag from '$lib/Group/Tag.svelte';
-	import { goto } from '$app/navigation';
-	import Fa from 'svelte-fa';
-	import { faArrowLeft, faBackspace } from '@fortawesome/free-solid-svg-icons';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -239,8 +234,12 @@
 				</div>
 			</Modal>
 		</div>
-		<!-- <div class="fixed left-0 top-0 z-50">
-			<Fa icon={faArrowLeft}/>
-		</div> -->
+		{#if poll.attachments && poll.attachments.length > 0}
+			<img
+				class=""
+				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+				alt="attachment to the comment"
+			/>
+		{/if}
 	</Layout>
 {/if}

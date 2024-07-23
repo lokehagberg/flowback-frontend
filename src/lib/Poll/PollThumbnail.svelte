@@ -21,6 +21,7 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import { getTags } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
+	import {env} from "$env/dynamic/public";
 
 	export let poll: poll,
 		isAdmin = false;

@@ -18,14 +18,20 @@
 		faHome,
 		faList,
 		faMoon,
-		faUserFriends
+		faUserFriends,
+		faChartBar,
+		faMoneyBill
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
+	import {
+		env
+	} from "$env/dynamic/public";
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
 		darkMode: boolean = false,
-		isAdmin = false;
+		isAdmin = false,
+		ledgerExists = true;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
@@ -70,11 +76,9 @@
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 
-		if (!res.ok) return;
-
-		if (res.ok && json?.profile_image)
-			profileImage = `${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+		if (res.ok && json.profile_image)
+			profileImage = `${env.PUBLIC_API_URL}${
+					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${json.profile_image}`;
 
 		localStorage.setItem('pfp-link', profileImage);
@@ -105,18 +109,38 @@
 			href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
 			class="md:w-auto flex justify-center md:flex-none"
 			><img
-				src={import.meta.env.VITE_LOGO === 'REFORUM' ? Reforum : Logo}
+				src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
 				class="w-32 cursor-pointer"
 				alt="flowback logo"
 			/></a
 		>
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
+					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
+					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
-						icon={faHome}
-						text="Home"
-						href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? 'groups/1' : 'home'}
+					icon={faUserFriends}
+					text="Groups"
+					href="groups"
+					color={darkMode ? 'white' : 'black'}
+					/>
+					{/if}
+					{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
+					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
+				{/if}
+				<HeaderIcon
+					icon={faCalendarWeek}
+					text="My Schedule"
+					href="schedule"
+					color={darkMode ? 'white' : 'black'}
+				/>
+
+				{#if env.PUBLIC_MODE === 'DEV'}
+					<HeaderIcon
+						icon={faChartBar}
+						text="Prediction"
+						href="prediction"
 						color={darkMode ? 'white' : 'black'}
 						Class={'p-4'}
 					/>
@@ -164,6 +188,22 @@
 					color={darkMode ? 'white' : 'black'}
 					Class="p-4"
 				/>
+				<!-- <HeaderIcon
+					icon={faList}
+					text="My Kanban"
+					href="kanban"
+					color={darkMode ? 'white' : 'black'}
+				/> -->
+				{#if env.PUBLIC_MODE === 'DEV'}
+					{#if ledgerExists}
+						<HeaderIcon
+							icon={faMoneyBill}
+							text="Account"
+							href="ledger"
+							color={darkMode ? 'white' : 'black'}
+						/>
+					{/if}
+				{/if}
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">

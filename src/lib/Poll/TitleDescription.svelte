@@ -8,6 +8,7 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
+	import {env} from "$env/dynamic/public";
 
 	export let poll: poll, displayTag = false;
 </script>
@@ -15,7 +16,7 @@
 <div class="flex h-8 justify-between items-center">
 	<div class="flex items-baseline">
 		{#if displayTag}
-			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag, active: true, imae: 0 }} />
+			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
 		{/if}
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
@@ -32,7 +33,7 @@
 			>
 				<img
 					class="h-8 w-8 inline rounded-full"
-					src={`${import.meta.env.VITE_API}${poll.group_image}`}
+					src={`${env.PUBLIC_API_URL}${poll.group_image}`}
 					alt="group thumbnail"
 					on:error={(e) => onThumbnailError(e, DefaultBanner)}
 				/>

@@ -14,6 +14,7 @@
 	import { isNumber } from 'chart.js/helpers';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import type { Delegate } from './interfaces';
+	import {env} from "$env/dynamic/public";
 
 	let delegates: Delegate[] = [],
 		delegateRelations: any[] = [],
@@ -49,6 +50,7 @@
 			await becomeDelegate($page.params.groupId);
 
 		loading = false;
+		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
 
@@ -197,10 +199,14 @@
 					on:keydown
 					on:click={() => goto(`/user?id=${delegate.pool_id}`)}
 				>
-					<ProfilePicture
-						displayName
-						username={delegate.user.username}
-						profilePicture={delegate.user.profile_image}
+					<img
+						src={delegate.profile_image
+							? `${env.PUBLIC_API_URL}${
+									env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+							  }${delegate.profile_image}`
+							: DefaultPFP}
+						alt="avatar"
+						class="w-10 h-10 rounded-full"
 					/>
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->

@@ -16,6 +16,7 @@
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { writable } from 'svelte/store';
 	import { pfpStore } from '$lib/Login/stores';
+	import { env } from '$env/dynamic/public';
 
 	let user: User = {
 		banner_image: '',
@@ -62,11 +63,8 @@
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
 		userEdit = user;
-		if (user.profile_image)
-			profileImagePreview = `${import.meta.env.VITE_API}${
-				!(import.meta.env.VITE_IMAGE_HAS_API === 'TRUE') ? '' : '/api'
-			}${user.profile_image}`;
-		if (user.banner_image) bannerImagePreview = `${import.meta.env.VITE_API}${user.banner_image}`;
+		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}/api${user.profile_image}`;
+		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
 
 		document.title = `${user.username}'s profile`;
 	};
@@ -86,7 +84,7 @@
 		if (res.ok) {
 			user = userEdit;
 			isEditing = false;
-			pfpStore.set(`${imageToSend.name}${Math.floor(Math.random()*1000000)}`) 
+			pfpStore.set(`${imageToSend.name}${Math.floor(Math.random() * 1000000)}`);
 		}
 
 		status = statusMessageFormatter(res, json);

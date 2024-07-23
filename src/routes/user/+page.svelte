@@ -14,6 +14,8 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
+	import { writable } from 'svelte/store';
+	import { pfpStore } from '$lib/Login/stores';
 
 	let user: User = {
 		banner_image: '',
@@ -84,7 +86,9 @@
 		if (res.ok) {
 			user = userEdit;
 			isEditing = false;
+			pfpStore.set(`${imageToSend.name}${Math.floor(Math.random()*1000000)}`) 
 		}
+
 		status = statusMessageFormatter(res, json);
 	};
 

@@ -20,6 +20,7 @@
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import type { Group, GroupUser, User, userGroupInfo } from '$lib/Group/interface';
 	import Chat from '$lib/Chat/Chat.svelte';
+	import { pfpStore } from '$lib/Login/stores';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -28,18 +29,28 @@
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
+		
+		if (location.pathname !== '/login') {
+			getProfileImage();
+			setPfP();
+		}
+
+		ensureDarkMode();
+
+		pfpStore.subscribe(s => {
+			// console.log(s)
+			getProfileImage();
+		})
+
+	});
+
+	const setPfP = () => {
 		if (!profileImage) getProfileImage();
 		else {
 			const pfpLink = localStorage.getItem('pfp-link');
 			if (pfpLink) profileImage = pfpLink;
 		}
-
-		if (location.pathname !== '/login') {
-			getProfileImage();
-		} 
-
-		ensureDarkMode();
-	});
+	};
 
 	const ensureDarkMode = () => {
 		if (localStorage.getItem('theme') === 'light') {

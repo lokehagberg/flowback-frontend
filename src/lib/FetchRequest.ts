@@ -39,7 +39,7 @@ export async function fetchRequest(
 		api.includes(env.PUBLIC_API_URL)
 			? `${api}`
 			: `${env.PUBLIC_API_URL}${
-				env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
+				env.PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
 			  }${api}`,
 		toSend
 	);

@@ -13,6 +13,12 @@
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import sendMessage, { messageStore } from './Socket';
+	import { onMount } from 'svelte';
+	import Socket from './Socket';
+	import { updateUserData } from './functions';
+	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
+	import {env} from "$env/dynamic/public";
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -99,7 +105,7 @@
 			});
 
 		messages = messages;
-		message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
+		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
 
 		updateUserData(selectedChat, new Date());
 	};
@@ -199,6 +205,91 @@
 
 	//@ts-ignore
 	$: if (user) socket = Socket.createSocket(user.id);
+
+	// const getRecentMesseges = async () => {
+	// 	if (!selectedChat) return;
+
+	// 	const { res, json } = await fetchRequest(
+	// 		'GET',
+	// 		`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
+	// 	);
+
+	// 	if (res.ok) messages = json.results.reverse();
+
+	// 	//Temporary fix before json.next issue is fixed
+	// 	olderMessages = json.next;
+	// 	newerMessages = '';
+	// };
+
+	//Runs when changing chats
+	// const postMessage = async () => {
+	// 	if (message.length === 0) return;
+	// 	if (!selectedChat) return;
+	// 	//If only spaces, return
+	// 	if (message.match(/^\s+$/)) return;
+
+	// 	//When sending, go to most recent messages
+	// 	if (newerMessages) getRecentMesseges();
+
+	// 	//Updates preview window to display recently typed chat message
+	// 	let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
+	// 		(previewMessage) =>
+	// 			(selectedPage === 'direct' &&
+	// 				((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
+	// 					(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
+	// 			(selectedPage === 'group' && previewMessage.group_id === selectedChat)
+	// 	);
+	// 	if (previewMessage) {
+	// 		previewMessage.message = message;
+	// 		previewMessage.created_at = new Date().toString();
+	// 	} else {
+	// 		//For brand new chats, create new preview message
+	// 		(selectedPage === 'direct' ? previewDirect : previewGroup).push({
+	// 			created_at: new Date().toString(),
+	// 			message,
+	// 			timestamp: new Date().toString(),
+	// 			username: user.username,
+	// 			user_id: user.id,
+	// 			target_id: selectedPage === 'direct' ? selectedChat : 0,
+	// 			target_username: user.username,
+	// 			profile_image: '',
+	// 			group_id: selectedPage === 'group' ? selectedChat : 0
+	// 		});
+	// 	}
+
+	// 	selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
+
+	// 	const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
+
+	// 	if (!didSend) status = { message: 'Could not send message', success: false };
+	// 	else
+	// 		messages.push({
+	// 			message,
+	// 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
+	// 			created_at: new Date().toString()
+	// 		});
+
+	// 	messages = messages;
+	// 	message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
+
+	// 	setTimeStamp(selectedChat, selectedPage);
+	// };
+
+	// const showOlderMessages = async () => {
+	// 	const { res, json } = await fetchRequest('GET', olderMessages);
+
+	// 	if (!res.ok) return;
+	// 	// nextMessagesAPI = json.next
+	// 	newerMessages = json.previous;
+	// 	olderMessages = json.next;
+
+	// 	messages = json.results.reverse();
+	// };
+
+	$: {
+		if (newerMessages) isLookingAtOlderMessages = true;
+		else isLookingAtOlderMessages = false;
+	}
 </script>
 
 {#if selectedChat !== null || true}

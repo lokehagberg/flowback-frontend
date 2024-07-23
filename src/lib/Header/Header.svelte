@@ -23,9 +23,7 @@
 		faMoneyBill
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
-	import {
-		env
-	} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
@@ -77,9 +75,9 @@
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-			}${json.profile_image}`;
+			profileImage = `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+				json.profile_image
+			}`;
 
 		localStorage.setItem('pfp-link', profileImage);
 
@@ -116,18 +114,23 @@
 		>
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
-					icon={faUserFriends}
-					text="Groups"
-					href="groups"
-					color={darkMode ? 'white' : 'black'}
+						icon={faUserFriends}
+						text="Groups"
+						href="groups"
+						color={darkMode ? 'white' : 'black'}
 					/>
-					{/if}
-					{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
-					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
+				{/if}
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+					<HeaderIcon
+						icon={faHome}
+						text="Home"
+						href="groups/1"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
 				<HeaderIcon
 					icon={faCalendarWeek}

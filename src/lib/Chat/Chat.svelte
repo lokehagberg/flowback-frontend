@@ -47,7 +47,7 @@
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
-		const { json, res } = await fetchRequest('GET', 'user');
+		const { res, json } = await fetchRequest('GET', 'user');
 		if (res.ok) user = json;
 		if (!res.ok) return;
 	};

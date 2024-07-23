@@ -10,6 +10,7 @@ export interface Delegate {
 	active: boolean;
 	group_id: number;
 	group_image: string;
+	profile_image:string;
 	group_name: string;
 	id: number;
 	pool_id: number;

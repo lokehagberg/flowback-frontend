@@ -37,6 +37,7 @@ export async function fetchRequest(
 
 	const res = await fetch(
 		//TODO: Make /api/ not hardcodd
+		//@ts-ignore
 		api.includes(env.PUBLIC_API_URL)
 			? `${api}`
 			: `${env.PUBLIC_API_URL}${

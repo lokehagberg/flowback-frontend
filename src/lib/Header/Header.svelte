@@ -139,40 +139,7 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if env.PUBLIC_MODE === 'DEV'}
-					<HeaderIcon
-						icon={faChartBar}
-						text="Prediction"
-						href="prediction"
-						color={darkMode ? 'white' : 'black'}
-						Class={'p-4'}
-					/>
-
-					<HeaderIcon
-						icon={faUserFriends}
-						text="Groups"
-						href="groups"
-						color={darkMode ? 'white' : 'black'}
-						Class="p-4"
-					/>
-				{/if}
-				{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE'}
-					<HeaderIcon
-						icon={faHome}
-						text="Home"
-						href="groups/1"
-						color={darkMode ? 'white' : 'black'}
-						Class="p-4"
-					/>
-				{/if}
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon
-						icon={faCalendarWeek}
-						text="My Schedule"
-						href="schedule"
-						color={darkMode ? 'white' : 'black'}
-						Class="p-4"
-					/>
 					<HeaderIcon
 						icon={faList}
 						text="My Kanban"
@@ -197,7 +164,7 @@
 					href="kanban"
 					color={darkMode ? 'white' : 'black'}
 				/> -->
-				{#if env.PUBLIC_MODE === 'DEV'}
+				<!-- {#if env.PUBLIC_MODE === 'DEV'}
 					{#if ledgerExists}
 						<HeaderIcon
 							icon={faMoneyBill}
@@ -206,7 +173,7 @@
 							color={darkMode ? 'white' : 'black'}
 						/>
 					{/if}
-				{/if}
+				{/if} -->
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">

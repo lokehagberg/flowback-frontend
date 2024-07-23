@@ -35,13 +35,13 @@ export async function fetchRequest(
 
 	if (method !== 'GET') toSend.body = data;
 
+	console.log(env.PUBLIC_API_URL, api.includes(env.PUBLIC_API_URL));
+	
 	const res = await fetch(
-		//TODO: Make /api/ not hardcodd
-		//@ts-ignore
 		api.includes(env.PUBLIC_API_URL)
 			? `${api}`
 			: `${env.PUBLIC_API_URL}${
-				env.PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
+				env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
 			  }${api}`,
 		toSend
 	);

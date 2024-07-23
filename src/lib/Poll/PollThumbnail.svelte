@@ -36,7 +36,7 @@
 		tags: TagType[] = [],
 		selectedTag: number,
 		darkMode: boolean,
-		readMore = false;
+		voting = true;
 
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -45,12 +45,15 @@
 		if (res.ok) poll.pinned = !poll.pinned;
 	};
 
-	const vote = async (tag: number) => {
-		console.log(tag, 'TAGGo');
+	const submitTagVote = async (tag: number) => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.group_id}/area/update`, {
 			tag,
 			vote: true
 		});
+
+		// if (!res.ok) return;
+
+		voting = false;
 	};
 
 	onMount(async () => {
@@ -60,7 +63,11 @@
 		darkModeStore.subscribe((dark) => (darkMode = dark));
 	});
 
-	$: if (selectedTag) vote(selectedTag);
+	$: selectedTag &&
+		(() => {
+			console.log("HERE")
+			if (!voting) voting = true;
+		});
 
 	$: if (poll)
 		dates =
@@ -178,7 +185,7 @@
 
 	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
-		<div class="flex justify-around">
+		<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-around">
 			<Select
 				label={''}
 				labels={tags.map((tag) => tag.name)}
@@ -187,8 +194,13 @@
 				classInner="w-full bg-white p-6 border-gray-400 rounded-md border-2"
 				Class="w-[45%]"
 			/>
-			<Button Class="w-[45%]  !align-middle !table-cell align-middle">Save Vote</Button>
-		</div>
+			{#if voting}
+				<Button type="submit" Class="w-[45%]">Save Vote</Button>
+			{:else}
+			<p class="w-[45%] text-center pt-6">
+				Successfully saved voting!</p>
+			{/if}
+		</form>
 	{/if}
 
 	<div

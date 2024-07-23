@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-export const darkModeStore = writable()
+export const darkModeStore = writable(false)
 
 export const TriggerDarkMode = () => {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC

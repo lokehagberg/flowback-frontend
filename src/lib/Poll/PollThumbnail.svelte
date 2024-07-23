@@ -32,7 +32,8 @@
 		// If text poll, have all phases. Date polls have fewer phases to display
 		dates: Date[],
 		tags: TagType[] = [],
-		selectedTag: number;
+		selectedTag: number,
+		darkMode: boolean;
 
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -52,8 +53,8 @@
 	onMount(async () => {
 		phase = getPhase(poll);
 		if (phase === 'area_vote') tags = await getTags(poll.group_id);
-	
-		darkModeStore.subscribe(dark => darkMode = dark)
+
+		darkModeStore.subscribe((dark) => (darkMode = dark));
 	});
 
 	$: if (selectedTag) vote(selectedTag);
@@ -71,11 +72,6 @@
 						new Date(poll.end_date)
 				  ]
 				: [new Date(poll.start_date), new Date(poll.end_date)];
-
-		let darkMode:boolean;
-
-
-		
 </script>
 
 <div
@@ -85,30 +81,22 @@
 	id={`poll-thumbnail-${poll.id.toString()}`}
 >
 	<div class="flex items-center justify-between mt-1">
-		<div class="flex gap-2">
-			<Tag
-				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
-				Class="inline cursor-default"
-			/>
-
-			{#if poll.poll_type === 4}
-				<HeaderIcon
-					Class="!p-0 !cursor-default"
-					icon={faAlignLeft}
-					text={'Text Poll'}
-					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
-				/>
-			{:else if poll.poll_type === 3}
-				<HeaderIcon
-					Class="!p-0 !cursor-default"
-					icon={faCalendarAlt}
-					text={'Date Poll'}
-					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
-				/>
-			{/if}
+		<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
+			<a
+				class="cursor-pointer text-black"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+			>
+				<h1
+					class="text-left text-3xl mb-3 text-blue-800 p-1 pl-0 dark:text-darkmodeText hover:underline"
+				>
+					{poll.title}
+				</h1>
+			</a>
 		</div>
 		<div class="ml-2 inline-flex gap-3 items-center">
-			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
 				<a
 					href={poll.group_joined ? `groups/${poll.group_id}` : ''}
 					class:hover:underline={poll.group_joined}
@@ -126,6 +114,12 @@
 				</a>
 			{/if}
 			<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+			<NotificationOptions
+				id={poll.id}
+				api={`group/poll/${poll.id}`}
+				categories={['poll', 'timeline', 'comment_all']}
+				labels={['Poll', 'Timeline', 'Comments']}
+			/>
 			{#if isAdmin || poll.pinned}
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
@@ -137,25 +131,42 @@
 					/>
 				</div>
 			{/if}
-			<NotificationOptions
-				id={poll.id}
-				api={`group/poll/${poll.id}`}
-				categories={['poll', 'timeline', 'comment_all']}
-				labels={['Poll', 'Timeline', 'Comments']}
-			/>
 		</div>
 	</div>
-	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
-		<a
-			class="cursor-pointer text-black"
-			href={onHoverGroup
-				? '/groups/1'
-				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+	<div class="flex gap-2">
+		{#if poll.poll_type === 4}
+			<HeaderIcon
+				Class="!p-0 !cursor-default"
+				icon={faAlignLeft}
+				text={'Text Poll'}
+				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
+			/>
+		{:else if poll.poll_type === 3}
+			<HeaderIcon
+				Class="!p-0 !cursor-default"
+				icon={faCalendarAlt}
+				text={'Date Poll'}
+				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
+			/>
+		{/if}
+		<div
+			class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
 		>
-			<h1 class="text-left text-3xl mt-3 p-1 pl-0 dark:text-darkmodeText hover:underline">
-				{poll.title}
-			</h1>
-		</a>
+			<a
+				class="text-black dark:text-darkmodeText"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
+			>
+				<Fa class="inline" icon={faComment} />
+				<span class="inline">{poll.total_comments}</span>
+			</a>
+		</div>
+		<Tag
+			tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
+			Class="inline cursor-default"
+		/>
+		<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
 	</div>
 	<a
 		class="cursor-pointe text-black"
@@ -179,7 +190,6 @@
 	{/if}
 
 	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
-	<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
 	<div
 		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
 	>
@@ -193,19 +203,6 @@
 			on:keydown
 		/>
 	</div>
-	<div
-		class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2"
-	>
-		<a
-			class="text-black dark:text-darkmodeText"
-			href={onHoverGroup
-				? '/groups/1'
-				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
-		>
-			<Fa class="inline" icon={faComment} />
-			<span class="inline">{poll.total_comments} {$_('comments')}</span>
-		</a>
-	</div>
 </div>
 
 <style>
@@ -213,8 +210,7 @@
 		box-shadow: 0 0 5px rgb(203, 203, 203);
 	}
 
-		.poll-thumbnail-shadow-dark {
-			box-shadow: 0 0 10px rgb(24, 24, 24);
-		}
-
+	.poll-thumbnail-shadow-dark {
+		box-shadow: 0 0 10px rgb(24, 24, 24);
+	}
 </style>

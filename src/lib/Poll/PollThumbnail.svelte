@@ -21,7 +21,8 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import { getTags } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -51,6 +52,8 @@
 	onMount(async () => {
 		phase = getPhase(poll);
 		if (phase === 'area_vote') tags = await getTags(poll.group_id);
+	
+		darkModeStore.subscribe(dark => darkMode = dark)
 	});
 
 	$: if (selectedTag) vote(selectedTag);
@@ -68,19 +71,26 @@
 						new Date(poll.end_date)
 				  ]
 				: [new Date(poll.start_date), new Date(poll.end_date)];
+
+		let darkMode:boolean;
+
+
+		
 </script>
 
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 poll-thumbnail-shadow rounded-md transition-all vote-thumbnail"
+	class:poll-thumbnail-shadow={!darkMode}
+	class:poll-thumbnail-shadow-dark={darkMode}
 	id={`poll-thumbnail-${poll.id.toString()}`}
-	>
+>
 	<div class="flex items-center justify-between mt-1">
 		<div class="flex gap-2">
 			<Tag
-				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac:0}}
+				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 				Class="inline cursor-default"
 			/>
-			
+
 			{#if poll.poll_type === 4}
 				<HeaderIcon
 					Class="!p-0 !cursor-default"
@@ -197,3 +207,14 @@
 		</a>
 	</div>
 </div>
+
+<style>
+	.poll-thumbnail-shadow {
+		box-shadow: 0 0 5px rgb(203, 203, 203);
+	}
+
+		.poll-thumbnail-shadow-dark {
+			box-shadow: 0 0 10px rgb(24, 24, 24);
+		}
+
+</style>

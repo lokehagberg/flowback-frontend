@@ -50,15 +50,18 @@ export interface Delegate {
 	pool_id: number;
 	profile_image: File;
 
-	tags: { id: number; tag_name: string }[];
+	tags: { id: number; tag_name: string, name:string, active:boolean }[];
 }
 
 export interface Group {
 	active: boolean;
+	chat_id: number;
 	cover_image: string;
 	created_by: number;
+	blockchain_id: number;
 	description: string;
 	direct_join: boolean;
+	hide_poll_users: boolean;
 	id: number;
 	image: string;
 	joined: boolean;
@@ -84,6 +87,7 @@ export interface Tag {
 	id: number;
 	name: string;
 	active: boolean;
+	imac:number;
 }
 
 export interface groupUser extends User {
@@ -141,10 +145,12 @@ export interface kanban {
 
 export interface Thread {
 	created_by: {
-		id: 1;
+		id: number;
 		username: string;
 		profile_image: null | string;
 		banner_image: null | string;
 	};
 	title: string;
+	id: number;
+	total_comments:number;
 }

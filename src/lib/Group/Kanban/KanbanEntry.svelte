@@ -21,6 +21,8 @@
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
+	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import { goto } from '$app/navigation';
 
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 	let openModal = false,
@@ -36,7 +38,9 @@
 			'Very low priority'
 		],
 		isEditing = false,
-		changingOpens: null | 'Addition' | 'Subtraction' = null;
+		changingOpens: null | 'Addition' | 'Subtraction' = null,
+		innerWidth: number,
+		outerWidth: number;
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -51,7 +55,8 @@
 		description: kanban.description,
 		title: kanban.title,
 		assignee: kanban.assignee?.id,
-		priority: kanban.priority
+		priority: kanban.priority,
+		end_date: kanban.end_date ? new Date(kanban.end_date) : null
 	};
 
 	$: if (openModal === true) changeNumberOfOpen('Addition');
@@ -66,12 +71,14 @@
 				description: kanban.description,
 				title: kanban.title,
 				assignee: kanban.assignee?.id,
-				priority: kanban.priority
+				priority: kanban.priority,
+				end_date: kanban.end_date ? new Date(kanban.end_date) : null
 			};
 		})();
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
+		console.log(kanbanEdited);
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -126,6 +133,11 @@
 	// Delete kanban removes it from the database,
 	// remove kanban removes the displaying of the kanban.
 	const deleteKanbanEntry = async () => {
+		if (kanban.origin_type === 'group' && !$page.params.groupId) {
+			status = { message: 'Cannot remove kanban tasks from groups in My Kanban', success: false };
+			return;
+		}
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -165,83 +177,101 @@
 
 <!-- {@debug showSuccessPoppup} -->
 <!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
+<svelte:window bind:innerWidth bind:outerWidth />
 
-<li
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
-	in:fade
->
-	{#if kanban.end_date !== null && endDate}
-		Ends {endDate.format(new Date(kanban.end_date))}
-	{/if}
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		on:click={() => {
-			openModal = true;
-			selectedEntry = kanban.id;
-		}}
-		class="cursor-pointer hover:underline"
-		on:keydown
+{#if (kanban.origin_type === "group" && kanban.group_name) || kanban.origin_type === "user"}
+	<li
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+		in:fade
 	>
-		<div class="p-1 py-3">{kanban.title}</div>
-	</div>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
-		on:click={() =>
-			(window.location.href =
-				type === 'group'
-					? `/user?id=${kanban.assignee.id}`
-					: `groups/${kanban.origin_id}?page=kanban`)}
-		on:keydown
-	>
-		<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
-		<div class="break-all text-xs">
-			{type === 'group'
-				? kanban.assignee?.username
-				: kanban.origin_type === 'user'
-				? 'My own'
-				: kanban.group_name}
-		</div>
-	</div>
-	<!-- Arrows -->
-	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
-		<div class="flex justify-between mt-3">
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
-				class="cursor-pointer hover:text-gray-500"
-				on:click={() => {
-					if (kanban.tag > 0) {
-						updateKanbanTag(kanban.tag - 1);
-						kanban.tag -= 1;
-					}
-				}}
-				on:keydown
-			>
-				<Fa icon={faArrowLeft} size="1.5x" />
+		{#if kanban.end_date !== null && endDate}
+			<div class="text-sm">
+				Ends {endDate.format(new Date(kanban.end_date))}
 			</div>
-
-			<KanbanIcons bind:priority={kanban.priority} />
-
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
-				class="cursor-pointer hover:text-gray-500"
-				on:click={() => {
-					if (kanban.tag < tags.length) {
-						updateKanbanTag(kanban.tag + 1);
-						kanban.tag += 1;
-					}
-				}}
-				on:keydown
-			>
-				<Fa icon={faArrowRight} size="1.5x" />
+		{/if}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			on:click={() => {
+				openModal = true;
+				selectedEntry = kanban.id;
+			}}
+			class="cursor-pointer hover:underline"
+			on:keydown
+		>
+			<div class="p-1 py-3">{kanban.title}</div>
+		</div>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
+			on:click={() => {
+				if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+				else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
+			}}
+			on:keydown
+		>
+			<ProfilePicture user={type === 'group' ? kanban.assignee : ''} Class="" />
+			<div class="break-all text-xs">
+				{#if type === 'group'}
+					{kanban.assignee?.username}
+				{:else if kanban.origin_type === 'user'}
+					My own
+				{:else}
+					{kanban.group_name}
+				{/if}
 			</div>
 		</div>
-	{/if}
-</li>
+		<!-- Arrows -->
+		{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
+			<div class="flex justify-between mt-3">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="cursor-pointer hover:text-gray-500"
+					on:click={() => {
+						if (kanban.tag > 0) {
+							updateKanbanTag(kanban.tag - 1);
+							kanban.tag -= 1;
+						}
+					}}
+					on:keydown
+				>
+					{#if innerWidth >= 1280}
+						<Fa icon={faArrowLeft} size="1.5x" />
+					{:else}
+						<Fa icon={faArrowLeft} size="1x" />
+					{/if}
+				</div>
+
+				<KanbanIcons bind:priority={kanban.priority} />
+
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="cursor-pointer hover:text-gray-500"
+					on:click={() => {
+						if (kanban.tag < tags.length) {
+							updateKanbanTag(kanban.tag + 1);
+							kanban.tag += 1;
+						}
+					}}
+					on:keydown
+				>
+					{#if innerWidth >= 1280}
+						<Fa icon={faArrowRight} size="1.5x" />
+					{:else}
+						<Fa icon={faArrowRight} size="1x" />
+					{/if}
+				</div>
+			</div>
+		{/if}
+	</li>
+{/if}
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="z-50 break-words">
-		<div slot="header" class="mt-7">
+	<Modal
+		bind:open={openModal}
+		Class="min-w-[400px] z-50 break-words"
+		onClose={() => (isEditing = false)}
+	>
+		<div slot="header" class="">
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
 			{:else}
@@ -259,34 +289,51 @@
 					Class="h-full"
 					inputClass="border-none"
 				/>
-				<select
-					on:input={changeAssignee}
-					value={kanban?.assignee?.id}
-					class="dark:bg-darkbackground"
-				>
-					{#each users as user}
-						<option value={user.user.id}>{user.user.username}</option>
-					{/each}
-				</select>
-				{$_('Priority')}
-				<select
-					class="border border-gray-600 dark:bg-darkbackground bg-white"
-					on:input={handleChangePriority}
-					value={kanban?.priority}
-				>
-					{#each priorities as i}
-						<option value={i}>{priorityText[priorityText.length - i]} </option>
-					{/each}
-				</select>
+				<div class="flex gap-6 justify-between mt-2 flex-col">
+					<div class="text-left">
+						Assignee
+						<select
+							on:input={changeAssignee}
+							value={kanban?.assignee?.id}
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						>
+							{#each users as user}
+								<option value={user.user.id}>{user.user.username}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="text-left">
+						{$_('Priority')}
+						<select
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							on:input={handleChangePriority}
+							value={kanban?.priority}
+						>
+							{#each priorities as i}
+								<option value={i}>{priorityText[priorityText.length - i]} </option>
+							{/each}
+						</select>
+					</div>
+					<div class="text-left w-[300px]">
+						<!-- {#if kanban.end_date} -->
+						End Date
+						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
+						<!-- {/if} -->
+					</div>
+				</div>
 			{:else}
-				<div class="max-h-[40vh] overflow-y-auto" id={`kanban-${kanban.id}-description`}>
+				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
 					{kanban?.description}
 				</div>
-				<span>
-					{kanban?.assignee?.username}
-				</span>
-				<!-- Don't ask why the class "table" works here -->
-				<PriorityIcons Class="ml-auto mr-auto table mt-4" priority={kanban?.priority} />
+				<div class="mt-6 text-left">
+					<span>
+						Assignee: {kanban?.assignee?.username}
+					</span>
+					<div class="flex gap-2 align-middle">
+						<span>Priority:</span>
+						<PriorityIcons Class="ruby" priority={kanban?.priority} />
+					</div>
+				</div>
 			{/if}
 		</div>
 		<div slot="footer">

@@ -20,6 +20,32 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			}
+		],
+		"name": "becomeDelegate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_group",
+				"type": "uint256"
+			}
+		],
+		"name": "becomeMemberOfGroup",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "_title",
 				"type": "string"
@@ -69,13 +95,192 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_group",
+				"name": "_pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_prediction",
+				"type": "string"
+			}
+		],
+		"name": "createPrediction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_delegateTo",
+				"type": "address"
+			}
+		],
+		"name": "delegate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "delegate",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "groupId",
 				"type": "uint256"
 			}
 		],
-		"name": "giveRightToVote",
+		"name": "DelegateResignation",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "group",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "isMember",
+				"type": "bool"
+			}
+		],
+		"name": "GroupMembershipChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "delegate",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "groupId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "delegatedVotes",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address[]",
+				"name": "delegationsFrom",
+				"type": "address[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "groupDelegateId",
+				"type": "uint256"
+			}
+		],
+		"name": "NewDelegate",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "groupId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "delegatedVotes",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address[]",
+				"name": "delegationsFrom",
+				"type": "address[]"
+			}
+		],
+		"name": "NewDelegation",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_predictionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_likelihood",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_bet",
+				"type": "bool"
+			}
+		],
+		"name": "placePredictionBet",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -101,7 +306,63 @@
 		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "predictionId",
+				"type": "uint256"
+			},
+			{
 				"indexed": false,
+				"internalType": "bool",
+				"name": "bet",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "likelihood",
+				"type": "uint256"
+			}
+		],
+		"name": "PredictionBetCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "pollId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "proposalId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "predictionId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "prediction",
+				"type": "string"
+			}
+		],
+		"name": "PredictionCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"internalType": "uint256",
 				"name": "pollId",
 				"type": "uint256"
@@ -125,6 +386,50 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_delegate",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			}
+		],
+		"name": "removeDelegation",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_group",
+				"type": "uint256"
+			}
+		],
+		"name": "removeGroupMembership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			}
+		],
+		"name": "resignAsDelegate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "_pollId",
 				"type": "uint256"
@@ -133,11 +438,6 @@
 				"internalType": "uint256",
 				"name": "_proposalId",
 				"type": "uint256"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_hashedVote",
-				"type": "bytes32"
 			}
 		],
 		"name": "vote",
@@ -162,9 +462,9 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "bytes32",
-				"name": "hashedVote",
-				"type": "bytes32"
+				"internalType": "uint256",
+				"name": "votesForProposal",
+				"type": "uint256"
 			}
 		],
 		"name": "VoteSubmitted",
@@ -172,11 +472,11 @@
 	},
 	{
 		"inputs": [],
-		"name": "checkAllRights",
+		"name": "getGroupsUserIsMemberIn",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
-				"name": "groups",
+				"name": "",
 				"type": "uint256[]"
 			}
 		],
@@ -187,16 +487,194 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_group",
+				"name": "_pollId",
 				"type": "uint256"
 			}
 		],
-		"name": "checkRightsInGroup",
+		"name": "getPoll",
 		"outputs": [
 			{
-				"internalType": "bool",
-				"name": "hasRight",
-				"type": "bool"
+				"components": [
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tag",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "group",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "pollStartDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "proposalEndDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "votingStartDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "delegateEndDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "endDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "pollId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "proposalCount",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct PollHelpers.Poll",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pollId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPollResults",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_predictionId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPredictionBets",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "pollId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "proposalId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "predictionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "bet",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "likelihood",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct PredictionBetHelpers.PredictionBet[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_proposalId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPredictions",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "pollId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "proposalId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "predictionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "prediction",
+						"type": "string"
+					}
+				],
+				"internalType": "struct PredictionHelpers.Prediction[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -228,11 +706,117 @@
 						"internalType": "uint256",
 						"name": "proposalId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "predictionCount",
+						"type": "uint256"
 					}
 				],
-				"internalType": "struct Polls.Proposal[]",
+				"internalType": "struct ProposalHelpers.Proposal[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "groupDelegates",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "delegate",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "groupId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "delegatedVotes",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "groupDelegateId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			}
+		],
+		"name": "hasDelegatedInGroup",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_groupId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_delegate",
+				"type": "address"
+			}
+		],
+		"name": "hasDelegatedToDelegateInGroup",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_group",
+				"type": "uint256"
+			}
+		],
+		"name": "isUserMemberOfGroup",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "isMember",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -328,6 +912,89 @@
 				"type": "uint256"
 			}
 		],
+		"name": "predictionBets",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "predictionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "bet",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "likelihood",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "predictions",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "pollId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "predictionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "prediction",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"name": "proposals",
 		"outputs": [
 			{
@@ -343,6 +1010,11 @@
 			{
 				"internalType": "uint256",
 				"name": "proposalId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "predictionCount",
 				"type": "uint256"
 			}
 		],

@@ -3,6 +3,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { onMount } from 'svelte';
 	import TermsOfService from '$lib/Login/TermsOfService.svelte';
+	import { goto } from '$app/navigation';
 
 	export let sideHeaderOpen = false;
 
@@ -12,7 +13,7 @@
 
 	const logOut = () => {
 		localStorage.removeItem('token');
-		window.location.href = '/';
+		goto('/login');
 	};
 
 	//TODO: Implement codocument creation
@@ -34,7 +35,7 @@
 	const navs = [
 		{
 			title: 'User Profile',
-			action: () => (window.location.href = '/user')
+			action: () => (goto('/user'))
 		},
 		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },
@@ -48,6 +49,7 @@
 </script>
 
 <!-- TODO: Relative works great for phones -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class:invisible={!sideHeaderOpen}
 	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
@@ -57,7 +59,7 @@
 >
 	{#each navs as nav}
 		<div
-			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-shadow transition-colors"
+			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 			on:click={nav.action}
 			on:keydown
 		>
@@ -92,15 +94,16 @@
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</div>
 			</div>
 		</div>
 	</div>
 </Modal>
 
-<Modal bind:open={open_tos}>
-	<div slot="body">
-		<TermsOfService Class="!border-none !p-0 leading-7" />
+<Modal bind:open={open_tos} Class="h-[90%] overflow-y-scroll">
+	<div slot="body" class="">
+		<TermsOfService Class="!border-none !p-0 leading-8" />
 	</div>
 </Modal>
 

@@ -4,23 +4,26 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 
-	export let text: string;
-	export let action = () => {};
-	export let icon = faPoll
-	export let isSelected = true;
+	export let text: string,
+		action = () => {},
+		icon = faPoll,
+		isSelected = true;
 
 	let hovering = false;
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:mouseover={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:keydown
 	on:click={action}
-	class={`select-none flex item-center items-center hover:outline outline-gray-200 dark:outline-gray-700 hover:brightness-125 outline-1 cursor-pointer p-4 ${isSelected && "text-gray-300 dark:text-gray-500"}`}
+	class={`select-none flex item-center items-center outline-gray-400 dark:outline-gray-700 ${
+		!isSelected && 'hover:outline dark:hover:brightness-125 hover:brightness-150'
+	} outline-1 cursor-pointer p-4 ${isSelected && 'text-gray-400 dark:text-gray-500'}`}
 >
-	<Fa {icon}  />
+	<Fa {icon} />
 	<div class="ml-2">
 		{$_(text)}
 	</div>

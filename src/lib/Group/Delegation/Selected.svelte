@@ -18,10 +18,12 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let delegates: Delegate[] = [],
 		tags: any[] = [],
-		status: StatusMessageInfo,
+		poppup: poppup,
 		loading = false;
 
 	onMount(async () => {
@@ -42,17 +44,22 @@
 			toSendDelegates
 		);
 
-		if (res.ok) status = { message: 'Success', success: true };
+		if (res.ok) poppup = { message: 'Success', success: true };
 		loading = false;
 	};
 
 	const getDelegateRelations = async () => {
 		loading = true;
-		const { json } = await fetchRequest(
+		const { json, res } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
+		if (!res.ok) {
+			poppup = { message: 'Could not get delegates', success: false };
+			return [];
+		}
+
 		return json.results;
 	};
 
@@ -89,7 +96,6 @@
 		const delegatesUserInfo: any[] = await getDelegatesUserInfo();
 		const delegateRelations: any[] = await getDelegateRelations();
 
-		
 		delegateRelations.forEach((relation) => {
 			const info = delegatesUserInfo.find((user) => user.user.id === relation.delegates[0].user_id);
 			console.log(delegatesUserInfo, delegateRelations, info, 'LOG');
@@ -179,7 +185,7 @@
 			</li>
 		{/each}
 	</ul>
-	<StatusMessage bind:status />
+	
 	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
 		>{$_('Save changes')}</Button
 	>
@@ -188,6 +194,8 @@
 {:else if loading === true}
 	<Loader bind:loading />
 {/if}
+
+<Poppup bind:poppup />
 
 <style>
 	.faPlus {
@@ -198,3 +206,4 @@
 		transform: rotate(45deg);
 	}
 </style>
+

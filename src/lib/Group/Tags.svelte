@@ -4,33 +4,30 @@
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import Tag from './Tag.svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { tags as tagLimit } from '../Generic/APILimits.json'
+	import { getTags } from './functions';
+	import Tag from './Tag.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
 		selectedTag: TagType = { active: false, id: 0, name: '' },
 		loading = false,
-		areYouSureModal = false;
+		areYouSureModal = false,
+		poppup: poppup;
 
 	onMount(async () => {
-		getTags();
+		await getTagsLocal();
 	});
 
-	const getTags = async () => {
+	const getTagsLocal = async () => {
 		loading = true;
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/tags?limit=${tagLimit}`);
-
-		if (res.ok) {
-			//Sorts tags alphabetically
-			tags = json.results.sort((tag1: TagType, tag2: TagType) =>
-				tag1.name.localeCompare(tag2.name)
-			);
-		}
+		tags = await getTags($page.params.groupId);
+		if (!tags) poppup = { message: 'Could not get poppups', success: false };
 		loading = false;
 	};
 
@@ -40,7 +37,7 @@
 			name: tagToAdd
 		});
 		if (res.ok) {
-			getTags();
+			getTagsLocal();
 			tagToAdd = '';
 		} else loading = false;
 	};
@@ -53,7 +50,7 @@
 		});
 		//TODO: Just update DOM instead of re-getting tags
 		if (res.ok) {
-			getTags();
+			getTagsLocal();
 			areYouSureModal = false;
 		} else loading = false;
 	};
@@ -64,7 +61,7 @@
 			tag: tag.id,
 			active: !tag.active
 		});
-		if (res.ok) getTags();
+		if (res.ok) getTagsLocal();
 		else loading = false;
 	};
 </script>
@@ -111,3 +108,5 @@
 		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />

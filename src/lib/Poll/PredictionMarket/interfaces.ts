@@ -15,12 +15,14 @@ export interface PredictionStatement {
 		};
 	};
 
+	blockchain_id: number | null;
 	description: string;
 	id: number;
-	prediction_statement_id:number;
-	user_prediction_statement_vote_id:number;
-	end_date:Date;
+	prediction_statement_id: number;
+	user_prediction_statement_vote_id: number;
+	end_date: Date;
 	poll_id: number;
+	combined_bet: null | number;
 	segments: [
 		{
 			is_true: boolean;

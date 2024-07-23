@@ -10,13 +10,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!cookies['userid']) {
 		// if this is the first time the user has visited this app,
 		// set a cookie so that we recognise them when they return
-		response.headers.set(
-			'set-cookie',
-			cookie.serialize('userid', event.locals.userid, {
-				path: '/',
-				httpOnly: true
-			})
-		);
+		// response.headers.set(
+		// 	'set-cookie',
+		// 	cookie.serialize('userid', event.locals.userid, {
+		// 		path: '/',
+		// 		httpOnly: true
+		// 	})
+		// );
+		response.headers.set('Cache-Control', 'no-cache');
 	}
 
 	return response;

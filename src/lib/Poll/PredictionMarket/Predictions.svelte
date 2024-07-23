@@ -9,23 +9,28 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
-	import type { Phase, proposal } from '../interface';
+	import type { Phase, poll, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	// import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	// import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	// import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import { getGroupInfo } from '../functions';
+	import type { Group } from '$lib/Group/interface';
+
+	export let proposals: proposal[], phase: Phase, poll: poll;
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
 		addingPrediction = false,
-		prediction_statement_id = 0,
 		newPredictionStatement: {
 			description?: string;
 			end_date?: Date;
+			blockchain_id?: number;
 			segments: {
 				proposal_id: number;
 				is_true: boolean;
@@ -33,11 +38,9 @@
 		} = { segments: [] },
 		// statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [],
-		show = false,
-		message = '',
-		resetsOfValues = 0;
-
-	export let proposals: proposal[], phase: Phase;
+		resetsOfValues = 0,
+		poppup: poppup,
+		pushingToBlockchain = true;
 
 	const getPredictionStatements = async () => {
 		loading = true;
@@ -47,6 +50,7 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
 		);
 		loading = false;
+		console.log(json.results);
 		predictions = json.results;
 	};
 
@@ -64,23 +68,27 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
+			await pushToBlockchain();
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/prediction/statement/create`,
 			newPredictionStatement
 		);
 		loading = false;
-		show = true;
-
+		
 		if (!res.ok) {
-			message = json.detail[0];
+			poppup = { message: json.detail[0], success: false };
 			return;
 		}
-
+		
 		newPredictionStatement = { segments: [] };
 		resetsOfValues++;
 		addingPrediction = false;
-		message = 'Successfully created prediction statement';
+		poppup = { message: 'Successfully created prediction statement', success: true };
+		return;
 
 		getPredictionStatements();
 	};
@@ -92,15 +100,43 @@
 		);
 	};
 
-	const addPrediction = async () => {
-		loading = true;
+	//Go through every proposal that the prediction statement is predicting on.
+	// If the proposal is pushed to blockchain, push the prediction on that proposal to blockchain
+	const pushToBlockchain = async () => {
+		let prediction_blockchain_id;
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${prediction_statement_id}/prediction/create`,
-			{}
-		);
-		loading = false;
+		for (let i = 0; i < newPredictionStatement.segments.length; i++) {
+			try {
+				const proposal = proposals.find(
+					(proposal) => newPredictionStatement.segments[i].proposal_id === proposal.id
+				);
+
+				// if (proposal?.blockchain_id && group.blockchain_id) {
+				if (proposal?.blockchain_id && poll.blockchain_id) {
+					prediction_blockchain_id = await createPredictionBlockchain(
+						poll.blockchain_id,
+						proposal.blockchain_id,
+						newPredictionStatement.description || ''
+					);
+				}
+				console.log(`${prediction_blockchain_id}`);
+				newPredictionStatement.blockchain_id = Number(`${prediction_blockchain_id}`);
+			} catch {
+				poppup = { message: 'Could not push to Blockchain', success: false };
+			}
+		}
+	};
+
+	const getAIpredictionStatement = async () => {
+		let proposalsString = '';
+		proposals.forEach((proposal) => {
+			proposalsString += `- ${proposal.title}\n`;
+		});
+
+		const { res, json } = await fetchRequest('POST', 'ai/prediction_statement', {
+			prompt: proposalsString
+		});
+		newPredictionStatement.description = json.predictions;
 	};
 
 	onMount(() => {
@@ -113,25 +149,25 @@
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
 		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading score={2} bind:phase /></li>
+			<li><Prediction {prediction} bind:loading score={2} bind:phase bind:poll /></li>
 		{/each}
 	</ul>
 
-	{#if phase === 'prediction-statement'}
-		<Button action={() => (addingPrediction = true)}>{$_('Add Prediction')}</Button>
+	{#if phase === 'prediction_statement'}
+		<Button action={() => (addingPrediction = true)}>{$_('New Prediction')}</Button>
 	{/if}
 
-	
 	{#if predictions.length === 0}
-	<div class="mt-5">{$_('There are currently no predictions')}</div>
+		<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
 </Loader>
 
-<Modal bind:open={addingPrediction}>
-	<div slot="header">{$_('Add Prediction')}</div>
-	<form slot="body" on:submit={createPredictionStatement}>
+<!-- Is displayed whenever a prediction statement is being added -->
+<Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}>
+	<div slot="header">{$_('New Prediction')}</div>
+	<div slot="body">
 		<Loader bind:loading>
-			{$_('End date for prediction')}
+			{$_('Deadline for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
 				min={new Date()}
@@ -179,11 +215,14 @@
 			</div>
 			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<!-- <StatusMessage bind:status={statusMessage} /> -->
+			<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 			<Button type="submit">{$_('Submit')}</Button>
+			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
+				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+			{/if}
 			<Button buttonStyle="warning">{$_('Cancel')}</Button>
 		</Loader>
-	</form>
+	</div>
 </Modal>
 
-<SuccessPoppup bind:message bind:show />
+<Poppup bind:poppup />

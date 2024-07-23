@@ -10,9 +10,11 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
-	import { homePolls as homePollsLimit } from '../Generic/APILimits.json'
+	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 
-	export let filter: Filter, handleSearch: () => {}, tagFiltering = false;
+	export let filter: Filter,
+		handleSearch: () => {},
+		tagFiltering = false;
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
 		tags: Tag[] = [];
@@ -28,16 +30,19 @@
 	};
 
 	const handleTags = (e: any) => {
-		if (e.target.value === "null") filter.tag = null
+		if (e.target.value === 'null') filter.tag = null;
 		else filter.tag = e.target.value;
 		handleSearch();
 	};
 
 	const getTags = async () => {
+		if (!$page.params.groupId) return;
+
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/tags?limit=${homePollsLimit}`
 		);
+		if (!res.ok) return;
 		tags = json.results;
 	};
 
@@ -71,24 +76,27 @@
 		</Button>
 	</div>
 	<div>
-		<select on:input={handleFinishedSelection} class="dark:bg-darkobject">
+		<select
+			on:input={handleFinishedSelection}
+			class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
+		>
 			<option value="all">{$_('All')}</option>
 			<option value="unfinished">{$_('Ongoing')}</option>
 			<option value="finished">{$_('Done')}</option>
 		</select>
 
-		<select on:input={handleSort} class="dark:bg-darkobject">
+		<select on:input={handleSort} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
 			<option value="start_date_desc">{$_('Newest first')}</option>
 			<option value="start_date_asc">{$_('Oldest first')}</option>
 		</select>
 
 		{#if tagFiltering}
-		<select on:input={handleTags} class="dark:bg-darkobject">
-			<option value={null}>{$_("All")}</option>
-			{#each tags as tag}
-				<option value={tag.id}>{tag.tag_name}</option>
-			{/each}
-		</select>
+			<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
+				<option value={null}>{$_('Any')}</option>
+				{#each tags as tag}
+					<option value={tag.id}>{tag.name}</option>
+				{/each}
+			</select>
 		{/if}
 		<!-- <CheckboxButtons
 			label={''}

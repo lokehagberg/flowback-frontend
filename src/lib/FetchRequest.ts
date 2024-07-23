@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 import {env} from "$env/dynamic/public";
 
 export async function fetchRequest(
@@ -20,9 +21,8 @@ export async function fetchRequest(
 	if (needs_authorization) {
 		const token = localStorage.getItem('token');
 
-		// Redirect if no token
-		if (token === null) location.href = '/login';
-		else headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+		if (token !== null) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
+		else goto('/login');
 	}
 
 	if (needs_json) {
@@ -36,11 +36,10 @@ export async function fetchRequest(
 	if (method !== 'GET') toSend.body = data;
 
 	const res = await fetch(
-		//TODO: Make /api/ not hardcodd
 		api.includes(env.PUBLIC_API_URL)
 			? `${api}`
 			: `${env.PUBLIC_API_URL}${
-				env.PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
+				env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
 			  }${api}`,
 		toSend
 	);

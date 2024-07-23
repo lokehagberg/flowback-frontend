@@ -41,10 +41,11 @@
 	};
 </script>
 
+<!-- {#if } -->
 <form on:submit|preventDefault={addProposal} class="rounded border-gray-200 dark:border-gray-500 border p-4 z-30">
 	<Loader bind:loading>
-		<div class="text-xl">Lägg till Datumförslag</div>
-		<div class="mt-4">Start Datum</div>
+		<div class="text-xl">Add date proposal</div>
+		<div class="mt-4">Start Date</div>
 		<DateInput
 			format="yyyy-MM-dd HH:mm"
 			closeOnSelection
@@ -53,7 +54,7 @@
 			max={end_date || maxDatePickerYear}
 		/>
 
-		<div class="mt-4">Slut Datum</div>
+		<div class="mt-4">End Date</div>
 		<DateInput
 			format="yyyy-MM-dd HH:mm"
 			closeOnSelection
@@ -62,7 +63,7 @@
 			max={maxDatePickerYear}
 		/>
 
-		<Button Class="mt-4" type="submit" label="Lägg till" />
+		<Button Class="mt-4" type="submit" label="Add" />
 		<StatusMessage bind:status Class="mt-4" />
 	</Loader>
 </form>

@@ -17,8 +17,10 @@
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--darkmode-text-color: #e1e1e1;
-	--darkmode-object-color: rgb(51 65 85);
-	--darkmode-background-color: rgb(71 85 105);
+	--darkmode-object-color: rgb(40, 40, 40);
+	--darkmode-background-color: rgb(32, 32, 32);
+	/* --darkmode-object-color: rgb(40, 40, 40);
+	--darkmode-background-color: rgb(30, 30, 32); */
 	overflow-x: hidden;
 }
 
@@ -81,7 +83,7 @@ h2 {
 pre {
 	font-size: 16px;
 	font-family: var(--font-mono);
-	background-color: rgba(255, 255, 255, 0.45);
+	/* background-color: rgba(255, 255, 255, 0.45); */
 	border-radius: 3px;
 	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
 	padding: 0.5em;

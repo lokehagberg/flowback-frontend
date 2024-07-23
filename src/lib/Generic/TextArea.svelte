@@ -8,12 +8,12 @@
 		Class = '',
 		onBlur = () => {},
 		autofocus = false,
-		max = 2000,
+		max = 5000,
 		onKeyPress = (e: any) => {},
 		inputClass = '',
 		rows = 2,
 		recentlyTappedButton = '',
-		id = "";
+		id = '';
 
 	const onKeyDown = (e: any) => {
 		recentlyTappedButton = e.target.value[e.target.value.length - 1];
@@ -45,17 +45,26 @@
 </script>
 
 <label class={`${Class}`} {id}
-	><p class="text-sm mb-1">{$_(label)}</p>
-	<!-- on:input={expandTextArea} -->
+	><p class="text-sm mb-1 inline">{$_(label)}</p>
+	{#if required}
+		<p class="inline text-red-600">*</p>
+	{/if}
+
+	{#if max}
+		<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400">
+			{value.length}/{max}
+		</p>
+	{/if}
+
 	<textarea
+		class={`dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		id="textarea"
+		{required}
+		{rows}
+		maxlength={max}
 		bind:value
 		on:blur={onBlur}
 		on:keypress={onKeyPress}
 		on:input={onKeyDown}
-		{required}
-		{rows}
-		maxlength={max}
-		class={`dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
-		id="textarea"
 	/>
 </label>

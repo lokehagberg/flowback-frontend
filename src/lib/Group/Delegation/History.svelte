@@ -7,7 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { User } from '$lib/User/interfaces';
 	import { goto } from '$app/navigation';
-	import Comments from '$lib/Poll/Comments.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 
 	export let history: null | number;
 
@@ -21,8 +21,7 @@
 		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
 		const { json, res } = await fetchRequest('GET', `group/poll/pool/${history}/votes`);
 		loading = false;
-
-		votingHistory = json.results;
+		if (res.ok) votingHistory = json.results;
 	};
 
 	const getDelegateInfo = async () => {
@@ -31,17 +30,15 @@
 			`group/${$page.params.groupId}/delegate/pools?id=${history}`
 		);
 
-		console.log(json, 'JESOn');
-
 		delegatePool = json.results[0];
 	};
 
 	const getUserInfo = async () => {
 		//@ts-ignore
 		const userId = delegatePool.delegates[0].group_user.id;
-
 		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
 
+		if (!res.ok) return {};
 		user = json.results[0];
 	};
 
@@ -62,7 +59,7 @@
 			{$_('delegate history for')}
 			{user?.username}
 		</div>
-		<Comments api="delegate-history" on:keydown={() => {}} />
+		<Comments api="delegate-history" on:keydown={() => {}} delegate_pool_id={history} />
 	{/if}
 	<ul class="w-full">
 		{#each votingHistory as vote}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	// @ts-ignore
-	import { setTimeStamp, type Message, type PreviewMessage } from './interfaces';
+	import { type Message, type Message1, type PreviewMessage } from './interfaces';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -12,8 +12,12 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+	import sendMessage, { messageStore } from './Socket';
+	import { onMount } from 'svelte';
+	import Socket from './Socket';
+	import { updateUserData } from './functions';
+	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import {env} from "$env/dynamic/public";
 
 	// User Action variables
@@ -24,22 +28,168 @@
 		status: {
 			message: any;
 			success: boolean;
-		};
+		},
+		messages: Message[] = [],
+		socket: WebSocket;
 
 	export let selectedChat: number | null,
-		sendMessageToSocket: (
-			message: string,
-			selectedChat: number,
-			selectedPage: 'direct' | 'group'
-		) => Promise<boolean>,
+		selectedChatChannelId: number | null,
 		user: User,
-		messages: Message[] = [],
 		selectedPage: 'direct' | 'group',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
 		isLookingAtOlderMessages: boolean;
 
+	onMount(() => {
+		recieveMessage();
+	});
+
+	const getRecentMesseges = async () => {
+		if (!selectedChatChannelId) return;
+
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
+		);
+
+		if (res.ok) messages = json.results.reverse();
+
+		//Temporary fix before json.next issue is fixed
+		olderMessages = json.next;
+		newerMessages = '';
+	};
+
+	const getChannelId = async (id: number) => {
+		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		return json;
+	};
+
+	//Runs when changing chats
+	const postMessage = async () => {
+		if (!selectedChat) return;
+		if (message.length === 0) return;
+		//If only spaces, return
+		if (message.match(/^\s+$/)) return;
+
+		//When sending, go to most recent messages
+		if (newerMessages) getRecentMesseges();
+
+		//Updates preview window to display recently typed chat message
+		let previewMessage = (selectedPage === 'group' ? previewGroup : previewDirect).find(
+			(previewMessage) =>
+				(selectedPage === 'direct' &&
+					((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
+						(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
+				(selectedPage === 'group' && previewMessage.group_id === selectedChat)
+		);
+		if (previewMessage) {
+			previewMessage.message = message;
+			previewMessage.created_at = new Date().toString();
+		}
+
+		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
+
+		let channelId = selectedChat;
+		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
+
+		if (!selectedChatChannelId) return;
+		console.log(selectedChatChannelId, selectedChat)
+		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
+
+		if (!didSend) status = { message: 'Could not send message', success: false };
+		else
+			messages.push({
+				message,
+				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
+				created_at: new Date().toString()
+			});
+
+		messages = messages;
+		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
+
+		updateUserData(selectedChat, new Date());
+	};
+
+	const showOlderMessages = async () => {
+		const { res, json } = await fetchRequest('GET', olderMessages);
+
+		if (!res.ok) return;
+		newerMessages = json.previous;
+		olderMessages = json.next;
+
+		messages = json.results.reverse();
+	};
+
+	const showEarlierMessages = async () => {
+		const { res, json } = await fetchRequest('GET', newerMessages);
+
+		olderMessages = json.next;
+		newerMessages = json.previous;
+
+		messages = json.results.reverse();
+	};
+
+	//Uses svelte stores to recieve messages
+	const recieveMessage = () => {
+		messageStore.subscribe((message: Message1) => {
+			if (!message) return;
+
+			if (message.channel_origin_name === 'group') {
+				handleRecieveMessage(previewGroup, message);
+				previewGroup = previewGroup;
+			} else if (message.channel_origin_name === 'user') {
+				handleRecieveMessage(previewDirect, message);
+				previewDirect = previewDirect;
+			}
+		});
+	};
+
+	const handleRecieveMessage = (preview: PreviewMessage[], message: Message1) => {
+		if (message.channel_id !== selectedChat) {
+			let notifiedChannel = preview.find((info) => {
+				return info.channel_id === message.channel_id;
+			});
+
+			// If no channel has started yet, start it. New chats will work like this
+			if (!notifiedChannel) {
+				preview.push({
+					created_at: message.created_at.toString(),
+					id: message.id,
+					message: message.message,
+					notified: true,
+					profile_image: message.user.profile_image,
+					timestamp: new Date().toString(),
+					user: message.user,
+					user_id: message.user.id,
+					channel_id: message.channel_id
+				});
+				preview = preview;
+			} else {
+				notifiedChannel.notified = true;
+				notifiedChannel.message = message.message;
+				preview = preview;
+			}
+		} else if (message.channel_id === selectedChat) {
+			messages.push({
+				message: message.message,
+				user: {
+					id: message.id,
+					username: message.user.username,
+					profile_image: message.user.profile_image
+				}
+			});
+			messages = messages;
+		}
+	};
+
+	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
+
+	//Behavior is differnet when looking at older chat messages
+	$: {
+		if (newerMessages) isLookingAtOlderMessages = true;
+		else isLookingAtOlderMessages = false;
+	}
 
 	//When messages are recieved and not looking at history, scroll.
 	$: messages &&
@@ -53,85 +203,88 @@
 			}, 100);
 		})();
 
-	const getRecentMesseges = async () => {
-		if (!selectedChat) return;
+	//@ts-ignore
+	$: if (user) socket = Socket.createSocket(user.id);
 
-		const { res, json } = await fetchRequest(
-			'GET',
-			`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
-		);
+	// const getRecentMesseges = async () => {
+	// 	if (!selectedChat) return;
 
-		if (res.ok) messages = json.results.reverse();
+	// 	const { res, json } = await fetchRequest(
+	// 		'GET',
+	// 		`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
+	// 	);
 
-		//Temporary fix before json.next issue is fixed
-		olderMessages = json.next;
-		newerMessages = '';
-	};
+	// 	if (res.ok) messages = json.results.reverse();
+
+	// 	//Temporary fix before json.next issue is fixed
+	// 	olderMessages = json.next;
+	// 	newerMessages = '';
+	// };
 
 	//Runs when changing chats
-	const postMessage = async () => {
-		if (message.length === 0) return;
-		if (!selectedChat) return;
-		//If only spaces, return
-		if (message.match(/^\s+$/)) return;
+	// const postMessage = async () => {
+	// 	if (message.length === 0) return;
+	// 	if (!selectedChat) return;
+	// 	//If only spaces, return
+	// 	if (message.match(/^\s+$/)) return;
 
-		//When sending, go to most recent messages
-		if (newerMessages) getRecentMesseges();
+	// 	//When sending, go to most recent messages
+	// 	if (newerMessages) getRecentMesseges();
 
-		//Updates preview window to display recently typed chat message
-		let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
-			(previewMessage) =>
-				(selectedPage === 'direct' &&
-					((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
-						(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
-				(selectedPage === 'group' && previewMessage.group_id === selectedChat)
-		);
-		if (previewMessage) {
-			previewMessage.message = message;
-			previewMessage.created_at = new Date().toString();
-		} else {
-			//For brand new chats, create new preview message
-			(selectedPage === 'direct' ? previewDirect : previewGroup).push({
-				created_at: new Date().toString(),
-				message,
-				timestamp: new Date().toString(),
-				username: user.username,
-				user_id: user.id,
-				target_id: selectedPage === 'direct' ? selectedChat : 0,
-				target_username: user.username,
-				profile_image: '',
-				group_id: selectedPage === 'group' ? selectedChat : 0
-			});
-		}
+	// 	//Updates preview window to display recently typed chat message
+	// 	let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
+	// 		(previewMessage) =>
+	// 			(selectedPage === 'direct' &&
+	// 				((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
+	// 					(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
+	// 			(selectedPage === 'group' && previewMessage.group_id === selectedChat)
+	// 	);
+	// 	if (previewMessage) {
+	// 		previewMessage.message = message;
+	// 		previewMessage.created_at = new Date().toString();
+	// 	} else {
+	// 		//For brand new chats, create new preview message
+	// 		(selectedPage === 'direct' ? previewDirect : previewGroup).push({
+	// 			created_at: new Date().toString(),
+	// 			message,
+	// 			timestamp: new Date().toString(),
+	// 			username: user.username,
+	// 			user_id: user.id,
+	// 			target_id: selectedPage === 'direct' ? selectedChat : 0,
+	// 			target_username: user.username,
+	// 			profile_image: '',
+	// 			group_id: selectedPage === 'group' ? selectedChat : 0
+	// 		});
+	// 	}
 
-		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
+	// 	selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
-		const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
+	// 	const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
 
-		if (!didSend) status = { message: 'Could not send message', success: false };
-		else
-			messages.push({
-				message,
-				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-				created_at: new Date().toString()
-			});
+	// 	if (!didSend) status = { message: 'Could not send message', success: false };
+	// 	else
+	// 		messages.push({
+	// 			message,
+	// 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
+	// 			created_at: new Date().toString()
+	// 		});
 
-		messages = messages;
-		message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
+	// 	messages = messages;
+	// 	message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
 
-		setTimeStamp(selectedChat, selectedPage);
-	};
+	// 	setTimeStamp(selectedChat, selectedPage);
+	// };
 
-	const showOlderMessages = async () => {
-		const { res, json } = await fetchRequest('GET', olderMessages);
+	// const showOlderMessages = async () => {
+	// 	const { res, json } = await fetchRequest('GET', olderMessages);
 
-		if (!res.ok) return;
-		// nextMessagesAPI = json.next
-		newerMessages = json.previous;
-		olderMessages = json.next;
+	// 	if (!res.ok) return;
+	// 	// nextMessagesAPI = json.next
+	// 	newerMessages = json.previous;
+	// 	olderMessages = json.next;
 
-		messages = json.results.reverse();
-	};
+	// 	messages = json.results.reverse();
+	// };
 
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
@@ -139,9 +292,9 @@
 	}
 </script>
 
-{#if selectedChat !== null}
+{#if selectedChat !== null || true}
 	<ul
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-100% overflow-y-scroll overflow-x-hidden break-all"
+		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-[100%] overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 	>
 		{#if messages.length === 0}
@@ -154,7 +307,7 @@
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
 		{#each messages as message}
-			<li class="p-3 hover:bg-gray-200">
+			<li class="p-3 hover:bg-gray-200 hover:dark:bg-darkbackground">
 				<span>{message.user?.username || message.username}</span>
 				<span class="text-[14px] text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 				<p>{message.message}</p>
@@ -162,16 +315,8 @@
 		{/each}
 		{#if newerMessages}
 			<li class="text-center mt-6 mb-6">
-				<Button
-					action={async () => {
-						const { res, json } = await fetchRequest('GET', newerMessages);
-
-						olderMessages = json.next;
-						newerMessages = json.previous;
-
-						messages = json.results.reverse();
-					}}
-					buttonStyle="secondary">{$_('Show earlier messages')}</Button
+				<Button action={showEarlierMessages} buttonStyle="secondary"
+					>{$_('Show earlier messages')}</Button
 				>
 			</li>
 		{/if}
@@ -213,5 +358,5 @@
 		</form>
 	</div>
 {:else}
-	<div>{("No chat selected")}</div>
+	<div>{'No chat selected'}</div>
 {/if}

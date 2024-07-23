@@ -1,4 +1,4 @@
-import type { GroupUser } from "$lib/User/interfaces";
+import type { GroupUser } from '$lib/User/interfaces';
 
 export interface DelegatePool {
 	delegates: Delegate[];
@@ -6,10 +6,23 @@ export interface DelegatePool {
 }
 
 export interface Delegate {
-	delegate_id: number;
-	group_user_id: number;
-	user_id: number;
-	group_user : GroupUser
+	isInRelation: boolean;
+	active: boolean;
+	group_id: number;
+	group_image: string;
+	profile_image:string;
+	group_name: string;
+	id: number;
+	pool_id: number;
+	is_admin: boolean;
+	permission_id: number | null;
+	permission_name: string | null;
+	user: {
+		banner_image: string;
+		id: number;
+		profile_image: string;
+		username: string;
+	};
 }
 
 export interface VoteHistory {

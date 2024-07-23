@@ -25,6 +25,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Group/Threads.svelte';
+	import { pushState } from '$app/navigation';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -52,6 +53,7 @@
 
 	const setUserGroupInfo = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
+		if (!res.ok) return;
 		userIsDelegateStore.set(json.results[0].delegate);
 		statusMessageFormatter(res, json);
 		loading = false;
@@ -60,8 +62,11 @@
 	const getGroupInfo = async () => {
 		//TODO: detail is outdated
 		const { json, res } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
+		loading = false;
+		if (!res.ok) return;
+
 		group = json;
-		console.log(group, 'GROUPPP');
+		// console.log(group, 'GROUPPP');
 		memberCount = json.member_count;
 		userInGroup = !(json.detail && json.detail[0] === 'User is not in group');
 		statusMessageFormatter(res, json);
@@ -82,16 +87,10 @@
 	});
 
 	const handleBackButton = () => {
-		const page = new URLSearchParams(window.location.search).get('page') || 'flow';
+		// const page = new URLSearchParams(window.location.search).get('page') || 'flow';
 		//@ts-ignore
-		selectedPage = page;
+		// selectedPage = page;
 	};
-
-	$: if (hasMounted) {
-		const searchParams = new URLSearchParams(window.location.search);
-		searchParams.set('page', selectedPage);
-		window.history.pushState({}, '', `${location.pathname}?${searchParams}`);
-	}
 </script>
 
 <svelte:head>
@@ -106,18 +105,16 @@
 		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<div
-					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] ${
-						selectedPage === 'kanban' || selectedPage === 'schedule'
-							? 'xl:w-[1000px]'
-							: 'xl:w-[720px]'
-					}`}
+					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
+				`}
 				>
+					<!-- Here is where the different pages on a group are selected and switched around with, such as "Flow" page which is 
+					here called Pollthumbnails. -->
+
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
+
 					{#if selectedPage === 'flow'}
-						<PollThumbnails
-							infoToGet="group"
-							Class={`sm:w-full md:w-[80%] md:max-w-[600px] mx-auto my-0`}
-						/>
+						<PollThumbnails infoToGet="group" Class={`w-full mx-auto my-0`} />
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}

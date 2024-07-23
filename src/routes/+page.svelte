@@ -6,6 +6,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import {initializeLocalization} from '$lib/Localization/i18n'
+	import { goto } from '$app/navigation';
 
 	let status: StatusMessageInfo, initializedLocale = false;
 
@@ -28,7 +29,7 @@
 				localStorage.setItem('userName', json.username);
 			}
 
-			window.location.href = '/home';
+			goto('/home');
 		} else {
 			status = statusMessageFormatter(res, json, 'Problems');
 		}
@@ -45,10 +46,6 @@
 		const username = params.getAll('username')[0];
 		const password = params.getAll('password')[0];
 		if (username && password) logIn(username, password);
-		else if (localStorage.getItem('token')) window.location.href = '/home';
-		else window.location.href = '/login';
-
-		
 	});
 </script>
 

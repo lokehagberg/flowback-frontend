@@ -8,15 +8,13 @@
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
-	import { becomeDelegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { goto } from '$app/navigation';
+	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
+	import { isNumber } from 'chart.js/helpers';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import type { Delegate } from './interfaces';
 	import {env} from "$env/dynamic/public";
-
-	// TODO: fix multiple instances of Delegate interface
-	interface Delegate extends User {
-		delegate_pool_id: number;
-		isInRelation: boolean;
-	}
 
 	let delegates: Delegate[] = [],
 		delegateRelations: any[] = [],
@@ -30,14 +28,9 @@
 
 	onMount(async () => {
 		userId = (await fetchRequest('GET', 'user')).json.id;
-		await getDelegateRelations();
-		getDelegatePools();
+		await getDelegatePools();
 		getUserInfo();
-
-		// userIsDelegateStore.subscribe((info) => {
-		// 	userIsDelegate = info;
-		// 	console.log(info, 'INFO');
-		// });
+		getDelegateRelations();
 	});
 
 	const getUserInfo = async () => {
@@ -46,13 +39,17 @@
 			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 		if (json.results.length === 1) userIsDelegate = true;
-
-		console.log(json);
 	};
 
 	const createDelegation = async () => {
 		await createDelegationPool();
 		// TOOD-Blockchain: Set this up so it works
+		loading = true;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			await becomeDelegate($page.params.groupId);
+
+		loading = false;
 		// await becomeDelegate(Number($page.params.groupId));
 		getDelegatePools();
 	};
@@ -64,19 +61,63 @@
 	};
 
 	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		loading = true;
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
+		);
+
+		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
+
+		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
+		setTimeout(() => {
+			if (loading === true) {
+				loading = false;
+				show = true;
+				message = 'Something went wrong';
+			}
+		}, 25000);
+
+		if (!res.ok) return;
+
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
+
+		loading = false;
+	};
+
+	/*
 	 	Makes the currently logged in user into a delegate(pool)
 	 */
 	const createDelegationPool = async () => {
 		loading = true;
+		let toSend: any = {};
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			try {
+				const blockchain_id = becomeDelegate($page.params.groupId);
+				if (isNumber(blockchain_id)) toSend.blockchain_id = blockchain_id;
+			} catch {
+				toSend.blockchain_id = 4
+				console.warn('Error');
+			}
+
 		const { res } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/delegate/pool/create`
+			`group/${$page.params.groupId}/delegate/pool/create`,
+			toSend
 		);
 
 		if (!res.ok) return;
 
 		loading = false;
 		userIsDelegate = true;
+
 		// userIsDelegateStore.update((value) => (value = true));
 	};
 
@@ -97,45 +138,6 @@
 		// userIsDelegateStore.update((value) => (value = false));
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		loading = true;
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
-		);
-
-		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
-
-		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
-		setTimeout(() => {
-			if (loading === true) {
-				loading = false;
-				show = true;
-				message = 'Something went wrong';
-			}
-		}, 25000);
-
-		delegates = await Promise.all(
-			json.results.map(async (delegatePool: any) => {
-				const delegateId = delegatePool.delegates[0].group_user.id;
-
-				const delegateUserData = await (
-					await fetchRequest('GET', `users?id=${delegateId}`)
-				).json.results[0];
-
-				const isInRelation = delegateRelationPoolIds.includes(delegatePool.id);
-
-				return { ...delegateUserData, delegate_pool_id: delegatePool.id, isInRelation };
-			})
-		);
-
-		loading = false;
-	};
-
 	const getDelegateRelations = async () => {
 		loading = true;
 		const { json } = await fetchRequest(
@@ -143,6 +145,14 @@
 			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
 		loading = false;
+
+		//Determines whether to show the "remove as delegate" or "add as delegate" buttons, depening on if user already has delegated or not earlier. 
+		json.results.forEach((relation: any) => {
+			delegates.map((delegate) => {
+				if (delegate.pool_id === relation.delegate_pool_id) delegate.isInRelation = true;
+				return delegate;
+			});
+		});
 		delegateRelations = json.results;
 	};
 
@@ -153,10 +163,13 @@
 		});
 
 		loading = false;
-		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
-			].isInRelation = true;
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = true;
+
+		delegate($page.params.groupId);
 	};
 
 	const deleteDelegateRelation = async (delegate_pool_id: number) => {
@@ -166,10 +179,11 @@
 		});
 
 		loading = false;
-		if (res.ok)
-			delegates[
-				delegates.findIndex((delegate) => delegate.delegate_pool_id === delegate_pool_id)
-			].isInRelation = false;
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = false;
 	};
 </script>
 
@@ -183,7 +197,7 @@
 				<div
 					class="cursor-pointer hover:underline flex items-center"
 					on:keydown
-					on:click={() => (window.location.href = `/user?id=${delegate.id}`)}
+					on:click={() => goto(`/user?id=${delegate.pool_id}`)}
 				>
 					<img
 						src={delegate.profile_image
@@ -194,27 +208,25 @@
 						alt="avatar"
 						class="w-10 h-10 rounded-full"
 					/>
-					<span class="ml-4 mr-4">{delegate.username}</span>
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
 					on:keydown
 					class="text-gray-500 dark:text-gray-400 cursor-pointer hover:underline"
 					on:click={() => {
-						history = delegate.id;
+						history = delegate.pool_id;
 						selectedPage = 'History';
 					}}>{$_('See delegate history')}</span
 				>
-				{#if userId !== delegate.id}
+				{#if userId !== delegate.pool_id}
 					<div />
 					{#if delegate.isInRelation}
-						<Button
-							Class={'bg-red-500'}
-							action={() => deleteDelegateRelation(delegate.delegate_pool_id)}
+						<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
 							>{$_('Remove as delegate')}</Button
 						>
-					{:else}
-						<Button action={() => createDelegateRelation(delegate.delegate_pool_id)}
+						<!-- If not self, display "add as delegate" button -->
+					{:else if delegate.user.id !== Number(window.localStorage.getItem('userId'))}
+						<Button action={() => createDelegateRelation(delegate.pool_id)}
 							>{$_('Add as delegate')}</Button
 						>
 					{/if}

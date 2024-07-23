@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Thread } from '$lib/Group/interface';
-	import Comments from '$lib/Poll/Comments.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 	import type { Comment } from '$lib/Poll/interface';
 
 	let thread: Thread, comments: Comment[];

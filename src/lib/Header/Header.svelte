@@ -1,13 +1,5 @@
 <script lang="ts">
 	import HeaderIcon from './HeaderIcon.svelte';
-	//Temporary fix due to bug with Sveltekit, it should be "import {faHome, faGlobeEurope, ...} from @fortawesome/free-solid-svg-icons"
-	import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
-	import { faSun } from '@fortawesome/free-solid-svg-icons/faSun';
-	import { faUserFriends } from '@fortawesome/free-solid-svg-icons/faUserFriends';
-	import { faCalendarWeek } from '@fortawesome/free-solid-svg-icons/faCalendarWeek';
-	import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
-	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
-	import { faMoneyBill } from '@fortawesome/free-solid-svg-icons/faMoneyBill';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
@@ -18,47 +10,102 @@
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
-	// import { accountsStore } from '$lib/Account/stores';
-	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import type { Group, GroupUser } from '$lib/Group/interface';
+	import { pfpStore } from '$lib/Login/stores';
 	import {
-		env
-	} from "$env/dynamic/public";
+		faCalendarWeek,
+		faCoins,
+		faHome,
+		faList,
+		faMoon,
+		faUserFriends,
+		faChartBar,
+		faMoneyBill
+	} from '@fortawesome/free-solid-svg-icons';
+	import Sun from './Sun.svelte';
+	import { env } from '$env/dynamic/public';
 
 	let sideHeaderOpen = false,
 		profileImage = DefaultPFP,
-		darkMode: boolean | null = null,
-		ledgerExists: boolean = false;
+		darkMode: boolean = false,
+		isAdmin = false,
+		ledgerExists = true;
 	//TODO: The <HeaderIcon> component should handle default darkMode
 
 	onMount(() => {
-		getProfileImage();
-		darkMode = localStorage.theme === 'dark';
-		checkForLedgerModule();
+		if (location.pathname !== '/login') {
+			getProfileImage();
+			setPfP();
+		}
+
+		ensureDarkMode();
+
+		pfpStore.subscribe((s) => {
+			getProfileImage();
+		});
 	});
+
+	const setPfP = () => {
+		if (!profileImage) getProfileImage();
+		else {
+			const pfpLink = localStorage.getItem('pfp-link');
+			if (pfpLink) profileImage = pfpLink;
+		}
+	};
+
+	const ensureDarkMode = () => {
+		if (localStorage.getItem('theme') === 'light') {
+			darkMode = false;
+			return;
+		} else if (localStorage.getItem('theme') === 'dark') {
+			darkMode = true;
+			return;
+		}
+
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			darkMode = true;
+		} else darkMode = false;
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+			// darkMode = event.matches;
+		});
+	};
 
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 
 		if (res.ok && json.profile_image)
-			profileImage = `${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-			}${json.profile_image}`;
+			profileImage = `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+				json.profile_image
+			}`;
+
+		localStorage.setItem('pfp-link', profileImage);
+
+		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
 
-	const checkForLedgerModule = async () => {
-		// const accounts = await accountsStore.get();
-		// ledgerExists = accounts.loaded;
+	const getIsAdmin = async (userId: number) => {
+		const { res, json } = await fetchRequest('GET', 'group/list');
+		if (!res.ok) return;
+		const group: Group = json?.results[0];
+		{
+			const { res, json } = await fetchRequest('GET', `group/${group.id}/users`);
+			if (!res.ok) return;
+
+			const admins = json?.results.filter((user: GroupUser) => user.is_admin === true);
+
+			if (admins.find((admin: GroupUser) => admin.user.id === userId)) isAdmin = true;
+		}
 	};
 </script>
 
-<!-- TODO have two layers one for menu buttons for the middle and another layer on flowback/notification/pfp -->
-
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0">
+<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
 	<header
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
-		<a href="/home" class="md:w-auto flex justify-center md:flex-none"
+		<a
+			href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+			class="md:w-auto flex justify-center md:flex-none"
 			><img
 				src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
 				class="w-32 cursor-pointer"
@@ -66,19 +113,24 @@
 			/></a
 		>
 		<div class="!flex justify-between md:w-[80vw]">
-			<nav class="flex justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
+			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
-					icon={faUserFriends}
-					text="Groups"
-					href="groups"
-					color={darkMode ? 'white' : 'black'}
+						icon={faUserFriends}
+						text="Groups"
+						href="groups"
+						color={darkMode ? 'white' : 'black'}
 					/>
-					{/if}
-					{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
-					<HeaderIcon icon={faHome} text="Home" href="groups/1" color={darkMode ? 'white' : 'black'} />
+				{/if}
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+					<HeaderIcon
+						icon={faHome}
+						text="Home"
+						href="groups/1"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
 				<HeaderIcon
 					icon={faCalendarWeek}
@@ -87,51 +139,29 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if env.PUBLIC_MODE === 'DEV'}
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon
-						icon={faChartBar}
-						text="Prediction"
-						href="prediction"
+						icon={faList}
+						text="My Kanban"
+						href="kanban"
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
-				<HeaderIcon
-					icon={faList}
-					text="My Kanban"
-					href="kanban"
-					color={darkMode ? 'white' : 'black'}
-				/>
+
 				<HeaderIcon
 					icon={faCoins}
-					text="My Ledger"
+					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
+						? 'My Ledger'
+						: 'Group Ledger'}
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>
-				<!-- <HeaderIcon
-					icon={faList}
-					text="My Kanban"
-					href="kanban"
-					color={darkMode ? 'white' : 'black'}
-				/> -->
-				{#if env.PUBLIC_MODE === 'DEV'}
-					{#if ledgerExists}
-						<HeaderIcon
-							icon={faMoneyBill}
-							text="Account"
-							href="ledger"
-							color={darkMode ? 'white' : 'black'}
-						/>
-					{/if}
-				{/if}
 			</nav>
 
-			<div
-				id="side-header"
-				class="flex gap-4 items-center float-right cursor-pointer hover:bg-grey-800"
-			>
+			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<span
-					class="dark:text-darkmodeText"
+					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
 					on:click={() => {
@@ -140,7 +170,7 @@
 					}}
 				>
 					{#if darkMode}
-						<Fa icon={faSun} />
+						<Sun />
 					{:else}
 						<Fa icon={faMoon} />
 					{/if}
@@ -150,8 +180,10 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
-						class={`w-8 h-8 rounded-full ${sideHeaderOpen && 'border-blue-500 border-4'}`}
 						src={profileImage}
+						class={`w-8 h-8 rounded-full cursor-pointer ${
+							sideHeaderOpen && 'border-blue-500 border-4'
+						}`}
 						alt="default pfp"
 					/>
 				</div>

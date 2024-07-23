@@ -62,7 +62,8 @@
 		end_date: Date | null,
 		title: string,
 		description: string,
-		event_id: number | undefined;
+		event_id: number | undefined,
+		deleteSelection = () => {};
 
 	export let type: 'user' | 'group';
 
@@ -89,13 +90,10 @@
 		}
 	};
 
-	//This function is defined in onMount, prevents "document not found" error
-	let deleteSelection = () => {};
-
 	const setUpScheduledPolls = async () => {
 		const { json, res } = await fetchRequest(
 			'GET',
-			groupId ? `group/${groupId}/schedule` : 'user/schedule?limit=1000'
+			groupId ? `group/${groupId}/schedule?limit=1000` : 'user/schedule?limit=1000'
 		);
 		events = json.results;
 	};
@@ -107,7 +105,9 @@
 	const isEventOnDate = (date: Date) => {
 		let eventsOnDate = events;
 		eventsOnDate = eventsOnDate.filter((event) => {
-			return date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date);
+			return (
+				date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date)
+			);
 		});
 
 		return eventsOnDate.length > 0;
@@ -225,6 +225,10 @@
 		showEvent = true;
 	};
 
+	const getDate = (year: number, month: number, x: number, y: number) => {
+		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+	};
+
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
@@ -240,10 +244,11 @@
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate()}/{selectedDate.getMonth()}
+		{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div on:click={() => (showCreateScheduleEvent = true)} on:keydown>
 				{#if type === 'user'}
 					<Fa
@@ -283,7 +288,7 @@
 									}:${
 										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
 									}`;
-								else return 'ongoing';
+								else return 'whole day';
 							})()}</span
 						>
 					</a>
@@ -295,6 +300,7 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year -= 1)}
@@ -303,6 +309,7 @@
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="text-xl text-center w-16">{year}</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year += 1)}
@@ -313,6 +320,7 @@
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month -= 1)}
@@ -321,6 +329,7 @@
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</div>
 				<div class="w-10 text-center">{$_(months[month])}</div>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month += 1)}
@@ -333,8 +342,11 @@
 		<div class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
-						on:dblclick={() => (showCreateScheduleEvent = true)}
+						on:dblclick={() => {
+							if (type === 'user') showCreateScheduleEvent = true;
+						}}
 						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 						id={`${x}-${y}`}
 						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
@@ -352,10 +364,16 @@
 							<div class="text-center">
 								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 							</div>
+							{#each events as event}
 
+								{#if new Date(event.start_date) <= getDate(year, month, x+1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+									<div class="text-center">{event.title}</div>
+								{/if}
+							{/each}
+							<!-- 
 							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
 								<Fa class="m-auto" icon={faCalendarAlt} />
-							{/if}
+							{/if} -->
 						</div>
 					</div>
 				{/each}
@@ -410,12 +428,7 @@
 	</div>
 </Modal>
 
-<Modal
-	bind:open={showEditScheduleEvent}
-	onClose={() => {
-		console.log('WHY HERE?!');
-	}}
->
+<Modal bind:open={showEditScheduleEvent}>
 	<div slot="header">{$_('Edit Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>

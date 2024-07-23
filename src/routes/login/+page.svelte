@@ -9,6 +9,7 @@
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/Reforum.png';
 	import { _ } from 'svelte-i18n';
+	import { goto } from '$app/navigation';
 	import {env} from "$env/dynamic/public";
 
 	let selectedPage = 'Login';
@@ -17,7 +18,7 @@
 	let email = ''
 
 	onMount(() => {
-		if (localStorage.getItem('token')) window.location.href = '/home';
+		if (localStorage.getItem('token')) goto('/home');
 	});
 </script>
 
@@ -29,7 +30,7 @@
 	<div class="mt-6">
 		<img src={env.PUBLIC_LOGO === "REFORUM" ? Reforum : Logo} class="w-44" alt="flowback logo" />
 	</div>
-	<div class="bg-white mt-6 rounded shadow-lg w-full max-w-[600px]">
+	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText mt-6 rounded shadow-lg w-full max-w-[600px]">
 		<Tab bind:selectedPage tabs={import.meta.env.VITE_DISABLE_ACCOUNT_CREATION === "true" ? ['Login'] : ['Login', 'Register']} />
 		<div class="">
 			{#if selectedPage === 'Login'}

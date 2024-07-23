@@ -24,6 +24,9 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import { removeGroupMembership } from '$lib/Blockchain/javascript/rightToVote';
 
 	export let selectedPage: SelectablePage = 'flow';
 	export let group: GroupDetails;
@@ -52,7 +55,10 @@
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
-		if (res.ok) window.location.href = '/home';
+		if (res.ok) {
+			removeGroupMembership(Number($page.params.groupId))
+			goto('/home');		
+		} 
 	};
 
 	onMount(() => {
@@ -146,22 +152,24 @@
 				icon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => (selectedPage = 'statistics')}
 				text="Statistics"
 				icon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
-			/>
-			<GroupSidebarButton
-				action={() => (selectedPage = 'about')}
-				text="About"
-				icon={faCircleInfo}
-				isSelected={selectedPage === 'about'}
-			/>
+			/> -->
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<GroupSidebarButton
+					action={() => (selectedPage = 'about')}
+					text="About"
+					icon={faCircleInfo}
+					isSelected={selectedPage === 'about'}
+				/>
+			{/if}
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+			
 			<!-- These two are link tags so people are able to open them in new window/tab -->
-
 			<a
 				class="text-inherit"
 				target="_blank"
@@ -169,12 +177,26 @@
 			>
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 			<GroupSidebarButton
 				action={() => (areYouSureModal = true)}
 				text="Leave group"
 				icon={faPersonRunning}
 				isSelected={false}
 			/>
+			{:else }
+			<a
+			class="text-inherit"
+		
+			href={`/ledger`}
+			>
+			<GroupSidebarButton
+				text="Group Ledger"
+				icon={faCoins}
+				isSelected={false}
+			/>
+		</a>
+			{/if}
 		</div>
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
@@ -197,7 +219,7 @@
 					isSelected={selectedPage === 'perms'}
 				/>
 				<GroupSidebarButton
-					action={() => (window.location.href = `/creategroup?group=${$page.params.groupId}`)}
+					action={() => (goto(`/creategroup?group=${$page.params.groupId}`))}
 					text="Edit Group"
 					icon={faCog}
 					isSelected={false}

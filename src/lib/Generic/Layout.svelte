@@ -7,13 +7,15 @@
 	export let centered = false;
 
 	onMount(() => {
+		let backed = false;
 		TriggerDarkMode();
+
 	});
 </script>
 
-<Header />
+<!-- <Header /> -->
 
-<Chat />
+<!-- <Chat /> -->
 
 <div class={`${centered ? 'flex justify-center flex-col items-center' : ''}`}>
 	<slot />

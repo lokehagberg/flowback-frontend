@@ -1,7 +1,6 @@
 <script lang="ts">
-	import ProposalsRanked from '$lib/Poll/ProposalsRanked.svelte';
 	import Timeline from '$lib/Poll/Timeline.svelte';
-	import Comments from '$lib/Poll/Comments.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -20,10 +19,9 @@
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
 	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
 	import TitleDescription from '$lib/Poll/TitleDescription.svelte';
-	import { getPhase } from '$lib/Poll/functions';
+	import { getPhase, getPhaseUserFriendlyName } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
-	import {env} from "$env/dynamic/public";
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -47,7 +45,7 @@
 		await getPollData();
 		phase = getPhase(poll);
 		scrollToSection();
-		checkForLinks(poll.description, 'poll-description');
+		checkForLinks(poll?.description, 'poll-description');
 		document.title = poll.title;
 	});
 
@@ -69,7 +67,7 @@
 
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
-		if (res.ok) window.location.href = `/groups/${$page.params.groupId}`;
+		if (res.ok) goto(`/groups/${$page.params.groupId}`);
 		else deleteStatus = statusMessageFormatter(res, json, '');
 	};
 
@@ -95,72 +93,131 @@
 		if (!section) return;
 		setTimeout(() => {
 			const scrollTo = document.getElementById(section);
-			scrollTo?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-		}, 1500);
+			scrollTo?.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
+		}, 200);
+	};
+
+	const nextPhase = async () => {
+		let _phase: Phase = 'pre_start';
+
+		if (pollType === 4) {
+			if (phase === 'area_vote') _phase = 'proposal';
+			else if (phase === 'proposal') _phase = 'prediction_statement';
+			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
+			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
+			else if (phase === 'delegate_vote') _phase = 'vote';
+			else if (phase === 'vote') _phase = 'prediction_vote';
+		} else if (pollType === 3) _phase = 'result';
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/fast_forward`,
+			{
+				phase: _phase
+			}
+		);
+
+		if (res.ok) phase = _phase;
 	};
 </script>
 
 {#if poll}
 	<Layout centered>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			class="cursor-pointer p-1 m-6 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			on:click={() => goto(`/groups/${$page.params.groupId}`)}
 		>
-			<TitleDescription {pollType} {poll} />
-			{$_('Current phase:')}
-			{phase}
+			<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
+			<Fa icon={faArrowLeft} />
+		</div>
+		<div
+			class="p-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+		>
+			<TitleDescription {poll} displayTag={phase !== 'area_vote'} />
+			{#if poll.attachments && poll.attachments.length > 0}
+				<img
+					src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
+					alt="attachment to the poll"
+				/>
+			{/if}
 
-			{#if phase === 'pre-start'}
-				<div>dev</div>
-			{:else if phase === 'area-vote'}
-				<AreaVote />
-			{:else if phase === 'proposals'}
-				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+			<!-- Current Phase -->
+			<div>
+				{$_('Current phase:')}
+				{getPhaseUserFriendlyName(phase)}
+			</div>
 
-				{#if pollType === 4}
-					<!-- Ranked Poll -->
-					<ProposalSubmition bind:proposals />
-				{:else if pollType === 3}
-					<!-- Scheduled Poll -->
-					<ScheduledSubmission bind:abstained />
+			{#if pollType === 4}
+				{#if phase === 'pre_start'}
+					<div>dev</div>
+				{:else if phase === 'area_vote'}
+					<AreaVote />
+				{:else if phase === 'proposal'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					<ProposalSubmition bind:proposals {poll} />
+				{:else if phase === 'prediction_statement'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'prediction_bet'}
+					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'delegate_vote'}
+					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'vote'}
+					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'result'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'prediction_vote'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase bind:poll />
 				{/if}
-			{:else if phase === 'prediction-statement'}
-				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'prediction-betting'}
-				<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'delegate-voting'}
-				<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
-				<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'voting'}
-				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-
-				<ProposalScoreVoting {groupUser} isVoting={!groupUser?.is_delegate} {proposals} />
-
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'results'}
-				<Results {pollType} />
-				<Predictions bind:proposals bind:phase />
-			{:else if phase === 'prediction-voting'}
-				<Results {pollType} />
-				<Predictions bind:proposals bind:phase />
+			{:else if pollType === 3}
+				{#if !finished}
+					<DatePoll />
+				{:else}
+					<Results {pollType} />
+				{/if}
 			{/if}
 
 			<Timeline
 				displayDetails={false}
-				dates={[
-					new Date(poll.start_date),
-					new Date(poll.area_vote_end_date),
-					new Date(poll.proposal_end_date),
-					new Date(poll.prediction_statement_end_date),
-					new Date(poll.prediction_bet_end_date),
-					new Date(poll.delegate_vote_end_date),
-					new Date(poll.end_date)
-				]}
+				dates={// If text poll, have all phases. Date polls have fewer phases to display
+				poll.poll_type === 4
+					? [
+							new Date(poll.start_date),
+							new Date(poll.area_vote_end_date),
+							new Date(poll.proposal_end_date),
+							new Date(poll.prediction_statement_end_date),
+							new Date(poll.prediction_bet_end_date),
+							new Date(poll.delegate_vote_end_date),
+							new Date(poll.end_date)
+					  ]
+					: [new Date(poll.start_date), new Date(poll.end_date)]}
+				{pollType}
 			/>
+
+			<!-- Mod Tools -->
+			<!-- TODO: Fix as part of svelte store information this place -->
+			{#if groupUser?.is_admin}
+				<StatusMessage bind:status={deleteStatus} />
+				<div class="flex gap-4 align-middle">
+					<div class="">Mod Tools:</div>
+					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+						>{$_('Delete poll')}</Button
+					>
+					{#if !finished}
+						<Button action={nextPhase}>Next Phase</Button>
+					{/if}
+				</div>
+			{/if}
+
 			<Comments bind:proposals api="poll" />
 			<Modal bind:open={DeletePollModalShow}>
 				<div slot="header">{$_('Deleting Poll')}</div>
@@ -176,17 +233,11 @@
 					</div>
 				</div>
 			</Modal>
-			{#if groupUser?.is_admin}
-				<StatusMessage bind:status={deleteStatus} />
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500"
-					>{$_('Delete poll')}</Button
-				>
-			{/if}
 		</div>
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img
 				class=""
-				src={`${env.PUBLIC_API_URL}api/media/${poll.attachments[0].file}` || ''}
+				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
 				alt="attachment to the comment"
 			/>
 		{/if}

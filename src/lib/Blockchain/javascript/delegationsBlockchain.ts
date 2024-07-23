@@ -1,71 +1,125 @@
 import { ethers } from 'ethers';
-import contractABI from './contractDelegationsABI.json';
+import contractABI from './contractABI.json';
 
+interface Window {
+	ethereum?: import('ethers').providers.ExternalProvider;
+}
 
-const getContract = (privateKey:string) => {
-	const provider = new ethers.providers.InfuraProvider('sepolia', import.meta.env.INFURA_API_KEY);
-
-	const wallet = new ethers.Wallet(privateKey, provider);
-
-
-	const contractAddress = '0x616F8F6C731f805C4Ae7D0D315cD97877F99745a';
-
-	return new ethers.Contract(contractAddress, contractABI, wallet);
-};
-
-export const becomeMemberOfGroup = async (groupId: number, privateKey:string) => {
-	const contract = getContract(privateKey);
-	
-	// Set gasPrice value
-	const gasPrice = ethers.utils.parseUnits('0.000000001', 'gwei');
-	
-	// Update transaction options with gasPrice
-	const tx = await contract.giveRightToVote(groupId, { gasLimit: 21204, gasPrice });
-	
-	
-	// Timeout for when the transactions takes too long
-	const txReceipt = await tx.wait({ timeout: 20000 }).catch((error:any) => {
-		console.error('Error waiting for transaction:', error);
-	});
-	
-	
-	if (txReceipt.status === 1) {
-		console.log('Transaction successful');
-		console.log(txReceipt);
-	} else console.warn('Transaction failed');
-};
-
-export const delegate = async (groupId: number, reciever: any, privateKey:string) => {
-	const contract = getContract(privateKey);
-
-	console.log(groupId, reciever);
-	const tx = await contract.delegate(groupId.toString(), reciever.toString());
-
-	const txReceipt = await tx.wait();
-
-	if (txReceipt.status === 1) {
-		console.log('Transaction successful');
-		console.log(txReceipt.logs);
+async function getUser() {
+	if (window.ethereum) {
+		await window.ethereum.request({ method: 'eth_requestAccounts' });
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const signer = provider.getSigner();
+		return signer;
+	} else {
+		console.log('MetaMask is not available');
+		throw new Error('MetaMask is not available');
 	}
+}
+
+const getContract = async () => {
+	const signer = await getUser();
+
+	const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
+
+	return new ethers.Contract(contractAddress, contractABI, signer);
 };
-export const becomeDelegate = async (groupId: number, privateKey:string) => {
-	const contract = getContract(privateKey);
-	console.log('HERE');
-	const tx = await contract.becomeDelegate(groupId);
 
-	const txReceipt = await tx.wait();
+export const becomeDelegate = async (groupId: number | string) => {
+	groupId = Number(groupId);
 
-	if (txReceipt.status === 1) {
-		console.log('Transaction successful');
-		const logs = txReceipt.logs;
-		console.log(logs);
+	try {
+		const contract = await getContract();
+		const feeData = await contract.provider.getFeeData();
+		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+		const estimatedGasLimit = await contract.estimateGas.becomeDelegate(groupId);
+		const tx = await contract.becomeDelegate(groupId, {
+			gasLimit: estimatedGasLimit,
+			maxPriorityFeePerGas: maxPriorityFeePerGas
+		});
 
-		const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
-		console.log(parsedLogs);
+		const txReceipt = await tx.wait({ timeout: 4000 });
+		if (txReceipt && txReceipt.status === 1) {
+			const logs = txReceipt.logs;
+			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
+			const NewDelegateEvent = parsedLogs.find((log: any) => log.name === 'NewDelegate');
+			if (NewDelegateEvent) {
+				const delegate = NewDelegateEvent.args.delegate;
+				const groupId = NewDelegateEvent.args.groupId;
+				console.log(`New delegate "${delegate}" added to group ${groupId}`);
+				return delegate;
+			} else {
+				console.warn('NewDelegate event not found in transaction logs');
+			}
+		} else {
+			console.warn('Transaction might have failed');
+			console.log(txReceipt);
+		}
+	} catch (error) {
+		console.error('Error becoming delegate', error);
 	}
 };
 
-//becomeMemberOfGroup(1)
-//becomeDelegate(1);
+export const delegate = async (groupId: number | string) => {
+	groupId = Number(groupId);
 
-//delegate(1,"adress");
+	try {
+		const contract = await getContract();
+		const feeData = await contract.provider.getFeeData();
+		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+		const estimatedGasLimit = await contract.estimateGas.delegate(
+			groupId,
+			import.meta.env.VITE_SIGNER_ADDRESS
+		);
+		const tx = await contract.delegate(groupId, import.meta.env.VITE_SIGNER_ADDRESS, {
+			gasLimit: estimatedGasLimit,
+			maxPriorityFeePerGas: maxPriorityFeePerGas
+		});
+
+		const txReceipt = await tx.wait({ timeout: 4000 });
+		if (txReceipt && txReceipt.status === 1) {
+			const logs = txReceipt.logs;
+			const parsedLogs = logs.map((log: any) => contract.interface.parseLog(log));
+			const NewDelegationEvent = parsedLogs.find((log: any) => log.name === 'NewDelegation');
+			if (NewDelegationEvent) {
+				const delegate = NewDelegationEvent.args.to;
+				const delegater = NewDelegationEvent.args.from;
+				const groupId = NewDelegationEvent.args.groupId;
+				console.log(`New delegation from "${delegater}" to "${delegate} in group ${groupId}`);
+			} else {
+				console.warn('NewDelegation event not found in transaction logs');
+			}
+		} else {
+			console.warn('Transaction might have failed');
+			console.log(txReceipt);
+		}
+	} catch (error) {
+		console.error('Error delegating', error);
+	}
+};
+
+export const removeDelegation = async () => {
+	try {
+		const contract = await getContract();
+		const feeData = await contract.provider.getFeeData();
+		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+		const estimatedGasLimit = await contract.estimateGas.removeDelegation(
+			import.meta.env.VITE_SIGNER_ADDRESS,
+			2
+		);
+		const tx = await contract.removeDelegation(import.meta.env.VITE_SIGNER_ADDRESS, 2, {
+			gasLimit: estimatedGasLimit,
+			maxPriorityFeePerGas: maxPriorityFeePerGas
+		});
+
+		const txReceipt = await tx.wait({ timeout: 4000 });
+		if (txReceipt && txReceipt.status === 1) {
+			console.log('Transaction successful');
+		} else {
+			console.warn('Transaction might have failed');
+			console.log(txReceipt);
+		}
+	} catch (error) {
+		console.error('Error delegating', error);
+	}
+};

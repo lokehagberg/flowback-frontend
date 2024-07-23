@@ -5,6 +5,6 @@
 
 </script>
 
-<th>
+<th class="font-normal">
     {role}
 </th>

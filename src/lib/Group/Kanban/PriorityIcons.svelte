@@ -16,7 +16,7 @@
 		Class = '';
 </script>
 
-<div class={Class} title={priorityText[priority - 1]}>
+<div class={`${Class} ruby`} title={priorityText[priority - 1]}>
 	{#if priority === 1}
 		<div class="flex flex-col">
 			<Fa icon={faChevronDown} />
@@ -35,3 +35,9 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.ruby{
+		display:ruby
+	}
+</style>

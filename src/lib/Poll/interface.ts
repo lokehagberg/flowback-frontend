@@ -4,6 +4,7 @@ export interface proposal {
 	id: number;
 	created_by: number;
 	poll: number;
+	blockchain_id?: number;
 }
 
 export interface poll {
@@ -18,7 +19,7 @@ export interface poll {
 	poll_type: number;
 	result: boolean;
 	start_date: string;
-	tag: number;
+	tag_id: number;
 	tag_name: string;
 	title: string;
 	group_id: number;
@@ -30,12 +31,14 @@ export interface poll {
 	prediction_statement_end_date: string;
 	prediction_bet_end_date: string;
 	vote_end_date: string;
+	blockchain_id:number|null;
 	group_name?: string;
 	group_image?: string;
 	joined: boolean;
 	group_joined: boolean;
 	total_comments: number;
 	pinned: boolean;
+	status: number;
 }
 
 export interface votings {
@@ -55,15 +58,15 @@ export interface Filter {
 }
 
 export type Phase =
-	| 'pre-start'
-	| 'area-vote'
-	| 'proposals'
-	| 'prediction-statement'
-	| 'prediction-betting'
-	| 'delegate-voting'
-	| 'voting'
-	| 'results'
-	| 'prediction-voting';
+	| 'pre_start'
+	| 'area_vote'
+	| 'proposal'
+	| 'prediction_statement'
+	| 'prediction_bet'
+	| 'delegate_vote'
+	| 'vote'
+	| 'result'
+	| 'prediction_vote';
 
 export interface Comment {
 	author_id: number;
@@ -81,6 +84,7 @@ export interface Comment {
 	active: boolean;
 	edited: boolean;
 	attachments: { file: string }[];
+	user_vote: boolean | null;
 }
 
 export interface CommentEdited {}

@@ -1,14 +1,18 @@
 import { writable } from 'svelte/store';
-import {env} from "$env/dynamic/public";
+import { type Message1 } from './interfaces';
 
-const messageStore = writable('');
+export const messageStore = writable<Message1>();
 
 const createSocket = (userId: number) => {
 	let socket: WebSocket;
 
-	const token = localStorage.getItem('token') || '';
+	const token = localStorage.getItem('token');
 
-	const link = `${env.PUBLIC_WEBSOCKET_API_URI}${env.PUBLIC_HAS_API && '/api'}/chat/ws?token=${token}`;
+	if (token === undefined) return;
+
+	const link = `${import.meta.env.VITE_WEBSOCKET_API}${
+		import.meta.env.VITE_HAS_API === 'TRUE' ? '/api' : ''
+	}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 
@@ -18,9 +22,9 @@ const createSocket = (userId: number) => {
 
 	socket.onmessage = (event) => {
 		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
-		const messageId = JSON.parse(event.data).user.id;
-		if (messageId !== userId) messageStore.set(event.data);
-		console.log(`[message] Data received from server: ${event.data}`);
+		const parsedMessage = JSON.parse(event.data);
+		const messageId = parsedMessage.user.id;
+		if (messageId !== userId) messageStore.set(parsedMessage);
 	};
 
 	socket.onclose = (event) => {
@@ -44,19 +48,22 @@ const sendMessage = async (
 	message: string,
 	topic_id: number,
 	attachments_id: number | null = null,
-	parent_id: number | null = null,
+	parent_id: number | null = null
 ) => {
-	if (socket.readyState <= 1 && message.length > 0)
-	await socket.send(
-		JSON.stringify({
-			channel_id,
-			message,
-			// topic_id,
-			// attachments_id,
-			// parent_id,
-			type: 'message_create'
-		})
-	);
+	if (socket.readyState <= 1 && message.length > 0) {
+		const res = await socket.send(
+			JSON.stringify({
+				channel_id,
+				message,
+				// topic_id,
+				// attachments_id,
+				// parent_id,
+				method: 'message_create'
+			})
+		);
+		// console.log(res, "RESULTS")
+	}
+	return true;
 };
 
 // const sendMessage = async (socket: WebSocket) => {

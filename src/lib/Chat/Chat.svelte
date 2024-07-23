@@ -11,8 +11,9 @@
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
+	import { updateUserData } from './functions';
 	import Socket from './Socket';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -20,170 +21,88 @@
 		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number | null,
-		//Websocket utility functions and variables
-		socket: WebSocket,
-		sendMessageToSocket: (
-			message: string,
-			selectedChat: number,
-			selectedPage: 'direct' | 'group'
-		) => Promise<boolean>,
 		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
 		notifiedDirect: number[] = [],
 		notifiedGroup: number[] = [],
-		isLookingAtOlderMessages = false;
+		isLookingAtOlderMessages = false,
+		chatDiv: HTMLDivElement,
+		selectedChatChannelId: number | null;
 
 	onMount(async () => {
 		await getUser();
 		// await setUpMessageSending();
-		testNewAPI();
+		// console.log(socket, user, user.id, 'IDD');
+
+		// testNewAPI();
+		correctMarginRelativeToHeader();
+		window.addEventListener('resize', correctMarginRelativeToHeader);
 	});
 
-	const testNewAPI = async () => {
-
-		const { json, res } = await fetchRequest('GET', `chat/message/channel/${1}/list`);
-		if (!res.ok) return;
-
-
-		let socket = Socket.createSocket(user.id);
-		setTimeout(() => {
-			Socket.sendMessage(socket, 1, 'helloo :3', 1, 1, 1);
-		}, 2000);
+	const correctMarginRelativeToHeader = () => {
+		const _headerHeight = document.querySelector('#header')?.clientHeight;
+		if (_headerHeight && chatDiv) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
 	};
 
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
-		const { json, res } = await fetchRequest('GET', 'user');
+		const { res, json } = await fetchRequest('GET', 'user');
 		if (res.ok) user = json;
+		if (!res.ok) return;
 	};
-
-	// const setUpMessageSending = async () => {
-	// 	//Must be imported here to avoid "document not found" error
-	// 	const { createSocket, subscribe, sendMessage } = (await import('./Socket')).default;
-	// 	socket = createSocket(User.id);
-
-	// 	sendMessageToSocket = await sendMessage(socket);
-
-	// 	subscribe(getMessage);
-	// };
-
-	//There's one large socket that handles messages from everywhere, which is why
-	//this function which gets messages from the socket is placed here an not in
-	//ChatWindow.svelte
-
-	const getMessage = async (e: any) => {
-		//Try-catch to prevent error end at JSON string
-		try {
-			var { message, user, group, target_type } = JSON.parse(e);
-		} catch (err) {
-			return;
-		}
-
-		if (isLookingAtOlderMessages) return;
-
-		//Finds the message on the left side of the chat screen and changes it as the new one comes in.
-		let previewMessage = (target_type === 'direct' ? previewDirect : previewGroup).find(
-			(previewMessage) =>
-				(target_type === 'direct' &&
-					(previewMessage.user_id === user.id || previewMessage.target_id === user.id)) ||
-				(target_type === 'group' && previewMessage.group_id === group)
-		);
-
-		if (previewMessage) {
-			previewMessage.message = message;
-			previewMessage.created_at = new Date().toString();
-
-			if (selectedChat === previewMessage.user_id) {
-				previewMessage.timestamp = new Date().toString();
-			}
-		} else {
-			//For brand new chats, create new preview message
-			(target_type === 'direct' ? previewDirect : previewGroup).push({
-				created_at: new Date().toString(),
-				message,
-				timestamp: new Date().toString(),
-				username: user.username,
-				user_id: user.id,
-				target_id: user.id,
-				target_username: user.username,
-				profile_image: '',
-				group_id: group
-			});
-		}
-
-		previewGroup = previewGroup;
-		previewDirect = previewDirect;
-
-		if (
-			(selectedPage === 'direct' && target_type === 'direct' && user && user.id === selectedChat) ||
-			(selectedPage === 'group' && target_type === 'group' && group === selectedChat)
-		)
-			messages = [...messages, { message, user, created_at: new Date().toString() }];
-	};
-
-	//White screen when changing between direct and groups
-	$: selectedPage &&
-		(() => {
-			selectedChat = null;
-		})();
 
 	$: if (chatOpen === false) {
+		if (selectedChat) updateUserData(selectedChat, null, new Date());
 		selectedChat = null;
 		// selectedPage === 'direct';
 	}
-
-	// $: if (document !== undefined) document.title = chatOpen ? `${document.title} with chat open` : document.title.replace("with chat open", "")
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:head>
-	<!-- <title
-		>
-		{`${notifiedDirect.length > 0 ? '🟣' : ''}${
-			notifiedGroup.length > 0 ? '🔵' : ''
-		}`}
-		</title
-	> -->
+	<title>
+		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
+	</title>
 </svelte:head>
+
 <div
+	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix grid-sizing h-[100vh]"
 >
-	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2">
+	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2 h-[100vh]">
 		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
+
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="cursor-pointer w-full h-full" on:click={() => (chatOpen = false)}>
-			<CrossButton />
+		<div class="w-full h-full" on:keydown>
+			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 		</div>
 	</div>
-	<!-- <Preview
+	<Preview
 		bind:selectedChat
 		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		bind:notifiedDirect
-		bind:notifiedGroup
+		bind:selectedChatChannelId
 	/>
 	<ChatWindow
+		bind:selectedChat
+		bind:selectedChatChannelId
+		bind:selectedPage
 		bind:previewDirect
 		bind:previewGroup
-		bind:selectedChat
-		bind:selectedPage
-		bind:sendMessageToSocket
-		user={User}
-		bind:messages
 		bind:isLookingAtOlderMessages
-	/> -->
+		{user}
+	/>
 </div>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={() => (chatOpen = true)}
-	class:small-notification={notifiedDirect.length > 0}
-	class:small-notification-group={notifiedGroup.length > 0}
+	on:keydown
+	class:small-notification={previewDirect.find((preview) => preview.notified)}
+	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
 	<Fa icon={faComment} size="1.3x" />
@@ -218,5 +137,9 @@
 		background-color: rgb(147, 197, 235);
 		border-radius: 100%;
 		padding: 10px;
+	}
+
+	.grid-sizing {
+		grid-template-rows: 8% 77% 15%;
 	}
 </style>

@@ -9,18 +9,19 @@
 	import { _ } from 'svelte-i18n';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
 		loading = true,
 		selectedPage: SelectablePages = 'Members',
 		searchUser = '',
-		searchedUsers: User[] = [];
+		searchedUsers: User[] = [],
+		poppup: poppup;
 
 	onMount(async () => {
 		getUsers();
@@ -36,7 +37,6 @@
 			'GET',
 			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}`
 		);
-		console.log(json.results);
 		users = json.results;
 		loading = false;
 	};
@@ -58,13 +58,26 @@
 
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
-		usersAskingForInvite = json.results;
+		if (res.ok) usersAskingForInvite = json.results;
+		else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
+		loading = true;
+		const { res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
 			to: userId
 		});
+
+		loading = false;
+		if (!res.ok) {
+			poppup = { message: "Couldn't get invites list", success: false };
+			return;
+		}
+
+		poppup = {
+			success: true,
+			message: 'Successfully sent invite'
+		};
 	};
 
 	const acceptInviteUser = async (userId: number) => {
@@ -89,7 +102,7 @@
 	<div
 		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
-		<Tab bind:selectedPage tabs={['Members', 'Pending Invites', 'Invite']} />
+		<Tab bind:selectedPage tabs={import.meta.env.VITE_ONE_GROUP_FLOWBACK ? ['Members'] : ['Members', 'Pending Invites', 'Invite']} />
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}
@@ -103,7 +116,7 @@
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-			{#if usersAskingForInvite.length === 0}
+			{#if usersAskingForInvite?.length === 0}
 				{$_('There are currently no pending invites')}
 			{/if}
 			{#each usersAskingForInvite as user}
@@ -138,6 +151,7 @@
 					onInput={() => searchUsers(searchUser)}
 					bind:value={searchUser}
 					label="User to invite"
+					placeholder="Username"
 				/>
 				<ul>
 					{#each searchedUsers as searchedUser}
@@ -182,3 +196,5 @@
 		{/if}
 	</div>
 </Loader>
+
+<Poppup bind:poppup />

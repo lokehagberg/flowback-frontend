@@ -7,6 +7,7 @@
 	import StatusMessage    from '$lib/Generic/StatusMessage.svelte';
 	import {statusMessageFormatter} from '$lib/Generic/StatusMessage';
 	import type { Account } from './interface';
+	import { goto } from '$app/navigation';
 
 	export let open: boolean = false, account: Account;
 	
@@ -16,7 +17,7 @@
 		);
 		const status = statusMessageFormatter(res, json);
 		if (res.ok)
-			window.location.href = `/accounts`;
+			goto(`/accounts`);
 	};
 </script>
 <Modal bind:open>

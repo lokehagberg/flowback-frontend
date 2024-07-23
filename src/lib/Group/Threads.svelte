@@ -3,34 +3,82 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import type { Thread } from './interface';
+	import Pagination from '$lib/Generic/Pagination.svelte';
+	import { goto } from '$app/navigation';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import Fa from 'svelte-fa';
+	import { faComment } from '@fortawesome/free-solid-svg-icons';
 
-	let threads: any[] = [];
+	let threads: Thread[] = [],
+		prev = '',
+		next = '',
+		poppup: poppup;
 
-	const getThreads = async (): Promise<any[]> => {
+	const getThreads = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/thread/list`,
+			`group/${$page.params.groupId}/thread/list?limit=2`,
 			{}
 		);
-		return json.results;
+
+		if (!res.ok) {
+			poppup = { message: 'Could not load threads', success: false };
+			return;
+		}
+
+		next = json.next;
+		prev = json.previous;
+		threads = json.results;
 	};
 
-	onMount(async () => {
-		threads = await getThreads();
+	onMount(() => {
+		getThreads();
 	});
 </script>
 
 <div>
 	{#if threads.length === 0}
-	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center">There are currently no threads in this group</div>
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"
+		>
+			There are currently no threads in this group
+		</div>
 	{/if}
 	{#each threads as thread}
-		<div
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 cursor-pointer"
-			on:click={() => window.location.href = `${$page.params.groupId}/thread/${thread.id}`}
-			on:keydown
-		>
-			{thread.title}
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
+			<div class="flex justify-between">
+				<span
+					class="cursor-pointer hover:underline"
+					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
+					on:keydown>{thread.title}</span
+				>
+				<NotificationOptions
+					api={`group/thread/${thread.id}`}
+					categories={['comment']}
+					id={thread.id}
+					labels={['comment']}
+				/>
+			</div>
+
+			<div
+				class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText mt-3"
+			>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<a
+					class="text-black dark:text-darkmodeText"
+					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
+					on:keydown
+				>
+					<Fa class="inline" icon={faComment} />
+					<span class="inline">{thread.total_comments} {'comments'}</span>
+				</a>
+			</div>
 		</div>
 	{/each}
+	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>
+
+<Poppup bind:poppup />

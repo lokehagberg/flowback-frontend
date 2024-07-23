@@ -1,11 +1,9 @@
 <script lang="ts">
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { Transaction as TransactionType, Account, Filter } from '$lib/Ledger/interface';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -13,18 +11,16 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Select from '$lib/Generic/Select.svelte';
 	import Transaction from '$lib/Ledger/Transaction.svelte';
-	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import TransactionFilter from '$lib/Ledger/TransactionFilter.svelte';
 	import formatDate from '$lib/Ledger/formatDate';
 	import { generateAndDownloadHTML } from '$lib/Ledger/HTML';
-	import { page } from '$app/stores';
 	import type { User } from '$lib/User/interfaces';
-	import type { id } from 'ethers/lib/utils';
+	import Pagination from '$lib/Generic/Pagination.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let loading: boolean = true,
 		transactions: TransactionType[] = [],
-		status: StatusMessageInfo,
-		aggregatedBalance: number = 0,
 		account_id: number,
 		openNewTransaction = false,
 		show_account = false,
@@ -39,8 +35,9 @@
 		account_name: string,
 		account_number: string,
 		accounts: Account[] = [],
-		value: number,
-		message: string,
+		next: string,
+		prev: string,
+		poppup: poppup,
 		totalBalance = 0,
 		filter: Filter = {
 			account_ids: [],
@@ -48,15 +45,15 @@
 			date_before: null,
 			description: null
 		},
-		user: User;
+		user: User,
+		limit = 20;
 
 	onMount(async () => {
-		//@ts-ignore
-		getAccounts();
+		loading = true;
+		await getAccounts();
 		await getUserInfo();
 		await getTransactions();
-		calculateTotalBalance();
-
+		await calculateTotalBalance();
 		loading = false;
 	});
 
@@ -69,10 +66,13 @@
 	};
 
 	const getAccounts = async () => {
-		loading = true;
+		// loading = true;
 		const { res, json } = await fetchRequest('GET', `ledger/account/list`);
-		if (!res.ok) message = 'Something went wrong';
-		loading = false;
+		if (!res.ok) {
+			poppup = { message: 'Something went wrong', success: false };
+			return;
+		}
+		// loading = false;
 		accounts = json.results;
 		setAccountFilter(json);
 	};
@@ -84,7 +84,7 @@
 	};
 
 	const getTransactions = async () => {
-		loading = true;
+		// loading = true;
 
 		let api = `ledger/transactions/list?`;
 
@@ -101,17 +101,22 @@
 
 		if (filter.description !== null) api += `&description=${filter.description}`;
 
+		api += `&limit=${limit}`;
+
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) {
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		}
+
+		next = json.next;
+		prev = json.previous;
 
 		transactions = json.results.filter(
 			(transaction: Transaction) => transaction.account.created_by.id === user?.id
 		);
-		loading = false;
+		// loading = false;
 	};
 
 	const createTransaction = async () => {
@@ -132,11 +137,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully created transaction';
+			poppup = { message: 'Successfully created transaction', success: true };
 		}
 
 		transactions.push({
@@ -176,11 +181,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully created account';
+			poppup = { message: 'Successfully created account', success: true };
 			accounts.push({
 				account_name,
 				account_number,
@@ -199,11 +204,11 @@
 
 		if (!res.ok) {
 			show_poppup = true;
-			message = 'Something went wrong';
+			poppup = { message: 'Something went wrong', success: false };
 			return;
 		} else {
 			show_poppup = true;
-			message = 'Successfully deleted account';
+			poppup = { message: 'Successfully deleted account', success: true };
 			accounts = accounts.filter((account) => account_id !== account.id);
 		}
 	};
@@ -264,7 +269,7 @@
 
 	export const getUserInfo = async () => {
 		const { res, json } = await fetchRequest('GET', `users?id=${localStorage.getItem('userId')}`);
-
+		if (!res.ok) return {};
 		user = json.results[0];
 	};
 
@@ -282,12 +287,13 @@
 
 			<div class="mt-4">
 				<div class="bg-white dark:bg-darkobject p-6">
-					Filtering
+					<div class="mb-4">Filtering</div>
+					<!-- <div class="flex"> -->
 					{#if !Object.values(filter).every((x) => x === null)}
 						<Button
 							action={() => {
 								//@ts-ignore
-								for (var filt in filter) {
+								for (const filt in filter) {
 									//@ts-ignore
 									if (filt !== 'account_ids') filter[filt] = null;
 									else getAccounts();
@@ -303,6 +309,7 @@
 						>
 					{/if}
 					<TransactionFilter bind:filter {handleSearch} bind:accounts />
+					<!-- </div> -->
 				</div>
 				<div class="bg-white dark:bg-darkobject p-6 mt-6">
 					<Button
@@ -312,14 +319,31 @@
 						}}>Add Transaction</Button
 					>
 					<Button action={() => (show_account = true)}>Create Account</Button>
-					<Button action={() => (showDeleteAccount = true)} buttonStyle="warning"
-						>Delete Account</Button
-					>
+					<Button action={() => (showDeleteAccount = true)}>Delete An Account</Button>
 					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
 						>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
 							? 'between selected dates'
 							: ''}</Button
 					>
+					<div class="mt-4 flex gap-2">
+						Show on page:
+						<Select
+							labels={['20', '50', '100', 'All']}
+							values={[20, 50, 100, 10000]}
+							bind:value={limit}
+							onInput={(e) => {
+								const selectedOptions = Array.from(
+									//@ts-ignore
+									e.target?.selectedOptions,
+									//@ts-ignore
+									(option) => option.value
+								);
+								//@ts-ignore
+								limit = selectedOptions;
+								getTransactions();
+							}}
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -337,6 +361,8 @@
 				{#each transactions as transaction}
 					<Transaction bind:transaction bind:transactions bind:accounts />
 				{/each}
+
+				<Pagination bind:iterable={transactions} bind:next bind:prev />
 			</div>
 		</Loader>
 	</div>
@@ -445,7 +471,8 @@
 		<Button action={createAccount}>Create Account</Button>
 	</div>
 </Modal>
-<SuccessPoppup bind:show={show_poppup} bind:message />
+
+<Poppup bind:poppup />
 
 <Modal bind:open={showDeleteAccount}>
 	<div slot="body">

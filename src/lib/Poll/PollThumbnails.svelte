@@ -12,6 +12,7 @@
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
+	import Pagination from '$lib/Generic/Pagination.svelte';
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public';
@@ -25,73 +26,59 @@
 			tag: null
 		},
 		loading = false,
-		isAdmin = false;
+		isAdmin = false,
+		next = '',
+		prev = '';
 
-	//TODO: Refactor this
-	const getPolls = async () => {
-		loading = true;
+	const getAPI = async () => {
+		let API = '';
 
-		let API =
-			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}`
-				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}`
-				: //TODO remove public
-				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true`
-				: '';
+		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
+		else if (infoToGet === 'home') API += `home/polls?`;
+		//TODO remove public
+		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
 		if (filter.order_by) API += `&order_by=${filter.order_by}`;
 
-		API += `&finished=${filter.finishedSelection}`;
+		// API += `&limit=${pollThumbnailsLimit}`
+		API += `&limit=${pollThumbnailsLimit}`;
 
-		API += '&pinned=false';
+		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
-		if (filter.tag) API += `&tag=${filter.tag}`;
+		if (filter.finishedSelection !== 'all')
+			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
 
-		const { json, res } = await fetchRequest('GET', API);
+		// API += '&pinned=false';
 
-		if (!res.ok) status = statusMessageFormatter(res, json);
-		else polls = json.results;
+		if (filter.tag) API += `&tag_id=${filter.tag}`;
 
-		loading = false;
+		return API;
 	};
 
-	//TODO: Remove this shit later
-	const amendWithPinnedPolls = async () => {
-		const finishedFilter =
-			filter.finishedSelection === 'all'
-				? ''
-				: filter.finishedSelection === 'finished'
-				? 'finished=true'
-				: 'finished=false';
+	const getPolls = async () => {
+		loading = true;
+		polls = [];
 
-		let API =
-			infoToGet === 'group'
-				? `group/${$page.params.groupId}/poll/list?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
-				: infoToGet === 'home'
-				? `home/polls?limit=${pollThumbnailsLimit}&${finishedFilter}&order_by=${filter.order_by}`
-				: //TODO remove public
-				infoToGet === 'public'
-				? `home/polls?limit=${pollThumbnailsLimit}&public=true&${finishedFilter}`
-				: '';
+		const { json, res } = await fetchRequest('GET', await getAPI());
 
-		if (filter.search.length > 0) API += `&title__icontains=${filter.search || ''}`;
+		loading = false;
 
-		API = API + '&pinned=true';
+		if (!res.ok) {
+			status = statusMessageFormatter(res, json);
+			return;
+		}
 
-		const { json, res } = await fetchRequest('GET', API);
-
-		if (!res.ok) status = statusMessageFormatter(res, json);
-		else polls = [...json.results, ...polls];
+		polls = json.results;
+		next = json.next;
+		prev = json.previous;
 	};
 
 	let status: StatusMessageInfo;
 
 	onMount(async () => {
 		await getPolls();
-		amendWithPinnedPolls();
-		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId);
+		//TODO: Part of refactoring with svelte stores includes thsi
+		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId) || false;
 	});
 </script>
 
@@ -103,28 +90,35 @@
 				tagFiltering={infoToGet === 'group'}
 				handleSearch={async () => {
 					await getPolls();
-					amendWithPinnedPolls();
+					// amendWithPinnedPolls();
 					return {};
 				}}
 				bind:filter
 			/>
-			{#if polls.length === 0}
+			{#if polls.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No polls currently here')}
 				</div>
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
-
-				{#if polls.length > 0}
-					{#each polls as poll}
-						<PollThumbnail {poll} {isAdmin} />
-					{/each}
-				{:else}
-					<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-						{$_('No polls currently here')}
-					</div>
-				{/if}
+				{#key polls}
+					{#if polls.length > 0}
+						{#each polls as poll}
+							<PollThumbnail {poll} {isAdmin} />
+						{/each}
+					{:else if !loading}
+						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+							{$_('No polls currently here')}
+						</div>
+					{/if}
+				{/key}
 			{/if}
 		</div>
+		<Pagination
+			bind:next
+			bind:prev
+			bind:iterable={polls}
+			Class={'flex gap-2 justify-around w-full mt-6'}
+		/>
 	</Loader>
 </div>

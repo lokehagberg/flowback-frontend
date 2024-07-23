@@ -5,12 +5,13 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
+	import { poll } from 'ethers/lib/utils';
 
 	let proposals: any[] = [],
 		votes: number[] = [],
 		labels: string[] = [];
 
-	//1 for ranking, 3 for scheduled
+	//4 for score voting, 3 for date
 	export let pollType = 1;
 
 	const getProposals = async () => {
@@ -39,15 +40,20 @@
 </script>
 
 <div class="border border-gray- p-4 rounded">
-	<h1 class="text-4xl mb-6">{$_("Results")}</h1>
+	<h1 class="text-4xl mb-6">{$_('Results')}</h1>
 	{#if pollType === 4}
 		<Statistics bind:votes bind:labels />
+		{#each proposals as proposal}
+			<div class="border p-4 mt-4">
+				<h1 class="text-xl">{proposal.title}</h1>
+				<div>{proposal.description}</div>
+				<!-- {@debug proposal} -->
+				<b class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</b>
+			</div>
+		{/each}
+	{:else if pollType === 3}
+	<div>
+		Results in Group Schedule
+	</div>
 	{/if}
-	{#each proposals as proposal}
-		<div class="border p-4 mt-4">
-			<h1 class="text-xl">{pollType === 3 ? $_('Start') + ':' : ''} {proposal.title}</h1>
-			<div>{pollType === 3 ? $_('End') + ':' : ''} {proposal.description}</div>
-			<b class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</b>
-		</div>
-	{/each}
 </div>

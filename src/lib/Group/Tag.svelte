@@ -1,9 +1,23 @@
 <script lang="ts">
-	import type { Tag } from "./interface";
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { onMount } from 'svelte';
+	import type { Tag } from './interface';
 
 	export let tag: Tag,
 		Class: string = '',
 		onclick = () => {};
+
+	//Interval Mean Absolute Correctness
+	const getMeanAbsoluteError = async () => {
+		const { res, json } = await fetchRequest('GET', `group/tag/${tag.id}/imac`);
+		if (!res.ok) return
+
+		tag.imac  = json
+	};
+
+	onMount(() => {
+		getMeanAbsoluteError();
+	});
 </script>
 
 <!-- {@debug tag} -->
@@ -15,6 +29,11 @@
 	on:click={onclick}
 >
 	{tag?.name}
+	
+
+	{#if tag?.imac}
+		({tag?.imac})
+	{/if}
 </div>
 
 <style>

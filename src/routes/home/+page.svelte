@@ -9,7 +9,9 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
+	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
 	import {env} from "$env/dynamic/public";
+	import { goto } from '$app/navigation';
 
 	interface Invitation {
 		external: boolean;
@@ -25,8 +27,7 @@
 		status: StatusMessageInfo;
 
 	onMount(async () => {
-
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE") location.href = 'groups/1'
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE") goto('groups/1')
 
 		getInvitations();
 		getPolls();
@@ -38,8 +39,15 @@
 	};
 
 	const acceptInvitation = async (id: number) => {
-		console.log(id);
 		const { res, json } = await fetchRequest('POST', `group/${id}/invite/accept`);
+
+		if (!res.ok) {
+			return;
+		}
+
+		invitations = invitations.filter((invite) => invite.group !== id);
+		invitations = invitations;
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {

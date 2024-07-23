@@ -1,12 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/Generic/Button.svelte';
-	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import Tag from '$lib/Group/Tag.svelte';
-	import { onMount } from 'svelte';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { DateInput } from 'date-picker-svelte';
@@ -28,12 +25,13 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import { tagsCreatePoll as tagsCreatePollLimit } from '$lib/Generic/APILimits.json';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
-	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import Select from '$lib/Generic/Select.svelte';
-	import { faTachographDigital } from '@fortawesome/free-solid-svg-icons';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import TimelineTemplate from './TimelineTemplate.svelte';
+	import type { template } from './interface';
 
 	type polltypes =
 		| 'Ranking'
@@ -101,19 +99,22 @@
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
-		image: File;
+		images: File[],
+		isFF = true,
+		pushToBlockchain = true;
 
 	const groupId = $page.url.searchParams.get('id');
 
 	const createPoll = async () => {
-		if (selectedTag === undefined) {
-			status = { message: 'Must select tag', success: false };
-			return;
+		loading = true;
+		const formData = new FormData();
+		let blockchain_id;
+
+		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
+			blockchain_id = await createPollBlockchain(Number(groupId), title);
+			if (blockchain_id) formData.append('blockchain_id', blockchain_id.toString());
 		}
 
-		console.log(selectedTag);
-
-		const formData = new FormData();
 		formData.append('title', title);
 		formData.append('description', description);
 		formData.append('start_date', start_date.toISOString());
@@ -124,14 +125,17 @@
 		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
 		formData.append('vote_end_date', vote_end_date.toISOString());
 		formData.append('end_date', end_date.toISOString());
+		formData.append('tag', tags[0].id.toString());
+		formData.append('allow_fast_forward', isFF.toString());
 		formData.append('poll_type', (selected_poll === defaultType ? 4 : 3).toString());
-		formData.append('tag', selectedTag.id.toString());
-		formData.append('dynamic', 'false');
+		formData.append('dynamic', selected_poll === defaultType ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
-		if (image) formData.append('attachments', image);
 
-		loading = true;
+		images.forEach((image) => {
+			formData.append('attachments', image);
+		});
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${groupId}/poll/create`,
@@ -141,17 +145,17 @@
 		);
 
 		loading = false;
-		status = statusMessageFormatter(res, json);
 
-		if (res.ok) window.location.href = `groups/${groupId}/polls/${json}`;
+		if (!res.ok) status = statusMessageFormatter(res, json);
+
+		if (res.ok && groupId) {
+			goto(`groups/${groupId}/polls/${json}`);
+		}
 	};
 
 	const getGroupTags = async () => {
 		loading = true;
-		const { json } = await fetchRequest(
-			'GET',
-			`group/${groupId}/tags?limit=${tagsCreatePollLimit}`
-		);
+		const { json } = await fetchRequest('GET', `group/${groupId}/tags?limit=${9999}`);
 		loading = false;
 		tags = json.results;
 		selectedTag = tags[0];
@@ -184,13 +188,34 @@
 		}
 	};
 
+	const handleSelectTemplate = (template: template) => {
+		console.log(template);
+		const now = new Date().getTime();
+		start_date = new Date();
+
+		area_vote_end_date = new Date(now + template.area_vote_time_delta);
+		proposal_end_date = new Date(area_vote_end_date.getTime() + template.proposal_time_delta);
+		prediction_statement_end_date = new Date(
+			proposal_end_date.getTime() + template.prediction_statement_time_delta
+		);
+		prediction_bet_end_date = new Date(
+			prediction_statement_end_date.getTime() + template.prediction_bet_time_delta
+		);
+		delegate_vote_end_date = new Date(
+			prediction_bet_end_date.getTime() + template.delegate_vote_time_delta
+		);
+		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
+		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
+	};
+
 	onMount(() => {
 		getGroupTags();
-		console.log($page.params.type, 'TYPPPE');
 	});
 </script>
 
-<div class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 lg:w-[900px] dark:text-darkmodeText">
+<div
+	class="flex flex-col md:flex-row mt-8 gap-6 ml-8 mr-8 sm:w-[80%] lg:w-[900px] dark:text-darkmodeText"
+>
 	<form
 		on:submit|preventDefault={() =>
 			!disabled.includes(selected_poll) && !disabled.includes(selected_time) ? createPoll() : null}
@@ -200,21 +225,25 @@
 			<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
-				<TextArea required label="Description" bind:value={description} />
+				<TextArea label="Description" bind:value={description} />
+				<FileUploads bind:images />
+				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
+					<div>
+						<h2 class="">{$_('Days between phases')}</h2>
+						<input
+							type="number"
+							class="dark:bg-darkbackground show-buttons-all-times"
+							bind:value={daysBetweenPhases}
+							min="0"
+							max="1000"
+						/>
+					</div>
 					<Button
-						Class={`inline !bg-blue-600`}
+						Class={`!bg-blue-600 mt-4 !block`}
 						action={() => (advancedTimeSettings = !advancedTimeSettings)}
-						>{$_('Advanced time settings')}</Button
+						buttonStyle="secondary">{$_('Advanced time settings')}</Button
 					>
-					<h2 class="mt-4">{$_('Days between phases')}</h2>
-					<input
-						type="number"
-						class="dark:bg-darkbackground"
-						bind:value={daysBetweenPhases}
-						min="0"
-						max="1000"
-					/>
 
 					{#if advancedTimeSettings}
 						<div class="grid grid-cols-2 gap-6 justify-center">
@@ -239,18 +268,18 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
-							{/if}
-							<div>
-								<h2 class="mt-4">{$_('Proposal end')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={proposal_end_date}
-									min={area_vote_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
-							{#if selected_poll !== 'Date Poll'}
+
+								<div>
+									<h2 class="mt-4">{$_('Proposal end')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={proposal_end_date}
+										min={area_vote_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
+
 								<div>
 									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
 									<DateInput
@@ -281,17 +310,17 @@
 										max={maxDatePickerYear}
 									/>
 								</div>
+								<div>
+									<h2 class="mt-4">{$_('Voting end date')}</h2>
+									<DateInput
+										format="yyyy-MM-dd HH:mm"
+										closeOnSelection
+										bind:value={vote_end_date}
+										min={delegate_vote_end_date}
+										max={maxDatePickerYear}
+									/>
+								</div>
 							{/if}
-							<div>
-								<h2 class="mt-4">{$_('Voting end date')}</h2>
-								<DateInput
-									format="yyyy-MM-dd HH:mm"
-									closeOnSelection
-									bind:value={vote_end_date}
-									min={delegate_vote_end_date}
-									max={maxDatePickerYear}
-								/>
-							</div>
 							<div>
 								<h2 class="mt-4">{$_('End date')}</h2>
 								<DateInput
@@ -303,24 +332,38 @@
 								/>
 							</div>
 						</div>
+						<TimelineTemplate
+							area_vote_time_delta={area_vote_end_date.getTime() - start_date.getTime()}
+							proposal_time_delta={proposal_end_date.getTime() - area_vote_end_date.getTime()}
+							prediction_statement_time_delta={prediction_statement_end_date.getTime() -
+								proposal_end_date.getTime()}
+							prediction_bet_time_delta={prediction_bet_end_date.getTime() -
+								prediction_statement_end_date.getTime()}
+							delegate_vote_time_delta={delegate_vote_end_date.getTime() -
+								prediction_bet_end_date.getTime()}
+							vote_time_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
+							end_time_delta={end_date.getTime() - vote_end_date.getTime()}
+							poll_type={selected_poll === defaultType ? 4 : 3}
+							{handleSelectTemplate}
+						/>
 					{/if}
 				</div>
-				<!-- <h2>{$_('Select Tag')}</h2>
-				<div class="flex gap-4 flex-wrap">
-					{#each tags as tag}
-						<Tag
-							onclick={() => (selectedTag = tag)}
-							tag={{ name: tag.name, id: tag.id, active: true }}
-							Class={`cursor-pointer ${
-								selectedTag === tag ? 'bg-gray-500' : 'bg-gray-300 text-gray-500'
-							}`}
-						/>
-					{/each}
-				</div> -->
-				<RadioButtons bind:Yes={isPublic} label="Public?" />
+
+				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<RadioButtons bind:Yes={isPublic} label="Public?" />
+				{/if}
+
+				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
+
+				{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+					<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
+					<!-- <Button action={() => createPollBlockchain(Number($page.url.searchParams.get('id')), "title")}>Push to Blockchain?</Button> -->
+				{/if}
+
 				{#if disabled.includes(selected_poll) || disabled.includes(selected_time)}
 					{$_('This polltype is not implemented yet')}
 				{/if}
+
 				<StatusMessage bind:status />
 				<Button
 					type="submit"
@@ -329,16 +372,11 @@
 						? '!bg-gray-200'
 						: 'bg-primary'}>{$_('Create Poll')}</Button
 				>
-				<ImageUpload
-					icon={faUser}
-					bind:image
-					label=""
-					iconSize="2x"
-					Class="flex !flex-row-reverse"
-				/>
 			</div>
 		</Loader>
 	</form>
+
+	<!-- To the right, where one selects which type of poll to pick -->
 	<div class="md:w-1/3">
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl rounded">
 			<div class="flex flex-col gap-6">
@@ -350,7 +388,11 @@
 							if (selected_poll === poll) return poll === 'Text Poll' ? 'primary' : 'accent';
 							else return poll === 'Text Poll' ? 'secondary' : 'accent-secondary';
 						})()}
-						Class={`${selected_poll === poll ? 'shadow-sm outline outline-0' : 'shadow-xl'}
+						Class={`${
+							selected_poll === poll
+								? 'shadow-sm outline outline-0 brightness-115'
+								: 'shadow-xl brightness-90 saturate-0'
+						}
 							`}
 					>
 						<div class="flex items-center text-center">
@@ -401,3 +443,10 @@
 			</div> -->
 	</div>
 </div>
+
+<style>
+	.show-buttons-all-times::-webkit-inner-spin-button,
+	.show-buttons-all-times::-webkit-outer-spin-button {
+		opacity: 1;
+	}
+</style>

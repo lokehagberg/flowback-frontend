@@ -1,22 +1,38 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
+	import DefaultBanner from '$lib/assets/default_banner_group.png';
+	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import {env} from "$env/dynamic/public";
 
 	export let group: Group;
-	let pending = false;
+	let pending: boolean = false;
 
 	const goToGroup = () => {
-		if (group.joined) window.location.href = `/groups/${group.id}`;
+		if (group.joined) goto(`/groups/${group.id}`);
 	};
 
 	const subscribeToGroup = async () => {
 		const { res, json } = await fetchRequest('POST', 'notification/group');
 	};
+
+	const joinGroup = async () => {
+		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
+		if (res.ok) {
+			console.log(group, import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
+			group.joined = !group.joined;
+			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+				becomeMemberOfGroup(group.blockchain_id);
+			if (group.direct_join) goToGroup();
+		}
+	};
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	on:click={goToGroup}
 	on:keydown
@@ -31,6 +47,7 @@
 			}${group.cover_image}`}
 			class="cover rounded-t-2xl"
 			alt="cover"
+			on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		/>
 	</div>
 	<img
@@ -38,6 +55,7 @@
 			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 		}${group.image}`}
 		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+		on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		alt="profile"
 	/>
 
@@ -52,18 +70,10 @@
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<Button
-				action={async () => {
-					const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
-					if (res.ok) {
-						group.joined = !group.joined;
-						if (group.direct_join) goToGroup();
-					}
-				}}
-				Class="hover:bg-blue-800 bg-blue-600"
+			<Button action={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
-		{:else if pending === true}
+		{:else if pending}
 			<div>{$_('Pending invite')}</div>
 		{/if}
 	</div>
@@ -75,7 +85,7 @@
 	}
 
 	img.cover {
-		aspect-ratio: 4;
+		aspect-ratio: 5;
 		width: 100%;
 	}
 </style>

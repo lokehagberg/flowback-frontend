@@ -11,7 +11,7 @@
 	if (icons.length === 1) icons[0] = icon;
 
 	export let text = 'icon',
-		href = '/',
+		href: string | null = null,
 		Class = '',
 		color = '',
 		size = 'xl';
@@ -23,35 +23,62 @@
 		checkIfSelected();
 	});
 
-	function checkIfSelected() {
+	const checkIfSelected = () => {
 		selectedPage = window.location.pathname === '/' + href;
 	}
 </script>
 
-<a
-	on:mouseover={() => (hovering = true)}
-	on:mouseleave={() => (hovering = false)}
-	on:focus
-	href={href === "/" ? window.location.href : '/' + href}
-	class={`p-4 relative cursor-pointer ${Class}`}
->
-	<div on:load={checkIfSelected}>
-		{#each icons as icon}
-			<Fa
-				{icon}
-				{size}
-				class="inline"
-				color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
-				/>
-				{/each}
-	</div>
-	<div
-		class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
-		class:invisible={!hovering}
+{#if href}
+	<a
+		on:mouseover={() => (hovering = true)}
+		on:mouseleave={() => (hovering = false)}
+		on:focus
+		href={href === '/' ? window.location.href : '/' + href}
+		class={`relative cursor-pointer ${Class}`}
 	>
-		{$_(text)}
+		<div on:load={checkIfSelected}>
+			{#each icons as icon}
+				<Fa
+					{icon}
+					{size}
+					class="inline"
+					color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
+				/>
+			{/each}
+		</div>
+		<div
+			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
+			class:invisible={!hovering}
+		>
+			{$_(text)}
+		</div>
+	</a>
+{:else}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		on:mouseover={() => (hovering = true)}
+		on:mouseleave={() => (hovering = false)}
+		on:focus
+		class={`relative cursor-pointer ${Class}`}
+	>
+		<div on:load={checkIfSelected}>
+			{#each icons as icon}
+				<Fa
+					{icon}
+					{size}
+					class="inline"
+					color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
+				/>
+			{/each}
+		</div>
+		<div
+			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
+			class:invisible={!hovering}
+		>
+			{$_(text)}
+		</div>
 	</div>
-</a>
+{/if}
 
 <style>
 	.header-icon {

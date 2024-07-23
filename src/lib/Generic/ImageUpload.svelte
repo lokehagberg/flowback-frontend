@@ -2,52 +2,56 @@
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
+	import CropperModal from './Cropper/CropperModal.svelte';
+	import { faUpload } from '@fortawesome/free-solid-svg-icons';
 
-	export let image: File | null = null,
+	export let croppedImage: File | null = null,
 		label: string,
-		isCover = false,
+		isProfile = false,
 		icon: any,
-		Class = "",
-		iconSize = '5x';
+		Class = '',
+		iconSize = '5x',
+		imageString: string | null = null,
+		shouldCrop: boolean = true,
+		minimalist = false,
+		onCrop = () => {},
+		disableImagePreview = false;
 
-	let fileinput: HTMLInputElement;
+	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
-		image = files[0];
+		croppedImage = files[0];
+		imageString = URL.createObjectURL(croppedImage);
+		currentlyCropping = true;
 	};
 </script>
 
-<!-- on:change={() => {
-				const imgtag = document.getElementById("image");
-				const fr = new FileReader();
-				fr.onload = () => {
-					if (imgtag)
-					imgtag?.src = event.target.result;
-				};
-			}} -->
 <div class={`image-upload ${Class}`}>
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
 
-	{#if image}
-		<img id="image" class={`${isCover ? 'cover' : ''} avatar`} alt={$_(label)} />
-	{:else}
-		<!-- <img
-			class="avatar"
-			src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
-			alt=""
-		/> -->
+	{#if imageString && !disableImagePreview}
+		<img
+			id="image"
+			class={`${isProfile ? 'rounded-full' : 'cover'} avatar`}
+			alt={$_(label)}
+			src={imageString}
+		/>
+	{:else if !minimalist}
 		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
-	<img
-		class="upload mt-4"
-		src="https://static.thenounproject.com/png/625182-200.png"
-		alt=""
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="cursor-pointer"
 		on:click={() => {
 			fileinput.click();
 		}}
 		on:keydown
-	/>
+	>
+		<Fa {icon} size={iconSize} />
+	</div>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="chan"
 		on:click={() => {
@@ -55,7 +59,9 @@
 		}}
 		on:keydown
 	>
-		{$_('Choose Image')}
+		{#if !minimalist}
+			{$_('Choose Image')}
+		{/if}
 	</div>
 	<input
 		style="display:none"
@@ -65,6 +71,21 @@
 		bind:this={fileinput}
 	/>
 </div>
+
+{#if currentlyCropping && shouldCrop}
+	<CropperModal
+		confirmAction={() => {
+			currentlyCropping = false;
+			onCrop();
+		}}
+		cancelAction={() => {
+			currentlyCropping = false;
+		}}
+		bind:croppedImage={imageString}
+		bind:currentlyCroppingProfile={isProfile}
+		bind:image={imageString}
+		/>
+{/if}
 
 <style>
 	.image-upload {

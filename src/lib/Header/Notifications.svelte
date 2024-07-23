@@ -8,13 +8,16 @@
 	import type { notification } from './Notification';
 	import TimeAgo from 'javascript-time-ago';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+	import { goto } from '$app/navigation';
 
 	let notifications: notification[],
 		hovered: number[] = [];
 
 	const getNotifications = async () => {
+		//Prevents infinite reload in /login where <Header /> is hidden
+		if (location.pathname === '/login') return;
 		const { json, res } = await fetchRequest('GET', 'notification/list');
-		notifications = json.results;
+		if (res.ok) notifications = json.results;
 	};
 
 	const closeWindowWhenClickingOutside = () => {
@@ -66,14 +69,14 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	id="notifications-list"
-	class="small-notification relative"
+	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 	on:keydown
 >
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
 		class:hidden={notifications?.length === 0 || notifications?.length === undefined}
-		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white  bg-secondary"
+		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white bg-secondary"
 	>
 		<span class="">{notifications?.length}</span>
 	</div>
@@ -81,7 +84,7 @@
 
 {#if notificationsOpen}
 	<ul
-		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation"
+		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation z-[60]"
 		id="notifications-list"
 	>
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -104,14 +107,14 @@
 						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {
 							if (notification.channel_sender_type === 'group')
-								window.location.href = `groups/${notification.channel_id}?page=${notification.channel_category}`;
+								goto(`groups/${notification.channel_id}?page=${notification.channel_category}`);
 							else if (notification.channel_sender_type === 'poll') {
 								const { res, json } = await fetchRequest(
 									'GET',
 									`home/polls?id=${notification.channel_sender_id}`
 								);
 								const groupId = json.results[0].group_id;
-								window.location.href = `/groups/${groupId}/polls/${notification.channel_sender_id}`;
+								goto(`/groups/${groupId}/polls/${notification.channel_sender_id}`);
 							}
 						}}
 						on:keydown

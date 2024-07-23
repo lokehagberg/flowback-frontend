@@ -17,11 +17,12 @@
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Filter from '$lib/Generic/Filter.svelte';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
-	let kanbanEntries: kanban[] = [];
-	let description = '',
+	let kanbanEntries: kanban[] = [],
+		description = '',
 		title = '',
 		assignee: number | null = null,
 		users: GroupUser[] = [],
@@ -41,7 +42,8 @@
 		interval: any,
 		open = false,
 		numberOfOpen = 0,
-		filter: { assignee: number | null } = { assignee: null };
+		filter: { assignee: number | null } = { assignee: null },
+		images: File[];
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -114,29 +116,35 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		const content = priority
-			? {
-					assignee,
-					description,
-					tag: 1,
-					title,
-					priority,
-					end_date
-			  }
-			: {
-					assignee,
-					description,
-					tag: 1,
-					title,
-					end_date
-			  };
+
+		// let content: any = { assignee, tag: 1, title, priority, end_date };
+
+		const formData = new FormData();
+		formData.append('tag', '1');
+		formData.append('title', title);
+		if (assignee) formData.append('assignee', assignee.toString());
+		if (priority) formData.append('priority', priority.toString());
+		if (end_date) formData.append('end_date', end_date.toString());
+		if (description !== '') formData.append('description', description);
+
+		console.log(formData);
+		
+		if (images)
+			images.forEach((image) => {
+				console.log(image, 'IMAGOOO');
+				formData.append('attachments', image);
+			});
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/create`
 				: 'user/kanban/entry/create',
-			content
+			formData,
+			true,
+			false
 		);
+
 		status = statusMessageFormatter(res, json);
 		loading = false;
 
@@ -184,13 +192,13 @@
 	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<Filter
+	<!-- <Filter
 		bind:filter
 		handleSearch={getKanbanEntries}
 		iterables={users.map((user) => {
 			return { name: user.user.username, id: user.user.id };
 		})}
-	/>
+	/> -->
 	<div class="flex overflow-x-auto">
 		<!-- {#await promise}
 			<div>Loading...</div>
@@ -205,7 +213,7 @@
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}
-								<KanbanEntry bind:kanban {type} {users} {removeKanbanEntry} {changeNumberOfOpen} />
+								<KanbanEntry bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>
@@ -220,28 +228,31 @@
 </div>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
-<Modal bind:open Class="!overflow-visible">
+<Modal bind:open Class="!overflow-visible" onSubmit={createKanbanEntry}>
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>
-			<form on:submit|preventDefault={createKanbanEntry} class="mt-2">
+			<div on:submit|preventDefault={createKanbanEntry} class="mt-2">
 				<TextInput required label="Title" bind:value={title} />
-				<TextArea required label="Description" bind:value={description} />
-				<div class="flex gap-6 justify-between mt-2">
+				<TextArea label="Description" bind:value={description} />
+				<div class="flex gap-6 justify-between mt-2 flex-col">
 					{#if type === 'group'}
-						<select
-							on:input={handleChangeAssignee}
-							class="dark:bg-darkobject border border-gray-600"
-						>
-							{#each users as user}
-								<option value={user.user.id}>{user.user.username}</option>
-							{/each}
-						</select>
+						<div class="text-left">
+							Assignee
+							<select
+								on:input={handleChangeAssignee}
+								class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							>
+								{#each users as user}
+									<option value={user.user.id}>{user.user.username}</option>
+								{/each}
+							</select>
+						</div>
 					{/if}
-					<div>
+					<div class="text-left">
 						{$_('Priority')}
 						<select
-							class="border border-gray-600 dark:bg-darkobject"
+							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							on:input={handleChangePriority}
 							value={priority}
 						>
@@ -252,14 +263,17 @@
 							{/each}
 						</select>
 					</div>
-					<div>
+					<div class="text-left">
 						{$_('End date')}
 						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
 				</div>
-				<Button type="submit">{$_('Create task')}</Button>
+				<FileUploads bind:images />
 				<!-- <StatusMessage Class="mt-2" bind:status /> -->
-			</form>
+			</div>
 		</Loader>
+	</div>
+	<div slot="footer">
+		<Button Class="" type="submit">{$_('Create task')}</Button>
 	</div>
 </Modal>

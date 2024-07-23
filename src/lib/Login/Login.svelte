@@ -6,6 +6,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { goto } from '$app/navigation';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
@@ -19,20 +20,20 @@
 		loading = true;
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
+		console.log('LOGIN');
+		
 
-		if (!json) status = {message:"There was a problem logging in", success:false}
+		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
-			status = statusMessageFormatter(res, json, 'Successfully logged in');
 			await localStorage.setItem('token', json.token);
 			{
 				const { json } = await fetchRequest('GET', 'user');
 				localStorage.setItem('userId', json.id);
 				localStorage.setItem('userName', json.username);
 			}
-			
-			window.location.href = '/home';
-		}
-		else {
+
+			goto('/home');
+		} else {
 			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}
 	};
@@ -50,6 +51,7 @@
 		/>
 
 		<StatusMessage bind:status />
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			class="mb-4 cursor-pointer hover:underline"
 			on:click={() => (selectedPage = 'ForgotPassword')}

@@ -99,6 +99,10 @@
 		showUI = shouldShowUI();
 		redirect();
 		if (showUI) updateUserInfo();
+		setTimeout(() => {
+			const html = document.getElementById(`poll-thumbnail-${scrolledY}`);
+			html?.scrollIntoView();
+		}, 200);
 	});
 </script>
 

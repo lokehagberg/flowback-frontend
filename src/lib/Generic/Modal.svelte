@@ -35,7 +35,6 @@
 	};
 
 	$: if (open) onOpenModal();
-	$: if (!open) onCloseModal();
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

@@ -178,16 +178,16 @@
 
 	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
-		<div class="flex">
+		<div class="flex justify-around">
 			<Select
 				label={''}
 				labels={tags.map((tag) => tag.name)}
 				values={tags.map((tag) => tag.id)}
 				bind:value={selectedTag}
-				classInner="w-full"
-				Class="w-[50%]"
+				classInner="w-full bg-white p-6 border-gray-400 rounded-md border-2"
+				Class="w-[45%]"
 			/>
-			<Button Class="w-[50%]">Hello</Button>
+			<Button Class="w-[45%]  !align-middle">Save Vote</Button>
 		</div>
 	{/if}
 

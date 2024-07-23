@@ -26,6 +26,7 @@
 		class={`dark:bg-darkobject ${classInner}`}
 		bind:value
 	>
+		<option value="" disabled selected>Select Area</option>
 		{#each labels as label, i}
 			<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
 		{/each}

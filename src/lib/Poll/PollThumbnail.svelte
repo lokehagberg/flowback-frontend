@@ -173,8 +173,10 @@
 		<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
 	</div>
 
-	<Description limit={500} {poll} {onHoverGroup} />
-
+	{#if poll.description.length > 0}
+		<Description limit={500} {poll} {onHoverGroup} />
+	{/if}
+	
 	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<!-- Area Voting -->

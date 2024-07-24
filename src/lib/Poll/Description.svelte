@@ -37,7 +37,7 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         {#if poll.description.length > limit}
-            <span
+            ...<span
                 class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
                 on:click={() => (readMore = true)}>Show more...</span
             >

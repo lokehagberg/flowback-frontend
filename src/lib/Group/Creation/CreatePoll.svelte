@@ -33,6 +33,8 @@
 	import TimelineTemplate from './TimelineTemplate.svelte';
 	import type { pollType, template } from './interface';
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 
 	let title = '',
 		description = '',
@@ -94,6 +96,12 @@
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<h1 class="text-2xl">{$_('Create a poll')}</h1>
+            <RadioButtons2
+            name="F"
+            bind:value={selected_poll} 
+            labels={["Text Poll", "Date Poll"]}
+            values={["Text Poll", "Date Poll"]}            
+            />
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images />

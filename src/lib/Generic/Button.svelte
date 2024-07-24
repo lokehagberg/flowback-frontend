@@ -37,7 +37,7 @@
 		}}
 		class={`text-center ${
 			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-all duration-50`}
+		} filter hover:brightness-50 inline text-white rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-all duration-50`}
 		class:bg-gray-300={disabled}
 		class:!bg-secondary={buttonStyle == 'secondary'}
 		class:!bg-red-500={buttonStyle === 'warning'}
@@ -49,7 +49,7 @@
 {:else if type === 'submit'}
 	<button
 		type="submit"
-		class={`text-center inline bg-primary text-white pl-6 pr-6 pt-2 pb-2 rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-colors`}
+		class={`text-center inline bg-primary text-white rounded cursor-pointer ${Class} hover:brightness-[85%] active:brightness-[92%] transition-colors`}
 		class:bg-blue-200={buttonStyle == 'secondary'}
 		class:bg-red-500={buttonStyle === 'warning'}
 		{disabled}

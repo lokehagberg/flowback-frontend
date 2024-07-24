@@ -179,21 +179,26 @@
 
 	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
-		<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-around">
+		<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-between">
 			<Select
 				label={''}
 				labels={tags.map((tag) => tag.name)}
 				values={tags.map((tag) => tag.id)}
 				bind:value={selectedTag}
-				classInner="w-full bg-white p-6 border-gray-400 rounded-md border-2"
-				Class="w-[45%]"
+				classInner="w-full bg-white p-4 border-gray-400 rounded-md border-2"
+				Class="w-[47%]"
 			/>
 			{#if voting}
-				<Button type="submit" Class="w-[45%]">Save Vote</Button>
-			{:else}
-				<p class="w-[45%] text-center pt-6">Successfully saved voting!</p>
-			{/if}
-		</form>
+				<Button type="submit" Class="w-[47%]">Save Vote</Button>
+				{:else}
+				<p class="w-[47%] text-center pt-4">Successfully saved voting!</p>
+				{/if}
+			</form>
+			{:else if phase === 'proposal'}
+			<div class="flex justify-between">
+			<Button type="submit" Class="w-[47%] p-4">See Proposals ({poll.total_proposals})</Button>
+			<Button type="submit" Class="w-[47%] p-4">Create a Proposal</Button>
+		</div>
 	{/if}
 
 	<div

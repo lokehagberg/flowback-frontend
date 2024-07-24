@@ -22,6 +22,10 @@
 	import { getPhase, getPhaseUserFriendlyName } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import DatePoll from '$lib/Poll/DatePoll.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}

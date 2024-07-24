@@ -37,6 +37,8 @@ export interface poll {
 	joined: boolean;
 	group_joined: boolean;
 	total_comments: number;
+	total_proposals:number;
+	total_predictions:number;
 	pinned: boolean;
 	status: number;
 }

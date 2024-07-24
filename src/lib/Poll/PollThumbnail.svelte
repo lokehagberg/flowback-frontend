@@ -190,14 +190,18 @@
 			/>
 			{#if voting}
 				<Button type="submit" Class="w-[47%]">Save Vote</Button>
-				{:else}
+			{:else}
 				<p class="w-[47%] text-center pt-4">Successfully saved voting!</p>
-				{/if}
-			</form>
-			{:else if phase === 'proposal'}
-			<div class="flex justify-between">
-			<Button type="submit" Class="w-[47%] p-4">See Proposals ({poll.total_proposals})</Button>
-			<Button type="submit" Class="w-[47%] p-4">Create a Proposal</Button>
+			{/if}
+		</form>
+	{:else if phase === 'proposal'}
+		<div class="flex justify-between">
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light"
+				>See Proposals ({poll.total_proposals})</Button
+			>
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light"
+				>Create a Proposal</Button
+			>
 		</div>
 	{/if}
 

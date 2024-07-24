@@ -93,7 +93,9 @@
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<h1 class="text-2xl">{$_('Create a poll')}</h1>
 			<RadioButtons2
-				name="F"
+				name="poll Content"
+				label="Poll Content"
+				ClassInner="inline mr-2"
 				bind:value={selected_poll}
 				labels={['Text Poll', 'Date Poll']}
 				values={['Text Poll', 'Date Poll']}

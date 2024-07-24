@@ -21,3 +21,5 @@ export type template = {
 	vote_time_delta: number;
 	end_time_delta: number;
 };
+
+export type pollType = 'Text Poll' | 'Date Poll' 

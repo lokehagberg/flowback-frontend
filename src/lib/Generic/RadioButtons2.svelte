@@ -12,7 +12,7 @@
 		Class = '',
 		centering = false,
 		ClassInput = '',
-        name:string;
+		name: string;
 </script>
 
 <div class={Class}>

@@ -38,7 +38,6 @@
 
 	let title = '',
 		description = '',
-		tags: TagType[] = [],
 		status: StatusMessageInfo,
 		start_date = new Date(),
 		area_vote_end_date = new Date(),
@@ -64,10 +63,13 @@
 		const formData = new FormData();
 		let blockchain_id;
 
+		console.log('HERE');
+
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
 			blockchain_id = await createPollBlockchain(Number(groupId), title);
 			if (blockchain_id) formData.append('blockchain_id', blockchain_id.toString());
 		}
+		console.log('HERE 2');
 
 		formData.append('title', title);
 		formData.append('description', description);
@@ -78,8 +80,8 @@
 		formData.append('prediction_bet_end_date', prediction_bet_end_date.toISOString());
 		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
 		formData.append('vote_end_date', vote_end_date.toISOString());
+		formData.append('tag', '1');
 		formData.append('end_date', end_date.toISOString());
-		formData.append('tag', tags[0].id.toString());
 		formData.append('allow_fast_forward', isFF.toString());
 		formData.append('poll_type', (selected_poll === 'Text Poll' ? 4 : 3).toString());
 		formData.append('dynamic', selected_poll === 'Text Poll' ? 'false' : 'true');
@@ -89,6 +91,22 @@
 		images.forEach((image) => {
 			formData.append('attachments', image);
 		});
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${groupId}/poll/create`,
+			formData,
+			true,
+			false
+		);
+
+		loading = false;
+
+		if (!res.ok) status = statusMessageFormatter(res, json);
+
+		if (res.ok && groupId) {
+			goto(`groups/${groupId}/polls/${json}`);
+		}
 	};
 </script>
 
@@ -96,12 +114,12 @@
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<h1 class="text-2xl">{$_('Create a poll')}</h1>
-            <RadioButtons2
-            name="F"
-            bind:value={selected_poll} 
-            labels={["Text Poll", "Date Poll"]}
-            values={["Text Poll", "Date Poll"]}            
-            />
+			<RadioButtons2
+				name="F"
+				bind:value={selected_poll}
+				labels={['Text Poll', 'Date Poll']}
+				values={['Text Poll', 'Date Poll']}
+			/>
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images />

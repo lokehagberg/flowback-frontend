@@ -53,7 +53,7 @@
 		images: File[],
 		isFF = true,
 		pushToBlockchain = true,
-		selected_poll: pollType= 'Text Poll';
+		selected_poll: pollType = 'Text Poll';
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -115,7 +115,18 @@
 					buttonStyle="secondary">{$_('Advanced time settings')}</Button
 				>
 
-                <AdvancedTimeSettings bind:selected_poll/>
+				<AdvancedTimeSettings
+					bind:selected_poll
+					bind:advancedTimeSettings
+					bind:start_date
+					bind:area_vote_end_date
+					bind:proposal_end_date
+					bind:prediction_statement_end_date
+					bind:prediction_bet_end_date
+					bind:delegate_vote_end_date
+					bind:vote_end_date
+					bind:end_date
+				/>
 
 				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={isPublic} label="Public?" />

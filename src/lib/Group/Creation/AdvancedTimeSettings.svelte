@@ -34,18 +34,18 @@
 	import TimelineTemplate from './TimelineTemplate.svelte';
 	import type { pollType, template } from './interface';
 
-	export let selected_poll: pollType;
-
-	let start_date = new Date(),
+	export let selected_poll: pollType,
+		advancedTimeSettings = false,
+		start_date = new Date(),
 		area_vote_end_date = new Date(),
 		proposal_end_date = new Date(),
 		prediction_statement_end_date = new Date(),
 		prediction_bet_end_date = new Date(),
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
-		end_date = new Date(),
-		advancedTimeSettings = false,
-		daysBetweenPhases = 1;
+		end_date = new Date();
+
+	let daysBetweenPhases = 1;
 
 	const handleSelectTemplate = (template: template) => {
 		const now = new Date().getTime();

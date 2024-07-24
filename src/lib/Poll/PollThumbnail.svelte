@@ -199,9 +199,29 @@
 			<Button Class="w-[47%] p-4" buttonStyle="primary-light"
 				>See Proposals ({poll.total_proposals})</Button
 			>
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">Create a Proposal</Button>
+		</div>
+	{:else if phase === 'prediction_statement'}
+		<div class="flex justify-between">
 			<Button Class="w-[47%] p-4" buttonStyle="primary-light"
-				>Create a Proposal</Button
+				>See Predictions ({poll.total_predictions})</Button
 			>
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">Create a Prediction</Button>
+		</div>
+	{:else if phase === 'prediction_bet'}
+		<div class="flex justify-between">
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">Mange bets</Button>
+			<p class="w-[47%] text-center pt-4">You have not betted yet!</p>
+		</div>
+	{:else if phase === 'delegate_vote' || phase === 'vote'}
+		<div class="flex justify-between">
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">Mange votes</Button>
+			<p class="w-[47%] text-center pt-4">You have not voted yet!</p>
+		</div>
+	{:else if phase === 'prediction_vote' || phase === 'result'}
+		<div class="flex justify-between">
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">View detailed results</Button>
+			<Button Class="w-[47%] p-4" buttonStyle="primary-light">Evaluate predictions</Button>
 		</div>
 	{/if}
 

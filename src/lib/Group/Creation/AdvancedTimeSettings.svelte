@@ -1,36 +1,7 @@
 <script lang="ts">
 	import { DateInput } from 'date-picker-svelte';
-	import Button from '$lib/Generic/Button.svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
-	import { page } from '$app/stores';
-	import { fetchRequest } from '$lib/FetchRequest';
-	import TextArea from '$lib/Generic/TextArea.svelte';
-	import type { Tag as TagType } from '$lib/Group/interface';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-
 	import { _ } from 'svelte-i18n';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	//@ts-ignore
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp';
-	import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-	import { faWallet } from '@fortawesome/free-solid-svg-icons/faWallet';
-	import { faSliders } from '@fortawesome/free-solid-svg-icons/faSliders';
-	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
-	import { faHourglass } from '@fortawesome/free-solid-svg-icons/faHourglass';
-	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons/faClockRotateLeft';
-	import Loader from '$lib/Generic/Loader.svelte';
-	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
-	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
-	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import TimelineTemplate from './TimelineTemplate.svelte';
 	import type { pollType, template } from './interface';
 

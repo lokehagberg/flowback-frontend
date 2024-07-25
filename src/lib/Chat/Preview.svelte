@@ -87,6 +87,7 @@
 
 				previewDirect = previewDirect;
 			}
+			console.log(message, chatter)
 			selectedChat = chatter.channel_id;
 			selectedChatChannelId = chatter.channel_id
 		} else if (selectedPage === 'group') {

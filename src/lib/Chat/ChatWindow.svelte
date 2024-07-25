@@ -45,12 +45,14 @@
 	});
 
 	const getRecentMesseges = async () => {
+		console.log(selectedChatChannelId, "SELCTED")
 		if (!selectedChatChannelId) return;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
+
 
 		if (res.ok) messages = json.results.reverse();
 

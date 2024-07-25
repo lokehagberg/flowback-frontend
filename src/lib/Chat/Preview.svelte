@@ -88,10 +88,10 @@
 				previewDirect = previewDirect;
 			}
 			selectedChat = chatter.channel_id;
+			selectedChatChannelId = chatter.channel_id
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
 			if (message) {
-				
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
 				message.notified = false;
@@ -99,10 +99,7 @@
 				previewGroup = previewGroup;
 			}
 
-			
 			selectedChat = chatter.id;
-			console.log(chatter, message, chatter.chat_id)
-			// if (message?.channel_id)
 			selectedChatChannelId = chatter.chat_id;
 		}
 	};

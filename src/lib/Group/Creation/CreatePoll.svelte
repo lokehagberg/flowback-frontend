@@ -16,6 +16,7 @@
 	import type { pollType, template } from './interface';
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import Tab from '$lib/Generic/Tab.svelte';
 
 	let title = '',
 		description = '',
@@ -35,7 +36,8 @@
 		images: File[],
 		isFF = true,
 		pushToBlockchain = true,
-		selected_poll: pollType = 'Text Poll';
+		selected_poll: pollType = 'Text Poll',
+		selectedPage: 'poll' | 'thread' = 'poll';
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -86,20 +88,39 @@
 			goto(`groups/${groupId}/polls/${json}`);
 		}
 	};
+
+	const createThread = async () => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.url.searchParams.get('id')}/thread/create`,
+			{
+				title
+			}
+		);
+		if (!res.ok) {
+			// poppup = { message: "Couldn't create Thread", success: false };
+		}
+		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
+	};
 </script>
 
-<form on:submit|preventDefault={createPoll} class="md:w-2/3">
+<form on:submit|preventDefault={() => selectedPage === 'poll' ? createPoll() : createThread()} class="md:w-2/3">
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
-			<h1 class="text-2xl">{$_('Create a poll')}</h1>
-			<RadioButtons2
-				name="poll Content"
-				label="Poll Content"
-				ClassInner="inline mr-2"
-				bind:value={selected_poll}
-				labels={['Text Poll', 'Date Poll']}
-				values={['Text Poll', 'Date Poll']}
-			/>
+			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
+			{#if selectedPage === 'poll'}
+				<h1 class="text-2xl">{$_('Create a Poll')}</h1>
+				<RadioButtons2
+					name="poll Content"
+					label="Poll Content"
+					ClassInner="inline mr-2"
+					bind:value={selected_poll}
+					labels={['Text Poll', 'Date Poll']}
+					values={['Text Poll', 'Date Poll']}
+				/>
+			{:else if selectedPage === 'thread'}
+				<h1 class="text-2xl">{$_('Create a Thread')}</h1>
+			{/if}
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images />
@@ -146,7 +167,7 @@
 				{/if}
 
 				<StatusMessage bind:status />
-				<Button type="submit" disabled={loading} Class={'bg-primary'}>{$_('Create Poll')}</Button>
+				<Button type="submit" disabled={loading} Class={'bg-primary p-3 mt-3'}>{$_('Post')}</Button>
 			</div>
 		</div></Loader
 	>

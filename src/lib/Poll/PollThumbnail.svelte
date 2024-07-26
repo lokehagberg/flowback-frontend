@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Timeline from './Timeline.svelte';
+	import Timeline from './TimelineLegacy.svelte';
 	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';

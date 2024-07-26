@@ -1,9 +1,17 @@
 <script lang="ts">
+	import type { poll } from "../interface";
+	import Timeline from "./Timeline.svelte";
+
+    export let poll:poll;
+
 	let genericStyle = 'bg-white p-6';
 </script>
 
 <div class="poll-grid p-12">
-	<div class="bg-gray-500 w-[10px] h-[800px] timeline-grid" />
+	
+	<Timeline displayDetails={false} dates={[
+        new Date()
+    ]} pollType={4}  Class="timeline-grid"/>
 
 	{#if $$slots.left}
 		<div class={`${genericStyle}`}>
@@ -16,7 +24,7 @@
 			<slot name="right" />
 		</div>
 	{/if}
-    
+
 	{#if $$slots.bottom}
 		<div class={`${genericStyle} bottom-grid`}>
 			<slot name="bottom" />

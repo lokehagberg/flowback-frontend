@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Timeline from '$lib/Poll/Timeline.svelte';
+	import Timeline from '$lib/Poll/TimelineLegacy.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { onMount } from 'svelte';
@@ -158,7 +158,7 @@
 	</Layout>
 {/if}
 
-<Structure>
+<Structure {poll}>
     <div slot="left">Mrow :3 LEFT</div>
     <div slot="right">Mrow :3 RIGHT</div>
     <div slot="bottom">Mrow :3 BOTTOM</div>

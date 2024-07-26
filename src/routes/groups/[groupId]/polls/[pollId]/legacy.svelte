@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Timeline from '$lib/Poll/Timeline.svelte';
+	import Timeline from '$lib/Poll/TimelineLegacy.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import { onMount } from 'svelte';

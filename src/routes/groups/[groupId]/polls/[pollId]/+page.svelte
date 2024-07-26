@@ -183,22 +183,38 @@
 			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 		</Structure>
 	{:else if phase === 'prediction_bet'}
-		<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
-		<Predictions bind:proposals bind:phase bind:poll />
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+			</div>
+			<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
 	{:else if phase === 'delegate_vote'}
-		<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
-		<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-		<Predictions bind:proposals bind:phase bind:poll />
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+			</div>
+			<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
 	{:else if phase === 'vote'}
-		<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-		<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
-		<Predictions bind:proposals bind:phase bind:poll />
-	{:else if phase === 'result'}
-		<Results {pollType} />
-		<Predictions bind:proposals bind:phase bind:poll />
-	{:else if phase === 'prediction_vote'}
-		<Results {pollType} />
-		<Predictions bind:proposals bind:phase bind:poll />
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+				<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+			</div>
+			<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
+	{:else if phase === 'result' || phase === 'prediction_vote'}
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<Predictions bind:proposals bind:phase bind:poll />
+			</div>
+			<div slot="right"><Results {pollType} /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
 	{/if}
 {:else if pollType === 3}
 	{#if !finished}

@@ -58,10 +58,14 @@
 	};
 
 	const delegateVote = async () => {
-		const {json, res} = await fetchRequest(`POST`, `group/poll/${$page.params.pollId}/proposal/vote/delegate/update`, {
-			proposals: voting.map((vote) => vote.proposal),
-			scores: voting.map((vote) => vote.score)
-		});
+		const { json, res } = await fetchRequest(
+			`POST`,
+			`group/poll/${$page.params.pollId}/proposal/vote/delegate/update`,
+			{
+				proposals: voting.map((vote) => vote.proposal),
+				scores: voting.map((vote) => vote.score)
+			}
+		);
 
 		if (!res.ok) {
 			poppup = {
@@ -109,18 +113,18 @@
 </script>
 
 <div class="">
-	{#key needsReload}
-		{#each proposals as proposal}
-			<Proposal2 {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
-		{/each}
-	{/key}
+	{#if proposals}
+		{#key needsReload}
+			{#each proposals as proposal}
+				<Proposal2 {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
+			{/each}
+		{/key}
+	{/if}
 </div>
 
 {#if isVoting}
-	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]"
-		>Save Votings</Button
-		>
-		<!-- <Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]" -->
+	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]">Save Votings</Button>
+	<!-- <Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]" -->
 {/if}
 
 <Poppup bind:poppup />

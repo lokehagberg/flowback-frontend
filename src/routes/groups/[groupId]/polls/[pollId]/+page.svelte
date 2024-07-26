@@ -160,6 +160,6 @@
 
 <Structure>
     <div slot="left">Mrow :3 LEFT</div>
-    <div slot="bottom">Mrow :3 BOTTOM</div>
     <div slot="right">Mrow :3 RIGHT</div>
+    <div slot="bottom">Mrow :3 BOTTOM</div>
 </Structure>

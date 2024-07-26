@@ -131,16 +131,15 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="p-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full max-w-[1000px]"
+			class="cursor-pointer p-1 m-6 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			on:click={() => goto(`/groups/${$page.params.groupId}`)}
 		>
-			<div
-				class="cursor-pointer p-1 m-6 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full max-w-[1000px]"
-				on:click={() => goto(`/groups/${$page.params.groupId}`)}
-			>
-				<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
-				<Fa icon={faArrowLeft} />
-			</div>
-
+			<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
+			<Fa icon={faArrowLeft} />
+		</div>
+		<div
+			class="p-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+		>
 			<TitleDescription {poll} displayTag={phase !== 'area_vote'} />
 			{#if poll.attachments && poll.attachments.length > 0}
 				<img
@@ -154,12 +153,98 @@
 				{$_('Current phase:')}
 				{getPhaseUserFriendlyName(phase)}
 			</div>
+
+			{#if pollType === 4}
+				{#if phase === 'pre_start'}
+					<div>dev</div>
+				{:else if phase === 'area_vote'}
+					<AreaVote />
+				{:else if phase === 'proposal'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					<ProposalSubmition bind:proposals {poll} />
+				{:else if phase === 'prediction_statement'}
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'prediction_bet'}
+					<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'delegate_vote'}
+					<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'vote'}
+					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'result'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{:else if phase === 'prediction_vote'}
+					<Results {pollType} />
+					<Predictions bind:proposals bind:phase bind:poll />
+				{/if}
+			{:else if pollType === 3}
+				{#if !finished}
+					<DatePoll />
+				{:else}
+					<Results {pollType} />
+				{/if}
+			{/if}
+
+			<Timeline
+				displayDetails={false}
+				dates={// If text poll, have all phases. Date polls have fewer phases to display
+				poll.poll_type === 4
+					? [
+							new Date(poll.start_date),
+							new Date(poll.area_vote_end_date),
+							new Date(poll.proposal_end_date),
+							new Date(poll.prediction_statement_end_date),
+							new Date(poll.prediction_bet_end_date),
+							new Date(poll.delegate_vote_end_date),
+							new Date(poll.end_date)
+					  ]
+					: [new Date(poll.start_date), new Date(poll.end_date)]}
+				{pollType}
+			/>
+
+			<!-- Mod Tools -->
+			<!-- TODO: Fix as part of svelte store information this place -->
+			{#if groupUser?.is_admin}
+				<StatusMessage bind:status={deleteStatus} />
+				<div class="flex gap-4 align-middle">
+					<div class="">Mod Tools:</div>
+					<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+						>{$_('Delete poll')}</Button
+					>
+					{#if !finished}
+						<Button action={nextPhase}>Next Phase</Button>
+					{/if}
+				</div>
+			{/if}
+
+			<Comments bind:proposals api="poll" />
+			<Modal bind:open={DeletePollModalShow}>
+				<div slot="header">{$_('Deleting Poll')}</div>
+				<div slot="body">
+					{$_('Are you sure you want to delete this poll?')}
+				</div>
+				<div slot="footer">
+					<div class="flex justify-center gap-16">
+						<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+							action={() => (DeletePollModalShow = false)}
+							Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+						>
+					</div>
+				</div>
+			</Modal>
 		</div>
+		{#if poll.attachments && poll.attachments.length > 0}
+			<img
+				class=""
+				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+				alt="attachment to the comment"
+			/>
+		{/if}
 	</Layout>
 {/if}
-
-<Structure>
-    <div slot="left">Mrow :3 LEFT</div>
-    <div slot="bottom">Mrow :3 BOTTOM</div>
-    <div slot="right">Mrow :3 RIGHT</div>
-</Structure>

@@ -131,10 +131,10 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class=" bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col  w-full "
+			class=" bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col w-full"
 		>
 			<div
-				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full "
+				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full"
 				on:click={() => goto(`/groups/${$page.params.groupId}`)}
 			>
 				<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
@@ -158,8 +158,67 @@
 	</Layout>
 {/if}
 
-<Structure bind:poll>
-    <div slot="left">Mrow :3 LEFT</div>
-    <div slot="right">Mrow :3 RIGHT</div>
-    <div slot="bottom">Mrow :3 BOTTOM</div>
-</Structure>
+{#if pollType === 4}
+	{#if phase === 'pre_start'}
+		<div />
+	{:else if phase === 'area_vote'}
+		<Structure bind:poll>
+			<div slot="left"><AreaVote /></div>
+			<div slot="right"><Comments bind:proposals api="poll" /></div>
+		</Structure>
+	{:else if phase === 'proposal'}
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+			</div>
+			<div slot="right"><ProposalSubmition bind:proposals {poll} /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
+	{:else if phase === 'prediction_statement'}
+		<Structure bind:poll>
+			<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+			</div>
+			<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+			<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+		</Structure>
+	{:else if phase === 'prediction_bet'}
+		<ProposalScoreVoting {proposals} {groupUser} isVoting={false} />
+		<Predictions bind:proposals bind:phase bind:poll />
+	{:else if phase === 'delegate_vote'}
+		<!-- <Tab tabs={['You', 'Delegate']} bind:selectedPage /> -->
+		<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+		<Predictions bind:proposals bind:phase bind:poll />
+	{:else if phase === 'vote'}
+		<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+		<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+		<Predictions bind:proposals bind:phase bind:poll />
+	{:else if phase === 'result'}
+		<Results {pollType} />
+		<Predictions bind:proposals bind:phase bind:poll />
+	{:else if phase === 'prediction_vote'}
+		<Results {pollType} />
+		<Predictions bind:proposals bind:phase bind:poll />
+	{/if}
+{:else if pollType === 3}
+	{#if !finished}
+		<DatePoll />
+	{:else}
+		<Results {pollType} />
+	{/if}
+{/if}
+
+<!-- Mod Tools -->
+<!-- TODO: Fix as part of svelte store information this place -->
+{#if groupUser?.is_admin}
+	<StatusMessage bind:status={deleteStatus} />
+	<div class="flex gap-4 align-middle">
+		<div class="">Mod Tools:</div>
+		<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+			>{$_('Delete poll')}</Button
+		>
+		{#if !finished}
+			<Button action={nextPhase}>Next Phase</Button>
+		{/if}
+	</div>
+{/if}

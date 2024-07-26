@@ -78,12 +78,12 @@
 			newPredictionStatement
 		);
 		loading = false;
-		
+
 		if (!res.ok) {
 			poppup = { message: json.detail[0], success: false };
 			return;
 		}
-		
+
 		newPredictionStatement = { segments: [] };
 		resetsOfValues++;
 		addingPrediction = false;
@@ -140,6 +140,7 @@
 	};
 
 	onMount(() => {
+		console.log(proposals, 'PROPORSL');
 		getPredictionStatements();
 		getPredictionBets();
 	});
@@ -178,40 +179,42 @@
 				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 			/><br />
 			<div class="grid grid-cols-1">
-				{#each proposals as proposal}
-					{#key resetsOfValues}
-						<Select
-							label={proposal.title}
-							Class="mt-2"
-							onInput={(e) => {
-								//@ts-ignore
-								if (e.target.value === 'Neutral')
-									newPredictionStatement.segments?.filter(
-										(segment) => segment.proposal_id === proposal.id
-									);
-								else if (
-									newPredictionStatement.segments.find(
-										(segment) => segment.proposal_id === proposal.id
+				{#if proposals}
+					{#each proposals as proposal}
+						{#key resetsOfValues}
+							<Select
+								label={proposal.title}
+								Class="mt-2"
+								onInput={(e) => {
+									//@ts-ignore
+									if (e.target.value === 'Neutral')
+										newPredictionStatement.segments?.filter(
+											(segment) => segment.proposal_id === proposal.id
+										);
+									else if (
+										newPredictionStatement.segments.find(
+											(segment) => segment.proposal_id === proposal.id
+										)
 									)
-								)
-									newPredictionStatement.segments.map((segment) => {
-										if (segment.proposal_id === proposal.id)
+										newPredictionStatement.segments.map((segment) => {
+											if (segment.proposal_id === proposal.id)
+												//@ts-ignore
+												segment.is_true = e.target.value === 'Implemented' ? true : false;
+										});
+									else
+										newPredictionStatement.segments.push({
+											proposal_id: proposal.id,
 											//@ts-ignore
-											segment.is_true = e.target.value === 'Implemented' ? true : false;
-									});
-								else
-									newPredictionStatement.segments.push({
-										proposal_id: proposal.id,
-										//@ts-ignore
-										is_true: e.target.value === 'Implemented' ? true : false
-									});
-							}}
-							labels={['Neutral', 'Implemented', 'Not implemented']}
-							values={[null, 'Implemented', 'Not implemented']}
-							value={null}
-						/>
-					{/key}
-				{/each}
+											is_true: e.target.value === 'Implemented' ? true : false
+										});
+								}}
+								labels={['Neutral', 'Implemented', 'Not implemented']}
+								values={[null, 'Implemented', 'Not implemented']}
+								value={null}
+							/>
+						{/key}
+					{/each}
+				{/if}
 			</div>
 			<br />
 			<TextArea required label="Description" bind:value={newPredictionStatement.description} />

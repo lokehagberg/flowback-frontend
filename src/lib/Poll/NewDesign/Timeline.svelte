@@ -7,28 +7,50 @@
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from '../functions';
 	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+	import type { poll } from '../interface';
+	import { onMount } from 'svelte';
 
 	export let displayDetails = true,
 		displayTimeline = true,
 		Class = '',
 		dates: Date[] = [],
-		pollType: number;
+		pollType: number,
+		poll: poll;
 
 	let datesDisplay: string[] = [],
-		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
+		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
+		currentPhase,
+		fraction: number,
+		totalTime: number,
+		datePlacement: number[] = [];
 
-	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
-	const fraction = (currentPhase + 1) / dates.length;
-
-	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
-
-	let datePlacement: number[] = [];
-	dates.forEach((date, i) => {
-		// Date placement on Timeline
-		const toDateTime = date.getTime() - dates[0].getTime();
-		datePlacement[i] = (100 * toDateTime) / totalTime;
-		datesDisplay[i] = formatDate(date.toString());
+	onMount(() => {
+		setupDates();
 	});
+
+	const setupDates = () => {
+		dates = [
+			new Date(poll.start_date),
+			new Date(poll.area_vote_end_date),
+			new Date(poll.proposal_end_date),
+			new Date(poll.prediction_statement_end_date),
+			new Date(poll.prediction_bet_end_date),
+			new Date(poll.delegate_vote_end_date),
+			new Date(poll.end_date)
+		];
+
+		currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
+		fraction = (currentPhase + 1) / dates.length;
+
+		totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
+
+		dates.forEach((date, i) => {
+			// Date placement on Timeline
+			const toDateTime = date.getTime() - dates[0].getTime();
+			datePlacement[i] = (100 * toDateTime) / totalTime;
+			datesDisplay[i] = formatDate(date.toString());
+		});
+	};
 </script>
 
 <div class={`relative ${Class}`}>

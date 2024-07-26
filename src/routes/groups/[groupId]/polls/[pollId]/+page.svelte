@@ -131,10 +131,10 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="p-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full max-w-[1000px]"
+			class=" bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col  w-full "
 		>
 			<div
-				class="cursor-pointer p-1 m-6 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full max-w-[1000px]"
+				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow flex flex-col gap-8 w-full "
 				on:click={() => goto(`/groups/${$page.params.groupId}`)}
 			>
 				<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->

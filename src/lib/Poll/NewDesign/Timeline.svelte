@@ -21,7 +21,6 @@
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhase,
 		fraction: number,
-		totalTime: number,
 		datePlacement: number[] = [];
 
 	onMount(() => {
@@ -42,7 +41,7 @@
 		currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
 		fraction = (currentPhase + 1) / dates.length;
 
-		totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
+		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
 		dates.forEach((date, i) => {
 			// Date placement on Timeline
@@ -56,15 +55,15 @@
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
-			class="flex justify-between mt-2 rounded-md max-h-4"
-			style={`background: linear-gradient(90deg, rgba(189, 208, 255, 1) ${
+			class="flex flex-col gap-20 justify-between rounded-md max-w-4"
+			style={`background: linear-gradient(180deg, rgba(189, 208, 255, 1) ${
 				fraction * 100 - 2
 			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
 				<div class="">
 					<HeaderIcon
-						Class="cursor-default !p-0 -translate-y-1"
+						Class="cursor-default"
 						size="1x"
 						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
 						icon={dates[i] <= new Date() ? faCircleCheck : faCircle}

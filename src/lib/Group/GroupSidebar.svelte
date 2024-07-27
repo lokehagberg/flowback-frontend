@@ -56,9 +56,9 @@
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
 		if (res.ok) {
-			removeGroupMembership(Number($page.params.groupId))
-			goto('/home');		
-		} 
+			removeGroupMembership(Number($page.params.groupId));
+			goto('/home');
+		}
 	};
 
 	onMount(() => {
@@ -100,14 +100,7 @@
 		<div class="mb-6 w-full">
 			<div class="bg-primary text-white shadow rounded flex flex-col">
 				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
-					<GroupSidebarButton text="Create Poll" icon={faCheckToSlot} isSelected={false} /></a
-				>
-			</div>
-		</div>
-		<div class="mb-6 w-full">
-			<div class="bg-secondary text-white shadow rounded flex flex-col">
-				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}&type=thread`}>
-					<GroupSidebarButton text="Create Thread" icon={faCheckToSlot} isSelected={false} /></a
+					<GroupSidebarButton text="Create A post" icon={faCheckToSlot} isSelected={false} /></a
 				>
 			</div>
 		</div>
@@ -168,7 +161,6 @@
 			{/if}
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 			<a
 				class="text-inherit"
@@ -178,24 +170,16 @@
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
 			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<GroupSidebarButton
-				action={() => (areYouSureModal = true)}
-				text="Leave group"
-				icon={faPersonRunning}
-				isSelected={false}
-			/>
-			{:else }
-			<a
-			class="text-inherit"
-		
-			href={`/ledger`}
-			>
-			<GroupSidebarButton
-				text="Group Ledger"
-				icon={faCoins}
-				isSelected={false}
-			/>
-		</a>
+				<GroupSidebarButton
+					action={() => (areYouSureModal = true)}
+					text="Leave group"
+					icon={faPersonRunning}
+					isSelected={false}
+				/>
+			{:else}
+				<a class="text-inherit" href={`/ledger`}>
+					<GroupSidebarButton text="Group Ledger" icon={faCoins} isSelected={false} />
+				</a>
 			{/if}
 		</div>
 		{#if userIsOwner}
@@ -219,7 +203,7 @@
 					isSelected={selectedPage === 'perms'}
 				/>
 				<GroupSidebarButton
-					action={() => (goto(`/creategroup?group=${$page.params.groupId}`))}
+					action={() => goto(`/creategroup?group=${$page.params.groupId}`)}
 					text="Edit Group"
 					icon={faCog}
 					isSelected={false}

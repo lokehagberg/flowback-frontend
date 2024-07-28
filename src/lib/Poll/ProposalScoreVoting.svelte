@@ -10,6 +10,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
+	import { poll } from 'ethers/lib/utils';
 
 	export let proposals: proposal[] = [],
 		groupUser: groupUser,
@@ -113,13 +114,21 @@
 </script>
 
 <div class="">
-	{#if proposals}
-		{#key needsReload}
-			{#each proposals as proposal}
-				<Proposal2 {proposal} onChange={(e) => changingVote(e, proposal.id)} {isVoting} {voting} />
-			{/each}
-		{/key}
-	{/if}
+	<span class="text-center text-blue-500 text-2xl">All proposals ({proposals.length})</span>
+	<div class="mt-4">
+		{#if proposals}
+			{#key needsReload}
+				{#each proposals as proposal}
+					<Proposal2
+						{proposal}
+						onChange={(e) => changingVote(e, proposal.id)}
+						{isVoting}
+						{voting}
+					/>
+				{/each}
+			{/key}
+		{/if}
+	</div>
 </div>
 
 {#if isVoting}

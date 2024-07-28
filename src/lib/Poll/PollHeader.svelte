@@ -24,7 +24,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class=" bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
 >
 	<div
 		class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText"
@@ -42,12 +42,12 @@
 		labels={['Poll', 'Timeline', 'Comments']}
 	/>
 
-	<div class="flex items-baseline grid-area-items">
+	<div class="flex gap-4 items-baseline grid-area-items">
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
-			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+			<HeaderIcon Class="p-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
 		{:else if poll.poll_type === 3}
-			<HeaderIcon Class="p-2 pl-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
+			<HeaderIcon Class="p-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 		{/if}
 		<!-- Group Profile -->
 		{#if displayTag}
@@ -80,6 +80,7 @@
 			<Description limit={500} {poll} Class="" />
 		</div>
 	{/if}
+
 	{#if poll.attachments && poll.attachments.length > 0}
 		<img
 			src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}

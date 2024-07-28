@@ -38,6 +38,12 @@
 		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
 			{proposal.description}
 		</p>
+
+		<div class="bottom-0">
+
+			
+
+		</div>
 	</div>
 	{#if isVoting}
 		<input

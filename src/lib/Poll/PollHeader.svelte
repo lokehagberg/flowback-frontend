@@ -14,6 +14,7 @@
 	import { goto } from '$app/navigation';
 	import { getPhaseUserFriendlyName } from './functions';
 	import { _ } from 'svelte-i18n';
+	import Description from './Description.svelte';
 
 	export let poll: poll,
 		displayTag = false,
@@ -75,12 +76,8 @@
 	</div>
 
 	{#if poll.description.length > 0}
-		<div
-			class="grid-area-description border border-gray-200 dark:border-gray-500 rounded p-4 whitespace-pre-wrap break-words"
-			id="poll-description"
-		>
-			{poll.description}
-			<div class="w-full flex justify-center"><Fa icon={faDownLong} /></div>
+		<div class="grid-area-description">
+			<Description limit={500} {poll} Class="" />
 		</div>
 	{/if}
 	{#if poll.attachments && poll.attachments.length > 0}
@@ -101,7 +98,7 @@
 	.grid-area-items {
 		grid-area: 2 / 2 / 3 / 3;
 	}
-	
+
 	.grid-area-description {
 		grid-area: 3 / 2 / 4 / 3;
 	}

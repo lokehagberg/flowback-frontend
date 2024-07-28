@@ -2,12 +2,12 @@
 	import type { poll } from "./interface";
     import { page } from '$app/stores';
 
-    export let limit:number, poll:poll, onHoverGroup:boolean;
+    export let limit:number, poll:poll, onHoverGroup:boolean = false, Class = ""
 
     let readMore = false
 </script>
 
-<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText">
+<p class={`mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText ${Class}`}>
     {#if readMore}
         <a
             class="cursor-pointe text-black hover:underline"

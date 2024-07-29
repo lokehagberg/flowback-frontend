@@ -142,7 +142,12 @@
 	});
 </script>
 
-<div>{$_('New Prediction')}</div>
+<div class="flex">
+	<span>{$_('New Prediction')}</span>
+	<Question
+		message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
+	/><br />
+</div>
 <div>
 	{#if proposalsToPredictionMarket}
 		{#each proposalsToPredictionMarket as proposal}
@@ -185,10 +190,6 @@
 			min={new Date()}
 			max={maxDatePickerYear}
 		/>
-		<span>{$_('Select Proposals to predict on')}</span>
-		<Question
-			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
-		/><br />
 		<div class="grid grid-cols-1" />
 		<br />
 		<TextArea required label="Description" bind:value={newPredictionStatement.description} />

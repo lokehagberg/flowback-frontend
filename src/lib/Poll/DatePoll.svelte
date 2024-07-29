@@ -2,11 +2,10 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { faCheck, faCross, faX } from '@fortawesome/free-solid-svg-icons';
+	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 	import { DateInput } from 'date-picker-svelte';
 	import Fa from 'svelte-fa';
 	import { page } from '$app/stores';
-	import { deepCopy } from 'ethers/lib/utils';
 	import Proposal from './ProposalLegacy.svelte';
 	import { onMount } from 'svelte';
 

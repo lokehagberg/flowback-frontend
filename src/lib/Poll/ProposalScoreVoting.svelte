@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import type { proposal } from '$lib/Poll/interface';
+	import type { Phase, proposal } from '$lib/Poll/interface';
 	import Proposal2 from './Proposal2.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
@@ -14,7 +14,8 @@
 
 	export let proposals: proposal[] = [],
 		isVoting: boolean = false,
-		selectedProposal: proposal | null = null;
+		selectedProposal: proposal | null = null,
+		phase:Phase;
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -121,10 +122,11 @@
 				{#each proposals as proposal}
 					<Proposal2
 						{proposal}
-						onChange={(e) => changingVote(e, proposal.id)}
 						{isVoting}
 						{voting}
+						onChange={(e) => changingVote(e, proposal.id)}
 						bind:selectedProposal
+						bind:phase
 					/>
 				{/each}
 			{/key}

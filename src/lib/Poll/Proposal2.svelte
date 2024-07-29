@@ -1,12 +1,18 @@
 <!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
 	//@ts-ignore
-	import type { proposal } from './interface';
+	import type { Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faComment } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faBox,
+		faComment,
+		faSquare,
+		faSquareH,
+		faSquareVirus
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	export let proposal: proposal,
@@ -14,7 +20,9 @@
 		onChange = (e: Event) => {},
 		isVoting = true,
 		voting: { score: number; proposal: number }[] = [],
-		selectedProposal:proposal|null = null
+		selectedProposal: proposal | null = null,
+		proposalsToPredictionMarket: proposal[] = [],
+		phase: Phase;
 
 	export const id: number = 0;
 
@@ -24,6 +32,8 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
+
+	$: console.log(proposalsToPredictionMarket);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -37,6 +47,32 @@
 >
 	<!-- <div><Fa icon={faBars} /></div> -->
 	<div class="h-full w-2/3">
+		{#if phase === 'prediction_statement'}
+			{@const proposalInList = proposalsToPredictionMarket.findIndex(
+				(prop) => prop.id === proposal.id
+			)}
+			{#if proposalInList !== -1}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:click={() => {
+						proposalsToPredictionMarket.splice(proposalInList, 1);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquare} color={'blue'} class="border border-black" />
+				</div>
+			{:else}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:click={() => {
+						proposalsToPredictionMarket.push(proposal);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquare} color={'white'} class="border border-black" />
+				</div>
+			{/if}
+		{/if}
 		<h1 class="text-lg text-left">{proposal.title}</h1>
 		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
 			{proposal.description}
@@ -47,7 +83,7 @@
 				<Fa icon={faComment} />
 			</div>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click={() => selectedProposal = proposal}>See More</div>
+			<div on:click={() => (selectedProposal = proposal)}>See More</div>
 		</div>
 	</div>
 	{#if isVoting}

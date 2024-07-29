@@ -136,12 +136,19 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
 					<div slot="left" class="h-full">
-						<ProposalScoreVoting bind:proposals isVoting={false} bind:selectedProposal />
-						<Button action={() => (selectedProposal = null)}>Create Proposal</Button>
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:selectedProposal bind:phase />
+						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
+							>Create Proposal</Button
+						>
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}
-							<Proposal2 bind:selectedProposal proposal={selectedProposal} isVoting={false} />
+							<Proposal2
+								bind:selectedProposal
+								proposal={selectedProposal}
+								isVoting={false}
+								bind:phase
+							/>
 						{:else}
 							<ProposalSubmition bind:proposals {poll} />
 						{/if}
@@ -151,7 +158,7 @@
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals isVoting={false} />
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -159,7 +166,7 @@
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals isVoting={false} />
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -167,7 +174,7 @@
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting isVoting={groupUser?.is_delegate} {proposals} />
+						<ProposalScoreVoting isVoting={groupUser?.is_delegate} {proposals} bind:phase />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -176,7 +183,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-						<ProposalScoreVoting isVoting={true} {proposals} />
+						<ProposalScoreVoting isVoting={true} {proposals} bind:phase />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>

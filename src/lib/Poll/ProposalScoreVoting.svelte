@@ -13,7 +13,6 @@
 	import { poll } from 'ethers/lib/utils';
 
 	export let proposals: proposal[] = [],
-		groupUser: groupUser,
 		isVoting: boolean = false,
 		selectedProposal: proposal | null = null;
 
@@ -131,7 +130,6 @@
 			{/key}
 		{/if}
 	</div>
-	<Button action={() => (selectedProposal = null)}>Create Proposal</Button>
 </div>
 
 {#if isVoting}

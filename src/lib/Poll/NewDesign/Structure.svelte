@@ -10,7 +10,7 @@
 </script>
 
 {#if poll}
-	<div class="poll-grid p-12 max-w-[2000px]">
+	<div class="poll-grid p-12 max-w-[1200px] w-full">
 		<Timeline displayDetails={false} bind:poll pollType={4} Class="timeline-grid" />
 
 		{#if $$slots.left}

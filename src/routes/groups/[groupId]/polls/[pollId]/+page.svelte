@@ -136,12 +136,8 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting
-							bind:proposals
-							{groupUser}
-							isVoting={false}
-							bind:selectedProposal
-						/>
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:selectedProposal />
+						<Button action={() => (selectedProposal = null)}>Create Proposal</Button>
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
@@ -155,7 +151,7 @@
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+						<ProposalScoreVoting bind:proposals isVoting={false} />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -163,7 +159,7 @@
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+						<ProposalScoreVoting bind:proposals isVoting={false} />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -171,7 +167,7 @@
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+						<ProposalScoreVoting isVoting={groupUser?.is_delegate} {proposals} />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
@@ -180,7 +176,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-						<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+						<ProposalScoreVoting isVoting={true} {proposals} />
 					</div>
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>

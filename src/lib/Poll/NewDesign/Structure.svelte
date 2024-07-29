@@ -5,12 +5,12 @@
 
 	export let poll: poll;
 
-	let genericStyle = 'bg-white p-6';
+	let genericStyle = 'bg-white p-6 h-[100%] overflow-y-scroll';
 	onMount(() => {});
 </script>
 
 {#if poll}
-	<div class="poll-grid p-12">
+	<div class="poll-grid p-12 max-w-[2000px]">
 		<Timeline displayDetails={false} bind:poll pollType={4} Class="timeline-grid" />
 
 		{#if $$slots.left}

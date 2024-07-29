@@ -15,7 +15,7 @@
 	export let proposals: proposal[] = [],
 		groupUser: groupUser,
 		isVoting: boolean = false,
-		selectedProposal:proposal|null = null
+		selectedProposal: proposal | null = null;
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -114,9 +114,9 @@
 	};
 </script>
 
-<div class="">
+<div class="overflow-y-scroll box-border">
 	<span class="text-center text-blue-500 text-2xl">All proposals ({proposals.length})</span>
-	<div class="mt-4">
+	<div class="mt-4 overflow-y-scroll h-[100%]">
 		{#if proposals}
 			{#key needsReload}
 				{#each proposals as proposal}
@@ -131,9 +131,8 @@
 			{/key}
 		{/if}
 	</div>
-	<Button action={() => selectedProposal = null}>Create Proposal</Button>
+	<Button action={() => (selectedProposal = null)}>Create Proposal</Button>
 </div>
-
 
 {#if isVoting}
 	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]">Save Votings</Button>

@@ -133,7 +133,7 @@
 			</Structure>
 		{:else if phase === 'proposal'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} bind:selectedProposal />
 				</div>
 				<div slot="right">
@@ -147,7 +147,7 @@
 			</Structure>
 		{:else if phase === 'prediction_statement'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 				</div>
 				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
@@ -155,7 +155,7 @@
 			</Structure>
 		{:else if phase === 'prediction_bet'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
 				</div>
 				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
@@ -163,7 +163,7 @@
 			</Structure>
 		{:else if phase === 'delegate_vote'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
 				</div>
 				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
@@ -171,7 +171,7 @@
 			</Structure>
 		{:else if phase === 'vote'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
 					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
 				</div>
@@ -180,7 +180,7 @@
 			</Structure>
 		{:else if phase === 'result' || phase === 'prediction_vote'}
 			<Structure bind:poll>
-				<div slot="left" class="overflow-y-scroll max-h-[400px]">
+				<div slot="left" class="">
 					<Predictions bind:proposals bind:phase bind:poll />
 				</div>
 				<div slot="right"><Results {pollType} /></div>

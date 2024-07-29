@@ -21,7 +21,7 @@
 	import { goto } from '$app/navigation';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
-	import Proposal2 from '$lib/Poll/Proposal2.svelte';
+	import Proposal2 from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 
 	// TODO: refactor the phase system so be very modular
@@ -159,8 +159,24 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
+						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
+							>Create Prediction</Button
+						>
 					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="right" class="h-full">
+						{#if selectedProposal}
+							<Proposal2
+								bind:selectedProposal
+								proposal={selectedProposal}
+								isVoting={false}
+								bind:phase
+							/>
+						{:else}
+							<Predictions bind:proposals bind:phase bind:poll />
+						{/if}
+					</div>
+
+					<!-- <div slot="right"></div> -->
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 			{:else if phase === 'prediction_bet'}

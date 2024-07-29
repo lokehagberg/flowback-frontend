@@ -146,7 +146,7 @@
 	});
 </script>
 
-<Loader bind:loading>
+<!-- <Loader bind:loading>
 	<h2>{$_('Prediction Market')}</h2>
 	<ul class="mb-4">
 		{#each predictions as prediction}
@@ -161,71 +161,72 @@
 	{#if predictions.length === 0}
 		<div class="mt-5">{$_('There are currently no predictions')}</div>
 	{/if}
-</Loader>
+</Loader> -->
 
 <!-- Is displayed whenever a prediction statement is being added -->
-<Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}>
-	<div slot="header">{$_('New Prediction')}</div>
-	<div slot="body">
-		<Loader bind:loading>
-			{$_('Deadline for prediction')}
-			<DateInput
-				bind:value={newPredictionStatement.end_date}
-				min={new Date()}
-				max={maxDatePickerYear}
-			/>
-			<span>{$_('Select Proposals to predict on')}</span>
-			<Question
-				message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
-			/><br />
-			<div class="grid grid-cols-1">
-				{#if proposals}
-					{#each proposals as proposal}
-						{#key resetsOfValues}
-							<Select
-								label={proposal.title}
-								Class="mt-2"
-								onInput={(e) => {
-									//@ts-ignore
-									if (e.target.value === 'Neutral')
-										newPredictionStatement.segments?.filter(
-											(segment) => segment.proposal_id === proposal.id
-										);
-									else if (
-										newPredictionStatement.segments.find(
-											(segment) => segment.proposal_id === proposal.id
-										)
+<!-- <Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}> -->
+	
+<div>{$_('New Prediction')}</div>
+<div>
+	<Loader bind:loading>
+		{$_('Deadline for prediction')}
+		<DateInput
+			bind:value={newPredictionStatement.end_date}
+			min={new Date()}
+			max={maxDatePickerYear}
+		/>
+		<span>{$_('Select Proposals to predict on')}</span>
+		<Question
+			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
+		/><br />
+		<div class="grid grid-cols-1">
+			{#if proposals}
+				{#each proposals as proposal}
+					{#key resetsOfValues}
+						<Select
+							label={proposal.title}
+							Class="mt-2"
+							onInput={(e) => {
+								//@ts-ignore
+								if (e.target.value === 'Neutral')
+									newPredictionStatement.segments?.filter(
+										(segment) => segment.proposal_id === proposal.id
+									);
+								else if (
+									newPredictionStatement.segments.find(
+										(segment) => segment.proposal_id === proposal.id
 									)
-										newPredictionStatement.segments.map((segment) => {
-											if (segment.proposal_id === proposal.id)
-												//@ts-ignore
-												segment.is_true = e.target.value === 'Implemented' ? true : false;
-										});
-									else
-										newPredictionStatement.segments.push({
-											proposal_id: proposal.id,
+								)
+									newPredictionStatement.segments.map((segment) => {
+										if (segment.proposal_id === proposal.id)
 											//@ts-ignore
-											is_true: e.target.value === 'Implemented' ? true : false
-										});
-								}}
-								labels={['Neutral', 'Implemented', 'Not implemented']}
-								values={[null, 'Implemented', 'Not implemented']}
-								value={null}
-							/>
-						{/key}
-					{/each}
-				{/if}
-			</div>
-			<br />
-			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
-			<Button type="submit">{$_('Submit')}</Button>
-			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
-				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+											segment.is_true = e.target.value === 'Implemented' ? true : false;
+									});
+								else
+									newPredictionStatement.segments.push({
+										proposal_id: proposal.id,
+										//@ts-ignore
+										is_true: e.target.value === 'Implemented' ? true : false
+									});
+							}}
+							labels={['Neutral', 'Implemented', 'Not implemented']}
+							values={[null, 'Implemented', 'Not implemented']}
+							value={null}
+						/>
+					{/key}
+				{/each}
 			{/if}
-			<Button buttonStyle="warning">{$_('Cancel')}</Button>
-		</Loader>
-	</div>
-</Modal>
+		</div>
+		<br />
+		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
+		<Button type="submit">{$_('Submit')}</Button>
+		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
+			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+		{/if}
+		<Button buttonStyle="warning">{$_('Cancel')}</Button>
+	</Loader>
+</div>
+<!-- </Modal> -->
 
 <Poppup bind:poppup />

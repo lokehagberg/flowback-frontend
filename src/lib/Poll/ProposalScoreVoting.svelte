@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Phase, proposal } from '$lib/Poll/interface';
-	import Proposal2 from './Proposal2.svelte';
+	import Proposal from './Proposal.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
 	import type { groupUser } from '$lib/Group/interface';
@@ -120,7 +120,7 @@
 		{#if proposals}
 			{#key needsReload}
 				{#each proposals as proposal}
-					<Proposal2
+					<Proposal
 						{proposal}
 						{isVoting}
 						{voting}

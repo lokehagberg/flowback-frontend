@@ -4,8 +4,6 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import Prediction from './Prediction.svelte';
-	import Modal from '$lib/Generic/Modal.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
@@ -16,13 +14,13 @@
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
-	import { getGroupInfo } from '../functions';
-	import type { Group } from '$lib/Group/interface';
 
-	export let proposals: proposal[], phase: Phase, poll: poll;
+	export let proposals: proposal[],
+		phase: Phase,
+		poll: poll,
+		proposalsToPredictionMarket: proposal[] = [];
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -119,7 +117,6 @@
 						newPredictionStatement.description || ''
 					);
 				}
-				console.log(`${prediction_blockchain_id}`);
 				newPredictionStatement.blockchain_id = Number(`${prediction_blockchain_id}`);
 			} catch {
 				poppup = { message: 'Could not push to Blockchain', success: false };
@@ -140,34 +137,47 @@
 	};
 
 	onMount(() => {
-		console.log(proposals, 'PROPORSL');
 		getPredictionStatements();
 		getPredictionBets();
 	});
 </script>
 
-<!-- <Loader bind:loading>
-	<h2>{$_('Prediction Market')}</h2>
-	<ul class="mb-4">
-		{#each predictions as prediction}
-			<li><Prediction {prediction} bind:loading score={2} bind:phase bind:poll /></li>
-		{/each}
-	</ul>
-
-	{#if phase === 'prediction_statement'}
-		<Button action={() => (addingPrediction = true)}>{$_('New Prediction')}</Button>
-	{/if}
-
-	{#if predictions.length === 0}
-		<div class="mt-5">{$_('There are currently no predictions')}</div>
-	{/if}
-</Loader> -->
-
-<!-- Is displayed whenever a prediction statement is being added -->
-<!-- <Modal bind:open={addingPrediction} onSubmit={createPredictionStatement}> -->
-	
 <div>{$_('New Prediction')}</div>
 <div>
+	{#if proposalsToPredictionMarket}
+		{#each proposalsToPredictionMarket as proposal}
+			{#key resetsOfValues}
+				<Select
+					label={proposal.title}
+					Class="mt-2"
+					onInput={(e) => {
+						//@ts-ignore
+						if (e.target.value === 'Neutral')
+							newPredictionStatement.segments?.filter(
+								(segment) => segment.proposal_id === proposal.id
+							);
+						else if (
+							newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id)
+						)
+							newPredictionStatement.segments.map((segment) => {
+								if (segment.proposal_id === proposal.id)
+									//@ts-ignore
+									segment.is_true = e.target.value === 'Implemented' ? true : false;
+							});
+						else
+							newPredictionStatement.segments.push({
+								proposal_id: proposal.id,
+								//@ts-ignore
+								is_true: e.target.value === 'Implemented' ? true : false
+							});
+					}}
+					labels={['Implemented', 'Not implemented']}
+					values={['Implemented', 'Not implemented']}
+					value={'Implemented'}
+				/>
+			{/key}
+		{/each}
+	{/if}
 	<Loader bind:loading>
 		{$_('Deadline for prediction')}
 		<DateInput
@@ -179,44 +189,7 @@
 		<Question
 			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 		/><br />
-		<div class="grid grid-cols-1">
-			{#if proposals}
-				{#each proposals as proposal}
-					{#key resetsOfValues}
-						<Select
-							label={proposal.title}
-							Class="mt-2"
-							onInput={(e) => {
-								//@ts-ignore
-								if (e.target.value === 'Neutral')
-									newPredictionStatement.segments?.filter(
-										(segment) => segment.proposal_id === proposal.id
-									);
-								else if (
-									newPredictionStatement.segments.find(
-										(segment) => segment.proposal_id === proposal.id
-									)
-								)
-									newPredictionStatement.segments.map((segment) => {
-										if (segment.proposal_id === proposal.id)
-											//@ts-ignore
-											segment.is_true = e.target.value === 'Implemented' ? true : false;
-									});
-								else
-									newPredictionStatement.segments.push({
-										proposal_id: proposal.id,
-										//@ts-ignore
-										is_true: e.target.value === 'Implemented' ? true : false
-									});
-							}}
-							labels={['Neutral', 'Implemented', 'Not implemented']}
-							values={[null, 'Implemented', 'Not implemented']}
-							value={null}
-						/>
-					{/key}
-				{/each}
-			{/if}
-		</div>
+		<div class="grid grid-cols-1" />
 		<br />
 		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />

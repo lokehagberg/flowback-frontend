@@ -15,7 +15,8 @@
 	export let proposals: proposal[] = [],
 		isVoting: boolean = false,
 		selectedProposal: proposal | null = null,
-		phase:Phase;
+		phase:Phase,
+		proposalsToPredictionMarket:proposal[] = [];
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -125,6 +126,7 @@
 						{isVoting}
 						{voting}
 						onChange={(e) => changingVote(e, proposal.id)}
+						bind:proposalsToPredictionMarket
 						bind:selectedProposal
 						bind:phase
 					/>

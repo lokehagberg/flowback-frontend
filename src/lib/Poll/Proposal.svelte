@@ -86,7 +86,7 @@
 				<Fa icon={faComment} />
 			</div>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click={() => {console.log("HELLOO?") ;(selectedProposal = proposal);}}>See More</div>
+			<div on:click={() => {(selectedProposal = proposal);}}>See More</div>
 		</div>
 	</div>
 	{#if isVoting}

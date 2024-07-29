@@ -21,7 +21,7 @@
 	import { goto } from '$app/navigation';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
-	import Proposal2 from '$lib/Poll/Proposal.svelte';
+	import Proposal from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 
 	// TODO: refactor the phase system so be very modular
@@ -38,7 +38,8 @@
 		deleteStatus: StatusMessageInfo,
 		phase: Phase,
 		proposals: proposal[],
-		selectedProposal: proposal | null;
+		selectedProposal: proposal | null,
+		proposalsToPredictionMarket:proposal[] = [];
 
 	onMount(async () => {
 		getGroupUser();
@@ -143,7 +144,7 @@
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}
-							<Proposal2
+							<Proposal
 								bind:selectedProposal
 								proposal={selectedProposal}
 								isVoting={false}
@@ -158,21 +159,21 @@
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase bind:selectedProposal bind:proposalsToPredictionMarket />
 						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
 							>Create Prediction</Button
 						>
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}
-							<Proposal2
+							<Proposal
 								bind:selectedProposal
 								proposal={selectedProposal}
 								isVoting={false}
 								bind:phase
 							/>
 						{:else}
-							<Predictions bind:proposals bind:phase bind:poll />
+							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket/>
 						{/if}
 					</div>
 
@@ -184,7 +185,7 @@
 					<div slot="left" class="">
 						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
 					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll/></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 			{:else if phase === 'delegate_vote'}

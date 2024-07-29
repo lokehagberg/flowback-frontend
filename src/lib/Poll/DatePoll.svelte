@@ -7,7 +7,7 @@
 	import Fa from 'svelte-fa';
 	import { page } from '$app/stores';
 	import { deepCopy } from 'ethers/lib/utils';
-	import Proposal from './Proposal.svelte';
+	import Proposal from './ProposalLegacy.svelte';
 	import { onMount } from 'svelte';
 
 	let open = false,

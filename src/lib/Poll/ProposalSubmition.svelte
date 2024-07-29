@@ -14,13 +14,15 @@
 	import { getProposals } from '$lib/Generic/AI';
 	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	let title: string,
 		description: string,
 		loading = false,
 		status: StatusMessageInfo,
 		show = false,
-		blockchain = true;
+		blockchain = true,
+		images: File[];
 
 	export let proposals: proposal[], poll: poll;
 
@@ -28,7 +30,7 @@
 		loading = true;
 
 		let blockchain_id;
-		console.log(poll.blockchain_id)
+		console.log(poll.blockchain_id);
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
 			blockchain_id = await createProposal(poll.blockchain_id, title);
 
@@ -75,10 +77,7 @@
 </script>
 
 <SuccessPoppup bind:show />
-<form
-	on:submit|preventDefault={addProposal}
-	class="p-4 border border-gray-200 dark:border-gray-500 rounded"
->
+<form on:submit|preventDefault={addProposal} class=" dark:border-gray-500 rounded">
 	<Loader bind:loading>
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
 		<TextInput required label="Title" bind:value={title} />
@@ -86,11 +85,12 @@
 		{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
+		<FileUploads bind:images />
 
 		<StatusMessage bind:status />
-		<Button type="submit" label="Add" />
+		<Button Class="pr-3 pl-3" type="submit" label="Add" />
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button action={async () => (title = await getProposals(poll.title))}
+			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button
 			>
 		{/if}

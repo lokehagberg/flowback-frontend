@@ -30,7 +30,7 @@
 <div
 	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex 
 	justify-between items-center bg-white gap-8 p-4 border border-gray-200
-	 dark:border-gray-500 lg:h-36 xl:h-40 ${Class}`}
+	 dark:border-gray-500 lg:h-36 xl:h-40 relative ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
@@ -42,7 +42,7 @@
 			{proposal.description}
 		</p>
 
-		<div class="bottom-0">
+		<div class="absolute flex justify-between bottom-0 w-[95%]">
 			<div>
 				<Fa icon={faComment} />
 			</div>

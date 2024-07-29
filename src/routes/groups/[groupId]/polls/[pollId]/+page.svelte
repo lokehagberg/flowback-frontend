@@ -22,6 +22,7 @@
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
 	import Proposal2 from '$lib/Poll/Proposal2.svelte';
+	import Layout from '$lib/Generic/Layout.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -120,93 +121,100 @@
 	};
 </script>
 
-{#if poll}
-	<PollHeader {poll} {phase} displayTag={phase !== 'area_vote'} />
+<Layout centered>
+	{#if poll}
+		<PollHeader {poll} {phase} displayTag={phase !== 'area_vote'} />
 
-	{#if pollType === 4}
-		{#if phase === 'pre_start'}
-			<div />
-		{:else if phase === 'area_vote'}
-			<Structure bind:poll>
-				<div slot="left"><AreaVote /></div>
-				<div slot="right"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'proposal'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} bind:selectedProposal />
-				</div>
-				<div slot="right">
-					{#if selectedProposal}
-						<Proposal2 bind:selectedProposal proposal={selectedProposal} isVoting={false} />
-					{:else}
-						<ProposalSubmition bind:proposals {poll} />
-					{/if}
-				</div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'prediction_statement'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
-				</div>
-				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'prediction_bet'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
-				</div>
-				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'delegate_vote'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
-				</div>
-				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'vote'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-					<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
-				</div>
-				<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{:else if phase === 'result' || phase === 'prediction_vote'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<Predictions bind:proposals bind:phase bind:poll />
-				</div>
-				<div slot="right"><Results {pollType} /></div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
-		{/if}
-	{:else if pollType === 3}
-		{#if !finished}
-			<DatePoll />
-		{:else}
-			<Results {pollType} />
-		{/if}
-	{/if}
-
-	<!-- Mod Tools -->
-	<!-- TODO: Fix as part of svelte store information this place -->
-	{#if groupUser?.is_admin}
-		<StatusMessage bind:status={deleteStatus} />
-		<div class="flex gap-4 align-middle">
-			<div class="">Mod Tools:</div>
-			<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-				>{$_('Delete poll')}</Button
-			>
-			{#if !finished}
-				<Button action={nextPhase}>Next Phase</Button>
+		{#if pollType === 4}
+			{#if phase === 'pre_start'}
+				<div />
+			{:else if phase === 'area_vote'}
+				<Structure bind:poll>
+					<div slot="left"><AreaVote /></div>
+					<div slot="right"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'proposal'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<ProposalScoreVoting
+							bind:proposals
+							{groupUser}
+							isVoting={false}
+							bind:selectedProposal
+						/>
+					</div>
+					<div slot="right">
+						{#if selectedProposal}
+							<Proposal2 bind:selectedProposal proposal={selectedProposal} isVoting={false} />
+						{:else}
+							<ProposalSubmition bind:proposals {poll} />
+						{/if}
+					</div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'prediction_statement'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					</div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'prediction_bet'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					</div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'delegate_vote'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<ProposalScoreVoting {groupUser} isVoting={groupUser?.is_delegate} {proposals} />
+					</div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'vote'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<Tab tabs={['You', 'Delegate']} bind:selectedPage />
+						<ProposalScoreVoting {groupUser} isVoting={true} {proposals} />
+					</div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
+			{:else if phase === 'result' || phase === 'prediction_vote'}
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<Predictions bind:proposals bind:phase bind:poll />
+					</div>
+					<div slot="right"><Results {pollType} /></div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
 			{/if}
-		</div>
+		{:else if pollType === 3}
+			{#if !finished}
+				<DatePoll />
+			{:else}
+				<Results {pollType} />
+			{/if}
+		{/if}
+
+		<!-- Mod Tools -->
+		<!-- TODO: Fix as part of svelte store information this place -->
+		{#if groupUser?.is_admin}
+			<StatusMessage bind:status={deleteStatus} />
+			<div class="flex gap-4 align-middle">
+				<div class="">Mod Tools:</div>
+				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
+					>{$_('Delete poll')}</Button
+				>
+				{#if !finished}
+					<Button action={nextPhase}>Next Phase</Button>
+				{/if}
+			</div>
+		{/if}
 	{/if}
-{/if}
+</Layout>

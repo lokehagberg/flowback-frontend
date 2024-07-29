@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class={`relative ${Class}`} class:contrast-50={isLoading}>
+<div class={`relative ${Class} h-full`} class:contrast-50={isLoading}>
 	<div
 		class:hidden={!isLoading}
 		class="conotrast-100 z-10 text-blue-500 absolute hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"

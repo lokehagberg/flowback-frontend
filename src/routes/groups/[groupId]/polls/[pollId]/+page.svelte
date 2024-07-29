@@ -135,11 +135,11 @@
 				</Structure>
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
-					<div slot="left" class="">
+					<div slot="left" class="h-full">
 						<ProposalScoreVoting bind:proposals isVoting={false} bind:selectedProposal />
 						<Button action={() => (selectedProposal = null)}>Create Proposal</Button>
 					</div>
-					<div slot="right">
+					<div slot="right" class="h-full">
 						{#if selectedProposal}
 							<Proposal2 bind:selectedProposal proposal={selectedProposal} isVoting={false} />
 						{:else}

@@ -77,7 +77,7 @@
 </script>
 
 <SuccessPoppup bind:show />
-<form on:submit|preventDefault={addProposal} class=" dark:border-gray-500 rounded">
+<form on:submit|preventDefault={addProposal} class="relative h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
 		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
 		<TextInput required label="Title" bind:value={title} />
@@ -88,7 +88,7 @@
 		<FileUploads bind:images />
 
 		<StatusMessage bind:status />
-		<Button Class="pr-3 pl-3" type="submit" label="Add" />
+		<Button buttonStyle="primary-light" Class="absolute bottom-0 w-full" type="submit" label="Add Proposal" />
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button

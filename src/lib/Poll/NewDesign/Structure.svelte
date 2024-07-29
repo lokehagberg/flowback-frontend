@@ -5,7 +5,7 @@
 
 	export let poll: poll;
 
-	let genericStyle = 'bg-white p-6 h-[100%] overflow-y-scroll';
+	let genericStyle = 'bg-white p-6 h-[100%] overflow-y-scroll h-full';
 	onMount(() => {});
 </script>
 

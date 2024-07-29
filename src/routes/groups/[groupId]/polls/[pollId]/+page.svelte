@@ -21,6 +21,7 @@
 	import { goto } from '$app/navigation';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
+	import Proposal2 from '$lib/Poll/Proposal2.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -35,7 +36,8 @@
 		groupUser: groupUser,
 		deleteStatus: StatusMessageInfo,
 		phase: Phase,
-		proposals: proposal[];
+		proposals: proposal[],
+		selectedProposal: proposal | null;
 
 	onMount(async () => {
 		getGroupUser();
@@ -132,9 +134,15 @@
 		{:else if phase === 'proposal'}
 			<Structure bind:poll>
 				<div slot="left" class="overflow-y-scroll max-h-[400px]">
-					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} />
+					<ProposalScoreVoting bind:proposals {groupUser} isVoting={false} bind:selectedProposal />
 				</div>
-				<div slot="right"><ProposalSubmition bind:proposals {poll} /></div>
+				<div slot="right">
+					{#if selectedProposal}
+						<Proposal2 bind:selectedProposal proposal={selectedProposal} isVoting={false} />
+					{:else}
+						<ProposalSubmition bind:proposals {poll} />
+					{/if}
+				</div>
 				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 			</Structure>
 		{:else if phase === 'prediction_statement'}

@@ -6,10 +6,7 @@
 	export let poll: poll;
 
 	let genericStyle = 'bg-white p-6';
-	onMount(() => {
-		console.log(poll);
-	});
-	$: console.log(poll);
+	onMount(() => {});
 </script>
 
 {#if poll}
@@ -41,7 +38,7 @@
 		grid-template-columns: 0.2fr 1fr 1fr;
 		grid-template-rows: 50vh 40vh;
 		display: grid;
-		gap: 20px;
+		gap: 40px;
 	}
 
 	.timeline-grid {

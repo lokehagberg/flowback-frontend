@@ -6,12 +6,15 @@
 	import { onMount } from 'svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
+	import { faComment } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	export let proposal: proposal,
 		Class = '',
 		onChange = (e: Event) => {},
 		isVoting = true,
-		voting: { score: number; proposal: number }[];
+		voting: { score: number; proposal: number }[] = [],
+		selectedProposal:proposal|null = null
 
 	export const id: number = 0;
 
@@ -40,9 +43,11 @@
 		</p>
 
 		<div class="bottom-0">
-
-			
-
+			<div>
+				<Fa icon={faComment} />
+			</div>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div on:click={() => selectedProposal = proposal}>See More</div>
 		</div>
 	</div>
 	{#if isVoting}

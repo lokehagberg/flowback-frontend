@@ -14,7 +14,8 @@
 
 	export let proposals: proposal[] = [],
 		groupUser: groupUser,
-		isVoting: boolean = false;
+		isVoting: boolean = false,
+		selectedProposal:proposal|null = null
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -124,12 +125,15 @@
 						onChange={(e) => changingVote(e, proposal.id)}
 						{isVoting}
 						{voting}
+						bind:selectedProposal
 					/>
 				{/each}
 			{/key}
 		{/if}
 	</div>
+	<Button action={() => selectedProposal = null}>Create Proposal</Button>
 </div>
+
 
 {#if isVoting}
 	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]">Save Votings</Button>

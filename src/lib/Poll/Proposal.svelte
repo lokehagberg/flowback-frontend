@@ -33,78 +33,78 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
-
-	$: console.log(proposalsToPredictionMarket);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex 
-	justify-between items-center bg-white gap-8 p-4 border border-gray-200
-	 dark:border-gray-500 lg:h-36 xl:h-40 relative ${Class}`}
+	class={`dark:bg-darkobject bg-white border-b-2 border-gray-300
+	 dark:border-gray-500 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
 >
-	<!-- <div><Fa icon={faBars} /></div> -->
-	<div class="h-full w-2/3">
-		<div class="flex">
-			{#if phase === 'prediction_statement'}
-				{@const proposalInList = proposalsToPredictionMarket.findIndex(
-					(prop) => prop.id === proposal.id
-				)}
-				{#if proposalInList !== -1}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div
-						on:click={() => {
-							proposalsToPredictionMarket.splice(proposalInList, 1);
-							proposalsToPredictionMarket = proposalsToPredictionMarket;
-						}}
-					>
-						<Fa icon={faSquare} color={'blue'} class="border border-black" />
-					</div>
-				{:else}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div
-						on:click={() => {
-							proposalsToPredictionMarket.push(proposal);
-							proposalsToPredictionMarket = proposalsToPredictionMarket;
-						}}
-					>
-						<Fa icon={faSquareCheck} color={'white'} class="border border-black" />
-					</div>
-				{/if}
+	<div class="flex gap-2 ">
+		{#if phase === 'prediction_statement'}
+			{@const proposalInList = proposalsToPredictionMarket.findIndex(
+				(prop) => prop.id === proposal.id
+			)}
+			{#if proposalInList !== -1}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:click={() => {
+						proposalsToPredictionMarket.splice(proposalInList, 1);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquare} color={'blue'} class="border border-black" />
+				</div>
+			{:else}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:click={() => {
+						proposalsToPredictionMarket.push(proposal);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquareCheck} color={'white'} class="border border-black" />
+				</div>
 			{/if}
-			<h1 class="text-lg text-left">{proposal.title}</h1>
-		</div>
-		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
-			{proposal.description}
-		</p>
+		{/if}
+		<span class="text-lg">{proposal.title}</span>
+	</div>
+	<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
+		{proposal.description}
+	</p>
 
-		<div class="absolute flex justify-between bottom-0 w-[95%]">
-			<div>
-				<Fa icon={faComment} />
-			</div>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click={() => {(selectedProposal = proposal);}}>See More</div>
+	<div class="flex justify-between w-full">
+		<div>
+			<Fa icon={faComment} />
+		</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			on:click={() => {
+				selectedProposal = proposal;
+			}}
+		>
+			See More
 		</div>
 	</div>
-	{#if isVoting}
-		<input
-			value={voting.find((vote) => vote.proposal === proposal.id)?.score}
-			id="amount"
-			class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2"
-			type="number"
-			on:change={(e) => onChange(e)}
-			min={0}
-			max={100}
-		/>
-	{:else}
-		<!-- Used to ensure flex design stays intact -->
-		<div />
-	{/if}
-	<slot />
 </div>
+{#if isVoting}
+	<input
+		value={voting.find((vote) => vote.proposal === proposal.id)?.score}
+		id="amount"
+		class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2"
+		type="number"
+		on:change={(e) => onChange(e)}
+		min={0}
+		max={100}
+	/>
+{:else}
+	<!-- Used to ensure flex design stays intact -->
+	<div />
+{/if}
+<slot />
 
 <SuccessPoppup bind:show message="Successfully edited proposal" />
 

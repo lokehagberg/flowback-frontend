@@ -104,7 +104,10 @@
 	};
 </script>
 
-<form on:submit|preventDefault={() => selectedPage === 'poll' ? createPoll() : createThread()} class="md:w-2/3">
+<form
+	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
+	class="md:w-2/3"
+>
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
@@ -125,50 +128,53 @@
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images />
 			<!-- Time setup -->
-			<div class="border border-gray-200 dark:border-gray-500 p-6">
-				<div>
-					<h2 class="">{$_('Days between phases')}</h2>
-					<input
-						type="number"
-						class="dark:bg-darkbackground show-buttons-all-times"
-						bind:value={daysBetweenPhases}
-						min="0"
-						max="1000"
+			{#if selectedPage === 'poll'}
+				<div class="border border-gray-200 dark:border-gray-500 p-6">
+					<div>
+						<h2 class="">{$_('Days between phases')}</h2>
+						<input
+							type="number"
+							class="dark:bg-darkbackground show-buttons-all-times"
+							bind:value={daysBetweenPhases}
+							min="0"
+							max="1000"
+						/>
+					</div>
+
+					<Button
+						Class={`!bg-blue-600 mt-4 !block`}
+						action={() => (advancedTimeSettings = !advancedTimeSettings)}
+						buttonStyle="secondary">{$_('Advanced time settings')}</Button
+					>
+
+					<AdvancedTimeSettings
+						bind:selected_poll
+						bind:advancedTimeSettings
+						bind:start_date
+						bind:area_vote_end_date
+						bind:proposal_end_date
+						bind:prediction_statement_end_date
+						bind:prediction_bet_end_date
+						bind:delegate_vote_end_date
+						bind:vote_end_date
+						bind:end_date
 					/>
 				</div>
-				<Button
-					Class={`!bg-blue-600 mt-4 !block`}
-					action={() => (advancedTimeSettings = !advancedTimeSettings)}
-					buttonStyle="secondary">{$_('Advanced time settings')}</Button
-				>
+			{/if}
 
-				<AdvancedTimeSettings
-					bind:selected_poll
-					bind:advancedTimeSettings
-					bind:start_date
-					bind:area_vote_end_date
-					bind:proposal_end_date
-					bind:prediction_statement_end_date
-					bind:prediction_bet_end_date
-					bind:delegate_vote_end_date
-					bind:vote_end_date
-					bind:end_date
-				/>
+			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<RadioButtons bind:Yes={isPublic} label="Public?" />
+			{/if}
 
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<RadioButtons bind:Yes={isPublic} label="Public?" />
-				{/if}
+			<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
 
-				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
+			{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+				<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
+				<!-- <Button action={() => createPollBlockchain(Number($page.url.searchParams.get('id')), "title")}>Push to Blockchain?</Button> -->
+			{/if}
 
-				{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
-					<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
-					<!-- <Button action={() => createPollBlockchain(Number($page.url.searchParams.get('id')), "title")}>Push to Blockchain?</Button> -->
-				{/if}
-
-				<StatusMessage bind:status />
-				<Button type="submit" disabled={loading} Class={'bg-primary p-3 mt-3'}>{$_('Post')}</Button>
-			</div>
+			<StatusMessage bind:status />
+			<Button type="submit" disabled={loading} Class={'bg-primary p-3 mt-3'}>{$_('Post')}</Button>
 		</div></Loader
 	>
 </form>

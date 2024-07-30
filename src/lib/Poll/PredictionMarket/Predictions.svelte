@@ -184,21 +184,24 @@
 		{/each}
 	{/if}
 	<Loader bind:loading>
-		{$_('Deadline for prediction')}
-		<DateInput
-			bind:value={newPredictionStatement.end_date}
-			min={new Date()}
-			max={maxDatePickerYear}
-		/>
-		<div class="grid grid-cols-1" />
-		<br />
-		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
-		<Button type="submit">{$_('Submit')}</Button>
-		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
-			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
-		{/if}
-		<Button buttonStyle="warning">{$_('Cancel')}</Button>
+		<form on:submit|preventDefault={createPredictionStatement}>
+			{$_('Deadline for prediction')}
+			<DateInput
+				bind:value={newPredictionStatement.end_date}
+				min={new Date()}
+				max={maxDatePickerYear}
+			/>
+			<div class="grid grid-cols-1" />
+			<br />
+			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+			<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
+			<!-- <Button type="submit">{$_('Submit')}</Button> -->
+			<Button type="submit" buttonStyle="primary-light" Class="">Submit</Button>
+			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
+				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+			{/if}
+			<Button buttonStyle="warning">{$_('Cancel')}</Button>
+		</form>
 	</Loader>
 </div>
 <!-- </Modal> -->

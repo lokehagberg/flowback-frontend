@@ -23,6 +23,7 @@
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
 	import Proposal from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -265,3 +266,18 @@
 		{/if}
 	{/if}
 </Layout>
+
+<Modal bind:open={DeletePollModalShow}>
+	<div slot="header">{$_('Deleting Poll')}</div>
+	<div slot="body">
+		{$_('Are you sure you want to delete this poll?')}
+	</div>
+	<div slot="footer">
+		<div class="flex justify-center gap-16">
+			<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+				action={() => (DeletePollModalShow = false)}
+				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+			>
+		</div>
+	</div>
+</Modal>

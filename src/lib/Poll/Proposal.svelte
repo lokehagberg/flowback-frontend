@@ -43,7 +43,7 @@
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
 >
-	<div class="flex gap-2 ">
+	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
 			{@const proposalInList = proposalsToPredictionMarket.findIndex(
 				(prop) => prop.id === proposal.id
@@ -70,7 +70,7 @@
 				</div>
 			{/if}
 		{/if}
-		<span class="text-lg">{proposal.title}</span>
+		<span class="text-lg align-text-top">{proposal.title}</span>
 	</div>
 	<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}

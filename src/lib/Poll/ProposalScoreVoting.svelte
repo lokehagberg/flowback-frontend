@@ -6,17 +6,15 @@
 	import Proposal from './Proposal.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
-	import type { groupUser } from '$lib/Group/interface';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import { poll } from 'ethers/lib/utils';
 
 	export let proposals: proposal[] = [],
 		isVoting: boolean = false,
 		selectedProposal: proposal | null = null,
-		phase:Phase,
-		proposalsToPredictionMarket:proposal[] = [];
+		phase: Phase,
+		proposalsToPredictionMarket: proposal[] = [],
+		Class = '';
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -115,8 +113,8 @@
 	};
 </script>
 
-<div class="overflow-y-scroll box-border">
-	<span class="text-center text-blue-500 text-2xl">All proposals ({proposals.length})</span>
+<div class={`overflow-y-scroll box-border ${Class}`}>
+
 	<div class="mt-4 overflow-y-scroll h-[100%]">
 		{#if proposals}
 			{#key needsReload}

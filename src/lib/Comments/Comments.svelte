@@ -40,7 +40,7 @@
 <SuccessPoppup bind:show message={showMessage} />
 
 <div
-	class="p-4 border border-gray-200 dark:border-gray-500 rounded dark:text-darktext"
+	class="p-4 rounded dark:text-darktext"
 	id="comments"
 >
 	<h1 class="text-left text-2xl">{$_('Comments')}</h1>

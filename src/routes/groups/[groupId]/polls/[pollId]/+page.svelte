@@ -39,7 +39,7 @@
 		phase: Phase,
 		proposals: proposal[],
 		selectedProposal: proposal | null,
-		proposalsToPredictionMarket:proposal[] = [];
+		proposalsToPredictionMarket: proposal[] = [];
 
 	onMount(async () => {
 		getGroupUser();
@@ -129,17 +129,31 @@
 		{#if pollType === 4}
 			{#if phase === 'pre_start'}
 				<div />
+				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+				<!-- PHASE 2: PROPOSAL CREATION -->
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
-					<div slot="left" class="h-full">
-						<ProposalScoreVoting bind:proposals isVoting={false} bind:selectedProposal bind:phase />
-						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
-							>Create Proposal</Button
+					<div slot="left" class="h-full relative">
+						<span class="text-center text-blue-500 text-2xl"
+							>All proposals ({proposals?.length})</span
+						>
+						<div class="max-h-[80%] overflow-y-scroll">
+							<ProposalScoreVoting
+								bind:proposals
+								isVoting={false}
+								bind:selectedProposal
+								bind:phase
+							/>
+						</div>
+						<Button
+							Class="absolute bottom-0 w-full"
+							buttonStyle="primary-light"
+							action={() => (selectedProposal = null)}>Create Proposal</Button
 						>
 					</div>
 					<div slot="right" class="h-full">
@@ -156,10 +170,18 @@
 					</div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+
+				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase bind:selectedProposal bind:proposalsToPredictionMarket />
+						<ProposalScoreVoting
+							bind:proposals
+							isVoting={false}
+							bind:phase
+							bind:selectedProposal
+							bind:proposalsToPredictionMarket
+						/>
 						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
 							>Create Prediction</Button
 						>
@@ -173,21 +195,24 @@
 								bind:phase
 							/>
 						{:else}
-							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket/>
+							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>
 
 					<!-- <div slot="right"></div> -->
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+
+				<!-- PHASE 4: PREDICTION BETTING -->
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
 					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll/></div>
+					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+				<!-- PHASE 5: DELEGATE VOTING -->
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
@@ -196,6 +221,7 @@
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+				<!-- PHASE 6: ANYONE VOTING -->
 			{:else if phase === 'vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
@@ -205,6 +231,7 @@
 					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">

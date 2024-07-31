@@ -175,17 +175,25 @@
 				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
-					<div slot="left" class="">
-						<ProposalScoreVoting
+					<div slot="left" class="h-full relative">
+
+						<span class="text-center text-blue-500 text-2xl"
+							>All proposals ({proposals?.length})</span
+						>
+						<div class="max-h-[80%] overflow-y-scroll">
+							<ProposalScoreVoting
 							bind:proposals
 							isVoting={false}
 							bind:phase
 							bind:selectedProposal
 							bind:proposalsToPredictionMarket
 						/>
+						</div>
 						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
 							>Create Prediction</Button
 						>
+					
+					
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}

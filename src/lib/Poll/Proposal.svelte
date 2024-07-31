@@ -56,7 +56,7 @@
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
-					<Fa icon={faSquare} color={'blue'} class="border border-black" />
+					<Fa icon={faSquareCheck} color={'black'} class="cursor-pointer" />
 				</div>
 			{:else}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -66,7 +66,7 @@
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
-					<Fa icon={faSquareCheck} color={'white'} class="border border-black" />
+					<Fa icon={faSquareCheck} color={'white'} class="border border-black cursor-pointer" />
 				</div>
 			{/if}
 		{/if}

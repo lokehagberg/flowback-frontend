@@ -15,6 +15,8 @@
 		faSquareVirus
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import type { PredictionStatement } from './PredictionMarket/interfaces';
 
 	export let proposal: proposal,
 		Class = '',
@@ -28,11 +30,14 @@
 	export const id: number = 0;
 
 	let isHoveredOver = false,
-		show = false;
+		show = false,
+		predictions:PredictionStatement[] = []
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
+
+
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

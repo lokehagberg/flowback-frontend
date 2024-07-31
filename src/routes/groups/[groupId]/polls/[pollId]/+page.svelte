@@ -24,6 +24,7 @@
 	import Proposal from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -192,8 +193,7 @@
 						<Button buttonStyle="primary-light" action={() => (selectedProposal = null)}
 							>Create Prediction</Button
 						>
-					
-					
+								
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}
@@ -203,6 +203,7 @@
 								isVoting={false}
 								bind:phase
 							/>
+							<PredictionStatements bind:selectedProposal />
 						{:else}
 							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket />
 						{/if}

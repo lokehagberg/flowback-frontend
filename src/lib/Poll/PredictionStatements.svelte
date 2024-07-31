@@ -24,4 +24,9 @@
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
 </script>
 
-<div />
+<div>
+    {#each predictions as prediction}
+        {prediction.description}
+    {/each}
+
+</div>

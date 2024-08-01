@@ -81,12 +81,13 @@
 		</div>
 	{/if}
 
-	{#if poll.attachments && poll.attachments.length > 0}
+	<!-- TODO: fix attachments in poll -->
+	<!-- {#if poll.attachments && poll.attachments.length > 0}
 		<img
 			src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
 			alt="attachment to the poll"
 		/>
-	{/if}
+	{/if} -->
 </div>
 
 <style>

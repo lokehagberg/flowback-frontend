@@ -183,14 +183,14 @@
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
 								bind:proposals
-								isVoting={false}
 								bind:phase
 								bind:selectedProposal
 								bind:proposalsToPredictionMarket
+								isVoting={false}
 							/>
 						</div>
 						<Button
-							Class="absolute bottom-0 w-full" 
+							Class="absolute bottom-0 w-full"
 							buttonStyle="primary-light"
 							action={() => (selectedProposal = null)}>Create Prediction</Button
 						>
@@ -199,9 +199,9 @@
 						{#if selectedProposal}
 							<Proposal
 								bind:selectedProposal
+								bind:phase
 								proposal={selectedProposal}
 								isVoting={false}
-								bind:phase
 							/>
 							<PredictionStatements bind:selectedProposal />
 						{:else}

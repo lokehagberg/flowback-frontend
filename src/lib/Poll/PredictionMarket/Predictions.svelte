@@ -136,10 +136,30 @@
 		newPredictionStatement.description = json.predictions;
 	};
 
+	const handleImplementationStatusChange = (e: any, proposal: proposal) => {
+		//@ts-ignore
+		if (e.target.value === 'Neutral')
+			newPredictionStatement.segments?.filter((segment) => segment.proposal_id === proposal.id);
+		else if (newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id))
+			newPredictionStatement.segments.map((segment) => {
+				if (segment.proposal_id === proposal.id)
+					//@ts-ignore
+					segment.is_true = e.target.value === 'Implemented' ? true : false;
+			});
+		else
+			newPredictionStatement.segments.push({
+				proposal_id: proposal.id,
+				//@ts-ignore
+				is_true: e.target.value === 'Implemented' ? true : false
+			});
+	};
+
 	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
 	});
+
+	$: if(proposalsToPredictionMarket) handleImplementationStatusChange
 </script>
 
 <div class="flex">
@@ -155,27 +175,7 @@
 				<Select
 					label={proposal.title}
 					Class="mt-2"
-					onInput={(e) => {
-						//@ts-ignore
-						if (e.target.value === 'Neutral')
-							newPredictionStatement.segments?.filter(
-								(segment) => segment.proposal_id === proposal.id
-							);
-						else if (
-							newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id)
-						)
-							newPredictionStatement.segments.map((segment) => {
-								if (segment.proposal_id === proposal.id)
-									//@ts-ignore
-									segment.is_true = e.target.value === 'Implemented' ? true : false;
-							});
-						else
-							newPredictionStatement.segments.push({
-								proposal_id: proposal.id,
-								//@ts-ignore
-								is_true: e.target.value === 'Implemented' ? true : false
-							});
-					}}
+					onInput={(e) => handleImplementationStatusChange(e, proposal)}
 					labels={['Implemented', 'Not implemented']}
 					values={['Implemented', 'Not implemented']}
 					value={'Implemented'}

@@ -15,6 +15,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import PredictionBettingDraggable from '../PredictionBettingDraggable.svelte';
 
 	export let prediction: PredictionStatement, loading: boolean = false, score: null | number = null, phase: Phase, poll:poll;
 
@@ -166,7 +167,7 @@
 	};
 </script>
 
-<div class="flex justify-between">
+<div class="">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<span
 		on:click={() => (showDetails = true)}
@@ -175,14 +176,16 @@
 	>
 		{prediction.description}</span
 	>
+	<span>{formatDate(prediction.end_date)}</span>
 	{#if phase === 'prediction_bet'}
+		<PredictionBettingDraggable />
 		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
-		<Select
+		<!-- <Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
 			bind:value={score}
 			onInput={handleChangeBetScore}
-		/>
+		/> -->
 	{/if}
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex">

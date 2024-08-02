@@ -22,14 +22,15 @@
 			const nearestSnap = snapPoints.reduce((prev, curr) =>
 				Math.abs(curr - width) < Math.abs(prev - width) ? curr : prev
 			);
+
 			lineWidth = nearestSnap;
 			currentSnapPosition = nearestSnap;
 		}
 
 		function onMouseUp() {
-			console.log(currentSnapPosition);
-
-			onSelection(currentSnapPosition/20);
+            console.log(currentSnapPosition, "POH SNAP");
+            
+			onSelection(currentSnapPosition  / 20);
 			document.removeEventListener('mousemove', onMouseMove);
 			document.removeEventListener('mouseup', onMouseUp);
 			dragLinePosition = null; // Hide the vertical line after mouse up
@@ -49,7 +50,12 @@
 </script>
 
 <div class="w-96 bg-white p-4 rounded-lg shadow-lg">
-	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		id="track-container"
+		class="relative w-full h-2 bg-purple-200 rounded-full draggable"
+		on:mousedown={onMouseDown}
+	>
 		{#if dragLinePosition !== null}
 			<div
 				class="absolute top-0 left-0 h-[40px<] border-l-2 border-gray-600"
@@ -57,9 +63,8 @@
 			/>
 		{/if}
 		<div
-			class="absolute top-0 left-0 h-full bg-purple-500 rounded-full draggable"
+			class="absolute top-0 left-0 h-full bg-purple-500 rounded-full"
 			style="width: {lineWidth}%;"
-			on:mousedown={onMouseDown}
 		/>
 
 		{#each snapPointsInPixels as point (point)}

@@ -53,14 +53,14 @@
 	};
 
 	const predictionBetCreate = async (score: string | number) => {
-		if (!score) return;
+		// if (!score) return;
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/create`,
 			{
-				score:`${score}`
+				score: `${score}`
 			}
 		);
 		loading = false;
@@ -68,7 +68,7 @@
 		if (!res.ok) showPoppup = true;
 	};
 
-	const predictionBetUpdate = async (score: string|number) => {
+	const predictionBetUpdate = async (score: string | number) => {
 		if (!score) return;
 		loading = true;
 
@@ -76,7 +76,7 @@
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/update`,
 			{
-				score:`${score}`
+				score: `${score}`
 			}
 		);
 		loading = false;
@@ -158,16 +158,13 @@
 		//@ts-ignore
 		// const newScore = e?.target?.value;
 
-		if (!newScore) predictionBetDelete();
-		else if (score === null) {
+		// if (newScore === null) predictionBetDelete();
+		// else if (score === null) {
+			console.log("WHATDS OYUSOYU SO UYKALOPSH");
+			
 			predictionBetCreate(newScore);
-		} else predictionBetUpdate(newScore);
+		// } else predictionBetUpdate(newScore);
 
-		console.log(
-			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE',
-			poll.blockchain_id,
-			prediction
-		);
 		if (
 			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
 			poll.blockchain_id &&

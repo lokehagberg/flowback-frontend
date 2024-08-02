@@ -105,17 +105,16 @@
 		};
 	};
 
-	const changingVote = (e: Event, proposalId: number) => {
+	const changingVote = (score: number | string, proposalId: number) => {
 		//@ts-ignore
-		let newScore = e?.target?.value;
+		// let newScore = e?.target?.value;
 		const i = voting.findIndex((vote) => vote.proposal === proposalId);
-		voting[i].score = Number(newScore);
+		voting[i].score = Number(score);
 		voting = voting;
 	};
 </script>
 
 <div class={`overflow-y-scroll box-border ${Class}`}>
-
 	<div class="mt-4 overflow-y-scroll h-[100%]">
 		{#if proposals}
 			{#key needsReload}
@@ -124,14 +123,19 @@
 						{proposal}
 						{isVoting}
 						{voting}
-						onChange={(e) => changingVote(e, proposal.id)}
+						onChange={() => {}}
 						bind:proposalsToPredictionMarket
 						bind:selectedProposal
 						bind:phase
 					/>
-					{#if phase==='delegate_vote'}
-						<VotingSlider onSelection={delegateVote}/>
-					
+					{#if phase === 'delegate_vote'}
+						<VotingSlider
+							onSelection={(pos) => {
+								changingVote(pos, proposal.id);
+								if (phase === 'delegate_vote') delegateVote();
+								else if (phase === 'vote') vote();
+							}}
+						/>
 					{/if}
 				{/each}
 			{/key}
@@ -139,9 +143,9 @@
 	</div>
 </div>
 
-{#if isVoting}
-	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]">Save Votings</Button>
-	<!-- <Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]" -->
-{/if}
+<!-- {#if isVoting}
+	<Button action={() => (false ? delegateVote() : vote())} Class="w-[30%]">Save Votings</Button> -->
+<!-- <Button action={() => (groupUser.is_delegate ? delegateVote() : vote())} Class="w-[30%]" -->
+<!-- {/if} -->
 
 <Poppup bind:poppup />

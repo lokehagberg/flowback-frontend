@@ -5,7 +5,7 @@
 	import type { PredictionStatement } from './PredictionMarket/interfaces';
 	import Prediction from './PredictionMarket/Prediction.svelte';
 
-	export let selectedProposal: proposal, phase:Phase, poll:poll;
+	export let selectedProposal: proposal, phase: Phase, poll: poll;
 
 	let predictions: PredictionStatement[] = [];
 
@@ -19,16 +19,17 @@
 		);
 		// loading = false;
 		predictions = json.results;
-        console.log(predictions)
 	};
 
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
 </script>
 
 <div>
-    {#each predictions as prediction}
-        {prediction.description}
-		<Prediction bind:phase bind:poll bind:prediction />
-    {/each}
-
+	{#each predictions as prediction}
+		{#if phase === 'prediction_bet'}
+			<Prediction bind:phase bind:poll bind:prediction />
+		{:else}
+			{prediction.description}
+		{/if}
+	{/each}
 </div>

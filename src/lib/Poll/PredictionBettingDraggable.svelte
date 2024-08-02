@@ -8,10 +8,10 @@
 		width: any,
 		currentSnapPosition: any;
 
-	function onMouseDown(event: any) {
+	const  onMouseDown  = (event: any) => {
 		const container = event.target.parentElement;
 
-		function onMouseMove(e: any) {
+		const onMouseMove = (e: any) => {
 			const rect = container.getBoundingClientRect();
 			const offsetX = e.clientX - rect.left;
 			const width = (offsetX / rect.width) * 100;
@@ -27,10 +27,10 @@
 			currentSnapPosition = nearestSnap;
 		}
 
-		function onMouseUp() {
-            console.log(currentSnapPosition, "POH SNAP");
-            
-			onSelection(currentSnapPosition  / 20);
+		const onMouseUp = () => {
+			console.log(currentSnapPosition, 'POH SNAP');
+
+			onSelection(currentSnapPosition / 20);
 			document.removeEventListener('mousemove', onMouseMove);
 			document.removeEventListener('mouseup', onMouseUp);
 			dragLinePosition = null; // Hide the vertical line after mouse up
@@ -49,13 +49,9 @@
 	});
 </script>
 
-<div class="w-96 bg-white p-4 rounded-lg shadow-lg">
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		id="track-container"
-		class="relative w-full h-2 bg-purple-200 rounded-full draggable"
-		on:mousedown={onMouseDown}
-	>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="w-96 bg-white p-4 rounded-lg shadow-lg draggable" on:mousedown={onMouseDown}>
+	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
 		{#if dragLinePosition !== null}
 			<div
 				class="absolute top-0 left-0 h-[40px<] border-l-2 border-gray-600"

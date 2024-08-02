@@ -17,7 +17,11 @@
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 	import PredictionBettingDraggable from '../PredictionBettingDraggable.svelte';
 
-	export let prediction: PredictionStatement, loading: boolean = false, score: null | number = null, phase: Phase, poll:poll;
+	export let prediction: PredictionStatement,
+		loading: boolean = false,
+		score: null | number = null,
+		phase: Phase,
+		poll: poll;
 
 	let showPoppup = false,
 		showDetails = false,
@@ -48,7 +52,7 @@
 		}
 	};
 
-	const predictionBetCreate = async (score: string) => {
+	const predictionBetCreate = async (score: string | number) => {
 		if (!score) return;
 		loading = true;
 
@@ -56,7 +60,7 @@
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/create`,
 			{
-				score
+				score:`${score}`
 			}
 		);
 		loading = false;
@@ -64,7 +68,7 @@
 		if (!res.ok) showPoppup = true;
 	};
 
-	const predictionBetUpdate = async (score: string) => {
+	const predictionBetUpdate = async (score: string|number) => {
 		if (!score) return;
 		loading = true;
 
@@ -72,7 +76,7 @@
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/update`,
 			{
-				score
+				score:`${score}`
 			}
 		);
 		loading = false;
@@ -150,18 +154,27 @@
 		});
 	};
 
-	const handleChangeBetScore = async (e: any) => {
+	const handleChangeBetScore = async (newScore: number) => {
 		//@ts-ignore
-		const newScore = e?.target?.value;
+		// const newScore = e?.target?.value;
 
 		if (!newScore) predictionBetDelete();
 		else if (score === null) {
 			predictionBetCreate(newScore);
 		} else predictionBetUpdate(newScore);
 
-		console.log(import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', poll.blockchain_id, prediction)
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && poll.blockchain_id && prediction.blockchain_id && score)
-		createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
+		console.log(
+			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE',
+			poll.blockchain_id,
+			prediction
+		);
+		if (
+			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
+			poll.blockchain_id &&
+			prediction.blockchain_id &&
+			score
+		)
+			createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
 
 		score = Number(newScore);
 	};
@@ -178,13 +191,15 @@
 	>
 	<span>{formatDate(prediction.end_date)}</span>
 	{#if phase === 'prediction_bet'}
-		<PredictionBettingDraggable />
+		<PredictionBettingDraggable onSelection={handleChangeBetScore} />
 		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
 		<!-- <Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
 			values={[null, 0, 1, 2, 3, 4, 5]}
 			bind:value={score}
-			onInput={handleChangeBetScore}
+			onInput={
+				
+			}
 		/> -->
 	{/if}
 	{#if phase === 'result' || phase === 'prediction_vote'}

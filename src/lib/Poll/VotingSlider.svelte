@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	export let onSelection = (pos: number) => {};
+	export let onSelection = (pos: number) => {}, lineWidth = 0
 
-	let lineWidth = 100,
-		snapPoints = [0, 20, 40, 60, 80, 100],
+	let snapPoints = [0, 20, 40, 60, 80, 100],
 		dragLinePosition: any = null,
-		width: any,
 		currentSnapPosition: any;
 
 	const  onMouseDown  = (event: any) => {
@@ -28,8 +26,6 @@
 		}
 
 		const onMouseUp = () => {
-			console.log(currentSnapPosition, 'POH SNAP');
-
 			onSelection(currentSnapPosition / 20);
 			document.removeEventListener('mousemove', onMouseMove);
 			document.removeEventListener('mouseup', onMouseUp);

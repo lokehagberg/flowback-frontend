@@ -15,7 +15,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
-	import PredictionBettingDraggable from '../VotingSlider.svelte';
+	import VotingSlider from '../VotingSlider.svelte';
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
@@ -187,7 +187,7 @@
 	>
 	<span>{formatDate(prediction.end_date)}</span>
 	{#if phase === 'prediction_bet'}
-		<PredictionBettingDraggable onSelection={handleChangeBetScore} />
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} />
 		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
 		<!-- <Select
 			labels={['Not selected', '0', '20', '40', '60', '80', '100']}

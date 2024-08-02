@@ -38,7 +38,7 @@ export const getPhase = (poll: poll): Phase => {
 
 // Labels for the circles on the timeline
 export const dateLabels = [
-	'Pre Start',
+	'',
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
@@ -51,8 +51,7 @@ export const dateLabels = [
 export const dateLabelsDatePoll = ['Start', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
-	if (phase === 'pre_start') return dateLabels[0];
-	else if (phase === 'area_vote') return dateLabels[1];
+	if (phase === 'area_vote') return dateLabels[1];
 	else if (phase === 'proposal') return dateLabels[2];
 	else if (phase === 'prediction_statement') return dateLabels[3];
 	else if (phase === 'prediction_bet') return dateLabels[4];
@@ -63,7 +62,7 @@ export const getPhaseUserFriendlyName = (phase: Phase) => {
 
 //TODO: To prevent many API calls, use svelte stores to transfer information between files about groups
 export const getGroupInfo = async (id: number | string) => {
-	id = Number(id)
+	id = Number(id);
 	const { res, json } = await fetchRequest('GET', `group/list?id=${id}`);
 	return { res, json };
 };

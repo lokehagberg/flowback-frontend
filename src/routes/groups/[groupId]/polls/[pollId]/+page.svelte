@@ -236,14 +236,25 @@
 				</Structure>
 				<!-- PHASE 5: DELEGATE VOTING -->
 			{:else if phase === 'delegate_vote'}
-				<Structure bind:poll>
-					<div slot="left" class="">
-						<ProposalScoreVoting isVoting={groupUser?.is_delegate} {proposals} bind:phase />
-					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-				</Structure>
-				<!-- PHASE 6: ANYONE VOTING -->
+			<Structure bind:poll>
+				<div slot="left" class="">
+					<ProposalScoreVoting bind:proposals isVoting={false} bind:phase bind:selectedProposal />
+				</div>
+				<div slot="right">
+					{#if selectedProposal}
+						<Proposal
+							bind:selectedProposal
+							bind:phase
+							proposal={selectedProposal}
+							isVoting={false}
+						/>
+						<PredictionStatements bind:selectedProposal bind:phase bind:poll />
+						
+					{/if}
+				</div>
+				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+			</Structure>
+					<!-- PHASE 6: ANYONE VOTING -->
 			{:else if phase === 'vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">

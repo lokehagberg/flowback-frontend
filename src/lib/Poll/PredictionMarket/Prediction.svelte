@@ -15,7 +15,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
-	import PredictionBettingDraggable from '../PredictionBettingDraggable.svelte';
+	import PredictionBettingDraggable from '../VotingSlider.svelte';
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,

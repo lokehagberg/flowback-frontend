@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import VotingSlider from './VotingSlider.svelte';
 
 	export let proposals: proposal[] = [],
 		isVoting: boolean = false,
@@ -128,6 +129,10 @@
 						bind:selectedProposal
 						bind:phase
 					/>
+					{#if phase==='delegate_vote'}
+						<VotingSlider onSelection={delegateVote}/>
+					
+					{/if}
 				{/each}
 			{/key}
 		{/if}

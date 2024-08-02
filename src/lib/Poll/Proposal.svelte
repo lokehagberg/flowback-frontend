@@ -90,6 +90,7 @@
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
+			class="hover:underline cursor-pointer" 
 		>
 			See More
 		</div>

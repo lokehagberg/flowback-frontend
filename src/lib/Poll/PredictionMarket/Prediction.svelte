@@ -16,7 +16,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 
-	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase, poll:poll;
+	export let prediction: PredictionStatement, loading: boolean = false, score: null | number = null, phase: Phase, poll:poll;
 
 	let showPoppup = false,
 		showDetails = false,

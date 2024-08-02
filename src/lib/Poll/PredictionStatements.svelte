@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import type { proposal } from './interface';
+	import type { Phase, poll, proposal } from './interface';
 	import { page } from '$app/stores';
 	import type { PredictionStatement } from './PredictionMarket/interfaces';
+	import Prediction from './PredictionMarket/Prediction.svelte';
 
-	export let selectedProposal: proposal;
+	export let selectedProposal: proposal, phase:Phase, poll:poll;
 
 	let predictions: PredictionStatement[] = [];
 
@@ -27,6 +28,7 @@
 <div>
     {#each predictions as prediction}
         {prediction.description}
+		<Prediction bind:phase bind:poll bind:prediction />
     {/each}
 
 </div>

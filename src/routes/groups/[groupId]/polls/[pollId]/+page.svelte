@@ -25,6 +25,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
+	import Prediction from '$lib/Poll/PredictionMarket/Prediction.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -203,7 +204,7 @@
 								proposal={selectedProposal}
 								isVoting={false}
 							/>
-							<PredictionStatements bind:selectedProposal />
+							<PredictionStatements bind:selectedProposal bind:phase bind:poll/>
 						{:else}
 							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket />
 						{/if}
@@ -217,9 +218,20 @@
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase />
+						<ProposalScoreVoting bind:proposals isVoting={false} bind:phase bind:selectedProposal />
 					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
+					<div slot="right">
+						{#if selectedProposal}
+							<Proposal
+								bind:selectedProposal
+								bind:phase
+								proposal={selectedProposal}
+								isVoting={false}
+							/>
+							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
+							
+						{/if}
+					</div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 				<!-- PHASE 5: DELEGATE VOTING -->

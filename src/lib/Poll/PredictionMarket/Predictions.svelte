@@ -158,8 +158,7 @@
 		getPredictionStatements();
 		getPredictionBets();
 	});
-
-	$: if(proposalsToPredictionMarket) handleImplementationStatusChange
+	
 </script>
 
 <div class="flex">

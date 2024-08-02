@@ -69,7 +69,7 @@
 	};
 
 	const predictionBetUpdate = async (score: string | number) => {
-		if (!score) return;
+		if (score === null) return;
 		loading = true;
 
 		const { res, json } = await fetchRequest(
@@ -157,13 +157,12 @@
 	const handleChangeBetScore = async (newScore: number) => {
 		//@ts-ignore
 		// const newScore = e?.target?.value;
-
-		// if (newScore === null) predictionBetDelete();
-		// else if (score === null) {
-			console.log("WHATDS OYUSOYU SO UYKALOPSH");
-			
+		console.log(newScore, "NEW SCORI");
+		
+		if (newScore === null) predictionBetDelete();
+		else if (score === null) {
 			predictionBetCreate(newScore);
-		// } else predictionBetUpdate(newScore);
+		} else predictionBetUpdate(newScore);
 
 		if (
 			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' &&

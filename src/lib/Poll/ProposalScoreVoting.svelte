@@ -119,16 +119,17 @@
 		{#if proposals}
 			{#key needsReload}
 				{#each proposals as proposal}
-					<Proposal
-						{proposal}
-						{isVoting}
-						{voting}
-						onChange={() => {}}
-						bind:proposalsToPredictionMarket
-						bind:selectedProposal
-						bind:phase
-					/>
-					{#if phase === 'delegate_vote'}
+					<div class="border-b-2 border-gray-300">
+						<Proposal
+							{proposal}
+							{isVoting}
+							{voting}
+							onChange={() => {}}
+							bind:proposalsToPredictionMarket
+							bind:selectedProposal
+							bind:phase
+						>
+						{#if phase === 'delegate_vote'}
 						<VotingSlider
 							onSelection={(pos) => {
 								changingVote(pos, proposal.id);
@@ -137,6 +138,8 @@
 							}}
 						/>
 					{/if}
+						</Proposal>
+					</div>
 				{/each}
 			{/key}
 		{/if}

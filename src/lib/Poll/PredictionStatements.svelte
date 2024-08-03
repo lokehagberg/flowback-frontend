@@ -29,7 +29,17 @@
 		{#if phase === 'prediction_bet'}
 			<Prediction bind:phase bind:poll bind:prediction />
 		{:else}
-			{prediction.description}
+			<div class="flex justify-between">
+				{prediction.description}
+				<span
+					>Combined bet:
+					{#if prediction.combined_bet}
+						{prediction.combined_bet}
+					{:else}
+						none
+					{/if}
+				</span>
+			</div>
 		{/if}
 	{/each}
 </div>

@@ -6,16 +6,8 @@
 	import { onMount } from 'svelte';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import {
-		faBox,
-		faComment,
-		faSquare,
-		faSquareCheck,
-		faSquareH,
-		faSquareVirus
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { fetchRequest } from '$lib/FetchRequest';
 	import type { PredictionStatement } from './PredictionMarket/interfaces';
 
 	export let proposal: proposal,
@@ -30,19 +22,16 @@
 	export const id: number = 0;
 
 	let isHoveredOver = false,
-		show = false,
-		predictions:PredictionStatement[] = []
+		show = false;
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
-
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class={`dark:bg-darkobject bg-white border-b-2 border-gray-300
+	class={`dark:bg-darkobject bg-white
 	 dark:border-gray-500 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
@@ -81,6 +70,8 @@
 		{proposal.description}
 	</p>
 
+	<slot />
+
 	<div class="flex justify-between w-full">
 		<div>
 			<Fa icon={faComment} />
@@ -90,7 +81,7 @@
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
-			class="hover:underline cursor-pointer" 
+			class="hover:underline cursor-pointer"
 		>
 			See More
 		</div>
@@ -110,7 +101,6 @@
 	<!-- Used to ensure flex design stays intact -->
 	<div />
 {/if}
-<slot />
 
 <SuccessPoppup bind:show message="Successfully edited proposal" />
 

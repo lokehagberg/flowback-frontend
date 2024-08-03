@@ -59,6 +59,23 @@
 		voting = voting;
 	};
 
+	const getDelegateVotes = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/poll/pool${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
+		);
+
+		if (!json.results || json.results.length === 0) return;
+
+		voting = voting.map((vote) => ({
+			score: (vote.score = json.results.find(
+				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
+			).raw_score),
+			proposal: vote.proposal
+		}));
+		voting = voting;
+	};
+
 	const delegateVote = async () => {
 		const { json, res } = await fetchRequest(
 			`POST`,
@@ -129,15 +146,17 @@
 							bind:selectedProposal
 							bind:phase
 						>
-						{#if phase === 'delegate_vote'}
-						<VotingSlider
-							onSelection={(pos) => {
-								changingVote(pos, proposal.id);
-								if (phase === 'delegate_vote') delegateVote();
-								else if (phase === 'vote') vote();
-							}}
-						/>
-					{/if}
+							{#if phase === 'delegate_vote' || phase === "vote"}
+								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
+								<VotingSlider
+									onSelection={(pos) => {
+										changingVote(pos, proposal.id);
+										if (phase === 'delegate_vote') delegateVote();
+										else if (phase === 'vote') vote();
+									}}
+									lineWidth={score ? score * 20 : 0}
+								/>
+							{/if}
 						</Proposal>
 					</div>
 				{/each}

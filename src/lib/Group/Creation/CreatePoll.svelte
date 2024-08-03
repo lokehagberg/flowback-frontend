@@ -102,6 +102,33 @@
 		}
 		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
+
+	const changeDaysBetweenPhases = () => {
+		const now = new Date();
+		start_date = new Date();
+
+		//For debug purposes this puts one minute delay between each phase.
+		if (daysBetweenPhases === 0) {
+			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			proposal_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			prediction_statement_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			prediction_bet_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			delegate_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			end_date = new Date(now.setMinutes(now.getMinutes() + 1));
+			//For users to select over multiple days
+		} else {
+			area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		}
+	};
+	
+	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 </script>
 
 <form

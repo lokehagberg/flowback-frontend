@@ -123,6 +123,8 @@
 
 		if (res.ok) phase = _phase;
 	};
+	
+
 </script>
 
 <Layout centered>
@@ -274,14 +276,33 @@
 				</Structure>
 				<!-- PHASE 6: ANYONE VOTING -->
 			{:else if phase === 'vote'}
-				<Structure bind:poll>
-					<div slot="left" class="">
-						<Tab tabs={['You', 'Delegate']} bind:selectedPage />
-						<ProposalScoreVoting isVoting={true} {proposals} bind:phase />
+			<Structure bind:poll>
+				<div slot="left" class="">
+					<span class="text-center text-blue-500 text-2xl"
+						>All proposals ({proposals?.length})</span
+					>
+					<div class="max-h-[90%] overflow-y-scroll">
+						<ProposalScoreVoting
+							bind:proposals
+							isVoting={false}
+							bind:phase
+							bind:selectedProposal
+						/>
 					</div>
-					<div slot="right"><Predictions bind:proposals bind:phase bind:poll /></div>
-					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-				</Structure>
+				</div>
+				<div slot="right">
+					{#if selectedProposal}
+						<Proposal
+							bind:selectedProposal
+							bind:phase
+							proposal={selectedProposal}
+							isVoting={false}
+						/>
+						<PredictionStatements bind:selectedProposal bind:phase bind:poll />
+					{/if}
+				</div>
+				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+			</Structure>
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:poll>

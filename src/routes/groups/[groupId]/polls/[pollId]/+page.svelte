@@ -307,7 +307,7 @@
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<Predictions bind:proposals bind:phase bind:poll />
+						
 					</div>
 					<div slot="right"><Results {pollType} /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>

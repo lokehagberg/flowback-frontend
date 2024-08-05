@@ -50,7 +50,7 @@
 	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
 		{#if dragLinePosition !== null}
 			<div
-				class="absolute top-0 left-0 h-[40px<] border-l-2 border-gray-600"
+				class="absolute top-0 left-0 h-[40px<] border-l-2 border-gray-600 w-[40px]"
 				style="left: {dragLinePosition}px;"
 			/>
 		{/if}

@@ -15,11 +15,14 @@
 	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let title: string,
 		description: string,
 		loading = false,
 		status: StatusMessageInfo,
+		poppup: poppup = { message: '', success: true, show: true },
 		show = false,
 		blockchain = true,
 		images: File[];
@@ -57,7 +60,7 @@
 
 		if (!res.ok) return;
 
-		show = true;
+		poppup = { message: 'Successfully added proposal', success: true };
 		let created_by = await getUserInfo();
 		loading = false;
 
@@ -67,7 +70,6 @@
 			id,
 			created_by,
 			poll: Number($page.params.pollId),
-
 			attachments: images
 		});
 		proposals = proposals;
@@ -87,10 +89,11 @@
 	};
 </script>
 
-<SuccessPoppup bind:show />
+<!-- <SuccessPoppup bind:show /> -->
+<Poppup bind:poppup />
 <form on:submit|preventDefault={addProposal} class="relative h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
-		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
+		<span class="block text-left text-md text-primary font-bold">{$_('Create a Proposal')}</span>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
 		{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}

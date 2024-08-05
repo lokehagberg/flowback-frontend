@@ -27,13 +27,13 @@
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
 >
 	<div
-		class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText"
+		class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
 		on:click={() => goto(`/groups/${$page.params.groupId}`)}
 	>
 		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 		<Fa icon={faArrowLeft} />
 	</div>
-	<h1 class="text-left text-5xl">{poll.title}</h1>
+	<h1 class="text-left text-2xl text-primary font-bold">{poll.title}</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 	<NotificationOptions
 		id={poll.id}
@@ -42,12 +42,12 @@
 		labels={['Poll', 'Timeline', 'Comments']}
 	/>
 
-	<div class="flex gap-4 items-baseline grid-area-items">
+	<div class="flex gap-4 items-baseline grid-area-items mt-1">
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
-			<HeaderIcon Class="p-2 cursor-default" icon={faAlignLeft} text={'Text Poll'} />
+			<HeaderIcon Class="cursor-default" icon={faAlignLeft} text={'Text Poll'} />
 		{:else if poll.poll_type === 3}
-			<HeaderIcon Class="p-2 cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
+			<HeaderIcon Class="cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 		{/if}
 		<!-- Group Profile -->
 		{#if displayTag}
@@ -93,8 +93,8 @@
 <style>
 	.poll-header-grid {
 		display: grid;
-		grid-template-columns: 10% 80% 10%;
-		grid-template-rows: 10% 80% 10%;
+		grid-template-columns: 0.3fr 4fr 0.3fr;
+		grid-template-rows: 0.1fr 1fr 0.1fr;
 	}
 
 	.grid-area-items {

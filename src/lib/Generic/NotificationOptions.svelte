@@ -84,16 +84,13 @@
 	$: if (notificationOpen) getNotifications();
 </script>
 
-<div class="notifications-clickable-region">
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		on:click={() => {
-			notificationOpen = !notificationOpen;
-		}}
-		on:keydown
-	>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="notifications-clickable-region m-auto" on:click={() => {
+	notificationOpen = !notificationOpen;
+}}
+on:keydown>
+	
 		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.2x'} />
-	</div>
 
 	{#if notificationOpen}
 		<ul class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">

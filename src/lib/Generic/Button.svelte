@@ -76,8 +76,9 @@
 <style>
 	.primary-light-inner-shadow {
 		/* box-shadow: inset 0 0 0px 3px rgb(130, 180, 230); */
-		border: 3px solid rgb(130, 180, 230);
-		color:rgb(130, 180, 230) !important;
-		font-weight:bolder;
+		border: 1px solid var(--secondary);
+		color:var(--secondary) !important;
+		font-weight:500;
+		font-size:medium
 	}
 </style>

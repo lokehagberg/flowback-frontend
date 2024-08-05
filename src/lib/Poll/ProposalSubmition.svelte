@@ -30,17 +30,26 @@
 		loading = true;
 
 		let blockchain_id;
-		console.log(poll.blockchain_id);
 		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
 			blockchain_id = await createProposal(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
 		if (blockchain_id) proposal.blockchain_id = blockchain_id;
 
+		const formData = new FormData();
+		formData.append('title', title);
+		formData.append('description', description);
+
+		images.forEach((image) => {
+			formData.append('attachments', image);
+		});
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/create`,
-			proposal
+			formData,
+			true,
+			false
 		);
 
 		const id = json;
@@ -57,7 +66,9 @@
 			description,
 			id,
 			created_by,
-			poll: Number($page.params.pollId)
+			poll: Number($page.params.pollId),
+
+			attachments: images
 		});
 		proposals = proposals;
 
@@ -88,7 +99,12 @@
 		<FileUploads bind:images />
 
 		<StatusMessage bind:status />
-		<Button buttonStyle="primary-light" Class="absolute bottom-0 w-full" type="submit" label="Add Proposal" />
+		<Button
+			buttonStyle="primary-light"
+			Class="absolute bottom-0 w-full"
+			type="submit"
+			label="Add Proposal"
+		/>
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button

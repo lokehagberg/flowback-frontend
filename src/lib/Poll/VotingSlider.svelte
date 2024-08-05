@@ -59,9 +59,10 @@
 			style="width: {lineWidth}%;"
 		/>
 
-		{#each snapPointsInPixels as point (point)}
+		<!-- {#each snapPointsInPixels as point (point)}
 			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
-		{/each}
+		{/each} -->
+		
 	</div>
 </div>
 

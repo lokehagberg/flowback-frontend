@@ -5,6 +5,7 @@ export interface proposal {
 	created_by: number;
 	poll: number;
 	blockchain_id?: number;
+	attachments: File[];
 }
 
 export interface poll {

@@ -123,8 +123,6 @@
 
 		if (res.ok) phase = _phase;
 	};
-	
-
 </script>
 
 <Layout centered>
@@ -163,12 +161,22 @@
 					</div>
 					<div slot="right" class="h-full">
 						{#if selectedProposal}
-							<Proposal
+							<!-- <Proposal
 								bind:selectedProposal
 								proposal={selectedProposal}
 								isVoting={false}
 								bind:phase
-							/>
+							/> -->
+							<span class="text-primary font-bold block"> {selectedProposal.title}</span>
+							<span>
+								{selectedProposal.description}
+							</span>
+							<!-- {@debug selectedProposal} -->
+							{#if selectedProposal.attachments}
+								{#each selectedProposal.attachments as file}
+									{file.name}
+								{/each}
+							{/if}
 						{:else}
 							<ProposalSubmition bind:proposals {poll} />
 						{/if}
@@ -276,39 +284,37 @@
 				</Structure>
 				<!-- PHASE 6: ANYONE VOTING -->
 			{:else if phase === 'vote'}
-			<Structure bind:poll>
-				<div slot="left" class="">
-					<span class="text-center text-blue-500 text-2xl"
-						>All proposals ({proposals?.length})</span
-					>
-					<div class="max-h-[90%] overflow-y-scroll">
-						<ProposalScoreVoting
-							bind:proposals
-							isVoting={false}
-							bind:phase
-							bind:selectedProposal
-						/>
+				<Structure bind:poll>
+					<div slot="left" class="">
+						<span class="text-center text-blue-500 text-2xl"
+							>All proposals ({proposals?.length})</span
+						>
+						<div class="max-h-[90%] overflow-y-scroll">
+							<ProposalScoreVoting
+								bind:proposals
+								isVoting={false}
+								bind:phase
+								bind:selectedProposal
+							/>
+						</div>
 					</div>
-				</div>
-				<div slot="right">
-					{#if selectedProposal}
-						<Proposal
-							bind:selectedProposal
-							bind:phase
-							proposal={selectedProposal}
-							isVoting={false}
-						/>
-						<PredictionStatements bind:selectedProposal bind:phase bind:poll />
-					{/if}
-				</div>
-				<div slot="bottom"><Comments bind:proposals api="poll" /></div>
-			</Structure>
+					<div slot="right">
+						{#if selectedProposal}
+							<Proposal
+								bind:selectedProposal
+								bind:phase
+								proposal={selectedProposal}
+								isVoting={false}
+							/>
+							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
+						{/if}
+					</div>
+					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
+				</Structure>
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:poll>
-					<div slot="left" class="">
-						
-					</div>
+					<div slot="left" class="" />
 					<div slot="right"><Results {pollType} /></div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>

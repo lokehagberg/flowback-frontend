@@ -43,7 +43,7 @@
 		}}
 		class={`text-center ${
 			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[85%] active:brightness-[92%] transition-all duration-50 
+		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
 		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow text-xl' : ''}`}
 		class:bg-gray-300={disabled}
@@ -59,7 +59,7 @@
 		type="submit"
 		class={`text-center ${
 			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[85%] active:brightness-[92%] transition-all duration-50 
+		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
 		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow text-xl' : ''}`}
 		class:bg-gray-300={disabled}

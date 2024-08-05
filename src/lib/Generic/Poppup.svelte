@@ -24,7 +24,7 @@
 {#if poppup?.message}
 	<div
 		id="popup"
-		class={`bg-white fixed bottom-5 right-5 z-50 shadow-xl flex gap-2 items-center  px-4 py-2 rounded-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
+		class={`bg-white fixed bottom-5 right-5 z-50 shadow-xl flex gap-2 items-center px-4 py-2 rounded-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
 		class:show
 		hidden={!show}
 	>

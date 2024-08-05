@@ -143,7 +143,7 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
-						<span class="text-center text-blue-500 text-2xl"
+						<span class="text-center text-primary font-bold text-md"
 							>All proposals ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
@@ -192,7 +192,7 @@
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
-						<span class="text-center text-blue-500 text-2xl"
+						<span class="text-center text-primary font-bold text-md"
 							>All proposals ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
@@ -232,7 +232,7 @@
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<span class="text-center text-blue-500 text-2xl"
+						<span class="text-center text-primary font-bold text-md"
 							>All proposals ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
@@ -261,7 +261,7 @@
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<span class="text-center text-blue-500 text-2xl"
+						<span class="text-center text-primary font-bold text-md"
 							>All proposals ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">
@@ -290,7 +290,7 @@
 			{:else if phase === 'vote'}
 				<Structure bind:poll>
 					<div slot="left" class="">
-						<span class="text-center text-blue-500 text-2xl"
+						<span class="text-center text-primary font-bold text-md"
 							>All proposals ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">

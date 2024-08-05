@@ -25,6 +25,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
+	import { env } from '$env/dynamic/public';
 	import Prediction from '$lib/Poll/PredictionMarket/Prediction.svelte';
 
 	// TODO: refactor the phase system so be very modular
@@ -173,9 +174,12 @@
 							</span>
 							<!-- {@debug selectedProposal} -->
 							{#if selectedProposal.attachments}
-								{#each selectedProposal.attachments as file}
-									{file.name}
-								{/each}
+								<div>
+									{#each selectedProposal.attachments as file}
+										<!-- svelte-ignore a11y-missing-attribute -->
+										<img src={`${env.PUBLIC_API_URL}/media/${file.file}`} />
+									{/each}
+								</div>
 							{/if}
 						{:else}
 							<ProposalSubmition bind:proposals {poll} />

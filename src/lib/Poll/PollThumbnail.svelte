@@ -21,7 +21,6 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import { getTags } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
-	import { env } from '$env/dynamic/public';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import Button from '$lib/Generic/Button.svelte';
 	import Description from './Description.svelte';
@@ -79,27 +78,22 @@
 </script>
 
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 poll-thumbnail-shadow rounded-md transition-all vote-thumbnail"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText poll-thumbnail-shadow rounded-md"
 	class:poll-thumbnail-shadow={!darkMode}
 	class:poll-thumbnail-shadow-dark={darkMode}
 	id={`poll-thumbnail-${poll.id.toString()}`}
 >
-	<div class="flex items-center justify-between mt-1">
-		<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
-			<a
-				class="cursor-pointer text-black"
-				href={onHoverGroup
-					? '/groups/1'
-					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-			>
-				<h1
-					class="text-left text-3xl mb-3 text-blue-800 p-1 pl-0 dark:text-darkmodeText hover:underline"
-				>
-					{poll.title}
-				</h1>
-			</a>
-		</div>
-		<div class="ml-2 inline-flex gap-3 items-center">
+	<div class="flex items-center justify-between">
+		<a
+			class="cursor-pointer text-xl text-primary dark:text-darkmodeText hover:underline"
+			href={onHoverGroup
+				? '/groups/1'
+				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+		>
+			{poll.title}
+		</a>
+
+		<div class="inline-flex items-center">
 			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
 				<a
 					href={poll.group_joined ? `groups/${poll.group_id}` : ''}
@@ -137,7 +131,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="flex gap-2">
+	<div class="flex">
 		{#if poll.poll_type === 4}
 			<HeaderIcon
 				Class="!p-0 !cursor-default"
@@ -174,10 +168,10 @@
 	</div>
 
 	{#if poll.description.length > 0}
-		<Description limit={500} {poll} {onHoverGroup} />
+		<Description limit={500} {poll} {onHoverGroup} Class="!p-0 !m-0" />
 	{/if}
-	
-	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
+
+	<Timeline Class="!m-0" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<!-- Area Voting -->
 	{#if phase === 'area_vote'}
@@ -226,20 +220,6 @@
 			<Button Class="w-[47%]" buttonStyle="primary-light">Evaluate predictions</Button>
 		</div>
 	{/if}
-
-	<div
-		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
-	>
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<p
-			class="hover:underline"
-			on:mouseover={() => (onHoverGroup = true)}
-			on:mouseleave={() => (onHoverGroup = false)}
-			on:click={() => goto('/groups/1')}
-			on:focus
-			on:keydown
-		/>
-	</div>
 </div>
 
 <style>

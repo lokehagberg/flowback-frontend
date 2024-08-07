@@ -34,7 +34,7 @@
 <div class={`relative ${Class}`}>
 	{#if displayTimeline}
 		<div
-			class="flex justify-between mt-2 rounded-md max-h-4"
+			class="flex justify-between rounded-md max-h-4"
 			style={`background: linear-gradient(90deg, rgba(189, 208, 255, 1) ${
 				fraction * 100 - 2
 			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
@@ -53,7 +53,7 @@
 		</div>
 	{/if}
 	{#if displayDetails}
-		<ul class="p-2">
+		<ul class="">
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				on:keydown={() => {}}

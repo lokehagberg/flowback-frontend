@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CommentPost from './CommentPost.svelte';
+	import CommentPost from '$lib/Comments/CommentPost.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
@@ -101,7 +101,7 @@
 	class="p-4 rounded darK:text-darktext"
 	id="comments"
 >
-	<h1 class="text-left text-2xl">{$_('Comments')}</h1>
+	<h1 class="text-left text-2xl">Cu</h1>
 	<!-- Add Comment -->
 	<CommentPost bind:proposals bind:comments parent_id={undefined} replyDepth={-1} {api} />
 

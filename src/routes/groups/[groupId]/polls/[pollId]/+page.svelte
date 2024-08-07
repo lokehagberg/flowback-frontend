@@ -3,9 +3,8 @@
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import type { Phase, poll, proposal, votings } from '$lib/Poll/interface';
+	import type { Phase, poll, proposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
-	import Tab from '$lib/Generic/Tab.svelte';
 	import { _ } from 'svelte-i18n';
 	import Results from '$lib/Poll/Results.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -26,7 +25,6 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
 	import { env } from '$env/dynamic/public';
-	import Prediction from '$lib/Poll/PredictionMarket/Prediction.svelte';
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}
@@ -137,7 +135,7 @@
 			{:else if phase === 'area_vote'}
 				<Structure bind:poll>
 					<div slot="left"><AreaVote /></div>
-					<div slot="right"><Comments bind:proposals api="poll" /></div>
+					<div slot="right" class="!p-0"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 				<!-- PHASE 2: PROPOSAL CREATION -->
 			{:else if phase === 'proposal'}

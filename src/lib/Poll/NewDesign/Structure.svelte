@@ -36,7 +36,7 @@
 <style>
 	.poll-grid {
 		grid-template-columns: 0.1fr 1fr 1fr;
-		grid-template-rows: 50vh 40vh;
+		grid-template-rows: 100vh 40vh;
 		display: grid;
 	}
 

@@ -131,7 +131,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="flex gap-4">
+	<div class="flex gap-4 mt-2">
 		{#if poll.poll_type === 4}
 			<HeaderIcon
 				Class="!p-0 !cursor-default"
@@ -168,7 +168,7 @@
 	</div>
 
 	{#if poll.description.length > 0}
-		<Description limit={500} {poll} {onHoverGroup} />
+		<Description limit={500} {poll} {onHoverGroup} Class="mt-2" />
 	{/if}
 
 	<Timeline Class="!m-0" displayDetails={false} pollType={poll.poll_type} bind:dates />

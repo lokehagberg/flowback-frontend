@@ -70,7 +70,7 @@
 			id,
 			created_by,
 			poll: Number($page.params.pollId),
-			attachments: images
+			attachments: []
 		});
 		proposals = proposals;
 
@@ -91,7 +91,7 @@
 
 <!-- <SuccessPoppup bind:show /> -->
 <Poppup bind:poppup />
-<form on:submit|preventDefault={addProposal} class="relative h-full dark:border-gray-500 rounded">
+<form on:submit|preventDefault={addProposal} class=" h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
 		<span class="block text-left text-md text-primary font-bold">{$_('Create a Proposal')}</span>
 		<TextInput required label="Title" bind:value={title} />

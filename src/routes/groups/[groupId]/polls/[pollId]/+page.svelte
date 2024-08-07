@@ -158,7 +158,7 @@
 							action={() => (selectedProposal = null)}>Create Proposal</Button
 						>
 					</div>
-					<div slot="right" class="h-full">
+					<div slot="right" class="">
 						{#if selectedProposal}
 							<!-- <Proposal
 								bind:selectedProposal
@@ -208,7 +208,7 @@
 							action={() => (selectedProposal = null)}>Create Prediction</Button
 						>
 					</div>
-					<div slot="right" class="h-full">
+					<div slot="right" class="relative h-full">
 						{#if selectedProposal}
 							<Proposal
 								bind:selectedProposal

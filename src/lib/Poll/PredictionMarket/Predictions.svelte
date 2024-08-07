@@ -158,7 +158,6 @@
 		getPredictionStatements();
 		getPredictionBets();
 	});
-	
 </script>
 
 <div class="flex">
@@ -167,42 +166,43 @@
 		message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 	/><br />
 </div>
-<div>
-	{#if proposalsToPredictionMarket}
-		{#each proposalsToPredictionMarket as proposal}
-			{#key resetsOfValues}
-				<Select
-					label={proposal.title}
-					Class="mt-2"
-					onInput={(e) => handleImplementationStatusChange(e, proposal)}
-					labels={['Implemented', 'Not implemented']}
-					values={['Implemented', 'Not implemented']}
-					value={'Implemented'}
-				/>
-			{/key}
-		{/each}
-	{/if}
-	<Loader bind:loading>
-		<form on:submit|preventDefault={createPredictionStatement}>
-			{$_('Deadline for prediction')}
-			<DateInput
-				bind:value={newPredictionStatement.end_date}
-				min={new Date()}
-				max={maxDatePickerYear}
+
+{#if proposalsToPredictionMarket}
+	{#each proposalsToPredictionMarket as proposal}
+		{#key resetsOfValues}
+			<Select
+				label={proposal.title}
+				Class="mt-2"
+				onInput={(e) => handleImplementationStatusChange(e, proposal)}
+				labels={['Implemented', 'Not implemented']}
+				values={['Implemented', 'Not implemented']}
+				value={'Implemented'}
 			/>
-			<div class="grid grid-cols-1" />
-			<br />
-			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-			<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
-			<!-- <Button type="submit">{$_('Submit')}</Button> -->
-			<Button type="submit" buttonStyle="primary-light" Class="">Submit</Button>
-			{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
-				<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
-			{/if}
-			<Button buttonStyle="warning">{$_('Cancel')}</Button>
-		</form>
-	</Loader>
-</div>
+		{/key}
+	{/each}
+{/if}
+<Loader bind:loading Class="!static">
+	<form on:submit|preventDefault={createPredictionStatement}>
+		{$_('Deadline for prediction')}
+		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
+		<!-- <Button type="submit">{$_('Submit')}</Button> -->
+		<DateInput
+			bind:value={newPredictionStatement.end_date}
+			min={new Date()}
+			max={maxDatePickerYear}
+		/>
+
+		<Button type="submit" buttonStyle="primary-light" Class="w-full bottom-0 absolute"
+			>Submit</Button
+		>
+		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
+			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+		{/if}
+		<!-- <Button buttonStyle="warning">{$_('Cancel')}</Button> -->
+	</form>
+</Loader>
+
 <!-- </Modal> -->
 
 <Poppup bind:poppup />

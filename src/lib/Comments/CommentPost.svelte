@@ -120,7 +120,7 @@
 </script>
 
 <form
-	class="mt-4 relative"
+	class="relative"
 	on:submit|preventDefault={() => (beingEdited ? commentUpdate() : commentCreate())}
 >
 	<!-- When # typed, show proposals to be tagged -->

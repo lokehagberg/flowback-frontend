@@ -27,18 +27,19 @@
 
 <div class="border-t-2">
 	{#each predictions as prediction}
-	<div class="border-b-2 flex flex-col pt-3">
+		<div class="border-b-2 flex flex-col pt-3">
 			<span class="text-primary font-semibold">{prediction.description}</span>
 			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
-			<span class="text-sm text-right"
-				>Bet:
-				{#if prediction.combined_bet}
-					{prediction.combined_bet}
-				{:else}
-					none
-				{/if}
-			</span>
-			{#if phase === 'prediction_bet'}
+			{#if phase === 'delegate_vote' || phase === 'vote' || phase === 'result'}
+				<span class="text-sm text-right"
+					>Bet:
+					{#if prediction.combined_bet}
+						{prediction.combined_bet}
+					{:else}
+						none
+					{/if}
+				</span>
+			{:else if phase === 'prediction_bet'}
 				<Prediction bind:phase bind:poll bind:prediction />
 			{/if}
 		</div>

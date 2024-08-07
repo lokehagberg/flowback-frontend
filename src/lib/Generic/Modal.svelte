@@ -15,6 +15,8 @@
 
 	const stopPropagation = (event: MouseEvent) => {
 		event.stopPropagation();
+		hideScrollbar(false);
+		onClose();
 	};
 
 	const hideScrollbar = (hide: boolean) => {
@@ -34,7 +36,7 @@
 		onClose();
 	};
 
-	$: open ? onOpenModal() : onCloseModal();
+	$: if (open) onOpenModal();
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

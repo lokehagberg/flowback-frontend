@@ -217,6 +217,8 @@
 								isVoting={false}
 							/>
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
+						{:else if proposalsToPredictionMarket.length === 0}
+							<span class="text-center block text-primary font-semibold"> To make a prediction, please select atleast one proposal </span>
 						{:else}
 							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket />
 						{/if}

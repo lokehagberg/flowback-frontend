@@ -78,7 +78,7 @@
 </script>
 
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText poll-thumbnail-shadow rounded-md"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText poll-thumbnail-shadow rounded-md p-4"
 	class:poll-thumbnail-shadow={!darkMode}
 	class:poll-thumbnail-shadow-dark={darkMode}
 	id={`poll-thumbnail-${poll.id.toString()}`}
@@ -93,7 +93,7 @@
 			{poll.title}
 		</a>
 
-		<div class="inline-flex items-center">
+		<div class="inline-flex items-center gap-4">
 			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
 				<a
 					href={poll.group_joined ? `groups/${poll.group_id}` : ''}
@@ -131,7 +131,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="flex">
+	<div class="flex gap-4">
 		{#if poll.poll_type === 4}
 			<HeaderIcon
 				Class="!p-0 !cursor-default"
@@ -168,58 +168,60 @@
 	</div>
 
 	{#if poll.description.length > 0}
-		<Description limit={500} {poll} {onHoverGroup} Class="!p-0 !m-0" />
+		<Description limit={500} {poll} {onHoverGroup} />
 	{/if}
 
 	<Timeline Class="!m-0" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
-	<!-- Area Voting -->
-	{#if phase === 'area_vote'}
-		<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-between">
-			<Select
-				label={''}
-				labels={tags.map((tag) => tag.name)}
-				values={tags.map((tag) => tag.id)}
-				bind:value={selectedTag}
-				classInner="w-full bg-white p-4 border-gray-400 rounded-md border-2"
-				Class="w-[47%]"
-			/>
-			{#if voting}
-				<Button type="submit" Class="w-[47%]">Save Vote</Button>
-			{:else}
-				<p class="w-[47%] text-center pt-4">Successfully saved voting!</p>
-			{/if}
-		</form>
-	{:else if phase === 'proposal'}
-		<div class="flex justify-between">
-			<Button Class="w-[47%]" buttonStyle="primary-light"
-				>See Proposals ({poll.total_proposals})</Button
-			>
-			<Button Class="w-[47%]" buttonStyle="primary-light">Create a Proposal</Button>
-		</div>
-	{:else if phase === 'prediction_statement'}
-		<div class="flex justify-between">
-			<Button Class="w-[47%]" buttonStyle="primary-light"
-				>See Predictions ({poll.total_predictions})</Button
-			>
-			<Button Class="w-[47%]" buttonStyle="primary-light">Create a Prediction</Button>
-		</div>
-	{:else if phase === 'prediction_bet'}
-		<div class="flex justify-between">
-			<Button Class="w-[47%]" buttonStyle="primary-light">Mange bets</Button>
-			<p class="w-[47%]">You have not betted yet!</p>
-		</div>
-	{:else if phase === 'delegate_vote' || phase === 'vote'}
-		<div class="flex justify-between">
-			<Button Class="w-[47%]" buttonStyle="primary-light">Mange votes</Button>
-			<p class="w-[47%]">You have not voted yet!</p>
-		</div>
-	{:else if phase === 'prediction_vote' || phase === 'result'}
-		<div class="flex justify-between">
-			<Button Class="w-[47%]" buttonStyle="primary-light">View detailed results</Button>
-			<Button Class="w-[47%]" buttonStyle="primary-light">Evaluate predictions</Button>
-		</div>
-	{/if}
+	<div class="!mt-4">
+		<!-- Area Voting -->
+		{#if phase === 'area_vote'}
+			<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-betwee">
+				<Select
+					label={''}
+					labels={tags.map((tag) => tag.name)}
+					values={tags.map((tag) => tag.id)}
+					bind:value={selectedTag}
+					classInner="w-full bg-white p-4 border-gray-400 rounded-md border-2"
+					Class="w-[47%]"
+				/>
+				{#if voting}
+					<Button type="submit" Class="w-[47%]">Save Vote</Button>
+				{:else}
+					<p class="w-[47%] text-center pt-4">Successfully saved voting!</p>
+				{/if}
+			</form>
+		{:else if phase === 'proposal'}
+			<div class="flex justify-between">
+				<Button Class="w-[47%]" buttonStyle="primary-light"
+					>See Proposals ({poll.total_proposals})</Button
+				>
+				<Button Class="w-[47%]" buttonStyle="primary-light">Create a Proposal</Button>
+			</div>
+		{:else if phase === 'prediction_statement'}
+			<div class="flex justify-between">
+				<Button Class="w-[47%]" buttonStyle="primary-light"
+					>See Predictions ({poll.total_predictions})</Button
+				>
+				<Button Class="w-[47%]" buttonStyle="primary-light">Create a Prediction</Button>
+			</div>
+		{:else if phase === 'prediction_bet'}
+			<div class="flex justify-between">
+				<Button Class="w-[47%]" buttonStyle="primary-light">Mange bets</Button>
+				<p class="w-[47%]">You have not betted yet!</p>
+			</div>
+		{:else if phase === 'delegate_vote' || phase === 'vote'}
+			<div class="flex justify-between">
+				<Button Class="w-[47%]" buttonStyle="primary-light">Mange votes</Button>
+				<p class="w-[47%]">You have not voted yet!</p>
+			</div>
+		{:else if phase === 'prediction_vote' || phase === 'result'}
+			<div class="flex justify-between">
+				<Button Class="w-[47%]" buttonStyle="primary-light">View detailed results</Button>
+				<Button Class="w-[47%]" buttonStyle="primary-light">Evaluate predictions</Button>
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style>

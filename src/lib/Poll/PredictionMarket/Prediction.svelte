@@ -155,10 +155,6 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
-		//@ts-ignore
-		// const newScore = e?.target?.value;
-		console.log(newScore, "NEW SCORI");
-		
 		if (newScore === null) predictionBetDelete();
 		else if (score === null) {
 			predictionBetCreate(newScore);
@@ -178,14 +174,14 @@
 
 <div class="">
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<span
+	<!-- <span
 		on:click={() => (showDetails = true)}
 		on:keydown
 		class="hover:underline cursor-pointer overflow-hidden"
 	>
 		{prediction.description}</span
 	>
-	<span>{formatDate(prediction.end_date)}</span>
+	<span>{formatDate(prediction.end_date)}</span> -->
 	{#if phase === 'prediction_bet'}
 		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} />
 		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->

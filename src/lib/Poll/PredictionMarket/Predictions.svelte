@@ -87,16 +87,7 @@
 		resetsOfValues++;
 		addingPrediction = false;
 		poppup = { message: 'Successfully created prediction statement', success: true };
-		return;
 
-		getPredictionStatements();
-	};
-
-	const deletePredictionStatement = async (id: number) => {
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/prediction/${id}/statement/delete`
-		);
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.
@@ -174,7 +165,6 @@
 	};
 
 	onMount(() => {
-		getPredictionStatements();
 		getPredictionBets();
 	});
 

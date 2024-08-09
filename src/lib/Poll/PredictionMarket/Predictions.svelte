@@ -193,18 +193,9 @@
 		<span>If implemented</span>
 		{#each proposalsToPredictionMarket as proposal, i}
 			{#key resetsOfValues}
-				<!--	<Select
-		label={proposal.title}
-		Class="mt-2"
-		onInput={(e) => handleImplementationStatusChange(e?.target?.value, proposal)}
-		labels={['Implemented', 'Not implemented']}
-		values={['Implemented', 'Not implemented']}
-		value={'Implemented'}
-		/>-->
 				{#if i !== 0} OR {/if}
-
 				<div class="flex justify-between">
-					<span class="p-0.5 border border-gray-400 rounded w-full">{proposal.title}</span>
+					<span class="p-0.5 border border-gray-300 rounded w-full">{proposal.title}</span>
 					<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>
 						<Fa icon={faX} color="red" />
 					</button>

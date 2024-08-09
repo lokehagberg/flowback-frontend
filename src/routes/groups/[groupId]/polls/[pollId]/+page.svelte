@@ -203,12 +203,12 @@
 							/>
 						</div>
 						<Button
-							Class="absolute bottom-0 w-full"
+							Class="w-full"
 							buttonStyle="primary-light"
 							action={() => (selectedProposal = null)}>Create Prediction</Button
 						>
 					</div>
-					<div slot="right" class="relative h-full">
+					<div slot="right" class="relative">
 						{#if selectedProposal}
 							<Proposal
 								bind:selectedProposal
@@ -218,9 +218,11 @@
 							/>
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
-							<span class="text-center block text-primary font-semibold"> To make a prediction, please select atleast one proposal </span>
+							<span class="text-center block text-primary font-semibold">
+								To make a prediction, please select atleast one proposal
+							</span>
 						{:else}
-							<Predictions bind:proposals bind:phase bind:poll bind:proposalsToPredictionMarket />
+							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>
 

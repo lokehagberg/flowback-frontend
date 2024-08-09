@@ -7,20 +7,22 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
-	import type { Phase, poll, proposal } from '../interface';
+	import type { poll, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
-	import Select from '$lib/Generic/Select.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 	import type { PredictionBet, PredictionStatement } from './interfaces';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import Fa from 'svelte-fa';
+	import { faX } from '@fortawesome/free-solid-svg-icons';
 
 	export let proposals: proposal[],
-		phase: Phase,
 		poll: poll,
 		proposalsToPredictionMarket: proposal[] = [];
+
+	$: console.log(proposalsToPredictionMarket, 'PROPS');
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
@@ -48,7 +50,6 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
 		);
 		loading = false;
-		console.log(json.results);
 		predictions = json.results;
 	};
 
@@ -136,66 +137,85 @@
 		newPredictionStatement.description = json.predictions;
 	};
 
-	const handleImplementationStatusChange = (e: any, proposal: proposal) => {
+	const handleImplementationStatusChange = (
+		value: 'Neutral' | 'Implemented' | 'Not Implemented',
+		proposal: proposal
+	) => {
 		//@ts-ignore
-		if (e.target.value === 'Neutral')
+		if (value === 'Neutral')
 			newPredictionStatement.segments?.filter((segment) => segment.proposal_id === proposal.id);
 		else if (newPredictionStatement.segments.find((segment) => segment.proposal_id === proposal.id))
 			newPredictionStatement.segments.map((segment) => {
 				if (segment.proposal_id === proposal.id)
 					//@ts-ignore
-					segment.is_true = e.target.value === 'Implemented' ? true : false;
+					segment.is_true = value === 'Implemented' ? true : false;
 			});
 		else
 			newPredictionStatement.segments.push({
 				proposal_id: proposal.id,
 				//@ts-ignore
-				is_true: e.target.value === 'Implemented' ? true : false
+				is_true: value === 'Implemented' ? true : false
 			});
+	};
+
+	const handleChangeProposalSelection = () => {
+		newPredictionStatement.segments = [];
+		proposalsToPredictionMarket.forEach((proposal) => {
+			handleImplementationStatusChange('Implemented', proposal);
+		});
 	};
 
 	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
 	});
+
+	$: if (proposalsToPredictionMarket) handleChangeProposalSelection();
 </script>
 
 <div class="flex">
-	<span>{$_('New Prediction')}</span>
+	<span class="font-semibold text-primary">{$_('New Prediction')}</span>
 	<Question
 		message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
 	/><br />
 </div>
 
 {#if proposalsToPredictionMarket}
-	{#each proposalsToPredictionMarket as proposal}
-		{#key resetsOfValues}
-			<Select
-				label={proposal.title}
-				Class="mt-2"
-				onInput={(e) => handleImplementationStatusChange(e, proposal)}
-				labels={['Implemented', 'Not implemented']}
-				values={['Implemented', 'Not implemented']}
-				value={'Implemented'}
-			/>
-		{/key}
-	{/each}
+	<div class="flex flex-col gap-2">
+		<span>If implemented</span>
+		{#each proposalsToPredictionMarket as proposal, i}
+			{#key resetsOfValues}
+				<!--	<Select
+		label={proposal.title}
+		Class="mt-2"
+		onInput={(e) => handleImplementationStatusChange(e?.target?.value, proposal)}
+		labels={['Implemented', 'Not implemented']}
+		values={['Implemented', 'Not implemented']}
+		value={'Implemented'}
+		/>-->
+				{#if i !== 0} OR {/if}
+
+				<div class="flex justify-between">
+					<span class="p-0.5 border border-gray-400 rounded w-full">{proposal.title}</span>
+					<div class="p-2"><Fa icon={faX} color="red" /></div>
+				</div>
+			{/key}
+		{/each}
+	</div>
 {/if}
 <Loader bind:loading Class="!static">
 	<form on:submit|preventDefault={createPredictionStatement}>
-		{$_('Deadline for prediction')}
 		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 		<!-- <Button type="submit">{$_('Submit')}</Button> -->
+		{$_('Deadline for prediction')}
 		<DateInput
 			bind:value={newPredictionStatement.end_date}
 			min={new Date()}
 			max={maxDatePickerYear}
 		/>
 
-		<Button type="submit" buttonStyle="primary-light" Class="w-full bottom-0 absolute"
-			>Submit</Button
-		>
+		<Button type="submit" buttonStyle="primary-light" Class="w-full">Submit</Button>
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
 			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 		{/if}

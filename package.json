@@ -9,6 +9,7 @@
         "dev3000": "vite dev --port 3000",
         "dev4000": "vite dev --port 4000",
         "dev5000": "vite dev --port 5000",
+        "dev6000": "vite dev --port 4500",
         "build": "vite build",
         "package": "svelte-kit package",
         "preview": "vite preview",
@@ -45,18 +46,20 @@
     "dependencies": {
         "@fontsource/fira-mono": "^4.5.0",
         "@fortawesome/free-solid-svg-icons": "^6.1.2",
+        "@schedule-x/svelte": "^1.8.0",
+        "@schedule-x/theme-default": "^1.58.0",
         "@shopify/draggable": "^1.0.0-beta.8",
         "chart.js": "^4.1.2",
         "cookie": "^0.4.1",
+        "crypto-js": "^4.2.0",
         "date-picker-svelte": "^2.2.0",
         "dotenv": "^16.3.1",
+        "ethers": "^5.7.2",
         "javascript-time-ago": "^2.5.9",
         "svelte-chartjs": "^3.1.0",
         "svelte-easy-crop": "^2.0.1",
         "svelte-fa": "^3.0.3",
         "svelte-i18n": "^4.0.0",
-        "crypto-js": "^4.2.0",
-        "ethers": "^5.7.2",
         "web3": "^4.2.1"
     }
 }

@@ -17,6 +17,17 @@
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
+	import { onMount } from 'svelte';
+	import { ScheduleXCalendar } from '@schedule-x/svelte';
+	import {
+		createCalendar,
+		createViewDay,
+		createViewWeek,
+		createViewMonthGrid,
+		createViewMonthAgenda
+	} from '@schedule-x/calendar';
+	import '@schedule-x/theme-default/dist/index.css';
+	import T from './T.svelte';
 
 	let title = '',
 		description = '',
@@ -127,7 +138,25 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
-	
+
+	const calendarApp = createCalendar({
+		views: [createViewMonthGrid()],
+		events: [
+			{
+				id: '1',
+				title: 'Event 1',
+				start: '2024-07-06',
+				end: '2024-07-06'
+			},
+			{
+				id: '2',
+				title: 'Event 2',
+				start: '2024-07-06 02:00',
+				end: '2024-07-06 04:00'
+			}
+		]
+	});
+
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 </script>
 
@@ -153,6 +182,7 @@
 			{/if}
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
+
 			<FileUploads bind:images />
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}
@@ -205,3 +235,5 @@
 		</div></Loader
 	>
 </form>
+<!-- <T />
+<ScheduleXCalendar {calendarApp} monthGridEvent={T}/> -->

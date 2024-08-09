@@ -203,7 +203,7 @@
 							/>
 						</div>
 						<Button
-							Class="w-full"
+							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
 							action={() => (selectedProposal = null)}>Create Prediction</Button
 						>

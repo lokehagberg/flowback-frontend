@@ -165,6 +165,14 @@
 		});
 	};
 
+	const removeProposal = (proposal: proposal) => {
+		const i = proposalsToPredictionMarket.findIndex((_proposal) => {
+			_proposal === proposal;
+		});
+		proposalsToPredictionMarket.splice(i, 1);
+		proposalsToPredictionMarket = proposalsToPredictionMarket;
+	};
+
 	onMount(() => {
 		getPredictionStatements();
 		getPredictionBets();
@@ -197,7 +205,9 @@
 
 				<div class="flex justify-between">
 					<span class="p-0.5 border border-gray-400 rounded w-full">{proposal.title}</span>
-					<div class="p-2"><Fa icon={faX} color="red" /></div>
+					<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>
+						<Fa icon={faX} color="red" />
+					</button>
 				</div>
 			{/key}
 		{/each}
@@ -205,17 +215,21 @@
 {/if}
 <Loader bind:loading Class="!static">
 	<form on:submit|preventDefault={createPredictionStatement}>
-		<TextArea required label="Description" bind:value={newPredictionStatement.description} />
-		<RadioButtons bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
+		<div class="mt-3">
+			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+		</div>
+		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 		<!-- <Button type="submit">{$_('Submit')}</Button> -->
-		{$_('Deadline for prediction')}
-		<DateInput
-			bind:value={newPredictionStatement.end_date}
-			min={new Date()}
-			max={maxDatePickerYear}
-		/>
+		<div class="mt-3">
+			{$_('Deadline for prediction')}
+			<DateInput
+				bind:value={newPredictionStatement.end_date}
+				min={new Date()}
+				max={maxDatePickerYear}
+			/>
+		</div>
 
-		<Button type="submit" buttonStyle="primary-light" Class="w-full">Submit</Button>
+		<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">Submit</Button>
 		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
 			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 		{/if}

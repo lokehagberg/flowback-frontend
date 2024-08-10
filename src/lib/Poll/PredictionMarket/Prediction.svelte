@@ -65,7 +65,9 @@
 		);
 		loading = false;
 
-		if (!res.ok) showPoppup = true;
+		if (!res.ok) return;
+
+		poppup = { message: 'Successfully betted', success: true, show: true };
 	};
 
 	const predictionBetUpdate = async (score: string | number) => {
@@ -81,7 +83,9 @@
 		);
 		loading = false;
 
-		if (!res.ok) showPoppup = true;
+		if (!res.ok) return;
+
+		poppup = { message: 'Successfully betted', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -203,7 +207,7 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
+				Class={`p-2 ${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
 			>
 				<Fa icon={faCheck} />
 			</Button>
@@ -214,7 +218,7 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
+				Class={`p-2 ml-2 ${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
 			>
 				<Fa icon={faX} />
 			</Button>

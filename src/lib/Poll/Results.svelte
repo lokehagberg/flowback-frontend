@@ -7,12 +7,12 @@
 	import { _ } from 'svelte-i18n';
 	import { poll } from 'ethers/lib/utils';
 
-	let proposals: any[] = [],
-		votes: number[] = [],
+	let votes: number[] = [],
 		labels: string[] = [];
 
 	//4 for score voting, 3 for date
-	export let pollType = 1;
+	export let pollType = 1,
+	proposals: any[] = []
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(

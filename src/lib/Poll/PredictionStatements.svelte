@@ -30,7 +30,7 @@
 		<div class="border-b-2 flex flex-col pt-3">
 			<span class="text-primary font-semibold">{prediction.description}</span>
 			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
-			{#if phase === 'delegate_vote' || phase === 'vote' || phase === 'result'}
+			{#if phase === 'delegate_vote' || phase === 'vote'}
 				<span class="text-sm text-right"
 					>Bet:
 					{#if prediction.combined_bet}
@@ -39,7 +39,7 @@
 						none
 					{/if}
 				</span>
-			{:else if phase === 'prediction_bet'}
+			{:else if phase === 'prediction_bet' || phase === "result" || phase === 'prediction_vote'}
 				<Prediction bind:phase bind:poll bind:prediction />
 			{/if}
 		</div>

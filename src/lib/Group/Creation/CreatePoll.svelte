@@ -28,6 +28,7 @@
 	} from '@schedule-x/calendar';
 	import '@schedule-x/theme-default/dist/index.css';
 	import T from './T.svelte';
+	import Schedule from '$lib/Schedule/Schedule.svelte';
 
 	let title = '',
 		description = '',
@@ -140,7 +141,7 @@
 	};
 
 	const calendarApp = createCalendar({
-		views: [createViewMonthGrid()],
+		views: [createViewMonthAgenda()],
 		events: [
 			{
 				id: '1',
@@ -162,7 +163,7 @@
 
 <form
 	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
-	class="md:w-2/3"
+	class="md:w-2/3 max-w-[800px]"
 >
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
@@ -235,5 +236,7 @@
 		</div></Loader
 	>
 </form>
-<!-- <T />
-<ScheduleXCalendar {calendarApp} monthGridEvent={T}/> -->
+<!-- 
+<ScheduleXCalendar {calendarApp} monthGridEvent={T} />
+
+<Schedule type="group"/> -->

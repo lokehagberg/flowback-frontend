@@ -125,7 +125,7 @@
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="invisible absolute bg-white dark:bg-darkbackground shadow w-full bottom-full"
+		class="invisible  bg-white dark:bg-darkbackground shadow w-full bottom-full"
 		class:!visible={recentlyTappedButton === '#'}
 	>
 		<ul>

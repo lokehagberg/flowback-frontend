@@ -26,7 +26,6 @@
 
 	let loading = false,
 		predictions: PredictionStatement[] = [],
-		addingPrediction = false,
 		newPredictionStatement: {
 			description?: string;
 			end_date?: Date;
@@ -38,9 +37,16 @@
 		} = { segments: [] },
 		// statusMessage: StatusMessageInfo,
 		bets: PredictionBet[] = [],
-		resetsOfValues = 0,
 		poppup: poppup,
 		pushingToBlockchain = true;
+
+	$: console.log(
+		'MANY THINGS:',
+		newPredictionStatement,
+		predictions,
+		proposals,
+		proposalsToPredictionMarket
+	);
 
 	const getPredictionStatements = async () => {
 		loading = true;
@@ -83,11 +89,8 @@
 			return;
 		}
 
-		newPredictionStatement = { segments: [] };
-		resetsOfValues++;
-		addingPrediction = false;
+		newPredictionStatement = { segments: [], description:"", end_date: new Date() };
 		poppup = { message: 'Successfully created prediction statement', success: true };
-
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.
@@ -178,11 +181,11 @@
 	/><br />
 </div>
 
-{#if proposalsToPredictionMarket}
-	<div class="flex flex-col gap-2">
-		<span>If implemented</span>
-		{#each proposalsToPredictionMarket as proposal, i}
-			{#key resetsOfValues}
+{#key proposalsToPredictionMarket}
+	{#if proposalsToPredictionMarket}
+		<div class="flex flex-col gap-2">
+			<span>If implemented</span>
+			{#each proposalsToPredictionMarket as proposal, i}
 				{#if i !== 0} OR {/if}
 				<div class="flex justify-between">
 					<span class="p-0.5 border border-gray-300 rounded w-full">{proposal.title}</span>
@@ -190,10 +193,10 @@
 						<Fa icon={faX} color="red" />
 					</button>
 				</div>
-			{/key}
-		{/each}
-	</div>
-{/if}
+			{/each}
+		</div>
+	{/if}
+{/key}
 <Loader bind:loading Class="!static">
 	<form on:submit|preventDefault={createPredictionStatement}>
 		<div class="mt-3">

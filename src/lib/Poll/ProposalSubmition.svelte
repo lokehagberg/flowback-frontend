@@ -30,6 +30,7 @@
 	export let proposals: proposal[], poll: poll;
 
 	const addProposal = async () => {
+	
 		loading = true;
 
 		let blockchain_id;
@@ -61,6 +62,7 @@
 		if (!res.ok) return;
 
 		poppup = { message: 'Successfully added proposal', success: true };
+
 		let created_by = await getUserInfo();
 		loading = false;
 
@@ -76,6 +78,7 @@
 
 		title = '';
 		description = '';
+		
 	};
 
 	//TODO: Multiple places in the codebase uses this rather than local storage for group-user info

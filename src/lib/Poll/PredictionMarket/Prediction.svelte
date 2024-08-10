@@ -199,7 +199,7 @@
 		/> -->
 	{/if}
 	{#if phase === 'result' || phase === 'prediction_vote'}
-		<div class="flex">
+		<div class="flex justify-end mb-3">
 			<Button
 				action={() =>
 					prediction.user_prediction_statement_vote === null
@@ -207,7 +207,7 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`p-2 ${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
+				Class={`px-4 py-1 ${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
 			>
 				<Fa icon={faCheck} />
 			</Button>
@@ -218,7 +218,7 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`p-2 ml-2 ${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
+				Class={`px-4 py-1 ml-2 ${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
 			>
 				<Fa icon={faX} />
 			</Button>

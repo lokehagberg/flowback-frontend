@@ -6,6 +6,9 @@ export interface DelegatePool {
 }
 
 export interface Delegate {
+
+
+	tags: { id: number; tag_name: string, name:string, active:boolean }[];
 	isInRelation: boolean;
 	active: boolean;
 	group_id: number;

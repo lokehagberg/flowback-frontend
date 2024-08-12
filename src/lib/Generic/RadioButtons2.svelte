@@ -5,6 +5,7 @@
 				currentTarget: EventTarget & HTMLSelectElement;
 			}
 		) => void = (e) => {},
+		onChange = (e:number) => {},
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
@@ -22,6 +23,7 @@
 			on:change={(e) => {
 				//@ts-ignore
 				value = e?.target?.value;
+				onChange(value);
 			}}
 		>
 			{#each labels as label}

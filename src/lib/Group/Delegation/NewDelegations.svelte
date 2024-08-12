@@ -14,7 +14,8 @@
 
 	let loading = false,
 		tags: Tag[] = [],
-		delegates: Delegate[] = [];
+		delegates: Delegate[] = [],
+		selectedTag: Tag;
 
 	const getTagsLocal = async () => {
 		loading = true;
@@ -39,9 +40,98 @@
 		loading = false;
 	};
 
-	onMount(() => {
-		getTagsLocal();
-		getDelegatePools();
+	const createDelegateRelation = async (delegate_pool_id: number | string) => {
+        delegate_pool_id = Number(delegate_pool_id);
+        console.log(delegate_pool_id, "DELET");
+        
+        
+		loading = true;
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
+			delegate_pool_id
+		});
+
+		loading = false;
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = true;
+	};
+
+	const saveDelegation = async () => {
+		loading = true;
+		const toSendDelegates = delegates.map(({ pool_id, tags }) => ({
+			delegate_pool_id: pool_id,
+			tags: tags.map(({ id }) => id)
+		}));
+
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/delegate/update`,
+			toSendDelegates
+		);
+
+		// if (res.ok) poppup = { message: 'Success', success: true };
+		loading = false;
+	};
+
+	const changeDelegation = (delegate_id: number, tag: Tag) => {
+		console.log(delegates)
+        const delegateOld = delegates.find((delegate) =>
+			delegate.tags.find((_tag) => _tag.id === tag.id)
+		);
+		let delegateNew = delegates.find((delegate) => (delegate.id = delegate_id));
+		if (!delegateNew) return;
+
+		if (delegateOld) delegateOld.tags = delegateOld?.tags.filter((_tag: any) => _tag.id !== tag.id);
+		if (delegateOld?.id === delegateNew.id) {
+			delegates = delegates;
+			return;
+		}
+
+        //@ts-ignore
+		delegateNew.tags.push(tag);
+		delegates = delegates;
+	};
+
+    const getDelegateRelations = async () => {
+		loading = true;
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
+		);
+		loading = false;
+		if (!res.ok) {
+			// poppup = { message: 'Could not get delegates', success: false };
+			return [];
+		}
+
+		return json.results;
+	};
+
+    const setDelegators = async () => {
+		const delegateRelations: any[] = await getDelegateRelations();
+
+		delegateRelations.forEach((relation) => {
+
+            delegates.map(delegate => {
+                delegate.tags = relation.tags
+            })
+		});
+
+		delegates = delegates;
+	};
+
+	const handleChangeTag = async (delegate_id: number, tag: Tag) => {
+        await createDelegateRelation(delegate_id);
+		await changeDelegation(delegate_id, tag);
+		saveDelegation();
+	};
+
+	onMount(async () => {
+		await getTagsLocal();
+		await getDelegatePools();
+        setDelegators();
 	});
 </script>
 
@@ -49,14 +139,35 @@
 	<div class="delegation-grid gap-4">
 		<div class="bg-white p-4">
 			{#each tags as tag}
-				<div class="text-primary font-bold flex items-center justify-between cursor-pointer">
+				<div
+					on:keydown={() => (selectedTag = tag)}
+					on:click={() => (selectedTag = tag)}
+					role="button"
+					tabindex="0"
+					class="text-primary font-bold flex items-center justify-between cursor-pointer"
+				>
 					{tag.name}
 					<Fa icon={faAngleRight} />
 				</div>
 			{/each}
 		</div>
 		<div class="bg-white p-4">
-            <RadioButtons2 name="delegation-radio" values={delegates.map(delegate => delegate.id)} labels={delegates.map(delegate => delegate.user.username)}/>
+			{#if selectedTag}
+				<span class="text-primary font-bold text-2xl">{selectedTag.name}</span>
+				<RadioButtons2
+					onChange={(e) => {
+                        console.log("HELO?", e);
+                        
+						//@ts-ignore
+						handleChangeTag(e, selectedTag);
+					}}
+					name="delegation-radio"
+					labels={delegates.map((delegate) => delegate.id.toString())}
+					values={delegates.map((delegate) => delegate.user.username)}
+				/>
+			{:else}
+				<span class="text-primary font-bold text-2xl">Select Tag</span>
+			{/if}
 		</div>
 	</div>
 </Loader>

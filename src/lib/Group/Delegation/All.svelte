@@ -2,7 +2,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import type { User } from '$lib/User/interfaces';
 	import Button from '$lib/Generic/Button.svelte';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
@@ -12,7 +11,6 @@
 	import { goto } from '$app/navigation';
 	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 	import { isNumber } from 'chart.js/helpers';
-	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import type { Delegate } from './interfaces';
 	import {env} from "$env/dynamic/public";
 
@@ -70,8 +68,6 @@
 			'GET',
 			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
 		);
-
-		const delegateRelationPoolIds = delegateRelations.map((delegate) => delegate.delegate_pool_id);
 
 		// TODO: Might be worth doing this on most if not all messages, but that might require some refactoring.
 		setTimeout(() => {

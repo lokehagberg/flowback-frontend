@@ -8,6 +8,7 @@
 	import Tab from '$lib/Generic/Tab.svelte';
 	import All from './All.svelte';
 	import History from './History.svelte';
+	import NewDelegations from './NewDelegations.svelte';
 
 	let selectedPage: 'All' | 'Selected' | 'History' = 'All',
 		history: number | null = null;
@@ -27,3 +28,5 @@
 		<History bind:history />
 	{/if}
 </div>
+
+<NewDelegations />

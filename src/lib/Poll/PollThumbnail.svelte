@@ -131,7 +131,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="flex gap-4 mt-2">
+	<div class="flex gap-4 mt-1 items-center">
 		{#if poll.poll_type === 4}
 			<HeaderIcon
 				Class="!p-0 !cursor-default"
@@ -171,7 +171,7 @@
 		<Description limit={500} {poll} {onHoverGroup} Class="mt-2" />
 	{/if}
 
-	<Timeline Class="!m-0" displayDetails={false} pollType={poll.poll_type} bind:dates />
+	<Timeline Class="!m-0 !mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<div class="!mt-4">
 		<!-- Area Voting -->

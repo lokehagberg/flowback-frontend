@@ -49,9 +49,9 @@
 	{#each threads as thread}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
-			<div class="flex justify-between">
+			<div class="flex justify-between items-center">
 				<span
-					class="cursor-pointer hover:underline"
+					class="cursor-pointer hover:underline text-primary font-bold text-2xl"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					on:keydown>{thread.title}</span
 				>

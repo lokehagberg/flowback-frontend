@@ -171,7 +171,7 @@
 		<Description limit={500} {poll} {onHoverGroup} Class="mt-2" />
 	{/if}
 
-	<Timeline Class="!m-0 !mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+	<Timeline Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<div class="!mt-4">
 		<!-- Area Voting -->

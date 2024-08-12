@@ -224,7 +224,9 @@
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 			{/if}
 
-			<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
+			{#if selectedPage === 'poll'}
+				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
+			{/if}
 
 			{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 				<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />

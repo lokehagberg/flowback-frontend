@@ -85,7 +85,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="notifications-clickable-region m-auto" on:click={() => {
+<div class="notifications-clickable-region" on:click={() => {
 	notificationOpen = !notificationOpen;
 }}
 on:keydown>

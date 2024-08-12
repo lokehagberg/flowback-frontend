@@ -55,6 +55,7 @@
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					on:keydown>{thread.title}</span
 				>
+
 				<NotificationOptions
 					api={`group/thread/${thread.id}`}
 					categories={['comment']}
@@ -62,6 +63,11 @@
 					labels={['comment']}
 				/>
 			</div>
+			{#if thread.description}
+				<span>
+					{thread.description}
+				</span>
+			{/if}
 
 			<div
 				class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText mt-3"

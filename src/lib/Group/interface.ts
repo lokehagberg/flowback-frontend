@@ -153,4 +153,10 @@ export interface Thread {
 	title: string;
 	id: number;
 	total_comments:number;
+	description:string;
+	pinned:boolean;
+	attachments:string[];
+	user_vote:null|boolean
+	score:number;
+
 }

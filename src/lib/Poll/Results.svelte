@@ -6,13 +6,15 @@
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
 	import { poll } from 'ethers/lib/utils';
+	import Fa from 'svelte-fa';
+	import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 	let votes: number[] = [],
 		labels: string[] = [];
 
 	//4 for score voting, 3 for date
 	export let pollType = 1,
-	proposals: any[] = []
+		proposals: any[] = [];
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
@@ -39,21 +41,24 @@
 	});
 </script>
 
-<div class="border border-gray- p-4 rounded">
-	<h1 class="text-4xl mb-6">{$_('Results')}</h1>
+<div class="">
+	<span class="text-primary font-bold text-xl text-center block">{$_('Results')}</span>
 	{#if pollType === 4}
 		<Statistics bind:votes bind:labels />
-		{#each proposals as proposal}
-			<div class="border p-4 mt-4">
-				<h1 class="text-xl">{proposal.title}</h1>
+		{#each proposals as proposal, i}
+			<div class="border-gray-300 border-b-2 mt-3 pb-1">
+				<span class="text-primary font-bold flex items-center gap-1"
+					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
+					{proposal.title}</span
+				>
 				<div>{proposal.description}</div>
 				<!-- {@debug proposal} -->
-				<b class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</b>
+				<span class="block text-right"
+					><span class="text-primary font-bold">{$_('Points')}:</span> {proposal.score || '0'}</span
+				>
 			</div>
 		{/each}
 	{:else if pollType === 3}
-	<div>
-		Results in Group Schedule
-	</div>
+		<div>Results in Group Schedule</div>
 	{/if}
 </div>

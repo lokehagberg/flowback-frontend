@@ -18,11 +18,11 @@
 
 <div class={`${Class} text-white dark:text-darkmodeText`}>
 	{#if prev}
-		<Button onClick={() => request(prev)}>Previous</Button>
+		<Button Class="py-1 px-2" onClick={() => request(prev)}>Previous</Button>
 		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(prev)}>Previous</button> -->
 	{/if}
 	{#if next}
-		<Button onClick={() => request(next)}>Next</Button>
+		<Button Class="py-1 px-2" onClick={() => request(next)}>Next</Button>
 		<!-- <button class="p-2 bg-primary cursor-pointer rounded-md" on:click={() => request(next)}>Next</button> -->
 	{/if}
 

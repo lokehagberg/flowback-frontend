@@ -83,9 +83,9 @@
 	class:poll-thumbnail-shadow-dark={darkMode}
 	id={`poll-thumbnail-${poll.id.toString()}`}
 >
-	<div class="flex items-center justify-between">
+	<div class="flex items-center justify-between text-primary font-bold text-2xl">
 		<a
-			class="cursor-pointer text-xl text-primary dark:text-darkmodeText hover:underline"
+			class="cursor-pointer text-primary dark:text-darkmodeText hover:underline"
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}

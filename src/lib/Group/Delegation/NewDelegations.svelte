@@ -8,9 +8,9 @@
 	import { faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
-	import type { Delegate } from './interfaces';
-	import Select from '$lib/Generic/Select.svelte';
+	import type { Delegate, DelegatePool } from './interfaces';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
 
 	let loading = false,
 		tags: Tag[] = [],
@@ -41,10 +41,8 @@
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number | string) => {
-        delegate_pool_id = Number(delegate_pool_id);
-        console.log(delegate_pool_id, "DELET");
-        
-        
+		delegate_pool_id = Number(delegate_pool_id);
+
 		loading = true;
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
 			delegate_pool_id
@@ -60,10 +58,16 @@
 
 	const saveDelegation = async () => {
 		loading = true;
-		const toSendDelegates = delegates.map(({ pool_id, tags }) => ({
-			delegate_pool_id: pool_id,
-			tags: tags.map(({ id }) => id)
-		}));
+		let toSendDelegates = delegates.map((delegate) =>
+			delegate?.tags?.length !== undefined
+				? {
+						delegate_pool_id: delegate.pool_id,
+						tags: delegate.tags.map(({ id }) => id)
+				  }
+				: null
+		);
+
+		toSendDelegates = toSendDelegates.filter(delegate => delegate !== null)
 
 		const { res } = await fetchRequest(
 			'POST',
@@ -76,8 +80,8 @@
 	};
 
 	const changeDelegation = (delegate_id: number, tag: Tag) => {
-		console.log(delegates)
-        const delegateOld = delegates.find((delegate) =>
+		console.log(delegates, " DE LE ET");
+		const delegateOld = delegates.find((delegate) =>
 			delegate.tags.find((_tag) => _tag.id === tag.id)
 		);
 		let delegateNew = delegates.find((delegate) => (delegate.id = delegate_id));
@@ -89,17 +93,18 @@
 			return;
 		}
 
-        //@ts-ignore
+		//@ts-ignore
 		delegateNew.tags.push(tag);
 		delegates = delegates;
 	};
 
-    const getDelegateRelations = async () => {
+	const getDelegateRelations = async () => {
 		loading = true;
 		const { json, res } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
 		);
+
 		loading = false;
 		if (!res.ok) {
 			// poppup = { message: 'Could not get delegates', success: false };
@@ -109,21 +114,30 @@
 		return json.results;
 	};
 
-    const setDelegators = async () => {
-		const delegateRelations: any[] = await getDelegateRelations();
+	const setDelegators = async () => {
+		const delegateRelations: DelegatePool[] = await getDelegateRelations();
 
 		delegateRelations.forEach((relation) => {
-
-            delegates.map(delegate => {
-                delegate.tags = relation.tags
-            })
+			delegates.map((delegate) => {
+				if (delegate.pool_id === relation.delegate_pool_id) {
+					relation.tags.map((tag) => {
+						tag.active = true;
+						tag.tag_name = tag.name;
+					});
+					//@ts-ignore
+					delegate.tags = relation.tags;
+				}
+			});
 		});
 
 		delegates = delegates;
+
+		console.log(delegates, tags, selectedTag);
 	};
 
 	const handleChangeTag = async (delegate_id: number, tag: Tag) => {
-        await createDelegateRelation(delegate_id);
+		await createDelegateRelation(delegate_id);
+
 		await changeDelegation(delegate_id, tag);
 		saveDelegation();
 	};
@@ -131,7 +145,7 @@
 	onMount(async () => {
 		await getTagsLocal();
 		await getDelegatePools();
-        setDelegators();
+		setDelegators();
 	});
 </script>
 
@@ -155,9 +169,10 @@
 			{#if selectedTag}
 				<span class="text-primary font-bold text-2xl">{selectedTag.name}</span>
 				<RadioButtons2
+				radioSide="right"
+					Class="w-full cursor-pointer"
+				  	ClassInner="w-full flex justify-between cursor-pointer" 
 					onChange={(e) => {
-                        console.log("HELO?", e);
-                        
 						//@ts-ignore
 						handleChangeTag(e, selectedTag);
 					}}

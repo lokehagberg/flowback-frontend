@@ -5,7 +5,7 @@
 				currentTarget: EventTarget & HTMLSelectElement;
 			}
 		) => void = (e) => {},
-		onChange = (e:number) => {},
+		onChange = (e: number) => {},
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
@@ -13,7 +13,8 @@
 		Class = '',
 		centering = false,
 		ClassInner = '',
-		name: string = "";
+		name: string = '',
+		radioSide: 'left' | 'right' = 'left';
 </script>
 
 <div class={Class}>
@@ -27,9 +28,13 @@
 			}}
 		>
 			{#each labels as label}
-				<div class={ClassInner}>
-					<label> <input type="radio" {name} value={label} id={label} />{label}</label>
-				</div>
+				<label class={ClassInner}>
+					{#if radioSide === 'left'}
+						<input type="radio" {name} value={label} id={label} />{label}
+					{:else}
+						{label}<input type="radio" {name} value={label} id={label} />
+					{/if}
+				</label>
 			{/each}
 		</fieldset>
 	</div>

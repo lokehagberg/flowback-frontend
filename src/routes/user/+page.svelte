@@ -62,7 +62,7 @@
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
 		userEdit = user;
-		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}/api${user.profile_image}`;
+		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
 
 		document.title = `${user.username}'s profile`;
@@ -132,30 +132,33 @@
 <!-- Viewing someone's profile -->
 <Layout centered>
 	{#if !isEditing}
-		<img
-			src={bannerImagePreview || DefaultBanner}
-			class="bg-gray-200 w-full cover aspect-ratio-5"
-			alt="banner"
-		/>
-		<div
-			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
-		>
+		<div class="relative w-full bg-white">
+			<img
+				src={bannerImagePreview || DefaultBanner}
+				class="bg-gray-200 w-full cover aspect-ratio-5"
+				alt="banner"
+			/>
+
 			<img
 				src={profileImagePreview}
-				class="h-36 w-36 inline rounded-full profile"
+				class="h-36 w-36 z-10 inline absolute top-[100%] -translate-y-14 left-[30%] rounded-full profile"
 				alt="avatar"
 				id="avatar"
 			/>
-			<h1 class="inline ml-8">{user.username}</h1>
-			<a class={`block mt-6`} href={user.website || ''}>
+		</div>
+		<div
+			class="bg-white z-0 w-full text-center -translate-x-10 shadow rounded dark:bg-darkobject dark:text-darkmodeText"
+		>
+			<span class="">{user.username}</span>
+			<a class={``} href={user.website || ''}>
 				{user.website || ''}
 			</a>
-			<p class="mt-6 whitespace-pre-wrap">
+			<p class=" whitespace-pre-wrap">
 				{user.bio || $_('This user has no bio')}
 			</p>
-			<StatusMessage Class="mt-6" bind:status />
+			<StatusMessage Class="" bind:status />
 			{#if isUser}
-				<div class="mt-8">
+				<div class="">
 					<Button action={() => (isEditing = true)}>{$_('Edit profile')}</Button>
 				</div>
 			{/if}
@@ -179,7 +182,7 @@
 			/>
 		</label>
 		<form
-			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
+			class="w-full bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">

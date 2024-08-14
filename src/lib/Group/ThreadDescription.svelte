@@ -6,6 +6,7 @@
     let readMore = false
 </script>
 
+{@debug description}
 <p class={`mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText ${Class}`}>
     {#if readMore}
         <a

@@ -15,6 +15,7 @@
 	import Description from '$lib/Poll/Description.svelte';
 	import ThreadDescription from '$lib/Group/ThreadDescription.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
+	import Layout from '$lib/Generic/Layout.svelte';
 
 	let thread: Thread, comments: Comment[];
 
@@ -27,12 +28,12 @@
 			'GET',
 			`group/${$page.params.groupId}/thread/list?id=${$page.params.threadId}`
 		);
-		console.log('HELLO?');
+		console.log('HELLO?', thread);
 
 		if (!res.ok) return;
 
 		thread = json.results[0];
-		thread.description = ""
+		if (thread.description === null) thread.description = '';
 	};
 </script>
 
@@ -50,35 +51,38 @@
 		</div>
 	{/if}
 </Layout> -->
-{#if thread}
-	<div
-		class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
-	>
+<Layout centered>
+	{#if thread}
 		<div
-			class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
-			on:click={() => goto(`/groups/${$page.params.groupId}`)}
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center"
 		>
-			<Fa icon={faArrowLeft} />
-		</div>
-		
-		<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
-		
-		<NotificationOptions
-			id={thread.id}
-			api={`group/thread/${thread.id}`}
-			categories={['thread']}
-			labels={['thread']}
-		/>
-
-		{#if thread.description.length > 0}
-			<div class="grid-area-description">
-				<ThreadDescription bind:description={thread.description} limit={500} Class="" />
+			<div
+				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
+				on:click={() => goto(`/groups/${$page.params.groupId}`)}
+			>
+				<Fa icon={faArrowLeft} />
 			</div>
-		{/if} 
-	</div>
-{/if}
 
-<Comments api={'thread'} />
+			<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
+
+			<NotificationOptions
+				id={thread.id}
+				api={`group/thread/${thread.id}`}
+				categories={['thread']}
+				labels={['thread']}
+			/>
+
+			{@debug thread}
+			{#if thread.description.length > 0}
+				<div class="grid-area-description">
+					<ThreadDescription bind:description={thread.description} limit={500} Class="" />
+				</div>
+			{/if}
+		</div>
+	{/if}
+
+	<Comments api={'thread'} Class="w-[70%] max-w-[800px] bg-white dark:bg-darkobject p-6" />
+</Layout>
 
 <style>
 	.poll-header-grid {

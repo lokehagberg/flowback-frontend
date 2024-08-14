@@ -106,7 +106,7 @@
 			'POST',
 			`group/${$page.url.searchParams.get('id')}/thread/create`,
 			{
-				title
+				title, description
 			}
 		);
 		if (!res.ok) {

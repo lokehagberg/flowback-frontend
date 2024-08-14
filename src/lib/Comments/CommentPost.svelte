@@ -144,7 +144,7 @@
 			{/each}
 		</ul>
 	</div>
-	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton />
+	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton  />
 	<FileUploads bind:images />
 	<!-- <ImageUpload
 		icon={faUser}

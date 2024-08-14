@@ -59,6 +59,9 @@
 			<div
 				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
 				on:click={() => goto(`/groups/${$page.params.groupId}`)}
+				on:keydown
+				role="button"
+				tabindex="0"
 			>
 				<Fa icon={faArrowLeft} />
 			</div>
@@ -72,7 +75,6 @@
 				labels={['thread']}
 			/>
 
-			{@debug thread}
 			{#if thread.description.length > 0}
 				<div class="grid-area-description">
 					<ThreadDescription bind:description={thread.description} limit={500} Class="" />

@@ -16,7 +16,9 @@
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}
-            &proposals=${selectedProposal.id}`
+            &proposal=${selectedProposal.id}`, {
+				'proposals':'22'
+			}
 		);
 		// loading = false;
 		predictions = json.results;

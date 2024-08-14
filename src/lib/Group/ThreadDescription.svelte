@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { poll } from "./interface";
     import { page } from '$app/stores';
 
-    export let limit:number, poll:any, onHoverGroup:boolean = false, Class = ""
+    export let limit:number, description:string = "", onHoverGroup:boolean = false, Class = ""
 
     let readMore = false
 </script>
@@ -11,13 +10,11 @@
     {#if readMore}
         <a
             class="cursor-pointe text-black hover:underline"
-            href={onHoverGroup
-                ? '/groups/1'
-                : `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-        >
-            {poll.description}
+            >
+            {description}
         </a>
-        {#if poll.description.length > limit}
+
+        {#if description.length > limit}
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <span
@@ -28,15 +25,13 @@
     {:else}
         <a
             class="cursor-pointe text-black hover:underline"
-            href={onHoverGroup
-                ? '/groups/1'
-                : `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+            
         >
-            {poll.description.slice(0, limit)}
+            {description.slice(0, limit)}
         </a>
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if poll.description.length > limit}
+        {#if description.length > limit}
             ...<span
                 class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
                 on:click={() => (readMore = true)}>Show more...</span

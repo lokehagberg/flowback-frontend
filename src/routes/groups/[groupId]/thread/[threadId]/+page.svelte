@@ -1,17 +1,25 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Layout from '$lib/Generic/Layout.svelte';
+
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Thread } from '$lib/Group/interface';
-	import Comments from '$lib/Comments/Comments.svelte';
+
 	import type { Comment } from '$lib/Poll/interface';
+
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft, faDownLong } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import { _ } from 'svelte-i18n';
+	import Description from '$lib/Poll/Description.svelte';
+	import ThreadDescription from '$lib/Group/ThreadDescription.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 
 	let thread: Thread, comments: Comment[];
 
 	onMount(() => {
 		getThread();
-		console.log($page.params.threadId, "THREADID")
 	});
 
 	const getThread = async () => {
@@ -19,23 +27,71 @@
 			'GET',
 			`group/${$page.params.groupId}/thread/list?id=${$page.params.threadId}`
 		);
-		console.log(json, 'JSON');
+		console.log('HELLO?');
+
 		if (!res.ok) return;
 
 		thread = json.results[0];
-		console.log(thread, "THREAD")
+		thread.description = ""
 	};
 </script>
 
-<Layout centered>
+<!-- <Layout centered>
 	
 	{#if thread}
-		<div
-			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
-		>
-			<h1 class="text-left text-2xl">{thread.title}</h1>
 
-			<Comments api={'thread'} />
+	
+		<div
+			class="w-full bg-white p-6"
+		>
+			<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
+
+
 		</div>
 	{/if}
-</Layout>
+</Layout> -->
+{#if thread}
+	<div
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
+	>
+		<div
+			class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
+			on:click={() => goto(`/groups/${$page.params.groupId}`)}
+		>
+			<Fa icon={faArrowLeft} />
+		</div>
+		
+		<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
+		
+		<NotificationOptions
+			id={thread.id}
+			api={`group/thread/${thread.id}`}
+			categories={['thread']}
+			labels={['thread']}
+		/>
+
+		{#if thread.description.length > 0}
+			<div class="grid-area-description">
+				<ThreadDescription bind:description={thread.description} limit={500} Class="" />
+			</div>
+		{/if} 
+	</div>
+{/if}
+
+<Comments api={'thread'} />
+
+<style>
+	.poll-header-grid {
+		display: grid;
+		grid-template-columns: 0.3fr 4fr 0.3fr;
+		grid-template-rows: 0.1fr 0.1fr 1fr;
+	}
+
+	.grid-area-items {
+		grid-area: 2 / 2 / 3 / 3;
+	}
+
+	.grid-area-description {
+		grid-area: 3 / 2 / 4 / 3;
+	}
+</style>

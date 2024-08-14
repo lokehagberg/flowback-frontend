@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	export let onInput: (
 			e: Event & {
@@ -15,6 +16,16 @@
 		ClassInner = '',
 		name: string = '',
 		radioSide: 'left' | 'right' = 'left';
+
+	export const resetValue = () => {
+		var elements = document.getElementsByTagName('input');
+
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].type == 'radio' && labels.find((label) => label === elements[i].id)) {
+				elements[i].checked = false;
+			}
+		}
+	};
 </script>
 
 <div class={Class}>

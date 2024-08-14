@@ -15,7 +15,9 @@
 	let loading = false,
 		tags: Tag[] = [],
 		delegates: Delegate[] = [],
-		selectedTag: Tag;
+		selectedTag: Tag,
+		value:number|null,
+		resetValue = () => {}
 
 	const getTagsLocal = async () => {
 		loading = true;
@@ -137,16 +139,22 @@
 
 	const handleChangeTag = async (delegate_id: number, tag: Tag) => {
 		await createDelegateRelation(delegate_id);
-
 		await changeDelegation(delegate_id, tag);
 		saveDelegation();
 	};
+
+	const handleTagChange = () => {
+		resetValue();
+		
+	}
 
 	onMount(async () => {
 		await getTagsLocal();
 		await getDelegatePools();
 		setDelegators();
 	});
+
+	$: if (selectedTag) handleTagChange();
 </script>
 
 <Loader bind:loading>
@@ -169,7 +177,7 @@
 			{#if selectedTag}
 				<span class="text-primary font-bold text-2xl">{selectedTag.name}</span>
 				<RadioButtons2
-				radioSide="right"
+					radioSide="right"
 					Class="w-full cursor-pointer"
 				  	ClassInner="w-full flex justify-between cursor-pointer" 
 					onChange={(e) => {
@@ -177,8 +185,10 @@
 						handleChangeTag(e, selectedTag);
 					}}
 					name="delegation-radio"
-					labels={delegates.map((delegate) => delegate.id.toString())}
+					labels={delegates.map((delegate) => delegate.pool_id.toString())}
 					values={delegates.map((delegate) => delegate.user.username)}
+					bind:value
+					bind:resetValue
 				/>
 			{:else}
 				<span class="text-primary font-bold text-2xl">Select Tag</span>

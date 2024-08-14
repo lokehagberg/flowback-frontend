@@ -182,13 +182,13 @@
 					labels={tags.map((tag) => tag.name)}
 					values={tags.map((tag) => tag.id)}
 					bind:value={selectedTag}
-					classInner="w-full bg-white p-4 border-gray-400 rounded-md border-2"
-					Class="w-[47%]"
+					classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
+					Class="w-[47%] "
 				/>
 				{#if voting}
-					<Button type="submit" Class="w-[47%]">Save Vote</Button>
+					<Button type="submit" Class="w-[47%] !p-0">Save Vote</Button>
 				{:else}
-					<p class="w-[47%] text-center pt-4">Successfully saved voting!</p>
+					<p class="w-[47%] text-center">Successfully saved voting!</p>
 				{/if}
 			</form>
 		{:else if phase === 'proposal'}

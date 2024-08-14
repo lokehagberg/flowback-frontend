@@ -8,12 +8,40 @@
 	import { page } from '$app/stores';
 	import Proposal from './ProposalLegacy.svelte';
 	import { onMount } from 'svelte';
+	import { ScheduleXCalendar } from '@schedule-x/svelte';
+	import '@schedule-x/theme-default/dist/index.css';
+	import T from '$lib/Group/Creation/T.svelte'
+	import {
+		createCalendar,
+		createViewDay,
+		createViewWeek,
+		createViewMonthGrid,
+		createViewMonthAgenda
+	} from '@schedule-x/calendar';
 
 	let open = false,
 		date: Date,
 		proposals: Proposal[] = [],
 		daysFormatting = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
 		votes: number[] = [];
+
+		const calendarApp = createCalendar({
+		views: [createViewWeek()],
+		events: [
+			{
+				id: '1',
+				title: 'Event 1',
+				start: '2024-07-06',
+				end: '2024-07-06'
+			},
+			{
+				id: '2',
+				title: 'Event 2',
+				start: '2024-07-06 02:00',
+				end: '2024-07-06 04:00'
+			}
+		]
+	});
 
 	let postProposal = async () => {
 		let end_date = new Date(date);
@@ -65,6 +93,8 @@
 		getProposals();
 		getProposalVote();
 	});
+
+	
 </script>
 
 <div class="flex">
@@ -114,3 +144,6 @@
 		<Button type="submit">Submit</Button>
 	</div>
 </Modal>
+
+
+<!-- <ScheduleXCalendar {calendarApp} eventModal={T} /> -->

@@ -28,7 +28,8 @@
 <div class="border-t-2">
 	{#each predictions as prediction}
 		<div class="border-b-2 flex flex-col pt-3">
-			<span class="text-primary font-semibold">{prediction.description}</span>
+			<span class="text-primary font-semibold">{prediction.title}</span>
+			<span class="">{prediction.description}</span>
 			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 			{#if phase === 'delegate_vote' || phase === 'vote'}
 				<span class="text-sm text-right"

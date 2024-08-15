@@ -17,6 +17,7 @@
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 	import Fa from 'svelte-fa';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
+	import TextInput from '$lib/Generic/TextInput.svelte';
 
 	export let proposals: proposal[],
 		poll: poll,
@@ -27,6 +28,7 @@
 	let loading = false,
 		predictions: PredictionStatement[] = [],
 		newPredictionStatement: {
+			title?:string;
 			description?: string;
 			end_date?: Date;
 			blockchain_id?: number;
@@ -199,8 +201,9 @@
 {/key}
 <Loader bind:loading Class="!static">
 	<form on:submit|preventDefault={createPredictionStatement}>
+		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
-			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+			<TextArea label="Description" bind:value={newPredictionStatement.description} />
 		</div>
 		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 		<!-- <Button type="submit">{$_('Submit')}</Button> -->

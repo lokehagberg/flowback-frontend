@@ -19,14 +19,14 @@
 <div
 	class="flex flex-col items-center gap-2 mb-24 bg-white rounded shadow p-4 dark:bg-darkobject dark:text-darkmodeText"
 >
-	<!-- <Tab tabs={['All', 'Selected']} bind:selectedPage />
+	<Tab tabs={['All', 'Selected']} bind:selectedPage />
 	{#if selectedPage === 'Selected'}
 		<Selected />
 	{:else if selectedPage === 'All'}
 		<All bind:history bind:selectedPage/>
 	{:else if selectedPage === 'History'}
 		<History bind:history />
-	{/if} -->
+	{/if}
 </div>
 
 <NewDelegations />

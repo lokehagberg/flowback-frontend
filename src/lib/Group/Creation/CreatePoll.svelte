@@ -72,7 +72,6 @@
 		formData.append('prediction_bet_end_date', prediction_bet_end_date.toISOString());
 		formData.append('delegate_vote_end_date', delegate_vote_end_date.toISOString());
 		formData.append('vote_end_date', vote_end_date.toISOString());
-		formData.append('tag', '1');
 		formData.append('end_date', end_date.toISOString());
 		formData.append('allow_fast_forward', isFF.toString());
 		formData.append('poll_type', (selected_poll === 'Text Poll' ? 4 : 3).toString());

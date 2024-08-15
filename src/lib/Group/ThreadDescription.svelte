@@ -6,14 +6,13 @@
     let readMore = false
 </script>
 
-{@debug description}
-<p class={`mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText ${Class}`}>
+<p class={`whitespace-pre-wrap break-words mt-2 dark:text-darkmodeText ${Class}`}>
     {#if readMore}
-        <a
-            class="cursor-pointe text-black hover:underline"
+        <div
+            class=" text-black "
             >
             {description}
-        </a>
+        </div>
 
         {#if description.length > limit}
             <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -24,12 +23,12 @@
             >
         {/if}
     {:else}
-        <a
+        <div
             class="cursor-pointe text-black hover:underline"
             
         >
             {description.slice(0, limit)}
-        </a>
+        </div>
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         {#if description.length > limit}

@@ -102,9 +102,8 @@
 		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
 		<GroupHeader bind:selectedPage {group} {memberCount} />
-		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
-				<div
+				<main
 					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
 				`}
 				>
@@ -138,11 +137,10 @@
 					{:else if selectedPage === 'threads'}
 						<Threads />
 					{/if}
-				</div>
+				</main>
 
 				<GroupSidebar Class={``} {group} bind:selectedPage />
 			</div>
-		</div>
 	{:else}
 		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
 			{$_('You are not a memeber of this group!')}

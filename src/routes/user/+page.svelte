@@ -18,7 +18,7 @@
 	import { env } from '$env/dynamic/public';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Fa from 'svelte-fa';
-	import { faPen } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 
 	let user: User = {
 		banner_image: '',
@@ -143,10 +143,17 @@
 			/>
 
 			{#if isUser}
-				<div class="absolute right-0 top-0 m-4">
-					<Button action={() => (isEditing = true)}><Fa icon={faPen} color="black"/></Button>
-				</div>
-			{/if}
+			<Button action={() => (isEditing = true)} Class="absolute right-0 top-0 p-3 m-1 transition-all hover:bg-gray-300">
+				<div >
+						<Fa icon={faPen} color="black"/>
+					</div>
+				</Button>
+				{/if}
+				<Button action={() => history.back()} Class="absolute left-0 top-0 p-3 m-1 transition-all hover:bg-gray-300">
+					<div >
+							<Fa icon={faArrowLeft} color="black"/>
+						</div>
+					</Button>
 
 			<img
 				src={profileImagePreview}

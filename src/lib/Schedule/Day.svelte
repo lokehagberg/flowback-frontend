@@ -26,54 +26,27 @@
 		x: number,
 		y: number;
 
-	const months = [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec'
-	];
-
-	const currentDate = new Date(),
-		groupId = $page.params.groupId;
+	const currentDate = new Date();
 
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
 		selectedDate = new Date(),
 		events: scheduledEvent[] = [],
-		loading = false,
 		showCreateScheduleEvent = false,
-		showEditScheduleEvent = false,
-		showEvent = false,
-		show = false,
-		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
-		selectedDatePosition = '0-0',
-		//Variables for creating new scheduled events
-		start_date: Date | null,
-		end_date: Date | null,
-		title: string,
-		description: string,
-		event_id: number | undefined,
-		deleteSelection = () => {};
+		selectedDatePosition = '0-0';
 
+	onMount(() => {
+		setUpDraggable();
+	});
 
 	const getDate = (year: number, month: number, x: number, y: number) => {
 		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 	};
 
-    const firstDayInMonthWeekday = () => {
+	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
 	};
-
-
 
 	const isEventOnDate = (date: Date) => {
 		let eventsOnDate = events;
@@ -84,6 +57,13 @@
 		});
 
 		return eventsOnDate.length > 0;
+	};
+
+	const setUpDraggable = async () => {
+		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+		const draggable = new Draggable(document.getElementById(`${x}-${y}-draggable`), {
+			draggable: 'div'
+		});
 	};
 </script>
 

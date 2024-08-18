@@ -73,10 +73,7 @@
 
 		setUpScheduledPolls();
 
-		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
-		const draggable = new Draggable(document.getElementById('1-1-draggable'), {
-			draggable: 'div'
-		});
+
 	});
 
 	$: month && year && deleteSelection();

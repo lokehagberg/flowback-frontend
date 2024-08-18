@@ -14,8 +14,6 @@
 	import { DateInput } from 'date-picker-svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -24,8 +22,10 @@
 	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Day from './Day.svelte';
 
-	export let Class = '';
+	export let Class = '',
+		type: 'user' | 'group' | 'pollcreation';
 
 	const months = [
 		'Jan',
@@ -65,8 +65,6 @@
 		event_id: number | undefined,
 		deleteSelection = () => {};
 
-	export let type: 'user' | 'group';
-
 	onMount(async () => {
 		//Prevents "document not found" error
 		deleteSelection = () => {
@@ -74,6 +72,11 @@
 		};
 
 		setUpScheduledPolls();
+
+		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+		const draggable = new Draggable(document.getElementById('1-1-draggable'), {
+			draggable: 'div'
+		});
 	});
 
 	$: month && year && deleteSelection();
@@ -96,21 +99,6 @@
 			groupId ? `group/${groupId}/schedule?limit=1000` : 'user/schedule?limit=1000'
 		);
 		events = json.results;
-	};
-
-	const firstDayInMonthWeekday = () => {
-		return new Date(year, month, 0).getDay();
-	};
-
-	const isEventOnDate = (date: Date) => {
-		let eventsOnDate = events;
-		eventsOnDate = eventsOnDate.filter((event) => {
-			return (
-				date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date)
-			);
-		});
-
-		return eventsOnDate.length > 0;
 	};
 
 	const scheduleEventCreate = async (e: any) => {
@@ -223,10 +211,6 @@
 		description = event.description;
 		event_id = event.event_id;
 		showEvent = true;
-	};
-
-	const getDate = (year: number, month: number, x: number, y: number) => {
-		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 	};
 
 	let notActivated = true;
@@ -342,40 +326,7 @@
 		<div class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
-						on:dblclick={() => {
-							if (type === 'user') showCreateScheduleEvent = true;
-						}}
-						class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
-						id={`${x}-${y}`}
-						class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
-							month === currentDate.getMonth() &&
-							year === currentDate.getFullYear()}
-						on:click={() => {
-							document.getElementById(selectedDatePosition)?.classList.remove('selected');
-							document.getElementById(`${x}-${y}`)?.classList.add('selected');
-							selectedDatePosition = `${x}-${y}`;
-							selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
-						}}
-						on:keydown
-					>
-						<div class="w-full">
-							<div class="text-center">
-								{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
-							</div>
-							{#each events as event}
-
-								{#if new Date(event.start_date) <= getDate(year, month, x+1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-									<div class="text-center">{event.title}</div>
-								{/if}
-							{/each}
-							<!-- 
-							{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
-								<Fa class="m-auto" icon={faCalendarAlt} />
-							{/if} -->
-						</div>
-					</div>
+					<Day type="pollcreation" {x} {y}/>
 				{/each}
 			{/each}
 		</div>

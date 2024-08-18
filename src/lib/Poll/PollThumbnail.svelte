@@ -24,6 +24,8 @@
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import Button from '$lib/Generic/Button.svelte';
 	import Description from './Description.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -35,7 +37,8 @@
 		tags: TagType[] = [],
 		selectedTag: number,
 		darkMode: boolean,
-		voting = true;
+		voting = true,
+		poppup:poppup;
 
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -50,7 +53,10 @@
 			vote: true
 		});
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = {message:"Could not submit tag vote", success:false}
+			return;
+		}
 
 		voting = false;
 	};
@@ -176,17 +182,17 @@
 	<div class="!mt-4">
 		<!-- Area Voting -->
 		{#if phase === 'area_vote'}
-			<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-betwee">
+			<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-between">
 				<Select
 					label={''}
 					labels={tags.map((tag) => tag.name)}
 					values={tags.map((tag) => tag.id)}
 					bind:value={selectedTag}
-					classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
+					classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
 					Class="w-[47%] "
 				/>
 				{#if voting}
-					<Button type="submit" Class="w-[47%] !p-0">Save Vote</Button>
+					<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light">Save Vote</Button>
 				{:else}
 					<p class="w-[47%] text-center">Successfully saved voting!</p>
 				{/if}
@@ -223,6 +229,8 @@
 		{/if}
 	</div>
 </div>
+
+<Poppup bind:poppup/>
 
 <style>
 	.poll-thumbnail-shadow {

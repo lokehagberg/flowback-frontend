@@ -48,7 +48,7 @@ export interface Delegate {
 	username: string;
 	id: number;
 	pool_id: number;
-	profile_image: File;
+	profile_image: string;
 
 	tags: { id: number; tag_name: string, name:string, active:boolean }[];
 }

@@ -13,9 +13,13 @@
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 	import Pagination from '$lib/Generic/Pagination.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import type { Delegate } from '$lib/Group/interface';
 
 	export let Class = '',
-		infoToGet: 'group' | 'home' | 'public';
+		infoToGet: 'group' | 'home' | 'public' | 'delegate',
+		delegate:Delegate = {id:0, pool_id:0, profile_image:"", tags:[], username:""}
 
 	let polls: Poll[] = [],
 		filter: Filter = {
@@ -28,12 +32,16 @@
 		loading = false,
 		isAdmin = false,
 		next = '',
-		prev = '';
+		prev = '',
+		poppup:poppup;
 
 	const getAPI = async () => {
 		let API = '';
+		// console.log(delegate, {}, delegate === {});
 
 		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
+		//@ts-ignore
+		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
 		else if (infoToGet === 'home') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
@@ -64,7 +72,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			status = statusMessageFormatter(res, json);
+			poppup ={message:"Could not get polls", success:false}
 			return;
 		}
 
@@ -85,7 +93,6 @@
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>
-			<StatusMessage bind:status disableSuccess />
 			<PollFiltering
 				tagFiltering={infoToGet === 'group'}
 				handleSearch={async () => {
@@ -122,3 +129,5 @@
 		/>
 	</Loader>
 </div>
+
+<Poppup bind:poppup/>

@@ -16,6 +16,7 @@
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
+	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -141,15 +142,15 @@
 
 			<img
 				src={profileImagePreview}
-				class="h-36 w-36 z-10 inline absolute top-[100%] -translate-y-14 left-[30%] rounded-full profile"
+				class="h-36 w-36 z-10 inline absolute top-[100%] -translate-y-14 left-[20%] xl:left-[25%] 2xl:left-[30%] rounded-full profile"
 				alt="avatar"
 				id="avatar"
 			/>
 		</div>
 		<div
-			class="bg-white z-0 w-full text-center -translate-x-10 shadow rounded dark:bg-darkobject dark:text-darkmodeText"
+		class="z-0 m-auto shadow rounded dark:bg-darkobject dark:text-darkmodeText"
 		>
-			<span class="">{user.username}</span>
+			<span class="text-xl text-primary font-bold">{user.username}</span>
 			<a class={``} href={user.website || ''}>
 				{user.website || ''}
 			</a>
@@ -265,6 +266,8 @@
 		</form>
 	{/if}
 </Layout>
+
+<!-- <PollThumbnails infoToGet="delegate" delegate/> -->
 
 <style>
 	img.cover {

@@ -131,12 +131,12 @@
 {/if}
 
 <!-- Viewing someone's profile -->
-<Layout centered>
+<Layout centered Class="bg-white shadow">
 	{#if !isEditing}
-		<div class="relative w-full bg-white">
+		<div class="relative w-full">
 			<img
 				src={bannerImagePreview || DefaultBanner}
-				class="bg-gray-200 w-full cover aspect-ratio-5"
+				class="w-full cover aspect-ratio-5"
 				alt="banner"
 			/>
 
@@ -148,7 +148,7 @@
 			/>
 		</div>
 		<div
-		class="z-0 m-auto shadow rounded dark:bg-darkobject dark:text-darkmodeText"
+		class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText"
 		>
 			<span class="text-xl text-primary font-bold">{user.username}</span>
 			<a class={``} href={user.website || ''}>
@@ -159,7 +159,7 @@
 			</p>
 			<StatusMessage Class="" bind:status />
 			{#if isUser}
-				<div class="">
+				<div >
 					<Button action={() => (isEditing = true)}>{$_('Edit profile')}</Button>
 				</div>
 			{/if}

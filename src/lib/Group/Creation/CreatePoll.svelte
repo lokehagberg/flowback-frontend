@@ -218,7 +218,7 @@
 					/>
 				</div>
 			{/if}
-			<Schedule type="pollcreation"/>
+			<!-- <Schedule type="pollcreation"/> -->
 
 			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<RadioButtons bind:Yes={isPublic} label="Public?" />

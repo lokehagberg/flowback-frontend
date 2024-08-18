@@ -1,25 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
-	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
-	import { fetchRequest } from '$lib/FetchRequest';
 	import type { scheduledEvent } from '$lib/Schedule/interface';
-	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import Modal from '$lib/Generic/Modal.svelte';
-	import { DateInput } from 'date-picker-svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import Loader from '$lib/Generic/Loader.svelte';
-	import { page } from '$app/stores';
-	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
-	import { formatDate } from '$lib/Generic/DateFormatter';
-	import TextArea from '$lib/Generic/TextArea.svelte';
+	import { setDateToMidnight } from '$lib/Generic/Dates';
 
 	export let Class = '',
 		type: 'user' | 'group' | 'pollcreation',
@@ -37,7 +20,7 @@
 		selectedDatePosition = '0-0';
 
 	onMount(() => {
-		setUpDraggable();
+		// setUpDraggable();
 	});
 
 	const getDate = (year: number, month: number, x: number, y: number) => {
@@ -59,12 +42,7 @@
 		return eventsOnDate.length > 0;
 	};
 
-	const setUpDraggable = async () => {
-		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
-		const draggable = new Draggable(document.getElementById(`${x}-${y}-draggable`), {
-			draggable: 'div'
-		});
-	};
+	
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -92,7 +70,10 @@
 
 		<!-- The line for poll creation -->
 		{#if type === 'pollcreation'}
-			<div id={`${x}-${y}-draggable`} class="p-1 bg-gray-600 w-1 h-16" />
+			<div id={`${x}-${y}-draggable`} class="p-1 w-1 h-16"
+			class:bg-gray-600={Math.random() > 0.5}
+			class:!bg-blue-600={Math.random() > 0.5}
+			/>
 		{/if}
 
 		{#each events as event}

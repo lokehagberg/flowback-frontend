@@ -17,6 +17,8 @@
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
+	import Fa from 'svelte-fa';
+	import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 	let user: User = {
 		banner_image: '',
@@ -140,6 +142,12 @@
 				alt="banner"
 			/>
 
+			{#if isUser}
+				<div class="absolute right-0 top-0 m-4">
+					<Button action={() => (isEditing = true)}><Fa icon={faPen} color="black"/></Button>
+				</div>
+			{/if}
+
 			<img
 				src={profileImagePreview}
 				class="h-36 w-36 z-10 inline absolute top-[100%] -translate-y-14 left-[20%] xl:left-[25%] 2xl:left-[30%] rounded-full profile"
@@ -147,9 +155,7 @@
 				id="avatar"
 			/>
 		</div>
-		<div
-		class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText"
-		>
+		<div class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText">
 			<span class="text-xl text-primary font-bold">{user.username}</span>
 			<a class={``} href={user.website || ''}>
 				{user.website || ''}
@@ -158,11 +164,6 @@
 				{user.bio || $_('This user has no bio')}
 			</p>
 			<StatusMessage Class="" bind:status />
-			{#if isUser}
-				<div >
-					<Button action={() => (isEditing = true)}>{$_('Edit profile')}</Button>
-				</div>
-			{/if}
 		</div>
 
 		<!-- Editing your own profile -->

@@ -88,7 +88,7 @@
 
 		if (!res.ok) {
 			poppup = {
-				message: json.message,
+				message: "Vote Failed",
 				success: false
 			};
 			return;
@@ -111,11 +111,12 @@
 
 		if (!res.ok) {
 			poppup = {
-				message: json.message,
+				message: "Vote Failed",
 				success: false
 			};
 			return;
 		}
+
 		poppup = {
 			message: 'Successfully voted',
 			success: true

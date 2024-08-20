@@ -23,8 +23,6 @@
 		poll: poll,
 		proposalsToPredictionMarket: proposal[] = [];
 
-	$: console.log(proposalsToPredictionMarket, 'PROPS');
-
 	let loading = false,
 		predictions: PredictionStatement[] = [],
 		newPredictionStatement: {
@@ -91,7 +89,7 @@
 			return;
 		}
 
-		newPredictionStatement = { segments: [], description:"", end_date: new Date() };
+		newPredictionStatement = { segments: [], description:"", end_date: new Date(), blockchain_id:0, title:"" };
 		poppup = { message: 'Successfully created prediction statement', success: true };
 	};
 

@@ -136,7 +136,7 @@
 		{#if proposals}
 			{#key needsReload}
 				{#each proposals as proposal}
-					<div class="border-b-2 border-gray-300">
+					<div class="border-b-2 border-gray-300 select-none">
 						<Proposal
 							{proposal}
 							{isVoting}

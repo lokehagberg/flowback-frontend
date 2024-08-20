@@ -87,7 +87,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: json.detail[0], success: false };
+			poppup = { message: "Could not create prediction statement", success: false };
 			return;
 		}
 
@@ -203,7 +203,7 @@
 	<form on:submit|preventDefault={createPredictionStatement}>
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
-			<TextArea label="Description" bind:value={newPredictionStatement.description} />
+			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
 		</div>
 		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
 		<!-- <Button type="submit">{$_('Submit')}</Button> -->

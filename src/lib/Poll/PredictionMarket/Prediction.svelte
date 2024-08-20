@@ -65,7 +65,10 @@
 		);
 		loading = false;
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed', success: false };
+			return;
+		}
 
 		poppup = { message: 'Successfully betted', success: true, show: true };
 	};
@@ -83,9 +86,12 @@
 		);
 		loading = false;
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed', success: false };
+			return;
+		}
 
-		poppup = { message: 'Successfully betted', success: true, show: true };
+		poppup = { message: 'Successfully updated bet', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -98,7 +104,11 @@
 
 		loading = false;
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed to be deleted', success: false };
+			return;
+		}
+		poppup = { message: 'Successfully updated bet', success: true };
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -109,7 +119,7 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Something went wrong', success: false };
+			poppup = { message: 'Evaluation failed', success: false };
 			return;
 		}
 
@@ -207,7 +217,9 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`px-4 py-1 ${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
+				Class={`px-4 py-1 ${
+					prediction.user_prediction_statement_vote === true && 'brightness-200'
+				}`}
 			>
 				<Fa icon={faCheck} />
 			</Button>
@@ -218,7 +230,9 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`px-4 py-1 ml-2 ${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
+				Class={`px-4 py-1 ml-2 ${
+					prediction.user_prediction_statement_vote === false && 'brightness-200'
+				}`}
 			>
 				<Fa icon={faX} />
 			</Button>

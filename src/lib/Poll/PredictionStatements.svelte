@@ -27,7 +27,9 @@
 
 <div class="border-t-2">
 	{#each predictions as prediction}
-		<div class="border-b-2 flex flex-col pt-3 select-none">
+		<div class="border-b-2 flex flex-col pt-3"
+		class:select-none={phase === 'prediction_bet'}
+		>
 			<span class="text-primary font-semibold">{prediction.title}</span>
 			<span class="">{prediction.description}</span>
 			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>

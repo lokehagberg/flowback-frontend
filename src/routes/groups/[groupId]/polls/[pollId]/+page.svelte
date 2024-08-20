@@ -298,9 +298,9 @@
 						<div class="max-h-[90%] overflow-y-scroll">
 							<ProposalScoreVoting
 								bind:proposals
-								isVoting={false}
 								bind:phase
 								bind:selectedProposal
+								isVoting={false}
 							/>
 						</div>
 					</div>

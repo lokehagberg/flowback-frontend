@@ -28,9 +28,9 @@
 <div class="relative flex justify-center">
 	<img
 		class="cover"
-		src={`${env.PUBLIC_API_URL}${
+		src={group.cover_image ? `${env.PUBLIC_API_URL}${
 			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${group.cover_image}`}
+		}${group.cover_image}`: DefaultBanner}
 		alt="cover"
 	/>
 	<img

@@ -239,8 +239,7 @@
 		</div></Loader
 	>
 </form>
-<!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
-<!-- 
 
--->
-<Schedule type="group"/> 
+<!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
+
+<Schedule type="pollcreation"/> 

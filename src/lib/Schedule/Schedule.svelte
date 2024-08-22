@@ -72,8 +72,7 @@
 		};
 
 		setUpScheduledPolls();
-
-
+		if (type === 'pollcreation') setUpDraggable();
 	});
 
 	$: month && year && deleteSelection();
@@ -210,12 +209,12 @@
 		showEvent = true;
 	};
 
-	// const setUpDraggable = async () => {
-	// 	const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
-	// 	const draggable = new Swappable(document.getElementById(`${x}-${y}-draggable`), {
-	// 		draggable: 'div'
-	// 	});
-	// };
+	const setUpDraggable = async () => {
+		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+		const draggable = new Swappable(document.getElementById('calendar'), {
+			draggable: 'div'
+		});
+	};
 
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {
@@ -327,10 +326,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="calendar w-full">
+		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day type="pollcreation" {x} {y}/>
+					<Day  {type} {x} {y} />
 				{/each}
 			{/each}
 		</div>

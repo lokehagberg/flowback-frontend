@@ -19,10 +19,6 @@
 		//A fix due to class struggle
 		selectedDatePosition = '0-0';
 
-	onMount(() => {
-		// setUpDraggable();
-	});
-
 	const getDate = (year: number, month: number, x: number, y: number) => {
 		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 	};
@@ -41,8 +37,6 @@
 
 		return eventsOnDate.length > 0;
 	};
-
-	
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -70,9 +64,11 @@
 
 		<!-- The line for poll creation -->
 		{#if type === 'pollcreation'}
-			<div id={`${x}-${y}-draggable`} class="p-1 w-1 h-16"
-			class:bg-gray-600={Math.random() > 0.5}
-			class:!bg-blue-600={Math.random() > 0.5}
+			<div
+				id={`${x}-${y}-draggable`}
+				class="p-1 w-1 h-16"
+				class:bg-gray-600={Math.random() > 0.5}
+				class:!bg-blue-600={Math.random() > 0.5}
 			/>
 		{/if}
 

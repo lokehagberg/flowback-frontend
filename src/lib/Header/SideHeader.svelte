@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import TermsOfService from '$lib/Login/TermsOfService.svelte';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
 
 	export let sideHeaderOpen = false;
 
@@ -35,7 +36,7 @@
 	const navs = [
 		{
 			title: 'User Profile',
-			action: () => (goto('/user'))
+			action: () => goto('/user')
 		},
 		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },
@@ -76,7 +77,7 @@
 	<div slot="body" class="text-left">
 		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
 		<div>{$_('Number: +46737482562')}</div>
-		<div>{$_(`Mail: ${import.meta.env.VITE_SUPPORT_MAIL}`)}</div>
+		<div>{$_(`Mail: ${env.PUBLIC_SUPPORT_MAIL}`)}</div>
 		<!-- <div>{$_('For questions about Metamask, contact the Metamask team.')}</div> -->
 	</div>
 </Modal>

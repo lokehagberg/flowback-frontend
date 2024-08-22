@@ -151,7 +151,7 @@
 				icon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
 			/> -->
-			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
 					action={() => (selectedPage = 'about')}
 					text="About"
@@ -169,7 +169,7 @@
 			>
 				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
-			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
 					action={() => (areYouSureModal = true)}
 					text="Leave group"

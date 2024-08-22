@@ -35,8 +35,8 @@
 		/>
 	{:else if profilePicture}
 		<img
-			src={`${import.meta.env.VITE_API}${
-				import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+			src={`${env.PUBLIC_API}${
+				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${profilePicture}`}
 			alt="avatar"
 			class={`w-${size} h-${size} rounded-full`}

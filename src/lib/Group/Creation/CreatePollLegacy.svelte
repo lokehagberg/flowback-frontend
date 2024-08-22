@@ -110,7 +110,7 @@
 		const formData = new FormData();
 		let blockchain_id;
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
 			blockchain_id = await createPollBlockchain(Number(groupId), title);
 			if (blockchain_id) formData.append('blockchain_id', blockchain_id.toString());
 		}
@@ -349,13 +349,13 @@
 					{/if}
 				</div>
 
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={isPublic} label="Public?" />
 				{/if}
 
 				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
 
-				{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+				{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 					<RadioButtons bind:Yes={pushToBlockchain} label="Push to Blockchain?" />
 					<!-- <Button action={() => createPollBlockchain(Number($page.url.searchParams.get('id')), "title")}>Push to Blockchain?</Button> -->
 				{/if}

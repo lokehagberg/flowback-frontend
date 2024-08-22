@@ -175,7 +175,7 @@
 		} else predictionBetUpdate(newScore);
 
 		if (
-			import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
+			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
 			poll.blockchain_id &&
 			prediction.blockchain_id &&
 			score

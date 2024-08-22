@@ -34,7 +34,7 @@
 		loading = true;
 
 		let blockchain_id;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
 			blockchain_id = await createProposal(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
@@ -99,7 +99,7 @@
 		<span class="block text-left text-md text-primary font-bold">{$_('Create a Proposal')}</span>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
-		{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
 		<FileUploads bind:images />
@@ -111,7 +111,7 @@
 			type="submit"
 			label="Add Proposal"
 		/>
-		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
+		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button
 			>

@@ -100,7 +100,7 @@
 		</a>
 
 		<div class="inline-flex items-center gap-4">
-			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
 				<a
 					href={poll.group_joined ? `groups/${poll.group_id}` : ''}
 					class:hover:underline={poll.group_joined}
@@ -109,8 +109,8 @@
 					<span class="inline">{poll.group_name}</span>
 					<img
 						class="h-8 w-8 inline rounded-full"
-						src={`${import.meta.env.VITE_API}${
-							import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
+						src={`${env.PUBLIC_API}${
+							env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 						}${poll.group_image}`}
 						on:error={(e) => onThumbnailError(e, DefaultBanner)}
 						alt={'Poll Thumbnail'}

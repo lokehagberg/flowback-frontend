@@ -47,7 +47,7 @@
 
 		invitations = invitations.filter((invite) => invite.group !== id);
 		invitations = invitations;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {

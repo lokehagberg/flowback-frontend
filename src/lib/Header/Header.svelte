@@ -81,7 +81,7 @@
 
 		localStorage.setItem('pfp-link', profileImage);
 
-		if (import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
 
 	const getIsAdmin = async (userId: number) => {
@@ -104,7 +104,7 @@
 		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
 	>
 		<a
-			href={import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+			href={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
 			class="md:w-auto flex justify-center md:flex-none"
 			><img
 				src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
@@ -139,7 +139,7 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon
 						icon={faList}
 						text="My Kanban"
@@ -150,7 +150,7 @@
 
 				<HeaderIcon
 					icon={faCoins}
-					text={!(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')
+					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')
 						? 'My Ledger'
 						: 'Group Ledger'}
 					href="ledger"

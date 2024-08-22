@@ -20,7 +20,7 @@ async function getUser() {
 const getContract = async () => {
 	const signer = await getUser();
 
-	const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
+	const contractAddress = env.PUBLIC_SIGNER_ADDRESS; //use this address
 
 	return new ethers.Contract(contractAddress, contractABI, signer);
 };
@@ -69,9 +69,9 @@ export const delegate = async (groupId: number | string) => {
 		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
 		const estimatedGasLimit = await contract.estimateGas.delegate(
 			groupId,
-			import.meta.env.VITE_SIGNER_ADDRESS
+			env.PUBLIC_SIGNER_ADDRESS
 		);
-		const tx = await contract.delegate(groupId, import.meta.env.VITE_SIGNER_ADDRESS, {
+		const tx = await contract.delegate(groupId, env.PUBLIC_SIGNER_ADDRESS, {
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas
 		});
@@ -104,10 +104,10 @@ export const removeDelegation = async () => {
 		const feeData = await contract.provider.getFeeData();
 		const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
 		const estimatedGasLimit = await contract.estimateGas.removeDelegation(
-			import.meta.env.VITE_SIGNER_ADDRESS,
+			env.PUBLIC_SIGNER_ADDRESS,
 			2
 		);
-		const tx = await contract.removeDelegation(import.meta.env.VITE_SIGNER_ADDRESS, 2, {
+		const tx = await contract.removeDelegation(env.PUBLIC_SIGNER_ADDRESS, 2, {
 			gasLimit: estimatedGasLimit,
 			maxPriorityFeePerGas: maxPriorityFeePerGas
 		});

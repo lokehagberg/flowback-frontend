@@ -31,7 +31,7 @@ interface Window {
 	
 	const getContract = async () => {
 	  const signer = await getUser();
-	  const contractAddress = import.meta.env.VITE_SIGNER_ADDRESS; //use this address
+	  const contractAddress = env.PUBLIC_SIGNER_ADDRESS; //use this address
 	  return new ethers.Contract(contractAddress, contractABI, signer);
 	};
 

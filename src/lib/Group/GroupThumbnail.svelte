@@ -23,9 +23,9 @@
 	const joinGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
-			console.log(group, import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
+			console.log(group, env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
 			group.joined = !group.joined;
-			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 				becomeMemberOfGroup(group.blockchain_id);
 			if (group.direct_join) goToGroup();
 		}

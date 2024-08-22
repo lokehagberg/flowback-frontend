@@ -143,7 +143,7 @@
 			<TitleDescription {poll} displayTag={phase !== 'area_vote'} />
 			{#if poll.attachments && poll.attachments.length > 0}
 				<img
-					src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
+					src={`${env.PUBLIC_API}/api/media/${poll.attachments[0].file}` || ''}
 					alt="attachment to the poll"
 				/>
 			{/if}
@@ -242,7 +242,7 @@
 		{#if poll.attachments && poll.attachments.length > 0}
 			<img
 				class=""
-				src={`${import.meta.env.VITE_API}api/media/${poll.attachments[0].file}` || ''}
+				src={`${env.PUBLIC_API}api/media/${poll.attachments[0].file}` || ''}
 				alt="attachment to the comment"
 			/>
 		{/if}

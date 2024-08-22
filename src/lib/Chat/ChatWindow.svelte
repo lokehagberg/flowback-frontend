@@ -110,7 +110,7 @@
 			});
 
 		messages = messages;
-		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
+		message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
 
 		updateUserData(selectedChat, new Date());
 	};

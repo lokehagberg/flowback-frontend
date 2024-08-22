@@ -53,7 +53,7 @@
 		{#if displayTag}
 			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
 		{/if}
-		{#if import.meta.env.VITE_ONE_GROUP_FLOWBACK !== 'TRUE'}
+		{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 			<a
 				href={`/groups/${$page.params.groupId}`}
 				class:hover:underline={poll.group_joined}
@@ -84,7 +84,7 @@
 	<!-- TODO: fix attachments in poll -->
 	<!-- {#if poll.attachments && poll.attachments.length > 0}
 		<img
-			src={`${import.meta.env.VITE_API}/api/media/${poll.attachments[0].file}` || ''}
+			src={`${env.PUBLIC_API}/api/media/${poll.attachments[0].file}` || ''}
 			alt="attachment to the poll"
 		/>
 	{/if} -->

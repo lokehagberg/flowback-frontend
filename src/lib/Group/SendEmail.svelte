@@ -38,7 +38,7 @@
 			<TextArea required label="Message" bind:value={message} />
 			<StatusMessage bind:status />
 			<div class="font-bold">
-				Warning: This will send a mail to {import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE'
+				Warning: This will send a mail to {env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
 					? 'everyone'
 					: 'everyone in the group'}
 			</div>

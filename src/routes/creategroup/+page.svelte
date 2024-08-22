@@ -70,7 +70,7 @@
 			});
 
 			if (res.ok) {
-				if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+				if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 					becomeMemberOfGroup(blockchain_id);
 				goto(`/groups/${json}`);
 			} else status = statusMessageFormatter(res, json);
@@ -94,8 +94,8 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
-		if (image) image = `${import.meta.env.VITE_API}${json.image}`;
-		if (coverImage) coverImage = `${import.meta.env.VITE_API}${json.cover_image}`;
+		if (image) image = `${env.PUBLIC_API}${json.image}`;
+		if (coverImage) coverImage = `${env.PUBLIC_API}${json.cover_image}`;
 	};
 
 	onMount(() => {
@@ -122,7 +122,7 @@
 				<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
 				<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
-				{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
 					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
 					<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} />
@@ -135,7 +135,7 @@
 						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}
 					</div>
 				</Button>
-				{#if groupToEdit !== null && !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<Modal bind:open={DeleteGroupModalShow}>
 						<div slot="header">{$_('Deleting group')}</div>
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>

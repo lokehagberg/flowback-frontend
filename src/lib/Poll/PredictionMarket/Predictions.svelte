@@ -74,7 +74,7 @@
 	const createPredictionStatement = async () => {
 		loading = true;
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
 
 		const { res, json } = await fetchRequest(
@@ -215,7 +215,7 @@
 		</div>
 
 		<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">Submit</Button>
-		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE}
+		{#if env.PUBLIC_FLOWBACK_AI_MODULE}
 			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 		{/if}
 		<!-- <Button buttonStyle="warning">{$_('Cancel')}</Button> -->

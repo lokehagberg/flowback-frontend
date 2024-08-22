@@ -108,7 +108,7 @@
 				{#each comment.attachments as attachment}
 					<img
 						class=""
-						src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+						src={`${env.PUBLIC_API}/media/${attachment.file}`}
 						alt="attachment to the comment"
 					/>
 				{/each}

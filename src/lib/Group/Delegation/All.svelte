@@ -44,7 +44,7 @@
 		// TOOD-Blockchain: Set this up so it works
 		loading = true;
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 			await becomeDelegate($page.params.groupId);
 
 		loading = false;
@@ -94,7 +94,7 @@
 		loading = true;
 		let toSend: any = {};
 
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 			try {
 				const blockchain_id = becomeDelegate($page.params.groupId);
 				if (isNumber(blockchain_id)) toSend.blockchain_id = blockchain_id;

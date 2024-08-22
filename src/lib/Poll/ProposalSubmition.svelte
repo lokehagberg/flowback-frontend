@@ -9,7 +9,6 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
 	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
@@ -17,6 +16,8 @@
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { env } from "$env/dynamic/public";
+
 
 	let title: string,
 		description: string,

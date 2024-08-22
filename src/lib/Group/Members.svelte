@@ -13,6 +13,7 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
 
 	let users: GroupUser[] = [],
@@ -102,7 +103,10 @@
 	<div
 		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
-		<Tab bind:selectedPage tabs={env.PUBLIC_ONE_GROUP_FLOWBACK ? ['Members'] : ['Members', 'Pending Invites', 'Invite']} />
+		<Tab
+			bind:selectedPage
+			tabs={env.PUBLIC_ONE_GROUP_FLOWBACK ? ['Members'] : ['Members', 'Pending Invites', 'Invite']}
+		/>
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}

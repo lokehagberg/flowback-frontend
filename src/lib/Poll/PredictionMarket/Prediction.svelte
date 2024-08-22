@@ -16,6 +16,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
 	import VotingSlider from '../VotingSlider.svelte';
+	import { env } from "$env/dynamic/public";
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,

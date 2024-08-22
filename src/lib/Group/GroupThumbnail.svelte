@@ -23,7 +23,6 @@
 	const joinGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
-			console.log(group, env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
 			group.joined = !group.joined;
 			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 				becomeMemberOfGroup(group.blockchain_id);

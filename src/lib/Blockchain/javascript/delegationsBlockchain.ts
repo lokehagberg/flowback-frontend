@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import contractABI from './contractABI.json';
+import {env} from "$env/dynamic/public";
 
 interface Window {
 	ethereum?: import('ethers').providers.ExternalProvider;

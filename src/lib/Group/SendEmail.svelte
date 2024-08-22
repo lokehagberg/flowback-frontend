@@ -7,6 +7,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import {env} from "$env/dynamic/public";
 
 	let title: string,
 		message: string,

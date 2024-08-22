@@ -8,6 +8,7 @@
 	import CommentPost from './CommentPost.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
+	import { env } from "$env/dynamic/public";
 
 	export let comment: Comment,
 		comments: Comment[],

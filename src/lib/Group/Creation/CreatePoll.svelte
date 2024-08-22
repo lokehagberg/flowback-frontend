@@ -17,8 +17,6 @@
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
-	import { onMount } from 'svelte';
-	import { ScheduleXCalendar } from '@schedule-x/svelte';
 	import {
 		createCalendar,
 		createViewDay,
@@ -27,8 +25,8 @@
 		createViewMonthAgenda
 	} from '@schedule-x/calendar';
 	import '@schedule-x/theme-default/dist/index.css';
-	import T from './T.svelte';
-	import Schedule from '$lib/Schedule/Schedule.svelte';
+	import { env } from "$env/dynamic/public";
+
 
 	let title = '',
 		description = '',

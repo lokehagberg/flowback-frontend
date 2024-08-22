@@ -1,7 +1,8 @@
 import { ethers } from 'ethers';
+import {env} from "$env/dynamic/public";
 
 export const newWallet = async () => {
-	const provider = new ethers.providers.InfuraProvider('sepolia', import.meta.env.INFURA_API_KEY);
+	const provider = new ethers.providers.InfuraProvider('sepolia', env.PUBLIC_INFURA_API_KEY);
 
 	// console.log(ethers.utils.formatEther(balance), "BALANCE")
 

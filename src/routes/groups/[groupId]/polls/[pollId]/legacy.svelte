@@ -26,7 +26,7 @@
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
-	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
+	import { env } from "$env/dynamic/public";
 
 	// TODO: refactor the phase system so be very modular
 	//{#if phase === "phase x}

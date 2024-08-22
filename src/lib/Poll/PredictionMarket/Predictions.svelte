@@ -18,6 +18,7 @@
 	import Fa from 'svelte-fa';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import { env } from "$env/dynamic/public";
 
 	export let proposals: proposal[],
 		poll: poll,

@@ -170,6 +170,7 @@
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
 			{#if selectedPage === 'poll'}
 				<h1 class="text-2xl">{$_('Create a Poll')}</h1>
+				{@debug selected_poll}
 				<RadioButtons2
 					name="poll Content"
 					label="Poll Content"

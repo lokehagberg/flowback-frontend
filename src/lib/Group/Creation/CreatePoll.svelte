@@ -26,6 +26,8 @@
 	} from '@schedule-x/calendar';
 	import '@schedule-x/theme-default/dist/index.css';
 	import { env } from "$env/dynamic/public";
+	import { ScheduleXCalendar } from '@schedule-x/svelte';
+	import Schedule from '$lib/Schedule/Schedule.svelte';
 
 
 	let title = '',
@@ -237,7 +239,8 @@
 		</div></Loader
 	>
 </form>
+<!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
 <!-- 
-<ScheduleXCalendar {calendarApp} monthGridEvent={T} />
 
-<Schedule type="group"/> -->
+-->
+<Schedule type="group"/> 

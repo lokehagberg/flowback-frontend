@@ -210,12 +210,12 @@
 		showEvent = true;
 	};
 
-	const setUpDraggable = async () => {
-		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
-		// const draggable = new Swappable(document.getElementById(`${x}-${y}-draggable`), {
-		// 	draggable: 'div'
-		// });
-	};
+	// const setUpDraggable = async () => {
+	// 	const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+	// 	const draggable = new Swappable(document.getElementById(`${x}-${y}-draggable`), {
+	// 		draggable: 'div'
+	// 	});
+	// };
 
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {

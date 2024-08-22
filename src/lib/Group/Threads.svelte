@@ -10,6 +10,7 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
 	import { faComment } from '@fortawesome/free-solid-svg-icons';
+	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 
 	let threads: Thread[] = [],
 		prev = '',
@@ -19,8 +20,7 @@
 	const getThreads = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/thread/list?limit=2`,
-			{}
+			`group/${$page.params.groupId}/thread/list?limit=${threadsLimit}`
 		);
 
 		if (!res.ok) {

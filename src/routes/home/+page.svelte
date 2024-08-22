@@ -60,11 +60,8 @@
 	};
 </script>
 
-<!-- TODO: stuck on loading when no polls -->
 <Layout centered>
-	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
 	<ul class="w-full mt-6 flex flex-col gap-6 max-w-[700px]">
-		<!-- {#if import.meta.env.MODE === 'DEV'} -->
 		{#each invitations as invite}
 			{#if !invite.external}
 				<li class="bg-white p-6 shadow rounded dark:bg-darkobject dark:text-darkmodeText">
@@ -77,7 +74,6 @@
 				</li>
 			{/if}
 		{/each}
-		<!-- {/if} -->
 	</ul>
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>

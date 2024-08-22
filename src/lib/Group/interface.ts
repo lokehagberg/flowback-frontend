@@ -50,7 +50,7 @@ export interface Delegate {
 	pool_id: number;
 	profile_image: string;
 
-	tags: { id: number; tag_name: string, name:string, active:boolean }[];
+	tags: Tag[];
 }
 
 export interface Group {

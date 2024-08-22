@@ -14,5 +14,6 @@
     "tagsCreatePoll":1000,
     "groups":1000,
     "homePolls":1000,
-    "transactions":30
+    "transactions":30,
+    "threads":20
 }

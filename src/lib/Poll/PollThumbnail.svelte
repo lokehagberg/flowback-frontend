@@ -26,6 +26,7 @@
 	import Description from './Description.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import {env} from "$env/dynamic/public";
 
 	export let poll: poll,
 		isAdmin = false;

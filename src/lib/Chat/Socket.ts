@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { type Message1 } from './interfaces';
+import {env} from "$env/dynamic/public";
 
 export const messageStore = writable<Message1>();
 

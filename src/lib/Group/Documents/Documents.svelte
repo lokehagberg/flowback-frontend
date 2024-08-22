@@ -4,6 +4,7 @@
 	// import Button from '$lib/Generic/Button.svelte';
 	import Folder from './Folder.svelte';
 	import { _ } from 'svelte-i18n';
+	import {env} from "$env/dynamic/public";
 
 	let root = [
 		{
@@ -36,22 +37,22 @@
 	//like for example in .env do a,b,c, instead
 	switch (groupId) {
 		case 1:
-			folderId = env.PUBLIC_DOCUMENT_1;
+			folderId = env.PUBLIC_DOCUMENT_1 || "";
 			break;
 		case 2:
-			folderId = env.PUBLIC_DOCUMENT_2;
+			folderId = env.PUBLIC_DOCUMENT_2 || "";
 			break;
 		case 4:
-			folderId = env.PUBLIC_DOCUMENT_4;
+			folderId = env.PUBLIC_DOCUMENT_4 || "";
 			break;
 		case 5:
-			folderId = env.PUBLIC_DOCUMENT_5;
+			folderId = env.PUBLIC_DOCUMENT_5 || "";
 			break;
 		case 9:
-			folderId = env.PUBLIC_DOCUMENT_9;
+			folderId = env.PUBLIC_DOCUMENT_9 || "";
 			break;
 		default:
-			folderId = env.PUBLIC_DOCUMENT_DEFAULT;
+			folderId = env.PUBLIC_DOCUMENT_DEFAULT || "";
 			break;
 	}
 </script>

@@ -6,11 +6,11 @@
 				currentTarget: EventTarget & HTMLSelectElement;
 			}
 		) => void = (e) => {},
-		onChange = (e: number) => {},
+		onChange = (e: any) => {},
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
-		value = values[0],
+		value: any | null = values[0],
 		Class = '',
 		centering = false,
 		ClassInner = '',
@@ -38,12 +38,24 @@
 				onChange(value);
 			}}
 		>
-			{#each labels as label}
+			{#each labels as label, i}
 				<label class={ClassInner}>
 					{#if radioSide === 'left'}
-						<input type="radio" {name} value={label} id={label} />{label}
+						<input
+							type="radio"
+							{name}
+							value={values[i]}
+							id={values[i]}
+							checked={values[i] === value}
+						/>{label}
 					{:else}
-						{label}<input type="radio" {name} value={label} id={label} />
+						{label}<input
+							type="radio"
+							{name}
+							value={values[i]}
+							id={values[i]}
+							checked={values[i] === value}
+						/>
 					{/if}
 				</label>
 			{/each}

@@ -39,7 +39,8 @@ export const createPoll = async (groupId: number, title: string) => {
 			nowInSeconds + oneDayInSeconds, //proposalenddate
 			nowInSeconds + 2 * oneDayInSeconds, //votingstartdate
 			nowInSeconds + 3 * oneDayInSeconds, //delegateenddate
-			nowInSeconds + 4 * oneDayInSeconds //enddate
+			nowInSeconds + 4 * oneDayInSeconds, //enddate
+			10 //maximum vote range
 		);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
@@ -58,7 +59,7 @@ export const createPoll = async (groupId: number, title: string) => {
 				const pollId = parseInt(PollCreatedEvent.args.pollId);
 				const title = PollCreatedEvent.args.title;
 				console.log(`Poll created with title ${title} and id ${pollId}`);
-				return pollId
+				return pollId;
 			}
 		}
 	} catch (error) {
@@ -92,13 +93,10 @@ export const getPoll = async (id: number) => {
 	}
 };
 
-export const createProposal = async (pollId: number, title:string) => {
+export const createProposal = async (pollId: number, title: string) => {
 	const contract = await getContract();
 	try {
-		const tx = await contract.addProposal(
-			pollId, 
-			title
-		);
+		const tx = await contract.addProposal(pollId, title);
 
 		const txReceipt = await tx.wait({ timeout: 40000 }).catch((error: any) => {
 			console.error('Error waiting for transaction:', error);
@@ -116,7 +114,7 @@ export const createProposal = async (pollId: number, title:string) => {
 				console.log(
 					`Proposal with id ${proposalId} created on poll with id ${pollId}: PROPOSAL: ${description}`
 				);
-				return Number(proposalId)
+				return Number(proposalId);
 			}
 		}
 	} catch (error) {

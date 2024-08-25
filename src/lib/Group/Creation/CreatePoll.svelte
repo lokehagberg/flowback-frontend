@@ -59,7 +59,10 @@
 		let blockchain_id;
 
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushToBlockchain) {
+			console.log("Hello");
+			
 			blockchain_id = await createPollBlockchain(Number(groupId), title);
+			console.log("Hello 2");
 			if (blockchain_id) formData.append('blockchain_id', blockchain_id.toString());
 		}
 
@@ -170,7 +173,7 @@
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
 			{#if selectedPage === 'poll'}
 				<h1 class="text-2xl">{$_('Create a Poll')}</h1>
-				{@debug selected_poll}
+				<!-- {@debug selected_poll} -->
 				<RadioButtons2
 					name="poll Content"
 					label="Poll Content"

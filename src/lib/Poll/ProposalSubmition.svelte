@@ -32,7 +32,7 @@
 
 	const addProposal = async () => {
 	
-		loading = true;
+		loading = true;	console.log("Hello?");
 
 		let blockchain_id;
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)

@@ -116,22 +116,17 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-
-		// let content: any = { assignee, tag: 1, title, priority, end_date };
+		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`
 
 		const formData = new FormData();
 		formData.append('tag', '1');
 		formData.append('title', title);
 		if (assignee) formData.append('assignee', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
-		if (end_date) formData.append('end_date', end_date.toString());
+		if (end_date) formData.append('end_date', dateString);
 		if (description !== '') formData.append('description', description);
-
-		console.log(formData);
-		
 		if (images)
 			images.forEach((image) => {
-				console.log(image, 'IMAGOOO');
 				formData.append('attachments', image);
 			});
 

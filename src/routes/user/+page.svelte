@@ -65,6 +65,10 @@
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
 		userEdit = user;
+
+		if (userEdit.bio === null) userEdit.bio = ""
+		if (userEdit.website === null) userEdit.website = ""
+
 		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
 
@@ -248,6 +252,7 @@
 					{userEdit.website || $_('Add Website')}
 				</p>
 			{/if}
+			
 			{#if currentlyEditing === 'bio'}
 				<TextArea
 					autofocus
@@ -257,15 +262,17 @@
 					Class="pt-8 pb-8 whitespace-pre-wrap"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p
+				<div
 					on:click={() => (currentlyEditing = 'bio')}
+					on:keydown
+					role="button"
+					tabindex=0
 					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"
 				>
 					{userEdit.bio || $_('Add Bio')}
-				</p>
+				</div>
 			{/if}
+
 			<StatusMessage Class="mt-4" bind:status />
 			<div class="mt-6">
 				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>

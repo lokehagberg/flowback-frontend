@@ -7,7 +7,8 @@
 	export let Class = '',
 		type: 'user' | 'group' | 'pollcreation',
 		x: number,
-		y: number;
+		y: number,
+		advancedTimeSettingsDates: Date[] = [];
 
 	const currentDate = new Date();
 
@@ -19,8 +20,15 @@
 		//A fix due to class struggle
 		selectedDatePosition = '0-0';
 
+	onMount(() => {
+		const today = new Date();
+		let tomorow = new Date();
+		tomorow.setDate(today.getDate() + 1);
+		advancedTimeSettingsDates = [today, tomorow];
+	});
+
 	const getDate = (year: number, month: number, x: number, y: number) => {
-		return new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+		return new Date(year, month, getDay());
 	};
 
 	const firstDayInMonthWeekday = () => {
@@ -37,50 +45,55 @@
 
 		return eventsOnDate.length > 0;
 	};
+
+	const getDay = () => {
+		return -firstDayInMonthWeekday() + x + 7 * (y - 1)
+	}
 </script>
+
 <!-- The line for poll creation -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-on:dblclick={() => {
-	if (type === 'user') showCreateScheduleEvent = true;
-}}
+	on:dblclick={() => {
+		if (type === 'user') showCreateScheduleEvent = true;
+	}}
 	class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
-	class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
+	class:today={getDay() === currentDate.getDate() &&
 		month === currentDate.getMonth() &&
 		year === currentDate.getFullYear()}
 	on:click={() => {
 		document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		document.getElementById(`${x}-${y}`)?.classList.add('selected');
 		selectedDatePosition = `${x}-${y}`;
-		selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
+		selectedDate = new Date(year, month, getDay());
 	}}
 	on:keydown
-	>
+>
 	<div class="w-full">
 		<div class="text-center">
-			{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
+			{new Date(year, month, getDay()).getDate()}
 		</div>
-		
-		{#if type === 'pollcreation'}
-		<swappable
-			id={`${x}-${y}-draggable`}
-			class="p-1 w-1 h-[70px]"
-			class:bg-gray-600={Math.random() > 0.5}
-			class:!bg-blue-600={Math.random() > 0.5}
-		/>
+
+		{#if type === 'pollcreation' && advancedTimeSettingsDates
+				?.find((date) => date?.getDate() === getDay())
+				?.getDate()}
+			<swappable
+				id={`${x}-${y}-draggable`}
+				class="py-5 px-1"
+				class:bg-gray-600={Math.random() > 0.5}
+				class:!bg-blue-600={Math.random() > 0.5}
+			/>
 		{/if}
-		
-		
+
 		{#each events as event}
-		{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-		<div class="text-center">{event.title}</div>
-		{/if}
+			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+				<div class="text-center">{event.title}</div>
+			{/if}
 		{/each}
 		<!-- 
 			{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
             <Fa class="m-auto" icon={faCalendarAlt} />
 			{/if} -->
-		</div>
 	</div>
-	
+</div>

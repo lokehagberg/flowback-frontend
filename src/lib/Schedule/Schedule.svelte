@@ -25,7 +25,8 @@
 	import Day from './Day.svelte';
 
 	export let Class = '',
-		type: 'user' | 'group' | 'pollcreation';
+		type: 'user' | 'group' | 'pollcreation',
+		advancedTimeSettingsDates:Date[] = []
 
 	const months = [
 		'Jan',
@@ -329,7 +330,7 @@
 		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day  {type} {x} {y} />
+					<Day bind:advancedTimeSettingsDates  {type} {x} {y} />
 				{/each}
 			{/each}
 		</div>

@@ -47,8 +47,8 @@
 	};
 
 	const getDay = () => {
-		return -firstDayInMonthWeekday() + x + 7 * (y - 1)
-	}
+		return -firstDayInMonthWeekday() + x + 7 * (y - 1);
+	};
 </script>
 
 <!-- The line for poll creation -->
@@ -75,14 +75,13 @@
 			{new Date(year, month, getDay()).getDate()}
 		</div>
 
-		{#if type === 'pollcreation' && advancedTimeSettingsDates
-				?.find((date) => date?.getDate() === getDay())
-				?.getDate()}
+		{#if type === 'pollcreation'}
 			<swappable
 				id={`${x}-${y}-draggable`}
 				class="py-5 px-1"
-				class:bg-gray-600={Math.random() > 0.5}
-				class:!bg-blue-600={Math.random() > 0.5}
+				class:!bg-blue-600={advancedTimeSettingsDates
+					?.find((date) => date?.getDate() === getDay())
+					?.getDate()}
 			/>
 		{/if}
 

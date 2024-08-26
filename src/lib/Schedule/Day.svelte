@@ -38,12 +38,12 @@
 		return eventsOnDate.length > 0;
 	};
 </script>
-
+<!-- The line for poll creation -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	on:dblclick={() => {
-		if (type === 'user') showCreateScheduleEvent = true;
-	}}
+on:dblclick={() => {
+	if (type === 'user') showCreateScheduleEvent = true;
+}}
 	class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
 	class:today={-firstDayInMonthWeekday() + x + 7 * (y - 1) === currentDate.getDate() &&
@@ -56,30 +56,31 @@
 		selectedDate = new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1));
 	}}
 	on:keydown
->
+	>
 	<div class="w-full">
 		<div class="text-center">
 			{new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1)).getDate()}
 		</div>
-
-		<!-- The line for poll creation -->
+		
 		{#if type === 'pollcreation'}
-			<div
-				id={`${x}-${y}-draggable`}
-				class="p-1 w-1 h-16"
-				class:bg-gray-600={Math.random() > 0.5}
-				class:!bg-blue-600={Math.random() > 0.5}
-			/>
+		<swappable
+			id={`${x}-${y}-draggable`}
+			class="p-1 w-1 h-[70px]"
+			class:bg-gray-600={Math.random() > 0.5}
+			class:!bg-blue-600={Math.random() > 0.5}
+		/>
 		{/if}
-
+		
+		
 		{#each events as event}
-			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-				<div class="text-center">{event.title}</div>
-			{/if}
+		{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+		<div class="text-center">{event.title}</div>
+		{/if}
 		{/each}
 		<!-- 
-        {#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
+			{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
             <Fa class="m-auto" icon={faCalendarAlt} />
-        {/if} -->
+			{/if} -->
+		</div>
 	</div>
-</div>
+	

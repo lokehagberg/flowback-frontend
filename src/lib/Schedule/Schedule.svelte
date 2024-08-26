@@ -212,7 +212,7 @@
 	const setUpDraggable = async () => {
 		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('calendar'), {
-			draggable: 'div'
+			draggable: 'swappable'
 		});
 	};
 

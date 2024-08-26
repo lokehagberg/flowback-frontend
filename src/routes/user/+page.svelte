@@ -172,11 +172,8 @@
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText">
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText">
 				<span class="text-xl text-primary font-bold">{user.username}</span>
-				<a class={``} href={user.website || ''}>
-					{user.website || ''}
-				</a>
 				<p class=" whitespace-pre-wrap">
 					{user.bio || $_('This user has no bio')}
 				</p>
@@ -184,7 +181,9 @@
 			</div>
 			<div>
 				<div class="text-primary font-bold">Contact Information</div>
-				<div>Website</div>
+				<a class={``} href={user.website || ''}>
+					{user.website || ''}
+				</a>
 				<div>Phone</div>
 				<div>thiny</div>
 			</div>

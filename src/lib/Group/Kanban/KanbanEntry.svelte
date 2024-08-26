@@ -42,8 +42,6 @@
 		innerWidth: number,
 		outerWidth: number;
 
-	$: console.log(isEditing, 'EDIT');
-
 	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],

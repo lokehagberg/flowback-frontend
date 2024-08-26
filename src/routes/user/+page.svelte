@@ -66,8 +66,8 @@
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 
-		if (userEdit.bio === null) userEdit.bio = ""
-		if (userEdit.website === null) userEdit.website = ""
+		if (userEdit.bio === null) userEdit.bio = '';
+		if (userEdit.website === null) userEdit.website = '';
 
 		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
@@ -147,36 +147,48 @@
 			/>
 
 			{#if isUser}
-			<Button action={() => (isEditing = true)} Class="absolute right-0 top-0 p-3 m-1 transition-all hover:bg-gray-300">
-				<div >
-						<Fa icon={faPen} color="black"/>
+				<Button
+					action={() => (isEditing = true)}
+					Class="absolute right-0 top-0 p-3 m-1 transition-all hover:bg-gray-300"
+				>
+					<div>
+						<Fa icon={faPen} color="black" />
 					</div>
 				</Button>
-				{/if}
-				<Button action={() => history.back()} Class="absolute left-0 top-0 p-3 m-1 transition-all hover:bg-gray-300">
-					<div >
-							<Fa icon={faArrowLeft} color="black"/>
-						</div>
-					</Button>
-
+			{/if}
+			<Button
+				action={() => history.back()}
+				Class="absolute left-0 top-0 p-3 m-1 transition-all hover:bg-gray-300"
+			>
+				<div>
+					<Fa icon={faArrowLeft} color="black" />
+				</div>
+			</Button>
+		</div>
+		<div class="flex justify-around w-full max-w-[600px]">
 			<img
 				src={profileImagePreview}
-				class="h-36 w-36 z-10 inline absolute top-[100%] -translate-y-14 left-[20%] xl:left-[25%] 2xl:left-[30%] rounded-full profile"
+				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
 				alt="avatar"
 				id="avatar"
 			/>
+			<div class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText">
+				<span class="text-xl text-primary font-bold">{user.username}</span>
+				<a class={``} href={user.website || ''}>
+					{user.website || ''}
+				</a>
+				<p class=" whitespace-pre-wrap">
+					{user.bio || $_('This user has no bio')}
+				</p>
+				<StatusMessage Class="" bind:status />
+			</div>
+			<div>
+				<div class="text-primary font-bold">Contact Information</div>
+				<div>Website</div>
+				<div>Phone</div>
+				<div>thiny</div>
+			</div>
 		</div>
-		<div class="z-0 m-auto dark:bg-darkobject dark:text-darkmodeText">
-			<span class="text-xl text-primary font-bold">{user.username}</span>
-			<a class={``} href={user.website || ''}>
-				{user.website || ''}
-			</a>
-			<p class=" whitespace-pre-wrap">
-				{user.bio || $_('This user has no bio')}
-			</p>
-			<StatusMessage Class="" bind:status />
-		</div>
-
 		<!-- Editing your own profile -->
 	{:else}
 		<!-- Banner Image -->
@@ -252,7 +264,7 @@
 					{userEdit.website || $_('Add Website')}
 				</p>
 			{/if}
-			
+
 			{#if currentlyEditing === 'bio'}
 				<TextArea
 					autofocus
@@ -266,7 +278,7 @@
 					on:click={() => (currentlyEditing = 'bio')}
 					on:keydown
 					role="button"
-					tabindex=0
+					tabindex="0"
 					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"
 				>
 					{userEdit.bio || $_('Add Bio')}

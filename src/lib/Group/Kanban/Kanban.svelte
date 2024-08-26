@@ -116,7 +116,7 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`
+		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
 
 		const formData = new FormData();
 		formData.append('tag', '1');

@@ -42,6 +42,8 @@
 		innerWidth: number,
 		outerWidth: number;
 
+	$: console.log(isEditing, 'EDIT');
+
 	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
@@ -78,7 +80,9 @@
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
-		console.log(kanbanEdited);
+		//@ts-ignore
+		if (kanbanEdited.end_date === null) delete kanbanEdited.end_date
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -101,6 +105,7 @@
 		};
 
 		// showSuccessPoppup = true;
+
 		isEditing = false;
 	};
 
@@ -162,7 +167,7 @@
 	let endDate: TimeAgo;
 	const formatEndDate = async () => {
 		const en = (await import('javascript-time-ago/locale/en')).default;
-		TimeAgo.addDefaultLocale(en);
+		// TimeAgo.addDefaultLocale(en);
 		endDate = new TimeAgo('en');
 	};
 
@@ -179,7 +184,7 @@
 <!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 <svelte:window bind:innerWidth bind:outerWidth />
 
-{#if (kanban.origin_type === "group" && kanban.group_name) || kanban.origin_type === "user"}
+{#if (kanban.origin_type === 'group' && kanban.group_name) || kanban.origin_type === 'user'}
 	<li
 		class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
 		in:fade
@@ -266,11 +271,7 @@
 {/if}
 
 {#if kanban.id === selectedEntry}
-	<Modal
-		bind:open={openModal}
-		Class="min-w-[400px] z-50 break-words"
-		onClose={() => (isEditing = false)}
-	>
+	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words">
 		<div slot="header" class="">
 			{#if isEditing}
 				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
@@ -282,13 +283,13 @@
 		<div slot="body">
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
-				<TextArea
+				<!-- <TextArea
 					rows={10}
 					bind:value={kanbanEdited.description}
 					label=""
 					Class="h-full"
 					inputClass="border-none"
-				/>
+				/> -->
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						Assignee
@@ -341,7 +342,7 @@
 				<Button action={updateKanbanContent}>{$_('Update')}</Button>
 				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
 			{:else}
-				<Button action={() => (isEditing = true)}>{$_('Edit')}</Button>
+				<Button Class="px-2" action={() => (isEditing = true)}>{$_('Edit')}</Button>
 			{/if}
 		</div>
 	</Modal>

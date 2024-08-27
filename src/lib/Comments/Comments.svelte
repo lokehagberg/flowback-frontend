@@ -13,7 +13,7 @@
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null,
-		Class = "";
+		Class = '';
 
 	let _comments: CommentType[] = [],
 		show = false,
@@ -39,10 +39,7 @@
 
 <SuccessPoppup bind:show message={showMessage} />
 
-<div
-	class={`rounded dark:text-darktext ${Class}`}
-	id="comments"
->
+<div class={`rounded dark:text-darktext ${Class}`} id="comments">
 	<!-- Add Comment -->
 	<CommentPost
 		bind:proposals

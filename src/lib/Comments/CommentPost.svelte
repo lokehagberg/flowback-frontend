@@ -68,7 +68,7 @@
 				message,
 				id: json,
 				parent_id,
-				author_thumbnail: window.localStorage.getItem('pfp-link') || '',
+				author_profile_image: window.localStorage.getItem('pfp-link') || '',
 				being_edited_message: '',
 				reply_depth: 0
 			};

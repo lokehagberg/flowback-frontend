@@ -79,7 +79,10 @@
 				json.profile_image
 			}`;
 
-		localStorage.setItem('pfp-link', profileImage);
+		localStorage.setItem(
+			'pfp-link',
+			`${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${json.profile_image}`
+		);
 
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
@@ -150,9 +153,7 @@
 
 				<HeaderIcon
 					icon={faCoins}
-					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')
-						? 'My Ledger'
-						: 'Group Ledger'}
+					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>

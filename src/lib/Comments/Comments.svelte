@@ -33,7 +33,6 @@
 		_comments = _comments.concat(comments);
 		_comments = await commentSetup(_comments);
 		_comments = _comments;
-		console.log(next, 'NXT');
 		showReadMore = next !== null;
 	};
 </script>

@@ -114,7 +114,10 @@
 						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
 						href={`/user?id=${user.user.id}`}
 					>
-						<ProfilePicture user={user.user} />
+						<ProfilePicture
+							username={user.user.username}
+							profilePicture={user.user.profile_image}
+						/>
 						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
 					</a>
 				{/each}
@@ -128,7 +131,10 @@
 					<div
 						class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 					>
-						<ProfilePicture {user} />
+						<ProfilePicture
+							username={user.user.username}
+							profilePicture={user.user.profile_image}
+						/>
 						<div class="w-64 ml-10 hover">{user.username}</div>
 						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<div
@@ -163,7 +169,10 @@
 							class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
 						>
 							<div class="flex">
-								<ProfilePicture user={searchedUser} />
+								<ProfilePicture
+									username={searchedUser.username}
+									profilePicture={searchedUser.profile_image}
+								/>
 								<div class="w-64 ml-10">{searchedUser.username}</div>
 							</div>
 

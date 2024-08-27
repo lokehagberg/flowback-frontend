@@ -91,7 +91,6 @@
 	>
 		<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 		<div class="flex gap-2">
-			<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
 			<ProfilePicture
 				profilePicture={comment.author_thumbnail}
 				username={comment.author_name}

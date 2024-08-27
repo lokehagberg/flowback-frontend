@@ -10,6 +10,8 @@
 	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 	import { commentSetup, getCommentDepth } from './functions';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import Fa from 'svelte-fa';
+	import { faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-icons';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -125,8 +127,8 @@
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="invisible  bg-white dark:bg-darkbackground shadow w-full bottom-full"
-		class:!visible={recentlyTappedButton === '#'}
+		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
+		class:!block={recentlyTappedButton === '#'}
 	>
 		<ul>
 			{#each proposals as proposal}
@@ -144,7 +146,16 @@
 			{/each}
 		</ul>
 	</div>
-	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton  />
+	<div class="flex">
+		<TextArea
+			label="Comment"
+			bind:value={message}
+			bind:recentlyTappedButton
+			inputClass="bg-gray-100 h-8"
+			Class="w-full"
+		/>
+		<Button Class="px-3 mt-6 bg-white" type="submit" label="" ><Fa icon={faPaperPlane} color="black"/></Button>
+	</div>
 	<FileUploads bind:images />
 	<!-- <ImageUpload
 		icon={faUser}
@@ -156,6 +167,6 @@
 		minimalist
 	/> -->
 	<!-- {#if message !== "" || attachments.length > 0} -->
-	<Button Class="mt-4" type="submit" label="Send" />
+
 	<!-- {/if} -->
 </form>

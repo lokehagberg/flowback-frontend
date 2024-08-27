@@ -91,11 +91,11 @@
 				</li>
 			{/each}
 		</ul>
-	{:else}
+	{:else if displayDetails}
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<ul
 			on:keydown={() => {}}
-			class="hover:underline flex items-center gap-1 cursor-pointer text-xs "
+			class="hover:underline flex items-center gap-1 cursor-pointer text-xs"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />

@@ -74,7 +74,7 @@ export type Phase =
 export interface Comment {
 	author_id: number;
 	author_name: string;
-	author_thumbnail: string;
+	author_profile_image: string;
 	parent_id?: number;
 	reply_depth: number;
 	message: string;

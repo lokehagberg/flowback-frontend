@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { fetchRequest } from '$lib/FetchRequest';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
-	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
 
 	export let username = '',
@@ -12,22 +10,7 @@
 		size = 6;
 </script>
 
-<!-- TODO: Simplify this function to only take images as input or include name -->
 <div class={`flex gap-2 ${Class}`}>
-	<!-- <img
-		src={`${env.PUBLIC_API_URL}${
-			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${profilePicture}`}
-		alt="avatar"
-		class={`w-${size} h-${size} rounded-full`}
-	/>
-
-	<img
-		src={`${env.PUBLIC_API}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${profilePicture}`}
-		alt="avatar"
-		class={`w-${size} h-${size} rounded-full`}
-	/> -->
-
 	{#if profilePicture === null}
 		<img src={DefaultPFP} alt="avatar" class={`w-${size} h-${size} rounded-full`} />
 	{:else}
@@ -39,7 +22,7 @@
 			class={`w-${size} h-${size} rounded-full`}
 		/>
 	{/if}
-	<!-- TODO: Make default name default on everywhere-->
+
 	{#if displayName}
 		{username}
 	{/if}

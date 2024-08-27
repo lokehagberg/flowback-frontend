@@ -91,8 +91,9 @@
 	>
 		<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 		<div class="flex gap-2">
+			<!-- {@debug comment} -->
 			<ProfilePicture
-				profilePicture={comment.author_thumbnail}
+				profilePicture={comment.author_profile_image}
 				username={comment.author_name}
 				displayName
 			/>

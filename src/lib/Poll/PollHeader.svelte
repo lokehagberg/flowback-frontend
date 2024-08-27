@@ -38,7 +38,7 @@
 	<NotificationOptions
 		id={poll.id}
 		api={`group/poll/${poll.id}`}
-		categories={['poll', 'timeline', 'comments_all']}
+		categories={['poll', 'timeline', 'comment_all']}
 		labels={['Poll', 'Timeline', 'Comments']}
 	/>
 

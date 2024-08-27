@@ -242,4 +242,14 @@
 
 <!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
 
-<Schedule type="pollcreation" />
+<Schedule
+	type="pollcreation"
+	bind:start_date_poll={start_date}
+	bind:area_vote_end_date
+	bind:proposal_end_date
+	bind:prediction_statement_end_date
+	bind:prediction_bet_end_date
+	bind:delegate_vote_end_date
+	bind:vote_end_date
+	bind:end_date_poll={end_date}
+/>

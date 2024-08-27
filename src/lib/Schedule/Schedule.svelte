@@ -26,7 +26,14 @@
 
 	export let Class = '',
 		type: 'user' | 'group' | 'pollcreation',
-		advancedTimeSettingsDates:Date[] = []
+		start_date_poll: Date,
+		area_vote_end_date: Date,
+		proposal_end_date: Date,
+		prediction_statement_end_date: Date,
+		prediction_bet_end_date: Date,
+		delegate_vote_end_date: Date,
+		vote_end_date: Date,
+		end_date_poll: Date;
 
 	const months = [
 		'Jan',
@@ -64,7 +71,8 @@
 		title: string,
 		description: string,
 		event_id: number | undefined,
-		deleteSelection = () => {};
+		deleteSelection = () => {},
+		advancedTimeSettingsDates: Date[] = [];
 
 	onMount(async () => {
 		//Prevents "document not found" error
@@ -215,7 +223,35 @@
 		const draggable = new Swappable(document.getElementById('calendar'), {
 			draggable: 'swappable'
 		});
+
+		advancedTimeSettingsDates = [
+			start_date_poll,
+			area_vote_end_date,
+			proposal_end_date,
+			prediction_statement_end_date,
+			prediction_bet_end_date,
+			delegate_vote_end_date,
+			vote_end_date,
+			end_date_poll
+		];
 	};
+
+	//TODO: refactor the whole schedule and createpoll files to only use an array, which makes it easier to change the number of poll phases
+	const updateDraggables = () => {
+		// if (advancedTimeSettingsDates.length !== 8) return; 
+		// start_date_poll = advancedTimeSettingsDates[0];
+		// area_vote_end_date = advancedTimeSettingsDates[1];
+		// proposal_end_date = advancedTimeSettingsDates[2];
+		// prediction_statement_end_date = advancedTimeSettingsDates[3];
+		// prediction_bet_end_date = advancedTimeSettingsDates[4];
+		// delegate_vote_end_date = advancedTimeSettingsDates[5];
+		// vote_end_date = advancedTimeSettingsDates[6];
+		// end_date_poll = advancedTimeSettingsDates[7];
+	};
+
+	$: if (advancedTimeSettingsDates) updateDraggables();
+
+	$: start_date_poll = advancedTimeSettingsDates[0]
 
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {
@@ -330,7 +366,7 @@
 		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day bind:advancedTimeSettingsDates  {type} {x} {y} />
+					<Day bind:advancedTimeSettingsDates {type} {x} {y} />
 				{/each}
 			{/each}
 		</div>

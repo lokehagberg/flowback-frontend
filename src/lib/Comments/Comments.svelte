@@ -9,6 +9,7 @@
 	import Comment from './Comment.svelte';
 	import { commentSetup, getComments } from './functions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
+	import CommentFilter from './CommentFilter.svelte';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -19,10 +20,11 @@
 		show = false,
 		showMessage = '',
 		offset = 0,
-		showReadMore = true;
+		showReadMore = true,
+		sortBy: null | string = null;
 
 	onMount(async () => {
-		const { comments, next } = await getComments($page.params.pollId, api, offset);
+		const { comments, next } = await getComments($page.params.pollId, api, offset, );
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
 	});
@@ -48,6 +50,8 @@
 		{api}
 		{delegate_pool_id}
 	/>
+
+	<CommentFilter bind:sortBy />
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each _comments as comment}

@@ -29,16 +29,17 @@ export const getCommentDepth = (comment: Comment, comments: Comment[]): number =
 export const getComments = async (
 	id: number | string,
 	api: 'poll' | 'thread' | 'delegate-history',
-	offset = 0
+	offset = 0,
+	sortBy: string | null = null
 ) => {
 	let _api = '';
-
 	if (api === 'poll') _api += `group/poll/${id}`;
 	else if (api === 'thread') _api += `group/thread/${id}`;
 	else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
 
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
 	_api += `&offset=${offset}`;
+	if (sortBy !== null) _api += `&order_by=${sortBy}`;
 
 	const { res, json } = await fetchRequest('GET', _api);
 

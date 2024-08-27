@@ -12,6 +12,7 @@
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Fa from 'svelte-fa';
 	import { faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-icons';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -154,19 +155,9 @@
 			inputClass="bg-gray-100 h-8"
 			Class="w-full"
 		/>
-		<Button Class="px-3 mt-6 bg-white" type="submit" label="" ><Fa icon={faPaperPlane} color="black"/></Button>
+		<Button Class="px-3 mt-6 bg-white" type="submit" label=""
+			><Fa icon={faPaperPlane} color="black" /></Button
+		>
 	</div>
 	<FileUploads bind:images />
-	<!-- <ImageUpload
-		icon={faUser}
-		shouldCrop={false}
-		bind:croppedImage={image}
-		label=""
-		iconSize={'2x'}
-		Class="flex !flex-row-reverse"
-		minimalist
-	/> -->
-	<!-- {#if message !== "" || attachments.length > 0} -->
-
-	<!-- {/if} -->
 </form>

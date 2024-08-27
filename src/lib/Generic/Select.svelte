@@ -9,7 +9,8 @@
 		values: any[] = labels,
 		value = values[0],
 		Class = '',
-		classInner = '';
+		classInner = '',
+		innerLabel = "Select"
 </script>
 
 <div class={`${Class}`}>
@@ -26,7 +27,7 @@
 		class={`dark:bg-darkobject ${classInner}`}
 		bind:value
 	>
-		<option value="" disabled selected>Select Area</option>
+		<option value="" disabled selected>{innerLabel}</option>
 		{#each labels as label, i}
 			<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
 		{/each}

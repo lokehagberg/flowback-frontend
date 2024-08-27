@@ -24,14 +24,20 @@
 		sortBy: null | string = null;
 
 	onMount(async () => {
-		const { comments, next } = await getComments($page.params.pollId, api, offset, );
+		setUpComments();
+	});
+
+	$: if (sortBy || !sortBy) setUpComments();
+
+	const setUpComments = async () => {
+		const { comments, next } = await getComments($page.params.pollId, api, offset, sortBy);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
-	});
+	};
 
 	const readMore = async () => {
 		offset += pollCommentsLimit;
-		const { comments, next } = await getComments($page.params.pollId, api, offset);
+		const { comments, next } = await getComments($page.params.pollId, api, offset, sortBy);
 		_comments = _comments.concat(comments);
 		_comments = await commentSetup(_comments);
 		_comments = _comments;

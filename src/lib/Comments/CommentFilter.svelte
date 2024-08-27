@@ -12,8 +12,9 @@
 			'created_at_desc',
 			'total_replies_asc',
 			'total_replies_desc',
-			'score_asc		',
-			'score_desc'
+			'score_asc',
+			'score_desc',
+			null
 		]}
 		bind:value={sortBy}
 		labels={[
@@ -21,8 +22,9 @@
 			'created_at_desc',
 			'total_replies_asc',
 			'total_replies_desc',
-			'score_asc		',
-			'score_desc'
+			'score_asc',
+			'score_desc',
+			'cancel'
 		]}
 	/>
 	filter Sorting

@@ -35,12 +35,14 @@
 	</div>
 	<h1 class="text-left text-2xl text-primary font-bold">{poll.title}</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
-	<NotificationOptions
+
+		<NotificationOptions
 		id={poll.id}
 		api={`group/poll/${poll.id}`}
 		categories={['poll', 'timeline', 'comment_all']}
 		labels={['Poll', 'Timeline', 'Comments']}
-	/>
+		Class="justify-self-center mt-2"
+		/>
 
 	<div class="flex gap-4 items-baseline grid-area-items mt-1">
 		{#if poll.poll_type === 4}

@@ -12,7 +12,8 @@
 		categories: string[],
 		labels: string[],
 		api: string,
-		id: number;
+		id: number,
+		Class = "";
 
 	let popupMessage: string = '';
 
@@ -84,7 +85,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="notifications-clickable-region" on:click={() => {
+<div class={`${Class} notifications-clickable-region`} on:click={() => {
 	notificationOpen = !notificationOpen;
 }}
 on:keydown>

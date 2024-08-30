@@ -9,16 +9,16 @@
 		x: number,
 		y: number,
 		advancedTimeSettingsDates: Date[] = [],
-		selectedDatePosition = '0-0';
+		//A fix due to class struggle
+		selectedDatePosition = '0-0',
+		showCreateScheduleEvent = false;
 
 	const currentDate = new Date();
 
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
 		selectedDate = new Date(),
-		events: scheduledEvent[] = [],
-		showCreateScheduleEvent = false;
-	//A fix due to class struggle
+		events: scheduledEvent[] = [];
 
 	onMount(() => {
 		const today = new Date();

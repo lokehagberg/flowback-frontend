@@ -366,7 +366,7 @@
 		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day bind:selectedDatePosition bind:advancedTimeSettingsDates {type} {x} {y} />
+					<Day bind:showCreateScheduleEvent bind:selectedDatePosition bind:advancedTimeSettingsDates {type} {x} {y} />
 				{/each}
 			{/each}
 		</div>

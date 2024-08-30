@@ -8,7 +8,8 @@
 		type: 'user' | 'group' | 'pollcreation',
 		x: number,
 		y: number,
-		advancedTimeSettingsDates: Date[] = [];
+		advancedTimeSettingsDates: Date[] = [],
+		selectedDatePosition = '0-0';
 
 	const currentDate = new Date();
 
@@ -16,9 +17,8 @@
 		year = currentDate.getFullYear(),
 		selectedDate = new Date(),
 		events: scheduledEvent[] = [],
-		showCreateScheduleEvent = false,
-		//A fix due to class struggle
-		selectedDatePosition = '0-0';
+		showCreateScheduleEvent = false;
+	//A fix due to class struggle
 
 	onMount(() => {
 		const today = new Date();
@@ -96,3 +96,22 @@
 			{/if} -->
 	</div>
 </div>
+
+<style>
+	.selected {
+		box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.4) !important;
+	}
+
+	.today {
+		box-shadow: inset 0 0 0 2px var(--primary-color) !important;
+	}
+
+	.calendar-day {
+		display: flex;
+		justify-content: center;
+	}
+
+	.calendar-day:hover {
+		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.1);
+	}
+</style>

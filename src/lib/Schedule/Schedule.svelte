@@ -26,14 +26,14 @@
 
 	export let Class = '',
 		type: 'user' | 'group' | 'pollcreation',
-		start_date_poll: Date,
-		area_vote_end_date: Date,
-		proposal_end_date: Date,
-		prediction_statement_end_date: Date,
-		prediction_bet_end_date: Date,
-		delegate_vote_end_date: Date,
-		vote_end_date: Date,
-		end_date_poll: Date;
+		start_date_poll: Date = new Date(),
+		area_vote_end_date: Date = new Date(),
+		proposal_end_date: Date = new Date(),
+		prediction_statement_end_date: Date = new Date(),
+		prediction_bet_end_date: Date = new Date(),
+		delegate_vote_end_date: Date = new Date(),
+		vote_end_date: Date = new Date(),
+		end_date_poll: Date = new Date();
 
 	const months = [
 		'Jan',
@@ -238,7 +238,7 @@
 
 	//TODO: refactor the whole schedule and createpoll files to only use an array, which makes it easier to change the number of poll phases
 	const updateDraggables = () => {
-		// if (advancedTimeSettingsDates.length !== 8) return; 
+		// if (advancedTimeSettingsDates.length !== 8) return;
 		// start_date_poll = advancedTimeSettingsDates[0];
 		// area_vote_end_date = advancedTimeSettingsDates[1];
 		// proposal_end_date = advancedTimeSettingsDates[2];
@@ -251,7 +251,7 @@
 
 	$: if (advancedTimeSettingsDates) updateDraggables();
 
-	$: start_date_poll = advancedTimeSettingsDates[0]
+	$: start_date_poll = advancedTimeSettingsDates[0];
 
 	let notActivated = true;
 	$: if (showCreateScheduleEvent && notActivated) {
@@ -366,7 +366,7 @@
 		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day bind:advancedTimeSettingsDates {type} {x} {y} />
+					<Day bind:selectedDatePosition bind:advancedTimeSettingsDates {type} {x} {y} />
 				{/each}
 			{/each}
 		</div>
@@ -451,22 +451,5 @@
     on the header, 40px from the height of each symbol/the logo on the header, and 
     28 px for the controlls on the calendar. This scuffed solution might need to be improved */
 		height: calc(100vh - 2rem - 40px - 28px);
-	}
-
-	.calendar-day {
-		display: flex;
-		justify-content: center;
-	}
-
-	.today {
-		box-shadow: inset 0 0 0 2px var(--primary-color) !important;
-	}
-
-	.selected {
-		box-shadow: inset 0 0 2px 3px var(--secondary-color) !important;
-	}
-
-	.calendar-day:hover {
-		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.1);
 	}
 </style>

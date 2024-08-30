@@ -43,7 +43,6 @@
 		labels={['Poll', 'Timeline', 'Comments']}
 		Class="justify-self-center mt-2"
 		/>
-
 	<div class="flex gap-4 items-baseline grid-area-items mt-1">
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->

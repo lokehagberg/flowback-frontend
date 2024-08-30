@@ -40,7 +40,6 @@
 		},
 		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },
-		// { title: 'Tools', action: () => (open_tools = true) },
 		{ title: 'Log Out', action: logOut }
 	];
 

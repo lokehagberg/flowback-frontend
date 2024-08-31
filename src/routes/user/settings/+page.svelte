@@ -66,6 +66,7 @@
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
 					<li>Profile</li>
+					<!-- TODO: Create generic list of lists with checkbox component -->
 				{:else if selectedPage === 'notifications'}
 					Notify me when...
 					{#each notificationSettingsTitles as title, i}
@@ -82,8 +83,8 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process'}
-				<span class="text-xl text-primary font-bold">Poll Phases</span>
-				<span>Select the phases you want to participate in.</span>
+					<span class="text-xl text-primary font-bold">Poll Phases</span>
+					<span>Select the phases you want to participate in.</span>
 					{#each pollSettings[0] as setting}
 						<li class="flex justify-between">
 							<span>{setting}</span>

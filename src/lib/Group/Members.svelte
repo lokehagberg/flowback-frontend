@@ -15,6 +15,8 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -105,21 +107,31 @@
 	>
 		<Tab
 			bind:selectedPage
-			tabs={env.PUBLIC_ONE_GROUP_FLOWBACK ? ['Members'] : ['Members', 'Pending Invites', 'Invite']}
+			tabs={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
+				? ['Members']
+				: ['Members', 'Pending Invites', 'Invite']}
 		/>
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}
-					<a
-						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
-						href={`/user?id=${user.user.id}`}
-					>
+					<div class="flex justify-between items-center">
 						<ProfilePicture
 							username={user.user.username}
 							profilePicture={user.user.profile_image}
+							displayName
 						/>
-						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
-					</a>
+						<div class="bg-gray-300 px-2 py-0.5 rounded-lg">
+							{user.permission_name}
+						</div>
+						<div
+							on:click={() => goto(`/user?id=${user.user.id}`)}
+							on:keydown
+							tabindex="0"
+							role="button"
+						>
+							<Fa icon={faPaperPlane} rotate="60" />
+						</div>
+					</div>
 				{/each}
 			</div>
 		{:else if selectedPage === 'Pending Invites' && users.length > 0}

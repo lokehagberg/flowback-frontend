@@ -172,8 +172,10 @@
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText">
-				<span class="text-xl text-primary font-bold">{user.username}</span>
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[50%]">
+				<div class="text-xl text-primary font-bold max-w-[600px] break-words">
+					{user.username}
+				</div>
 				<p class=" whitespace-pre-wrap">
 					{user.bio || $_('This user has no bio')}
 				</p>
@@ -184,8 +186,8 @@
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}
 				</a>
-				<div>Phone</div>
-				<div>thiny</div>
+				<div>Phone number: 0764446252</div>
+				<div>Thing</div>
 			</div>
 		</div>
 		<!-- Editing your own profile -->

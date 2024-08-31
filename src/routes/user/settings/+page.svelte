@@ -16,6 +16,16 @@
 			],
 			['a task is assigned to you', "a task's priority is changed", "a task's status is changed"],
 			['a new thread is created', 'a new poll is created', 'someone votes on my comment']
+		],
+		pollSettings = [
+			[
+				'Area voting',
+				'Proposal creation',
+				'Prediction statement creation',
+				'Prediction betting',
+				'Delegate voting',
+				'Voting'
+			]
 		];
 </script>
 
@@ -53,11 +63,11 @@
 			</ul>
 		</div>
 		<div class="bg-white p-6 w-[400px]">
-			Notify me when...
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
-					<li>one</li>
+					<li>Profile</li>
 				{:else if selectedPage === 'notifications'}
+					Notify me when...
 					{#each notificationSettingsTitles as title, i}
 						<li>
 							<span class="text-xl text-primary font-bold">{title}</span>
@@ -72,7 +82,14 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process'}
-					<li>three</li>
+				<span class="text-xl text-primary font-bold">Poll Phases</span>
+				<span>Select the phases you want to participate in.</span>
+					{#each pollSettings[0] as setting}
+						<li class="flex justify-between">
+							<span>{setting}</span>
+							<input type="checkbox" />
+						</li>
+					{/each}
 				{/if}
 			</ul>
 		</div>

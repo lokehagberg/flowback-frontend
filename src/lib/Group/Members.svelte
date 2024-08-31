@@ -114,8 +114,9 @@
 		{#if selectedPage === 'Members' && users.length > 0}
 			<div class="w-full p-6 flex flex-col gap-6">
 				{#each users as user}
-					<div class="flex justify-between items-center">
+					<div class="flex items-center ">
 						<ProfilePicture
+						Class="w-[30%]"
 							username={user.user.username}
 							profilePicture={user.user.profile_image}
 							displayName
@@ -128,6 +129,7 @@
 							on:keydown
 							tabindex="0"
 							role="button"
+							Class="right-6 absolute"
 						>
 							<Fa icon={faPaperPlane} rotate="60" />
 						</div>

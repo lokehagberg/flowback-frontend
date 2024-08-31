@@ -184,7 +184,7 @@
 <SuccessPoppup bind:show={showSuccessPoppup} />
 
 <div
-	class={'bg-white dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
+	class={' dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
 	<!-- <Filter
@@ -201,7 +201,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl bg-white"
+					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl "
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
@@ -236,7 +236,7 @@
 							Assignee
 							<select
 								on:input={handleChangeAssignee}
-								class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+								class="rounded-sm p-1 border  border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
@@ -247,7 +247,7 @@
 					<div class="text-left">
 						{$_('Priority')}
 						<select
-							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							class="rounded-sm p-1 border  border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							on:input={handleChangePriority}
 							value={priority}
 						>

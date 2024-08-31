@@ -51,7 +51,7 @@
 <!-- TODO: Relative works great for phones -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class:invisible={!sideHeaderOpen}
+	class:hidden={!sideHeaderOpen}
 	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
 	id="side-header"
 	on:click={() => (sideHeaderOpen = !sideHeaderOpen)}

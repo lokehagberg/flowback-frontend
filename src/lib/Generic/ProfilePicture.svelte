@@ -24,7 +24,7 @@
 	{/if}
 
 	{#if displayName}
-		{username}
+		<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis">{username}</span>
 	{/if}
 </div>
 

@@ -26,7 +26,7 @@
 	import Description from './Description.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -39,7 +39,7 @@
 		selectedTag: number,
 		darkMode: boolean,
 		voting = true,
-		poppup:poppup;
+		poppup: poppup;
 
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
@@ -55,7 +55,7 @@
 		});
 
 		if (!res.ok) {
-			poppup = {message:"Could not submit tag vote", success:false}
+			poppup = { message: 'Could not submit tag vote', success: false };
 			return;
 		}
 
@@ -110,9 +110,9 @@
 					<span class="inline">{poll.group_name}</span>
 					<img
 						class="h-8 w-8 inline rounded-full"
-						src={`${env.PUBLIC_API}${
-							env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-						}${poll.group_image}`}
+						src={`${env.PUBLIC_API}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+							poll.group_image
+						}`}
 						on:error={(e) => onThumbnailError(e, DefaultBanner)}
 						alt={'Poll Thumbnail'}
 					/>
@@ -154,19 +154,17 @@
 				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 			/>
 		{/if}
-		<div
-			class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
+
+		<a
+			class="flex gap-1 items-center text-black dark:text-darkmodeText hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm "
+			href={onHoverGroup
+				? '/groups/1'
+				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
 		>
-			<a
-				class="text-black dark:text-darkmodeText"
-				href={onHoverGroup
-					? '/groups/1'
-					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
-			>
-				<Fa class="inline" icon={faComment} />
-				<span class="inline">{poll.total_comments}</span>
-			</a>
-		</div>
+			<Fa class="inline" icon={faComment} />
+			<span class="inline">{poll.total_comments}</span>
+		</a>
+
 		<Tag
 			tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 			Class="inline cursor-default"
@@ -183,7 +181,10 @@
 	<div class="!mt-4">
 		<!-- Area Voting -->
 		{#if phase === 'area_vote'}
-			<form on:submit|preventDefault={() => submitTagVote(selectedTag)} class="flex justify-between">
+			<form
+				on:submit|preventDefault={() => submitTagVote(selectedTag)}
+				class="flex justify-between"
+			>
 				<Select
 					label={''}
 					labels={tags.map((tag) => tag.name)}
@@ -231,7 +232,7 @@
 	</div>
 </div>
 
-<Poppup bind:poppup/>
+<Poppup bind:poppup />
 
 <style>
 	.poll-thumbnail-shadow {

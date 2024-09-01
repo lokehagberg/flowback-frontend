@@ -26,7 +26,7 @@
 	import { env } from '$env/dynamic/public';
 
 	let sideHeaderOpen = false,
-		profileImage = DefaultPFP,
+		profileImage: string | null = DefaultPFP,
 		darkMode: boolean = false,
 		isAdmin = false,
 		ledgerExists = true;
@@ -49,7 +49,10 @@
 		if (!profileImage) getProfileImage();
 		else {
 			const pfpLink = localStorage.getItem('pfp-link');
-			if (pfpLink) profileImage = pfpLink;
+			console.log(typeof pfpLink, 'PFPLINK');
+
+			if (pfpLink !== 'null') profileImage = pfpLink;
+			else profileImage = null;
 		}
 	};
 
@@ -65,10 +68,6 @@
 		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 			darkMode = true;
 		} else darkMode = false;
-
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-			// darkMode = event.matches;
-		});
 	};
 
 	const getProfileImage = async () => {

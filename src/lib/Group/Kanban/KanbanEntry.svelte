@@ -213,8 +213,8 @@
 			on:keydown
 		>
 			<ProfilePicture
-				username={kanban.assignee.username || ''}
-				profilePicture={kanban.assignee.profile_image || ''}
+				username={kanban.assignee.username}
+				profilePicture={kanban.assignee.profile_image}
 				Class=""
 			/>
 			<div class="break-all text-xs">

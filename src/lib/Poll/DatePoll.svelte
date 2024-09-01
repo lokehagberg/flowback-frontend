@@ -144,8 +144,8 @@
 	</div>
 </Modal>
 
-<Grid >
-
+<Grid x={7} y={23} >
+	
 </Grid>
 
 <!-- <ScheduleXCalendar {calendarApp} eventModal={T} /> -->

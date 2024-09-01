@@ -10,7 +10,7 @@
 	import { onMount } from 'svelte';
 	import { ScheduleXCalendar } from '@schedule-x/svelte';
 	import '@schedule-x/theme-default/dist/index.css';
-	import T from '$lib/Group/Creation/T.svelte'
+	import T from '$lib/Group/Creation/T.svelte';
 	import {
 		createCalendar,
 		createViewDay,
@@ -18,6 +18,7 @@
 		createViewMonthGrid,
 		createViewMonthAgenda
 	} from '@schedule-x/calendar';
+	import Grid from '$lib/Generic/Grid.svelte';
 
 	let open = false,
 		date: Date,
@@ -25,7 +26,7 @@
 		daysFormatting = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
 		votes: number[] = [];
 
-		const calendarApp = createCalendar({
+	const calendarApp = createCalendar({
 		views: [createViewWeek()],
 		events: [
 			{
@@ -93,8 +94,6 @@
 		getProposals();
 		getProposalVote();
 	});
-
-	
 </script>
 
 <div class="flex">
@@ -145,5 +144,8 @@
 	</div>
 </Modal>
 
+<Grid >
+
+</Grid>
 
 <!-- <ScheduleXCalendar {calendarApp} eventModal={T} /> -->

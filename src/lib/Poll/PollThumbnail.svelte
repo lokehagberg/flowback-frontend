@@ -124,6 +124,7 @@
 				api={`group/poll/${poll.id}`}
 				categories={['poll', 'timeline', 'comment_all']}
 				labels={['Poll', 'Timeline', 'Comments']}
+				Class="text-black"
 			/>
 			{#if isAdmin || poll.pinned}
 				<!-- svelte-ignore a11y-no-static-element-interactions -->

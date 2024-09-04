@@ -63,11 +63,8 @@
 					role="button"
 					tabindex="0"
 				>
-					{date}
-					{selectedDates}
 					{#key selectedDates}
-					{selectedDates.findIndex((_date) => _date === date)}
-						{#if selectedDates.find((_date) => _date === date)}zzz
+						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
 							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>
 						{:else}
 							<slot {i} {j} />

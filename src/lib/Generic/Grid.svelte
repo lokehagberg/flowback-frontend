@@ -50,7 +50,9 @@
 					on:click={() => {
 						// clicked.push([i, j]);
 						// clicked = clicked;
-						selectedDates.push(date);
+						const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime())
+						if (before) selectedDates = selectedDates.filter(_date => _date?.getTime() !== date?.getTime())
+						else selectedDates.push(date);
 						selectedDates = selectedDates;
 						console.log(
 							date,

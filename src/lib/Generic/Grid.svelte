@@ -11,12 +11,13 @@
 
 	let clicked = [[1, 1]],
 		selectedDates: Date[] = [],
-		week: number = getWeek(new Date()),
+		weekOffset: number = 0,
 		year: number = new Date().getFullYear(),
+		initialMonday: Date,
 		monday: Date;
 
 	onMount(() => {
-		monday = getRecentMonday(new Date());
+		initialMonday = getRecentMonday(new Date());
 	});
 
 	const getRecentMonday = (d: Date) => {
@@ -25,55 +26,59 @@
 
 		return new Date(d.getFullYear(), month, mondayOffset);
 	};
+
+	const toggleDate = (date: Date) => {
+		const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime());
+		if (before)
+			selectedDates = selectedDates.filter((_date) => _date?.getTime() !== date?.getTime());
+		else selectedDates.push(date);
+
+		selectedDates = selectedDates
+	};
+
+	$: monday = getRecentMonday(new Date(initialMonday?.getFullYear(), initialMonday?.getMonth(), initialMonday?.getDate() - weekOffset*7))
+
+	$: gridDates = Array.from({ length: y }, (_, j) =>
+		Array.from(
+			{ length: x },
+			(_, i) => new Date(monday?.getFullYear(), monday?.getMonth(), monday?.getDate() + i, j)
+		)
+	);
 </script>
 
 <button on:click={() => year++}>year up</button>
 <button on:click={() => year--}>year down</button>
-<button on:click={() => week++}>week up</button>
-<button on:click={() => week--}>week down</button>
+<button on:click={() => weekOffset++}>week up</button>
+<button on:click={() => weekOffset--}>week down</button>
 
 {year}
-{week}
+{weekOffset}
 
 {selectedDates.length}
-
-{#if monday}
-	<div
-		class="grid"
-		style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
-	>
-		{#each { length: y } as _, j}
-			{#each { length: x } as _, i}
-				{@const date = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i, j)}
-				<div
-					class="border p-4"
-					on:click={() => {
-						// clicked.push([i, j]);
-						// clicked = clicked;
-						const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime())
-						if (before) selectedDates = selectedDates.filter(_date => _date?.getTime() !== date?.getTime())
-						else selectedDates.push(date);
-						selectedDates = selectedDates;
-						console.log(
-							date,
-							selectedDates,
-							'CAN YOU HERE THE BEAT?',
-							selectedDates.find((_date) => _date === date)
-						);
-					}}
-					on:keydown
-					role="button"
-					tabindex="0"
-				>
-					{#key selectedDates}
+{#key weekOffset}
+	{#if monday}
+		<div
+			class="grid"
+			style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+		>
+			{#each gridDates as row, j}
+				{#each row as date, i}
+			
+					<div
+						class="border p-4"
+						on:click={() => toggleDate(date)}
+						on:keydown
+						role="button"
+						tabindex="0"
+					>	{date}
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
 							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>
 						{:else}
 							<slot {i} {j} />
 						{/if}
-					{/key}
-				</div>
+					</div>
+				{/each}
 			{/each}
-		{/each}
-	</div>
-{/if}
+		</div>
+	{/if}
+{/key}

@@ -83,6 +83,7 @@
 		const draggable = new Swappable(document.getElementById('monthView'), {
 			draggable: 'swappable'
 		});
+
 	};
 
 	onMount(() => {

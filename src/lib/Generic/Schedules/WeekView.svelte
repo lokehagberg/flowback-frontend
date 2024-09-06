@@ -11,8 +11,7 @@
 	// w = 200,
 	// h = 300;
 
-	let clicked = [[1, 1]],
-		selectedDates: Date[] = [],
+	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
 		year: number = new Date().getFullYear(),
 		initialMonday: Date,

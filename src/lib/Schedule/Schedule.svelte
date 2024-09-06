@@ -157,7 +157,7 @@
 
 		if (!res.ok) {
 			status = statusMessageFormatter(res, json);
-			console.log(status);
+			console.warn(status);
 			return;
 		}
 

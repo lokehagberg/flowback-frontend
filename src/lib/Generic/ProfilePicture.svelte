@@ -30,9 +30,3 @@
 	{/if}
 </div>
 
-<style>
-	/* Not used in this file but can be used by the exported class variable */
-	.small-pfp > img {
-		/* padding: 10px; */
-	}
-</style>

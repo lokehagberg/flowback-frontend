@@ -28,6 +28,7 @@
 	import { env } from '$env/dynamic/public';
 	import { ScheduleXCalendar } from '@schedule-x/svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
+	import MonthView from '$lib/Generic/Schedules/MonthView.svelte';
 
 	let title = '',
 		description = '',
@@ -241,6 +242,19 @@
 </form>
 
 <!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
+
+<MonthView
+	bind:start_date
+	bind:area_vote_end_date
+	bind:proposal_end_date
+	bind:prediction_statement_end_date
+	bind:prediction_bet_end_date
+	bind:delegate_vote_end_date
+	bind:vote_end_date
+	bind:end_date
+/>
+
+
 
 <Schedule
 	type="pollcreation"

@@ -1,18 +1,24 @@
 <script lang="ts">
 	import { faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { getMonday, getWeek } from '../Dates';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 
-	export let x = 10,
-		y = 10;
+	export let x = 7,
+		y = 7,
+		start_date,
+		area_vote_end_date,
+		proposal_end_date,
+		prediction_statement_end_date,
+		prediction_bet_end_date,
+		delegate_vote_end_date,
+		vote_end_date,
+		end_date;
 	// w = 200,
 	// h = 300;
 
-	let clicked = [[1, 1]],
-		selectedDates: Date[] = [],
+	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
 		year: number = new Date().getFullYear(),
 		initialMonday: Date,
@@ -72,6 +78,17 @@
 		let output = await Promise.allSettled(array);
 	};
 
+	const setUpDraggable = async () => {
+		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+		const draggable = new Swappable(document.getElementById('monthView'), {
+			draggable: 'swappable'
+		});
+	};
+
+	onMount(() => {
+		setUpDraggable();
+	});
+
 	$: monday = getRecentMonday(
 		new Date(
 			initialMonday?.getFullYear(),
@@ -83,7 +100,7 @@
 	$: gridDates = Array.from({ length: y }, (_, j) =>
 		Array.from(
 			{ length: x },
-			(_, i) => new Date(monday?.getFullYear(), monday?.getMonth(), monday?.getDate() + i, j)
+			(_, i) => new Date(monday?.getFullYear(), monday?.getMonth(), monday?.getDate() + i + j * 7)
 		)
 	);
 </script>
@@ -97,28 +114,30 @@
 {year}
 {weekOffset}
 
-{selectedDates.length}
 {#key weekOffset}
 	{#if monday}
 		<div
 			class="grid"
 			style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+			id="monthView"
 		>
 			{#each gridDates as row, j}
 				{#each row as date, i}
-					<div
-						class="border p-4"
-						on:click={() => toggleDate(date)}
-						on:keydown
-						role="button"
-						tabindex="0"
-					>
+					<div class="border p-4" on:keydown role="button" tabindex="0">
 						{date}
+
+						<swappable
+							id={`${x}-${y}-draggable`}
+							class="py-5 px-1"
+							class:!bg-blue-600={true && date.getDate() === 10}
+						/>
+						<!--
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
 							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>
 						{:else}
 							<slot {i} {j} />
 						{/if}
+					-->
 					</div>
 				{/each}
 			{/each}

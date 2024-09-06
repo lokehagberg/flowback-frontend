@@ -18,7 +18,7 @@
 		createViewMonthGrid,
 		createViewMonthAgenda
 	} from '@schedule-x/calendar';
-	import Grid from '$lib/Generic/Grid.svelte';
+	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
 
 	let open = false,
 		date: Date,
@@ -144,8 +144,8 @@
 	</div>
 </Modal>
 
-<Grid x={7} y={23} >
+<WeekView x={7} y={23} >
 	
-</Grid>
+</WeekView>
 
 <!-- <ScheduleXCalendar {calendarApp} eventModal={T} /> -->

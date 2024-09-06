@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { getMonday, getWeek } from './Dates';
+	import { getMonday, getWeek } from '../Dates';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';

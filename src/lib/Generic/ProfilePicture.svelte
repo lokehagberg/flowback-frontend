@@ -7,30 +7,31 @@
 		//TODO: Always display username, replace all instance of username with this file
 		displayName = false,
 		Class = '',
-		size = 6;
+		size:number|null = null;
 </script>
 
-<div class={`flex gap-2 ${Class}`}>
+<div class={`flex gap-2 ${Class} w-[${size}px] h-[${size}px]`}>
 	{#if profilePicture === null}
-		<img src={DefaultPFP} alt="avatar" class={`w-${size} h-${size} rounded-full`} />
+		<img src={DefaultPFP} alt="avatar" class={`max-w-[${size}px] max-h-[${size}px] rounded-full`} />
 	{:else}
 		<img
 			src={`${env.PUBLIC_API_URL}${
 				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
 			}${profilePicture}`}
 			alt="avatar"
-			class={`w-${size} h-${size} rounded-full`}
+			class={`w-[40px] h-[40px] rounded-full`}
 		/>
 	{/if}
 
 	{#if displayName}
-		<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis">{username}</span>
+		<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis">{username}</span
+		>
 	{/if}
 </div>
 
 <style>
 	/* Not used in this file but can be used by the exported class variable */
 	.small-pfp > img {
-		padding: 10px;
+		/* padding: 10px; */
 	}
 </style>

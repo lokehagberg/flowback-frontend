@@ -70,7 +70,6 @@
 		});
 
 		let output = await Promise.allSettled(array);
-		console.log(output);
 	};
 
 	$: monday = getRecentMonday(

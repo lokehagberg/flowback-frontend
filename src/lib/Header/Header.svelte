@@ -177,7 +177,7 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
-						src={profileImage ? `${env.PUBLIC_API}${profileImage}` : DefaultPFP}
+						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
 						class={`w-8 h-8 rounded-full cursor-pointer ${
 							sideHeaderOpen && 'border-blue-500 border-4'
 						}`}

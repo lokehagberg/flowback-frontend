@@ -121,7 +121,7 @@
 		const now = new Date();
 		start_date = new Date();
 		start_date.setHours(0,0,0,0)
-		console.log(start_date);
+		
 		
 
 		//For debug purposes this puts one minute delay between each phase.
@@ -241,7 +241,7 @@
 />
 
 
-
+<!-- 
 <Schedule
 	type="pollcreation"
 	bind:start_date_poll={start_date}
@@ -252,4 +252,4 @@
 	bind:delegate_vote_end_date
 	bind:vote_end_date
 	bind:end_date_poll={end_date}
-/>
+/> -->

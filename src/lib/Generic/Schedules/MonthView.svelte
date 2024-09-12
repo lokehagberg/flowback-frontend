@@ -8,13 +8,13 @@
 	export let x = 7,
 		y = 7,
 		start_date: Date,
-		area_vote_end_date,
-		proposal_end_date,
-		prediction_statement_end_date,
-		prediction_bet_end_date,
-		delegate_vote_end_date,
-		vote_end_date,
-		end_date;
+		area_vote_end_date: Date,
+		proposal_end_date: Date,
+		prediction_statement_end_date: Date,
+		prediction_bet_end_date: Date,
+		delegate_vote_end_date: Date,
+		vote_end_date: Date,
+		end_date: Date;
 	// w = 200,
 	// h = 300;
 
@@ -39,6 +39,8 @@
 			vote_end_date,
 			end_date
 		];
+		dates.map((date) => date.setHours(0, 0, 0, 0));
+		dates = dates;
 	});
 
 	const getRecentMonday = (d: Date) => {
@@ -92,26 +94,60 @@
 	};
 
 	const setUpDraggable = async () => {
-		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
+		const { Swappable } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('monthView'), {
 			draggable: 'swappable'
 		});
 
 		draggable.on('drag:stop', (e: any) => {
-			console.log(e.source.parentElement);
-			console.log(e.source.parentElement.id[0]);
+			// console.log(e.source.parentElement);
+			// console.log(e.source.parentElement.id[0]);
 			let x: string = e.source.parentElement.id[0];
 			let y: string = e.source.parentElement.id[2];
-			console.log(e.originalSource);
+			console.log(e.originalSource.id);
 
 			// tick();
-			start_date = new Date(
+			const newDate = new Date(
 				monday?.getFullYear(),
 				monday?.getMonth(),
 				monday?.getDate() + Number(x) + Number(y) * 7
 			);
 
-			console.log(start_date, monday, x, y);
+			//TODO: General refactor on phases so it only uses arrays for dynamic number of phases
+			//Note: Do not do code like this like ever.
+
+			switch (e.originalSource.id) {
+				case '0':
+					start_date = newDate;
+					break;
+				case '1':
+					area_vote_end_date = newDate;
+					break;
+				case '2':
+					proposal_end_date = newDate;
+					break;
+				case '3':
+					prediction_statement_end_date = newDate;
+					break;
+				case '4':
+					prediction_bet_end_date = newDate;
+					break;
+				case '5':
+					delegate_vote_end_date = newDate;
+					break;
+				case '6':
+					vote_end_date = newDate;
+					break;
+				case '7':
+					end_date = newDate;
+					break;
+				default:
+					break;
+			}
+
+			// start_date =
+
+			// console.log(start_date, monday, x, y);
 		});
 	};
 
@@ -153,6 +189,7 @@
 		>
 			{#each gridDates as row, j}
 				{#each row as date, i}
+					{@const index = dates.findIndex((_date) => _date.getTime() === date.getTime())}
 					<div id={`${i}-${j}-draggable`} class="border p-4" on:keydown role="button" tabindex="0">
 						{date}
 						{new Date(dates[0]?.getFullYear(), dates[0]?.getMonth(), dates[0]?.getDate())}
@@ -163,11 +200,8 @@
 								start_date.getDate()
 							).getTime()}
 
-						{dates.find((_date) => _date.getTime() === date.getTime())}
-						{date.getTime()}
-
 						<swappable
-							id={'start_date'}
+							id={index}
 							class="py-5 px-5"
 							class:!bg-blue-600={mounted &&
 								date.getTime() ===
@@ -175,8 +209,8 @@
 										dates.find((_date) => _date.getTime() === date.getTime())?.getFullYear() || 0,
 										dates.find((_date) => _date.getTime() === date.getTime())?.getMonth() || 0,
 										dates.find((_date) => _date.getTime() === date.getTime())?.getDate()
-									).getTime()}
-						/>
+									)?.getTime()}><span id={index?.toString()} /></swappable
+						>
 						<!--
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
 							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>

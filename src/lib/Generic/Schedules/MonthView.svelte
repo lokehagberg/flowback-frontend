@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 
 	export let x = 7,
 		y = 7,
-		start_date,
+		start_date: Date,
 		area_vote_end_date,
 		proposal_end_date,
 		prediction_statement_end_date,
@@ -22,10 +22,23 @@
 		weekOffset: number = 0,
 		year: number = new Date().getFullYear(),
 		initialMonday: Date,
-		monday: Date;
+		monday: Date,
+		mounted: boolean,
+		dates: Date[] = [];
 
 	onMount(() => {
+		mounted = true;
 		initialMonday = getRecentMonday(new Date());
+		dates = [
+			start_date,
+			area_vote_end_date,
+			proposal_end_date,
+			prediction_statement_end_date,
+			prediction_bet_end_date,
+			delegate_vote_end_date,
+			vote_end_date,
+			end_date
+		];
 	});
 
 	const getRecentMonday = (d: Date) => {
@@ -84,6 +97,22 @@
 			draggable: 'swappable'
 		});
 
+		draggable.on('drag:stop', (e: any) => {
+			console.log(e.source.parentElement);
+			console.log(e.source.parentElement.id[0]);
+			let x: string = e.source.parentElement.id[0];
+			let y: string = e.source.parentElement.id[2];
+			console.log(e.originalSource);
+
+			// tick();
+			start_date = new Date(
+				monday?.getFullYear(),
+				monday?.getMonth(),
+				monday?.getDate() + Number(x) + Number(y) * 7
+			);
+
+			console.log(start_date, monday, x, y);
+		});
 	};
 
 	onMount(() => {
@@ -124,13 +153,29 @@
 		>
 			{#each gridDates as row, j}
 				{#each row as date, i}
-					<div class="border p-4" on:keydown role="button" tabindex="0">
+					<div id={`${i}-${j}-draggable`} class="border p-4" on:keydown role="button" tabindex="0">
 						{date}
+						{new Date(dates[0]?.getFullYear(), dates[0]?.getMonth(), dates[0]?.getDate())}
+						{date.getTime() ===
+							new Date(
+								start_date.getFullYear(),
+								start_date.getMonth(),
+								start_date.getDate()
+							).getTime()}
+
+						{dates.find((_date) => _date.getTime() === date.getTime())}
+						{date.getTime()}
 
 						<swappable
-							id={`${x}-${y}-draggable`}
-							class="py-5 px-1"
-							class:!bg-blue-600={true && date.getDate() === 10}
+							id={'start_date'}
+							class="py-5 px-5"
+							class:!bg-blue-600={mounted &&
+								date.getTime() ===
+									new Date(
+										dates.find((_date) => _date.getTime() === date.getTime())?.getFullYear() || 0,
+										dates.find((_date) => _date.getTime() === date.getTime())?.getMonth() || 0,
+										dates.find((_date) => _date.getTime() === date.getTime())?.getDate()
+									).getTime()}
 						/>
 						<!--
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}

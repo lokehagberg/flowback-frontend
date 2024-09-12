@@ -21,6 +21,7 @@
 	const handleSelectTemplate = (template: template) => {
 		const now = new Date().getTime();
 		start_date = new Date();
+		start_date.setHours(0,0,0,0)
 
 		area_vote_end_date = new Date(now + template.area_vote_time_delta);
 		proposal_end_date = new Date(area_vote_end_date.getTime() + template.proposal_time_delta);
@@ -42,6 +43,7 @@
 	const changeDaysBetweenPhases = () => {
 		const now = new Date();
 		start_date = new Date();
+		start_date.setHours(0,0,0,0)
 
 		//For debug purposes this puts one minute delay between each phase.
 		if (daysBetweenPhases === 0) {

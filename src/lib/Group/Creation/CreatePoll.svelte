@@ -116,9 +116,13 @@
 		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
 
+	//TODO: Refactor so arbitrary number of phases can be done
 	const changeDaysBetweenPhases = () => {
 		const now = new Date();
 		start_date = new Date();
+		start_date.setHours(0,0,0,0)
+		console.log(start_date);
+		
 
 		//For debug purposes this puts one minute delay between each phase.
 		if (daysBetweenPhases === 0) {
@@ -140,24 +144,6 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
-
-	const calendarApp = createCalendar({
-		views: [createViewMonthAgenda()],
-		events: [
-			{
-				id: '1',
-				title: 'Event 1',
-				start: '2024-07-06',
-				end: '2024-07-06'
-			},
-			{
-				id: '2',
-				title: 'Event 2',
-				start: '2024-07-06 02:00',
-				end: '2024-07-06 04:00'
-			}
-		]
-	});
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 </script>

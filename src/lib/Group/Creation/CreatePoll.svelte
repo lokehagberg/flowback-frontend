@@ -122,8 +122,6 @@
 		start_date = new Date();
 		start_date.setHours(0,0,0,0)
 		
-		
-
 		//For debug purposes this puts one minute delay between each phase.
 		if (daysBetweenPhases === 0) {
 			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
@@ -239,17 +237,3 @@
 	bind:vote_end_date
 	bind:end_date
 />
-
-
-<!-- 
-<Schedule
-	type="pollcreation"
-	bind:start_date_poll={start_date}
-	bind:area_vote_end_date
-	bind:proposal_end_date
-	bind:prediction_statement_end_date
-	bind:prediction_bet_end_date
-	bind:delegate_vote_end_date
-	bind:vote_end_date
-	bind:end_date_poll={end_date}
-/> -->

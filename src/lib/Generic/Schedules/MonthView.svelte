@@ -50,49 +50,6 @@
 		return new Date(d.getFullYear(), month, mondayOffset);
 	};
 
-	const toggleDate = (date: Date) => {
-		const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime());
-		if (before)
-			selectedDates = selectedDates.filter((_date) => _date?.getTime() !== date?.getTime());
-		else selectedDates.push(date);
-
-		selectedDates = selectedDates;
-	};
-
-	const saveSelection = async () => {
-		const array = selectedDates.map(async (date) => {
-			const start_date = date;
-			const end_date = new Date(
-				date.getFullYear(),
-				date.getMonth(),
-				date.getDate(),
-				date.getHours() + 1
-			);
-
-			try {
-				const { res, json } = await fetchRequest(
-					'POST',
-					`group/poll/${$page.params.pollId}/proposal/create`,
-					{
-						start_date,
-						end_date
-					}
-				);
-			} catch {
-				const { res, json } = await fetchRequest(
-					'POST',
-					`group/poll/${$page.params.pollId}/proposal/vote/update`,
-					{
-						start_date,
-						end_date
-					}
-				);
-			}
-		});
-
-		let output = await Promise.allSettled(array);
-	};
-
 	const setUpDraggable = async () => {
 		const { Swappable } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('monthView'), {
@@ -175,12 +132,11 @@
 <button on:click={() => year--}>year down</button>
 <button on:click={() => weekOffset++}>week up</button>
 <button on:click={() => weekOffset--}>week down</button>
-<button on:click={saveSelection}>le submit</button>
 
 {year}
 {weekOffset}
 
-{#key weekOffset}
+<!-- {#key weekOffset} -->
 	{#if monday}
 		<div
 			class="grid"
@@ -223,4 +179,4 @@
 			{/each}
 		</div>
 	{/if}
-{/key}
+<!-- {/key} -->

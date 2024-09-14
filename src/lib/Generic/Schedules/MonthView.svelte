@@ -147,15 +147,16 @@
 				{#each row as date, i}
 					{@const index = dates.findIndex((_date) => _date.getTime() === date.getTime())}
 					<div id={`${i}-${j}-draggable`} class="border p-4" on:keydown role="button" tabindex="0">
-						{date}
+						<!-- {date}
 						{new Date(dates[0]?.getFullYear(), dates[0]?.getMonth(), dates[0]?.getDate())}
 						{date.getTime() ===
 							new Date(
 								start_date.getFullYear(),
 								start_date.getMonth(),
 								start_date.getDate()
-							).getTime()}
+							).getTime()} -->
 
+							{date.getDate()}
 						<swappable
 							id={index}
 							class="py-5 px-5"

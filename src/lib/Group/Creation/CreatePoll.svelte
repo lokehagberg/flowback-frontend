@@ -53,6 +53,8 @@
 
 	const groupId = $page.url.searchParams.get('id');
 
+	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
+
 	const createPoll = async () => {
 		loading = true;
 		const formData = new FormData();
@@ -120,8 +122,8 @@
 	const changeDaysBetweenPhases = () => {
 		const now = new Date();
 		start_date = new Date();
-		start_date.setHours(0,0,0,0)
-		
+		start_date.setHours(0, 0, 0, 0);
+
 		//For debug purposes this puts one minute delay between each phase.
 		if (daysBetweenPhases === 0) {
 			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
@@ -142,8 +144,6 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
-
-	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 </script>
 
 <form

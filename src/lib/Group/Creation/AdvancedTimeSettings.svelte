@@ -21,6 +21,8 @@
 	let daysBetweenPhases = 1,
 		calendarView = '1';
 
+	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
+
 	const handleSelectTemplate = (template: template) => {
 		const now = new Date().getTime();
 		start_date = new Date();
@@ -40,8 +42,6 @@
 		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
 		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
 	};
-
-	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
 	const changeDaysBetweenPhases = () => {
 		const now = new Date();
@@ -68,8 +68,6 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
-
-	$: console.log('calendarView', calendarView);
 </script>
 
 {#if advancedTimeSettings}
@@ -77,7 +75,7 @@
 		<RadioButtons2
 			name="advancedTimeSettingChoice"
 			bind:value={calendarView}
-			values={["1", "0"]}
+			values={['1', '0']}
 			labels={['Schedule', 'Nah']}
 		/>
 		{#if calendarView === '1'}
@@ -93,88 +91,90 @@
 			/>
 		{:else if calendarView === '0'}
 			<div class="grid grid-cols-2 gap-6 justify-center">
-				<h2 class="mt-4">{$_('Poll start')}</h2>
-				<DateInput
-					format="yyyy-MM-dd HH:mm"
-					closeOnSelection
-					bind:value={start_date}
-					min={new Date()}
-					max={maxDatePickerYear}
-				/>
-			</div>
-			{#if selected_poll !== 'Date Poll'}
 				<div>
-					<h2 class="mt-4">{$_('Area voting end')}</h2>
+					<h2 class="mt-4">{$_('Poll start')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
-						bind:value={area_vote_end_date}
-						min={start_date}
+						bind:value={start_date}
+						min={new Date()}
 						max={maxDatePickerYear}
 					/>
 				</div>
+				{#if selected_poll !== 'Date Poll'}
+					<div>
+						<h2 class="mt-4">{$_('Area voting end')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={area_vote_end_date}
+							min={start_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
 
-				<div>
-					<h2 class="mt-4">{$_('Proposal end')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={proposal_end_date}
-						min={area_vote_end_date}
-						max={maxDatePickerYear}
-					/>
-				</div>
+					<div>
+						<h2 class="mt-4">{$_('Proposal end')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={proposal_end_date}
+							min={area_vote_end_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
 
+					<div>
+						<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={prediction_statement_end_date}
+							min={proposal_end_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
+					<div>
+						<h2 class="mt-4">{$_('Prediction bet end')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={prediction_bet_end_date}
+							min={prediction_statement_end_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
+					<div>
+						<h2 class="mt-4">{$_('Delegate Voting end date')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={delegate_vote_end_date}
+							min={prediction_bet_end_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
+					<div>
+						<h2 class="mt-4">{$_('Voting end date')}</h2>
+						<DateInput
+							format="yyyy-MM-dd HH:mm"
+							closeOnSelection
+							bind:value={vote_end_date}
+							min={delegate_vote_end_date}
+							max={maxDatePickerYear}
+						/>
+					</div>
+				{/if}
 				<div>
-					<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+					<h2 class="mt-4">{$_('End date')}</h2>
 					<DateInput
 						format="yyyy-MM-dd HH:mm"
 						closeOnSelection
-						bind:value={prediction_statement_end_date}
-						min={proposal_end_date}
+						bind:value={end_date}
+						min={vote_end_date}
 						max={maxDatePickerYear}
 					/>
 				</div>
-				<div>
-					<h2 class="mt-4">{$_('Prediction bet end')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={prediction_bet_end_date}
-						min={prediction_statement_end_date}
-						max={maxDatePickerYear}
-					/>
-				</div>
-				<div>
-					<h2 class="mt-4">{$_('Delegate Voting end date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={delegate_vote_end_date}
-						min={prediction_bet_end_date}
-						max={maxDatePickerYear}
-					/>
-				</div>
-				<div>
-					<h2 class="mt-4">{$_('Voting end date')}</h2>
-					<DateInput
-						format="yyyy-MM-dd HH:mm"
-						closeOnSelection
-						bind:value={vote_end_date}
-						min={delegate_vote_end_date}
-						max={maxDatePickerYear}
-					/>
-				</div>
-			{/if}
-			<div>
-				<h2 class="mt-4">{$_('End date')}</h2>
-				<DateInput
-					format="yyyy-MM-dd HH:mm"
-					closeOnSelection
-					bind:value={end_date}
-					min={vote_end_date}
-					max={maxDatePickerYear}
-				/>
 			</div>
 		{/if}
 	</div>

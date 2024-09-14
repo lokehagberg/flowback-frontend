@@ -70,6 +70,13 @@
 				monday?.getDate() + Number(x) + Number(y) * 7
 			);
 
+			if (dates.find(_date => _date.getTime() === newDate.getTime())) {
+				// e.cancel();
+				// return;
+			} 
+			console.log('New day new beginnings',);
+			
+
 			//TODO: General refactor on phases so it only uses arrays for dynamic number of phases
 			//Note: Do not do code like this like ever.
 

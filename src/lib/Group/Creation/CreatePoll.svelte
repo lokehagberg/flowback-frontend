@@ -227,7 +227,7 @@
 
 <!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
 
-<MonthView
+<!-- <MonthView
 	bind:start_date
 	bind:area_vote_end_date
 	bind:proposal_end_date
@@ -236,4 +236,4 @@
 	bind:delegate_vote_end_date
 	bind:vote_end_date
 	bind:end_date
-/>
+/> -->

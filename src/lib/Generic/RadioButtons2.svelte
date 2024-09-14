@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	export let onInput: (
-			e: Event & {
-				currentTarget: EventTarget & HTMLSelectElement;
-			}
-		) => void = (e) => {},
-		onChange = (e: any) => {},
+	export let onChange = (e: any) => {},
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
@@ -14,7 +9,7 @@
 		Class = '',
 		centering = false,
 		ClassInner = '',
-		name: string = '',
+		name: string,
 		radioSide: 'left' | 'right' = 'left';
 
 	export const resetValue = () => {
@@ -26,6 +21,12 @@
 			}
 		}
 	};
+	
+	onMount(() => {
+		value = values[0];
+		console.log('values[', values[0]);
+		
+	});
 </script>
 
 <div class={Class}>

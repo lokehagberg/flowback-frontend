@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	export let onChange = (e: any) => {},
+	// Name is mandatory so as to collect the different radtio button elements into one group,
+	// and distinguish them from other groups.
+	export let name: string,
+		onChange = (e: any) => {},
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
@@ -9,7 +12,6 @@
 		Class = '',
 		centering = false,
 		ClassInner = '',
-		name: string,
 		radioSide: 'left' | 'right' = 'left';
 
 	export const resetValue = () => {
@@ -21,11 +23,10 @@
 			}
 		}
 	};
-	
+
 	onMount(() => {
 		value = values[0];
 		console.log('values[', values[0]);
-		
 	});
 </script>
 

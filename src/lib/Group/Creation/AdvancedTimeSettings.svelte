@@ -76,7 +76,7 @@
 			name="advancedTimeSettingChoice"
 			bind:value={calendarView}
 			values={['1', '0']}
-			labels={['Schedule', 'Nah']}
+			labels={['Calendar', 'List']}
 		/>
 		{#if calendarView === '1'}
 			<MonthView

@@ -25,13 +25,13 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="flex">
 	<div
-		class={'w-[100%] select-none text-xs tag text-center bg-gray-300 text-black pl-4 pr-4 pt-1 pb-1 break-words rounded ' +
+		class={'w-[100%] select-none text-xs tag text-center bg-accent-tertiary text-black pl-4 pr-4 pt-1 pb-1 break-words rounded ' +
 			Class}
 		on:click={onclick}
 	>
 		{tag?.name}
 	</div>
-	<div class="border-gray-300 pl-1 pr-1 border-2 w-[20%] text-center">
+	<div class="border-accent-tertiary pl-1 pr-1 border-2 w-[20%] text-center">
 		{#if tag?.imac}
 			({tag?.imac})
 		{:else}

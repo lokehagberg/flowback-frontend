@@ -92,7 +92,7 @@
 >
 	<div class="flex items-center justify-between text-primary">
 		<a
-			class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl font-bold"
+			class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl"
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}

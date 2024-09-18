@@ -2,7 +2,8 @@
 	import { faUpload } from '@fortawesome/free-solid-svg-icons';
 	import ImageUpload from './ImageUpload.svelte';
 
-	export let images: File[] = [];
+	export let images: File[] = [],
+	minimalist = false;
 	let image: File | null = null;
 </script>
 
@@ -16,12 +17,13 @@
 			</div>
 		{/each}
 	</div>
-	<div class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300">
-		Add media
+	<!-- <div class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300"> -->
+		{#if minimalist}Add media{/if}
 		<ImageUpload
 			icon={faUpload}
 			bind:croppedImage={image}
 			minimalist
+			Class=""
 			label=""
 			iconSize="1.5x"
 			disableImagePreview
@@ -32,5 +34,5 @@
 				}
 			}}
 		/>
-	</div>
+	<!-- </div> -->
 </div>

@@ -53,7 +53,6 @@
 	</div>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
-		class="chan"
 		on:click={() => {
 			fileinput.click();
 		}}

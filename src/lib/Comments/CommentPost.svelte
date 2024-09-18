@@ -156,8 +156,8 @@
 			Class="w-full"
 		/>
 		<Button Class="px-3 mt-6 bg-white" type="submit" label=""
-			><Fa icon={faPaperPlane} color="black" /></Button
+		><Fa icon={faPaperPlane} color="black" /></Button
 		>
 	</div>
-	<FileUploads bind:images />
+	<FileUploads bind:images minimalist />
 </form>

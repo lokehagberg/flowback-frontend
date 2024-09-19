@@ -12,7 +12,9 @@ export type SelectablePage =
 	| 'kanban'
 	| 'perms'
 	| 'schedule'
-	| 'threads';
+	| 'threads'
+	| 'working-groups'
+	;
 
 export interface User {
 	username: string;

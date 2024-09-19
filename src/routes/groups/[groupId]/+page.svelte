@@ -26,6 +26,7 @@
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Group/Threads.svelte';
 	import { pushState } from '$app/navigation';
+	import WorkingGroups from '$lib/Group/WorkingGroups.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -136,6 +137,8 @@
 						<Schedule type="group" />
 					{:else if selectedPage === 'threads'}
 						<Threads />
+					{:else if selectedPage === 'working-groups'}
+						<WorkingGroups />
 					{/if}
 				</main>
 

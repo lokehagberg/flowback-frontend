@@ -5,7 +5,6 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
-	import { poll } from 'ethers/lib/utils';
 	import Fa from 'svelte-fa';
 	import { faStar } from '@fortawesome/free-solid-svg-icons';
 
@@ -41,7 +40,7 @@
 	});
 </script>
 
-<div class="">
+<div class="w-full">
 	<span class="text-primary font-bold text-xl text-center block">{$_('Results')}</span>
 	{#if pollType === 4}
 		<Statistics bind:votes bind:labels />

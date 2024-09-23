@@ -44,6 +44,6 @@
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 </script>
 
-<div class="w-[450px] m-auto">
+<div class=" m-auto">
 	<Pie bind:chart bind:data={data} options={{ responsive: true }} />
 </div>

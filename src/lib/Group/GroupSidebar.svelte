@@ -112,11 +112,6 @@
 				isSelected={selectedPage === 'flow'}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'working-groups')}
-				text="Working Groups"
-				isSelected={selectedPage === 'working-groups'}
-			/>
-			<GroupSidebarButton
 				action={() => (selectedPage = 'threads')}
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
@@ -126,6 +121,12 @@
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
+			/>
+			<GroupSidebarButton
+				action={() => (selectedPage = 'working-groups')}
+				text="Working Groups"
+				isSelected={selectedPage === 'working-groups'}
+				icon={faUserGroup}
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'documents')}

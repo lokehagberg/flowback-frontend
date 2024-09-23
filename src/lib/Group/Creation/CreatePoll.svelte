@@ -41,7 +41,7 @@
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
 		end_date = new Date(),
-		isPublic = false,
+		isPublic = true,
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,

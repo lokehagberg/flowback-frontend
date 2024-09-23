@@ -104,14 +104,52 @@
 	<div
 		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
+		<!-- Inviting -->
+
+		<div class="w-full p-4 bg-white rounded shadow">
+			<TextInput
+				onInput={() => searchUsers(searchUser)}
+				bind:value={searchUser}
+				label="User to invite"
+				placeholder="Username"
+			/>
+			<ul>
+				{#each searchedUsers as searchedUser}
+					<li
+						class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
+					>
+						<div class="flex">
+							<ProfilePicture
+								username={searchedUser.username}
+								profilePicture={searchedUser.profile_image}
+							/>
+							<div class="w-64 ml-10">{searchedUser.username}</div>
+						</div>
+
+						<div class="flex">
+							<div
+								class="ml-2 cursor-pointer"
+								on:click={() => inviteUser(searchedUser.id)}
+								on:keydown
+								tabindex="0"
+								role="button"
+							>
+								<Fa size="2x" icon={faEnvelope} />
+							</div>
+						</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
+
 		<!-- Invites -->
 
-		<div class="mb-4 w-full shadow rounded bg-white p-2">
+		<div class="w-full shadow rounded bg-white p-2">
 			<span>Users requesting invite</span>
 			{#each usersAskingForInvite as user}
 				{#if user.external === true}
 					<div
-						class="text-black  p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 					>
 						<ProfilePicture
 							Class="w-full"
@@ -119,16 +157,25 @@
 							username={user.username}
 							profilePicture={user.profile_image}
 						/>
-						<Button Class="py-1 mr-4 px-2" buttonStyle="primary-light" action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button>
-						<Button Class="py-2  px-2" buttonStyle="warning" action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button>
+						<Button
+							Class="py-1 mr-4 px-2"
+							buttonStyle="primary-light"
+							action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+						>
+						<Button
+							Class="py-2  px-2"
+							buttonStyle="warning"
+							action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
+						>
 					</div>
 				{/if}
 			{/each}
 		</div>
+		
 		<!-- Members List -->
 
 		{#if users.length > 0}
-			<div class="w-full p-6 flex flex-col gap-6">
+			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow">
 				{#each users as user}
 					<div class="flex items-center">
 						<ProfilePicture
@@ -151,43 +198,6 @@
 						</div>
 					</div>
 				{/each}
-			</div>
-
-			<!-- Inviting -->
-			<div class="w-full p-6">
-				<TextInput
-					onInput={() => searchUsers(searchUser)}
-					bind:value={searchUser}
-					label="User to invite"
-					placeholder="Username"
-				/>
-				<ul>
-					{#each searchedUsers as searchedUser}
-						<li
-							class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
-						>
-							<div class="flex">
-								<ProfilePicture
-									username={searchedUser.username}
-									profilePicture={searchedUser.profile_image}
-								/>
-								<div class="w-64 ml-10">{searchedUser.username}</div>
-							</div>
-
-							<div class="flex">
-								<div
-									class="ml-2 cursor-pointer"
-									on:click={() => inviteUser(searchedUser.id)}
-									on:keydown
-									tabindex="0"
-									role="button"
-								>
-									<Fa size="2x" icon={faEnvelope} />
-								</div>
-							</div>
-						</li>
-					{/each}
-				</ul>
 			</div>
 		{/if}
 	</div>

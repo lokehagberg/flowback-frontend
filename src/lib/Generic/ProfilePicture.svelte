@@ -23,7 +23,6 @@
 			class={`w-[40px] h-[40px] rounded-full`}
 		/>
 	{/if}
-
 	{#if displayName}
 		<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis">{username}</span
 		>

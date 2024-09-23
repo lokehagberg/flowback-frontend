@@ -17,6 +17,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/Generic/Button.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -97,8 +98,6 @@
 		});
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 	};
-
-	// $: if (selectedPage === 'Invite') searchUsers('');
 </script>
 
 <Loader bind:loading>
@@ -112,29 +111,16 @@
 			{#each usersAskingForInvite as user}
 				{#if user.external === true}
 					<div
-						class="text-black flex outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						class="text-black  p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 					>
 						<ProfilePicture
-							username={user.user.username}
-							profilePicture={user.user.profile_image}
+							Class="w-full"
+							displayName
+							username={user.username}
+							profilePicture={user.profile_image}
 						/>
-						<div class="w-64 ml-10 hover">{user.username}</div>
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
-						<div
-							class="w-64 ml-10 hover:underline cursor-pointer"
-							on:click={() => acceptInviteUser(user.user)}
-							on:keydown
-						>
-							{$_('ACCEPT')}
-						</div>
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
-						<div
-							class="w-64 ml-10 hover:underline cursor-pointer"
-							on:click={() => denyInviteUser(user.user)}
-							on:keydown
-						>
-							{$_('DECLINE')}
-						</div>
+						<Button Class="py-1 mr-4 px-2" buttonStyle="primary-light" action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button>
+						<Button Class="py-2  px-2" buttonStyle="warning" action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button>
 					</div>
 				{/if}
 			{/each}

@@ -144,34 +144,36 @@
 
 		<!-- Invites -->
 
-		<div class="w-full shadow rounded bg-white p-2">
-			<span>Users requesting invite</span>
-			{#each usersAskingForInvite as user}
-				{#if user.external === true}
-					<div
-						class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
-					>
-						<ProfilePicture
-							Class="w-full"
-							displayName
-							username={user.username}
-							profilePicture={user.profile_image}
-						/>
-						<Button
-							Class="py-1 mr-4 px-2"
-							buttonStyle="primary-light"
-							action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+		{#if usersAskingForInvite.length > 0}
+			<div class="w-full shadow rounded bg-white p-2">
+				<span>Users requesting invite</span>
+				{#each usersAskingForInvite as user}
+					{#if user.external === true}
+						<div
+							class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 						>
-						<Button
-							Class="py-2  px-2"
-							buttonStyle="warning"
-							action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
-						>
-					</div>
-				{/if}
-			{/each}
-		</div>
-		
+							<ProfilePicture
+								Class="w-full"
+								displayName
+								username={user.username}
+								profilePicture={user.profile_image}
+							/>
+							<Button
+								Class="py-1 mr-4 px-2"
+								buttonStyle="primary-light"
+								action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+							>
+							<Button
+								Class="py-2  px-2"
+								buttonStyle="warning"
+								action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
+							>
+						</div>
+					{/if}
+				{/each}
+			</div>
+		{/if}
+
 		<!-- Members List -->
 
 		{#if users.length > 0}

@@ -4,18 +4,13 @@
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import { faThumbtack } from '@fortawesome/free-solid-svg-icons/faThumbtack';
-	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
-	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyName } from './functions';
-	import { goto } from '$app/navigation';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
@@ -27,6 +22,13 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
+	import {
+		faAnglesRight,
+		faThumbtack,
+		faComment,
+		faAlignLeft,
+		faCalendarAlt
+	} from '@fortawesome/free-solid-svg-icons';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -127,8 +129,14 @@
 				Class="text-black"
 			/>
 			{#if isAdmin || poll.pinned}
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
+				<div
+					class=""
+					class:cursor-pointer={isAdmin}
+					on:click={pinPoll}
+					on:keydown
+					tabindex="0"
+					role="button"
+				>
 					<Fa
 						size="1.2x"
 						icon={faThumbtack}
@@ -139,7 +147,9 @@
 			{/if}
 		</div>
 	</div>
+
 	<div class="flex gap-4 mt-1 items-center">
+		<!-- Poll Type Icons -->
 		{#if poll.poll_type === 4}
 			<HeaderIcon
 				Class="!p-0 !cursor-default"
@@ -156,8 +166,19 @@
 			/>
 		{/if}
 
+		<!-- Fast Forward Icon -->
+		{#if poll.allow_fast_forward}
+			<HeaderIcon
+				Class="!p-0 !cursor-default flex"
+				icon={faAnglesRight}
+				text={'Fast Forward'}
+				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
+			/>
+		{/if}
+
+		<!-- Comment icon. When user clicks it leads to the comment section on the poll -->
 		<a
-			class="flex gap-1 items-center text-black dark:text-darkmodeText hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm "
+			class="flex gap-1 items-center text-black dark:text-darkmodeText hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm"
 			href={onHoverGroup
 				? '/groups/1'
 				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
@@ -166,6 +187,7 @@
 			<span class="inline">{poll.total_comments}</span>
 		</a>
 
+		<!-- Phase -->
 		<Tag
 			tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 			Class="inline cursor-default"

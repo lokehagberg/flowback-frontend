@@ -10,6 +10,7 @@ export interface proposal {
 
 export interface poll {
 	attachments: { file: string }[];
+	allow_fast_forward:boolean;
 	created_by: number;
 	description: string;
 	dynamic: boolean;

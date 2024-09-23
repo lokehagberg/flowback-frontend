@@ -98,52 +98,21 @@
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 	};
 
-	$: if (selectedPage === 'Invite') searchUsers('');
+	// $: if (selectedPage === 'Invite') searchUsers('');
 </script>
 
 <Loader bind:loading>
 	<div
-		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText pb-2"
+		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
-		<Tab
-			bind:selectedPage
-			tabs={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
-				? ['Members']
-				: ['Members', 'Pending Invites', 'Invite']}
-		/>
-		{#if selectedPage === 'Members' && users.length > 0}
-			<div class="w-full p-6 flex flex-col gap-6">
-				{#each users as user}
-					<div class="flex items-center ">
-						<ProfilePicture
-						Class="w-[30%]"
-							username={user.user.username}
-							profilePicture={user.user.profile_image}
-							displayName
-						/>
-						<div class="bg-gray-300 px-2 py-0.5 rounded-lg">
-							{user.permission_name}
-						</div>
-						<div
-							on:click={() => goto(`/user?id=${user.user.id}`)}
-							on:keydown
-							tabindex="0"
-							role="button"
-							Class="right-6 absolute"
-						>
-							<Fa icon={faPaperPlane} rotate="60" />
-						</div>
-					</div>
-				{/each}
-			</div>
-		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-			{#if usersAskingForInvite?.length === 0}
-				{$_('There are currently no pending invites')}
-			{/if}
+		<!-- Invites -->
+
+		<div class="mb-4 w-full shadow rounded bg-white p-2">
+			<span>Users requesting invite</span>
 			{#each usersAskingForInvite as user}
 				{#if user.external === true}
 					<div
-						class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						class="text-black flex outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
 					>
 						<ProfilePicture
 							username={user.user.username}
@@ -169,7 +138,36 @@
 					</div>
 				{/if}
 			{/each}
-		{:else if selectedPage === 'Invite'}
+		</div>
+		<!-- Members List -->
+
+		{#if users.length > 0}
+			<div class="w-full p-6 flex flex-col gap-6">
+				{#each users as user}
+					<div class="flex items-center">
+						<ProfilePicture
+							Class="w-[30%]"
+							username={user.user.username}
+							profilePicture={user.user.profile_image}
+							displayName
+						/>
+						<div class="bg-gray-300 px-2 py-0.5 rounded-lg">
+							{user.permission_name}
+						</div>
+						<div
+							on:click={() => goto(`/user?id=${user.user.id}`)}
+							on:keydown
+							tabindex="0"
+							role="button"
+							Class="right-6 absolute"
+						>
+							<Fa icon={faPaperPlane} rotate="60" />
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<!-- Inviting -->
 			<div class="w-full p-6">
 				<TextInput
 					onInput={() => searchUsers(searchUser)}
@@ -191,27 +189,12 @@
 							</div>
 
 							<div class="flex">
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<!-- <div
-									class="cursor-pointer"
-									on:click={() => acceptInviteUser(searchedUser.id)}
-									on:keydown
-								>
-									<Fa size="2x" color="blue" icon={faCheck} />
-								</div> -->
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<!-- <div
-									class="ml-2 cursor-pointer"
-									on:click={() => denyInviteUser(searchedUser.id)}
-									on:keydown
-								>
-									<Fa size="2x" color="#CC4444" icon={faX} />
-								</div> -->
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
 									class="ml-2 cursor-pointer"
 									on:click={() => inviteUser(searchedUser.id)}
 									on:keydown
+									tabindex="0"
+									role="button"
 								>
 									<Fa size="2x" icon={faEnvelope} />
 								</div>

@@ -162,10 +162,3 @@ export interface Thread {
 	score:number;
 
 }
-
-export interface WorkingGroup {
-	name:string;
-	members:number;
-	isMember:boolean;
-	invite:boolean;
-}

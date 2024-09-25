@@ -11,8 +11,8 @@
 	{#if workGroup.members}
 		<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]">Leave</Button>
 	{:else if workGroup.direct_join}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]">Ask to Join</Button>
-	{:else}
 		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]">Join</Button>
+	{:else}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]">Ask to Join</Button>
 	{/if}
 </div>

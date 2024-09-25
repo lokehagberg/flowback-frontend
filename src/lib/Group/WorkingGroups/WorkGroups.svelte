@@ -12,12 +12,12 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 
 	let workGroups: WorkingGroupType[] = [],
-		workGroupEdit: WorkingGroupType = { direct_join: false, members: null, name: '' },
+		workGroupEdit: WorkingGroupType = { direct_join: false, members: null, name: '', id: 0 },
 		poppup: poppup,
 		open = false;
 
 	const getWorkingGroupList = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list?limit=100`);
 
 		if (!res.ok) {
 			poppup = { message: 'Could not fetch working groups', success: false };
@@ -54,7 +54,8 @@
 <Button action={() => (open = true)}>Create Working Group</Button>
 
 <Modal bind:open>
-	<div slot="body">
+	<div slot="header"><h1>Create a Work Group</h1></div>
+	<form slot="body" on:submit|preventDefault={createWorkingGroup}>
 		<TextInput label="Name" required bind:value={workGroupEdit.name} />
 		<RadioButtons2
 			bind:value={workGroupEdit.direct_join}
@@ -63,8 +64,6 @@
 			label="Direct Join?"
 			name="direct_join"
 		/>
-	</div>
-	<div slot="footer">
-		<Button action={createWorkingGroup} />
-	</div>
+		<Button Class="px-2" type="submit">Create</Button>
+	</form>
 </Modal>

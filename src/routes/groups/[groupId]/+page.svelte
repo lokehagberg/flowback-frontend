@@ -26,7 +26,7 @@
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Group/Threads.svelte';
 	import { pushState } from '$app/navigation';
-	import WorkingGroups from '$lib/Group/WorkingGroups.svelte';
+	import WorkingGroups from '$lib/Group/WorkingGroups/WorkingGroups.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {

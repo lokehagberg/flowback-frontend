@@ -30,7 +30,7 @@
 		faCalendarAlt,
 		// faDash
 	} from '@fortawesome/free-solid-svg-icons';
-	import { FaLayers } from 'svelte-fa';
+	// import { FaLayers } from 'svelte-fa';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -177,10 +177,10 @@
 				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 			/>
 			{:else}
-			<FaLayers>
+			<!-- <FaLayers>
 				<Fa icon={faAnglesRight}/>
-				<!-- <Fa icon={faDash} /> -->
-			</FaLayers>
+				<Fa icon={faDash} />
+			</FaLayers> -->
 		{/if}
 
 		<!-- Comment icon. When user clicks it leads to the comment section on the poll -->

@@ -32,10 +32,8 @@
 	The reason for the split between default and submit is that submit buttons
 	work differently in forms
  -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if type === 'default'}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div
+	<button
 		on:click|preventDefault={() => {
 			//The button used to only have action, but onClick is standard for svelte. TODO: Refactor so we only have onClick on all buttons in the code.
 			action();
@@ -45,23 +43,27 @@
 			Class.includes('bg-') ? '' : 'bg-primary'
 		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
-		${buttonStyle === 'primary-light' ? ' !bg-white dark:bg-darkobject  primary-light-inner-shadow text-xl' : ''}`}
+		${
+			buttonStyle === 'primary-light'
+				? ' !bg-white dark:bg-darkobject  primary-light-inner-shadow'
+				: ''
+		}`}
 		class:bg-gray-300={disabled}
 		class:!bg-secondary={buttonStyle == 'secondary'}
 		class:!bg-red-500={buttonStyle === 'warning'}
 		class:!bg-accent={buttonStyle === 'accent'}
 		class:!bg-accentSecondary={buttonStyle === 'accent-secondary'}
-		>
+	>
 		<slot />
-	</div>
+	</button>
 {:else if type === 'submit'}
 	<button
 		type="submit"
 		class={`text-center ${
 			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
+		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
-		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow text-xl' : ''}`}
+		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow ' : ''}`}
 		class:bg-gray-300={disabled}
 		class:!bg-secondary={buttonStyle == 'secondary'}
 		class:!bg-red-500={buttonStyle === 'warning'}
@@ -77,8 +79,8 @@
 	.primary-light-inner-shadow {
 		/* box-shadow: inset 0 0 0px 3px rgb(130, 180, 230); */
 		border: 1px solid var(--secondary);
-		color:var(--secondary) !important;
-		font-weight:500;
-		font-size:medium
+		color: var(--secondary) !important;
+		font-weight: 500;
+		font-size: medium;
 	}
 </style>

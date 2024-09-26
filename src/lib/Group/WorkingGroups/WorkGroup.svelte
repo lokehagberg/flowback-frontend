@@ -72,7 +72,7 @@
 	});
 </script>
 
-<div class="bg-white w-full p-6 mb-6 flex justify-between items-center shadow rounded dark:bg-darkobject">
+<div class="bg-white w-full p-6 flex justify-between items-center shadow rounded dark:bg-darkobject">
 	<span class="text-primary w-[20%]">{workGroup.name}</span>
 	<span class="text-gray-500 text-sm">Members: {workGroupUserList.length} </span>
 

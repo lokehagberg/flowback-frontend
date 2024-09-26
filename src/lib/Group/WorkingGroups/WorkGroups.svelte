@@ -14,10 +14,14 @@
 	let workGroups: WorkingGroupType[] = [],
 		workGroupEdit: WorkingGroupType = { direct_join: false, members: null, name: '', id: 0 },
 		poppup: poppup,
-		open = false;
+		open = false,
+		search: string;
 
 	const getWorkingGroupList = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list?limit=100`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/list?limit=100&name__icontains=${search}`
+		);
 
 		if (!res.ok) {
 			poppup = { message: 'Could not fetch working groups', success: false };
@@ -45,9 +49,20 @@
 	});
 </script>
 
-{#each workGroups as workingGroup}
-	<WorkingGroup bind:workGroup={workingGroup} />
-{/each}
+<div class="bg-white p-6 shadow rounded">
+	<TextInput
+		label=""
+		placeholder="search work group"
+		bind:value={search}
+		onInput={getWorkingGroupList}
+	/>
+</div>
+
+<div class="flex flex-col gap-4 mt-4">
+	{#each workGroups as workingGroup}
+		<WorkingGroup bind:workGroup={workingGroup} />
+	{/each}
+</div>
 
 <Poppup bind:poppup />
 

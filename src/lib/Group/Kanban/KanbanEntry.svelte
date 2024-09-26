@@ -8,7 +8,6 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -16,19 +15,24 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser, kanban } from '../interface';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
-	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import { DateInput } from 'date-picker-svelte';
 	import { goto } from '$app/navigation';
 
+	export let kanban: kanban,
+		type: 'group' | 'home',
+		users: GroupUser[],
+		removeKanbanEntry: (id: number) => void,
+		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {};
+
 	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
+
 	let openModal = false,
 		selectedEntry: number,
 		status: StatusMessageInfo,
-		showSuccessPoppup = false,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
 			'Very high priority',
@@ -38,26 +42,18 @@
 			'Very low priority'
 		],
 		isEditing = false,
-		changingOpens: null | 'Addition' | 'Subtraction' = null,
 		innerWidth: number,
-		outerWidth: number;
-
-	export let kanban: kanban,
-		type: 'group' | 'home',
-		users: GroupUser[],
-		removeKanbanEntry: (id: number) => void,
-		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {};
-
-	// initializes the kanban to be edited when modal is opened
-	let kanbanEdited = {
-		entry_id: kanban.id,
-		id: kanban.id,
-		description: kanban.description,
-		title: kanban.title,
-		assignee: kanban.assignee?.id,
-		priority: kanban.priority,
-		end_date: kanban.end_date ? new Date(kanban.end_date) : null
-	};
+		outerWidth: number,
+		// initializes the kanban to be edited when modal is opened
+		kanbanEdited = {
+			entry_id: kanban.id,
+			id: kanban.id,
+			description: kanban.description,
+			title: kanban.title,
+			assignee: kanban.assignee?.id,
+			priority: kanban.priority,
+			end_date: kanban.end_date ? new Date(kanban.end_date) : null
+		};
 
 	$: if (openModal === true) changeNumberOfOpen('Addition');
 	else changeNumberOfOpen('Subtraction');
@@ -229,43 +225,37 @@
 		</div>
 		<!-- Arrows -->
 		{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
-			<div class="flex justify-between mt-3">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="flex justify-between mt-3 align-middle">
 				<div
-					class="cursor-pointer hover:text-gray-500"
+					class="cursor-pointer hover:text-gray-500 py-1"
 					on:click={() => {
-						if (kanban.tag > 0) {
+						if (kanban.tag > 1) {
 							updateKanbanTag(kanban.tag - 1);
 							kanban.tag -= 1;
 						}
 					}}
 					on:keydown
+					tabindex="0"
+					role="button"
 				>
-					{#if innerWidth >= 1280}
-						<Fa icon={faArrowLeft} size="1.5x" />
-					{:else}
-						<Fa icon={faArrowLeft} size="1x" />
-					{/if}
+					<Fa icon={faArrowLeft} size="1x" />
 				</div>
 
 				<KanbanIcons bind:priority={kanban.priority} />
 
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
-					class="cursor-pointer hover:text-gray-500"
+					class="cursor-pointer hover:text-gray-500 py-1"
 					on:click={() => {
-						if (kanban.tag < tags.length) {
+						if (kanban.tag < tags.length - 1) {
 							updateKanbanTag(kanban.tag + 1);
 							kanban.tag += 1;
 						}
 					}}
 					on:keydown
+					tabindex="0"
+					role="button"
 				>
-					{#if innerWidth >= 1280}
-						<Fa icon={faArrowRight} size="1.5x" />
-					{:else}
-						<Fa icon={faArrowRight} size="1x" />
-					{/if}
+					<Fa icon={faArrowRight} size="1x" />
 				</div>
 			</div>
 		{/if}

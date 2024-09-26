@@ -72,9 +72,9 @@
 	});
 </script>
 
-<div class="bg-white w-full p-6 flex justify-between items-center shadow rounded dark:bg-darkobject">
-	<span class="text-primary w-[20%]">{workGroup.name}</span>
-	<span class="text-gray-500 text-sm">Members: {workGroupUserList.length} </span>
+<div class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject">
+	<span class="text-primary w-[40%] font-bold">{workGroup.name}</span>
+	<span class="text-gray-500 text-sm w-[30%]">Members: {workGroupUserList.length} </span>
 
 	{#key workGroupUserList}
 		{#if isMember()}

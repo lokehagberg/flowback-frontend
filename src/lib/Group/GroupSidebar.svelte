@@ -124,7 +124,7 @@
 			/>
 			<GroupSidebarButton
 				action={() => (selectedPage = 'working-groups')}
-				text="Working Groups"
+				text="Work Groups"
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>

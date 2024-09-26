@@ -24,7 +24,7 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Could not fetch working groups', success: false };
+			poppup = { message: 'Could not fetch work groups', success: false };
 			return;
 		}
 
@@ -39,7 +39,7 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to create working group', success: false };
+			poppup = { message: 'Failed to create work group', success: false };
 			return;
 		}
 
@@ -61,7 +61,7 @@
 	/>
 </div>
 
-<Button action={() => (open = true)} Class="p-2">Create Working Group</Button>
+<Button action={() => (open = true)} Class="p-2">Create Work Group</Button>
 
 <div class="flex flex-col gap-4 mt-4">
 	{#each workGroups as workingGroup}

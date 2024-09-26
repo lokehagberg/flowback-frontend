@@ -11,13 +11,14 @@
 	import { onDestroy, onMount } from 'svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Filter from '$lib/Generic/Filter.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -27,7 +28,7 @@
 		assignee: number | null = null,
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
-		showSuccessPoppup = false,
+		poppup: poppup,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
 			'Very high priority',
@@ -143,7 +144,12 @@
 		status = statusMessageFormatter(res, json);
 		loading = false;
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Failed to create kanban task', success: false };
+			return;
+		}
+
+		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
 		if (!assignee) return;
@@ -172,8 +178,6 @@
 		title = '';
 		priority = 3;
 		end_date = null;
-
-		showSuccessPoppup = true;
 	};
 
 	const removeKanbanEntry = (id: number) => {
@@ -181,7 +185,7 @@
 	};
 </script>
 
-<SuccessPoppup bind:show={showSuccessPoppup} />
+<Poppup bind:poppup />
 
 <div
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
@@ -201,7 +205,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl "
+					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
@@ -236,7 +240,7 @@
 							Assignee
 							<select
 								on:input={handleChangeAssignee}
-								class="rounded-sm p-1 border  border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
@@ -247,7 +251,7 @@
 					<div class="text-left">
 						{$_('Priority')}
 						<select
-							class="rounded-sm p-1 border  border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							on:input={handleChangePriority}
 							value={priority}
 						>

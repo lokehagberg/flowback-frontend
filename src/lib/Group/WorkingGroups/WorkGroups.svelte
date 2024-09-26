@@ -42,6 +42,9 @@
 			poppup = { message: 'Failed to create working group', success: false };
 			return;
 		}
+
+		await getWorkingGroupList();
+		open = false;
 	};
 
 	onMount(() => {
@@ -49,7 +52,7 @@
 	});
 </script>
 
-<div class="bg-white p-6 shadow rounded">
+<div class="bg-white p-6 shadow rounded mb-4">
 	<TextInput
 		label=""
 		placeholder="search work group"
@@ -57,6 +60,8 @@
 		onInput={getWorkingGroupList}
 	/>
 </div>
+
+<Button action={() => (open = true)} Class="p-2">Create Working Group</Button>
 
 <div class="flex flex-col gap-4 mt-4">
 	{#each workGroups as workingGroup}
@@ -66,11 +71,9 @@
 
 <Poppup bind:poppup />
 
-<Button action={() => (open = true)}>Create Working Group</Button>
-
 <Modal bind:open>
-	<div slot="header"><h1>Create a Work Group</h1></div>
-	<form slot="body" on:submit|preventDefault={createWorkingGroup}>
+	<div slot="header" class="w-full"><span>Create a Work Group</span></div>
+	<form slot="body" class="w-full" on:submit|preventDefault={createWorkingGroup}>
 		<TextInput label="Name" required bind:value={workGroupEdit.name} />
 		<RadioButtons2
 			bind:value={workGroupEdit.direct_join}

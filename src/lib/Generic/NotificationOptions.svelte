@@ -15,17 +15,15 @@
 		id: number,
 		Class = '';
 
-	let popupMessage: string = '';
+	let popupMessage: string = '',
+		notifications: NotificationObject[] = [],
+		show = false;
 
 	interface NotificationObject {
 		channel_category: string;
 		channel_sender_id: number;
 		channel_sender_type: string;
 	}
-
-	let categoriesData: string[] = [],
-		notifications: NotificationObject[] = [],
-		show = false;
 
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
@@ -84,15 +82,16 @@
 	$: if (notificationOpen) getNotifications();
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class={`${Class} notifications-clickable-region`}
-	on:click={() => {
-		notificationOpen = !notificationOpen;
-	}}
-	on:keydown
->
-	<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.2x'} />
+<div class={`${Class} notifications-clickable-region`}>
+	<button
+		class={``}
+		on:click={() => {
+			notificationOpen = !notificationOpen;
+		}}
+		on:keydown
+	>
+		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.2x'} />
+	</button>
 
 	{#if notificationOpen}
 		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
@@ -133,5 +132,4 @@
 		</div>
 	{/if}
 </div>
-
 <SuccessPoppup bind:show bind:message={popupMessage} />

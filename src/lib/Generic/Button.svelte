@@ -45,7 +45,7 @@
 			Class.includes('bg-') ? '' : 'bg-primary'
 		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
-		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow text-xl' : ''}`}
+		${buttonStyle === 'primary-light' ? ' !bg-white dark:bg-darkobject  primary-light-inner-shadow text-xl' : ''}`}
 		class:bg-gray-300={disabled}
 		class:!bg-secondary={buttonStyle == 'secondary'}
 		class:!bg-red-500={buttonStyle === 'warning'}

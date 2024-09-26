@@ -6,7 +6,7 @@
 		onClick = () => {},
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
-		type: buttontypes = 'default',
+		type: buttontypes = 'button',
 		disabled = false,
 		label: string = '',
 		href = '';
@@ -25,55 +25,36 @@
 		| 'accent-secondary'
 		| 'accent'
 		| 'primary-light';
-	type buttontypes = 'default' | 'submit';
+
+	type buttontypes = 'button' | 'submit';
 </script>
 
-<!-- 
-	The reason for the split between default and submit is that submit buttons
-	work differently in forms
- -->
-{#if type === 'default'}
-	<button
-		on:click|preventDefault={() => {
-			//The button used to only have action, but onClick is standard for svelte. TODO: Refactor so we only have onClick on all buttons in the code.
-			action();
-			onClick();
-		}}
-		class={`text-center ${
-			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
+<button
+	{type}
+	on:click={() => {
+		//The button used to only have action, but onClick is standard for svelte. TODO: Refactor so we only have onClick on all buttons in the code.
+		action();
+		onClick();
+	}}
+	class={`text-center ${
+		Class.includes('bg-') ? '' : 'bg-primary'
+	} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
 		${
 			buttonStyle === 'primary-light'
 				? ' !bg-white dark:bg-darkobject  primary-light-inner-shadow'
 				: ''
 		}`}
-		class:bg-gray-300={disabled}
-		class:!bg-secondary={buttonStyle == 'secondary'}
-		class:!bg-red-500={buttonStyle === 'warning'}
-		class:!bg-accent={buttonStyle === 'accent'}
-		class:!bg-accentSecondary={buttonStyle === 'accent-secondary'}
-	>
-		<slot />
-	</button>
-{:else if type === 'submit'}
-	<button
-		type="submit"
-		class={`text-center ${
-			Class.includes('bg-') ? '' : 'bg-primary'
-		} filter hover:brightness-50 inline text-white rounded-md cursor-pointer ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
-
-		${buttonStyle === 'primary-light' ? ' !bg-white  primary-light-inner-shadow ' : ''}`}
-		class:bg-gray-300={disabled}
-		class:!bg-secondary={buttonStyle == 'secondary'}
-		class:!bg-red-500={buttonStyle === 'warning'}
-		class:!bg-accent={buttonStyle === 'accent'}
-		class:!bg-accentSecondary={buttonStyle === 'accent-secondary'}
-		{disabled}
-		value={$_(label)}
-		><slot />{$_(label)}
-	</button>
-{/if}
+	class:bg-gray-300={disabled}
+	class:!bg-secondary={buttonStyle == 'secondary'}
+	class:!bg-red-500={buttonStyle === 'warning'}
+	class:!bg-accent={buttonStyle === 'accent'}
+	class:!bg-accentSecondary={buttonStyle === 'accent-secondary'}
+	{disabled}
+	value={$_(label)}
+>
+	<slot />
+</button>
 
 <style>
 	.primary-light-inner-shadow {

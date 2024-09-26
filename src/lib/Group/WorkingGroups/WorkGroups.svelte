@@ -75,6 +75,7 @@
 	<div slot="header" class="w-full"><span>Create a Work Group</span></div>
 	<form slot="body" class="w-full" on:submit|preventDefault={createWorkingGroup}>
 		<TextInput label="Name" required bind:value={workGroupEdit.name} />
+
 		<RadioButtons2
 			bind:value={workGroupEdit.direct_join}
 			values={[true, false]}
@@ -82,6 +83,9 @@
 			label="Direct Join?"
 			name="direct_join"
 		/>
+
+		<button type="submit">hi</button>
+
 		<Button Class="px-2" type="submit">Create</Button>
 	</form>
 </Modal>

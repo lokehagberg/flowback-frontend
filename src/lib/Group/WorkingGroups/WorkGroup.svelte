@@ -31,19 +31,22 @@
 		}
 
 		await getUserList();
-		return res;
 	};
 
 	const askToJoin = async () => {
-		const res = await joinGroup();
+		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/join`);
 
-		console.log(res, "RESS");
 		
+		
+		if (!res.ok) {
+			const message = json?.detail?.__all__[0].toString() === "Work group user join request with this Work group and Group user already exists." 
+			? "Already asked to join group" : "Failed to ask to join group"
 
-		if (res?.ok) {
-			poppup = { message: 'Invite Sent', success: true };
+			poppup = { message, success: false };
 			return;
 		}
+
+		poppup = { message: 'Invite Sent', success: true };
 	};
 
 	const leaveGroup = async () => {

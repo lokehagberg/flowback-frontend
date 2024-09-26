@@ -36,11 +36,12 @@
 	const askToJoin = async () => {
 		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/join`);
 
-		
-		
 		if (!res.ok) {
-			const message = json?.detail?.__all__[0].toString() === "Work group user join request with this Work group and Group user already exists." 
-			? "Already asked to join group" : "Failed to ask to join group"
+			const message =
+				json?.detail?.__all__[0].toString() ===
+				'Work group user join request with this Work group and Group user already exists.'
+					? 'Already asked to join group'
+					: 'Failed to ask to join group';
 
 			poppup = { message, success: false };
 			return;

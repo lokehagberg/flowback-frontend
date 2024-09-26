@@ -1,18 +1,88 @@
 <script lang="ts">
-	import type { WorkGroup } from './interface';
+	import type { WorkGroup, WorkGroupUser } from './interface';
 	import Button from '$lib/Generic/Button.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { onMount } from 'svelte';
+
 	export let workGroup: WorkGroup;
+
+	let poppup: poppup,
+		workGroupUserList: WorkGroupUser[] = [];
+
+	const getUserList = async () => {
+		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to get Work Group', success: false };
+			return;
+		}
+
+		workGroupUserList = json.results;
+	};
+
+	const joinGroup = async () => {
+		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/join`);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to join Group', success: false };
+			return;
+		}
+
+		await getUserList();
+		return res;
+	};
+
+	const askToJoin = async () => {
+		const res = await joinGroup();
+
+		console.log(res, "RESS");
+		
+
+		if (res?.ok) {
+			poppup = { message: 'Invite Sent', success: true };
+			return;
+		}
+	};
+
+	const leaveGroup = async () => {
+		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/leave`);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to Leave Group', success: false };
+			return;
+		}
+
+		getUserList();
+	};
+
+	const isMember = () => {
+		return workGroupUserList.find(
+			(user) => user.group_user.user.id === (Number(localStorage.getItem('userId')) || -1)
+		);
+	};
+
+	onMount(() => {
+		getUserList();
+	});
 </script>
 
 <div class="bg-white dark:bg-darkobject w-full p-6 mb-6 flex justify-between items-center">
 	<span class="text-primary w-[20%]">{workGroup.name}</span>
-	<span class="text-gray-500 text-sm">Members: {workGroup.members} </span>
+	<span class="text-gray-500 text-sm">Members: {workGroupUserList.length} </span>
 
-	{#if workGroup.members}
-		<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]">Leave</Button>
-	{:else if workGroup.direct_join}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]">Join</Button>
-	{:else}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]">Ask to Join</Button>
-	{/if}
+	{#key workGroupUserList}
+		{#if isMember()}
+			<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]" action={leaveGroup}>Leave</Button>
+		{:else if workGroup.direct_join}
+			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>Join</Button>
+		{:else}
+			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
+				>Ask to Join</Button
+			>
+		{/if}
+	{/key}
 </div>
+
+<Poppup bind:poppup />

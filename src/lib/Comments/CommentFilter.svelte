@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Select from '$lib/Generic/Select.svelte';
 
-	export let sortBy: string | null = null;
+	export let sortBy: string | null = null, Class = ""
 </script>
 
-<div>
-	Sort by: <Select
+<div class={Class}>
+	<Select
 		innerLabel="Select Sorting"
 		values={[
 			'created_at_asc',
@@ -24,6 +24,6 @@
 			'Controversial',
 			'Hot'
 		]}
+		{Class}
 	/>
-	filter Sorting
 </div>

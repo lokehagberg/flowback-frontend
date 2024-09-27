@@ -63,7 +63,7 @@
 		{delegate_pool_id}
 	/>
 
-	<CommentFilter bind:sortBy />
+	<CommentFilter bind:sortBy Class="inline"/>
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each _comments as comment}

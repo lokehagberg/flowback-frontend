@@ -39,7 +39,7 @@
 <Layout centered>
 	{#if thread}
 		<div
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center"
+			class="pt-4 max-w-[1000px] bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center"
 		>
 			<div
 				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
@@ -68,7 +68,7 @@
 		</div>
 	{/if}
 
-	<Comments api={'thread'} Class="w-[70%] max-w-[800px] bg-white dark:bg-darkobject p-6" />
+	<Comments api={'thread'} Class="w-full max-w-[1000px] bg-white dark:bg-darkobject p-6 mt-6" />
 </Layout>
 
 <Poppup bind:poppup />

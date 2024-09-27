@@ -29,7 +29,7 @@ export const getCommentDepth = (comment: Comment, comments: Comment[]): number =
 };
 
 export const getComments = async (
-	id: number | string,
+	id: number | string | null | undefined,
 	api: 'poll' | 'thread' | 'delegate-history',
 	offset = 0,
 	sortBy: string | null = null

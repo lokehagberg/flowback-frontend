@@ -23,26 +23,34 @@
 		showReadMore = true,
 		sortBy: null | string = null;
 
-	onMount(async () => {
-		setUpComments();
-	});
 
-	$: if (sortBy || !sortBy) setUpComments();
 
 	const setUpComments = async () => {
-		const { comments, next } = await getComments($page.params.pollId, api, offset, sortBy);
+		const { comments, next } = await getComments(getId(), api, offset, sortBy);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
 	};
 
 	const readMore = async () => {
 		offset += pollCommentsLimit;
-		const { comments, next } = await getComments($page.params.pollId, api, offset, sortBy);
+		const { comments, next } = await getComments(getId(), api, offset, sortBy);
 		_comments = _comments.concat(comments);
 		_comments = await commentSetup(_comments);
 		_comments = _comments;
 		showReadMore = next !== null;
 	};
+
+	const getId = () => {
+		if (api === 'poll') return $page.params.pollId
+		else if (api === 'thread') return $page.params.threadId
+		else if (api === 'delegate-history') return delegate_pool_id
+	}
+
+	onMount(async () => {
+		setUpComments();
+	});
+
+	$: if (sortBy || !sortBy) setUpComments();
 </script>
 
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">

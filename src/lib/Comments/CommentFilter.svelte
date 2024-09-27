@@ -22,7 +22,7 @@
 			'Oldest',
 			'Top',
 			'Controversial',
-			'Cancel Selection'
+			'Hot'
 		]}
 	/>
 	filter Sorting

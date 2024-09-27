@@ -4,12 +4,13 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import type { Comment as CommentType } from '../Poll/interface';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
 	import { commentSetup, getComments } from './functions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 	import CommentFilter from './CommentFilter.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -17,8 +18,7 @@
 		Class = '';
 
 	let _comments: CommentType[] = [],
-		show = false,
-		showMessage = '',
+		poppup: poppup,
 		offset = 0,
 		showReadMore = true,
 		sortBy: null | string = null;
@@ -45,8 +45,6 @@
 	};
 </script>
 
-<SuccessPoppup bind:show message={showMessage} />
-
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
 	<!-- Add Comment -->
 	<CommentPost
@@ -72,3 +70,5 @@
 		<div>{$_('There are currently no comments')}</div>
 	{/if}
 </div>
+
+<Poppup bind:poppup />

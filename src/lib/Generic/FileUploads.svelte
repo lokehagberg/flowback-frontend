@@ -16,7 +16,7 @@
 </div>
 <div
 	class={minimalist
-		? ''
+		? 'inline'
 		: `flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
 	{#if !minimalist}Add media{/if}
@@ -24,7 +24,7 @@
 		icon={faUpload}
 		bind:croppedImage={image}
 		minimalist
-		Class="inline"
+		Class="!inline"
 		label=""
 		iconSize="1.5x"
 		disableImagePreview

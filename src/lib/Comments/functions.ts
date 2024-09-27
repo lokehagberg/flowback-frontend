@@ -4,6 +4,8 @@ import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 import { fetchRequest } from '$lib/FetchRequest';
 
 export const commentSetup = async (comments: Comment[]) => {
+	if (!comments) return [];
+
 	comments.map((comment) => (comment.reply_depth = getCommentDepth(comment, comments)));
 	comments.forEach((comment) => {
 		checkForLinks(comment.message, `comment-${comment.id}`);
@@ -44,7 +46,7 @@ export const getComments = async (
 	const { res, json } = await fetchRequest('GET', _api);
 
 	return {
-		comments: json.results.map((comment: Comment) => {
+		comments: json.results?.map((comment: Comment) => {
 			comment.being_edited = false;
 			comment.being_replied = false;
 			return comment;

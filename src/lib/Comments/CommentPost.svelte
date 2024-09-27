@@ -6,13 +6,10 @@
 	import { page } from '$app/stores';
 	import type { Comment } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
-	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
-	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import { commentSetup, getCommentDepth } from './functions';
+	import { getCommentDepth } from './functions';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Fa from 'svelte-fa';
-	import { faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-icons';
-	import Select from '$lib/Generic/Select.svelte';
+	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -156,7 +153,7 @@
 			Class="w-full"
 		/>
 		<Button Class="px-3 mt-6 bg-white" type="submit" label=""
-		><Fa icon={faPaperPlane} color="black" /></Button
+			><Fa icon={faPaperPlane} color="black" /></Button
 		>
 	</div>
 	<FileUploads bind:images minimalist />

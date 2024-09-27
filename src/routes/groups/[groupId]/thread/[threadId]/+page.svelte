@@ -1,23 +1,20 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Thread } from '$lib/Group/interface';
-
-	import type { Comment } from '$lib/Poll/interface';
-
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faDownLong } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import { _ } from 'svelte-i18n';
-	import Description from '$lib/Poll/Description.svelte';
 	import ThreadDescription from '$lib/Group/ThreadDescription.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
-	let thread: Thread, comments: Comment[];
+	let thread: Thread, poppup: poppup;
 
 	onMount(() => {
 		getThread();
@@ -28,29 +25,17 @@
 			'GET',
 			`group/${$page.params.groupId}/thread/list?id=${$page.params.threadId}`
 		);
-		console.log('HELLO?', thread);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not get Thread', success: false };
+			return;
+		}
 
 		thread = json.results[0];
 		if (thread.description === null) thread.description = '';
 	};
 </script>
 
-<!-- <Layout centered>
-	
-	{#if thread}
-
-	
-		<div
-			class="w-full bg-white p-6"
-		>
-			<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
-
-
-		</div>
-	{/if}
-</Layout> -->
 <Layout centered>
 	{#if thread}
 		<div
@@ -85,6 +70,8 @@
 
 	<Comments api={'thread'} Class="w-[70%] max-w-[800px] bg-white dark:bg-darkobject p-6" />
 </Layout>
+
+<Poppup bind:poppup />
 
 <style>
 	.poll-header-grid {

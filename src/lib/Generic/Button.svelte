@@ -45,7 +45,7 @@
 				? ' !bg-white dark:bg-darkobject  primary-light-inner-shadow'
 				: ''
 		}`}
-	class:bg-gray-300={disabled}
+	class:!bg-gray-300={disabled}
 	class:!bg-secondary={buttonStyle == 'secondary'}
 	class:!bg-red-500={buttonStyle === 'warning'}
 	class:!bg-accent={buttonStyle === 'accent'}

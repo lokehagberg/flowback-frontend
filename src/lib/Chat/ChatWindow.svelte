@@ -45,14 +45,13 @@
 	});
 
 	const getRecentMesseges = async () => {
-		console.log(selectedChatChannelId, "SELCTED")
+		console.log(selectedChatChannelId, 'SELCTED');
 		if (!selectedChatChannelId) return;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
-
 
 		if (res.ok) messages = json.results.reverse();
 
@@ -94,10 +93,9 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
-		
 		if (!channelId) return;
-		console.log(selectedChatChannelId, "SELECT");
-		
+		console.log(selectedChatChannelId, 'SELECT');
+
 		if (!selectedChatChannelId) return;
 
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
@@ -232,10 +230,18 @@
 		{/if}
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
 		{#each messages as message}
-			<li class="p-3 hover:bg-gray-200 hover:dark:bg-darkbackground">
+			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
+			<li class="p-3 max-w-[80%]" class:ml-auto={sentByUser}>
 				<span>{message.user?.username || message.username}</span>
-				<span class="text-[14px] text-gray-400 ml-3">{formatDate(message.created_at)}</span>
-				<p>{message.message}</p>
+				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+				<p
+					class="p-2"
+					class:bg-primary={sentByUser}
+					class:text-white={sentByUser}
+					class:bg-gray-300={!sentByUser}
+				>
+					{message.message}
+				</p>
 			</li>
 		{/each}
 		{#if newerMessages}

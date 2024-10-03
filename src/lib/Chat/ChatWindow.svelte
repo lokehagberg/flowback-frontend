@@ -231,17 +231,17 @@
 		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
 		{#each messages as message}
 			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
-			<li class="p-3 max-w-[80%]" class:ml-auto={sentByUser}>
+			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
 				<span>{message.user?.username || message.username}</span>
-				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 				<p
-					class="p-2"
-					class:bg-primary={sentByUser}
-					class:text-white={sentByUser}
-					class:bg-gray-300={!sentByUser}
+				class="p-2 rounded-xl"
+				class:bg-primary={sentByUser}
+				class:text-white={sentByUser}
+				class:bg-gray-300={!sentByUser}
 				>
 					{message.message}
 				</p>
+				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 			</li>
 		{/each}
 		{#if newerMessages}

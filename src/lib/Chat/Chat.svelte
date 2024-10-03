@@ -67,7 +67,7 @@
 
 <div
 	bind:this={chatDiv}
-	class:invisible={!chatOpen}
+	class:invisible={chatOpen}
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
 	<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />

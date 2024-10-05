@@ -67,11 +67,11 @@
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
+	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh]  !flex justify-center"
 >
 	<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 
-	<div class="flex w-full gap-6 max-w-[1200px]">
+	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-12 ml-6 dark:bg-darkobject p-2">
 			<Preview
 				bind:selectedChat

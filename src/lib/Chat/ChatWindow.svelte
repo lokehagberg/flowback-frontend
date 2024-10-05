@@ -30,7 +30,8 @@
 			success: boolean;
 		},
 		messages: Message[] = [],
-		socket: WebSocket;
+		socket: WebSocket,
+		chatWindow: any;
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -39,10 +40,6 @@
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
 		isLookingAtOlderMessages: boolean;
-
-	onMount(() => {
-		recieveMessage();
-	});
 
 	const getRecentMesseges = async () => {
 		console.log(selectedChatChannelId, 'SELCTED');
@@ -185,6 +182,19 @@
 		}
 	};
 
+	const correctHeightRelativeToHeader = () => {
+		const headerHeight = document.querySelector('#header')?.clientHeight;
+		const chatTextField = document.querySelector('#chatTextField')?.clientHeight;
+		if (headerHeight && chatWindow)
+			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
+	};
+
+	onMount(() => {
+		recieveMessage();
+		correctHeightRelativeToHeader();
+		window.addEventListener('resize', correctHeightRelativeToHeader);
+	});
+
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -217,8 +227,9 @@
 
 {#if selectedChat !== null || true}
 	<ul
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-[100%] overflow-y-scroll overflow-x-hidden break-all"
+		class="dark:bg-darkobject col-start-2 col-end-3 bg-white overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
+		bind:this={chatWindow}
 	>
 		{#if messages.length === 0}
 			<span class="self-center">{'Chat is currently empty, maybe say hello?'}</span>
@@ -228,16 +239,16 @@
 				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
 			</li>
 		{/if}
-		
+
 		{#each messages as message}
 			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
 			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
 				<span>{message.user?.username || message.username}</span>
 				<p
-				class="p-2 rounded-xl"
-				class:bg-primary={sentByUser}
-				class:text-white={sentByUser}
-				class:bg-gray-300={!sentByUser}
+					class="p-2 rounded-xl"
+					class:bg-primary={sentByUser}
+					class:text-white={sentByUser}
+					class:bg-gray-300={!sentByUser}
 				>
 					{message.message}
 				</p>
@@ -255,7 +266,10 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="dark:bg-darkobject col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
+	<div
+		id="chatTextField"
+		class="dark:bg-darkobject col-start-2 col-end-3 bg-white shadow rounded p-2 w-full"
+	>
 		<!-- Here the user writes a message to be sent -->
 		<form
 			class="w-full flex gap-2 md:mt-2 lg:mt-5 xl:mt-14 items-center"

@@ -227,7 +227,7 @@
 
 {#if selectedChat !== null || true}
 	<ul
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white overflow-y-scroll overflow-x-hidden break-all"
+		class="col-start-2 col-end-3 overflow-y-scroll overflow-x-hidden break-all"
 		id="chat-window"
 		bind:this={chatWindow}
 	>
@@ -268,11 +268,11 @@
 	</div> -->
 	<div
 		id="chatTextField"
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white shadow rounded p-2 w-full"
+		class="shadow rounded"
 	>
 		<!-- Here the user writes a message to be sent -->
 		<form
-			class="w-full flex gap-2 md:mt-2 lg:mt-5 xl:mt-14 items-center"
+			class="flex gap-1 items-center"
 			on:submit|preventDefault={postMessage}
 		>
 			<TextArea

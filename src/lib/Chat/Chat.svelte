@@ -81,7 +81,7 @@
 				bind:selectedChatChannelId
 			/>
 		</div>
-		<div class="bg-white w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
+		<div class="bg-white dark:bg-darkobject w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
 			<ChatWindow
 				bind:selectedChat
 				bind:selectedChatChannelId

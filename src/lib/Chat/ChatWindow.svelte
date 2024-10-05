@@ -228,7 +228,7 @@
 				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
 			</li>
 		{/if}
-		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
+		
 		{#each messages as message}
 			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
 			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>

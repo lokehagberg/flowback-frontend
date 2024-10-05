@@ -87,9 +87,9 @@
 
 				previewDirect = previewDirect;
 			}
-			console.log(message, chatter)
+			console.log(message, chatter);
 			selectedChat = chatter.channel_id;
-			selectedChatChannelId = chatter.channel_id
+			selectedChatChannelId = chatter.channel_id;
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
 			if (message) {
@@ -127,16 +127,6 @@
 	$: groups = sort(groups, previewGroup);
 </script>
 
-<!-- ${
-	(previewDirect.find(preview => preview.notified) && previewGroup.find(preview => preview.notified))
-		? 'both-message-bg'
-		: previewDirect.find(preview => preview.notified)
-		? 'direct-message-bg'
-		: previewGroup.find(preview => preview.notified)
-		? 'group-message-bg'
-		: ''}
-		
-		`} -->
 <div class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject`}>
 	<Tab
 		Class={``}
@@ -146,9 +136,7 @@
 	/>
 </div>
 
-<ul
-	class="max-h-[100%] overflow-scroll"
->
+<div class="max-h-[100%] overflow-scroll">
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
 		bind:value={chatSearch}
@@ -160,22 +148,19 @@
 				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<li
+		<div
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 			class:bg-gray-200={selectedChat === chatter.id}
 			class:dark:bg-gray-700={selectedChat === chatter.id}
-			on:keydown
-			on:click={async () => {
+			on:click={() => {
 				clickedChatter(chatter);
-				setTimeout(() => {
-					// Fixes having to doubble click to get rid of chat notificattion
-					clickedChatter(chatter);
-				}, 200);
 			}}
+			on:keydown
+			tabindex="0"
+			role="button"
 		>
 			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
@@ -186,7 +171,10 @@
 					class:bg-purple-300={selectedPage === 'direct'}
 				/>
 			{/if}
-			<ProfilePicture username={chatter.name || chatter.username} profilePicture={chatter.profile_image} />
+			<ProfilePicture
+				username={chatter.name || chatter.username}
+				profilePicture={chatter.profile_image}
+			/>
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"
 					>{chatter.name || chatter.username}</span
@@ -200,9 +188,9 @@
 					{/if}
 				</span>
 			</div>
-		</li>
+		</div>
 	{/each}
-</ul>
+</div>
 
 <style>
 	.group-message-bg {

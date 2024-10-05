@@ -42,7 +42,6 @@
 		isLookingAtOlderMessages: boolean;
 
 	const getRecentMesseges = async () => {
-		console.log(selectedChatChannelId, 'SELCTED');
 		if (!selectedChatChannelId) return;
 
 		const { res, json } = await fetchRequest(
@@ -91,7 +90,6 @@
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
 		if (!channelId) return;
-		console.log(selectedChatChannelId, 'SELECT');
 
 		if (!selectedChatChannelId) return;
 
@@ -184,7 +182,6 @@
 
 	const correctHeightRelativeToHeader = () => {
 		const headerHeight = document.querySelector('#header')?.clientHeight;
-		const chatTextField = document.querySelector('#chatTextField')?.clientHeight;
 		if (headerHeight && chatWindow)
 			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
 	};
@@ -204,7 +201,8 @@
 		else isLookingAtOlderMessages = false;
 	}
 
-	//When messages are recieved and not looking at history, scroll.
+	//When messages are recieved and not looking at history, scroll to bottom.
+	//TODO: Question if we need this, discord doesn't have this feature and I like that.
 	$: messages &&
 		(async () => {
 			if (newerMessages) return;
@@ -215,9 +213,6 @@
 				d?.scroll(0, 100000);
 			}, 100);
 		})();
-
-	//@ts-ignore
-	$: if (user) socket = Socket.createSocket(user.id);
 
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
@@ -268,15 +263,9 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div
-		id="chatTextField"
-		class="shadow rounded"
-	>
+	<div class="shadow rounded">
 		<!-- Here the user writes a message to be sent -->
-		<form
-			class="flex gap-1 items-center"
-			on:submit|preventDefault={postMessage}
-		>
+		<form class="flex gap-1 items-center" on:submit|preventDefault={postMessage}>
 			<TextArea
 				autofocus
 				label=""

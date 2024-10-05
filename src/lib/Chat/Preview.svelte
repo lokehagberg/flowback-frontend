@@ -147,7 +147,7 @@
 </div>
 
 <ul
-	class="row-start-2 row-end-4 overflow-hidden bg-white dark:bg-darkobject flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll pb-[40px]"
+	class="max-h-[100%] overflow-scroll"
 >
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
@@ -186,7 +186,7 @@
 					class:bg-purple-300={selectedPage === 'direct'}
 				/>
 			{/if}
-			<ProfilePicture user={chatter} />
+			<ProfilePicture username={chatter.name || chatter.username} profilePicture={chatter.profile_image} />
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"
 					>{chatter.name || chatter.username}</span

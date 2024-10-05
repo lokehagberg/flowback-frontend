@@ -247,8 +247,10 @@
 				<p
 					class="p-2 rounded-xl"
 					class:bg-primary={sentByUser}
+					class:dark:bg-gray-600={sentByUser}
 					class:text-white={sentByUser}
 					class:bg-gray-300={!sentByUser}
+					class:dark:bg-gray-500={!sentByUser}
 				>
 					{message.message}
 				</p>

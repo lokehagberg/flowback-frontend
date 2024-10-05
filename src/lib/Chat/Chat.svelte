@@ -2,18 +2,15 @@
 	import ChatWindow from './ChatWindow.svelte';
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
-	// @ts-ignore
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message, PreviewMessage } from './interfaces';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
-	import { updateUserData } from './functions';
-	import Socket from './Socket';
 	import { env } from '$env/dynamic/public';
+	//@ts-ignore
+	import Fa from 'svelte-fa/src/fa.svelte';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -32,9 +29,6 @@
 
 	onMount(async () => {
 		await getUser();
-		// await setUpMessageSending();
-
-		// testNewAPI();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 	});
@@ -47,15 +41,15 @@
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
-		if (res.ok) user = json;
 		if (!res.ok) return;
+		user = json;
 	};
 
-	$: if (!chatOpen) {
-		if (selectedChat) updateUserData(selectedChat, null, new Date());
-		selectedChat = null;
-		// selectedPage === 'direct';
-	}
+	// $: if (!chatOpen) {
+	// 	if (selectedChat) updateUserData(selectedChat, null, new Date());
+	// 	selectedChat = null;
+	// 	// selectedPage === 'direct';
+	// }
 </script>
 
 <svelte:head>
@@ -67,7 +61,7 @@
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh]  !flex justify-center"
+	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
 	<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 
@@ -81,7 +75,7 @@
 				bind:selectedChatChannelId
 			/>
 		</div>
-		<div class="bg-white dark:bg-darkobject w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
+		<div class="bg-white w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
 			<ChatWindow
 				bind:selectedChat
 				bind:selectedChatChannelId
@@ -108,15 +102,6 @@
 </div>
 
 <style>
-	.grid-width-fix {
-		grid-template-columns: 30% 70%;
-		grid-template-rows: 2.9rem 58vh 28vh;
-		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and 
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved */
-		height: calc(100vh - 2rem - 40px - 28px);
-	}
-
 	.small-notification:before {
 		position: absolute;
 		content: '';
@@ -136,9 +121,5 @@
 		background-color: rgb(147, 197, 235);
 		border-radius: 100%;
 		padding: 10px;
-	}
-
-	.grid-sizing {
-		grid-template-rows: 8% 77% 15%;
 	}
 </style>

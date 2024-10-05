@@ -77,7 +77,7 @@
 		//Update when user last saw message after clicking on channel
 
 		if (selectedPage === 'direct') {
-			if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
+			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
 			let message = previewDirect.find((message) => message.channel_id === chatter.channel_id);
 
 			if (message) {
@@ -87,7 +87,6 @@
 
 				previewDirect = previewDirect;
 			}
-			console.log(message, chatter);
 			selectedChat = chatter.channel_id;
 			selectedChatChannelId = chatter.channel_id;
 		} else if (selectedPage === 'group') {

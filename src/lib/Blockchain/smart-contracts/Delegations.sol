@@ -1,64 +1,93 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.0;
+pragma solidity 0.8.18;
 
-import {RightToVote} from './RightToVote.sol';
+import {RightToVote} from "./RightToVote.sol";
 
 /**
  * @title Delegations
  * @dev A contract that manages delegations for different groups.
- * @author @EllenLng, @KristofferGW
-*/
-
+ */
 contract Delegations is RightToVote {
+    /// Custom errors
+    error D_AlreadyDelegate(uint256 groupId, address delegate);
+    error D_NotGroupMember(uint256 groupId, address user);
+    error D_NotADelegate(uint256 groupId, address potentialDelegate);
+    error D_CannotDelegateToSelf(address user);
+    error D_NoDelegationToRemove(uint256 groupId, address user, address delegate);
 
-    //Mapping over who is delegate in which group
-    mapping(uint => GroupDelegate[]) public groupDelegates;
-    
-    //Mapping that keeps track of the number of delegates corresponding to groupId
-    mapping(uint => uint) internal groupDelegateCount;
-    
-    // Mapping over which groups users have delegated in by address
+    /// @notice Maps group IDs to their list of delegates.
+    mapping(uint256 => GroupDelegate[]) public groupDelegates;
+
+    /// @notice Maps group IDs to the count of delegates in the group.
+    mapping(uint256 => uint256) internal groupDelegateCount;
+
+    /// @notice Tracks the groups in which each user has delegated their votes.
     mapping(address => GroupDelegation[]) internal groupDelegationsByUser;
 
-    // A struct that represents a delegate
     struct GroupDelegate {
-        address delegate; // The address of the delegate.
-        uint groupId; // The group ID of the group the delegate is a delegate in.
-        uint delegatedVotes; // The number of delegated votes the delegate has.
-        address[] delegationsFrom; // An array of addresses that have delegated to the delegate.
-        uint groupDelegateId; // The delegate ID of the delegate.
+        address delegate;
+        uint256 groupId;
+        uint256 delegatedVotes;
+        address[] delegationsFrom;
+        uint256 groupDelegateId;
     }
 
     struct GroupDelegation {
-        uint groupId;
-        uint timeOfDelegation;
+        uint256 groupId;
+        uint256 timeOfDelegation;
     }
 
-    // Event triggered when a new delegate is created.
-    event NewDelegate(address indexed delegate, uint indexed groupId, uint delegatedVotes, address[] delegationsFrom, uint groupDelegateId);
-    
-    // Event triggered when a new delegation is created.
-    event NewDelegation(address indexed from, address indexed to, uint indexed groupId, uint delegatedVotes, address[] delegationsFrom);
+    event NewDelegate(
+        address indexed delegate,
+        uint256 indexed groupId,
+        uint256 delegatedVotes,
+        address[] delegationsFrom,
+        uint256 indexed groupDelegateId
+    );
 
-    // Event triggered when a delegate resigns.
-    event DelegateResignation(address indexed delegate, uint indexed groupId);
-    
-   
-    function _requireAddressIsDelegate(uint _groupId, address _potentialDelegate) private view {
-        require(addressIsDelegate(_groupId, _potentialDelegate), "The address is not a delegate in the specified group");
+    event NewDelegation(
+        address indexed from,
+        address indexed to,
+        uint256 indexed groupId,
+        uint256 delegatedVotes,
+        address[] delegationsFrom
+    );
+
+    event DelegateResignation(address indexed delegate, uint256 indexed groupId);
+
+    event DelegationRemoved(address indexed user, address indexed delegate, uint256 indexed groupId);
+
+    //GETTERS FOR TESTING PURPOSES
+    function getDelegateCount(uint256 _groupId) external view returns (uint256) {
+        return groupDelegateCount[_groupId];
     }
 
-    modifier requireAddressIsDelegate(uint _groupId, address _potentialDelegate){
-        _requireAddressIsDelegate(_groupId, _potentialDelegate);
-        _;
+    function getDelegateVoteCount(uint256 _groupId, address _delegate) external view returns (uint256) {
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == _delegate) {
+                return delegates[i].delegatedVotes;
+            }
+        }
+        revert("Delegate not found");
     }
-    /**
-     * @dev Allows a user to become a delegate in a specific group.
-     * @param _groupId The group ID of the group the delegate is a delegate in.
-    */
-    function becomeDelegate(uint _groupId) public {
-        require(!addressIsDelegate(_groupId, msg.sender), "You are already a delegate in specific group");
-        require(isUserMemberOfGroup(_groupId), "You need to be a member of the group to become a delegate");
+
+    /// Internal function to check if an address is a delegate in a specific group.
+    function _requireAddressIsDelegate(uint256 _groupId, address _potentialDelegate) internal view {
+        if (!addressIsDelegate(_groupId, _potentialDelegate)) {
+            revert D_NotADelegate(_groupId, _potentialDelegate);
+        }
+    }
+    /// Allows a user to become a delegate in a specific group.
+
+    function becomeDelegate(uint256 _groupId) external {
+        if (addressIsDelegate(_groupId, msg.sender)) {
+            revert D_AlreadyDelegate(_groupId, msg.sender);
+        }
+        if (!isUserMemberOfGroup(_groupId)) {
+            revert D_NotGroupMember(_groupId, msg.sender);
+        }
+
         groupDelegateCount[_groupId]++;
 
         GroupDelegate memory newGroupDelegate = GroupDelegate({
@@ -68,194 +97,191 @@ contract Delegations is RightToVote {
             delegationsFrom: new address[](0),
             groupDelegateId: groupDelegateCount[_groupId]
         });
-
         groupDelegates[_groupId].push(newGroupDelegate);
 
-        emit NewDelegate(newGroupDelegate.delegate, newGroupDelegate.groupId, newGroupDelegate.delegatedVotes, newGroupDelegate.delegationsFrom, newGroupDelegate.groupDelegateId);
+        emit NewDelegate(
+            newGroupDelegate.delegate,
+            newGroupDelegate.groupId,
+            newGroupDelegate.delegatedVotes,
+            newGroupDelegate.delegationsFrom,
+            newGroupDelegate.groupDelegateId
+        );
     }
 
-    /**
-     * @dev Allows a user to delegate their vote to a delegate in a specific group.
-     * @param _groupId The group ID of the group the delegate is a delegate in.
-     * @param _delegateTo The address of the delegate to delegate to.
-    */
-    function delegate(uint _groupId, address _delegateTo) public requireAddressIsDelegate(_groupId, _delegateTo) {
-        require(isUserMemberOfGroup(_groupId), "You can only delegate in groups you are a member of.");
-        require(!hasDelegatedInGroup(_groupId), "You have an active delegation in this group.");
-        require(_delegateTo != msg.sender, "You can not delegate to yourself");
+    /// Allows a user to delegate their vote to a specific delegate in a group.
+    function delegateToDelegate(address _delegate, uint256 _groupId) external {
+        if (!addressIsDelegate(_groupId, _delegate)) {
+            revert D_NotADelegate(_groupId, _delegate);
+        }
+        if (!isUserMemberOfGroup(_groupId)) {
+            revert D_NotGroupMember(_groupId, msg.sender);
+        }
+        if (msg.sender == _delegate) {
+            revert D_CannotDelegateToSelf(msg.sender);
+        }
+        if (hasDelegatedToDelegateInGroup(_groupId, _delegate)) {
+            revert D_AlreadyDelegate(_groupId, _delegate);
+        }
 
-        // add the group to the user's groupDelegationsByUser array
-        GroupDelegation memory newGroupDelegation = GroupDelegation({
-            groupId: _groupId,
-            timeOfDelegation: block.timestamp
-        });
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        bool found = false;
 
+        // Iterate through the delegates to find the matching one
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == _delegate) {
+                delegates[i].delegatedVotes++; // Increment the delegate's votes
+                delegates[i].delegationsFrom.push(msg.sender); // Add the delegator
+                found = true;
+
+                // Emit the event here inside the loop
+                emit NewDelegation(
+                    msg.sender,
+                    _delegate,
+                    _groupId,
+                    delegates[i].delegatedVotes, // Access via the index
+                    delegates[i].delegationsFrom // Access via the index
+                );
+
+                break; // Break the loop once the delegate is found
+            }
+        }
+
+        // Ensure delegate was found
+        require(found, "Delegate not found");
+
+        // Add the new delegation for the user
+        GroupDelegation memory newGroupDelegation =
+            GroupDelegation({groupId: _groupId, timeOfDelegation: block.timestamp});
         groupDelegationsByUser[msg.sender].push(newGroupDelegation);
-
-        // increase the delegates delegatedVotes
-        uint delegatedVotes;
-        address[] memory delegationsFrom;
-        uint arrayLength = groupDelegates[_groupId].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegates[_groupId][i].delegate == _delegateTo) {
-                groupDelegates[_groupId][i].delegatedVotes++;
-                groupDelegates[_groupId][i].delegationsFrom.push(msg.sender);
-                delegatedVotes = groupDelegates[_groupId][i].delegatedVotes;
-                delegationsFrom = groupDelegates[_groupId][i].delegationsFrom;
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        emit NewDelegation(msg.sender, _delegateTo, _groupId, delegatedVotes, delegationsFrom);
     }
 
-    /**
-     * @dev Allows a user to remove a delegation in a specific group.
-     * @param _delegate The address of the delegate to remove the delegation from.
-     * @param _groupId The group ID of the group the delegate is a delegate in.
-    */
-    function removeDelegation(address _delegate, uint _groupId) public {
+    /// Allows a user to remove their delegation from a specific delegate in a group.
+    function removeDelegation(address _delegate, uint256 _groupId) external {
+        if (!hasDelegatedToDelegateInGroup(_groupId, _delegate)) {
+            revert D_NoDelegationToRemove(_groupId, msg.sender, _delegate);
+        }
 
-        // check that the user has delegated to the specified delegate in the specified group
-        require(hasDelegatedToDelegateInGroup(_groupId, _delegate), "You have not delegated to the specified delegate in this group");
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        uint256 foundIndex;
+        bool found = false; // Flag to check if delegate is found
 
-        // decrease the number of delegated votes from the delegate
-        // remove the user from the delegates delegationsFrom array
-        uint delegatedVotes;
-        uint arrayLength = groupDelegates[_groupId].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegates[_groupId][i].delegate == _delegate) {
-                groupDelegates[_groupId][i].delegatedVotes--;
-                delegatedVotes = groupDelegates[_groupId][i].delegatedVotes;
-                for (uint k; k < groupDelegates[_groupId][i].delegationsFrom.length;) {
-                    if (groupDelegates[_groupId][i].delegationsFrom[k] == msg.sender) {
-                        delete groupDelegates[_groupId][i].delegationsFrom[k];
-                    }
+        // Iterate through the delegates to find the matching delegate
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == _delegate) {
+                delegates[i].delegatedVotes--;
 
-                    unchecked {
-                        ++k;
+                // Iterate through the delegationsFrom array to find and delete msg.sender
+                for (uint256 k = 0; k < delegates[i].delegationsFrom.length; k++) {
+                    if (delegates[i].delegationsFrom[k] == msg.sender) {
+                        delete delegates[i].delegationsFrom[k]; // Delete the delegator
+                        break;
                     }
                 }
-            }
 
-            unchecked {
-                ++i;
+                foundIndex = i; // Store the index of the found delegate
+                found = true;
+                break;
             }
         }
-        
-        // remove the group from the user's groupDelegationsByUser array
-        arrayLength = groupDelegationsByUser[msg.sender].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegationsByUser[msg.sender][i].groupId == _groupId) {
-                delete groupDelegationsByUser[msg.sender][i];
-            }
 
-            unchecked {
-                ++i;
+        // Ensure the delegate was found
+        require(found, "Delegate not found");
+
+        // Remove the delegation from the user's delegations
+        GroupDelegation[] storage userDelegations = groupDelegationsByUser[msg.sender];
+        for (uint256 i = 0; i < userDelegations.length; i++) {
+            if (userDelegations[i].groupId == _groupId) {
+                delete userDelegations[i]; // Delete the user's delegation
+                break;
+            }
+        }
+        emit DelegationRemoved(msg.sender, _delegate, _groupId);
+    }
+
+    /// Allows a delegate to resign from a group.
+    function resignAsDelegate(uint256 _groupId) external {
+        // Ensure the user is a delegate in the group
+        _requireAddressIsDelegate(_groupId, msg.sender);
+
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        bool delegateFound = false;
+        address[] memory affectedUsers; // Initialize the memory array
+
+        // Loop to find the delegate and initialize affectedUsers
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == msg.sender) {
+                uint256 length = delegates[i].delegationsFrom.length;
+
+                // Initialize affectedUsers if there are delegations
+                if (length > 0) {
+                    affectedUsers = new address[](length); // Properly initialize the memory array
+                    for (uint256 j = 0; j < length; j++) {
+                        affectedUsers[j] = delegates[i].delegationsFrom[j];
+                    }
+                }
+
+                // Remove the delegate from the group
+                delegates[i] = delegates[delegates.length - 1]; // Swap with the last element
+                delegates.pop(); // Remove the last element
+
+                delegateFound = true;
+
+                // Emit the event here as soon as the delegate is found and removed
+                emit DelegateResignation(msg.sender, _groupId);
+
+                break; // Break the loop after finding and processing the delegate
+            }
+        }
+
+        // Ensure the delegate was found
+        require(delegateFound, "Delegate not found");
+
+        // Iterate over affectedUsers and delete their group delegations
+        for (uint256 i = 0; i < affectedUsers.length; i++) {
+            GroupDelegation[] storage userDelegations = groupDelegationsByUser[affectedUsers[i]];
+            for (uint256 k = 0; k < userDelegations.length; k++) {
+                if (userDelegations[k].groupId == _groupId) {
+                    // Swap-and-pop to remove the delegation
+                    userDelegations[k] = userDelegations[userDelegations.length - 1];
+                    userDelegations.pop();
+                    break;
+                }
             }
         }
     }
 
-    /**
-     * @dev Allows a user to resign as a delegate in a specific group.
-     * @param _groupId The group ID of the group the delegate is a delegate in.
-    */
-    function resignAsDelegate(uint _groupId) public requireAddressIsDelegate(_groupId, msg.sender){
-        address[] memory affectedUsers;
-
-        // remove groupDelegationsByUsers for affected users
-        uint arrayLength = groupDelegates[_groupId].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegates[_groupId][i].delegate == msg.sender) {
-                affectedUsers = groupDelegates[_groupId][i].delegationsFrom;
-                delete groupDelegates[_groupId][i];
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        for (uint i; i < affectedUsers.length; i++) {
-            arrayLength = groupDelegationsByUser[affectedUsers[i]].length;
-            for (uint k; k < arrayLength;) {
-                if (groupDelegationsByUser[affectedUsers[i]][k].groupId == _groupId) {
-                    delete groupDelegationsByUser[affectedUsers[i]][k];
-                }
-
-                unchecked {
-                    ++k;
-                }
-            }
-        }
-        emit DelegateResignation(msg.sender, _groupId);
-    }
-
-    /**
-     * @dev Checks if a user is delegate in a specific group.
-     * @param _groupId The group ID of the group to check.
-     * @return isDelegate Returns true if the user has delegated in the group, false otherwise.
-    */
-    function addressIsDelegate(uint _groupId, address _potentialDelegate) view private returns(bool isDelegate) {
-        uint arrayLength = groupDelegates[_groupId].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegates[_groupId][i].delegate == _potentialDelegate) {
+    /// Checks if an address is a delegate in a specific group.
+    function addressIsDelegate(uint256 _groupId, address _potentialDelegate) public view returns (bool isDelegate) {
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == _potentialDelegate) {
                 return true;
-            }
-
-            unchecked {
-                ++i;
             }
         }
         return false;
     }
 
-    /**
-     * @dev Checks if a user has delegated in a specific group.
-     * @param _groupId The group ID of the group to check.
-     * @return hasDelegated Returns true if the user has delegated in the group, false otherwise.
-    */
-    function hasDelegatedInGroup(uint _groupId) public view returns (bool) {
-        for (uint i = 0; i < groupDelegationsByUser[msg.sender].length;) {
-            if (groupDelegationsByUser[msg.sender][i].groupId == _groupId) {
+    /// Checks if the user has an active delegation in a specific group.
+    function hasDelegatedInGroup(uint256 _groupId) public view returns (bool) {
+        GroupDelegation[] storage userDelegations = groupDelegationsByUser[msg.sender];
+        for (uint256 i = 0; i < userDelegations.length; i++) {
+            if (userDelegations[i].groupId == _groupId) {
                 return true;
             }
-
-            unchecked {
-                ++i;
-            }
         }
-        
         return false;
     }
 
-    /**
-     * @dev Checks if a user has delegated to a specific delegate in a specific group.
-     * @param _groupId The group ID of the group to check.
-     * @param _delegate The address of the delegate to check.
-     * @return hasDelegated Returns true if the user has delegated to the delegate in the group, false otherwise.
-    */
-    function hasDelegatedToDelegateInGroup(uint _groupId, address _delegate) public view returns (bool) {
-        uint arrayLength = groupDelegates[_groupId].length;
-        for (uint i; i < arrayLength;) {
-            if (groupDelegates[_groupId][i].delegate == _delegate) {
-                arrayLength = groupDelegates[_groupId][i].delegationsFrom.length;
-                for (uint k; k < arrayLength;) {
-                    if (groupDelegates[_groupId][i].delegationsFrom[k] == msg.sender) {
+    /// Checks if the user has delegated to a specific delegate in a group.
+    function hasDelegatedToDelegateInGroup(uint256 _groupId, address _delegate) public view returns (bool) {
+        GroupDelegate[] storage delegates = groupDelegates[_groupId];
+        for (uint256 i = 0; i < delegates.length; i++) {
+            if (delegates[i].delegate == _delegate) {
+                for (uint256 k = 0; k < delegates[i].delegationsFrom.length; k++) {
+                    if (delegates[i].delegationsFrom[k] == msg.sender) {
                         return true;
                     }
-
-                    unchecked {
-                        ++k;
-                    }
                 }
-            }
-
-            unchecked {
-                ++i;
             }
         }
         return false;

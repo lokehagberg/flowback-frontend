@@ -31,7 +31,7 @@
 	>
 		{tag?.name}
 	</div>
-	<div class="border-accent-tertiary pl-1 pr-1 border-2 w-[20%] text-center">
+	<div class="border-accent-tertiary pl-1 pr-1 border-2 w-[20%] text-center text-darkmodeText">
 		{#if tag?.imac}
 			({tag?.imac})
 		{:else}

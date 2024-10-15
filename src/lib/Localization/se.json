@@ -353,5 +353,11 @@
     "delegate history for": "Delegeringshistorik för",
     "There are currently no threads in this group":"Det finns för nuvarande inga trådar här",
     "search work group": "Sök bland arbetsgrupper",
-    "Create work group": "Skapa arbetsgrupp"
+    "Create work group": "Skapa arbetsgrupp",
+    "Assignee": "Givare",
+    "Priority": "Prioritet",
+    "Scheduled events for":"Schemalagda skeénden den",
+    "User to invite":"Användare att bjuda in",
+    "Removing a tag removes all polls with that tag!": "Att ta bort en tagg tar bort alla omröstningar med den taggen!",
+    "You are removing":"Du tar bort"
 }

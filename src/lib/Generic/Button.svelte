@@ -38,7 +38,7 @@
 	}}
 	class={`text-center ${
 		Class.includes('bg-') ? '' : 'bg-primary'
-	} filter hover:brightness-50 inline text-white rounded-md cursor-pointer  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
+	} filter hover:brightness-50 inline text-white rounded-md cursor-pointer p-2  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
 		${
 			buttonStyle === 'primary-light'

@@ -5,6 +5,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let workGroup: WorkGroup;
 
@@ -74,16 +75,16 @@
 
 <div class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject min-h-14">
 	<span class="text-primary w-[40%] font-bold">{workGroup.name}</span>
-	<span class="text-gray-500 text-sm w-[30%]">Members: {workGroupUserList.length} </span>
+	<span class="text-gray-500 text-sm w-[30%]">{$_("Members")}: {workGroupUserList.length} </span>
 
 	{#key workGroupUserList}
 		{#if isMember()}
-			<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]" action={leaveGroup}>Leave</Button>
+			<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
 		{:else if workGroup.direct_join}
-			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>Join</Button>
+			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>{$_("Join")}</Button>
 		{:else}
 			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
-				>Ask to Join</Button
+				>{$_("Ask to join")}</Button
 			>
 		{/if}
 	{/key}

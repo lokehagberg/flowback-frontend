@@ -284,7 +284,7 @@
 				/> -->
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
-						Assignee
+						{$_("Assignee")}
 						<select
 							on:input={changeAssignee}
 							value={kanban?.assignee?.id}
@@ -309,7 +309,7 @@
 					</div>
 					<div class="text-left w-[300px]">
 						<!-- {#if kanban.end_date} -->
-						End Date
+						{$_("End Date")}
 						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
 						<!-- {/if} -->
 					</div>
@@ -320,10 +320,10 @@
 				</div>
 				<div class="mt-6 text-left">
 					<span>
-						Assignee: {kanban?.assignee?.username}
+						{$_("Assignee")}: {kanban?.assignee?.username}
 					</span>
 					<div class="flex gap-2 align-middle">
-						<span>Priority:</span>
+						<span>{$_("Priority")}:</span>
 						<PriorityIcons Class="ruby" priority={kanban?.priority} />
 					</div>
 				</div>

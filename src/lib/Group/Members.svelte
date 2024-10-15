@@ -110,7 +110,7 @@
 			<TextInput
 				onInput={() => searchUsers(searchUser)}
 				bind:value={searchUser}
-				label="User to invite"
+				label={$_("User to invite")}
 				placeholder="Username"
 			/>
 			<ul>

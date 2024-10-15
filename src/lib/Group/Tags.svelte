@@ -15,7 +15,7 @@
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
-		selectedTag: TagType = { active: false, id: 0, name: '' },
+		selectedTag: TagType = { active: false, id: 0, name: '', imac: 0 },
 		loading = false,
 		areYouSureModal = false,
 		poppup: poppup;
@@ -101,7 +101,7 @@
 	<div slot="body">
 		<span>{$_('Removing a tag removes all polls with that tag!')}</span>
 		<br />
-		<span>{$_('You are removing:')} {selectedTag?.name}</span>
+		<span>{$_('You are removing')}: {selectedTag?.name}</span>
 	</div>
 	<div slot="footer">
 		<Button action={() => removeTag(selectedTag)} Class="bg-red-500">{$_('Yes')}</Button>

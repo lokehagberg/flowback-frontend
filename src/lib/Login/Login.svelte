@@ -20,8 +20,6 @@
 		loading = true;
 		const { json, res } = await fetchRequest('POST', 'login', { username, password }, false);
 		loading = false;
-		console.log('LOGIN');
-		
 
 		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {

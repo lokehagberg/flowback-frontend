@@ -52,7 +52,7 @@
 	});
 </script>
 
-<div class="bg-white p-6 shadow rounded mb-4">
+<div class="bg-white dark:bg-darkobject p-6 shadow rounded mb-4">
 	<TextInput
 		label=""
 		placeholder="search work group"

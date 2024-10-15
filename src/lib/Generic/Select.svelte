@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
+
 	export let onInput: (
 			e: Event & {
 				currentTarget: EventTarget & HTMLSelectElement;
@@ -10,7 +12,7 @@
 		value = values[0],
 		Class = '',
 		classInner = '',
-		innerLabel = "Select"
+		innerLabel = 'Select';
 </script>
 
 <div class={`${Class}`}>
@@ -29,7 +31,7 @@
 	>
 		<option value="" disabled selected>{innerLabel}</option>
 		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
+			<option value={values[i]} class="dark:bg-darkobject"> {$_(label)} </option>
 		{/each}
 	</select>
 </div>

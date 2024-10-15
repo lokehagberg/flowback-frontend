@@ -4,7 +4,6 @@
 	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
 	import { faPeopleArrows } from '@fortawesome/free-solid-svg-icons/faPeopleArrows';
 	import { faUserGroup } from '@fortawesome/free-solid-svg-icons/faUserGroup';
-	import { faChartColumn } from '@fortawesome/free-solid-svg-icons/faChartColumn';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
 	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
 	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
@@ -13,7 +12,6 @@
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
-	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import { page } from '$app/stores';
 	//@ts-ignore
@@ -101,7 +99,7 @@
 		<div class="mb-6 w-full">
 			<div class="bg-primary text-white shadow rounded flex flex-col">
 				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
-					<GroupSidebarButton text="Create A post" icon={faCheckToSlot} isSelected={false} /></a
+					<GroupSidebarButton text="Create a post" icon={faCheckToSlot} isSelected={false} /></a
 				>
 			</div>
 		</div>

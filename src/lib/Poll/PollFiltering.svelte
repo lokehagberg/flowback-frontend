@@ -113,7 +113,7 @@
 			</select>
 		{/if}
 
-		<Button Class="p-2" action={resetFilter}>Reset Filter</Button>
+		<Button Class="p-2" action={resetFilter}>{$_("Reset Filter")}</Button>
 
 		<!-- <CheckboxButtons
 			label={''}

@@ -56,6 +56,6 @@
 			<option value="not-member">{$_('Not member')}</option>
 		</select>
 
-		<Button Class="p-2" action={resetFilter}>Reset Filter</Button>
+		<Button Class="p-2" action={resetFilter}>{$_("Reset Filter")}</Button>
 	</div>
 </form>

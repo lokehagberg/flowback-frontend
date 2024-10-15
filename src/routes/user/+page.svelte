@@ -186,8 +186,8 @@
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}
 				</a>
-				<div>Phone number: 0764446252</div>
-				<div>Thing</div>
+				<!-- <div>Phone number</div> -->
+				<!-- <div>Thing</div> -->
 			</div>
 		</div>
 		<!-- Editing your own profile -->

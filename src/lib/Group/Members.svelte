@@ -106,7 +106,7 @@
 	>
 		<!-- Inviting -->
 
-		<div class="w-full p-4 bg-white rounded shadow">
+		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
 			<TextInput
 				onInput={() => searchUsers(searchUser)}
 				bind:value={searchUser}
@@ -177,7 +177,7 @@
 		<!-- Members List -->
 
 		{#if users.length > 0}
-			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow">
+			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each users as user}
 					<div class="flex items-center">
 						<ProfilePicture
@@ -186,7 +186,7 @@
 							profilePicture={user.user.profile_image}
 							displayName
 						/>
-						<div class="bg-gray-300 px-2 py-0.5 rounded-lg">
+						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
 						<div

@@ -350,5 +350,8 @@
     "Permissions": "Roller",
     "Assign": "Ge",
     "Any": "Ospecifierat",
-    "delegate history for": "Delegeringshistorik för"
+    "delegate history for": "Delegeringshistorik för",
+    "There are currently no threads in this group":"Det finns för nuvarande inga trådar här",
+    "search work group": "Sök bland arbetsgrupper",
+    "Create work group": "Skapa arbetsgrupp"
 }

@@ -11,6 +11,7 @@
 	import Fa from 'svelte-fa';
 	import { faComment } from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
+	import { _ } from 'svelte-i18n';
 
 	let threads: Thread[] = [],
 		prev = '',
@@ -43,7 +44,7 @@
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"
 		>
-			There are currently no threads in this group
+			{$_("There are currently no threads in this group")}
 		</div>
 	{/if}
 	{#each threads as thread}

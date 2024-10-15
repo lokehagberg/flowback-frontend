@@ -10,6 +10,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let workGroups: WorkingGroupType[] = [],
 		workGroupEdit: WorkingGroupType = { direct_join: false, members: null, name: '', id: 0 },
@@ -61,7 +62,7 @@
 	/>
 </div>
 
-<Button action={() => (open = true)} Class="p-2">Create Work Group</Button>
+<Button action={() => (open = true)} Class="p-2">{$_("Create work group")}</Button>
 
 <div class="flex flex-col gap-4 mt-4">
 	{#each workGroups as workingGroup}
@@ -72,7 +73,7 @@
 <Poppup bind:poppup />
 
 <Modal bind:open>
-	<div slot="header" class="w-full"><span>Create a Work Group</span></div>
+	<div slot="header" class="w-full"><span>{$_("Create work group")}</span></div>
 	<form slot="body" class="w-full" on:submit|preventDefault={createWorkingGroup}>
 		<TextInput label="Name" required bind:value={workGroupEdit.name} />
 
@@ -83,9 +84,6 @@
 			label="Direct Join?"
 			name="direct_join"
 		/>
-
-		<button type="submit">hi</button>
-
 		<Button Class="px-2" type="submit">Create</Button>
 	</form>
 </Modal>

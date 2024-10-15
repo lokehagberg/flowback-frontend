@@ -17,16 +17,16 @@
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
-	import {
-		createCalendar,
-		createViewDay,
-		createViewWeek,
-		createViewMonthGrid,
-		createViewMonthAgenda
-	} from '@schedule-x/calendar';
-	import '@schedule-x/theme-default/dist/index.css';
+	// import {
+	// 	createCalendar,
+	// 	createViewDay,
+	// 	createViewWeek,
+	// 	createViewMonthGrid,
+	// 	createViewMonthAgenda
+	// } from '@schedule-x/calendar';
+	// import '@schedule-x/theme-default/dist/index.css';
 	import { env } from '$env/dynamic/public';
-	import { ScheduleXCalendar } from '@schedule-x/svelte';
+	// import { ScheduleXCalendar } from '@schedule-x/svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import MonthView from '$lib/Generic/Schedules/MonthView.svelte';
 
@@ -148,7 +148,7 @@
 
 <form
 	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
-	class="md:w-2/3 max-w-[800px]"
+	class="md:w-2/3 max-w-[800px] dark:text-darkmodeText"
 >
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">

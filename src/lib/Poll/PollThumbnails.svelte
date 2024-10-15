@@ -19,7 +19,7 @@
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public' | 'delegate',
-		delegate:Delegate = {id:0, pool_id:0, profile_image:"", tags:[], username:""}
+		delegate: Delegate = { id: 0, pool_id: 0, profile_image: '', tags: [], username: '' };
 
 	let polls: Poll[] = [],
 		filter: Filter = {
@@ -33,7 +33,7 @@
 		isAdmin = false,
 		next = '',
 		prev = '',
-		poppup:poppup;
+		poppup: poppup;
 
 	const getAPI = async () => {
 		let API = '';
@@ -72,7 +72,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup ={message:"Could not get polls", success:false}
+			poppup = { message: 'Could not get polls', success: false };
 			return;
 		}
 
@@ -86,7 +86,7 @@
 	onMount(async () => {
 		await getPolls();
 		//TODO: Part of refactoring with svelte stores includes thsi
-		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId) || false;
+		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
 </script>
 
@@ -130,4 +130,4 @@
 	</Loader>
 </div>
 
-<Poppup bind:poppup/>
+<Poppup bind:poppup />

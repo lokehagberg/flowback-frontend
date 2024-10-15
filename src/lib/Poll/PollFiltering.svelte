@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let filter: Filter,
 		handleSearch: () => {},
@@ -21,18 +22,15 @@
 
 	const handleFinishedSelection = (e: any) => {
 		filter.finishedSelection = e.target.value;
-
 	};
 
 	const handleSort = (e: any) => {
 		filter.order_by = e.target.value;
-
 	};
 
 	const handleTags = (e: any) => {
 		if (e.target.value === 'null') filter.tag = null;
 		else filter.tag = e.target.value;
-
 	};
 
 	const getTags = async () => {
@@ -53,15 +51,14 @@
 			public: false,
 			order_by: 'start_date_desc',
 			tag: null
-		}
-
-	}
+		};
+	};
 
 	onMount(() => {
 		getTags();
 	});
 
-	$: if (filter) handleSearch()
+	$: if (filter) handleSearch();
 </script>
 
 <form
@@ -89,19 +86,23 @@
 		</Button>
 	</div>
 	<div>
-		<select
-			on:input={handleFinishedSelection}
-			class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
-		>
-			<option value="all">{$_('All')}</option>
-			<option value="unfinished">{$_('Ongoing')}</option>
-			<option value="finished">{$_('Done')}</option>
-		</select>
+	
+		<Select
+			Class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
+			onInput={handleFinishedSelection}
+			values={['all', 'unfinished', 'finished']}
+			labels={['All', 'Ongoing', 'Done']}
+			bind:value={filter.finishedSelection}
+		/>
 
-		<select on:input={handleSort} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
-			<option value="start_date_desc">{$_('Newest first')}</option>
-			<option value="start_date_asc">{$_('Oldest first')}</option>
-		</select>
+		<Select
+			Class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
+			onInput={handleSort}
+			values={['start_date_desc', 'start_date_asc']}
+			labels={['Newest first', 'Oldest first']}
+			bind:value={filter.order_by}
+		/>
+
 
 		{#if tagFiltering}
 			<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">

@@ -50,7 +50,7 @@ export interface Delegate {
 	pool_id: number;
 	profile_image: File;
 
-	tags: { id: number; tag_name: string, name:string, active:boolean }[];
+	tags: { id: number; tag_name: string, name: string, active: boolean }[];
 }
 
 export interface Group {
@@ -87,7 +87,7 @@ export interface Tag {
 	id: number;
 	name: string;
 	active: boolean;
-	imac:number;
+	imac: number;
 }
 
 export interface groupUser extends User {
@@ -152,5 +152,8 @@ export interface Thread {
 	};
 	title: string;
 	id: number;
-	total_comments:number;
+	total_comments: number;
 }
+
+
+export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }

@@ -21,18 +21,18 @@
 
 	const handleFinishedSelection = (e: any) => {
 		filter.finishedSelection = e.target.value;
-		handleSearch();
+
 	};
 
 	const handleSort = (e: any) => {
 		filter.order_by = e.target.value;
-		handleSearch();
+
 	};
 
 	const handleTags = (e: any) => {
 		if (e.target.value === 'null') filter.tag = null;
 		else filter.tag = e.target.value;
-		handleSearch();
+
 	};
 
 	const getTags = async () => {
@@ -46,9 +46,22 @@
 		tags = json.results;
 	};
 
+	const resetFilter = () => {
+		filter = {
+			search: '',
+			finishedSelection: 'all',
+			public: false,
+			order_by: 'start_date_desc',
+			tag: null
+		}
+
+	}
+
 	onMount(() => {
 		getTags();
 	});
+
+	$: if (filter) handleSearch()
 </script>
 
 <form
@@ -98,6 +111,9 @@
 				{/each}
 			</select>
 		{/if}
+
+		<Button action={resetFilter}>Reset Filter</Button>
+
 		<!-- <CheckboxButtons
 			label={''}
 			labels={[

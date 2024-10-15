@@ -8,7 +8,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import GroupFiltering from '$lib/Group/GroupFiltering.svelte';
 	import GroupThumbnail from '$lib/Group/GroupThumbnail.svelte';
-	import type { Group } from '$lib/Group/interface';
+	import type { Group, GroupFilter } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json'
@@ -16,7 +16,7 @@
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
-		filter: any = { joined: 'all', search: '' },
+		filter: GroupFilter = { joined: 'all', search: '' },
 		loading = false;
 
 	onMount(() => {
@@ -55,7 +55,7 @@
 	<Loader bind:loading Class="w-full">
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
-			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'false' || PUBLIC_DISABLE_GROUP_CREATION === undefined}
+			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'false' || env.PUBLIC_DISABLE_GROUP_CREATION === undefined}
 				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl">{$_("Create Group")}</Button>
 			{/if}
 

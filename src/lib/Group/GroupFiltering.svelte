@@ -5,22 +5,27 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
+	import type { GroupFilter } from './interface';
 
-	export let filter:any = {},
-        getGroups: () => void;
+	export let filter: GroupFilter, getGroups: () => void;
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
 
 	const handleChangeMember = (e: any) => {
 		filter.joined = e.target.value;
-		getGroups()
+		getGroups();
 	};
-    
+
 	const handleSearch = (e: any) => {
-        // console.log(filter)
-        // filter.search = e.target.value;
-        getGroups();
-    };
+		// console.log(filter)
+		// filter.search = e.target.value;
+		getGroups();
+	};
+
+	const resetFilter = () => {
+		filter = { joined: 'all', search: '' };
+		getGroups();
+	};
 </script>
 
 <form
@@ -50,5 +55,7 @@
 			<option value="member">{$_('Member')}</option>
 			<option value="not-member">{$_('Not member')}</option>
 		</select>
+
+		<Button action={resetFilter}>Reset Filter</Button>
 	</div>
 </form>

@@ -53,6 +53,7 @@ export interface Delegate {
 	profile_image: string;
 
 	tags: { id: number; tag_name: string, name: string, active: boolean }[];
+
 }
 
 export interface Group {

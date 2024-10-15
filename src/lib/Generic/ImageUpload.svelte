@@ -3,7 +3,6 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { _ } from 'svelte-i18n';
 	import CropperModal from './Cropper/CropperModal.svelte';
-	import { faUpload } from '@fortawesome/free-solid-svg-icons';
 
 	export let croppedImage: File | null = null,
 		label: string,

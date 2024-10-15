@@ -37,31 +37,25 @@
 			alt={$_(label)}
 			src={imageString}
 		/>
-	{:else if !minimalist}
-		<Fa {icon} size={iconSize} class="mt-6" />
 	{/if}
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
+
+	<button
 		class="cursor-pointer"
-		on:click={() => {
+		on:click|preventDefault={() => {
 			fileinput.click();
 		}}
-		on:keydown
 	>
 		<Fa {icon} size={iconSize} />
-	</div>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		on:click={() => {
+	</button>
+	<button
+		on:click|preventDefault={() => {
 			fileinput.click();
 		}}
-		on:keydown
 	>
 		{#if !minimalist}
 			{$_('Choose Image')}
 		{/if}
-	</div>
+	</button>
 	<input
 		style="display:none"
 		type="file"
@@ -83,7 +77,7 @@
 		bind:croppedImage={imageString}
 		bind:currentlyCroppingProfile={isProfile}
 		bind:image={imageString}
-		/>
+	/>
 {/if}
 
 <style>

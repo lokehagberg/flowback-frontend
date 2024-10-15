@@ -137,7 +137,7 @@
 {/if}
 
 <!-- Viewing someone's profile -->
-<Layout centered Class="bg-white shadow">
+<Layout centered Class="bg-white dark:bg-darkobject shadow">
 	{#if !isEditing}
 		<div class="relative w-full">
 			<img
@@ -165,7 +165,7 @@
 				</div>
 			</Button>
 		</div>
-		<div class="flex justify-around w-full max-w-[600px]">
+		<div class="flex justify-around w-full max-w-[600px] ">
 			<img
 				src={profileImagePreview}
 				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
@@ -181,7 +181,7 @@
 				</p>
 				<StatusMessage Class="" bind:status />
 			</div>
-			<div>
+			<div class="dark:text-darkmodeText">
 				<div class="text-primary font-bold">Contact Information</div>
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}

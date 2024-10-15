@@ -52,7 +52,7 @@ export interface Delegate {
 	pool_id: number;
 	profile_image: string;
 
-	tags: Tag[];
+	tags: { id: number; tag_name: string, name: string, active: boolean }[];
 }
 
 export interface Group {
@@ -89,7 +89,7 @@ export interface Tag {
 	id: number;
 	name: string;
 	active: boolean;
-	imac:number;
+	imac: number;
 }
 
 export interface groupUser extends User {
@@ -162,3 +162,5 @@ export interface Thread {
 	score:number;
 
 }
+
+export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }

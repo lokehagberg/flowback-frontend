@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
-import {env} from "$env/dynamic/public";
+import { env } from "$env/dynamic/public";
 
 export async function fetchRequest(
 	method: 'GET' | 'POST',
@@ -36,12 +36,13 @@ export async function fetchRequest(
 	if (method !== 'GET') toSend.body = data;
 
 	const res = await fetch(
-		api.includes(env.PUBLIC_API_URL)
-			? `${api}`
-			: `${env.PUBLIC_API_URL}${
-				env.PUBLIC_HAS_API === 'TRUE' ? '/api/' : '/'
-			  }${api}`,
-		toSend
+		`${env.PUBLIC_API_URL}/${api}`, toSend
+		// api.includes(env.PUBLIC_API_URL)
+		// ? `${api}`
+		// : `${env.PUBLIC_API_URL}${
+		// 	env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
+		// }${api}`,
+		// toSend
 	);
 
 	try {

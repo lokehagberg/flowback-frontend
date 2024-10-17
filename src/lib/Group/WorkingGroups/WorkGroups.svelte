@@ -21,7 +21,7 @@
 	const getWorkingGroupList = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/list?limit=100&name__icontains=${search}`
+			`group/${$page.params.groupId}/list?limit=100&name__icontains=${search}&order_by=name`
 		);
 
 		if (!res.ok) {

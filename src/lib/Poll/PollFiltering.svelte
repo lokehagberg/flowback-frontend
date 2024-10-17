@@ -85,10 +85,10 @@
 			<Fa icon={faMagnifyingGlass} />
 		</Button>
 	</div>
-	<div>
+	<div class="flex">
 	
 		<Select
-			Class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
+			Class="rounded-md p-1"
 			onInput={handleFinishedSelection}
 			values={['all', 'unfinished', 'finished']}
 			labels={['All', 'Ongoing', 'Done']}
@@ -96,7 +96,7 @@
 		/>
 
 		<Select
-			Class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
+			Class="rounded-md p-1"
 			onInput={handleSort}
 			values={['start_date_desc', 'start_date_asc']}
 			labels={['Newest first', 'Oldest first']}
@@ -105,7 +105,7 @@
 
 
 		{#if tagFiltering}
-			<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
+			<select on:input={handleTags} class="rounded-md p-1">
 				<option value={null}>{$_('Any')}</option>
 				{#each tags as tag}
 					<option value={tag.id}>{tag.name}</option>
@@ -113,7 +113,7 @@
 			</select>
 		{/if}
 
-		<Button Class="p-2" action={resetFilter}>{$_("Reset Filter")}</Button>
+		<Button Class="!px-1 !py-0" action={resetFilter}>{$_("Reset Filter")}</Button>
 
 		<!-- <CheckboxButtons
 			label={''}

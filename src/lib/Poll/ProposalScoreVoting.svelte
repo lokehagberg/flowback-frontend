@@ -132,8 +132,8 @@
 	};
 </script>
 
-<div class={`overflow-y-scroll box-border ${Class}`}>
-	<div class="mt-4 overflow-y-scroll h-[100%]">
+<div class={`box-border ${Class}`}>
+	<div class="mt-4 h-[100%]">
 		{#if proposals}
 			{#key needsReload}
 				{#each proposals as proposal}

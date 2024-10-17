@@ -96,7 +96,7 @@
 <!-- <SuccessPoppup bind:show /> -->
 <Poppup bind:poppup />
 <form on:submit|preventDefault={addProposal} class=" h-full dark:border-gray-500 rounded">
-	<Loader bind:loading Class="h-full">
+	<Loader bind:loading>
 		<span class="block text-left text-md text-primary font-bold">{$_('Create a Proposal')}</span>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea Class="mt-4" label="Description" bind:value={description} />
@@ -108,7 +108,7 @@
 		<StatusMessage bind:status />
 		<Button
 			buttonStyle="primary-light"
-			Class="absolute bottom-0 w-full"
+			Class="bottom-0 w-full"
 			type="submit"
 			label="Add Proposal"
 		/>

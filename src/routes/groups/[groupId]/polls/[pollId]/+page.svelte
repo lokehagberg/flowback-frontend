@@ -219,7 +219,7 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary font-semibold">
-								{$_("To makea prediction, please select atleast one proposal")} 
+								{$_("To make a prediction, please select atleast one proposal")} 
 							</span>
 						{:else}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />

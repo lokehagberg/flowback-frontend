@@ -18,7 +18,7 @@
 	import Fa from 'svelte-fa';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import { env } from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	export let proposals: proposal[],
 		poll: poll,
@@ -27,7 +27,7 @@
 	let loading = false,
 		predictions: PredictionStatement[] = [],
 		newPredictionStatement: {
-			title?:string;
+			title?: string;
 			description?: string;
 			end_date?: Date;
 			blockchain_id?: number;
@@ -86,11 +86,17 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: "Could not create prediction statement", success: false };
+			poppup = { message: 'Could not create prediction statement', success: false };
 			return;
 		}
 
-		newPredictionStatement = { segments: [], description:"", end_date: new Date(), blockchain_id:0, title:"" };
+		newPredictionStatement = {
+			segments: [],
+			description: '',
+			end_date: new Date(),
+			blockchain_id: 0,
+			title: ''
+		};
 		poppup = { message: 'Successfully created prediction statement', success: true };
 	};
 
@@ -185,9 +191,9 @@
 {#key proposalsToPredictionMarket}
 	{#if proposalsToPredictionMarket}
 		<div class="flex flex-col gap-2">
-			<span>If implemented</span>
+			<span>{$_('If implemented')}</span>
 			{#each proposalsToPredictionMarket as proposal, i}
-				{#if i !== 0} OR {/if}
+				{#if i !== 0} {$_("OR")} {/if}
 				<div class="flex justify-between">
 					<span class="p-0.5 border border-gray-300 rounded w-full">{proposal.title}</span>
 					<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>
@@ -202,10 +208,9 @@
 	<form on:submit|preventDefault={createPredictionStatement}>
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
-			<TextArea required label="Description" bind:value={newPredictionStatement.description} />
+			<TextArea label="Description" bind:value={newPredictionStatement.description} />
 		</div>
-		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain?" />
-		<!-- <Button type="submit">{$_('Submit')}</Button> -->
+		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
 		<div class="mt-3">
 			{$_('Deadline for prediction')}
 			<DateInput
@@ -215,14 +220,11 @@
 			/>
 		</div>
 
-		<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">Submit</Button>
+		<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE}
 			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 		{/if}
-		<!-- <Button buttonStyle="warning">{$_('Cancel')}</Button> -->
 	</form>
 </Loader>
-
-<!-- </Modal> -->
 
 <Poppup bind:poppup />

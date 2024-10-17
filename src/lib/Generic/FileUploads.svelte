@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { faUpload } from '@fortawesome/free-solid-svg-icons';
 	import ImageUpload from './ImageUpload.svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let images: File[] = [],
 		minimalist = false;
@@ -19,7 +20,7 @@
 		? 'inline'
 		: `flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
-	{#if !minimalist}Add media{/if}
+	{#if !minimalist}{$_("Add media")}{/if}
 	<ImageUpload
 		icon={faUpload}
 		bind:croppedImage={image}

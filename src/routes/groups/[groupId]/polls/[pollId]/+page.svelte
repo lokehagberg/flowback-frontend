@@ -142,7 +142,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary font-bold text-md"
-							>All proposals ({proposals?.length})</span
+							>{$_("All proposals")} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -155,7 +155,7 @@
 						<Button
 							Class="absolute bottom-0 w-full"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>Create Proposal</Button
+							action={() => (selectedProposal = null)}>{$_("Create Proposal")}</Button
 						>
 					</div>
 					<div slot="right" class="">
@@ -191,7 +191,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary font-bold text-md"
-							>All proposals ({proposals?.length})</span
+							>{$_("All proposals")} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -205,7 +205,7 @@
 						<Button
 							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>Create Prediction</Button
+							action={() => (selectedProposal = null)}>{$_("Create Prediction")}</Button
 						>
 					</div>
 					<div slot="right" class="relative">
@@ -219,7 +219,7 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary font-semibold">
-								To make a prediction, please select atleast one proposal
+								{$_("To makea prediction, please select atleast one proposal")} 
 							</span>
 						{:else}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
@@ -235,7 +235,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>All proposals ({proposals?.length})</span
+							>{$_("All proposals")} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -264,7 +264,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>All proposals ({proposals?.length})</span
+							>{$_("All proposals")} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -293,7 +293,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>All proposals ({proposals?.length})</span
+							>{$_("All proposals")} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -342,12 +342,12 @@
 		{#if groupUser?.is_admin}
 			<StatusMessage bind:status={deleteStatus} />
 			<div class="flex gap-4 align-middle">
-				<div class="">Mod Tools:</div>
+				<div class="">{$_("Mod Tools")}:</div>
 				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
 					>{$_('Delete poll')}</Button
 				>
 				{#if !finished}
-					<Button action={nextPhase}>Next Phase</Button>
+					<Button action={nextPhase}>{$_("Next Phase")}</Button>
 				{/if}
 			</div>
 		{/if}

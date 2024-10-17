@@ -49,6 +49,9 @@
 	{disabled}
 	value={$_(label)}
 >
+	{#if label !== ''}
+		{$_(label)}
+	{/if}
 	<slot />
 </button>
 

@@ -27,6 +27,8 @@
 		profile_image: '',
 		username: '',
 		website: '',
+		contact_email: '',
+		contact_phone: '',
 		id: 0
 	};
 
@@ -37,6 +39,8 @@
 		profile_image: '',
 		username: '',
 		website: '',
+		contact_email: '',
+		contact_phone: '',
 		id: 0
 	};
 
@@ -44,7 +48,7 @@
 		isEditing = false,
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
-		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
+		currentlyEditing: null | 'bio' | 'web' | 'name' | 'phone' | 'email' = null,
 		status: StatusMessageInfo | undefined,
 		currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
@@ -83,6 +87,8 @@
 		formData.append('username', userEdit.username);
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
+		formData.append('contact_email', userEdit.contact_email || '');
+		formData.append('contact_phone', userEdit.contact_phone || '');
 		if (bannerImageToSend) formData.append('banner_image', bannerImageToSend);
 		if (imageToSend) formData.append('profile_image', imageToSend);
 
@@ -165,7 +171,7 @@
 				</div>
 			</Button>
 		</div>
-		<div class="flex justify-around w-full max-w-[600px] ">
+		<div class="flex justify-around w-full max-w-[600px]">
 			<img
 				src={profileImagePreview}
 				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
@@ -238,32 +244,46 @@
 					Class="mt-6 pt-8 pb-8 inline"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<h1
+				<button
 					on:click={() => (currentlyEditing = 'name')}
 					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
 				>
 					{$_(userEdit.username || 'Add Username')}
-				</h1>
+				</button>
 			{/if}
+
+			{#if currentlyEditing === 'phone'}
+				<TextInput
+					autofocus
+					onBlur={() => (currentlyEditing = null)}
+					label={'Phone Number'}
+					bind:value={userEdit.contact_phone}
+					Class="mt-6 pt-8 pb-8 inline"
+				/>
+			{:else}
+				<button
+					on:click={() => (currentlyEditing = 'phone')}
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
+				>
+					{$_(userEdit.contact_phone || 'Add Phone Number')}
+				</button>
+			{/if}
+
 			{#if currentlyEditing === 'web'}
 				<TextInput
 					autofocus
 					onBlur={() => (currentlyEditing = null)}
 					label={'Website'}
 					bind:value={userEdit.website}
-					Class="pt-8 pb-8 "
+					Class="pt-8 pb-8"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p
+				<button
 					on:click={() => (currentlyEditing = 'web')}
 					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
 				>
 					{userEdit.website || $_('Add Website')}
-				</p>
+				</button>
 			{/if}
 
 			{#if currentlyEditing === 'bio'}

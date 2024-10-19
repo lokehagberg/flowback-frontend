@@ -12,12 +12,10 @@
 	let hovering = false;
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	on:mouseover={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:focus
-	on:keydown
 	on:click={action}
 	class={`select-none flex item-center items-center outline-gray-400 dark:outline-gray-700 ${
 		!isSelected && 'hover:outline dark:hover:brightness-125 hover:brightness-150'
@@ -27,4 +25,4 @@
 	<div class="ml-2">
 		{$_(text)}
 	</div>
-</div>
+</button>

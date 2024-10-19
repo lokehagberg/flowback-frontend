@@ -37,24 +37,12 @@
 		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
 	};
 
-	onMount(() => {
-		getKanbanEntries();
-		getWorkGroups();
-
-		interval = setInterval(() => {
-			if (numberOfOpen === 0) getKanbanEntries();
-		}, 20000);
-	});
-
-	onDestroy(() => {
-		clearInterval(interval);
-	});
-
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
 			getGroupUsers();
 			getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
+		
 	};
 
 	const getKanbanEntriesGroup = async () => {
@@ -62,21 +50,20 @@
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
 
 		const { res, json } = await fetchRequest('GET', api);
-
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
 
 	const getKanbanEntriesHome = async () => {
-		assignee = Number(localStorage.getItem('userId')) || 1;
-		// const user = await fetchRequest('GET', 'user');
 		const { res, json } = await fetchRequest(
 			'GET',
 			`user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
 		);
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		kanbanEntries = json.results;
+		kanbanEntries = json.results;		
+		console.log(json.results[0].group_name, "LE NAMe");
+		
 	};
 
 	const getGroupUsers = async () => {
@@ -97,6 +84,21 @@
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
+	
+	onMount(() => {
+		assignee = Number(localStorage.getItem('userId')) || 1;
+		getKanbanEntries();
+		getWorkGroups();
+
+		interval = setInterval(() => {
+			if (numberOfOpen === 0) getKanbanEntries();
+		}, 20000);
+	});
+
+	onDestroy(() => {
+		clearInterval(interval);
+	});
+
 </script>
 
 <Poppup bind:poppup />

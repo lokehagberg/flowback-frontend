@@ -42,7 +42,6 @@
 			getGroupUsers();
 			getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
-		
 	};
 
 	const getKanbanEntriesGroup = async () => {
@@ -61,9 +60,7 @@
 		);
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		kanbanEntries = json.results;		
-		console.log(json.results[0].group_name, "LE NAMe");
-		
+		kanbanEntries = json.results;
 	};
 
 	const getGroupUsers = async () => {
@@ -84,7 +81,7 @@
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
-	
+
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
@@ -98,7 +95,6 @@
 	onDestroy(() => {
 		clearInterval(interval);
 	});
-
 </script>
 
 <Poppup bind:poppup />

@@ -46,7 +46,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="w-full bg-white pt-1 pb-3 p-1 rounded-lg draggable" on:mousedown={onMouseDown}>
+<div class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable" on:mousedown={onMouseDown}>
 	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
 		{#if dragLinePosition !== null}
 			<div

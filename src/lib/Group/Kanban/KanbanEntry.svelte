@@ -53,24 +53,8 @@
 			assignee: kanban.assignee?.id,
 			priority: kanban.priority,
 			end_date: kanban.end_date ? new Date(kanban.end_date) : null
-		};
-
-	$: if (openModal === true) changeNumberOfOpen('Addition');
-	else changeNumberOfOpen('Subtraction');
-
-	$: openModal &&
-		kanban.id !== selectedEntry &&
-		(() => {
-			kanbanEdited = {
-				entry_id: kanban.id,
-				id: kanban.id,
-				description: kanban.description,
-				title: kanban.title,
-				assignee: kanban.assignee?.id,
-				priority: kanban.priority,
-				end_date: kanban.end_date ? new Date(kanban.end_date) : null
-			};
-		})();
+		},
+		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
@@ -98,8 +82,6 @@
 			profile_image: assignee?.user.profile_image || ''
 		};
 
-		// showSuccessPoppup = true;
-
 		isEditing = false;
 	};
 
@@ -118,7 +100,6 @@
 		if (!res.ok) return;
 
 		kanban.tag = kanban.tag;
-		// showSuccessPoppup = true;
 	};
 
 	const changeAssignee = (e: any) => {
@@ -158,10 +139,8 @@
 		kanban.group_name = json.name;
 	};
 
-	let endDate: TimeAgo;
 	const formatEndDate = async () => {
 		const en = (await import('javascript-time-ago/locale/en')).default;
-		// TimeAgo.addDefaultLocale(en);
 		endDate = new TimeAgo('en');
 	};
 
@@ -172,95 +151,100 @@
 
 	$: if (openModal && !isEditing)
 		checkForLinks(kanban.description, `kanban-${kanban.id}-description`);
+
+	$: if (openModal === true) changeNumberOfOpen('Addition');
+	else changeNumberOfOpen('Subtraction');
+
+	$: openModal &&
+		kanban.id !== selectedEntry &&
+		(() => {
+			kanbanEdited = {
+				entry_id: kanban.id,
+				id: kanban.id,
+				description: kanban.description,
+				title: kanban.title,
+				assignee: kanban.assignee?.id,
+				priority: kanban.priority,
+				end_date: kanban.end_date ? new Date(kanban.end_date) : null
+			};
+		})();
 </script>
 
-<!-- {@debug showSuccessPoppup} -->
-<!-- <SuccessPoppup bind:show={showSuccessPoppup} /> -->
 <svelte:window bind:innerWidth bind:outerWidth />
 
-{#if (kanban.origin_type === 'group' && kanban.group_name) || kanban.origin_type === 'user'}
-	<li
-		class="bg-gray-100 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
-		in:fade
+<li
+	class="bg-gray-100 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	in:fade
+>
+
+	{#if kanban.end_date !== null && endDate}
+		<div class="text-sm">
+			{$_('Ends')}
+			{endDate.format(new Date(kanban.end_date))}
+		</div>
+	{/if}
+	<button
+		class="cursor-pointer hover:underline"
+		on:click={() => {
+			openModal = true;
+			selectedEntry = kanban.id;
+		}}
 	>
-		{#if kanban.end_date !== null && endDate}
-			<div class="text-sm">
-				Ends {endDate.format(new Date(kanban.end_date))}
-			</div>
-		{/if}
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			on:click={() => {
-				openModal = true;
-				selectedEntry = kanban.id;
-			}}
-			class="cursor-pointer hover:underline"
-			on:keydown
-		>
-			<div class="p-1 py-3">{kanban.title}</div>
+		<div class="p-1 py-3">{kanban.title}</div>
+	</button>
+	<button
+		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
+		on:click={() => {
+			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
+		}}
+	>
+		<ProfilePicture
+			username={kanban?.assignee?.username}
+			profilePicture={kanban?.assignee?.profile_image}
+			Class=""
+		/>
+		<div class="break-all text-xs">
+			{#if type === 'group'}
+				{kanban.assignee?.username}
+			{:else if kanban.origin_type === 'user'}
+				{$_('My own')}
+			{:else}
+				{kanban.group_name}
+			{/if}
 		</div>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
-			on:click={() => {
-				if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
-				else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
-			}}
-			on:keydown
-		>
-			<ProfilePicture
-				username={kanban.assignee.username}
-				profilePicture={kanban.assignee.profile_image}
-				Class=""
-			/>
-			<div class="break-all text-xs">
-				{#if type === 'group'}
-					{kanban.assignee?.username}
-				{:else if kanban.origin_type === 'user'}
-					My own
-				{:else}
-					{kanban.group_name}
-				{/if}
-			</div>
+	</button>
+	<!-- Arrows -->
+	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
+		<div class="flex justify-between mt-3 align-middle">
+			<button
+				class="cursor-pointer hover:text-gray-500 py-1"
+				on:click={() => {
+					if (kanban.tag > 1) {
+						updateKanbanTag(kanban.tag - 1);
+						kanban.tag -= 1;
+					}
+				}}
+			>
+				<Fa icon={faArrowLeft} size="1x" />
+			</button>
+
+			<KanbanIcons bind:priority={kanban.priority} />
+
+			<button
+				class="cursor-pointer hover:text-gray-500 py-1"
+				on:click={() => {
+					if (kanban.tag < tags.length - 1) {
+						updateKanbanTag(kanban.tag + 1);
+						kanban.tag += 1;
+					}
+				}}
+			>
+				<Fa icon={faArrowRight} size="1x" />
+			</button>
 		</div>
-		<!-- Arrows -->
-		{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
-			<div class="flex justify-between mt-3 align-middle">
-				<div
-					class="cursor-pointer hover:text-gray-500 py-1"
-					on:click={() => {
-						if (kanban.tag > 1) {
-							updateKanbanTag(kanban.tag - 1);
-							kanban.tag -= 1;
-						}
-					}}
-					on:keydown
-					tabindex="0"
-					role="button"
-				>
-					<Fa icon={faArrowLeft} size="1x" />
-				</div>
-
-				<KanbanIcons bind:priority={kanban.priority} />
-
-				<div
-					class="cursor-pointer hover:text-gray-500 py-1"
-					on:click={() => {
-						if (kanban.tag < tags.length - 1) {
-							updateKanbanTag(kanban.tag + 1);
-							kanban.tag += 1;
-						}
-					}}
-					on:keydown
-					tabindex="0"
-					role="button"
-				>
-					<Fa icon={faArrowRight} size="1x" />
-				</div>
-			</div>
-		{/if}
-	</li>
-{/if}
+	{/if}
+</li>
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words">
@@ -284,7 +268,7 @@
 				/> -->
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
-						{$_("Assignee")}
+						{$_('Assignee')}
 						<select
 							on:input={changeAssignee}
 							value={kanban?.assignee?.id}
@@ -309,7 +293,7 @@
 					</div>
 					<div class="text-left w-[300px]">
 						<!-- {#if kanban.end_date} -->
-						{$_("End Date")}
+						{$_('End Date')}
 						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
 						<!-- {/if} -->
 					</div>
@@ -320,10 +304,10 @@
 				</div>
 				<div class="mt-6 text-left">
 					<span>
-						{$_("Assignee")}: {kanban?.assignee?.username}
+						{$_('Assignee')}: {kanban?.assignee?.username}
 					</span>
 					<div class="flex gap-2 align-middle">
-						<span>{$_("Priority")}:</span>
+						<span>{$_('Priority')}:</span>
 						<PriorityIcons Class="ruby" priority={kanban?.priority} />
 					</div>
 				</div>

@@ -104,13 +104,13 @@
 	};
 
 	const createThread = async () => {
+		let thread: { title: string; description?: string } = { title };
+		if (description) thread.description = description;
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.url.searchParams.get('id')}/thread/create`,
-			{
-				title,
-				description
-			}
+			thread
 		);
 		if (!res.ok) {
 			// poppup = { message: "Couldn't create Thread", success: false };

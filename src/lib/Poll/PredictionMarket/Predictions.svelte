@@ -74,6 +74,7 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
+		if (newPredictionStatement.description === "") newPredictionStatement.description = undefined
 
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
@@ -204,6 +205,7 @@
 		</div>
 	{/if}
 {/key}
+
 <Loader bind:loading Class="!static">
 	<form on:submit|preventDefault={createPredictionStatement}>
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />

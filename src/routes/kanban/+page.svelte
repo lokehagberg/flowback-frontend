@@ -1,7 +1,7 @@
 <script>
 
 	import Layout from '$lib/Generic/Layout.svelte';
-	import Kanban from '$lib/Group/Kanban/Kanban.svelte';
+	import Kanban from '$lib/Group/Kanban/KanbanBoard.svelte';
 	import { _ } from 'svelte-i18n';
 </script>
 

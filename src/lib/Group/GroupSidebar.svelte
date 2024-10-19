@@ -77,24 +77,23 @@
 	} dark:!text-darkmodeText `}
 >
 	{#if innerWidth < 700 && !clickedExpandSidebar}
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
+		<button
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
 			on:keydown
 		>
 			<Fa icon={faBars} />
-		</div>
+		</button>
 	{:else}
 		{#if innerWidth < 700}
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
+	
+			<button
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
 				on:keydown
 			>
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
-			</div>
+			</button>
 		{/if}
 		<div class="mb-6 w-full">
 			<div class="bg-primary text-white shadow rounded flex flex-col">

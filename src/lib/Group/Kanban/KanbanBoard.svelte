@@ -25,7 +25,7 @@
 		open = false,
 		numberOfOpen = 0,
 		filter: { assignee: number | null } = { assignee: null },
-		workingGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [];
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -91,7 +91,7 @@
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
 
 		if (!res.ok) return;
-		workingGroups = json.results;
+		workGroups = json.results;
 	};
 
 	const removeKanbanEntry = (id: number) => {
@@ -140,4 +140,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry bind:open {type} bind:kanbanEntries {users} {workingGroups} />
+<CreateKanbanEntry bind:open {type} bind:kanbanEntries {users} {workGroups} />

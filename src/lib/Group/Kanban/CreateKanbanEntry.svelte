@@ -30,13 +30,13 @@
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: WorkGroup | null;
+		workGroup: WorkGroup | null = null;
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
 		users: GroupUser[] = [],
 		kanbanEntries: kanban[],
-		workingGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [];
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -113,7 +113,7 @@
 	};
 
 	const handleChangWorkGroup = (e: any) => {
-		workGroup = workingGroups.find(group => group.id === Number(e.target.value)) || null;
+		workGroup = workGroups.find(group => group.id === Number(e.target.value)) || null;
 	};
 </script>
 
@@ -158,10 +158,9 @@
 						<select
 							class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							on:input={handleChangWorkGroup}
-							value={workGroup}
 						>
-							{#each workingGroups as group}
-								<option value={group}>
+							{#each workGroups as group}
+								<option value={group.id}>
 									{group.name}
 								</option>
 							{/each}

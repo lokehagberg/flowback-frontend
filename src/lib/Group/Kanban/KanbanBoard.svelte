@@ -12,6 +12,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import CreateKanbanEntry from './CreateKanbanEntry.svelte';
+	import type { WorkGroup } from '../WorkingGroups/interface';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -23,7 +24,8 @@
 		interval: any,
 		open = false,
 		numberOfOpen = 0,
-		filter: { assignee: number | null } = { assignee: null };
+		filter: { assignee: number | null } = { assignee: null },
+		workingGroups: WorkGroup[] = [];
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -37,14 +39,13 @@
 
 	onMount(() => {
 		getKanbanEntries();
+		getWorkGroups();
 
 		interval = setInterval(() => {
-			// console.log(numberOfOpen, "OPEN")
 			if (numberOfOpen === 0) getKanbanEntries();
 		}, 20000);
 	});
 
-	//TODO fix this
 	onDestroy(() => {
 		clearInterval(interval);
 	});
@@ -84,6 +85,13 @@
 		const { json } = await fetchRequest('GET', api);
 		users = json.results;
 		if (!assignee) assignee = users[0]?.user.id;
+	};
+
+	const getWorkGroups = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
+
+		if (!res.ok) return;
+		workingGroups = json.results;
 	};
 
 	const removeKanbanEntry = (id: number) => {
@@ -132,4 +140,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry bind:open {type} bind:kanbanEntries/>
+<CreateKanbanEntry bind:open {type} bind:kanbanEntries {users} {workingGroups} />

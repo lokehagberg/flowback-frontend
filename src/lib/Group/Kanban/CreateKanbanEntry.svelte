@@ -1,26 +1,22 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-
 	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { GroupUser, kanban } from '../interface';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import type { WorkGroup } from '../WorkingGroups/interface';
 
-	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
 		title = '',
 		assignee: number | null = null,
-		users: GroupUser[] = [],
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
 			'Very high priority',
@@ -34,12 +30,13 @@
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: any = [],
-		workingGroups: any = [];
+		workGroup: WorkGroup | null;
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
-		kanbanEntries: kanban[] = [];
+		users: GroupUser[] = [],
+		kanbanEntries: kanban[],
+		workingGroups: WorkGroup[] = [];
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -51,6 +48,7 @@
 		if (assignee) formData.append('assignee', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
 		if (end_date) formData.append('end_date', dateString);
+		if (workGroup) formData.append('work_group', workGroup.id.toString());
 		if (description !== '') formData.append('description', description);
 		if (images)
 			images.forEach((image) => {
@@ -88,6 +86,7 @@
 			description,
 			tag: 1,
 			title,
+			work_group: workGroup?.id,
 			id: json,
 			created_by: 1,
 			origin_id: 1,
@@ -114,7 +113,7 @@
 	};
 
 	const handleChangWorkGroup = (e: any) => {
-		Number(e.target.value);
+		workGroup = workingGroups.find(group => group.id === Number(e.target.value)) || null;
 	};
 </script>
 

@@ -138,6 +138,7 @@ export interface kanban {
 	description: string;
 	id: number;
 	tag: number;
+	work_group?:number;
 	title: string;
 	origin_id: number;
 	origin_type: 'group' | 'user';
@@ -165,3 +166,4 @@ export interface Thread {
 }
 
 export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }
+

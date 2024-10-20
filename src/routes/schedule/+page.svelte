@@ -8,5 +8,5 @@
 </svelte:head>
 
 <Layout>
-	<Schedule type='user' />
+	<Schedule type="user"/>
 </Layout>

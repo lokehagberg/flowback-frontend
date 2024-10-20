@@ -24,7 +24,9 @@
 		on:input={(e) => {
 			onInput(e);
 			//@ts-ignore
-			value = e?.target?.value;
+			// if (e?.target?.value)
+			// 	//@ts-ignore
+			// 	value = e?.target?.value;
 		}}
 		class={`dark:bg-darkobject ${classInner}`}
 		bind:value

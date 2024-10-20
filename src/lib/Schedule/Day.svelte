@@ -5,7 +5,6 @@
 	import { setDateToMidnight } from '$lib/Generic/Dates';
 
 	export let Class = '',
-		type: 'user' | 'group' | 'pollcreation',
 		x: number,
 		y: number,
 		advancedTimeSettingsDates: Date[] = [],
@@ -54,9 +53,7 @@
 <!-- The line for poll creation -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	on:dblclick={() => {
-		if (type === 'user') showCreateScheduleEvent = true;
-	}}
+	on:dblclick={() => showCreateScheduleEvent = true}
 	class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
 	class:today={getDay() === currentDate.getDate() &&
@@ -74,16 +71,6 @@
 		<div class="text-center">
 			{new Date(year, month, getDay()).getDate()}
 		</div>
-
-		{#if type === 'pollcreation'}
-			<swappable
-				id={`${x}-${y}-draggable`}
-				class="py-5 px-1"
-				class:!bg-blue-600={advancedTimeSettingsDates
-					?.find((date) => date?.getDate() === getDay())
-					?.getDate()}
-			/>
-		{/if}
 
 		{#each events as event}
 			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}

@@ -92,7 +92,7 @@
 
 	const scheduleEventCreate = async () => {
 		let API = '';
-		let payload = {};
+		let payload: any = {};
 		if (type === 'user') {
 			API += `user/schedule/create`;
 			payload = {
@@ -109,6 +109,7 @@
 				title,
 				description
 			};
+			if (workGroup) payload['work_group'] = workGroup;
 		}
 
 		loading = true;
@@ -237,8 +238,6 @@
 	$: month && year && deleteSelection();
 
 	$: month && updateMonth();
-
-	$: console.log(workGroup);
 
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;

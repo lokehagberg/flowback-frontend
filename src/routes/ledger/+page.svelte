@@ -305,7 +305,7 @@
 									//@ts-ignore
 									acc.checked = false;
 								});
-							}}>Clear Filter</Button
+							}}>{$_("Clear Filter")}</Button
 						>
 					{/if}
 					<TransactionFilter bind:filter {handleSearch} bind:accounts />

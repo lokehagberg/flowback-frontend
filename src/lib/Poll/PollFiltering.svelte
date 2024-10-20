@@ -105,7 +105,7 @@
 
 
 		{#if tagFiltering}
-			<select on:input={handleTags} class="rounded-md p-1">
+			<select on:input={handleTags} class="rounded-md p-1 dark:bg-darkobject">
 				<option value={null}>{$_('Any')}</option>
 				{#each tags as tag}
 					<option value={tag.id}>{tag.name}</option>

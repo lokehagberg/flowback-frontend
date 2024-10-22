@@ -128,24 +128,21 @@
 				api={`group/poll/${poll.id}`}
 				categories={['poll', 'timeline', 'comment_all']}
 				labels={['Poll', 'Timeline', 'Comments']}
-				Class="text-black"
+				Class="text-black dark:text-darkmodeText"
 			/>
 			{#if isAdmin || poll.pinned}
-				<div
+				<button
 					class=""
 					class:cursor-pointer={isAdmin}
 					on:click={pinPoll}
-					on:keydown
-					tabindex="0"
-					role="button"
 				>
 					<Fa
 						size="1.2x"
 						icon={faThumbtack}
 						color={poll.pinned ? '#999' : '#CCC'}
-						rotate={poll.pinned ? '0' : '90'}
+						rotate={poll.pinned ? '0' : '45'}
 					/>
-				</div>
+				</button>
 			{/if}
 		</div>
 	</div>

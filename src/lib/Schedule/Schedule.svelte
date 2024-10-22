@@ -64,7 +64,7 @@
 		end_date: Date | null,
 		title: string,
 		description: string,
-		workGroup: WorkGroup | null = null,
+		workGroup: { name: string; id: number } | null = null,
 		event_id: number | undefined,
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
@@ -109,7 +109,7 @@
 				title,
 				description
 			};
-			if (workGroup) payload['work_group'] = workGroup;
+			if (workGroup) payload['work_group_id'] = workGroup;
 		}
 
 		loading = true;
@@ -215,6 +215,7 @@
 		title = event.title;
 		description = event.description;
 		event_id = event.event_id;
+		if (event.work_group) workGroup = event.work_group;
 		showEvent = true;
 	};
 
@@ -269,7 +270,7 @@
 						class:hover:bg-gray-300={event.poll}
 						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
 						on:click={() => {
-							if (event.schedule_origin_name === 'user') handleShowEvent(event);
+							handleShowEvent(event);
 						}}
 					>
 						<span>{event.title}</span>
@@ -352,6 +353,7 @@
 		</div>
 	</div>
 </div>
+
 <!-- Allows user to see event -->
 <Modal bind:open={showEvent}>
 	<div slot="header">{title}</div>
@@ -360,7 +362,9 @@
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
 			<span> {description} </span>
-			<span>{workGroups.find(group => group?.id === workGroup?.id)?.name || ""}</span>
+			{#if workGroup}
+				{$_("Work Group")}:<span>{workGroup?.name}</span>
+			{/if}
 		</div>
 	</div>
 	<div slot="footer">

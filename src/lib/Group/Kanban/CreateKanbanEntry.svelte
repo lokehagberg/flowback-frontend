@@ -41,7 +41,8 @@
 	const createKanbanEntry = async () => {
 		loading = true;
 		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
-
+		console.log(assignee);
+		
 		const formData = new FormData();
 		formData.append('tag', '1');
 		formData.append('title', title);
@@ -133,6 +134,7 @@
 								on:input={handleChangeAssignee}
 								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
+							<option value={null}>Select</option>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
 								{/each}

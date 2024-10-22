@@ -173,7 +173,7 @@
 <svelte:window bind:innerWidth bind:outerWidth />
 
 <li
-	class="bg-gray-100 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	class="bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
 	in:fade
 >
 	{#if kanban.end_date !== null && endDate}

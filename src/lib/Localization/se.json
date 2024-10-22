@@ -370,5 +370,16 @@
     "Add media": "Lägg till media",
     "My Schedule": "Mitt Schema",
     "My Ledger": "Mina Transaktioner",
-    "Work Group": "Arbetsgrupp"
+    "Work Group": "Arbetsgrupp",
+    "Save Vote": "Spara röst",
+    "Successfully saved voting!": "Lyckades spara röst",
+    "See Proposals": "Se förslag",
+    "See Predictions": "Se förutsägelser",
+    "Create a Prediction": "Skapa en förutsägelse",
+    "Mange bets": "Hantera bets",
+    "You have not betted yet!": "Du har ej bettat ännu",
+    "Mange votes": "Häntera röster",
+    "You have not voted yet!": "Du har ej röstat ännu!",
+    "View detailed results": "Visa detaljerade resultat",
+    "Evaluate predictions": "Evaluera förutsägelser"
 }

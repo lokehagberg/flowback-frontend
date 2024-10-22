@@ -153,6 +153,7 @@
 							{/each}
 						</select>
 					</div>
+					{#if type === "group"}
 					<div class="text-left">
 						{$_('Work group')}
 						<select
@@ -166,6 +167,7 @@
 							{/each}
 						</select>
 					</div>
+					{/if}
 					<div class="text-left">
 						{$_('End date')}
 						<DateInput bind:value={end_date} min={new Date()} />

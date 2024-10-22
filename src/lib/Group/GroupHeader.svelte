@@ -7,7 +7,7 @@
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 	//@ts-ignore
 	import Fa from 'svelte-fa/src/fa.svelte';
 
@@ -28,17 +28,17 @@
 <div class="relative flex justify-center">
 	<img
 		class="cover"
-		src={group.cover_image ? `${env.PUBLIC_API_URL}${
-			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${group.cover_image}`: DefaultBanner}
+		src={group.cover_image
+			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+					group.cover_image
+			  }`
+			: DefaultBanner}
 		alt="cover"
 	/>
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
 		src={group.image
-			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-					group.image
-			  }`
+			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
 			: DefaultBanner}
 		alt="profile"
 	/>
@@ -53,6 +53,7 @@
 			id={Number($page.params.groupId)}
 			categories={groupNotificationCategories}
 			labels={groupNotificationCategories}
+			Class="mt-auto"
 		/>
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<h1
@@ -94,5 +95,9 @@
 	img.profile {
 		width: 100px;
 		height: 100px;
+	}
+
+	.mt-auto {
+		margin-top: auto;
 	}
 </style>

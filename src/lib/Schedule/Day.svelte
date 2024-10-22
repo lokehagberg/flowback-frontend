@@ -51,10 +51,9 @@
 </script>
 
 <!-- The line for poll creation -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	on:dblclick={() => showCreateScheduleEvent = true}
-	class={`dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
+	class={`${Class} dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
 	class:today={getDay() === currentDate.getDate() &&
 		month === currentDate.getMonth() &&
@@ -82,7 +81,7 @@
             <Fa class="m-auto" icon={faCalendarAlt} />
 			{/if} -->
 	</div>
-</div>
+</button>
 
 <style>
 	.selected {

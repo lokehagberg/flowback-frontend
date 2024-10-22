@@ -352,7 +352,6 @@
 		</div>
 	</div>
 </div>
-
 <!-- Allows user to see event -->
 <Modal bind:open={showEvent}>
 	<div slot="header">{title}</div>
@@ -361,6 +360,7 @@
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
 			<span> {description} </span>
+			<span>{workGroups.find(group => group?.id === workGroup?.id)?.name || ""}</span>
 		</div>
 	</div>
 	<div slot="footer">

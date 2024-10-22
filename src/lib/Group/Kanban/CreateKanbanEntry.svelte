@@ -48,7 +48,7 @@
 		if (assignee) formData.append('assignee', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
 		if (end_date) formData.append('end_date', dateString);
-		if (workGroup) formData.append('work_group', workGroup.id.toString());
+		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
 		if (description !== '') formData.append('description', description);
 		if (images)
 			images.forEach((image) => {
@@ -86,7 +86,7 @@
 			description,
 			tag: 1,
 			title,
-			work_group: workGroup?.id,
+			work_group: { id: workGroup?.id || 0, name: workGroup?.name || '' },
 			id: json,
 			created_by: 1,
 			origin_id: 1,
@@ -113,7 +113,7 @@
 	};
 
 	const handleChangWorkGroup = (e: any) => {
-		workGroup = workGroups.find(group => group.id === Number(e.target.value)) || null;
+		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
 	};
 </script>
 
@@ -153,20 +153,20 @@
 							{/each}
 						</select>
 					</div>
-					{#if type === "group"}
-					<div class="text-left">
-						{$_('Work group')}
-						<select
-							class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							on:input={handleChangWorkGroup}
-						>
-							{#each workGroups as group}
-								<option value={group.id}>
-									{group.name}
-								</option>
-							{/each}
-						</select>
-					</div>
+					{#if type === 'group'}
+						<div class="text-left">
+							{$_('Work group')}
+							<select
+								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+								on:input={handleChangWorkGroup}
+							>
+								{#each workGroups as group}
+									<option value={group.id}>
+										{group.name}
+									</option>
+								{/each}
+							</select>
+						</div>
 					{/if}
 					<div class="text-left">
 						{$_('End date')}

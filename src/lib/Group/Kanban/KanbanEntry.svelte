@@ -217,7 +217,7 @@
 
 	{#if kanban.work_group}
 	<div>
-		{$_("Work Group")}: {kanban.work_group}
+		{$_("Work Group")}: {kanban.work_group.name}
 	</div>
 	{/if}
 	<!-- Arrows -->

@@ -63,7 +63,7 @@
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 		if (res.ok) usersAskingForInvite = json.results;
-		else poppup = { message: "Couldn't get invites list", success: false };
+		// else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {

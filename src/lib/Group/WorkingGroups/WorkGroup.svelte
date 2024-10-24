@@ -16,7 +16,7 @@
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to get Work Group', success: false };
+			// poppup = { message: 'Failed to get members in workgroup', success: false };
 			return;
 		}
 

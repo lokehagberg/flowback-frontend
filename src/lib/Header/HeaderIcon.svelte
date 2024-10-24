@@ -35,6 +35,7 @@
 		on:focus
 		href={href === '/' ? window.location.href : '/' + href}
 		class={`relative cursor-pointer ${Class}`}
+		id={href}
 	>
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}
@@ -54,12 +55,12 @@
 		</div>
 	</a>
 {:else}
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
+	<button
 		on:mouseover={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}
 		on:focus
 		class={`relative cursor-pointer ${Class}`}
+		id={href}
 	>
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}
@@ -77,7 +78,7 @@
 		>
 			{$_(text)}
 		</div>
-	</div>
+	</button>
 {/if}
 
 <style>

@@ -12,7 +12,8 @@
 		inputClass = '',
 		placeholder = '',
 		max = 100,
-		type: 'text' | 'password' = 'text';
+		type: 'text' | 'password' = 'text',
+		name:string = "";
 
 	onMount(() => {
 		const input = document.getElementById(`textinput-${label}`);
@@ -41,6 +42,7 @@
 			placeholder={$_(placeholder)}
 			on:blur={onBlur}
 			on:input={onInput}
+			{name}
 		/>
 	{:else if type === 'password'}
 		<input
@@ -53,6 +55,7 @@
 			on:blur={onBlur}
 			on:input={onInput}
 			type="password"
+			{name}
 		/>
 	{/if}
 </label>

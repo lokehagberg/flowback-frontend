@@ -7,6 +7,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/Generic/Button.svelte';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
@@ -39,8 +40,16 @@
 
 <Loader bind:loading>
 	<form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
-		<TextInput label={'Email'} bind:value={username} required />
-		<TextInput label={'Password'} bind:value={password} type={'password'} required />
+		<TextInput label={'Email'} bind:value={username} required name="email" />
+		<TextInput
+			label={'Password'}
+			bind:value={password}
+			type={'password'}
+			required
+			name="password"
+		/>
+
+		<Button type="submit"/>
 
 		<input
 			type="submit"

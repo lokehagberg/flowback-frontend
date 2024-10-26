@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Transaction } from './interface';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faScrewdriver, faTrash } from '@fortawesome/free-solid-svg-icons';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Select from '$lib/Generic/Select.svelte';

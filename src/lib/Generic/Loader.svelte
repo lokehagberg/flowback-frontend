@@ -1,6 +1,5 @@
 <script lang="ts">
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 
 	export let loading: boolean,

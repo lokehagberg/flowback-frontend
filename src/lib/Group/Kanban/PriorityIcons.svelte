@@ -2,8 +2,7 @@
 	import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown';
 	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 
 	export let priority: number = 3,
 	priorityText = [

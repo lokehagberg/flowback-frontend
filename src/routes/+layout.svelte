@@ -20,8 +20,6 @@
 	let showUI = false,
 		scrolledY = '';
 
-	initializeLocalization();
-
 	const updateUserInfo = async () => {
 		let userNeedsUpdate = false;
 		let groupId = Number($page.params.groupId);
@@ -94,6 +92,9 @@
 			html?.scrollIntoView();
 		}, 200);
 	});
+
+	//Initialize Translation, which should happen before any lifecycle hooks.
+	initializeLocalization();
 
 	onMount(() => {
 		showUI = shouldShowUI();

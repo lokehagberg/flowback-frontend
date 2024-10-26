@@ -14,8 +14,7 @@
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import { page } from '$app/stores';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import Modal from '$lib/Generic/Modal.svelte';

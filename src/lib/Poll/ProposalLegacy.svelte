@@ -1,6 +1,5 @@
 <script lang="ts">
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 	import type { proposal } from './interface';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';

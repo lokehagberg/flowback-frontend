@@ -1,6 +1,5 @@
 <script lang="ts">
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import CropperModal from './Cropper/CropperModal.svelte';
 

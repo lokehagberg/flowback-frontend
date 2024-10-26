@@ -3,8 +3,7 @@
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
 	import { onMount } from 'svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import SuccessPoppup from './SuccessPoppup.svelte';
 

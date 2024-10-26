@@ -8,8 +8,7 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import { env } from '$env/dynamic/public';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 

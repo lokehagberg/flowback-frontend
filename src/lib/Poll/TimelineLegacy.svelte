@@ -2,8 +2,7 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from './functions';
 	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';

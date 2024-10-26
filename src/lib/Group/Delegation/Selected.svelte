@@ -4,8 +4,7 @@
 	//Design in Figma should be done first
 
 	import Tag from '../Tag.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import type { Delegate } from '../interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';

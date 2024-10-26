@@ -49,13 +49,7 @@
 			name="password"
 		/>
 
-		<Button type="submit"/>
-
-		<input
-			type="submit"
-			value={$_('Login')}
-			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-		/>
+		<Button type="submit" Class=" pl-6 pr-6 pt-2 pb-2 mt-5 mb-5">{$_("Login")}</Button>
 
 		<StatusMessage bind:status />
 		<!-- svelte-ignore a11y-no-static-element-interactions -->

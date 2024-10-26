@@ -27,9 +27,13 @@
 		faComment,
 		faAlignLeft,
 		faCalendarAlt,
+		faSlash
 		// faDash
 	} from '@fortawesome/free-solid-svg-icons';
+	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
+	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
 	// import { FaLayers } from 'svelte-fa';
+	// import FaLayers from 'svelte-fa/src/fa-layers.js'
 
 	export let poll: poll,
 		isAdmin = false;
@@ -175,8 +179,14 @@
 			{:else}
 			<!-- <FaLayers>
 				<Fa icon={faAnglesRight}/>
-				<Fa icon={faDash} />
-			</FaLayers> -->
+				<Fa icon={faDas} />
+				</FaLayers> -->
+				<div >
+	<Fa style="position:absolute" icon={faAnglesRight}/>
+				
+	<Fa style="position:absolute" icon={faSlash} rotate="90" />
+</div>
+
 		{/if}
 
 		<!-- Comment icon. When user clicks it leads to the comment section on the poll -->

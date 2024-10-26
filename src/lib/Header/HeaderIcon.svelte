@@ -1,6 +1,7 @@
 <script lang="ts">
 	//TODO: The <HeaderIcon> component should handle default darkMode
-	import Fa from 'svelte-fa';
+	//@ts-ignore
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';

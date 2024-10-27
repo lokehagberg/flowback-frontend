@@ -8,7 +8,7 @@
 	import CommentPost from './CommentPost.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
-	import { env } from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -116,51 +116,41 @@
 		{/if}
 		{#if comment.active}
 			<div class="flex gap-3 text-xs">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 					on:click={() => (comment.being_replied = true)}
-					on:keydown
 				>
 					<Fa icon={faReply} />{$_('Reply')}
-				</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				</button>
+				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 					on:click={() => commentVote(1)}
-					on:keydown
 				>
 					<Fa icon={faArrowUp} color={userUpVote === 1 ? 'blue' : ''} />
-				</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				</button>
+				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 					on:click={() => commentVote(-1)}
-					on:keydown
 				>
 					<Fa icon={faArrowDown} color={userUpVote === -1 ? 'blue' : ''} />
-				</div>
+				</button>
 				{comment.score}
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
+					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 						on:click={() => deleteComment(comment.id)}
-						on:keydown
 					>
 						{$_('Delete')}
-					</div>
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
+					</button>
+					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
 						on:click={() => {
 							comment.being_edited = true;
 							comment.being_edited_message = comment.message;
 						}}
-						on:keydown
 					>
 						{$_('Edit')}
-					</div>
+					</button>
 				{/if}
 			</div>
 		{/if}

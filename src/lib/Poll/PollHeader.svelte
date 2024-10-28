@@ -16,10 +16,40 @@
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
 
 	export let poll: poll,
 		displayTag = false,
-		phase: Phase;
+		phase: Phase,
+		pollType: 3 | 4 = 3;
+
+	const nextPhase = async () => {
+		let _phase: Phase = 'pre_start';
+
+		if (pollType === 4) {
+			if (phase === 'area_vote') _phase = 'proposal';
+			else if (phase === 'proposal') _phase = 'prediction_statement';
+			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
+			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
+			else if (phase === 'delegate_vote') _phase = 'vote';
+			else if (phase === 'vote') _phase = 'prediction_vote';
+		} else if (pollType === 3) _phase = 'result';
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/fast_forward`,
+			{
+				phase: _phase
+			}
+		);
+
+		if (res.ok) phase = _phase;
+	};
+
+	const deletePoll = async () => {
+		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
+		if (res.ok) goto(`/groups/${$page.params.groupId}`);
+	};
 </script>
 
 <div
@@ -36,16 +66,19 @@
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 
 	<div class="flex">
-
 		<NotificationOptions
-		id={poll.id}
-		api={`group/poll/${poll.id}`}
-		categories={['poll', 'timeline', 'comment_all']}
-		labels={['Poll', 'Timeline', 'Comments']}
-		Class="justify-self-center mt-2"
+			id={poll.id}
+			api={`group/poll/${poll.id}`}
+			categories={['poll', 'timeline', 'comment_all']}
+			labels={['Poll', 'Timeline', 'Comments']}
+			Class="justify-self-center mt-2"
 		/>
-		
-		<MultipleChoices labels={[""]} categories={[""]} Class="justify-self-center mt-2"/>
+
+		<MultipleChoices
+			labels={['Fast Forward', 'Delete Poll']}
+			functions={[nextPhase, deletePoll]}
+			Class="justify-self-center mt-2"
+		/>
 	</div>
 
 	<div class="flex gap-4 items-baseline grid-area-items mt-1">

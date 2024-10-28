@@ -15,26 +15,27 @@
 	import { getPhaseUserFriendlyName } from './functions';
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	export let poll: poll,
 		displayTag = false,
 		phase: Phase;
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
 >
-	<div
+	<button
 		class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
 		on:click={() => goto(`/groups/${$page.params.groupId}`)}
 	>
 		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 		<Fa icon={faArrowLeft} />
-	</div>
+	</button>
 	<h1 class="text-left text-2xl text-primary font-bold">{poll.title}</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+
+	<div class="flex">
 
 		<NotificationOptions
 		id={poll.id}
@@ -43,6 +44,10 @@
 		labels={['Poll', 'Timeline', 'Comments']}
 		Class="justify-self-center mt-2"
 		/>
+		
+		<MultipleChoices labels={[""]} categories={[""]} Class="justify-self-center mt-2"/>
+	</div>
+
 	<div class="flex gap-4 items-baseline grid-area-items mt-1">
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->

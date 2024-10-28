@@ -5,7 +5,7 @@
 
 	export let poll: poll, Class = ""
 
-	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%]  h-full';
+	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full';
 	onMount(() => {});
 </script>
 
@@ -26,7 +26,7 @@
 		{/if}
 
 		{#if $$slots.bottom}
-			<div class={`${genericStyle} bottom-grid`}>
+			<div class={`${genericStyle} overflow-y-scroll bottom-grid`}>
 				<slot name="bottom" />
 			</div>
 		{/if}

@@ -1,0 +1,61 @@
+<script lang="ts">
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
+	import { onMount } from 'svelte';
+	import Fa from 'svelte-fa';
+	import { _ } from 'svelte-i18n';
+	import SuccessPoppup from './SuccessPoppup.svelte';
+	import { faEllipsis, faListDots } from '@fortawesome/free-solid-svg-icons';
+
+	export let notificationOpen = false,
+		categories: string[],
+		labels: string[],
+		Class = '';
+
+	let popupMessage: string = '',
+		show = false;
+
+	const closeWindowWhenClickingOutside = () => {
+		window.addEventListener('click', function (e) {
+			if (
+				notificationOpen &&
+				//@ts-ignore
+				![...document.getElementsByClassName(`notifications-clickable-region`)]?.find((element) =>
+					//@ts-ignore
+					element.contains(e.target)
+				)
+			) {
+				notificationOpen = false;
+			}
+		});
+	};
+
+	onMount(() => {
+		closeWindowWhenClickingOutside();
+	});
+</script>
+
+<div class={`${Class} notifications-clickable-region`}>
+	<button
+		class={``}
+		on:click={() => {
+			notificationOpen = !notificationOpen;
+		}}
+		on:keydown
+	>
+		<Fa class="hover:cursor-pointer hover:text-primary" icon={faEllipsis} rotate="90" size={'1.2x'} />
+	</button>
+
+	{#if notificationOpen}
+		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
+			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
+			{#each categories as category, i}
+				<button
+					class="bg-gray-200 w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
+				/>
+			{/each}
+		</div>
+	{/if}
+</div>
+<SuccessPoppup bind:show bind:message={popupMessage} />

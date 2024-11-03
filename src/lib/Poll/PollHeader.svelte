@@ -17,11 +17,15 @@
 	import Description from './Description.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let poll: poll,
 		displayTag = false,
 		phase: Phase,
 		pollType: 3 | 4 = 3;
+
+		let deletePollModalShow = false;
 
 	const nextPhase = async () => {
 		let _phase: Phase = 'pre_start';
@@ -45,6 +49,7 @@
 
 		if (res.ok) phase = _phase;
 	};
+
 
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
@@ -76,7 +81,7 @@
 
 		<MultipleChoices
 			labels={['Fast Forward', 'Delete Poll']}
-			functions={[nextPhase, deletePoll]}
+			functions={[nextPhase, () => (deletePollModalShow = true)]}
 			Class="justify-self-center mt-2"
 		/>
 	</div>
@@ -128,6 +133,21 @@
 		/>
 	{/if} -->
 </div>
+
+<Modal bind:open={deletePollModalShow}>
+	<div slot="header">{$_('Deleting Poll')}</div>
+	<div slot="body">
+		{$_('Are you sure you want to delete this poll?')}
+	</div>
+	<div slot="footer">
+		<div class="flex justify-center gap-16">
+			<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+				action={() => (deletePollModalShow = false)}
+				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+			>
+		</div>
+	</div>
+</Modal>
 
 <style>
 	.poll-header-grid {

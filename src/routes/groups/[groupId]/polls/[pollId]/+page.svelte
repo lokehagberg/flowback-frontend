@@ -353,19 +353,6 @@
 	{/if}
 </Layout>
 
-<Modal bind:open={DeletePollModalShow}>
-	<div slot="header">{$_('Deleting Poll')}</div>
-	<div slot="body">
-		{$_('Are you sure you want to delete this poll?')}
-	</div>
-	<div slot="footer">
-		<div class="flex justify-center gap-16">
-			<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
-				action={() => (DeletePollModalShow = false)}
-				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
-			>
-		</div>
-	</div>
-</Modal>
+
 
 <Poppup bind:poppup />

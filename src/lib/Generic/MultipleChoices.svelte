@@ -50,7 +50,7 @@
 	</button>
 
 	{#if notificationOpen}
-		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
+		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm right-0">
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each labels as label, i}
 				<button

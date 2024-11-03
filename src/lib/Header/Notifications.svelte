@@ -90,7 +90,7 @@
 		<button
 			on:click={markAllAsRead}
 			on:keydown
-			class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
+			class="w-full flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
 		>
 			{$_('Mark all as read')}
 		</button>

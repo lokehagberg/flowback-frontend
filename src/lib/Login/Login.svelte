@@ -28,10 +28,13 @@
 		else if (json?.token) {
 			await localStorage.setItem('token', json.token);
 
-			if (!remainLoggedIn)
+			//Checks if user has selected the "Remain logged in" button and acts accordingly
+			if (remainLoggedIn) await localStorage.removeItem('sessionExpirationTime');
+			else
 				await localStorage.setItem(
 					'sessionExpirationTime',
-					(new Date().getTime() + 1000 * 25).toString()
+					//A session is set to 24 hours with "1000 * 3600 * 24"
+					(new Date().getTime() + 1000 * 3600 * 24).toString()
 				);
 
 			{

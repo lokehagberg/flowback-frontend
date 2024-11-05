@@ -8,12 +8,14 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
+	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
 		password: string,
 		status: StatusMessageInfo,
-		loading = false;
+		loading = false,
+		remainLoggedIn = false;
 
 	export let selectedPage: string;
 
@@ -36,29 +38,39 @@
 			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}
 	};
+
+	$: console.log(remainLoggedIn, 'LOG');
 </script>
 
 <Loader bind:loading>
 	<form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
 		<TextInput label={'Email'} bind:value={username} required name="email" />
-		<TextInput
-			label={'Password'}
-			bind:value={password}
-			type={'password'}
-			required
-			name="password"
-		/>
+		<div class="w-full">
+			<TextInput
+				label={'Password'}
+				bind:value={password}
+				type={'password'}
+				required
+				name="password"
+			/>
+			<div class="flex justify-between">
+				<CheckboxButtons
+					Class="cursor-pointer"
+					label=""
+					labels={[{ label: 'Remain logged in', checked: false, id: 1 }]}
+					onChange={(e) => (remainLoggedIn = !remainLoggedIn)}
+				/>
+				<button
+					class="cursor-pointer hover:underline text-gray-400"
+					on:click={() => (selectedPage = 'ForgotPassword')}
+				>
+					{$_('Forgot password?')}
+				</button>
+			</div>
+		</div>
 
-		<Button type="submit" Class=" pl-6 pr-6 pt-2 pb-2 mt-5 mb-5">{$_("Login")}</Button>
+		<Button type="submit" buttonStyle="primary-light" Class="w-[250px]">{$_('Login')}</Button>
 
 		<StatusMessage bind:status />
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="mb-4 cursor-pointer hover:underline"
-			on:click={() => (selectedPage = 'ForgotPassword')}
-			on:keydown
-		>
-			{$_('Forgot password?')}
-		</div>
 	</form>
 </Loader>

@@ -382,5 +382,6 @@
     "You have not voted yet!": "Du har ej röstat ännu!",
     "View detailed results": "Visa detaljerade resultat",
     "Evaluate predictions": "Evaluera förutsägelser",
-    "Couldn't get invites list": "Kunde inte finna inbjudningslistan"
+    "Couldn't get invites list": "Kunde inte finna inbjudningslistan",
+    "Remain logged in":"Håll inloggad"
 }

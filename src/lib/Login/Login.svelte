@@ -27,6 +27,13 @@
 		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
 			await localStorage.setItem('token', json.token);
+
+			if (!remainLoggedIn)
+				await localStorage.setItem(
+					'sessionExpirationTime',
+					(new Date().getTime() + 1000 * 25).toString()
+				);
+
 			{
 				const { json } = await fetchRequest('GET', 'user');
 				localStorage.setItem('userId', json.id);
@@ -38,8 +45,6 @@
 			status = statusMessageFormatter(res, json, 'There was a problem logging in');
 		}
 	};
-
-	$: console.log(remainLoggedIn, 'LOG');
 </script>
 
 <Loader bind:loading>
@@ -69,7 +74,14 @@
 			</div>
 		</div>
 
-		<Button type="submit" buttonStyle="primary-light" disabled={username === "" || password === ""} Class="w-[250px]">{$_('Login')}</Button>
+		<hr class="border-b-1 border-gray-300 w-full" />
+
+		<Button
+			type="submit"
+			buttonStyle="primary-light"
+			disabled={username === '' || password === ''}
+			Class="w-[250px]">{$_('Login')}</Button
+		>
 
 		<StatusMessage bind:status />
 	</form>

@@ -54,7 +54,6 @@
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
 		showEvent = false,
-		show = false,
 		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
@@ -122,7 +121,6 @@
 		}
 
 		showCreateScheduleEvent = false;
-		show = true;
 		events.push({
 			created_by: Number(localStorage.getItem('userId')),
 			description: '',
@@ -161,7 +159,6 @@
 		}
 
 		showEditScheduleEvent = false;
-		show = true;
 		events = events.map((event) => {
 			if (event.event_id === event_id)
 				return {
@@ -429,7 +426,6 @@
 	</div>
 </Modal>
 
-<!-- <SuccessPoppup bind:show /> -->
 
 <style>
 	.calendar {

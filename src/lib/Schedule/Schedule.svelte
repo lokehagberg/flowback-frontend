@@ -362,7 +362,7 @@
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
 			<span> {description} </span>
 			{#if workGroup}
-				{$_("Work Group")}:<span>{workGroup?.name}</span>
+				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}
 		</div>
 	</div>
@@ -387,21 +387,18 @@
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
-				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput
-					bind:value={end_date}
-					format="yyyy-MM-dd HH:mm"
-					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
-				/>
-				<TextInput label="Event title" bind:value={title} />
-				<TextArea label="Event description" bind:value={description} />
+				<TextInput label="Title" bind:value={title} />
+				<TextArea label="Description" bind:value={description} />
 				{#if type === 'group'}
+					{$_('Work Group')}
 					<Select
 						bind:value={workGroup}
 						labels={workGroups.map((group) => group.name)}
 						values={workGroups.map((group) => group.id)}
 					/>
 				{/if}
+				<input bind:value={start_date} type="datetime-local" />
+				<input bind:value={end_date} type="datetime-local" />
 				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 			</form>

@@ -74,15 +74,13 @@
 	{/if}
 	{#if displayDetails}
 		<ul class="p-2">
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div
-				on:keydown={() => {}}
+			<button
 				class="hover:underline flex items-center gap-2 cursor-pointer"
 				on:click={() => (displayDetails = false)}
 			>
 				<Fa icon={faDownLong} flip />
 				{$_('Time details')}
-			</div>
+			</button>
 			{#each dateLabels as label, i}
 				<li class="flex justify-between flex-col md:flex-row text-center">
 					<div class="mb-4 md:mb-0">{$_(label)}:</div>
@@ -91,14 +89,12 @@
 			{/each}
 		</ul>
 	{:else if displayDetails}
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<ul
-			on:keydown={() => {}}
+		<button
 			class="hover:underline flex items-center gap-1 cursor-pointer text-xs"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />
 			{$_('Time details')}
-		</ul>
+		</button>
 	{/if}
 </div>

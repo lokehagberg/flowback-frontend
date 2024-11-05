@@ -128,21 +128,18 @@
 		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
 		class:!block={recentlyTappedButton === '#'}
 	>
-		<ul>
-			{#each proposals as proposal}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<li
-					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
-					on:click={() => {
-						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
-						recentlyTappedButton = '';
-					}}
-					on:keydown
-				>
-					{proposal.title}
-				</li>
-			{/each}
-		</ul>
+		{#each proposals as proposal}
+			<button
+				class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
+				on:click={() => {
+					message = `${message}${proposal.title.replaceAll(' ', '-')} `;
+					recentlyTappedButton = '';
+				}}
+				on:keydown
+			>
+				{proposal.title}
+			</button>
+		{/each}
 	</div>
 	<div class="flex">
 		<TextArea

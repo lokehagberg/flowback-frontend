@@ -383,5 +383,14 @@
     "View detailed results": "Visa detaljerade resultat",
     "Evaluate predictions": "Evaluera förutsägelser",
     "Couldn't get invites list": "Kunde inte finna inbjudningslistan",
-    "Remain logged in":"Håll inloggad"
+    "Remain logged in":"Håll inloggad",
+    "There are currently no comments": "För nuvarande finns inga kommentarer",
+    "Points": "Poäng",
+    "Hot": "Heta",
+    "Recent":"Senaste",
+    "Oldest": "Äldsta",
+    "New":"Nya",
+    "Controversial":"Kontroversiella",
+    "Select Sorting": "Välj sortering",
+    "Comment":"Kommentar"
 }

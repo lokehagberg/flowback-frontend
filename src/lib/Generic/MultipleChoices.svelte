@@ -5,7 +5,7 @@
 	import SuccessPoppup from './SuccessPoppup.svelte';
 	import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
-	export let notificationOpen = false,
+	export let choicesOpen = false,
 		labels: string[],
 		Class = '',
 		functions:any[] = [];
@@ -16,14 +16,14 @@
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
 			if (
-				notificationOpen &&
+				choicesOpen &&
 				//@ts-ignore
 				![...document.getElementsByClassName(`notifications-clickable-region`)]?.find((element) =>
 					//@ts-ignore
 					element.contains(e.target)
 				)
 			) {
-				notificationOpen = false;
+				choicesOpen = false;
 			}
 		});
 	};
@@ -37,7 +37,7 @@
 	<button
 		class={``}
 		on:click={() => {
-			notificationOpen = !notificationOpen;
+			choicesOpen = !choicesOpen;
 		}}
 		on:keydown
 	>
@@ -49,13 +49,13 @@
 		/>
 	</button>
 
-	{#if notificationOpen}
+	{#if choicesOpen}
 		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm right-0">
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each labels as label, i}
 				<button
 				on:click={() => functions[i]()}
-					class="bg-gray-200 w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
+					class="dark:bg-slate-400 bg-white w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
 					>{label}</button
 				>
 			{/each}

@@ -167,13 +167,13 @@
 		<!-- Fast Forward Icon -->
 		{#if poll.allow_fast_forward}
 			<HeaderIcon
-				Class="!p-0 !cursor-default flex"
+				Class="!p-0 !cursor-default"
 				icon={faAnglesRight}
 				text={'Fast Forward'}
 				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 			/>
 		{:else}
-			<div class="relative">
+			<div class="relative w-4 h-4">
 				<Fa style="position:absolute" icon={faAnglesRight} />
 
 				<Fa style="position:absolute" icon={faSlash} rotate="90" />

@@ -24,7 +24,8 @@
 		| 'warning'
 		| 'accent-secondary'
 		| 'accent'
-		| 'primary-light';
+		| 'primary-light'
+		| 'inactive'
 
 	type buttontypes = 'button' | 'submit';
 </script>
@@ -41,7 +42,8 @@
 	} filter hover:brightness-50 inline text-white rounded-md cursor-pointer p-2  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
 
 		${buttonStyle === 'primary-light' && ' bg-white dark:bg-darkobject  primary-light-inner-shadow'}`}
-	class:!bg-gray-300={disabled}
+	class:!border-gray-300={disabled}
+	class:!text-gray-300={disabled}
 	class:!bg-secondary={buttonStyle == 'secondary'}
 	class:!bg-red-500={buttonStyle === 'warning'}
 	class:!bg-accent={buttonStyle === 'accent'}
@@ -59,7 +61,7 @@
 	.primary-light-inner-shadow {
 		/* box-shadow: inset 0 0 0px 3px rgb(130, 180, 230); */
 		border: 1px solid var(--secondary);
-		color: var(--secondary) !important;
+		color: var(--secondary);
 		font-weight: 500;
 		font-size: medium;
 	}

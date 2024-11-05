@@ -69,7 +69,7 @@
 			</div>
 		</div>
 
-		<Button type="submit" buttonStyle="primary-light" Class="w-[250px]">{$_('Login')}</Button>
+		<Button type="submit" buttonStyle="primary-light" disabled={username === "" || password === ""} Class="w-[250px]">{$_('Login')}</Button>
 
 		<StatusMessage bind:status />
 	</form>

@@ -44,17 +44,16 @@
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"
 		>
-			{$_("There are currently no threads in this group")}
+			{$_('There are currently no threads in this group')}
 		</div>
 	{/if}
 	{#each threads as thread}
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
-				<span
+				<button
 					class="cursor-pointer hover:underline text-primary font-bold text-2xl"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-					on:keydown>{thread.title}</span
+					>{thread.title}</button
 				>
 
 				<NotificationOptions
@@ -73,11 +72,9 @@
 			<div
 				class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText mt-3"
 			>
-				<!-- svelte-ignore a11y-missing-attribute -->
 				<a
 					class="text-black dark:text-darkmodeText"
-					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-					on:keydown
+					href={`${$page.params.groupId}/thread/${thread.id}`}
 				>
 					<Fa class="inline" icon={faComment} />
 					<span class="inline">{thread.total_comments} {'comments'}</span>

@@ -54,25 +54,22 @@
 			labels={groupNotificationCategories}
 			Class="mt-auto"
 		/>
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<h1
+
+		<button
 			class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'flow')}
-			on:keydown
 		>
 			{group.name}
-		</h1>
+		</button>
 	</div>
 	<div class="flex items-center">
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<p
+		<button
 			class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'members')}
-			on:keydown
 		>
 			{memberCount}
 			{$_('members')}
-		</p>
+		</button>
 		<div class="ml-3">
 			{#if typeof window !== 'undefined'}
 				{#if group.public}

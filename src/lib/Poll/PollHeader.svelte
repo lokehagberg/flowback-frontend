@@ -77,6 +77,7 @@
 			categories={['poll', 'timeline', 'comment_all']}
 			labels={['Poll', 'Timeline', 'Comments']}
 			Class="justify-self-center mt-2"
+			ClassOpen="right-0"
 		/>
 
 		<MultipleChoices

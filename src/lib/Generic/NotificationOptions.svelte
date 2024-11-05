@@ -12,7 +12,8 @@
 		labels: string[],
 		api: string,
 		id: number,
-		Class = '';
+		Class = '',
+		ClassOpen = '';
 
 	let popupMessage: string = '',
 		notifications: NotificationObject[] = [],
@@ -93,7 +94,7 @@
 	</button>
 
 	{#if notificationOpen}
-		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm right-0">
+		<div class={`z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm ${ClassOpen}`}>
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each categories as category, i}
 				<button

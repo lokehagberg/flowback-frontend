@@ -132,6 +132,7 @@
 				categories={['poll', 'timeline', 'comment_all']}
 				labels={['Poll', 'Timeline', 'Comments']}
 				Class="text-black dark:text-darkmodeText"
+				ClassOpen="right-0"
 			/>
 			{#if isAdmin || poll.pinned}
 				<button class="" class:cursor-pointer={isAdmin} on:click={pinPoll}>

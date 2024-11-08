@@ -52,13 +52,13 @@
 <!-- TODO: Relative works great for phones -->
 <button
 	class:hidden={!sideHeaderOpen}
-	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
+	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText flex flex-col"
 	id="side-header"
 	on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 >
 	{#each navs as nav}
 		<button
-			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+			class="cursor-pointer w-full pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 			on:click={nav.action}
 		>
 			{$_(nav.title)}
@@ -75,7 +75,6 @@
 		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
 		<div>{$_('Number: +46737482562')}</div>
 		<div>{$_(`Mail: ${env.PUBLIC_SUPPORT_MAIL}`)}</div>
-		<!-- <div>{$_('For questions about Metamask, contact the Metamask team.')}</div> -->
 	</div>
 </Modal>
 
@@ -92,7 +91,7 @@
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
-				<button on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</button>
+				<button on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</button>
 			</div>
 		</div>
 	</div>

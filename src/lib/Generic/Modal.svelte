@@ -11,6 +11,7 @@
 	const closeModal = (event: MouseEvent) => {
 		event.stopPropagation();
 		open = false;
+		hideScrollbar(false);
 	};
 
 	const stopPropagation = (event: MouseEvent) => {

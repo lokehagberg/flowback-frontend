@@ -7,32 +7,33 @@
 	import { onMount } from 'svelte';
 
 	export let icon = faCircle,
-		icons = [faCircle];
-	if (icons.length === 1) icons[0] = icon;
-
-	export let text = 'icon',
+		icons = [faCircle],
+		text = 'icon',
 		href: string | null = null,
 		Class = '',
 		color = '',
 		size = 'xl';
 
-	let hovering = false;
-	let selectedPage = false;
+	let hovering = false,
+		selectedPage = false;
+
+	const checkIfSelected = () => {
+		selectedPage = window.location.pathname === '/' + href;
+	};
+
+	if (icons.length === 1) icons[0] = icon;
 
 	onMount(() => {
 		checkIfSelected();
 	});
-
-	const checkIfSelected = () => {
-		selectedPage = window.location.pathname === '/' + href;
-	}
 </script>
 
 {#if href}
 	<a
 		on:mouseover={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}
-		on:focus
+		on:focus={() => (hovering = true)}
+		on:blur={() => (hovering = false)}
 		href={href === '/' ? window.location.href : '/' + href}
 		class={`relative cursor-pointer ${Class}`}
 		id={href}
@@ -58,7 +59,9 @@
 	<button
 		on:mouseover={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}
-		on:focus
+		on:focus={() => (hovering = true)}
+		on:blur={() => (hovering = false)}
+		aria-haspopup="true"
 		class={`relative cursor-pointer ${Class}`}
 		id={href}
 	>

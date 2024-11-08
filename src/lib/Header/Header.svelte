@@ -155,8 +155,7 @@
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<span
+				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
@@ -170,11 +169,10 @@
 					{:else}
 						<Fa icon={faMoon} />
 					{/if}
-				</span>
+				</button>
 				<Notifications />
 
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+				<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
 						class={`w-8 h-8 rounded-full cursor-pointer ${
@@ -182,7 +180,7 @@
 						}`}
 						alt="default pfp"
 					/>
-				</div>
+				</button>
 			</div>
 		</div>
 	</header>

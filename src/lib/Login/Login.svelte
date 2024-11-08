@@ -61,6 +61,7 @@
 				required
 				name="password"
 			/>
+			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<div class="flex justify-between">
 				<CheckboxButtons
 					Class="cursor-pointer"
@@ -68,12 +69,15 @@
 					labels={[{ label: 'Remain logged in', checked: false, id: 1 }]}
 					onChange={(e) => (remainLoggedIn = !remainLoggedIn)}
 				/>
-				<button
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
 					class="cursor-pointer hover:underline text-gray-400"
 					on:click={() => (selectedPage = 'ForgotPassword')}
+					on:keydown
+					tabindex="0"
 				>
 					{$_('Forgot password?')}
-				</button>
+				</div>
 			</div>
 		</div>
 

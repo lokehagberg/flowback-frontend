@@ -50,24 +50,21 @@
 </script>
 
 <!-- TODO: Relative works great for phones -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	class:hidden={!sideHeaderOpen}
 	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
 	id="side-header"
 	on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
-	on:keydown
 >
 	{#each navs as nav}
-		<div
+		<button
 			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 			on:click={nav.action}
-			on:keydown
 		>
 			{$_(nav.title)}
-		</div>
+		</button>
 	{/each}
-</div>
+</button>
 
 <Modal bind:open={open_support}>
 	<div slot="header" class="p-4">
@@ -95,8 +92,7 @@
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</div>
+				<button on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</button>
 			</div>
 		</div>
 	</div>

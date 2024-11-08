@@ -66,12 +66,10 @@
 	let notificationsOpen = false;
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	id="notifications-list"
 	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
-	on:keydown
 >
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
@@ -80,7 +78,7 @@
 	>
 		<span class="">{notifications?.length}</span>
 	</div>
-</div>
+</button>
 
 {#if notificationsOpen}
 	<ul
@@ -89,7 +87,6 @@
 	>
 		<button
 			on:click={markAllAsRead}
-			on:keydown
 			class="w-full flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
 		>
 			{$_('Mark all as read')}

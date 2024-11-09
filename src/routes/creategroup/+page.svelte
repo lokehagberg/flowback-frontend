@@ -6,7 +6,7 @@
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
+	import ImageUpload from '$lib/Generic/FileUpload.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';

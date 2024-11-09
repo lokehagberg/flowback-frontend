@@ -14,6 +14,7 @@ export const commentSetup = async (comments: Comment[]) => {
 	return comments;
 };
 
+//Uses recursion
 export const getCommentDepth = (comment: Comment, comments: Comment[]): number => {
 	let depth: number = 0;
 
@@ -28,6 +29,7 @@ export const getCommentDepth = (comment: Comment, comments: Comment[]): number =
 	return depth;
 };
 
+//Calls the get comment API to 
 export const getComments = async (
 	id: number | string | null | undefined,
 	api: 'poll' | 'thread' | 'delegate-history',

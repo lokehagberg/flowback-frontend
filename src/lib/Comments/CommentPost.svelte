@@ -142,16 +142,20 @@
 		{/each}
 	</div>
 	<div class="flex">
-		<TextArea
-			label="Comment"
-			bind:value={message}
-			bind:recentlyTappedButton
-			inputClass="bg-gray-100 h-8"
-			Class="w-full"
-		/>
-		<Button Class="px-3 mt-6 bg-white" type="submit" label=""
-			><Fa icon={faPaperPlane} color="black" /></Button
-		>
+		<div class="flex flex-grow">
+			<TextArea
+				label="Comment"
+				bind:value={message}
+				bind:recentlyTappedButton
+				inputClass="bg-gray-100 h-8"
+				Class="w-full"
+			/>
+		</div>
+		<div class="flex">
+			<FileUploads bind:images minimalist />
+			<Button Class="bg-white" type="submit" label=""
+				><Fa icon={faPaperPlane} color="black" /></Button
+			>
+		</div>
 	</div>
-	<FileUploads bind:images minimalist />
 </form>

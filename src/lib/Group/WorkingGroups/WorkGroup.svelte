@@ -79,7 +79,7 @@
 
 	{#key workGroupUserList}
 		{#if isMember()}
-			<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
+			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
 		{:else if workGroup.direct_join}
 			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>{$_("Join")}</Button>
 		{:else}

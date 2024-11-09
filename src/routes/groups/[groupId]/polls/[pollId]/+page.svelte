@@ -335,24 +335,7 @@
 				<Results {pollType} />
 			{/if}
 		{/if}
-
-		<!-- Mod Tools -->
-		<!-- TODO: Fix as part of svelte store information this place -->
-		{#if groupUser?.is_admin}
-			<StatusMessage bind:status={deleteStatus} />
-			<div class="flex gap-4 align-middle">
-				<div class="">{$_('Mod Tools')}:</div>
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-					>{$_('Delete poll')}</Button
-				>
-				{#if !finished}
-					<Button action={nextPhase}>{$_('Next Phase')}</Button>
-				{/if}
-			</div>
-		{/if}
 	{/if}
 </Layout>
-
-
 
 <Poppup bind:poppup />

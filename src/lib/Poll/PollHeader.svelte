@@ -87,12 +87,13 @@
 			Class="justify-self-center mt-2"
 			ClassOpen="right-0"
 		/>
-
-		<MultipleChoices
-			labels={['Fast Forward', 'Delete Poll']}
-			functions={[nextPhase, () => (deletePollModalShow = true)]}
-			Class="justify-self-center mt-2"
-		/>
+		<!-- {#if groupUser?.is_admin} -->
+			<MultipleChoices
+				labels={['Fast Forward', 'Delete Poll']}
+				functions={[nextPhase, () => (deletePollModalShow = true)]}
+				Class="justify-self-center mt-2"
+			/>
+		<!-- {/if} -->
 	</div>
 
 	<div class="flex gap-4 items-baseline grid-area-items mt-1">

@@ -54,7 +54,7 @@
 		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
-			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
+			API += `&status=${filter.finishedSelection === 'finished' ? '-1' : '0'}`;
 
 		// API += '&pinned=false';
 

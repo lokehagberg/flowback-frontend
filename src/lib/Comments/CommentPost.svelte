@@ -144,7 +144,7 @@
 	<div class="flex">
 		<div class="flex flex-grow">
 			<TextArea
-				label="Comment"
+				label=""
 				bind:value={message}
 				bind:recentlyTappedButton
 				inputClass="bg-gray-100 h-8"

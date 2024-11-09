@@ -20,7 +20,7 @@
 	class={`${Class} select-none flex item-center items-center  dark:outline-gray-700 rounded-md transition-all  ${
 		!isSelected && 'hover:bg-gray-200 active:bg-gray-300  '
 	} outline-1 cursor-pointer p-3 ${
-		isSelected && 'text-gray-400 dark:text-gray-500 border-l-2 border-primary'
+		isSelected && 'text-gray-400 dark:text-gray-500 border-l-2 border-primary rounded-none'
 	} `}
 >
 	<Fa {icon} />

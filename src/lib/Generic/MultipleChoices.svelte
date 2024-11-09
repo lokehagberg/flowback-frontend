@@ -55,7 +55,7 @@
 			{#each labels as label, i}
 				<button
 				on:click={() => functions[i]()}
-					class="dark:bg-slate-400 bg-white w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
+					class=" bg-white w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
 					>{label}</button
 				>
 			{/each}

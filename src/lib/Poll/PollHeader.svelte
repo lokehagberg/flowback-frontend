@@ -19,13 +19,16 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let poll: poll,
 		displayTag = false,
 		phase: Phase,
 		pollType: 3 | 4 = 3;
 
-		let deletePollModalShow = false;
+	let deletePollModalShow = false,
+		poppup: poppup;
 
 	const nextPhase = async () => {
 		let _phase: Phase = 'pre_start';
@@ -47,9 +50,14 @@
 			}
 		);
 
-		if (res.ok) phase = _phase;
-	};
+		if (!res.ok) {
+			const message = json.detail[0] || 'Could not fast forward poll';
+			poppup = { message, success: false };
+			return;
+		}
 
+		phase = _phase;
+	};
 
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
@@ -149,6 +157,8 @@
 		</div>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />
 
 <style>
 	.poll-header-grid {

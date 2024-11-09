@@ -97,7 +97,7 @@
 		<div class="mb-6 w-full">
 			<div class="bg-primary text-white shadow rounded flex flex-col">
 				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
-					<GroupSidebarButton text="Create a post" icon={faCheckToSlot} isSelected={false} /></a
+					<GroupSidebarButton text="Create a post" icon={faCheckToSlot} isSelected={false} Class="hover:!bg-blue-800 active:!bg-blue-900"/></a
 				>
 			</div>
 		</div>

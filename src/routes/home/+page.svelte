@@ -10,7 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
 	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 	import { goto } from '$app/navigation';
 
 	interface Invitation {
@@ -22,15 +22,15 @@
 		profile_image: string;
 	}
 
-	let invitations: Invitation[] = [];
-	let polls: poll[] = [],
+	let invitations: Invitation[] = [],
 		status: StatusMessageInfo;
 
 	onMount(async () => {
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE") goto('groups/1')
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') goto('groups/1');
 
 		getInvitations();
 		getPolls();
+		getHome();
 	});
 
 	const getInvitations = async () => {
@@ -47,7 +47,7 @@
 
 		invitations = invitations.filter((invite) => invite.group !== id);
 		invitations = invitations;
-		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {
@@ -56,6 +56,11 @@
 
 	const getPolls = async () => {
 		const { res, json } = await fetchRequest('GET', `home/polls?limit=${homePollsLimit}`);
+		status = statusMessageFormatter(res, json);
+	};
+
+	const getHome = async () => {
+		const { res, json } = await fetchRequest('GET', `user/home`);
 		status = statusMessageFormatter(res, json);
 	};
 </script>

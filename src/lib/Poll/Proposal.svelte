@@ -28,12 +28,14 @@
 </script>
 
 <button
-	class={`dark:bg-darkobject bg-white w-full p-2
+	class={`dark:bg-darkobject bg-white w-full p-2 transition-all
 	 dark:border-gray-500 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
 	class:!bg-blue-100={selectedProposal === proposal}
+	class:border-l-2={selectedProposal === proposal}
+	class:border-primary={selectedProposal === proposal}
 >
 	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
@@ -60,9 +62,11 @@
 				</button>
 			{/if}
 		{/if}
-		<span class="text-lg align-text-top">{proposal.title}</span>
+		<!-- Proposal Title -->
+		<span class="text-md text-primary font-semibold align-text-top">{proposal.title}</span>
 	</div>
-	<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
+	<!-- Proposal Description -->
+	<p class="elipsis text-sm text-left mt-2" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 

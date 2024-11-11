@@ -143,7 +143,7 @@
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-[80%] overflow-y-scroll">
+						<div class="h-[90%]">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}

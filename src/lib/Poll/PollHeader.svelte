@@ -32,15 +32,17 @@
 
 	const nextPhase = async () => {
 		let _phase: Phase = 'pre_start';
+		console.log(phase, pollType);
+		
 
-		if (pollType === 4) {
+		if (pollType === 3) {
 			if (phase === 'area_vote') _phase = 'proposal';
 			else if (phase === 'proposal') _phase = 'prediction_statement';
 			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
 			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
 			else if (phase === 'delegate_vote') _phase = 'vote';
 			else if (phase === 'vote') _phase = 'prediction_vote';
-		} else if (pollType === 3) _phase = 'result';
+		} else if (pollType === 4) _phase = 'result';
 
 		const { res, json } = await fetchRequest(
 			'POST',

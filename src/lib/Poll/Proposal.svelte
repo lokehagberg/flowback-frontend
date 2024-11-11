@@ -1,6 +1,5 @@
 <!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
-	//@ts-ignore
 	import type { Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
@@ -8,7 +7,6 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { PredictionStatement } from './PredictionMarket/interfaces';
 
 	export let proposal: proposal,
 		Class = '',
@@ -29,13 +27,13 @@
 	});
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class={`dark:bg-darkobject bg-white
+<button
+	class={`dark:bg-darkobject bg-white w-full p-2
 	 dark:border-gray-500 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
 	class:hidden={isHoveredOver}
+	class:!bg-blue-100={selectedProposal === proposal}
 >
 	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
@@ -43,25 +41,23 @@
 				(prop) => prop.id === proposal.id
 			)}
 			{#if proposalInList !== -1}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div
+				<button
 					on:click={() => {
 						proposalsToPredictionMarket.splice(proposalInList, 1);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
 					<Fa icon={faSquareCheck} color={'black'} class="cursor-pointer" />
-				</div>
+				</button>
 			{:else}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div
+				<button
 					on:click={() => {
 						proposalsToPredictionMarket.push(proposal);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
 					<Fa icon={faSquareCheck} color={'white'} class="border border-black cursor-pointer" />
-				</div>
+				</button>
 			{/if}
 		{/if}
 		<span class="text-lg align-text-top">{proposal.title}</span>
@@ -76,17 +72,17 @@
 		<div>
 			<Fa icon={faComment} />
 		</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div
+		<button
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer"
 		>
-			See More
-		</div>
+			{$_('See More')}
+		</button>
 	</div>
-</div>
+</button>
+
 {#if isVoting}
 	<input
 		value={voting.find((vote) => vote.proposal === proposal.id)?.score}

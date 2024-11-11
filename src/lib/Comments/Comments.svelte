@@ -74,7 +74,7 @@
 		{/if}
 	</div>
 	{#if _comments.length === 0}
-		<div>{$_('There are currently no comments')}</div>
+		<div>{$_('There are currently no comments')}</div>>
 	{/if}
 </div>
 

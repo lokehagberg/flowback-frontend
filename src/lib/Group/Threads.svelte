@@ -9,9 +9,16 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
-	import { faComment, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faComment,
+		faThumbsDown,
+		faThumbsUp,
+		faThumbTack
+	} from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
+
+	export let isAdmin = true;
 
 	let threads: Thread[] = [],
 		prev = '',
@@ -54,6 +61,18 @@
 		getThreads();
 	};
 
+	//When adminn presses the pin tack symbol, pin the thread
+	const pinThread = async (thread: Thread) => {
+		const { json, res } = await fetchRequest('POST', `group/thread/${thread.id}/update`, {
+			title: thread.title,
+			pinned: !thread.pinned
+		});
+		if (!res.ok) return;
+		
+		thread.pinned = !thread.pinned;
+		threads = threads;
+	};
+
 	onMount(() => {
 		getThreads();
 	});
@@ -76,12 +95,24 @@
 					>{thread.title}</button
 				>
 
-				<NotificationOptions
-					api={`group/thread/${thread.id}`}
-					categories={['comment']}
-					id={thread.id}
-					labels={['comment']}
-				/>
+				<div class="flex gap-3">
+					<NotificationOptions
+						api={`group/thread/${thread.id}`}
+						categories={['comment']}
+						id={thread.id}
+						labels={['comment']}
+					/>
+					{#if isAdmin || thread.pinned}
+						<button class:cursor-pointer={isAdmin} on:click={() => pinThread(thread)}>
+							<Fa
+								size="1.2x"
+								icon={faThumbTack}
+								color={thread.pinned ? '#999' : '#CCC'}
+								rotate={thread.pinned ? '0' : '45'}
+							/>
+						</button>
+					{/if}
+				</div>
 			</div>
 			{#if thread.description}
 				<span>

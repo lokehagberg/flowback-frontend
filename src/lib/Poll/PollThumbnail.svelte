@@ -28,12 +28,7 @@
 		faAlignLeft,
 		faCalendarAlt,
 		faSlash
-		// faDash
 	} from '@fortawesome/free-solid-svg-icons';
-	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
-	import { faGripLines } from '@fortawesome/free-solid-svg-icons/faGripLines';
-	// import { FaLayers } from 'svelte-fa';
-	// import FaLayers from 'svelte-fa/src/fa-layers.js'
 
 	export let poll: poll,
 		isAdmin = false;
@@ -48,6 +43,7 @@
 		voting = true,
 		poppup: poppup;
 
+	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
 			pinned: !poll.pinned

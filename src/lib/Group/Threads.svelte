@@ -9,7 +9,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
-	import { faComment } from '@fortawesome/free-solid-svg-icons';
+	import { faComment, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 
@@ -34,6 +34,26 @@
 		threads = json.results;
 	};
 
+	//Launches whenever the user clicks upvote or downvote on a thread
+	const threadVote = async (thread: Thread, clicked: 'down' | 'up') => {
+		let vote: null | false | true = null;
+
+		if (thread.user_vote === false && clicked === 'down') vote = null;
+		else if (clicked === 'down') vote = false;
+		else if (thread.user_vote === true && clicked === 'up') vote = null;
+		else if (clicked === 'up') vote = true;
+
+		const { res, json } = await fetchRequest('POST', `group/thread/${thread.id}/vote`, { vote });
+
+		if (!res.ok) {
+			poppup = { message: 'Could not vote on thread', success: false };
+			return;
+		}
+
+		//TODO: Make this more efficient by not having to reload threads.
+		getThreads();
+	};
+
 	onMount(() => {
 		getThreads();
 	});
@@ -51,7 +71,7 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
 				<button
-					class="cursor-pointer hover:underline text-primary font-bold text-2xl"
+					class="cursor-pointer hover:underline text-primary text-2xl"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					>{thread.title}</button
 				>
@@ -69,16 +89,31 @@
 				</span>
 			{/if}
 
-			<div
-				class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText mt-3"
-			>
-				<a
-					class="text-black dark:text-darkmodeText"
-					href={`${$page.params.groupId}/thread/${thread.id}`}
+			<hr class="my-3" />
+
+			<div class="flex justify-between align-middle">
+				<div
+					class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
 				>
-					<Fa class="inline" icon={faComment} />
-					<span class="inline">{thread.total_comments} {'comments'}</span>
-				</a>
+					<a
+						class="text-black dark:text-darkmodeText"
+						href={`${$page.params.groupId}/thread/${thread.id}`}
+					>
+						<Fa class="inline" icon={faComment} />
+						<span class="inline">{thread.total_comments} {'comments'}</span>
+					</a>
+				</div>
+				<div>
+					<div class="flex gap-1">
+						{thread.score}
+						<button on:click={() => threadVote(thread, 'up')}>
+							<Fa icon={faThumbsUp} />
+						</button>
+						<button on:click={() => threadVote(thread, 'down')}>
+							<Fa icon={faThumbsDown} />
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	{/each}

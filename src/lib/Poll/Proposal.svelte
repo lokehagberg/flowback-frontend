@@ -19,8 +19,7 @@
 
 	export const id: number = 0;
 
-	let isHoveredOver = false,
-		show = false;
+	let show = false;
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
@@ -30,14 +29,11 @@
 <button
 	class={`dark:bg-darkobject bg-white w-full py-1 px-2 transition-all
 	 dark:border-gray-500 ${Class}`}
-	on:dragenter|preventDefault={() => (isHoveredOver = true)}
-	on:dragleave|preventDefault={() => (isHoveredOver = false)}
-	class:hidden={isHoveredOver}
 	class:!bg-blue-100={selectedProposal === proposal}
 	class:border-l-2={selectedProposal === proposal}
 	class:border-primary={selectedProposal === proposal}
 >
-	<div class="flex gap-2 items-center">
+	<div class="flex gap-2 items-baseline">
 		{#if phase === 'prediction_statement'}
 			{@const proposalInList = proposalsToPredictionMarket.findIndex(
 				(prop) => prop.id === proposal.id

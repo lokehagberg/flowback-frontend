@@ -63,7 +63,8 @@
 			{/if}
 		{/if}
 		<!-- Proposal Title -->
-		<span class="text-md text-primary font-semibold align-text-top">{proposal.title}</span>
+		<span class="text-md text-primary font-semibold align-text-top text-left">{proposal.title}</span
+		>
 	</div>
 	<!-- Proposal Description -->
 	<p class="elipsis text-sm text-left my-1" id={`proposal-${proposal.id}-description`}>

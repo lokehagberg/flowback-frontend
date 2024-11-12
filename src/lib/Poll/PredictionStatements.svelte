@@ -27,8 +27,9 @@
 </script>
 
 <div class="border-t-2">
+	<div class="text-gray-500 text-sm py-2">{$_("Predictions")}({predictions.length})</div>
 	{#each predictions as prediction}
-		<div class="border-b-2 flex flex-col pt-3" class:select-none={phase === 'prediction_bet'}>
+		<div class="border-b-2 flex flex-col" class:select-none={phase === 'prediction_bet'}>
 			<span class="text-primary font-semibold">{prediction.title}</span>
 			{#if prediction.description}
 				<span class="">{prediction.description}</span>

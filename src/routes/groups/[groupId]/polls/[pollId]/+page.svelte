@@ -209,12 +209,12 @@
 					</div>
 					<div slot="right" class="relative">
 						{#if selectedProposal}
-							<Proposal
-								bind:selectedProposal
-								bind:phase
-								proposal={selectedProposal}
-								isVoting={false}
-							/>
+							<div class="font-semibold text-primary text-lg">
+								{selectedProposal.title}
+							</div>
+							<p>
+								{selectedProposal.description}
+							</p>
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary font-semibold">

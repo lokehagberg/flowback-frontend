@@ -14,13 +14,13 @@
 		<Timeline displayDetails={false} bind:poll pollType={4} Class="timeline-grid" />
 
 		{#if $$slots.left}
-			<div class={`${genericStyle}`}>
+			<div class={`${genericStyle}  `}>
 				<slot name="left" />
 			</div>
 		{/if}
 
 		{#if $$slots.right}
-			<div class={`${genericStyle}`}>
+			<div class={`${genericStyle}  overflow-y-scroll`}>
 				<slot name="right" />
 			</div>
 		{/if}

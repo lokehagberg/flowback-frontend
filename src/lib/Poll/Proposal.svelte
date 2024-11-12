@@ -28,7 +28,7 @@
 </script>
 
 <button
-	class={`dark:bg-darkobject bg-white w-full p-2 transition-all
+	class={`dark:bg-darkobject bg-white w-full py-1 px-2 transition-all
 	 dark:border-gray-500 ${Class}`}
 	on:dragenter|preventDefault={() => (isHoveredOver = true)}
 	on:dragleave|preventDefault={() => (isHoveredOver = false)}
@@ -66,14 +66,14 @@
 		<span class="text-md text-primary font-semibold align-text-top">{proposal.title}</span>
 	</div>
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left mt-2" id={`proposal-${proposal.id}-description`}>
+	<p class="elipsis text-sm text-left my-1" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 
 	<slot />
 
 	<div class="flex justify-between w-full">
-		<div>
+		<div class="my-auto">
 			<Fa icon={faComment} />
 		</div>
 		<button

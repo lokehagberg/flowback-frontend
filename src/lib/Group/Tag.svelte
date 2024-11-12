@@ -32,7 +32,7 @@
 		{#if tag?.imac}
 			({tag?.imac})
 		{:else}
-			??
+			?
 		{/if}
 	</div>
 </div>

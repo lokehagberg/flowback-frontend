@@ -43,7 +43,10 @@
 <div class="w-full">
 	<span class="text-primary font-bold text-xl text-center block">{$_('Results')}</span>
 	{#if pollType === 4}
-		<Statistics bind:votes bind:labels />
+		<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
+		{#if proposals[0]?.score > 0}
+			<Statistics bind:votes bind:labels />
+		{/if}
 		{#each proposals as proposal, i}
 			<div class="border-gray-300 border-b-2 mt-3 pb-1">
 				<span class="text-primary font-bold flex items-center gap-1"
@@ -51,7 +54,6 @@
 					{proposal.title}</span
 				>
 				<div>{proposal.description}</div>
-				<!-- {@debug proposal} -->
 				<span class="block text-right"
 					><span class="text-primary font-bold">{$_('Points')}:</span> {proposal.score || '0'}</span
 				>

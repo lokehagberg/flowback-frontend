@@ -3,15 +3,17 @@
 	import type { poll } from '../interface';
 	import Timeline from './Timeline.svelte';
 
-	export let poll: poll, Class = ""
+	export let poll: poll,
+		Class = '';
 
 	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full';
+
 	onMount(() => {});
 </script>
 
 {#if poll}
 	<div class={`${Class} poll-grid p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
-		<Timeline displayDetails={false} bind:poll pollType={4} Class="timeline-grid" />
+		<Timeline displayDetails={false} bind:poll pollType={4} Class={"!absolute md:!relative left-4 md:left-0"}/>
 
 		{#if $$slots.left}
 			<div class={`${genericStyle}  `}>
@@ -34,17 +36,19 @@
 {/if}
 
 <style>
-	.poll-grid {
-		grid-template-columns: 0.1fr 1fr 1fr;
-		grid-template-rows: 80vh 80vh;
-		display: grid;
-	}
+	@media (min-width: 768px) {
+		.poll-grid {
+			grid-template-columns: 0.1fr 1fr 1fr;
+			grid-template-rows: 80vh 80vh;
+			display: grid;
+		}
 
-	.timeline-grid {
-		grid-area: 1 / 1 / 3 / 1;
-	}
+		.timeline-grid {
+			grid-area: 1 / 1 / 3 / 1;
+		}
 
-	.bottom-grid {
-		grid-area: 2 / 2 / 2 / 4;
+		.bottom-grid {
+			grid-area: 2 / 2 / 2 / 4;
+		}
 	}
 </style>

@@ -36,9 +36,9 @@
 	};
 
 	const setUpLocale = () => {
-		if (!initializedLocale)
-		initializeLocalization();
-		else initializedLocale = true;
+		// if (!initializedLocale)
+		// initializeLocalization();
+		// else initializedLocale = true;
 	}
 
 	onMount(async () => {

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 
 	export let text: string,
 		action = () => {},
 		icon = faPoll,
-		isSelected = true;
+		isSelected = true,
+		Class = '';
 
 	let hovering = false;
 </script>
@@ -17,9 +17,11 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class={`select-none flex item-center items-center outline-gray-400 dark:outline-gray-700 ${
-		!isSelected && 'hover:outline dark:hover:brightness-125 hover:brightness-150'
-	} outline-1 cursor-pointer p-4 ${isSelected && 'text-gray-400 dark:text-gray-500'}`}
+	class={`${Class} select-none flex item-center items-center  dark:outline-gray-700 rounded-md transition-all  ${
+		!isSelected && 'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
+	} outline-1 cursor-pointer p-3 ${
+		isSelected && 'text-gray-400 dark:text-gray-500 border-l-2 border-primary rounded-none'
+	} `}
 >
 	<Fa {icon} />
 	<div class="ml-2">

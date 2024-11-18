@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { _ } from 'svelte-i18n';
 
 	export let limit: number,
 		description: string = '',
-		onHoverGroup: boolean = false,
 		Class = '';
 
 	let readMore = false;
@@ -16,23 +15,20 @@
 		</div>
 
 		{#if description.length > limit}
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<span
+			<button
 				class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
-				on:click={() => (readMore = false)}>Show less...</span
+				on:click={() => (readMore = false)}>{$_('Show less')}...</button
 			>
 		{/if}
 	{:else}
 		<div class="cursor-pointe text-black">
 			{description.slice(0, limit)}
 		</div>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
+
 		{#if description.length > limit}
-			...<span
+			...<button
 				class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
-				on:click={() => (readMore = true)}>Show more...</span
+				on:click={() => (readMore = true)}>{$_('Show more')}...</button
 			>
 		{/if}
 	{/if}

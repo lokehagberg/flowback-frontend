@@ -8,5 +8,10 @@ export interface scheduledEvent {
 	start_date: string;
 	title: string;
 	group_id?: number;
+	work_group?:
+	{
+		id:number;
+		name:string;
+	};
 	schedule_origin_name: 'user' | 'group'
 }

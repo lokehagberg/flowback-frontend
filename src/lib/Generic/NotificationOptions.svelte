@@ -3,8 +3,7 @@
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import { faBellSlash } from '@fortawesome/free-solid-svg-icons/faBellSlash';
 	import { onMount } from 'svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import SuccessPoppup from './SuccessPoppup.svelte';
 
@@ -13,7 +12,8 @@
 		labels: string[],
 		api: string,
 		id: number,
-		Class = '';
+		Class = '',
+		ClassOpen = '';
 
 	let popupMessage: string = '',
 		notifications: NotificationObject[] = [],
@@ -94,7 +94,7 @@
 	</button>
 
 	{#if notificationOpen}
-		<div class="z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm">
+		<div class={`z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm ${ClassOpen}`}>
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each categories as category, i}
 				<button

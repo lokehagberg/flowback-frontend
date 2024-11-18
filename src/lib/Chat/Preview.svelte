@@ -45,7 +45,7 @@
 	};
 
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json.id;
 	};
 

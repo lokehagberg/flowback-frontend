@@ -4,8 +4,7 @@
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
@@ -28,9 +27,8 @@
 		faComment,
 		faAlignLeft,
 		faCalendarAlt,
-		// faDash
+		faSlash
 	} from '@fortawesome/free-solid-svg-icons';
-	// import { FaLayers } from 'svelte-fa';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -45,6 +43,7 @@
 		voting = true,
 		poppup: poppup;
 
+	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
 			pinned: !poll.pinned
@@ -128,24 +127,18 @@
 				api={`group/poll/${poll.id}`}
 				categories={['poll', 'timeline', 'comment_all']}
 				labels={['Poll', 'Timeline', 'Comments']}
-				Class="text-black"
+				Class="text-black dark:text-darkmodeText"
+				ClassOpen="right-0"
 			/>
 			{#if isAdmin || poll.pinned}
-				<div
-					class=""
-					class:cursor-pointer={isAdmin}
-					on:click={pinPoll}
-					on:keydown
-					tabindex="0"
-					role="button"
-				>
+				<button class="" class:cursor-pointer={isAdmin} on:click={pinPoll}>
 					<Fa
 						size="1.2x"
 						icon={faThumbtack}
 						color={poll.pinned ? '#999' : '#CCC'}
-						rotate={poll.pinned ? '0' : '90'}
+						rotate={poll.pinned ? '0' : '45'}
 					/>
-				</div>
+				</button>
 			{/if}
 		</div>
 	</div>
@@ -171,16 +164,17 @@
 		<!-- Fast Forward Icon -->
 		{#if poll.allow_fast_forward}
 			<HeaderIcon
-				Class="!p-0 !cursor-default flex"
+				Class="!p-0 !cursor-default"
 				icon={faAnglesRight}
 				text={'Fast Forward'}
 				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 			/>
-			{:else}
-			<!-- <FaLayers>
-				<Fa icon={faAnglesRight}/>
-				<Fa icon={faDash} />
-			</FaLayers> -->
+		{:else}
+			<div class="relative w-4 h-4">
+				<Fa style="position:absolute" icon={faAnglesRight} />
+
+				<Fa style="position:absolute" icon={faSlash} rotate="90" />
+			</div>
 		{/if}
 
 		<!-- Comment icon. When user clicks it leads to the comment section on the poll -->
@@ -199,7 +193,10 @@
 			tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 			Class="inline cursor-default"
 		/>
-		<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
+		<div class="text-sm font-bold text-primary">
+			{$_('Current phase:')}
+			{getPhaseUserFriendlyName(phase)}
+		</div>
 	</div>
 
 	{#if poll.description.length > 0}
@@ -224,39 +221,41 @@
 					Class="w-[47%] "
 				/>
 				{#if voting}
-					<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light">Save Vote</Button>
+					<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light"
+						>{$_('Save Vote')}</Button
+					>
 				{:else}
-					<p class="w-[47%] text-center">Successfully saved voting!</p>
+					<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
 				{/if}
 			</form>
 		{:else if phase === 'proposal'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light"
-					>See Proposals ({poll.total_proposals})</Button
+					>{$_('See Proposals')} ({poll.total_proposals})</Button
 				>
-				<Button Class="w-[47%]" buttonStyle="primary-light">Create a Proposal</Button>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Proposal')}</Button>
 			</div>
 		{:else if phase === 'prediction_statement'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light"
-					>See Predictions ({poll.total_predictions})</Button
+					>{$_('See Predictions')} ({poll.total_predictions})</Button
 				>
-				<Button Class="w-[47%]" buttonStyle="primary-light">Create a Prediction</Button>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Prediction')}</Button>
 			</div>
 		{:else if phase === 'prediction_bet'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">Mange bets</Button>
-				<p class="w-[47%]">You have not betted yet!</p>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange bets')}</Button>
+				<p class="w-[47%]">{$_('You have not betted yet!')}</p>
 			</div>
 		{:else if phase === 'delegate_vote' || phase === 'vote'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">Mange votes</Button>
-				<p class="w-[47%]">You have not voted yet!</p>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange votes')}</Button>
+				<p class="w-[47%]">{$_('You have not voted yet!')}</p>
 			</div>
 		{:else if phase === 'prediction_vote' || phase === 'result'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">View detailed results</Button>
-				<Button Class="w-[47%]" buttonStyle="primary-light">Evaluate predictions</Button>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('View detailed results')}</Button>
+				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Evaluate predictions')}</Button>
 			</div>
 		{/if}
 	</div>

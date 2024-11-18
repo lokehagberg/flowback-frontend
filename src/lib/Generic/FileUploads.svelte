@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { faUpload } from '@fortawesome/free-solid-svg-icons';
-	import ImageUpload from './ImageUpload.svelte';
+	import ImageUpload from './FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 
 	export let images: File[] = [],

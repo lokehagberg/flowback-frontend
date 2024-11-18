@@ -66,12 +66,10 @@
 	let notificationsOpen = false;
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	id="notifications-list"
 	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
-	on:keydown
 >
 	<Fa icon={faBell} size={'1.4x'} />
 	<div
@@ -80,30 +78,26 @@
 	>
 		<span class="">{notifications?.length}</span>
 	</div>
-</div>
+</button>
 
 {#if notificationsOpen}
 	<ul
 		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation z-[60]"
 		id="notifications-list"
 	>
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<li
+		<button
 			on:click={markAllAsRead}
-			on:keydown
-			class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+			class="w-full flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
 		>
 			{$_('Mark all as read')}
-		</li>
+		</button>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<li
-					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
+					<button
 						class="pt-3 pb-3 pr-10 pl-6"
 						on:click={async () => {
 							if (notification.channel_sender_type === 'group')
@@ -117,14 +111,13 @@
 								goto(`/groups/${groupId}/polls/${notification.channel_sender_id}`);
 							}
 						}}
-						on:keydown
 					>
 						<div class=" max-w-[25vw] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
 							{$_(notification.message)}
 							{timeAgo.format(new Date(notification.timestamp))}
 						</div>
-					</div>
-					<div
+					</button>
+					<button
 						style="z-index: 1;"
 						class="mr-8"
 						on:click={() => {
@@ -135,10 +128,9 @@
 							// hovered.push(notification.id);
 							// hovered = hovered;
 						}}
-						on:keydown
 					>
-						<Fa icon={faX} />
-					</div>
+						<Fa icon={faX} class="text-gray-300" />
+					</button>
 				</li>
 			{/each}
 		{:else}

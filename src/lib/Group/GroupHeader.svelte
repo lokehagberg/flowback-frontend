@@ -7,9 +7,8 @@
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
-	import {env} from "$env/dynamic/public";
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import { env } from '$env/dynamic/public';
+	import Fa from 'svelte-fa';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -28,17 +27,17 @@
 <div class="relative flex justify-center">
 	<img
 		class="cover"
-		src={group.cover_image ? `${env.PUBLIC_API_URL}${
-			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${group.cover_image}`: DefaultBanner}
+		src={group.cover_image
+			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+					group.cover_image
+			  }`
+			: DefaultBanner}
 		alt="cover"
 	/>
 	<img
 		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
 		src={group.image
-			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-					group.image
-			  }`
+			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
 			: DefaultBanner}
 		alt="profile"
 	/>
@@ -53,26 +52,24 @@
 			id={Number($page.params.groupId)}
 			categories={groupNotificationCategories}
 			labels={groupNotificationCategories}
+			Class="mt-auto"
 		/>
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<h1
+
+		<button
 			class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'flow')}
-			on:keydown
 		>
 			{group.name}
-		</h1>
+		</button>
 	</div>
 	<div class="flex items-center">
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<p
+		<button
 			class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 			on:click={() => (selectedPage = 'members')}
-			on:keydown
 		>
 			{memberCount}
 			{$_('members')}
-		</p>
+		</button>
 		<div class="ml-3">
 			{#if typeof window !== 'undefined'}
 				{#if group.public}
@@ -94,5 +91,9 @@
 	img.profile {
 		width: 100px;
 		height: 100px;
+	}
+
+	.mt-auto {
+		margin-top: auto;
 	}
 </style>

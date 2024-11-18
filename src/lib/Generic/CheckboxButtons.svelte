@@ -12,13 +12,14 @@
 	<h1 class="text-left text-sm">{$_(label)}</h1>
 	<div class={`mt-2 ${Class}`}>
 		{#each labels as label}
-			<label class="mr-5">
+			<label class="mr-5 cursor-pointer" >
 				<input
 					type="checkbox"
 					name={label.label}
 					value={label.checked}
 					on:click={() => onChange(label.id)}
 					id={`input-${label.id}`}
+					class="cursor-pointer"
 				/>
 				{$_(label.label)}
 			</label>

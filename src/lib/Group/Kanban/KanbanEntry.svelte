@@ -1,6 +1,5 @@
 <script lang="ts">
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
@@ -173,10 +172,9 @@
 <svelte:window bind:innerWidth bind:outerWidth />
 
 <li
-	class="bg-gray-100 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	class="bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
 	in:fade
 >
-
 	{#if kanban.end_date !== null && endDate}
 		<div class="text-sm">
 			{$_('Ends')}
@@ -204,6 +202,7 @@
 			profilePicture={kanban?.assignee?.profile_image}
 			Class=""
 		/>
+
 		<div class="break-all text-xs">
 			{#if type === 'group'}
 				{kanban.assignee?.username}
@@ -214,6 +213,12 @@
 			{/if}
 		</div>
 	</button>
+
+	{#if kanban.work_group}
+	<div>
+		{$_("Work Group")}: {kanban.work_group.name}
+	</div>
+	{/if}
 	<!-- Arrows -->
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">

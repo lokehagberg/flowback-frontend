@@ -138,7 +138,7 @@ export interface kanban {
 	description: string;
 	id: number;
 	tag: number;
-	work_group?:number;
+	work_group?:{name:string; id:number};
 	title: string;
 	origin_id: number;
 	origin_type: 'group' | 'user';

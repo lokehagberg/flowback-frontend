@@ -2,8 +2,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -105,7 +104,7 @@
 
 
 		{#if tagFiltering}
-			<select on:input={handleTags} class="rounded-md p-1">
+			<select on:input={handleTags} class="rounded-md p-1 dark:bg-darkobject">
 				<option value={null}>{$_('Any')}</option>
 				{#each tags as tag}
 					<option value={tag.id}>{tag.name}</option>

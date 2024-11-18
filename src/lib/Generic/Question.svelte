@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 
 	export let message = '';

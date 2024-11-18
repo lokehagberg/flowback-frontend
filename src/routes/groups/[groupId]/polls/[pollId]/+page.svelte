@@ -25,14 +25,10 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
 	import { env } from '$env/dynamic/public';
-
-	// TODO: refactor the phase system so be very modular
-	//{#if phase === "phase x}
-	//	 <PhaseX />
-	// ...
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let poll: poll,
-		selectedPage: 'You' | 'Delegate' = 'You',
 		DeletePollModalShow = false,
 		pollType = 1,
 		finished: boolean,
@@ -41,7 +37,8 @@
 		phase: Phase,
 		proposals: proposal[],
 		selectedProposal: proposal | null,
-		proposalsToPredictionMarket: proposal[] = [];
+		proposalsToPredictionMarket: proposal[] = [],
+		poppup: poppup;
 
 	onMount(async () => {
 		getGroupUser();
@@ -60,9 +57,11 @@
 			`group/${$page.params.groupId}/poll/list?id=${$page.params.pollId}`
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: json.detail[0], success: false };
+			return;
+		}
 
-		statusMessageFormatter(res, json);
 		poll = json.results[0];
 		pollType = json.results[0].poll_type;
 		finished = new Date(json.results[0].end_date) < new Date();
@@ -142,9 +141,9 @@
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary font-bold text-md"
-							>{$_("All proposals")} ({proposals?.length})</span
+							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-[80%] overflow-y-scroll">
+						<div class="h-[90%]">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}
@@ -155,7 +154,7 @@
 						<Button
 							Class="absolute bottom-0 w-full"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>{$_("Create Proposal")}</Button
+							action={() => (selectedProposal = null)}>{$_('Create Proposal')}</Button
 						>
 					</div>
 					<div slot="right" class="">
@@ -191,7 +190,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary font-bold text-md"
-							>{$_("All proposals")} ({proposals?.length})</span
+							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -205,21 +204,21 @@
 						<Button
 							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>{$_("Create Prediction")}</Button
+							action={() => (selectedProposal = null)}>{$_('Create Prediction')}</Button
 						>
 					</div>
 					<div slot="right" class="relative">
 						{#if selectedProposal}
-							<Proposal
-								bind:selectedProposal
-								bind:phase
-								proposal={selectedProposal}
-								isVoting={false}
-							/>
+							<div class="font-semibold text-primary text-lg">
+								{selectedProposal.title}
+							</div>
+							<p>
+								{selectedProposal.description}
+							</p>
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary font-semibold">
-								{$_("To make a prediction, please select atleast one proposal")} 
+								{$_('To make a prediction, please select atleast one proposal')}
 							</span>
 						{:else}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
@@ -235,7 +234,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>{$_("All proposals")} ({proposals?.length})</span
+							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -264,7 +263,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>{$_("All proposals")} ({proposals?.length})</span
+							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -293,7 +292,7 @@
 				<Structure bind:poll>
 					<div slot="left" class="">
 						<span class="text-center text-primary font-bold text-md"
-							>{$_("All proposals")} ({proposals?.length})</span
+							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-scroll">
 							<ProposalScoreVoting
@@ -336,35 +335,7 @@
 				<Results {pollType} />
 			{/if}
 		{/if}
-
-		<!-- Mod Tools -->
-		<!-- TODO: Fix as part of svelte store information this place -->
-		{#if groupUser?.is_admin}
-			<StatusMessage bind:status={deleteStatus} />
-			<div class="flex gap-4 align-middle">
-				<div class="">{$_("Mod Tools")}:</div>
-				<Button action={() => (DeletePollModalShow = true)} Class="bg-red-500 !inline"
-					>{$_('Delete poll')}</Button
-				>
-				{#if !finished}
-					<Button action={nextPhase}>{$_("Next Phase")}</Button>
-				{/if}
-			</div>
-		{/if}
 	{/if}
 </Layout>
 
-<Modal bind:open={DeletePollModalShow}>
-	<div slot="header">{$_('Deleting Poll')}</div>
-	<div slot="body">
-		{$_('Are you sure you want to delete this poll?')}
-	</div>
-	<div slot="footer">
-		<div class="flex justify-center gap-16">
-			<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
-				action={() => (DeletePollModalShow = false)}
-				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
-			>
-		</div>
-	</div>
-</Modal>
+<Poppup bind:poppup />

@@ -70,8 +70,7 @@
 			<Comment {comment} bind:comments={_comments} bind:api bind:proposals />
 		{/each}
 		{#if showReadMore}
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div on:click={readMore} on:keydown>Read more</div>
+			<button on:click={readMore}>{$_("Read more")}</button>
 		{/if}
 	</div>
 	{#if _comments.length === 0}

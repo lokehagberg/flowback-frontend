@@ -16,7 +16,7 @@
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to get Work Group', success: false };
+			// poppup = { message: 'Failed to get members in workgroup', success: false };
 			return;
 		}
 
@@ -79,7 +79,7 @@
 
 	{#key workGroupUserList}
 		{#if isMember()}
-			<Button buttonStyle="warning" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
+			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
 		{:else if workGroup.direct_join}
 			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>{$_("Join")}</Button>
 		{:else}

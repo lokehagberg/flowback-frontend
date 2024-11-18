@@ -42,7 +42,6 @@
 			getGroupUsers();
 			getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
-		
 	};
 
 	const getKanbanEntriesGroup = async () => {
@@ -61,9 +60,7 @@
 		);
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		kanbanEntries = json.results;		
-		console.log(json.results[0].group_name, "LE NAMe");
-		
+		kanbanEntries = json.results;
 	};
 
 	const getGroupUsers = async () => {
@@ -84,7 +81,7 @@
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
-	
+
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
@@ -98,7 +95,6 @@
 	onDestroy(() => {
 		clearInterval(interval);
 	});
-
 </script>
 
 <Poppup bind:poppup />
@@ -121,7 +117,7 @@
 		{#each tags as tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-1 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
+					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>

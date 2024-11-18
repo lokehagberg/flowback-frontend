@@ -1,6 +1,5 @@
 <!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
-	//@ts-ignore
 	import type { Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
@@ -8,7 +7,6 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { PredictionStatement } from './PredictionMarket/interfaces';
 
 	export let proposal: proposal,
 		Class = '',
@@ -21,72 +19,71 @@
 
 	export const id: number = 0;
 
-	let isHoveredOver = false,
-		show = false;
+	let show = false;
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class={`dark:bg-darkobject bg-white
+<button
+	class={`dark:bg-darkobject bg-white w-full py-1 px-2 transition-all
 	 dark:border-gray-500 ${Class}`}
-	on:dragenter|preventDefault={() => (isHoveredOver = true)}
-	on:dragleave|preventDefault={() => (isHoveredOver = false)}
-	class:hidden={isHoveredOver}
+	class:!bg-blue-100={selectedProposal === proposal}
+	class:border-l-2={selectedProposal === proposal}
+	class:border-primary={selectedProposal === proposal}
 >
-	<div class="flex gap-2 items-center">
+	<div class="flex gap-2 items-baseline">
 		{#if phase === 'prediction_statement'}
 			{@const proposalInList = proposalsToPredictionMarket.findIndex(
 				(prop) => prop.id === proposal.id
 			)}
 			{#if proposalInList !== -1}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div
+				<button
 					on:click={() => {
 						proposalsToPredictionMarket.splice(proposalInList, 1);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
 					<Fa icon={faSquareCheck} color={'black'} class="cursor-pointer" />
-				</div>
+				</button>
 			{:else}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div
+				<button
 					on:click={() => {
 						proposalsToPredictionMarket.push(proposal);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
 					<Fa icon={faSquareCheck} color={'white'} class="border border-black cursor-pointer" />
-				</div>
+				</button>
 			{/if}
 		{/if}
-		<span class="text-lg align-text-top">{proposal.title}</span>
+		<!-- Proposal Title -->
+		<span class="text-md text-primary font-semibold align-text-top text-left">{proposal.title}</span
+		>
 	</div>
-	<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
+	<!-- Proposal Description -->
+	<p class="elipsis text-sm text-left my-1" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 
 	<slot />
 
 	<div class="flex justify-between w-full">
-		<div>
+		<div class="my-auto">
 			<Fa icon={faComment} />
 		</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div
+		<button
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer"
 		>
-			See More
-		</div>
+			{$_('See More')}
+		</button>
 	</div>
-</div>
+</button>
+
 {#if isVoting}
 	<input
 		value={voting.find((vote) => vote.proposal === proposal.id)?.score}

@@ -4,8 +4,7 @@
 	import { onMount } from 'svelte';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { scheduledEvent } from '$lib/Schedule/interface';
@@ -23,17 +22,11 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Day from './Day.svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 	export let Class = '',
-		type: 'user' | 'group' | 'pollcreation',
-		start_date_poll: Date = new Date(),
-		area_vote_end_date: Date = new Date(),
-		proposal_end_date: Date = new Date(),
-		prediction_statement_end_date: Date = new Date(),
-		prediction_bet_end_date: Date = new Date(),
-		delegate_vote_end_date: Date = new Date(),
-		vote_end_date: Date = new Date(),
-		end_date_poll: Date = new Date();
+		type: 'user' | 'group';
 
 	const months = [
 		'Jan',
@@ -61,7 +54,6 @@
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
 		showEvent = false,
-		show = false,
 		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
@@ -70,22 +62,12 @@
 		end_date: Date | null,
 		title: string,
 		description: string,
+		workGroup: { name: string; id: number } | null = null,
 		event_id: number | undefined,
 		deleteSelection = () => {},
-		advancedTimeSettingsDates: Date[] = [];
-
-	onMount(async () => {
-		//Prevents "document not found" error
-		deleteSelection = () => {
-			document.getElementById(selectedDatePosition)?.classList.remove('selected');
-		};
-
-		setUpScheduledPolls();
-		if (type === 'pollcreation') setUpDraggable();
-	});
-
-	$: month && year && deleteSelection();
-	$: month && updateMonth();
+		advancedTimeSettingsDates: Date[] = [],
+		notActivated = true,
+		workGroups: WorkGroup[] = [];
 
 	const updateMonth = () => {
 		if (month === 12) {
@@ -106,14 +88,30 @@
 		events = json.results;
 	};
 
-	const scheduleEventCreate = async (e: any) => {
+	const scheduleEventCreate = async () => {
+		let API = '';
+		let payload: any = {};
+		if (type === 'user') {
+			API += `user/schedule/create`;
+			payload = {
+				start_date,
+				end_date,
+				title,
+				description
+			};
+		} else if (type === 'group') {
+			API += `group/${$page.params.groupId}/schedule/create`;
+			payload = {
+				start_date,
+				end_date,
+				title,
+				description
+			};
+			if (workGroup) payload['work_group_id'] = workGroup;
+		}
+
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `user/schedule/create`, {
-			start_date,
-			end_date,
-			title,
-			description
-		});
+		const { res, json } = await fetchRequest('POST', API, payload);
 
 		loading = false;
 
@@ -123,7 +121,6 @@
 		}
 
 		showCreateScheduleEvent = false;
-		show = true;
 		events.push({
 			created_by: Number(localStorage.getItem('userId')),
 			description: '',
@@ -162,7 +159,6 @@
 		}
 
 		showEditScheduleEvent = false;
-		show = true;
 		events = events.map((event) => {
 			if (event.event_id === event_id)
 				return {
@@ -215,45 +211,31 @@
 		title = event.title;
 		description = event.description;
 		event_id = event.event_id;
+		if (event.work_group) workGroup = event.work_group;
 		showEvent = true;
 	};
 
-	const setUpDraggable = async () => {
-		const { Swappable, Draggable, Sortable, SortAnimation } = await import('@shopify/draggable');
-		const draggable = new Swappable(document.getElementById('calendar'), {
-			draggable: 'swappable'
-		});
+	const getWorkGroups = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
 
-		advancedTimeSettingsDates = [
-			start_date_poll,
-			area_vote_end_date,
-			proposal_end_date,
-			prediction_statement_end_date,
-			prediction_bet_end_date,
-			delegate_vote_end_date,
-			vote_end_date,
-			end_date_poll
-		];
+		if (!res.ok) return;
+		workGroups = json.results;
 	};
 
-	//TODO: refactor the whole schedule and createpoll files to only use an array, which makes it easier to change the number of poll phases
-	const updateDraggables = () => {
-		// if (advancedTimeSettingsDates.length !== 8) return;
-		// start_date_poll = advancedTimeSettingsDates[0];
-		// area_vote_end_date = advancedTimeSettingsDates[1];
-		// proposal_end_date = advancedTimeSettingsDates[2];
-		// prediction_statement_end_date = advancedTimeSettingsDates[3];
-		// prediction_bet_end_date = advancedTimeSettingsDates[4];
-		// delegate_vote_end_date = advancedTimeSettingsDates[5];
-		// vote_end_date = advancedTimeSettingsDates[6];
-		// end_date_poll = advancedTimeSettingsDates[7];
-	};
+	onMount(async () => {
+		//Prevents "document not found" error
+		deleteSelection = () => {
+			document.getElementById(selectedDatePosition)?.classList.remove('selected');
+		};
 
-	$: if (advancedTimeSettingsDates) updateDraggables();
+		setUpScheduledPolls();
+		getWorkGroups();
+	});
 
-	$: start_date_poll = advancedTimeSettingsDates[0];
+	$: month && year && deleteSelection();
 
-	let notActivated = true;
+	$: month && updateMonth();
+
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
 		start_date = selectedDate;
@@ -261,8 +243,6 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	// $: end_date = start_date ? addDateOffset(start_date, 1, 'hour') : new Date();
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -272,16 +252,13 @@
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div on:click={() => (showCreateScheduleEvent = true)} on:keydown>
-				{#if type === 'user'}
-					<Fa
-						class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
-						size="3x"
-						icon={faPlus}
-					/>
-				{/if}
-			</div>
+			<button on:click={() => (showCreateScheduleEvent = true)}>
+				<Fa
+					class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
+					size="3x"
+					icon={faPlus}
+				/>
+			</button>
 			{#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
 				<div class="mt-2">
 					<a
@@ -289,7 +266,7 @@
 						class:hover:bg-gray-300={event.poll}
 						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
 						on:click={() => {
-							if (event.schedule_origin_name === 'user') handleShowEvent(event);
+							handleShowEvent(event);
 						}}
 					>
 						<span>{event.title}</span>
@@ -324,82 +301,56 @@
 	<div class="w-full">
 		<div class="flex">
 			<div class="flex items-center select-none">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year -= 1)}
-					on:keydown
 				>
 					<Fa icon={faChevronLeft} size="1.5x" />
-				</div>
+				</button>
 				<div class="text-xl text-center w-16">{year}</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+
+				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (year += 1)}
-					on:keydown
 				>
 					<Fa icon={faChevronRight} size="1.5x" />
-				</div>
+				</button>
 			</div>
 
 			<div class="flex items-center ml-6 select-none">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month -= 1)}
-					on:keydown
 				>
 					<Fa icon={faChevronLeft} size="1.5x" />
-				</div>
+				</button>
 				<div class="w-10 text-center">{$_(months[month])}</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+
+				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 					on:click={() => (month += 1)}
-					on:keydown
 				>
 					<Fa icon={faChevronRight} size="1.5x" />
-				</div>
+				</button>
 			</div>
 		</div>
 		<div id="calendar" class="calendar w-full">
 			{#each [1, 2, 3, 4, 5, 6] as y}
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day bind:showCreateScheduleEvent bind:selectedDatePosition bind:advancedTimeSettingsDates {type} {x} {y} />
+					<Day
+						bind:showCreateScheduleEvent
+						bind:selectedDatePosition
+						bind:advancedTimeSettingsDates
+						{x}
+						{y}
+					/>
 				{/each}
 			{/each}
 		</div>
 	</div>
 </div>
 
-<!-- Modal for creating one's own/group scheduled event -->
-<Modal
-	bind:open={showCreateScheduleEvent}
-	onClose={() => {
-		if (status !== undefined) status = undefined;
-	}}
->
-	<div slot="header">{$_('Create Event')}</div>
-	<div slot="body">
-		<Loader bind:loading>
-			<form on:submit|preventDefault={scheduleEventCreate}>
-				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput
-					bind:value={end_date}
-					format="yyyy-MM-dd HH:mm"
-					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
-				/>
-				<TextInput label="Event title" bind:value={title} />
-				<TextArea label="Event description" bind:value={description} />
-				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
-				<Button type="submit">{$_('Submit')}</Button>
-			</form>
-		</Loader>
-	</div>
-	<div slot="footer" />
-</Modal>
-
+<!-- Allows user to see event -->
 <Modal bind:open={showEvent}>
 	<div slot="header">{title}</div>
 	<div slot="body">
@@ -407,6 +358,9 @@
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
 			<span> {description} </span>
+			{#if workGroup}
+				{$_('Work Group')}:<span>{workGroup?.name}</span>
+			{/if}
 		</div>
 	</div>
 	<div slot="footer">
@@ -419,6 +373,38 @@
 	</div>
 </Modal>
 
+<!-- Modal for creating one's own/group scheduled event -->
+<Modal
+	bind:open={showCreateScheduleEvent}
+	onClose={() => {
+		if (status !== undefined) status = undefined;
+	}}
+>
+	<div slot="header">{$_('Create Event')}</div>
+	<div slot="body">
+		<Loader bind:loading>
+			<form on:submit|preventDefault={scheduleEventCreate}>
+				<TextInput label="Title" bind:value={title} />
+				<TextArea label="Description" bind:value={description} />
+				{#if type === 'group'}
+					{$_('Work Group')}
+					<Select
+						bind:value={workGroup}
+						labels={workGroups.map((group) => group.name)}
+						values={workGroups.map((group) => group.id)}
+					/>
+				{/if}
+				<input bind:value={start_date} type="datetime-local" />
+				<input bind:value={end_date} type="datetime-local" />
+				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
+				<Button type="submit">{$_('Submit')}</Button>
+			</form>
+		</Loader>
+	</div>
+	<div slot="footer" />
+</Modal>
+
+<!-- Opens a window which allows users to edit a schedule (TODO: refactor so there's just one combined modal for edit and create) -->
 <Modal bind:open={showEditScheduleEvent}>
 	<div slot="header">{$_('Edit Event')}</div>
 	<div slot="body">
@@ -440,7 +426,6 @@
 	</div>
 </Modal>
 
-<!-- <SuccessPoppup bind:show /> -->
 
 <style>
 	.calendar {

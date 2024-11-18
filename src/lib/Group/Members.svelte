@@ -7,8 +7,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { GroupUser, SelectablePages, User } from './interface';
 	import { _ } from 'svelte-i18n';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
@@ -63,7 +62,7 @@
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 		if (res.ok) usersAskingForInvite = json.results;
-		else poppup = { message: "Couldn't get invites list", success: false };
+		// else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {

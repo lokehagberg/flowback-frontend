@@ -11,6 +11,7 @@
 		label: string = '',
 		href = '';
 
+	//If all you send in is ref without noClick, the button will automatically send one to that link if pressed.
 	onMount(() => {
 		if (href !== '')
 			action = () => {
@@ -22,9 +23,11 @@
 		| 'primary'
 		| 'secondary'
 		| 'warning'
+		| 'warning-light'
 		| 'accent-secondary'
 		| 'accent'
-		| 'primary-light';
+		| 'primary-light'
+		| 'inactive';
 
 	type buttontypes = 'button' | 'submit';
 </script>
@@ -38,10 +41,11 @@
 	}}
 	class={`text-center ${
 		Class.includes('bg-') ? '' : 'bg-primary'
-	} filter hover:brightness-50 inline text-white rounded-md cursor-pointer p-2  ${Class} hover:brightness-[95%] active:brightness-[92%] transition-all duration-50 
-
-		${buttonStyle === 'primary-light' && ' bg-white dark:bg-darkobject  primary-light-inner-shadow'}`}
-	class:!bg-gray-300={disabled}
+	} ${Class} filter hover:brightness-[90%] inline text-white rounded-md cursor-pointer p-2 active:brightness-[92%] transition-all duration-50 
+	${buttonStyle === 'primary-light' && ' bg-white dark:bg-darkobject primary-light-inner-shadow'}
+	${buttonStyle === 'warning-light' && ' bg-white dark:bg-darkobject dark:text-darkmodeText !text-red-400 border-[1px] border-red-400'}`}
+	class:!border-gray-300={disabled}
+	class:!text-gray-300={disabled}
 	class:!bg-secondary={buttonStyle == 'secondary'}
 	class:!bg-red-500={buttonStyle === 'warning'}
 	class:!bg-accent={buttonStyle === 'accent'}
@@ -59,7 +63,7 @@
 	.primary-light-inner-shadow {
 		/* box-shadow: inset 0 0 0px 3px rgb(130, 180, 230); */
 		border: 1px solid var(--secondary);
-		color: var(--secondary) !important;
+		color: var(--secondary);
 		font-weight: 500;
 		font-size: medium;
 	}

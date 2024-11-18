@@ -2,8 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Select from '$lib/Generic/Select.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import type { Phase, poll } from '../interface';
 	import type { PredictionStatement } from './interfaces';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';

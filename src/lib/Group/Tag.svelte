@@ -20,22 +20,19 @@
 	});
 </script>
 
-<!-- {@debug tag} -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="flex">
-	<div
+	<button
 		class={'w-[100%] select-none text-xs tag text-center bg-accent-tertiary text-black pl-4 pr-4 pt-1 pb-1 break-words rounded ' +
 			Class}
 		on:click={onclick}
 	>
 		{tag?.name}
-	</div>
+	</button>
 	<div class="border-accent-tertiary pl-1 pr-1 border-2 w-[20%] text-center text-darkmodeText">
 		{#if tag?.imac}
 			({tag?.imac})
 		{:else}
-			??
+			?
 		{/if}
 	</div>
 </div>

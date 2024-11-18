@@ -11,7 +11,9 @@
 		onBlur = () => {},
 		inputClass = '',
 		placeholder = '',
-		max = 100;
+		max = 100,
+		type: 'text' | 'password' = 'text',
+		name:string = "";
 
 	onMount(() => {
 		const input = document.getElementById(`textinput-${label}`);
@@ -26,18 +28,34 @@
 	{/if}
 
 	{#if max}
-		<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400">
+		<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-300 text-xs">
 			{value.length}/{max}
 		</p>{/if}
 
-	<input
-		id={`textinput-${label}`}
-		class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
-		{required}
-		maxlength={max}
-		placeholder={$_(placeholder)}
-		bind:value
-		on:blur={onBlur}
-		on:input={onInput}
-	/></label
->
+	{#if type === 'text'}
+		<input
+			bind:value
+			id={`textinput-${label}`}
+			class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+			{required}
+			maxlength={max}
+			placeholder={$_(placeholder)}
+			on:blur={onBlur}
+			on:input={onInput}
+			{name}
+		/>
+	{:else if type === 'password'}
+		<input
+			id={`textinput-${label}`}
+			class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+			{required}
+			maxlength={max}
+			placeholder={$_(placeholder)}
+			bind:value
+			on:blur={onBlur}
+			on:input={onInput}
+			type="password"
+			{name}
+		/>
+	{/if}
+</label>

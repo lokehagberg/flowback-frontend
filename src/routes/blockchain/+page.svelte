@@ -134,9 +134,9 @@
 </Layout>
 
 <style>
-	hr {
+	/* hr {
 		border: 0;
 		border-top: 1px solid #8a8a8a;
 		margin: 20px 0;
-	}
+	} */
 </style>

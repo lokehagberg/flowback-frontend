@@ -14,6 +14,7 @@
 
 	const logOut = () => {
 		localStorage.removeItem('token');
+		localStorage.removeItem('sessionExpirationTime');
 		goto('/login');
 	};
 
@@ -49,24 +50,21 @@
 </script>
 
 <!-- TODO: Relative works great for phones -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	class:hidden={!sideHeaderOpen}
-	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText"
+	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText flex flex-col"
 	id="side-header"
 	on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
-	on:keydown
 >
 	{#each navs as nav}
-		<div
-			class="cursor-pointer pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
+		<button
+			class="cursor-pointer w-full pt-3 pb-3 pr-10 pl-6 border-b border-gray-200 border hover:shadow hover:bg-blue-300 transition-all"
 			on:click={nav.action}
-			on:keydown
 		>
 			{$_(nav.title)}
-		</div>
+		</button>
 	{/each}
-</div>
+</button>
 
 <Modal bind:open={open_support}>
 	<div slot="header" class="p-4">
@@ -77,7 +75,6 @@
 		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
 		<div>{$_('Number: +46737482562')}</div>
 		<div>{$_(`Mail: ${env.PUBLIC_SUPPORT_MAIL}`)}</div>
-		<!-- <div>{$_('For questions about Metamask, contact the Metamask team.')}</div> -->
 	</div>
 </Modal>
 
@@ -94,8 +91,7 @@
 		</div>
 		<div class="grupper-card row g-2 clickable">
 			<div class="text-center my-2 noSelect">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</div>
+				<button on:keydown on:click={handleCoDocumentCreation}>+ {$_('Create Co-Document')}</button>
 			</div>
 		</div>
 	</div>

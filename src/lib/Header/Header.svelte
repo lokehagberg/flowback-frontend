@@ -8,8 +8,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
 	import { changeDarkMode } from '$lib/Generic/DarkMode';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
 	import {
@@ -24,6 +22,7 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
+	import Fa from 'svelte-fa';
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
@@ -156,8 +155,7 @@
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<span
+				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
 					on:keydown={() => {}}
@@ -171,11 +169,10 @@
 					{:else}
 						<Fa icon={faMoon} />
 					{/if}
-				</span>
+				</button>
 				<Notifications />
 
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div on:keydown={() => {}} on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+				<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
 						class={`w-8 h-8 rounded-full cursor-pointer ${
@@ -183,7 +180,7 @@
 						}`}
 						alt="default pfp"
 					/>
-				</div>
+				</button>
 			</div>
 		</div>
 	</header>

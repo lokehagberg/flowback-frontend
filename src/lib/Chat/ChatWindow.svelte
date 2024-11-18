@@ -8,8 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/environment';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -57,7 +56,7 @@
 	};
 
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json;
 	};
 
@@ -92,7 +91,7 @@
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
-
+		
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -218,6 +217,9 @@
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
 	}
+
+	//@ts-ignore
+	$: if (user) socket = Socket.createSocket(user.id);
 </script>
 
 {#if selectedChat !== null || true}

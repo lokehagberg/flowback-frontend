@@ -109,7 +109,7 @@
 			<TextInput
 				onInput={() => searchUsers(searchUser)}
 				bind:value={searchUser}
-				label={$_("User to invite")}
+				label={$_('User to invite')}
 				placeholder="Username"
 			/>
 			<ul>
@@ -185,6 +185,16 @@
 							profilePicture={user.user.profile_image}
 							displayName
 						/>
+						{#if user.is_delegate}
+							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
+								{$_('Delegate')}
+							</div>
+						{/if}
+						{#if user.is_admin}
+							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
+								{$_('Admin')}
+							</div>
+						{/if}
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>

@@ -85,7 +85,6 @@
 		</Button>
 	</div>
 	<div class="flex">
-	
 		<Select
 			Class="rounded-md p-1"
 			onInput={handleFinishedSelection}
@@ -102,7 +101,6 @@
 			bind:value={filter.order_by}
 		/>
 
-
 		{#if tagFiltering}
 			<select on:input={handleTags} class="rounded-md p-1 dark:bg-darkobject">
 				<option value={null}>{$_('Any')}</option>
@@ -112,7 +110,9 @@
 			</select>
 		{/if}
 
-		<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}>{$_("Reset Filter")}</Button>
+		<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}
+			>{$_('Reset Filter')}</Button
+		>
 
 		<!-- <CheckboxButtons
 			label={''}

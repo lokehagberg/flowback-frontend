@@ -13,6 +13,8 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import CreateKanbanEntry from './CreateKanbanEntry.svelte';
 	import type { WorkGroup } from '../WorkingGroups/interface';
+	import Fa from 'svelte-fa';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -120,7 +122,14 @@
 					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
-					<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
+					<div class="flex justify-between">
+						<span class="xl:text-xl text-md p-1">{$_(tag)}</span>
+						<button
+							on:click={() => {
+								open = true;
+							}}><Fa icon={faPlus} /></button
+						>
+					</div>
 					<ul class="flex flex-col mt-2 gap-4">
 						{#each kanbanEntries as kanban}
 							{#if kanban.tag === i}

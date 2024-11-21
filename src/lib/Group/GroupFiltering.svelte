@@ -28,7 +28,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-darkobject shadow rounded p-6 flex flex-col md:w-[40%] w-[90%] gap-4"
+	class="bg-white dark:bg-darkobject shadow rounded px-4 py-2 flex flex-col md:w-[40%] w-[90%] gap-2"
 	on:submit|preventDefault={handleSearch}
 >
 	<div class="w-full flex items-end">
@@ -40,7 +40,7 @@
 		/>
 
 		<Button
-			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
+			Class={`w-7 h-7 ml-4 flex justify-center items-center ${
 				searched ? 'bg-blue-300' : 'bg-blue-600'
 			}`}
 			type="submit"
@@ -55,6 +55,8 @@
 			<option value="not-member">{$_('Not member')}</option>
 		</select>
 
-		<Button Class="p-2" action={resetFilter}>{$_("Reset Filter")}</Button>
+		<Button Class="!p-1" action={resetFilter} buttonStyle="primary-light"
+			>{$_('Reset Filter')}</Button
+		>
 	</div>
 </form>

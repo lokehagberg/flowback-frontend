@@ -112,7 +112,7 @@
 			</select>
 		{/if}
 
-		<Button Class="!px-1 !py-0" action={resetFilter}>{$_("Reset Filter")}</Button>
+		<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}>{$_("Reset Filter")}</Button>
 
 		<!-- <CheckboxButtons
 			label={''}

@@ -10,10 +10,10 @@
 		Class = '',
 		onBlur = () => {},
 		inputClass = '',
-		placeholder = '',
+		placeholder = 'Search',
 		max = 100,
 		type: 'text' | 'password' = 'text',
-		name:string = "";
+		name: string = '';
 
 	onMount(() => {
 		const input = document.getElementById(`textinput-${label}`);
@@ -21,8 +21,8 @@
 	});
 </script>
 
-<label class={`w-full ${Class}`}
-	><p class="text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
+<label class={`w-full ${Class}`}>
+	<!-- <p class="text-gray-400 text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p> -->
 	{#if required}
 		<p class="inline text-red-600">*</p>
 	{/if}
@@ -36,7 +36,7 @@
 		<input
 			bind:value
 			id={`textinput-${label}`}
-			class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+			class={`bg-gray-100 dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 			{required}
 			maxlength={max}
 			placeholder={$_(placeholder)}

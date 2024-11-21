@@ -74,7 +74,7 @@
 </script>
 
 <div class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject min-h-14">
-	<span class="text-primary w-[40%] font-bold">{workGroup.name}</span>
+	<span class="text-primary w-[40%] font-bold break-words">{workGroup.name}</span>
 	<span class="text-gray-500 text-sm w-[30%]">{$_("Members")}: {workGroupUserList.length} </span>
 
 	{#key workGroupUserList}

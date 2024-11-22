@@ -64,7 +64,6 @@
 	//When adminn presses the pin tack symbol, pin the thread
 	const pinThread = async (thread: Thread) => {
 		const { json, res } = await fetchRequest('POST', `group/thread/${thread.id}/update`, {
-			title: thread.title,
 			pinned: !thread.pinned
 		});
 		if (!res.ok) return;

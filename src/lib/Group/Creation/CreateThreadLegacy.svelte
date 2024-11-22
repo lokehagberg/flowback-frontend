@@ -21,10 +21,13 @@
 				title
 			}
 		);
+
 		if (!res.ok) {
 			poppup = { message: "Couldn't create Thread", success: false };
+			return;
 		}
-		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
+
+		goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
 </script>
 

@@ -42,7 +42,7 @@
 		loading = true;
 		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
 		console.log(assignee);
-		
+
 		const formData = new FormData();
 		formData.append('tag', '1');
 		formData.append('title', title);
@@ -113,7 +113,7 @@
 		priority = Number(e.target.value);
 	};
 
-	const handleChangWorkGroup = (e: any) => {
+	const handleChangeWorkGroup = (e: any) => {
 		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
 	};
 </script>
@@ -134,7 +134,7 @@
 								on:input={handleChangeAssignee}
 								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
-							<option value={null}>Select</option>
+								<option value={null}>Select</option>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
 								{/each}
@@ -156,15 +156,16 @@
 						</select>
 					</div>
 					{#if type === 'group'}
-						<div class="text-left">
-							{$_('Work group')}
+						<div class="text-left" >
+							{$_('Work Group')}
 							<select
-								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-								on:input={handleChangWorkGroup}
+								style="width:100%"
+								class=" rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+								on:input={handleChangeWorkGroup}
 							>
 								{#each workGroups as group}
-									<option value={group.id}>
-										{group.name}
+									<option class="w-5" value={group.id}>
+										{group.name.length > 30 ? group.name.substring(0, 30) + '...' : group.name}
 									</option>
 								{/each}
 							</select>

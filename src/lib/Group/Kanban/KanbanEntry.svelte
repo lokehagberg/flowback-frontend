@@ -27,7 +27,7 @@
 		removeKanbanEntry: (id: number) => void,
 		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {};
 
-	const tags = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
+	const lanes = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 
 	let openModal = false,
 		selectedEntry: number,
@@ -84,21 +84,21 @@
 		isEditing = false;
 	};
 
-	const updateKanbanTag = async (tag: number) => {
+	const updateKanbanLane = async (lane: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			{
-				tag,
+				lane,
 				entry_id: kanban.id
 			}
 		);
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;
 
-		kanban.tag = kanban.tag;
+		kanban.lane = kanban.lane;
 	};
 
 	const changeAssignee = (e: any) => {
@@ -215,9 +215,9 @@
 	</button>
 
 	{#if kanban.work_group}
-	<div>
-		{$_("Work Group")}: {kanban.work_group.name}
-	</div>
+		<div>
+			{$_('Work Group')}: {kanban.work_group.name}
+		</div>
 	{/if}
 	<!-- Arrows -->
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
@@ -225,9 +225,9 @@
 			<button
 				class="cursor-pointer hover:text-gray-500 py-1"
 				on:click={() => {
-					if (kanban.tag > 1) {
-						updateKanbanTag(kanban.tag - 1);
-						kanban.tag -= 1;
+					if (kanban.lane > 1) {
+						updateKanbanLane(kanban.lane - 1);
+						kanban.lane -= 1;
 					}
 				}}
 			>
@@ -239,9 +239,9 @@
 			<button
 				class="cursor-pointer hover:text-gray-500 py-1"
 				on:click={() => {
-					if (kanban.tag < tags.length - 1) {
-						updateKanbanTag(kanban.tag + 1);
-						kanban.tag += 1;
+					if (kanban.lane < lanes.length - 1) {
+						updateKanbanLane(kanban.lane + 1);
+						kanban.lane += 1;
 					}
 				}}
 			>

@@ -36,7 +36,8 @@
 		open: boolean = false,
 		users: GroupUser[] = [],
 		kanbanEntries: kanban[],
-		workGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [],
+		lane: number = 1;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -44,8 +45,9 @@
 		console.log(assignee);
 
 		const formData = new FormData();
-		formData.append('tag', '1');
 		formData.append('title', title);
+		formData.append('tag', lane.toString());
+		formData.append('lane', lane.toString());
 		if (assignee) formData.append('assignee', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
 		if (end_date) formData.append('end_date', dateString);
@@ -85,7 +87,7 @@
 			},
 			group: { id: 0, image: '', name: '' },
 			description,
-			tag: 1,
+			lane,
 			title,
 			work_group: { id: workGroup?.id || 0, name: workGroup?.name || '' },
 			id: json,
@@ -119,12 +121,12 @@
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
-<Modal bind:open Class="!overflow-visible" onSubmit={createKanbanEntry}>
+<Modal bind:open Class="!overflow-visible mt-[5%]" onSubmit={createKanbanEntry}>
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<div on:submit|preventDefault={createKanbanEntry} class="mt-2">
-				<TextInput required label="Title" bind:value={title} />
+				<TextInput required label="Title" placeholder="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					{#if type === 'group'}
@@ -156,7 +158,7 @@
 						</select>
 					</div>
 					{#if type === 'group'}
-						<div class="text-left" >
+						<div class="text-left">
 							{$_('Work Group')}
 							<select
 								style="width:100%"

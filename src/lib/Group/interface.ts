@@ -138,7 +138,7 @@ export interface kanban {
 	created_by: number;
 	description: string;
 	id: number;
-	tag: number;
+	lane: number;
 	work_group?:{name:string; id:number};
 	title: string;
 	origin_id: number;

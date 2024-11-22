@@ -14,7 +14,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
-	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import Fa from 'svelte-fa';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
 	import TextInput from '$lib/Generic/TextInput.svelte';

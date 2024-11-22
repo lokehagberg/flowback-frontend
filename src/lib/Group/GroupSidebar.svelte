@@ -23,7 +23,7 @@
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
 	import { faCoins } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
-	import { removeGroupMembership } from '$lib/Blockchain/javascript/rightToVote';
+	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
 
 	export let selectedPage: SelectablePage = 'flow';

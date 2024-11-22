@@ -11,7 +11,7 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { goto } from '$app/navigation';
-	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import { createPoll as createPollBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { pollType, template } from './interface';
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';

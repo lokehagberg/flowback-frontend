@@ -20,7 +20,7 @@
 	import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { goto } from '$app/navigation';
-	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
+	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from "$env/dynamic/public";
 
 	let name: string,

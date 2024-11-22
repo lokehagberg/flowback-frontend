@@ -9,7 +9,7 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { goto } from '$app/navigation';
-	import { becomeDelegate, delegate } from '$lib/Blockchain/javascript/delegationsBlockchain';
+	import { becomeDelegate, delegate } from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 	import { isNumber } from 'chart.js/helpers';
 	import type { Delegate } from './interfaces';
 	import {env} from "$env/dynamic/public";

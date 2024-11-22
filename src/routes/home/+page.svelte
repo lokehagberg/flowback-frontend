@@ -9,7 +9,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
-	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
+	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
 	import { goto } from '$app/navigation';
 

@@ -11,7 +11,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
-	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import { createProposal } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';

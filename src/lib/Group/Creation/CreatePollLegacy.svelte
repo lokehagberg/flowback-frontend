@@ -27,7 +27,7 @@
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { createPoll as createPollBlockchain } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import { createPoll as createPollBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import TimelineTemplate from './TimelineTemplate.svelte';
 	import type { template } from './interface';

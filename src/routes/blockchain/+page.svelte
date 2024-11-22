@@ -1,6 +1,6 @@
 <script>
 	import Layout from '$lib/Generic/Layout.svelte';
-	import { test } from '$lib/Blockchain/javascript/test';
+	import { test } from '$lib/Blockchain_v1_Ethereum/javascript/test';
 	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 	import {
@@ -10,23 +10,23 @@
 		getProposalsOnPoll,
 		vote,
 		getPollResults
-	} from '$lib/Blockchain/javascript/pollsBlockchain';
+	} from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import {
 		createPrediction,
 		getPredictionsOnPoll,
 		createPredictionBet,
 		getPredictionBets
-	} from '$lib/Blockchain/javascript/predictionsBlockchain';
+	} from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import {
 		becomeMemberOfGroup,
 		removeGroupMembership,
 		isUserMemberInGroup,
 		getGroupsUserIsMemberIn
-	} from '$lib/Blockchain/javascript/rightToVote';
+	} from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import {
 		becomeDelegate,
 		delegate,
-	} from '$lib/Blockchain/javascript/delegationsBlockchain';
+	} from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 
 
 	onMount(() => {

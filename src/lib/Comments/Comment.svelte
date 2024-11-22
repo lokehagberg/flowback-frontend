@@ -9,31 +9,38 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[];
 
-	let userUpVote: -1 | 0 | 1 = 0;
+	let userUpVote: -1 | 0 | 1 = 0,
+		poppup: poppup;
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
 		if (api === 'poll') _api += `${$page.params.pollId}/`;
+		else if (api === 'thread') _api += `${$page.params.threadId}/`;
 		_api += `comment/${id}/delete`;
 
 		const { res, json } = await fetchRequest('POST', _api);
 
-		if (res.ok) {
-			comments = comments.map((comment) => {
-				if (comment.id !== id) return comment;
-
-				comment.message = '[Deleted]';
-				comment.active = false;
-				return comment;
-			});
-			comments = comments;
+		if (!res.ok) {
+			poppup = { message: 'Failed to delete comment', success: false };
+			return;
 		}
+
+		comments = comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			comment.message = '[Deleted]';
+			comment.active = false;
+			return comment;
+		});
+		comments = comments;
 	};
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
@@ -51,7 +58,10 @@
 			vote
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = {message:"Comment vote failed", success:false}
+			return;
+		}
 
 		if (regretting) {
 			userUpVote = 0;
@@ -165,3 +175,5 @@
 		{api}
 	/>
 {/if}
+
+<Poppup bind:poppup />

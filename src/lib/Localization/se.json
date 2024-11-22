@@ -396,5 +396,7 @@
     "Already asked to join group":"Redan frågat om att gå med i arbetsgrupp",
     "See More":"Läs mer",
     "All proposals": "Alla förslag",
-    "Create Prediction": "Skapa förutsägelse"
+    "Create Prediction": "Skapa förutsägelse",
+    "Failed to delete comment":"Misslyckades att ta bort kommenar",
+    "Comment vote failed":"Kommentarsröstning misslyckades"
 }

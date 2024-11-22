@@ -89,7 +89,7 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
 				<button
-					class="cursor-pointer hover:underline text-primary text-2xl"
+					class="cursor-pointer hover:underline text-primary text-2xl text-left"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					>{thread.title}</button
 				>

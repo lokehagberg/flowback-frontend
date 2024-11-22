@@ -42,15 +42,15 @@
 	const createKanbanEntry = async () => {
 		loading = true;
 		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
-		console.log(assignee);
-
 		const formData = new FormData();
+
 		formData.append('title', title);
 		formData.append('tag', lane.toString());
 		formData.append('lane', lane.toString());
+
 		if (assignee) formData.append('assignee', assignee.toString());
-		if (priority) formData.append('priority', priority.toString());
 		if (end_date) formData.append('end_date', dateString);
+		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
 		if (description !== '') formData.append('description', description);
 		if (images)
@@ -78,10 +78,9 @@
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
-		if (!assignee) return;
 		kanbanEntries.push({
 			assignee: {
-				id: assignee,
+				id: assignee || 0,
 				profile_image: userAssigned?.user.profile_image || '',
 				username: userAssigned?.user.username || 'unasigned'
 			},

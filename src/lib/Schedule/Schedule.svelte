@@ -24,6 +24,8 @@
 	import Day from './Day.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let Class = '',
 		type: 'user' | 'group';
@@ -54,7 +56,6 @@
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
 		showEvent = false,
-		status: StatusMessageInfo | undefined = undefined,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		//Variables for creating new scheduled events
@@ -67,7 +68,8 @@
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
 		notActivated = true,
-		workGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [],
+		poppup: poppup;
 
 	const updateMonth = () => {
 		if (month === 12) {
@@ -90,23 +92,17 @@
 
 	const scheduleEventCreate = async () => {
 		let API = '';
-		let payload: any = {};
+		let payload: any = {
+			start_date,
+			end_date,
+			title,
+			description
+		};
+
 		if (type === 'user') {
 			API += `user/schedule/create`;
-			payload = {
-				start_date,
-				end_date,
-				title,
-				description
-			};
 		} else if (type === 'group') {
 			API += `group/${$page.params.groupId}/schedule/create`;
-			payload = {
-				start_date,
-				end_date,
-				title,
-				description
-			};
 			if (workGroup) payload['work_group_id'] = workGroup;
 		}
 
@@ -116,10 +112,11 @@
 		loading = false;
 
 		if (!res.ok) {
-			status = statusMessageFormatter(res, json);
+			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
 
+		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
 		events.push({
 			created_by: Number(localStorage.getItem('userId')),
@@ -153,8 +150,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			status = statusMessageFormatter(res, json);
-			console.warn(status);
+			poppup = { message: 'Failed to edit event', success: false };
 			return;
 		}
 
@@ -189,10 +185,11 @@
 		loading = false;
 
 		if (!res.ok) {
-			status = statusMessageFormatter(res, json);
+			poppup = { message: 'Failed to delete event', success: false };
 			return;
 		}
 
+		poppup = { message: 'Event deleted', success: true };
 		events = events.filter((event) => event.event_id !== event_id);
 		events = events;
 
@@ -379,9 +376,6 @@
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal
 	bind:open={showCreateScheduleEvent}
-	onClose={() => {
-		if (status !== undefined) status = undefined;
-	}}
 >
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
@@ -399,7 +393,6 @@
 				{/if}
 				<input bind:value={start_date} type="datetime-local" />
 				<input bind:value={end_date} type="datetime-local" />
-				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 			</form>
 		</Loader>
@@ -421,13 +414,14 @@
 				/>
 				<TextInput label="Event title" bind:value={title} />
 				<TextArea label="Event description" bind:value={description} />
-				<StatusMessage bind:status Class="w-full mt-3 mb-3" />
 				<Button type="submit">{$_('Submit')}</Button>
 				<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
 			</form>
 		</Loader>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />
 
 <style>
 	.calendar {

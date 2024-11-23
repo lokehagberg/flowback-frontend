@@ -60,7 +60,7 @@
 		</div>
 		{#each events as event}
 			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-				<div class="bg-secondary w-full text-white text-sm">{event.title}</div>
+				<div class="break-all bg-secondary w-full text-white text-sm mb-1">{event.title}</div>
 			{/if}
 		{/each}
 	</div>

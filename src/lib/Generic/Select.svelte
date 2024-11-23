@@ -12,7 +12,8 @@
 		value = values[0],
 		Class = '',
 		classInner = '',
-		innerLabel = 'Select';
+		innerLabel = 'Select',
+		wordlimit = 30;
 </script>
 
 <div class={`${Class}`}>
@@ -33,7 +34,7 @@
 	>
 		<option value="" disabled selected>{innerLabel}</option>
 		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {$_(label)} </option>
+			<option value={values[i]} class="dark:bg-darkobject"> {label.length > wordlimit ? label.substring(0, wordlimit) + '...' : label} </option>
 		{/each}
 	</select>
 </div>

@@ -18,27 +18,15 @@
 
 	const currentDate = new Date();
 
-
 	const getDate = (year: number, month: number, x: number, y: number) => {
-		return new Date(year, month, getDay());
+		return new Date(year, month, getDay(x, y));
 	};
 
 	const firstDayInMonthWeekday = () => {
 		return new Date(year, month, 0).getDay();
 	};
 
-	const isEventOnDate = (date: Date) => {
-		let eventsOnDate = events;
-		eventsOnDate = eventsOnDate.filter((event) => {
-			return (
-				date >= setDateToMidnight(new Date(event.start_date)) && date <= new Date(event.end_date)
-			);
-		});
-
-		return eventsOnDate.length > 0;
-	};
-
-	const getDay = () => {
+	const getDay = (x: number, y: number) => {
 		return -firstDayInMonthWeekday() + x + 7 * (y - 1);
 	};
 
@@ -55,7 +43,7 @@
 	on:dblclick={() => (showCreateScheduleEvent = true)}
 	class={`${Class} dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
-	class:today={getDay() === currentDate.getDate() &&
+	class:today={getDay(x, y) === currentDate.getDate() &&
 		month === currentDate.getMonth() &&
 		year === currentDate.getFullYear()}
 	on:click={() => {
@@ -63,31 +51,32 @@
 		document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		document.getElementById(`${x}-${y}`)?.classList.add('selected');
 		selectedDatePosition = `${x}-${y}`;
-		selectedDate = new Date(year, month, getDay());
+		selectedDate = new Date(year, month, getDay(x, y));
 	}}
-	on:keydown
 >
 	<div class="w-full">
 		<div class="text-center">
-			{new Date(year, month, getDay()).getDate()}
+			{new Date(year, month, getDay(x, y)).getDate()}
 		</div>
 		{#each events as event}
 			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-				<!-- <div class="text-center">{event.title}</div> -->
 				<div class="bg-secondary w-full text-white text-sm">{event.title}</div>
 			{/if}
 		{/each}
-
 	</div>
 </button>
 
 <style>
 	.selected {
-		box-shadow: inset 0 0 2px 3px rgba(0, 0, 0, 0.4) !important;
+		box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.4) !important;
 	}
 
 	.today {
-		box-shadow: inset 0 0 0 2px var(--primary-color) !important;
+		box-shadow: inset 0 0 4px 1px var(--secondary) !important;
+	}
+	
+	.today.selected {
+		box-shadow: inset 0 0 10px 1px var(--secondary) !important;
 	}
 
 	.calendar-day {

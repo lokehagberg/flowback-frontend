@@ -19,13 +19,6 @@
 
 	let events: scheduledEvent[] = [];
 
-	onMount(() => {
-		const today = new Date();
-		let tomorow = new Date();
-		tomorow.setDate(today.getDate() + 1);
-		advancedTimeSettingsDates = [today, tomorow];
-	});
-
 	const getDate = (year: number, month: number, x: number, y: number) => {
 		return new Date(year, month, getDay());
 	};
@@ -48,11 +41,18 @@
 	const getDay = () => {
 		return -firstDayInMonthWeekday() + x + 7 * (y - 1);
 	};
+
+	onMount(() => {
+		const today = new Date();
+		let tomorow = new Date();
+		tomorow.setDate(today.getDate() + 1);
+		advancedTimeSettingsDates = [today, tomorow];
+	});
 </script>
 
 <!-- The line for poll creation -->
 <button
-	on:dblclick={() => showCreateScheduleEvent = true}
+	on:dblclick={() => (showCreateScheduleEvent = true)}
 	class={`${Class} dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
 	class:today={getDay() === currentDate.getDate() &&
@@ -71,16 +71,13 @@
 		<div class="text-center">
 			{new Date(year, month, getDay()).getDate()}
 		</div>
-
 		{#each events as event}
 			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
 				<div class="text-center">{event.title}</div>
 			{/if}
 		{/each}
-		<!-- 
-			{#if isEventOnDate(new Date(year, month, -firstDayInMonthWeekday() + x + 7 * (y - 1))) && events.length > 0}
-            <Fa class="m-auto" icon={faCalendarAlt} />
-			{/if} -->
+
+		<div class="bg-secondary w-full text-white text-sm">Hi!</div>
 	</div>
 </button>
 

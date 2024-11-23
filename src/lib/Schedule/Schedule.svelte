@@ -13,9 +13,6 @@
 	import { DateInput } from 'date-picker-svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
@@ -374,9 +371,7 @@
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal
-	bind:open={showCreateScheduleEvent}
->
+<Modal bind:open={showCreateScheduleEvent}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>

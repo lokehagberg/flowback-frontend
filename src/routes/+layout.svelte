@@ -78,10 +78,8 @@
 		if (window.localStorage.getItem('token') === undefined) goto('/login');
 		else if (pathname === '/') goto('/home');
 
-
 		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime')
 		if (sessionExpiration)
-		console.log(sessionExpiration, "EXPIREO", sessionExpiration < new Date().getTime().toString());
 		
 		if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
 			localStorage.removeItem('token');

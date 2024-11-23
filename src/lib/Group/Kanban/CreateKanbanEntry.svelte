@@ -12,6 +12,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import type { WorkGroup } from '../WorkingGroups/interface';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -166,7 +167,7 @@
 							>
 								{#each workGroups as group}
 									<option class="w-5" value={group.id}>
-										{group.name.length > 30 ? group.name.substring(0, 30) + '...' : group.name}
+										{elipsis(group.name)}
 									</option>
 								{/each}
 							</select>

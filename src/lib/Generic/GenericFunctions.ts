@@ -85,3 +85,7 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 	);
 	return json.results[0];
 };
+
+export const elipsis = (label:string, charMax = 30) => {
+	return label.length > charMax ? label.substring(0, charMax) + '...' : label
+}

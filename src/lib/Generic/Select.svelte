@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
+	import { elipsis } from './GenericFunctions';
 
 	export let onInput: (
 			e: Event & {
@@ -13,7 +14,7 @@
 		Class = '',
 		classInner = '',
 		innerLabel = 'Select',
-		wordlimit = 30;
+		charlimit = 30;
 </script>
 
 <div class={`${Class}`}>
@@ -34,7 +35,7 @@
 	>
 		<option value="" disabled selected>{innerLabel}</option>
 		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {label.length > wordlimit ? label.substring(0, wordlimit) + '...' : label} </option>
+			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
 		{/each}
 	</select>
 </div>

@@ -13,11 +13,11 @@
 		showCreateScheduleEvent = false,
 		selectedDate = new Date(),
 		month,
-		year;
+		year,
+		events: scheduledEvent[] = [];
 
 	const currentDate = new Date();
 
-	let events: scheduledEvent[] = [];
 
 	const getDate = (year: number, month: number, x: number, y: number) => {
 		return new Date(year, month, getDay());
@@ -73,11 +73,11 @@
 		</div>
 		{#each events as event}
 			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-				<div class="text-center">{event.title}</div>
+				<!-- <div class="text-center">{event.title}</div> -->
+				<div class="bg-secondary w-full text-white text-sm">{event.title}</div>
 			{/if}
 		{/each}
 
-		<div class="bg-secondary w-full text-white text-sm">Hi!</div>
 	</div>
 </button>
 

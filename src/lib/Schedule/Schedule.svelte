@@ -338,6 +338,7 @@
 						bind:year
 						bind:month
 						bind:advancedTimeSettingsDates
+						bind:events
 						{x}
 						{y}
 					/>

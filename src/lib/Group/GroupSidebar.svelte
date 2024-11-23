@@ -85,7 +85,6 @@
 		</button>
 	{:else}
 		{#if innerWidth < 700}
-	
 			<button
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
@@ -95,11 +94,14 @@
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
-			<div class="bg-primary text-white shadow rounded flex flex-col">
-				<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
-					<GroupSidebarButton text="Create a post" icon={faCheckToSlot} isSelected={false} Class="hover:!bg-blue-800 active:!bg-blue-900"/></a
-				>
-			</div>
+			<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
+				<GroupSidebarButton
+					text="Create a post"
+					icon={faCheckToSlot}
+					isSelected={false}
+					Class="hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
+				/></a
+			>
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
 			<GroupSidebarButton

@@ -33,7 +33,6 @@
 	const nextPhase = async () => {
 		let _phase: Phase = 'pre_start';
 		console.log(phase, pollType);
-		
 
 		if (pollType === 3) {
 			if (phase === 'area_vote') _phase = 'proposal';
@@ -53,8 +52,8 @@
 		);
 
 		if (!res.ok) {
-			const message = json.detail[0] || 'Could not fast forward poll';
-			poppup = { message, success: false };
+			// const message = json.detail[0] || 'Could not fast forward poll';
+			poppup = { message: 'Could not fast forward poll', success: false };
 			return;
 		}
 
@@ -90,11 +89,11 @@
 			ClassOpen="right-0"
 		/>
 		<!-- {#if groupUser?.is_admin} -->
-			<MultipleChoices
-				labels={['Fast Forward', 'Delete Poll']}
-				functions={[nextPhase, () => (deletePollModalShow = true)]}
-				Class="justify-self-center mt-2"
-			/>
+		<MultipleChoices
+			labels={['Fast Forward', 'Delete Poll']}
+			functions={[nextPhase, () => (deletePollModalShow = true)]}
+			Class="justify-self-center mt-2"
+		/>
 		<!-- {/if} -->
 	</div>
 

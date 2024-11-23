@@ -4,7 +4,9 @@
 	import { _ } from 'svelte-i18n';
 
 	export let images: File[] = [],
-		minimalist = false;
+		minimalist = false,
+		Class = '';
+
 	let image: File | null = null;
 </script>
 
@@ -17,10 +19,10 @@
 </div>
 <div
 	class={minimalist
-		? 'inline'
-		: `flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
+		? 'inline m-auto'
+		: `${Class} flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
-	{#if !minimalist}{$_("Add media")}{/if}
+	{#if !minimalist}{$_('Add media')}{/if}
 	<ImageUpload
 		icon={faUpload}
 		bind:croppedImage={image}

@@ -151,7 +151,7 @@
 				Class="w-full"
 			/>
 		</div>
-		<div class="flex">
+		<div class="flex ml-2">
 			<FileUploads bind:images minimalist />
 			<Button Class="bg-white" type="submit" label=""
 				><Fa icon={faPaperPlane} color="black" /></Button

@@ -340,6 +340,9 @@
 					<Day
 						bind:showCreateScheduleEvent
 						bind:selectedDatePosition
+						bind:selectedDate
+						bind:year
+						bind:month
 						bind:advancedTimeSettingsDates
 						{x}
 						{y}
@@ -384,7 +387,7 @@
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
-				<TextInput label="Title" bind:value={title} />
+				<TextInput placeholder="Event name" label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
 				{#if type === 'group'}
 					{$_('Work Group')}
@@ -425,7 +428,6 @@
 		</Loader>
 	</div>
 </Modal>
-
 
 <style>
 	.calendar {

@@ -10,14 +10,14 @@
 		advancedTimeSettingsDates: Date[] = [],
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
-		showCreateScheduleEvent = false;
+		showCreateScheduleEvent = false,
+		selectedDate = new Date(),
+		month,
+		year;
 
 	const currentDate = new Date();
 
-	let month = currentDate.getMonth(),
-		year = currentDate.getFullYear(),
-		selectedDate = new Date(),
-		events: scheduledEvent[] = [];
+	let events: scheduledEvent[] = [];
 
 	onMount(() => {
 		const today = new Date();
@@ -59,6 +59,7 @@
 		month === currentDate.getMonth() &&
 		year === currentDate.getFullYear()}
 	on:click={() => {
+		//Whenever user clicks on a date, ensure that it looks selected.
 		document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		document.getElementById(`${x}-${y}`)?.classList.add('selected');
 		selectedDatePosition = `${x}-${y}`;

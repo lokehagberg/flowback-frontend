@@ -201,7 +201,7 @@
 	</div>
 
 	{#if poll.description.length > 0}
-		<Description limit={500} {poll} {onHoverGroup} Class="mt-2" />
+		<Description limit={500} description={poll.description} Class="mt-2" />
 	{/if}
 
 	<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />

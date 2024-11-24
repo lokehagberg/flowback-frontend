@@ -8,11 +8,11 @@
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import { _ } from 'svelte-i18n';
-	import ThreadDescription from '$lib/Group/ThreadDescription.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import Description from '$lib/Poll/Description.svelte';
 
 	let thread: Thread, poppup: poppup;
 
@@ -62,7 +62,7 @@
 
 			{#if thread.description.length > 0}
 				<div class="grid-area-description">
-					<ThreadDescription bind:description={thread.description} limit={500} Class="" />
+					<Description bind:description={thread.description} limit={500} Class="" />
 				</div>
 			{/if}
 		</div>

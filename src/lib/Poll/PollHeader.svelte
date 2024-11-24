@@ -132,7 +132,7 @@
 
 	{#if poll.description.length > 0}
 		<div class="grid-area-description break-all">
-			<Description limit={400} {poll} />
+			<Description limit={400} description={poll.description} />
 		</div>
 	{/if}
 

@@ -17,7 +17,7 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
-	import ThreadDescription from './ThreadDescription.svelte';
+	import Description from '$lib/Poll/Description.svelte';
 
 	export let isAdmin = true;
 
@@ -68,7 +68,7 @@
 			pinned: !thread.pinned
 		});
 		if (!res.ok) return;
-		
+
 		thread.pinned = !thread.pinned;
 		threads = threads;
 	};
@@ -115,7 +115,7 @@
 				</div>
 			</div>
 			{#if thread.description}
-				<ThreadDescription description={thread.description} />
+				<Description limit={500} description={thread.description} />
 			{/if}
 
 			<hr class="my-3" />

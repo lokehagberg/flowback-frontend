@@ -166,7 +166,7 @@
 	.poll-header-grid {
 		display: grid;
 		grid-template-columns: 0.3fr 4fr 0.3fr;
-		grid-template-rows: 0.1fr 0.1fr 1fr;
+		/* grid-template-rows: 0.1fr 0.2fr 1fr; */
 	}
 
 	.grid-area-items {

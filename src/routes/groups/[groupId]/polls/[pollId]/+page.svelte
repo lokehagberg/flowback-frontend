@@ -157,24 +157,16 @@
 							action={() => (selectedProposal = null)}>{$_('Create Proposal')}</Button
 						>
 					</div>
-					<div slot="right">
+					<div slot="right" class="relative h-full">
 						{#if selectedProposal}
-							<!-- <Proposal
-								bind:selectedProposal
-								proposal={selectedProposal}
-								isVoting={false}
-								bind:phase
-							/> -->
 							<span class="text-primary font-semibold block break-words"> {selectedProposal.title}</span>
 							<span class="break-words">
 								{selectedProposal.description}
 							</span>
-							<!-- {@debug selectedProposal} -->
 							{#if selectedProposal.attachments}
 								<div>
 									{#each selectedProposal.attachments as file}
-										<!-- svelte-ignore a11y-missing-attribute -->
-										<img src={`${env.PUBLIC_API_URL}/media/${file.file}`} />
+										<img alt="attachment" src={`${env.PUBLIC_API_URL}/media/${file.file}`} />
 									{/each}
 								</div>
 							{/if}

@@ -108,7 +108,7 @@
 		<StatusMessage bind:status />
 		<Button
 			buttonStyle="primary-light"
-			Class="bottom-0 w-full"
+			Class="absolute bottom-0 w-full"
 			type="submit"
 			label="Add Proposal"
 		/>

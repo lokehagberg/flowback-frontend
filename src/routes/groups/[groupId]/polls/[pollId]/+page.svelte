@@ -125,7 +125,7 @@
 
 <Layout centered>
 	{#if poll}
-		<PollHeader {poll} {phase} displayTag={phase !== 'area_vote'} />
+		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote'} />
 
 		{#if pollType === 4}
 			{#if phase === 'pre_start'}
@@ -157,7 +157,7 @@
 							action={() => (selectedProposal = null)}>{$_('Create Proposal')}</Button
 						>
 					</div>
-					<div slot="right" class="">
+					<div slot="right">
 						{#if selectedProposal}
 							<!-- <Proposal
 								bind:selectedProposal
@@ -165,8 +165,8 @@
 								isVoting={false}
 								bind:phase
 							/> -->
-							<span class="text-primary font-bold block"> {selectedProposal.title}</span>
-							<span>
+							<span class="text-primary font-semibold block break-words"> {selectedProposal.title}</span>
+							<span class="break-words">
 								{selectedProposal.description}
 							</span>
 							<!-- {@debug selectedProposal} -->

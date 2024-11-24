@@ -3,7 +3,6 @@
 	import type { Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
@@ -18,8 +17,6 @@
 		phase: Phase;
 
 	export const id: number = 0;
-
-	let show = false;
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
@@ -59,11 +56,12 @@
 			{/if}
 		{/if}
 		<!-- Proposal Title -->
-		<span class="text-md text-primary font-semibold align-text-top text-left">{proposal.title}</span
+		<span class="text-md text-primary font-semibold align-text-top text-left break-all"
+			>{proposal.title}</span
 		>
 	</div>
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1" id={`proposal-${proposal.id}-description`}>
+	<p class="elipsis text-sm text-left my-1 break-all" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 
@@ -95,11 +93,9 @@
 		max={100}
 	/>
 {:else}
-	<!-- Used to ensure flex design stays intact -->
+	<!-- Ensures flex design stays intact -->
 	<div />
 {/if}
-
-<SuccessPoppup bind:show message="Successfully edited proposal" />
 
 <style>
 	.elipsis {

@@ -32,7 +32,6 @@
 
 	const nextPhase = async () => {
 		let _phase: Phase = 'pre_start';
-		console.log(phase, pollType);
 
 		if (pollType === 3) {
 			if (phase === 'area_vote') _phase = 'proposal';

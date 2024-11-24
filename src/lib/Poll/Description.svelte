@@ -35,8 +35,8 @@
         >
             {poll.description.slice(0, limit)}
         </a>
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
+
+        <br/>
         {#if poll.description.length > limit}
             ...<span
                 class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"

@@ -11,6 +11,7 @@
 	import type { Tag } from '$lib/Group/interface';
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import Select from '$lib/Generic/Select.svelte';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let filter: Filter,
 		handleSearch: () => {},
@@ -105,7 +106,7 @@
 			<select on:input={handleTags} class="rounded-md p-1 dark:bg-darkobject">
 				<option value={null}>{$_('Any')}</option>
 				{#each tags as tag}
-					<option value={tag.id}>{tag.name}</option>
+					<option value={tag.id}>{elipsis(tag.name, 15)}</option>
 				{/each}
 			</select>
 		{/if}

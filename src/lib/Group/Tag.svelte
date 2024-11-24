@@ -2,6 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import type { Tag } from './interface';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let tag: Tag,
 		Class: string = '',
@@ -26,7 +27,7 @@
 			Class}
 		on:click={onclick}
 	>
-		{tag?.name}
+		{elipsis(tag?.name, 5)}
 	</button>
 	<div class="border-accent-tertiary pl-1 pr-1 border-2 w-[20%] text-center text-darkmodeText">
 		{#if tag?.imac}

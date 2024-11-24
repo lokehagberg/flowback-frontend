@@ -10,7 +10,7 @@
 		Class = '',
 		onBlur = () => {},
 		inputClass = '',
-		placeholder = 'Search',
+		placeholder = '',
 		max = 100,
 		type: 'text' | 'password' = 'text',
 		name: string = '';
@@ -22,7 +22,9 @@
 </script>
 
 <label class={`w-full ${Class}`}>
-	<!-- <p class="text-gray-400 text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p> -->
+	{#if label}
+		<p class="text-gray-400 text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
+	{/if}
 	{#if required}
 		<p class="inline text-red-600">*</p>
 	{/if}

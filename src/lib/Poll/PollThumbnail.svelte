@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Timeline from './TimelineLegacy.svelte';
+	//@ts-ignore
+	import TimelineLegacy from './TimelineLegacy.svelte';
 	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
@@ -203,7 +204,7 @@
 		<Description limit={500} {poll} {onHoverGroup} Class="mt-2" />
 	{/if}
 
-	<Timeline Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+	<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<div class="!mt-4">
 		<!-- Area Voting -->

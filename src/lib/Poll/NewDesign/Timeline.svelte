@@ -16,9 +16,9 @@
 		pollType: number,
 		poll: poll;
 
-	let datesDisplay: string[] = [],
+	let datesArray: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
-		currentPhase,
+		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
 
@@ -37,8 +37,8 @@
 			new Date(poll.end_date)
 		];
 
-		currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
-		fraction = (currentPhase + 1) / dates.length;
+		currentPhaseIndex = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
+		fraction = (currentPhaseIndex + 1) / dates.length;
 
 		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
@@ -46,12 +46,21 @@
 			// Date placement on Timeline
 			const toDateTime = date.getTime() - dates[0].getTime();
 			datePlacement[i] = (100 * toDateTime) / totalTime;
-			datesDisplay[i] = formatDate(date.toString());
+			datesArray[i] = formatDate(date.toString());
 		});
 	};
 </script>
 
-<div class={`relative ${Class}`}>
+<div class={`relative flex flex-col items-center ${Class}`}>
+	<div >
+		<span class="font-semibold text-primary">
+			{$_('Current')}:
+		</span>
+		{$_('Phase')}
+		{currentPhaseIndex}
+		{dateLabels[currentPhaseIndex]}
+	</div>
+
 	{#if displayTimeline}
 		<div
 			class="flex flex-col gap-20 justify-between rounded-md max-w-4"
@@ -64,7 +73,7 @@
 					<HeaderIcon
 						Class="cursor-default"
 						size="1x"
-						text={`${$_(dateLabels[i])}: ${datesDisplay[i]}`}
+						text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
 						icon={dates[i] <= new Date() ? faCircleCheck : faCircle}
 						color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 					/>
@@ -84,7 +93,7 @@
 			{#each dateLabels as label, i}
 				<li class="flex justify-between flex-col md:flex-row text-center">
 					<div class="mb-4 md:mb-0">{$_(label)}:</div>
-					<div class="mb-4 md:mb-0">{datesDisplay[i]} CET</div>
+					<div class="mb-4 md:mb-0">{datesArray[i]} CET</div>
 				</li>
 			{/each}
 		</ul>

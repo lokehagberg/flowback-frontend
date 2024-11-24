@@ -5,7 +5,12 @@
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { dateLabels as dateLabelsTextPoll, dateLabelsDatePoll } from '../functions';
-	import { faCircle, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCircle,
+		faCircleCheck,
+		faCircleExclamation,
+		faMinus
+	} from '@fortawesome/free-solid-svg-icons';
 	import type { poll } from '../interface';
 	import { onMount } from 'svelte';
 
@@ -27,6 +32,7 @@
 	});
 
 	const setupDates = () => {
+		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
 		dates = [
 			new Date(poll.start_date),
 			new Date(poll.area_vote_end_date),
@@ -52,7 +58,7 @@
 </script>
 
 <div class={`relative flex flex-col items-center ${Class}`}>
-	<div >
+	<div class="text-center">
 		<span class="font-semibold text-primary">
 			{$_('Current')}:
 		</span>
@@ -63,21 +69,26 @@
 
 	{#if displayTimeline}
 		<div
-			class="flex flex-col gap-20 justify-between rounded-md max-w-4"
+			class="mt-4 flex flex-col gap-20 justify-between rounded-md max-w-4"
 			style={`background: linear-gradient(180deg, rgba(189, 208, 255, 1) ${
 				fraction * 100 - 2
 			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
-				<div class="">
-					<HeaderIcon
-						Class="cursor-default"
-						size="1x"
-						text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
-						icon={dates[i] <= new Date() ? faCircleCheck : faCircle}
-						color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
-					/>
-				</div>
+				{@const icon =
+					i === currentPhaseIndex
+						? faCircleExclamation
+						: dates[i] <= new Date()
+						? faCircleCheck
+						: faCircle}
+
+				<HeaderIcon
+					Class="cursor-default"
+					size="1x"
+					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
+					{icon}
+					color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
+				/>
 			{/each}
 		</div>
 	{/if}

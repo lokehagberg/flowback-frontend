@@ -25,7 +25,6 @@
 		proposalsToPredictionMarket: proposal[] = [];
 
 	let loading = false,
-		predictions: PredictionStatement[] = [],
 		newPredictionStatement: {
 			title?: string;
 			description?: string;
@@ -41,25 +40,6 @@
 		poppup: poppup,
 		pushingToBlockchain = true;
 
-	$: console.log(
-		'MANY THINGS:',
-		newPredictionStatement,
-		predictions,
-		proposals,
-		proposalsToPredictionMarket
-	);
-
-	const getPredictionStatements = async () => {
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}`
-		);
-		loading = false;
-		predictions = json.results;
-	};
-
 	const getPredictionBets = async () => {
 		loading = true;
 
@@ -74,7 +54,7 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
-		if (newPredictionStatement.description === "") newPredictionStatement.description = undefined
+		if (newPredictionStatement.description === '') newPredictionStatement.description = undefined;
 
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
@@ -194,7 +174,7 @@
 		<div class="flex flex-col gap-2">
 			<span>{$_('If implemented')}</span>
 			{#each proposalsToPredictionMarket as proposal, i}
-				{#if i !== 0} {$_("OR")} {/if}
+				{#if i !== 0} {$_('OR')} {/if}
 				<div class="flex justify-between">
 					<span class="p-0.5 border border-gray-300 rounded w-full">{proposal.title}</span>
 					<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>

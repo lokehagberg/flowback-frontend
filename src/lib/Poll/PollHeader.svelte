@@ -79,7 +79,7 @@
 	<h1 class="text-left text-2xl text-primary font-semibold break-all">{poll.title}</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 
-	<div class="flex gap-3">
+	<div class="flex gap-3 justify-center m-auto">
 		<NotificationOptions
 			id={poll.id}
 			api={`group/poll/${poll.id}`}
@@ -132,7 +132,7 @@
 
 	{#if poll.description.length > 0}
 		<div class="grid-area-description break-all">
-			<Description limit={500} {poll} Class="" />
+			<Description limit={400} {poll} />
 		</div>
 	{/if}
 

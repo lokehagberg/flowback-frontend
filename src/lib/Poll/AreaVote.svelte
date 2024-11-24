@@ -7,6 +7,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { toPercentage } from 'chart.js/helpers';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	let tags: Tag[] = [],
 		selectedTag: number,
@@ -47,7 +48,7 @@
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
 
 		if (!res.ok) return;
-		
+
 		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
 
 		if (selectedTagName) {
@@ -73,7 +74,7 @@
 				buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
 				action={() => changeSelect(tag)}
 			>
-				{tag.name}
+				{elipsis(tag.name, 10)}
 			</Button>
 		{/if}
 	{/each}

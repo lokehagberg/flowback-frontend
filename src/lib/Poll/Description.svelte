@@ -1,47 +1,26 @@
 <script lang="ts">
-	import type { poll } from "./interface";
-    import { page } from '$app/stores';
-    import { _ } from 'svelte-i18n';
+	import type { poll } from './interface';
+	import { page } from '$app/stores';
+	import { _ } from 'svelte-i18n';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
-    export let limit:number, poll:any, onHoverGroup:boolean = false, Class = ""
+	export let limit: number,
+		poll: any,
+		onHoverGroup: boolean = false,
+		Class = '';
 
-    let readMore = false
+	let readMore = false;
 </script>
 
-<p class={`mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText ${Class}`}>
-    {#if readMore}
-        <a
-            class="cursor-pointe hover:underline"
-            href={onHoverGroup
-                ? '/groups/1'
-                : `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-        >
-            {poll.description}
-        </a>
-        {#if poll.description.length > limit}
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span
-                class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
-                on:click={() => (readMore = false)}>{$_("Show less")}...</span
-            >
-        {/if}
-    {:else}
-        <a
-            class="cursor-pointe hover:underline"
-            href={onHoverGroup
-                ? '/groups/1'
-                : `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-        >
-            {poll.description.slice(0, limit)}
-        </a>
+<div class={`whitespace-pre-wrap break-all dark:text-darkmodeText ${Class}`}>
+	<p class=" text-black">
+		<!-- TODO: Ensure that the 5000 description limit is accessible more easily and universally across files -->
+		{elipsis(poll.description, readMore ? 5000 : limit)}
+	</p>
 
-        <br/>
-        {#if poll.description.length > limit}
-            ...<span
-                class="hover:underline cursor-pointer text-gray-600 font-bold ml-3"
-                on:click={() => (readMore = true)}>{$_("Show more")}...</span
-            >
-        {/if}
-    {/if}
-</p>
+	<button
+		class="hover:underline cursor-pointer text-gray-600 font-bold"
+		on:click={() => (readMore = !readMore)}>{$_(readMore ? 'Show less' : 'Show more')}...</button
+	>
+</div>
+

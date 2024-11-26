@@ -8,6 +8,7 @@
 	let show = false;
 </script>
 
+<!-- TODO: Fix accessibility on this element -->
 <!-- svelte-ignore a11y-interactive-supports-focus -->
 <div
 	class="inline"
@@ -32,7 +33,7 @@
 	</div>
 {/if}
 
-<!-- <div class="inline relative w-full">
+<div class="inline relative w-full">
 	<div class="inline rounded-full border border-opacity-40 border-gray-400 px-[3px] hover:bg-gray-200 bg-white cursor-pointer" on:mouseover={() => (show = true)} on:mouseleave={() => (show = false)} on:focus>
 	</div>
 	{#if show}
@@ -40,4 +41,4 @@
 			{$_(message)}
 		</div>
 	{/if}
-</div> -->
+</div>

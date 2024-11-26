@@ -7,6 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faStar } from '@fortawesome/free-solid-svg-icons';
+	import Description from './Description.svelte';
 
 	let votes: number[] = [],
 		labels: string[] = [];
@@ -53,7 +54,7 @@
 					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 					{proposal.title}</span
 				>
-				<div>{proposal.description}</div>
+				<Description description={proposal.description} limit={50}/>
 				<span class="block text-right"
 					><span class="text-primary font-bold">{$_('Points')}:</span> {proposal.score || '0'}</span
 				>

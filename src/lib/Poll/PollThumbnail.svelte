@@ -194,7 +194,7 @@
 			tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 			Class="inline cursor-default"
 		/>
-		<div class="text-sm font-bold text-primary">
+		<div class="text-sm font-semibold text-primary">
 			{$_('Current phase:')}
 			{getPhaseUserFriendlyName(phase)}
 		</div>

@@ -42,7 +42,7 @@
 </script>
 
 <div class="w-full">
-	<span class="text-primary font-bold text-xl text-center block">{$_('Results')}</span>
+	<span class="text-primary font-semibold text-xl text-center block">{$_('Results')}</span>
 	{#if pollType === 4}
 		<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
 		{#if proposals[0]?.score > 0}
@@ -50,13 +50,13 @@
 		{/if}
 		{#each proposals as proposal, i}
 			<div class="border-gray-300 border-b-2 mt-3 pb-1">
-				<span class="text-primary font-bold flex items-center gap-1"
+				<span class="text-primary font-semibold flex items-center gap-1"
 					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 					{proposal.title}</span
 				>
 				<Description description={proposal.description} limit={50}/>
 				<span class="block text-right"
-					><span class="text-primary font-bold">{$_('Points')}:</span> {proposal.score || '0'}</span
+					><span class="text-primary font-semibold">{$_('Points')}:</span> {proposal.score || '0'}</span
 				>
 			</div>
 		{/each}

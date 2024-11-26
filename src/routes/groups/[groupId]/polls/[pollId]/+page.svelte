@@ -7,33 +7,27 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import Results from '$lib/Poll/Results.svelte';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { groupUser } from '$lib/Group/interface';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import ProposalSubmition from '$lib/Poll/ProposalSubmition.svelte';
-	import Predictions from '$lib/Poll/PredictionMarket/Predictions.svelte';
+	import Predictions from '$lib/Poll/PredictionMarket/PredictionCreate.svelte';
 	import PollHeader from '$lib/Poll/PollHeader.svelte';
 	import { getPhase } from '$lib/Poll/functions';
 	import AreaVote from '$lib/Poll/AreaVote.svelte';
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
-	import { goto } from '$app/navigation';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
 	import Proposal from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
-	import Modal from '$lib/Generic/Modal.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 
 	let poll: poll,
-		DeletePollModalShow = false,
 		pollType = 1,
 		finished: boolean,
 		groupUser: groupUser,
-		deleteStatus: StatusMessageInfo,
 		phase: Phase,
 		proposals: proposal[],
 		selectedProposal: proposal | null,
@@ -67,7 +61,6 @@
 		finished = new Date(json.results[0].end_date) < new Date();
 	};
 
-
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
 		if (!$page.params) return;
@@ -93,29 +86,6 @@
 			scrollTo?.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 		}, 200);
 	};
-
-	const nextPhase = async () => {
-		let _phase: Phase = 'pre_start';
-
-		if (pollType === 4) {
-			if (phase === 'area_vote') _phase = 'proposal';
-			else if (phase === 'proposal') _phase = 'prediction_statement';
-			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
-			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
-			else if (phase === 'delegate_vote') _phase = 'vote';
-			else if (phase === 'vote') _phase = 'prediction_vote';
-		} else if (pollType === 3) _phase = 'result';
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/fast_forward`,
-			{
-				phase: _phase
-			}
-		);
-
-		if (res.ok) phase = _phase;
-	};
 </script>
 
 <Layout centered>
@@ -135,7 +105,7 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center text-primary font-semibold text-md "
+						<span class="text-center text-primary font-semibold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="h-[90%] overflow-auto">
@@ -154,7 +124,9 @@
 					</div>
 					<div slot="right" class="relative h-full">
 						{#if selectedProposal}
-							<span class="text-primary font-semibold block break-words"> {selectedProposal.title}</span>
+							<span class="text-primary font-semibold block break-words">
+								{selectedProposal.title}</span
+							>
 							<span class="break-words">
 								{selectedProposal.description}
 							</span>
@@ -211,8 +183,6 @@
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>
-
-					<!-- <div slot="right"></div> -->
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 

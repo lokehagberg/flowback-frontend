@@ -23,6 +23,7 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import Description from '$lib/Poll/Description.svelte';
 
 	let poll: poll,
 		pollType = 1,
@@ -171,9 +172,7 @@
 							<div class="font-semibold text-primary text-lg">
 								{selectedProposal.title}
 							</div>
-							<p>
-								{selectedProposal.description}
-							</p>
+							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary font-semibold">

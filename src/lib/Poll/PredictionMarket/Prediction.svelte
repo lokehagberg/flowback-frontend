@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import Select from '$lib/Generic/Select.svelte';
+	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import type { Phase, poll } from '../interface';
 	import type { PredictionStatement } from './interfaces';
@@ -15,7 +15,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import VotingSlider from '../VotingSlider.svelte';
-	import { env } from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
@@ -248,13 +248,11 @@
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>
 			{/each}
 		</ul>
-		<!-- {@debug prediction} -->
-		<div>Deadline: {formatDate(prediction.end_date.toString())}</div>
+		<div>{$_('Deadline')}: {formatDate(prediction.end_date.toString())}</div>
 		{#if prediction.combined_bet}
-			<div>Aggregated Bet: {prediction.combined_bet}</div>
+			<div>{$_('Aggregated Bet')}: {prediction.combined_bet}</div>
 		{/if}
 	</div>
 </Modal>
 
-<!-- <SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} /> -->
 <Poppup bind:poppup />

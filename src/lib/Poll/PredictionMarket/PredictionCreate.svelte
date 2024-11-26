@@ -71,9 +71,9 @@
 		}
 
 		newPredictionStatement = {
-			segments: [],
+			segments: newPredictionStatement.segments,
 			description: '',
-			end_date: new Date(),
+			end_date: newPredictionStatement.end_date,
 			blockchain_id: 0,
 			title: ''
 		};

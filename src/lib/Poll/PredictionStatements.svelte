@@ -6,6 +6,7 @@
 	import Prediction from './PredictionMarket/Prediction.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
+	import Description from './Description.svelte';
 
 	export let selectedProposal: proposal, phase: Phase, poll: poll;
 
@@ -31,7 +32,7 @@
 		<div class="border-b-2 flex flex-col" class:select-none={phase === 'prediction_bet'}>
 			<span class="text-primary font-semibold">{prediction.title}</span>
 			{#if prediction.description}
-				<span class="">{prediction.description}</span>
+			<Description description={prediction.description} limit={30}/>
 			{/if}
 			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 			{#if phase === 'delegate_vote' || phase === 'vote'}

@@ -6,6 +6,7 @@
 		label: string,
 		required = false,
 		Class = '',
+		areaClass = '',
 		onBlur = () => {},
 		autofocus = false,
 		max = 5000,
@@ -57,7 +58,7 @@
 	{/if}
 
 	<textarea
-		class={`dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		class={`${areaClass} dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 		id="textarea"
 		{required}
 		{rows}

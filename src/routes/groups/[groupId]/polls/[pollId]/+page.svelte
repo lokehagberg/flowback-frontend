@@ -67,11 +67,6 @@
 		finished = new Date(json.results[0].end_date) < new Date();
 	};
 
-	const deletePoll = async () => {
-		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
-		if (res.ok) goto(`/groups/${$page.params.groupId}`);
-		else deleteStatus = statusMessageFormatter(res, json, '');
-	};
 
 	//TODO: Replace this later with some kind of svelte stores or local storage data
 	const getGroupUser = async () => {
@@ -139,11 +134,11 @@
 				<!-- PHASE 2: PROPOSAL CREATION -->
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
-					<div slot="left" class="h-full relative">
-						<span class="text-center text-primary font-bold text-md"
+					<div slot="left" class="h-full">
+						<span class="text-center text-primary font-semibold text-md "
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="h-[90%]">
+						<div class="h-[90%] overflow-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}
@@ -152,9 +147,9 @@
 							/>
 						</div>
 						<Button
-							Class="absolute bottom-0 w-full"
+							Class="w-full"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>{$_('Create Proposal')}</Button
+							action={() => (selectedProposal = null)}>{$_('Add Proposal')}</Button
 						>
 					</div>
 					<div slot="right" class="relative h-full">

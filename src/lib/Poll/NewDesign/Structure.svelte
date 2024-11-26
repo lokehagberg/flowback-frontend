@@ -6,7 +6,7 @@
 	export let poll: poll,
 		Class = '';
 
-	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full overflow-auto shadow-md';
+	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
 
 	onMount(() => {});
 </script>

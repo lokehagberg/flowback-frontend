@@ -16,7 +16,7 @@
 	/>
 </div>
 {#if show}
-	<div class="absolute w-1/3 break-words bg-white dark:bg-darkobject text-sm p-4 shadow-md rounded">
+	<div class="absolute w-full top-5 break-words bg-white dark:bg-darkobject text-sm p-4 shadow-md rounded">
 	{$_(message)}
 	</div>
 {/if}

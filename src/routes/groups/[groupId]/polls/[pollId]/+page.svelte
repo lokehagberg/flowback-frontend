@@ -17,7 +17,6 @@
 	import ProposalScoreVoting from '$lib/Poll/ProposalScoreVoting.svelte';
 	import DatePoll from '$lib/Poll/DatePoll.svelte';
 	import Structure from '$lib/Poll/NewDesign/Structure.svelte';
-	import Proposal from '$lib/Poll/Proposal.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import PredictionStatements from '$lib/Poll/PredictionStatements.svelte';
 	import { env } from '$env/dynamic/public';
@@ -109,7 +108,7 @@
 						<span class="text-center text-primary font-semibold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="h-[90%] overflow-auto">
+						<div class="h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}
@@ -152,7 +151,7 @@
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-[80%] overflow-y-scroll">
+						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								bind:phase
@@ -192,7 +191,7 @@
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-full overflow-y-scroll">
+						<div class="max-h-full overflow-y-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}
@@ -219,7 +218,7 @@
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-[90%] overflow-y-scroll">
+						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								isVoting={false}
@@ -246,7 +245,7 @@
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
-						<div class="max-h-[90%] overflow-y-scroll">
+						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:proposals
 								bind:phase
@@ -269,7 +268,7 @@
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:poll>
-					<div slot="left" class="h-full overflow-y-scroll">
+					<div slot="left" class="h-full overflow-y-auto">
 						{#if proposals}
 							<PredictionStatements selectedProposal={proposals[0]} bind:phase bind:poll />
 						{/if}

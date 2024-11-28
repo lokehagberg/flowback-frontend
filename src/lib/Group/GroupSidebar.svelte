@@ -62,7 +62,7 @@
 	const action = (page: SelectablePage) => {
 		if (selectedPage === page) return;
 		selectedPage = page;
-		goto(`?page=${page}`);
+		goto(`?page=${page}`, { noScroll: true });
 	};
 
 	onMount(() => {
@@ -197,19 +197,19 @@
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton
-					action={() => (action('email'))}
+					action={() => action('email')}
 					text="Send Email"
 					icon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton
-					action={() => (action('tags'))}
+					action={() => action('tags')}
 					text="Edit Tags"
 					icon={faCog}
 					isSelected={selectedPage === 'tags'}
 				/>
 				<GroupSidebarButton
-					action={() => (action('perms'))}
+					action={() => action('perms')}
 					text="Permissions"
 					icon={faCog}
 					isSelected={selectedPage === 'perms'}

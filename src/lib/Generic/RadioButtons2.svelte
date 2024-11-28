@@ -26,7 +26,6 @@
 
 	onMount(() => {
 		value = values[0];
-		console.log('values[', values[0]);
 	});
 </script>
 

@@ -59,11 +59,19 @@
 		}
 	};
 
+	const action = (page: SelectablePage) => {
+		if (selectedPage === page) return;
+		selectedPage = page;
+		goto(`?page=${page}`);
+	};
+
 	onMount(() => {
 		getUserIsOwner();
 	});
 
-	$: selectedPage && (() => (clickedExpandSidebar = false))();
+		//@ts-ignore
+		$: selectedPage = $page.url.searchParams.get('page') || 'flow';
+
 </script>
 
 <svelte:window bind:innerWidth />
@@ -105,60 +113,60 @@
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
 			<GroupSidebarButton
-				action={() => (selectedPage = 'flow')}
+				action={() => action('flow')}
 				text="Flow"
 				isSelected={selectedPage === 'flow'}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'threads')}
+				action={() => action('threads')}
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'delegation')}
+				action={() => (action('delegation'))}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'working-groups')}
+				action={() => (action('working-groups'))}
 				text="Work Groups"
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'documents')}
+				action={() => (action('documents'))}
 				isSelected={selectedPage === 'documents'}
 				text="Documents"
 				icon={faFile}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'kanban')}
+				action={() => (action('kanban'))}
 				isSelected={selectedPage === 'kanban'}
 				text="Group Kanban"
 				icon={faList}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'schedule')}
+				action={() => (action('schedule'))}
 				isSelected={selectedPage === 'schedule'}
 				text="Group schedule"
 				icon={faCalendarAlt}
 			/>
 			<GroupSidebarButton
-				action={() => (selectedPage = 'members')}
+				action={() => (action('members'))}
 				text="Members"
 				icon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
 			<!-- <GroupSidebarButton
-				action={() => (selectedPage = 'statistics')}
+				action={() => (action('statistics'))}
 				text="Statistics"
 				icon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
 			/> -->
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
-					action={() => (selectedPage = 'about')}
+					action={() => (action('about'))}
 					text="About"
 					icon={faCircleInfo}
 					isSelected={selectedPage === 'about'}

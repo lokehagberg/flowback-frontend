@@ -16,12 +16,12 @@
 		tags: Tag[] = [],
 		delegates: Delegate[] = [],
 		selectedTag: Tag,
-		value:number|null,
-		resetValue = () => {}
+		value: number | null,
+		resetValue = () => {};
 
 	const getTagsLocal = async () => {
 		loading = true;
-		tags = await getTags($page.params.groupId);
+		tags = await getTags($page.params.groupid || 1);
 		// if (!tags) poppup = { message: 'Could not get poppups', success: false };
 		loading = false;
 	};
@@ -30,7 +30,7 @@
 		loading = true;
 		const { json, res } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=${delegationLimit}`
+			`group/${$page.params.groupId || 1}/delegate/pools?limit=${delegationLimit}`
 		);
 
 		if (!res.ok) return;
@@ -46,9 +46,13 @@
 		delegate_pool_id = Number(delegate_pool_id);
 
 		loading = true;
-		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/delegate/create`, {
-			delegate_pool_id
-		});
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId || 1}/delegate/create`,
+			{
+				delegate_pool_id
+			}
+		);
 
 		loading = false;
 		if (!res.ok) return;
@@ -69,11 +73,11 @@
 				: null
 		);
 
-		toSendDelegates = toSendDelegates.filter(delegate => delegate !== null)
+		toSendDelegates = toSendDelegates.filter((delegate) => delegate !== null);
 
 		const { res } = await fetchRequest(
 			'POST',
-			`group/${$page.params.groupId}/delegate/update`,
+			`group/${$page.params.groupid || 1}/delegate/update`,
 			toSendDelegates
 		);
 
@@ -82,7 +86,7 @@
 	};
 
 	const changeDelegation = (delegate_id: number, tag: Tag) => {
-		console.log(delegates, " DE LE ET");
+		console.log(delegates, ' DE LE ET');
 		const delegateOld = delegates.find((delegate) =>
 			delegate.tags.find((_tag) => _tag.id === tag.id)
 		);
@@ -104,7 +108,7 @@
 		loading = true;
 		const { json, res } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegates?limit=${delegationLimit}`
+			`group/${$page.params.groupid || 1}/delegates?limit=${delegationLimit}`
 		);
 
 		loading = false;
@@ -145,8 +149,7 @@
 
 	const handleTagChange = () => {
 		resetValue();
-		
-	}
+	};
 
 	onMount(async () => {
 		await getTagsLocal();
@@ -166,7 +169,7 @@
 					on:click={() => (selectedTag = tag)}
 					role="button"
 					tabindex="0"
-					class="text-primary font-bold flex items-center justify-between cursor-pointer"
+					class="text-primary font-bold flex items-center justify-between cursor-pointer break-all"
 				>
 					{tag.name}
 					<Fa icon={faAngleRight} />
@@ -175,11 +178,11 @@
 		</div>
 		<div class="bg-white p-4">
 			{#if selectedTag}
-				<span class="text-primary font-bold text-2xl">{selectedTag.name}</span>
+				<span class="text-primary font-bold text-2xl break-all">{selectedTag.name}</span>
 				<RadioButtons2
 					radioSide="right"
 					Class="w-full cursor-pointer"
-				  	ClassInner="w-full flex justify-between cursor-pointer" 
+					ClassInner="w-full flex justify-between cursor-pointer"
 					onChange={(e) => {
 						//@ts-ignore
 						handleChangeTag(e, selectedTag);

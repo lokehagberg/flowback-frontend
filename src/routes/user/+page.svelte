@@ -16,7 +16,6 @@
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
-	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Fa from 'svelte-fa';
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 
@@ -155,19 +154,19 @@
 			{#if isUser}
 				<Button
 					action={() => (isEditing = true)}
-					Class="absolute right-0 top-0 p-3 m-1 transition-all hover:bg-gray-300"
+					Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 				>
-					<div>
-						<Fa icon={faPen} color="black" />
+					<div class="text-gray-800 dark:text-gray-200">
+						<Fa icon={faPen} />
 					</div>
 				</Button>
 			{/if}
 			<Button
 				action={() => history.back()}
-				Class="absolute left-0 top-0 p-3 m-1 transition-all hover:bg-gray-300"
+				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
-				<div>
-					<Fa icon={faArrowLeft} color="black" />
+				<div class="text-gray-800 dark:text-gray-200">
+					<Fa icon={faArrowLeft} />
 				</div>
 			</Button>
 		</div>
@@ -315,8 +314,6 @@
 	{/if}
 </Layout>
 
-<!-- <PollThumbnails infoToGet="delegate" delegate/> -->
-
 <style>
 	img.cover {
 		aspect-ratio: 5;
@@ -330,5 +327,9 @@
 
 	.aspect-ratio-5 {
 		aspect-ratio: 5;
+	}
+
+	.bg-semi-transparent {
+		background-color: rgb(209, 213, 219);
 	}
 </style>

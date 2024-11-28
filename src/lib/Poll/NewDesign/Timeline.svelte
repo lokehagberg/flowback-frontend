@@ -63,7 +63,7 @@
 			{$_('Current')}:
 		</span>
 		{$_('Phase')}
-		{currentPhaseIndex}
+		{currentPhaseIndex + 1}
 		{dateLabels[currentPhaseIndex]}
 	</div>
 

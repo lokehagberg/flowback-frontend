@@ -203,12 +203,10 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<Proposal
-								bind:selectedProposal
-								bind:phase
-								proposal={selectedProposal}
-								isVoting={false}
-							/>
+							<div class="font-semibold text-primary text-lg">
+								{selectedProposal.title}
+							</div>
+							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
@@ -232,12 +230,10 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<Proposal
-								bind:selectedProposal
-								bind:phase
-								proposal={selectedProposal}
-								isVoting={false}
-							/>
+							<div class="font-semibold text-primary text-lg">
+								{selectedProposal.title}
+							</div>
+							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
@@ -261,12 +257,10 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<Proposal
-								bind:selectedProposal
-								bind:phase
-								proposal={selectedProposal}
-								isVoting={false}
-							/>
+							<div class="font-semibold text-primary text-lg">
+								{selectedProposal.title}
+							</div>
+							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>

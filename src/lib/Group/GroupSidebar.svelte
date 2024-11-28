@@ -79,7 +79,7 @@
 <nav
 	class={`${Class} ${
 		innerWidth < 700 &&
-		`fixed right-0 top-[50%] h-[50%] ${clickedExpandSidebar && 'overflow-y-scroll'}`
+		`fixed right-0 top-[50%] h-[50%] ${clickedExpandSidebar && 'overflow-y-auto'}`
 	} dark:!text-darkmodeText `}
 >
 	{#if innerWidth < 700 && !clickedExpandSidebar}

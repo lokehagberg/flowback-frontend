@@ -91,7 +91,7 @@
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
-		
+
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
@@ -224,7 +224,7 @@
 
 {#if selectedChat !== null || true}
 	<ul
-		class="col-start-2 col-end-3 overflow-y-scroll overflow-x-hidden break-all"
+		class="col-start-2 col-end-3 overflow-y-auto overflow-x-hidden break-all"
 		id="chat-window"
 		bind:this={chatWindow}
 	>
@@ -265,7 +265,7 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="shadow rounded">
+	<div class="">
 		<!-- Here the user writes a message to be sent -->
 		<form class="flex gap-1 items-center" on:submit|preventDefault={postMessage}>
 			<TextArea
@@ -281,6 +281,7 @@
 				max={3000}
 				bind:value={message}
 				Class="w-full"
+				areaClass="max-h-[4rem] resize-y"
 			/>
 
 			{#if env.PUBLIC_MODE === 'DEV'}

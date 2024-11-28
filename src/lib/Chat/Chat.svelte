@@ -88,17 +88,15 @@
 	</div>
 </div>
 
-<div
+<!-- Button which launches the chat, visible in bottom left corner when not in chat -->
+<button
 	on:click={() => (chatOpen = true)}
-	on:keydown
-	tabindex="0"
-	role="button"
 	class:small-notification={previewDirect.find((preview) => preview.notified)}
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
 	<Fa icon={faComment} size="1.3x" />
-</div>
+</button>
 
 <style>
 	.small-notification:before {

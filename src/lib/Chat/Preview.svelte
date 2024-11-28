@@ -135,7 +135,7 @@
 	/>
 </div>
 
-<div class="max-h-[100%] overflow-scroll">
+<div class="max-h-[100%] overflow-y-auto">
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
 		bind:value={chatSearch}
@@ -147,21 +147,18 @@
 				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-		<div
+		
+		<button
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
-			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+			class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 			class:bg-gray-200={selectedChat === chatter.id}
 			class:dark:bg-gray-700={selectedChat === chatter.id}
 			on:click={() => {
 				clickedChatter(chatter);
 			}}
-			on:keydown
-			tabindex="0"
-			role="button"
 		>
-			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
 			{#if previewObject?.notified}
 				<div
@@ -187,7 +184,7 @@
 					{/if}
 				</span>
 			</div>
-		</div>
+		</button>
 	{/each}
 </div>
 

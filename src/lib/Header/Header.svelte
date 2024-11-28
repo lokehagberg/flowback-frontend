@@ -17,8 +17,8 @@
 		faList,
 		faMoon,
 		faUserFriends,
-		faChartBar,
-		faMoneyBill
+		faCog
+
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
@@ -150,6 +150,13 @@
 					icon={faCoins}
 					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
+					color={darkMode ? 'white' : 'black'}
+				/>
+				
+				<HeaderIcon
+					icon={faCog}
+					text={'Automate'}
+					href="automate"
 					color={darkMode ? 'white' : 'black'}
 				/>
 			</nav>

@@ -29,4 +29,5 @@
 	{/if}
 </div>
 
-<NewDelegations />
+<!-- TODO: Finish this (and where did the figma design for the new delegation system go?) -->
+<!-- <NewDelegations /> -->

@@ -69,9 +69,8 @@
 		getUserIsOwner();
 	});
 
-		//@ts-ignore
-		$: selectedPage = $page.url.searchParams.get('page') || 'flow';
-
+	//@ts-ignore
+	$: selectedPage = $page.url.searchParams.get('page') || 'flow';
 </script>
 
 <svelte:window bind:innerWidth />
@@ -123,37 +122,37 @@
 				isSelected={selectedPage === 'threads'}
 			/>
 			<GroupSidebarButton
-				action={() => (action('delegation'))}
+				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
 			/>
 			<GroupSidebarButton
-				action={() => (action('working-groups'))}
+				action={() => action('working-groups')}
 				text="Work Groups"
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>
 			<GroupSidebarButton
-				action={() => (action('documents'))}
+				action={() => action('documents')}
 				isSelected={selectedPage === 'documents'}
 				text="Documents"
 				icon={faFile}
 			/>
 			<GroupSidebarButton
-				action={() => (action('kanban'))}
+				action={() => action('kanban')}
 				isSelected={selectedPage === 'kanban'}
 				text="Group Kanban"
 				icon={faList}
 			/>
 			<GroupSidebarButton
-				action={() => (action('schedule'))}
+				action={() => action('schedule')}
 				isSelected={selectedPage === 'schedule'}
 				text="Group schedule"
 				icon={faCalendarAlt}
 			/>
 			<GroupSidebarButton
-				action={() => (action('members'))}
+				action={() => action('members')}
 				text="Members"
 				icon={faUserGroup}
 				isSelected={selectedPage === 'members'}
@@ -166,7 +165,7 @@
 			/> -->
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
-					action={() => (action('about'))}
+					action={() => action('about')}
 					text="About"
 					icon={faCircleInfo}
 					isSelected={selectedPage === 'about'}
@@ -198,19 +197,19 @@
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton
-					action={() => (selectedPage = 'email')}
+					action={() => (action('email'))}
 					text="Send Email"
 					icon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton
-					action={() => (selectedPage = 'tags')}
+					action={() => (action('tags'))}
 					text="Edit Tags"
 					icon={faCog}
 					isSelected={selectedPage === 'tags'}
 				/>
 				<GroupSidebarButton
-					action={() => (selectedPage = 'perms')}
+					action={() => (action('perms'))}
 					text="Permissions"
 					icon={faCog}
 					isSelected={selectedPage === 'perms'}

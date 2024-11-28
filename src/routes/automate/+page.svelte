@@ -13,8 +13,14 @@
 			participate yourself.`)}
 		</p>
 	</div>
-	<div class="flex">
-		<div class="bg-white p-6 shadow" />
+	<div class="flex w-[80%] mt-6">
+		<div class="bg-white p-6 shadow">
+			<ul>
+				<li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li>
+				<li><input type="checkbox" /> {$_('Auto-vote')}</li>
+				<li><input type="checkbox" /> {$_('Smart secretary')}</li>
+			</ul>
+		</div>
 
 		<div class="bg-white p-6 shadow">
 			<NewDelegations />

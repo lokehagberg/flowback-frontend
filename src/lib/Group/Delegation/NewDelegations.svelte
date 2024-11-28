@@ -178,7 +178,7 @@
 		</div>
 		<div class="bg-white p-4">
 			{#if selectedTag}
-				<span class="text-primary font-bold text-2xl break-all">{selectedTag.name}</span>
+				<span class="text-primary font-bold break-all">{selectedTag.name}</span>
 				<RadioButtons2
 					radioSide="right"
 					Class="w-full cursor-pointer"

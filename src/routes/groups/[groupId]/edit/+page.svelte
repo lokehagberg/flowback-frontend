@@ -1,13 +1,24 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import EditGroup from '$lib/Group/Creation/CreateEditGroup.svelte';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
 	import Tags from '$lib/Group/Tags.svelte';
+	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 	let selectedPage: 'group' | 'areas' | 'perms' | 'blockchain' | null = null;
 </script>
 
+<button
+	class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
+	on:click={() => goto(`/groups/${$page.params.groupId}`)}
+>
+	<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
+	<Fa icon={faArrowLeft} />
+</button>
 <Layout centered>
 	<div class="flex w-[80%] mt-6 gap-6">
 		<div class="bg-white p-6 shadow">
@@ -28,8 +39,6 @@
 				<Permissions />
 			{:else if selectedPage === 'blockchain'}
 				block
-			{:else if !selectedPage}
-				Nothing
 			{/if}
 		</div>
 	</div>

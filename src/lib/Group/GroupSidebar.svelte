@@ -203,19 +203,7 @@
 					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton
-					action={() => action('tags')}
-					text="Edit Tags"
-					icon={faCog}
-					isSelected={selectedPage === 'tags'}
-				/>
-				<GroupSidebarButton
-					action={() => action('perms')}
-					text="Permissions"
-					icon={faCog}
-					isSelected={selectedPage === 'perms'}
-				/>
-				<GroupSidebarButton
-					action={() => goto(`/creategroup?group=${$page.params.groupId}`)}
+					action={() => goto(`/groups/${$page.params.groupId}/edit`)}
 					text="Edit Group"
 					icon={faCog}
 					isSelected={false}

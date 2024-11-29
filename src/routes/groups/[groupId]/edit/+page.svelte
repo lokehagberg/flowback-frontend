@@ -1,5 +1,8 @@
 <script lang="ts">
 	import Layout from '$lib/Generic/Layout.svelte';
+	import EditGroup from '$lib/Group/Creation/CreateEditGroup.svelte';
+	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
+	import Tags from '$lib/Group/Tags.svelte';
 	import { _ } from 'svelte-i18n';
 
 	let selectedPage: 'group' | 'areas' | 'perms' | 'blockchain' | null = null;
@@ -18,13 +21,13 @@
 		</div>
 		<div class="bg-white p-6 shadow flex-grow">
 			{#if selectedPage === 'group'}
-				group
+				<EditGroup />
 			{:else if selectedPage === 'areas'}
-				are
+				<Tags />
 			{:else if selectedPage === 'perms'}
-				perm
+				<Permissions />
 			{:else if selectedPage === 'blockchain'}
-				bloch
+				block
 			{:else if !selectedPage}
 				Nothing
 			{/if}

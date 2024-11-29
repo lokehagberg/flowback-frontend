@@ -3,37 +3,43 @@
 	import type { poll } from '../interface';
 	import Timeline from './Timeline.svelte';
 
-	export let poll: poll,
+	export let poll: poll | null = null,
 		Class = '';
 
-	let genericStyle = 'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
+	let genericStyle =
+		'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
 
 	onMount(() => {});
 </script>
 
-{#if poll}
-	<div class={`${Class} poll-grid p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
-		<Timeline displayDetails={false} bind:poll pollType={4} Class={"!absolute md:!relative left-4 md:left-0"}/>
+<div class={`${Class} poll-grid p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
+	{#if poll}
+		<Timeline
+			displayDetails={false}
+			bind:poll
+			pollType={4}
+			Class={'!absolute md:!relative left-4 md:left-0'}
+		/>
+	{/if}
 
-		{#if $$slots.left}
-			<div class={`${genericStyle}  `}>
-				<slot name="left" />
-			</div>
-		{/if}
+	{#if $$slots.left}
+		<div class={`${genericStyle}  `}>
+			<slot name="left" />
+		</div>
+	{/if}
 
-		{#if $$slots.right}
-			<div class={`${genericStyle}  overflow-auto`}>
-				<slot name="right" />
-			</div>
-		{/if}
+	{#if $$slots.right}
+		<div class={`${genericStyle}  overflow-auto`}>
+			<slot name="right" />
+		</div>
+	{/if}
 
-		{#if $$slots.bottom}
-			<div class={`${genericStyle} overflow-auto bottom-grid`}>
-				<slot name="bottom" />
-			</div>
-		{/if}
-	</div>
-{/if}
+	{#if $$slots.bottom}
+		<div class={`${genericStyle} overflow-auto bottom-grid`}>
+			<slot name="bottom" />
+		</div>
+	{/if}
+</div>
 
 <style>
 	@media (min-width: 768px) {

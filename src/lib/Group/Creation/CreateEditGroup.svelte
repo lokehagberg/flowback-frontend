@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Button from '$lib/Generic/Button.svelte';
-	import Layout from '$lib/Generic/Layout.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
@@ -23,6 +22,8 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+
+	export let Class = '';
 
 	//This file is used for both creating and editing groups
 	let name: string,
@@ -115,52 +116,50 @@
 	<title>{$_('Creating a Group')}</title>
 </svelte:head>
 
-<Layout centered>
+<form
+	on:submit|preventDefault={createGroup}
+	class={`dark:text-darkmodeText bg-white dark:bg-darkobject ${Class}`}
+>
 	<Loader bind:loading>
-		<form
-			on:submit|preventDefault={createGroup}
-			class="dark:text-darkmodeText mt-6 mb-6 flex items-start justify-center gap-8 md:mt-8 w-[1500px]"
-		>
-			<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-6 md:w-2/5">
-				<h1 class="text-2xl">{$_(groupToEdit ? 'Update' : 'Create a Group')}</h1>
-				<TextInput label="Title" bind:value={name} required />
-				<TextArea label="Description" bind:value={description} />
-				<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
-				<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
+		<div class="flex flex-col gap-6">
+			<h1 class="text-2xl">{$_(groupToEdit ? 'Update' : 'Create a Group')}</h1>
+			<TextInput label="Title" bind:value={name} required />
+			<TextArea label="Description" bind:value={description} />
+			<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
+			<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
-					<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
-					<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} />
-				{/if}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
+				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
+				<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} />
+			{/if}
 
-				<StatusMessage bind:status />
+			<StatusMessage bind:status />
 
-				<Button type="submit" disabled={loading}
-					><div class="flex justify-center gap-3 items-center">
-						<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}
-					</div>
-				</Button>
-				{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<Modal bind:open={DeleteGroupModalShow}>
-						<div slot="header">{$_('Deleting group')}</div>
-						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
-						<div slot="footer">
-							<div class="flex justify-center gap-16">
-								<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
-									action={() => (DeleteGroupModalShow = false)}
-									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
-								>
-							</div>
+			<Button type="submit" disabled={loading}
+				><div class="flex justify-center gap-3 items-center">
+					<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}
+				</div>
+			</Button>
+			{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<Modal bind:open={DeleteGroupModalShow}>
+					<div slot="header">{$_('Deleting group')}</div>
+					<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
+					<div slot="footer">
+						<div class="flex justify-center gap-16">
+							<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
+								action={() => (DeleteGroupModalShow = false)}
+								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+							>
 						</div>
-					</Modal>
-					<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}
-						>{$_('Delete Group')}</Button
-					>
-				{/if}
-			</div>
-		</form>
+					</div>
+				</Modal>
+				<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}
+					>{$_('Delete Group')}</Button
+				>
+			{/if}
+		</div>
 	</Loader>
-</Layout>
+</form>
 
 <Poppup bind:poppup />

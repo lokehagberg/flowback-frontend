@@ -233,7 +233,8 @@
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
 		start_date = selectedDate;
-		end_date = addDateOffset(selectedDate, 1, 'hour');
+		// if (selectedDate)
+		// end_date = addDateOffset(selectedDate, 1, 'hour');
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
@@ -387,8 +388,10 @@
 						values={workGroups.map((group) => group.id)}
 					/>
 				{/if}
-				<input bind:value={start_date} type="datetime-local" />
-				<input bind:value={end_date} type="datetime-local" />
+				<!-- <input bind:value={start_date} type="datetime-local" />
+				<input bind:value={end_date} type="datetime-local" /> -->
+				<DateInput bind:value={start_date} />
+				<DateInput bind:value={end_date} />
 				<Button type="submit">{$_('Submit')}</Button>
 			</form>
 		</Loader>
@@ -403,11 +406,8 @@
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventEdit}>
 				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput
-					bind:value={end_date}
-					format="yyyy-MM-dd HH:mm"
-					min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()}
-				/>
+				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<TextInput label="Event title" bind:value={title} />
 				<TextArea label="Event description" bind:value={description} />
 				<Button type="submit">{$_('Submit')}</Button>

@@ -54,13 +54,14 @@
 					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 					{proposal.title}</span
 				>
-				<Description description={proposal.description} limit={50}/>
+				<Description description={proposal.description} limit={50} />
 				<span class="block text-right"
-					><span class="text-primary font-semibold">{$_('Points')}:</span> {proposal.score || '0'}</span
+					><span class="text-primary font-semibold">{$_('Points')}:</span>
+					{proposal.score || '0'}</span
 				>
 			</div>
 		{/each}
 	{:else if pollType === 3}
-		<div>{$_("Results in Group Schedule")}</div>
+		<div>{$_('Results in Group Schedule')}</div>
 	{/if}
 </div>

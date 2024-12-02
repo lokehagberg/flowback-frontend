@@ -172,7 +172,7 @@
 <svelte:window bind:innerWidth bind:outerWidth />
 
 <li
-	class="bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-400 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	class="bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-200 hover:bg-gray-200 dark:hover:brightness-125 p-2"
 	in:fade
 >
 	{#if kanban.end_date !== null && endDate}
@@ -188,7 +188,7 @@
 			selectedEntry = kanban.id;
 		}}
 	>
-		<div class="p-1 py-3">{kanban.title}</div>
+		<div class="text-primary text-left break-before-auto font-semibold">{kanban.title}</div>
 	</button>
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
@@ -197,21 +197,24 @@
 			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 	>
-		<ProfilePicture
-			username={kanban?.assignee?.username}
-			profilePicture={kanban?.assignee?.profile_image}
-			Class=""
-		/>
+		{#if kanban?.assignee}
+			<ProfilePicture
+				username={kanban?.assignee?.username}
+				profilePicture={kanban?.assignee?.profile_image}
+				Class=""
+				size={20}
+			/>
 
-		<div class="break-all text-xs">
-			{#if type === 'group'}
-				{kanban.assignee?.username}
-			{:else if kanban.origin_type === 'user'}
-				{$_('My own')}
-			{:else}
-				{kanban.group_name}
-			{/if}
-		</div>
+			<div class="break-all text-xs">
+				{#if type === 'group'}
+					{kanban.assignee?.username}
+				{:else if kanban.origin_type === 'user'}
+					{$_('My own')}
+				{:else}
+					{kanban.group_name}
+				{/if}
+			</div>
+		{/if}
 	</button>
 
 	{#if kanban.work_group}

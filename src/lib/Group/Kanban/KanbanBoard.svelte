@@ -133,7 +133,7 @@
 							}}><Fa icon={faPlus} /></button
 						>
 					</div>
-					<ul class="flex flex-col mt-2 gap-4">
+					<ul class="flex flex-col gap-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.lane === i}
 								<KanbanEntry bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />

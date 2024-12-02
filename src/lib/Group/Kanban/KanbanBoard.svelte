@@ -64,7 +64,6 @@
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
-		
 	};
 
 	const getGroupUsers = async () => {
@@ -129,7 +128,7 @@
 						<button
 							on:click={() => {
 								open = true;
-								lane = i
+								lane = i;
 							}}><Fa icon={faPlus} /></button
 						>
 					</div>
@@ -144,9 +143,6 @@
 			{/if}
 		{/each}
 		<!-- {/await} -->
-	</div>
-	<div class="mt-4 ml-2 mb-4">
-		<Button action={() => (open = true)}>{$_('Create Task')}</Button>
 	</div>
 </div>
 

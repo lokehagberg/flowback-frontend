@@ -181,15 +181,18 @@
 			{endDate.format(new Date(kanban.end_date))}
 		</div>
 	{/if}
-	<button
-		class="cursor-pointer hover:underline"
-		on:click={() => {
-			openModal = true;
-			selectedEntry = kanban.id;
-		}}
-	>
+	<div class="flex justify-between w-full items-start">
 		<div class="text-primary text-left break-before-auto font-semibold">{kanban.title}</div>
-	</button>
+		<button
+			class="cursor-pointer hover:underline"
+			on:click={() => {
+				openModal = true;
+				selectedEntry = kanban.id;
+			}}
+		>
+			<KanbanIcons bind:priority={kanban.priority} />
+		</button>
+	</div>
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
@@ -236,8 +239,6 @@
 			>
 				<Fa icon={faArrowLeft} size="1x" />
 			</button>
-
-			<KanbanIcons bind:priority={kanban.priority} />
 
 			<button
 				class="cursor-pointer hover:text-gray-500 py-1"

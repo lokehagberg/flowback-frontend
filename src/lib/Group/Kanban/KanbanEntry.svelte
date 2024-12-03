@@ -12,7 +12,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { checkForLinks, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { checkForLinks, elipsis, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser, kanban } from '../interface';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
@@ -75,6 +75,7 @@
 		kanban.priority = kanbanEdited.priority;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
+		if (assignee)
 		kanban.assignee = {
 			id: kanbanEdited?.assignee,
 			username: assignee?.user.username || '',
@@ -171,9 +172,13 @@
 
 <svelte:window bind:innerWidth bind:outerWidth />
 
-<li
-	class="bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded border border-gray-200 hover:bg-gray-200 dark:hover:brightness-125 p-2"
+<button
+	class="text-left bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded shadow hover:bg-gray-200 dark:hover:brightness-125 p-2"
 	in:fade
+	on:click={() => {
+		openModal = true;
+		selectedEntry = kanban.id;
+	}}
 >
 	{#if kanban.end_date !== null && endDate}
 		<div class="text-sm">
@@ -183,15 +188,9 @@
 	{/if}
 	<div class="flex justify-between w-full items-start">
 		<div class="text-primary text-left break-before-auto font-semibold">{kanban.title}</div>
-		<button
-			class="cursor-pointer hover:underline"
-			on:click={() => {
-				openModal = true;
-				selectedEntry = kanban.id;
-			}}
-		>
+		<div class="cursor-pointer hover:underline">
 			<KanbanIcons bind:priority={kanban.priority} />
-		</button>
+		</div>
 	</div>
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
@@ -222,7 +221,7 @@
 
 	{#if kanban.work_group}
 		<div>
-			{$_('Work Group')}: {kanban.work_group.name}
+			{$_('Work Group')}: {elipsis(kanban.work_group.name, 20)}
 		</div>
 	{/if}
 	<!-- Arrows -->
@@ -253,7 +252,7 @@
 			</button>
 		</div>
 	{/if}
-</li>
+</button>
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words">

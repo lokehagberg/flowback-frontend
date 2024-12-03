@@ -71,6 +71,8 @@
 	});
 </script>
 
+<!-- 
+
 <div class="flex">
 	{#each proposals as proposal}
 		{@const hasVoted = votes.find((vote) => vote === proposal.id)}
@@ -98,17 +100,17 @@
 						<Fa icon={faX} />
 					{/if}
 				</Button>
-				<!-- <Button
+				 <Button
 					Class="flex justify-center w-[90%] rounded-none"
 					buttonStyle="secondary"
 					action={() => updateProposalVote(proposal.id, false)}><Fa icon={faX} /></Button
-				> -->
+				> 
 			</div>
 		</div>
 	{/each}
-</div>
+</div> -->
 
-<Button action={() => (open = true)}>{$_('New Proposal')}</Button>
+<!-- <Button action={() => (open = true)}>{$_('New Proposal')}</Button> -->
 
 <Structure>
 	<div slot="left">

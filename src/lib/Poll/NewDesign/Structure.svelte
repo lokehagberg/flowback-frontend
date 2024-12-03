@@ -12,7 +12,7 @@
 	onMount(() => {});
 </script>
 
-<div class={`${Class} poll-grid p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
+<div class={`${Class} ${poll ? "poll-grid" : "poll-grid-no-timeline"} p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
 	{#if poll}
 		<Timeline
 			displayDetails={false}
@@ -45,6 +45,11 @@
 	@media (min-width: 768px) {
 		.poll-grid {
 			grid-template-columns: 0.1fr 1fr 1fr;
+			display: grid;
+		}
+
+		.poll-grid-no-timeline {
+			grid-template-columns: 0.1fr 1fr;
 			display: grid;
 		}
 

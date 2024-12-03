@@ -10,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
+	import Structure from './NewDesign/Structure.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 
 	let open = false,
 		date: Date,
@@ -106,7 +108,15 @@
 	{/each}
 </div>
 
-<Button action={() => (open = true)}>New Proposal</Button>
+<Button action={() => (open = true)}>{$_("New Proposal")}</Button>
+
+<Structure>
+	<div slot="left">
+		<WeekView x={7} y={24} />
+	</div>
+
+	<div slot="right"><Comments api="poll" /></div>
+</Structure>
 
 <Modal bind:open onSubmit={handlePostProposal}>
 	<div slot="body" class="min-w-[400px] min-h-[300px]">
@@ -116,5 +126,3 @@
 		<Button type="submit">{$_('Submit')}</Button>
 	</div>
 </Modal>
-
-<WeekView x={7} y={23} />

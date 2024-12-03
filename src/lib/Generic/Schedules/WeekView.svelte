@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { faCheck } from '@fortawesome/free-solid-svg-icons';
+	import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { getMonday, getWeek } from '../Dates';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import { deepCopy } from '../GenericFunctions';
 
 	export let x = 10,
 		y = 10;
@@ -71,6 +72,13 @@
 		let output = await Promise.allSettled(array);
 	};
 
+	const dateOffset = (offset: number) => {
+
+		let _date = new Date(monday.getTime());
+		_date.setDate(monday.getDate() + offset);
+		return _date.getDate();
+	};
+
 	$: monday = getRecentMonday(
 		new Date(
 			initialMonday?.getFullYear(),
@@ -87,10 +95,10 @@
 	);
 </script>
 
-<button on:click={() => year++}>year up</button>
-<button on:click={() => year--}>year down</button>
-<button on:click={() => weekOffset++}>week up</button>
-<button on:click={() => weekOffset--}>week down</button>
+<!-- <button on:click={() => year++}>year up</button>
+<button on:click={() => year--}>year down</button> -->
+<button on:click={() => weekOffset--}><Fa icon={faChevronLeft} /></button>
+<button on:click={() => weekOffset++}><Fa icon={faChevronRight} /></button>
 <button on:click={saveSelection}>Submit</button>
 
 {year}
@@ -98,19 +106,28 @@
 
 {selectedDates.length}
 {#key weekOffset}
-	{#if monday}
+	{#key monday}
 		<div
-			class="grid calendar"
-			style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+			class="grid calendar overflow-auto text-xs"
+			style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${
+				y + 1
+			}, 1fr);`}
 			id="weekView"
 		>
+			<div />
+			<div>Monday {monday.getDate()}</div>
+			<div>Tuesday {dateOffset(1)}</div>
+			<div>Wednesday {dateOffset(2)}</div>
+			<div>Thursday {dateOffset(3)}</div>
+			<div>Friday {dateOffset(4)}</div>
+			<div>Saturday {dateOffset(5)}</div>
+			<div>Sunday {dateOffset(6)}</div>
 			{#each gridDates as row, j}
 				<div class="bg-primary text-white items-center flex justify-center">{j}</div>
 				{#each row as date, i}
 					<button class="border h-24 w-24" on:click={() => toggleDate(date)}>
-						<!-- {date} -->
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
-							<div class="bg-green-600 h-full w-full flex items-centerG justify-center">
+							<div class="bg-green-600 h-full w-full flex items-center justify-center">
 								<Fa icon={faCheck} color="white" />
 							</div>
 						{:else}
@@ -120,7 +137,7 @@
 				{/each}
 			{/each}
 		</div>
-	{/if}
+	{/key}
 {/key}
 
 <style>

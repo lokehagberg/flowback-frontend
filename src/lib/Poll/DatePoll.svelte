@@ -8,16 +8,7 @@
 	import { page } from '$app/stores';
 	import Proposal from './ProposalLegacy.svelte';
 	import { onMount } from 'svelte';
-	// import { ScheduleXCalendar } from '@schedule-x/svelte';
-	// import '@schedule-x/theme-default/dist/index.css';
-	import T from '$lib/Group/Creation/T.svelte';
-	// import {
-	// 	createCalendar,
-	// 	createViewDay,
-	// 	createViewWeek,
-	// 	createViewMonthGrid,
-	// 	createViewMonthAgenda
-	// } from '@schedule-x/calendar';
+	import { _ } from 'svelte-i18n';
 	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
 
 	let open = false,
@@ -25,24 +16,6 @@
 		proposals: Proposal[] = [],
 		daysFormatting = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
 		votes: number[] = [];
-
-	// const calendarApp = createCalendar({
-	// 	views: [createViewWeek()],
-	// 	events: [
-	// 		{
-	// 			id: '1',
-	// 			title: 'Event 1',
-	// 			start: '2024-07-06',
-	// 			end: '2024-07-06'
-	// 		},
-	// 		{
-	// 			id: '2',
-	// 			title: 'Event 2',
-	// 			start: '2024-07-06 02:00',
-	// 			end: '2024-07-06 04:00'
-	// 		}
-	// 	]
-	// });
 
 	let postProposal = async () => {
 		let end_date = new Date(date);
@@ -140,12 +113,8 @@
 		<DateInput bind:value={date} />
 	</div>
 	<div slot="footer">
-		<Button type="submit">Submit</Button>
+		<Button type="submit">{$_('Submit')}</Button>
 	</div>
 </Modal>
 
-<WeekView x={7} y={23} >
-	
-</WeekView>
-
-<!-- <ScheduleXCalendar {calendarApp} eventModal={T} /> -->
+<WeekView x={7} y={23} />

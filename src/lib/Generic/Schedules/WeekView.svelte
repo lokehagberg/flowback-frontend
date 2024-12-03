@@ -91,7 +91,7 @@
 <button on:click={() => year--}>year down</button>
 <button on:click={() => weekOffset++}>week up</button>
 <button on:click={() => weekOffset--}>week down</button>
-<button on:click={saveSelection}>le submit</button>
+<button on:click={saveSelection}>Submit</button>
 
 {year}
 {weekOffset}
@@ -100,27 +100,39 @@
 {#key weekOffset}
 	{#if monday}
 		<div
-			class="grid"
-			style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+			class="grid calendar"
+			style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+			id="weekView"
 		>
 			{#each gridDates as row, j}
+				<div class="bg-primary text-white items-center flex justify-center">{j}</div>
 				{#each row as date, i}
-					<div
-						class="border p-4"
-						on:click={() => toggleDate(date)}
-						on:keydown
-						role="button"
-						tabindex="0"
-					>
-						{date}
+					<button class="border h-24 w-24" on:click={() => toggleDate(date)}>
+						<!-- {date} -->
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
-							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>
+							<div class="bg-green-600 h-full w-full flex items-centerG justify-center">
+								<Fa icon={faCheck} color="white" />
+							</div>
 						{:else}
 							<slot {i} {j} />
 						{/if}
-					</div>
+					</button>
 				{/each}
 			{/each}
 		</div>
 	{/if}
 {/key}
+
+<style>
+	.calendar {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: repeat(6, 1fr);
+		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
+    on the header, 40px from the height of each symbol/the logo on the header, and 
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved 
+	
+	TODO: Don't do this*/
+		height: calc(100vh - 2rem - 40px - 28px);
+	}
+</style>

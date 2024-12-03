@@ -96,7 +96,7 @@
 <!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
 	<div
 		class={`p-3 text-sm border-0 border-l-gray-400`}
-		style:margin-left={`${comment.reply_depth * 10}px`}
+		style:margin-left={`${comment.reply_depth * 20}px`}
 		class:border-l-2={comment.reply_depth > 0} 
 	>
 		<div class="flex gap-2">

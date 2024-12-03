@@ -67,13 +67,13 @@
 			);
 
 			const existingProposal = proposals.find(
-				(proposal) => new Date(proposal.end_date) === end_date
+				(proposal) => new Date(proposal.end_date).getTime() === end_date.getTime()
 			);
 
-			console.log(existingProposal, end_date.toString(), proposals[0].end_date, "PROPO");
-			
+			console.log(existingProposal, end_date.toString(), proposals[0].end_date, 'PROPO');
 
-			{
+			let resC, jsonC;
+			if (!existingProposal) {
 				const { res, json } = await fetchRequest(
 					'POST',
 					`group/poll/${$page.params.pollId}/proposal/create`,
@@ -82,14 +82,15 @@
 						end_date
 					}
 				);
+				resC = res;
+				jsonC = json;
 			}
 
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,
 				{
-					start_date,
-					end_date
+					proposals: [jsonC ? jsonC.results : existingProposal?.id]
 				}
 			);
 		});

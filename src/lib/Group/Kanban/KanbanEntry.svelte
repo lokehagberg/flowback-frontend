@@ -76,11 +76,11 @@
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
 		if (assignee)
-		kanban.assignee = {
-			id: kanbanEdited?.assignee,
-			username: assignee?.user.username || '',
-			profile_image: assignee?.user.profile_image || ''
-		};
+			kanban.assignee = {
+				id: kanbanEdited?.assignee,
+				username: assignee?.user.username || '',
+				profile_image: assignee?.user.profile_image || ''
+			};
 
 		isEditing = false;
 	};
@@ -182,7 +182,11 @@
 >
 	{#if kanban.end_date !== null && endDate}
 		<div class="text-sm">
-			{$_('Ends')}
+			{#if new Date(kanban.end_date) < new Date()}
+				{$_('Ended')}
+			{:else}
+				{$_('Ends')}
+			{/if}
 			{endDate.format(new Date(kanban.end_date))}
 		</div>
 	{/if}

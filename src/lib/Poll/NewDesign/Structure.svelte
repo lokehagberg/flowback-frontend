@@ -45,7 +45,6 @@
 	@media (min-width: 768px) {
 		.poll-grid {
 			grid-template-columns: 0.1fr 1fr 1fr;
-			grid-template-rows: 80vh 80vh;
 			display: grid;
 		}
 

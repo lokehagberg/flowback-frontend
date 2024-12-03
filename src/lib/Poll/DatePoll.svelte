@@ -108,11 +108,13 @@
 	{/each}
 </div>
 
-<Button action={() => (open = true)}>{$_("New Proposal")}</Button>
+<Button action={() => (open = true)}>{$_('New Proposal')}</Button>
 
 <Structure>
 	<div slot="left">
-		<WeekView x={7} y={24} />
+		<div class="overflow-auto">
+			<WeekView x={7} y={24} />
+		</div>
 	</div>
 
 	<div slot="right"><Comments api="poll" /></div>

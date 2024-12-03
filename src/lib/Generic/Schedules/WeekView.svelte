@@ -108,7 +108,7 @@
 {#key weekOffset}
 	{#key monday}
 		<div
-			class="grid calendar overflow-auto text-xs"
+			class="grid calendar text-xs"
 			style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${
 				y + 1
 			}, 1fr);`}

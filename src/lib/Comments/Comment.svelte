@@ -59,7 +59,7 @@
 		);
 
 		if (!res.ok) {
-			poppup = {message:"Comment vote failed", success:false}
+			poppup = { message: 'Comment vote failed', success: false };
 			return;
 		}
 
@@ -92,15 +92,14 @@
 		{api}
 	/>
 {:else}
+<!-- class:bg-gray-100={comment.reply_depth % 2 === 1} -->
+<!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
 	<div
-		class={`p-3 text-sm border border-l-gray-400`}
+		class={`p-3 text-sm border-0 border-l-gray-400`}
 		style:margin-left={`${comment.reply_depth * 10}px`}
-		class:bg-gray-100={comment.reply_depth % 2 === 1}
-		class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}
+		class:border-l-2={comment.reply_depth > 0} 
 	>
-		<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 		<div class="flex gap-2">
-			<!-- {@debug comment} -->
 			<ProfilePicture
 				profilePicture={comment.author_profile_image}
 				username={comment.author_name}

@@ -1,3 +1,7 @@
+<!-- NOTE: This "WeekView" file is (at the time of writing this comment) exclusively for DatePoll
+	TODO: Extend to Schedule more generally and separate things for the datepoll API.
+-->
+
 <script lang="ts">
 	import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
@@ -38,7 +42,7 @@
 		selectedDates = selectedDates;
 	};
 
-	let getProposals = async () => {
+	const getProposals = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=10000`
@@ -47,10 +51,10 @@
 		proposals = json.results;
 	};
 
-	let getProposalVote = async () => {
+	const getProposalVote = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposal/votes`
+			`group/poll/${$page.params.pollId}/proposal/votes?limit=10000`
 		);
 
 		votes = json.results.map((vote: any) => vote.proposal);
@@ -70,7 +74,8 @@
 				(proposal) => new Date(proposal.end_date).getTime() === end_date.getTime()
 			);
 
-			console.log(existingProposal, end_date.toString(), proposals[0].end_date, 'PROPO');
+			console.log(existingProposal, "EXi");
+			
 
 			let resC, jsonC;
 			if (!existingProposal) {
@@ -86,11 +91,14 @@
 				jsonC = json;
 			}
 
+			console.log("hiello?");
+			
+
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,
 				{
-					proposals: [jsonC ? jsonC.results : existingProposal?.id]
+					proposals: [existingProposal ? existingProposal?.id : jsonC]
 				}
 			);
 		});
@@ -107,6 +115,7 @@
 
 	onMount(() => {
 		getProposals();
+		getProposalVote();
 		initialMonday = getRecentMonday(new Date());
 	});
 

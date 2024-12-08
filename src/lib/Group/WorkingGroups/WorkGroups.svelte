@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import type { WorkGroup as WorkingGroupType } from './interface';
+	import type { WorkGroupInvite, WorkGroup as WorkingGroupType } from './interface';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -25,7 +25,7 @@
 		poppup: poppup,
 		open = false,
 		search: string,
-		invites: any = [],
+		invites: WorkGroupInvite[] = [],
 		isAdmin = false,
 		loading = true;
 
@@ -73,6 +73,13 @@
 		});
 	};
 
+	const addUserToGroup = async (groupUserId: number) => {
+		const { res, json } = await fetchRequest('POST', `group/workgroup/${groupUserId}/user/add`, {
+			is_moderator: false,
+			target_group_user_id: groupUserId
+		});
+	};
+
 	onMount(async () => {
 		loading = true;
 		await getWorkingGroupList();
@@ -101,8 +108,13 @@
 					<div
 						class="bg-white w-full px-4 py-2 flex gap-2 shadow rounded dark:bg-darkobject min-h-14"
 					>
-						<b class="font-semibold">{invite.group_user.user.username}</b>
-						{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
+						<div class="flex justify-between w-full">
+							<div>
+								<b class="font-semibold">{invite.group_user.user.username}</b>
+								{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
+							</div>
+							<Button buttonStyle="primary-light" action={() => addUserToGroup(invite.group_user.id)}>{$_('Add User')}</Button>
+						</div>
 					</div>
 				{/each}
 			{/key}

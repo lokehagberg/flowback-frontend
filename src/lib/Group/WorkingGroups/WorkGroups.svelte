@@ -12,6 +12,7 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { _ } from 'svelte-i18n';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	let workGroups: WorkingGroupType[] = [],
 		workGroupEdit: WorkingGroupType = {
@@ -25,7 +26,8 @@
 		open = false,
 		search: string,
 		invites: any = [],
-		isAdmin = false;
+		isAdmin = false,
+		loading = true;
 
 	const getWorkingGroupList = async () => {
 		const { res, json } = await fetchRequest(
@@ -72,9 +74,11 @@
 	};
 
 	onMount(async () => {
+		loading = true;
 		await getWorkingGroupList();
 		getWorkGroupInvite();
 		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
+		loading = false;
 	});
 </script>
 
@@ -89,25 +93,27 @@
 
 <Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
 
-<div class="flex flex-col gap-4 mt-4">
-	{#if isAdmin}
-		{#key invites}
-			{#each invites as invite}
-				<div
-					class="bg-white w-full px-4 py-2 flex gap-2 shadow rounded dark:bg-darkobject min-h-14"
-				>
-					<b class="font-semibold">{invite.group_user.user.username}</b>
-					{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
-				</div>
-			{/each}
-		{/key}
-	{/if}
-</div>
-<div class="flex flex-col gap-4 mt-4">
-	{#each workGroups as workingGroup}
-		<WorkingGroup bind:workGroup={workingGroup} />
-	{/each}
-</div>
+<Loader bind:loading>
+	<div class="flex flex-col gap-4 mt-4">
+		{#if isAdmin}
+			{#key invites}
+				{#each invites as invite}
+					<div
+						class="bg-white w-full px-4 py-2 flex gap-2 shadow rounded dark:bg-darkobject min-h-14"
+					>
+						<b class="font-semibold">{invite.group_user.user.username}</b>
+						{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
+					</div>
+				{/each}
+			{/key}
+		{/if}
+	</div>
+	<div class="flex flex-col gap-4 mt-4">
+		{#each workGroups as workingGroup}
+			<WorkingGroup bind:workGroup={workingGroup} />
+		{/each}
+	</div>
+</Loader>
 
 <Poppup bind:poppup />
 

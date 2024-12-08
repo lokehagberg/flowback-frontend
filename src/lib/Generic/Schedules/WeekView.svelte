@@ -58,7 +58,12 @@
 		);
 
 		votes = json.results.map((vote: any) => vote.proposal);
+		// selectedDates = votes;
+
+		
 	};
+
+	$: 		console.log(votes, selectedDates);
 
 	const saveSelection = async () => {
 		const array = selectedDates.map(async (date) => {

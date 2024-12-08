@@ -4,9 +4,8 @@
 
 	export let limit: number,
 		description: string,
-		Class = '';
-
-	let readMore = false;
+		Class = '',
+		readMore = false;
 </script>
 
 <div class={` break-all dark:text-darkmodeText ${Class}`}>

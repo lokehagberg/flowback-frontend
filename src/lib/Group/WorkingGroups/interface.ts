@@ -1,8 +1,11 @@
+import type { GroupUser } from "../interface";
+
 export interface WorkGroup {
 	name: string;
 	members: number | null;
 	direct_join: boolean;
 	id: number;
+	work_group_id:number;
 }
 
 export interface WorkGroupUser {
@@ -26,4 +29,11 @@ export interface WorkGroupUser {
 		group_image: string;
 	};
 	is_moderator: boolean;
+}
+
+export interface WorkGroupInvite {
+	id:number,
+	work_group_id:number,
+	work_group_name:string,
+	group_user:GroupUser
 }

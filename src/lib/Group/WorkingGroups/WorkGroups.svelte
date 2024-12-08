@@ -13,10 +13,17 @@
 	import { _ } from 'svelte-i18n';
 
 	let workGroups: WorkingGroupType[] = [],
-		workGroupEdit: WorkingGroupType = { direct_join: false, members: null, name: '', id: 0 },
+		workGroupEdit: WorkingGroupType = {
+			direct_join: false,
+			members: null,
+			name: '',
+			id: 0,
+			work_group_id: 0
+		},
 		poppup: poppup,
 		open = false,
-		search: string;
+		search: string,
+		invites: any = [];
 
 	const getWorkingGroupList = async () => {
 		const { res, json } = await fetchRequest(
@@ -48,8 +55,26 @@
 		open = false;
 	};
 
-	onMount(() => {
-		getWorkingGroupList();
+	const getWorkGroupInvite = async () => {
+		workGroups.forEach(async (workGroup) => {
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/workgroup/${workGroup.id}/joinrequest/list`
+			);
+
+			if (!res.ok) return;
+
+			if (json.results[0])
+				// invites = [...invites, json.results];
+				invites.push(json.results[0]);
+			invites = invites;
+			console.log(invites);
+		});
+	};
+
+	onMount(async () => {
+		await getWorkingGroupList();
+		getWorkGroupInvite();
 	});
 </script>
 
@@ -62,7 +87,15 @@
 	/>
 </div>
 
-<Button action={() => (open = true)} Class="p-2">{$_("Create work group")}</Button>
+<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+
+{#key invites}
+	{#each invites as invite}
+		{invite.group_user.user.username}
+		wants to join 
+		{invite.work_group_name}
+	{/each}
+{/key}
 
 <div class="flex flex-col gap-4 mt-4">
 	{#each workGroups as workingGroup}
@@ -73,7 +106,7 @@
 <Poppup bind:poppup />
 
 <Modal bind:open>
-	<div slot="header" class="w-full"><span>{$_("Create work group")}</span></div>
+	<div slot="header" class="w-full"><span>{$_('Create work group')}</span></div>
 	<form slot="body" class="w-full" on:submit|preventDefault={createWorkingGroup}>
 		<TextInput label="Name" required bind:value={workGroupEdit.name} />
 
@@ -84,6 +117,6 @@
 			label="Direct Join?"
 			name="direct_join"
 		/>
-		<Button Class="px-2" type="submit">Create</Button>
+		<Button Class="px-2" type="submit">{$_('Create')}</Button>
 	</form>
 </Modal>

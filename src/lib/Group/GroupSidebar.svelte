@@ -25,31 +25,16 @@
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
-	export let selectedPage: SelectablePage = 'flow';
-	export let group: GroupDetails;
-	export let Class: string;
+	export let selectedPage: SelectablePage = 'flow',
+		group: GroupDetails,
+		Class: string;
 
-	let innerWidth = 0;
-	let clickedExpandSidebar = false;
-	let userIsOwner = false;
-	let areYouSureModal = false;
-
-	// $: console.log(innerWidth);
-
-	//TODO: More complicated system for this, aswell as storing user info in localstorage or svelte stores
-	const getUserIsOwner = async () => {
-		const userData = await fetchRequest('GET', 'user');
-		const groupAdmins = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/users?is_admin=true`
-		);
-
-		userIsOwner =
-			groupAdmins.json.results.find(
-				(user: any) => user.user.id === userData.json.id && user.is_admin
-			) !== undefined;
-	};
+	let innerWidth = 0,
+		clickedExpandSidebar = false,
+		userIsOwner = false,
+		areYouSureModal = false;
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
@@ -65,8 +50,8 @@
 		goto(`?page=${page}`, { noScroll: true });
 	};
 
-	onMount(() => {
-		getUserIsOwner();
+	onMount(async () => {
+		userIsOwner = await getUserIsGroupAdmin($page.params.groupId);
 	});
 
 	//@ts-ignore

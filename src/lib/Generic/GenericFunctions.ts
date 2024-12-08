@@ -86,6 +86,20 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 	return json.results[0];
 };
 
-export const elipsis = (label:string, charMax = 30) => {
+export const elipsis = (label: string, charMax = 30) => {
 	return label.length > charMax ? label.substring(0, charMax) + '...' : label
 }
+
+export const getUserIsGroupAdmin = async (groupId: number | string) => {
+	const userData = await fetchRequest('GET', 'user');
+	const groupAdmins = await fetchRequest(
+		'GET',
+		`group/${groupId}/users?is_admin=true`
+	);
+
+	if (groupAdmins.json.results.find(
+		(user: any) => user.user.id === userData.json.id && user.is_admin
+	) !== undefined)
+		return true
+	else return false;
+};

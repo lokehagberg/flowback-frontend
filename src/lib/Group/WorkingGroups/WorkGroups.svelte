@@ -11,6 +11,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { _ } from 'svelte-i18n';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	let workGroups: WorkingGroupType[] = [],
 		workGroupEdit: WorkingGroupType = {
@@ -23,7 +24,8 @@
 		poppup: poppup,
 		open = false,
 		search: string,
-		invites: any = [];
+		invites: any = [],
+		isAdmin = false;
 
 	const getWorkingGroupList = async () => {
 		const { res, json } = await fetchRequest(
@@ -64,17 +66,15 @@
 
 			if (!res.ok) return;
 
-			if (json.results[0])
-				// invites = [...invites, json.results];
-				invites.push(json.results[0]);
+			if (json.results[0]) invites.push(json.results[0]);
 			invites = invites;
-			console.log(invites);
 		});
 	};
 
 	onMount(async () => {
 		await getWorkingGroupList();
 		getWorkGroupInvite();
+		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
 	});
 </script>
 
@@ -89,14 +89,20 @@
 
 <Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
 
-{#key invites}
-	{#each invites as invite}
-		{invite.group_user.user.username}
-		wants to join 
-		{invite.work_group_name}
-	{/each}
-{/key}
-
+<div class="flex flex-col gap-4 mt-4">
+	{#if isAdmin}
+		{#key invites}
+			{#each invites as invite}
+				<div
+					class="bg-white w-full px-4 py-2 flex gap-2 shadow rounded dark:bg-darkobject min-h-14"
+				>
+					<b class="font-semibold">{invite.group_user.user.username}</b>
+					{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
+				</div>
+			{/each}
+		{/key}
+	{/if}
+</div>
 <div class="flex flex-col gap-4 mt-4">
 	{#each workGroups as workingGroup}
 		<WorkingGroup bind:workGroup={workingGroup} />

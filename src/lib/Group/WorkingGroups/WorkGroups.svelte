@@ -113,7 +113,10 @@
 								<b class="font-semibold">{invite.group_user.user.username}</b>
 								{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
 							</div>
-							<Button buttonStyle="primary-light" action={() => addUserToGroup(invite.group_user.id)}>{$_('Add User')}</Button>
+							<Button
+								buttonStyle="primary-light"
+								action={() => addUserToGroup(invite.group_user.id)}>{$_('Add User')}</Button
+							>
 						</div>
 					</div>
 				{/each}

@@ -46,7 +46,8 @@
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
-		if (filter.order_by) API += `&order_by=${filter.order_by}`;
+		if (filter.order_by) API += `&order_by=pinned,${filter.order_by}`;
+		else API+=`&order_by=pinned`
 
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;

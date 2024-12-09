@@ -118,12 +118,12 @@
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('documents')}
 				isSelected={selectedPage === 'documents'}
 				text="Documents"
 				icon={faFile}
-			/>
+			/> -->
 			<GroupSidebarButton
 				action={() => action('kanban')}
 				isSelected={selectedPage === 'kanban'}

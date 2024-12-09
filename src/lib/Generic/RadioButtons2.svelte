@@ -48,9 +48,9 @@
 							value={values[i]}
 							id={values[i]}
 							checked={values[i] === value}
-						/>{label}
+						/>{$_(label)}
 					{:else}
-						{label}<input
+						{$_(label)}<input
 							type="radio"
 							{name}
 							value={values[i]}

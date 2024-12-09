@@ -9,7 +9,7 @@ import se from './se.json';
 
 export const initializeLocalization = () => {
     addMessages('en', en);
-    // addMessages('sv', se);
+    addMessages('sv', se);
 
     //Avoids navigator not found error
     const initialLocale = typeof navigator !== 'undefined' ? navigator.language : 'en';

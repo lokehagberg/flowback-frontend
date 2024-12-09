@@ -17,18 +17,7 @@
 	import AdvancedTimeSettings from './AdvancedTimeSettings.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
-	// import {
-	// 	createCalendar,
-	// 	createViewDay,
-	// 	createViewWeek,
-	// 	createViewMonthGrid,
-	// 	createViewMonthAgenda
-	// } from '@schedule-x/calendar';
-	// import '@schedule-x/theme-default/dist/index.css';
 	import { env } from '$env/dynamic/public';
-	// import { ScheduleXCalendar } from '@schedule-x/svelte';
-	import Schedule from '$lib/Schedule/Schedule.svelte';
-	import MonthView from '$lib/Generic/Schedules/MonthView.svelte';
 
 	let title = '',
 		description = '',
@@ -148,13 +137,13 @@
 
 <form
 	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
-	class="md:w-2/3 max-w-[800px] dark:text-darkmodeText"
+	class="md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
 >
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
 			{#if selectedPage === 'poll'}
-				<h1 class="text-2xl">{$_('Create a Poll')}</h1>
+				<!-- <h1 class="text-2xl">{$_('Create a Poll')}</h1> -->
 				<RadioButtons2
 					name="poll Content"
 					label="Poll Content"
@@ -166,7 +155,7 @@
 			{:else if selectedPage === 'thread'}
 				<h1 class="text-2xl">{$_('Create a Thread')}</h1>
 			{/if}
-			<TextInput required label="Title" bind:value={title} />
+			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 
 			<FileUploads bind:images />
@@ -224,16 +213,3 @@
 		</div></Loader
 	>
 </form>
-
-<!-- <ScheduleXCalendar {calendarApp} monthGridEvent={T} /> -->
-
-<!-- <MonthView
-	bind:start_date
-	bind:area_vote_end_date
-	bind:proposal_end_date
-	bind:prediction_statement_end_date
-	bind:prediction_bet_end_date
-	bind:delegate_vote_end_date
-	bind:vote_end_date
-	bind:end_date
-/> -->

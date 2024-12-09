@@ -100,6 +100,7 @@
 					{$_('This poll will start at')}
 					{formatDate(poll.start_date)}
 				</div>
+				<div class="bg-white p-6 mt-6"><Comments bind:proposals api="poll" /></div>
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:poll>

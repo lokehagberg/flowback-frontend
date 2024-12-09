@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faCheck } from '@fortawesome/free-solid-svg-icons';
+	import { faCheck, faThumbTack } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { onMount, tick } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -70,12 +70,11 @@
 				monday?.getDate() + Number(x) + Number(y) * 7
 			);
 
-			if (dates.find(_date => _date.getTime() === newDate.getTime())) {
+			if (dates.find((_date) => _date.getTime() === newDate.getTime())) {
 				// e.cancel();
 				// return;
-			} 
-			console.log('New day new beginnings',);
-			
+			}
+			console.log('New day new beginnings');
 
 			//TODO: General refactor on phases so it only uses arrays for dynamic number of phases
 			//Note: Do not do code like this like ever.
@@ -144,17 +143,26 @@
 {weekOffset}
 
 <!-- {#key weekOffset} -->
-	{#if monday}
-		<div
-			class="grid"
-			style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
-			id="monthView"
-		>
-			{#each gridDates as row, j}
-				{#each row as date, i}
-					{@const index = dates.findIndex((_date) => _date.getTime() === date.getTime())}
-					<div id={`${i}-${j}-draggable`} class="border p-4" on:keydown role="button" tabindex="0">
-						<!-- {date}
+{#if monday}
+	<div
+		class="grid"
+		style={`grid-template-columns: repeat(${x}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
+		id="monthView"
+	>
+		{#each gridDates as row, j}
+			{#each row as date, i}
+				{@const index = dates.findIndex((_date) => _date.getTime() === date.getTime())}
+				{@const isSelected =
+					mounted &&
+					date.getTime() ===
+						new Date(
+							dates.find((_date) => _date.getTime() === date.getTime())?.getFullYear() || 0,
+							dates.find((_date) => _date.getTime() === date.getTime())?.getMonth() || 0,
+							dates.find((_date) => _date.getTime() === date.getTime())?.getDate()
+						)?.getTime()}
+
+				<div id={`${i}-${j}-draggable`} class="border p-4" on:keydown role="button" tabindex="0">
+					<!-- {date}
 						{new Date(dates[0]?.getFullYear(), dates[0]?.getMonth(), dates[0]?.getDate())}
 						{date.getTime() ===
 							new Date(
@@ -163,28 +171,24 @@
 								start_date.getDate()
 							).getTime()} -->
 
-							{date.getDate()}
-						<swappable
-							id={index}
-							class="py-5 px-5"
-							class:!bg-blue-600={mounted &&
-								date.getTime() ===
-									new Date(
-										dates.find((_date) => _date.getTime() === date.getTime())?.getFullYear() || 0,
-										dates.find((_date) => _date.getTime() === date.getTime())?.getMonth() || 0,
-										dates.find((_date) => _date.getTime() === date.getTime())?.getDate()
-									)?.getTime()}><span id={index?.toString()} /></swappable
-						>
-						<!--
+					{date.getDate()}
+					<swappable id={index} class="py-5 px-5" 
+						><span id={index?.toString()} />
+
+						{#if isSelected}
+							<Fa icon={faThumbTack} />
+						{/if}
+					</swappable>
+					<!--
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
 							<div class="bg-green-600 p-6"><Fa icon={faCheck} color="white" /></div>
 						{:else}
 							<slot {i} {j} />
 						{/if}
 					-->
-					</div>
-				{/each}
+				</div>
 			{/each}
-		</div>
-	{/if}
+		{/each}
+	</div>
+{/if}
 <!-- {/key} -->

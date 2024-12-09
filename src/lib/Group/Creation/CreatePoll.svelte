@@ -19,6 +19,7 @@
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { env } from '$env/dynamic/public';
 	import { faAlignLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
 
 	let title = '',
 		description = '',
@@ -179,6 +180,7 @@
 						action={() => (advancedTimeSettings = !advancedTimeSettings)}
 						buttonStyle="secondary">{$_('Advanced time settings')}</Button
 					>
+
 
 					<AdvancedTimeSettings
 						bind:selected_poll

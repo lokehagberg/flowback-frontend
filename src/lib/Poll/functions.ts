@@ -3,9 +3,8 @@ import type { Phase, poll } from './interface';
 
 export const formatDate = (dateInput: string) => {
 	const date = new Date(dateInput);
-	return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} klockan ${
-		date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
-	}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
+	return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} klockan ${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
+		}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
 };
 
 export const getPhase = (poll: poll): Phase => {
@@ -38,6 +37,7 @@ export const getPhase = (poll: poll): Phase => {
 
 // Labels for the circles on the timeline
 export const dateLabels = [
+	'Hasn\'t started yet',
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
@@ -50,13 +50,28 @@ export const dateLabels = [
 export const dateLabelsDatePoll = ['Start', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
-	if (phase === 'area_vote') return dateLabels[0];
-	else if (phase === 'proposal') return dateLabels[1];
-	else if (phase === 'prediction_statement') return dateLabels[2];
-	else if (phase === 'prediction_bet') return dateLabels[3];
-	else if (phase === 'delegate_vote') return dateLabels[4];
-	else if (phase === 'vote') return dateLabels[5];
-	else if (phase === 'prediction_vote' || phase === 'result') return dateLabels[6];
+	switch (phase) {
+		case 'pre_start':
+			return dateLabels[0];
+		case 'area_vote':
+			return dateLabels[1];
+		case 'proposal':
+			return dateLabels[2];
+		case 'prediction_statement':
+			return dateLabels[3];
+		case 'prediction_bet':
+			return dateLabels[4];
+		case 'delegate_vote':
+			return dateLabels[5];
+		case 'vote':
+			return dateLabels[6];
+		case 'prediction_vote':
+			return dateLabels[7];
+		case 'result':
+			return dateLabels[8];
+		default:
+			return "";
+	}
 };
 
 //TODO: To prevent many API calls, use svelte stores to transfer information between files about groups

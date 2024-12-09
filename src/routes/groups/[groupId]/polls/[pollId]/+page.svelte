@@ -23,6 +23,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Description from '$lib/Poll/Description.svelte';
+	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	let poll: poll,
 		pollType = 1,
@@ -93,8 +94,12 @@
 		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote'} />
 
 		{#if pollType === 4}
+			<!-- PHASE 0: PRE-START -->
 			{#if phase === 'pre_start'}
-				<div />
+				<div class="bg-white shadow rounded mt-6 p-6">
+					{$_('This poll will start at')}
+					{formatDate(poll.start_date)}
+				</div>
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:poll>

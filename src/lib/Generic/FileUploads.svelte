@@ -10,13 +10,19 @@
 	let image: File | null = null;
 </script>
 
-<div>
-	{#each images as image}
-		<div class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300">
-			{image.name}
-		</div>
-	{/each}
-</div>
+
+{#if images.length > 0}
+	<div>
+		{#each images as image}
+			<div
+				class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300"
+			>
+				{image.name}
+			</div>
+		{/each}
+	</div>
+{/if}
+
 <div
 	class={minimalist
 		? 'inline m-auto'

@@ -18,6 +18,7 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { env } from '$env/dynamic/public';
+	import { faAlignLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 	let title = '',
 		description = '',
@@ -142,28 +143,28 @@
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />
+
 			{#if selectedPage === 'poll'}
-				<!-- <h1 class="text-2xl">{$_('Create a Poll')}</h1> -->
 				<RadioButtons2
 					name="poll Content"
 					label="Poll Content"
-					ClassInner="inline mr-2"
+					ClassInner="inline mr-2 flex gap-2 items-center"
 					labels={['Text Poll', 'Date Poll']}
 					values={['Text Poll', 'Date Poll']}
+					icons={[faAlignLeft, faCalendarAlt]}
 					bind:value={selected_poll}
 				/>
-			{:else if selectedPage === 'thread'}
-				<h1 class="text-2xl">{$_('Create a Thread')}</h1>
 			{/if}
-			<TextInput inputClass="bg-white " required label="Title" bind:value={title} />
-			<TextArea label="Description" bind:value={description} />
 
+			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
+			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images />
+
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<div>
-						<h2 class="">{$_('Days between phases')}</h2>
+						<h2>{$_('Days between phases')}</h2>
 						<input
 							type="number"
 							class="dark:bg-darkbackground show-buttons-all-times"

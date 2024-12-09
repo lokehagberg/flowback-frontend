@@ -181,7 +181,7 @@
 						buttonStyle="secondary">{$_('Advanced time settings')}</Button
 					>
 
-
+					{#key daysBetweenPhases}
 					<AdvancedTimeSettings
 						bind:selected_poll
 						bind:advancedTimeSettings
@@ -193,7 +193,9 @@
 						bind:delegate_vote_end_date
 						bind:vote_end_date
 						bind:end_date
+						bind:daysBetweenPhases
 					/>
+					{/key}
 				</div>
 			{/if}
 			<!-- <Schedule type="pollcreation"/> -->

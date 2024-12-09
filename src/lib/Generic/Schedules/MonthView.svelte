@@ -14,7 +14,8 @@
 		prediction_bet_end_date: Date,
 		delegate_vote_end_date: Date,
 		vote_end_date: Date,
-		end_date: Date;
+		end_date: Date,
+		daysBetweenPhases = 1;
 	// w = 200,
 	// h = 300;
 
@@ -172,11 +173,17 @@
 							).getTime()} -->
 
 					{date.getDate()}
-					<swappable id={index} class="py-5 px-5" 
+					<swappable id={index} class="py-5 px-5"
 						><span id={index?.toString()} />
 
 						{#if isSelected}
-							<Fa icon={faThumbTack} />
+							<svg width="50" height="100" viewBox="0 0 50 100" xmlns="http://www.w3.org/2000/svg">
+								<!-- Vertical line -->
+								<line x1="25" y1="10" x2="25" y2="90" stroke="#0D47A1" stroke-width="4" />
+
+								<!-- Top circle anchor point -->
+								<circle cx="25" cy="10" r="5" fill="#0D47A1" />
+							</svg>
 						{/if}
 					</swappable>
 					<!--

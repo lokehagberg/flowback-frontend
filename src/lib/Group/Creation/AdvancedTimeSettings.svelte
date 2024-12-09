@@ -16,10 +16,10 @@
 		prediction_bet_end_date = new Date(),
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
-		end_date = new Date();
+		end_date = new Date(),
+		daysBetweenPhases = 1;
 
-	let daysBetweenPhases = 1,
-		calendarView = '1';
+	let calendarView = '1';
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 

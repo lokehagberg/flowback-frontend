@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { faCheck, faThumbTack } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCheck,
+		faChevronLeft,
+		faChevronRight,
+		faThumbTack
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { onMount, tick } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -75,7 +80,6 @@
 				// e.cancel();
 				// return;
 			}
-			console.log('New day new beginnings');
 
 			//TODO: General refactor on phases so it only uses arrays for dynamic number of phases
 			//Note: Do not do code like this like ever.
@@ -135,13 +139,44 @@
 	);
 </script>
 
-<button on:click={() => year++}>year up</button>
-<button on:click={() => year--}>year down</button>
-<button on:click={() => weekOffset++}>week up</button>
-<button on:click={() => weekOffset--}>week down</button>
+<div class="flex">
+	<div class="flex items-center select-none">
+		<button
+			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+			on:click={() => year--}
+		>
+			<Fa icon={faChevronLeft} size="1.5x" />
+		</button>
+		<div class="text-xl text-center w-16">{year}</div>
 
-{year}
-{weekOffset}
+		<button
+			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+			on:click={() => year++}
+		>
+			<Fa icon={faChevronRight} size="1.5x" />
+		</button>
+	</div>
+
+	<div class="flex items-center ml-6 select-none">
+		<button
+			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+			on:click={() => weekOffset--}
+		>
+			<Fa icon={faChevronLeft} size="1.5x" />
+		</button>
+
+		{(() => {
+			//@ts-ignore
+			return new Date().getWeek() + weekOffset;
+		})()}
+		<button
+			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
+			on:click={() => weekOffset++}
+		>
+			<Fa icon={faChevronRight} size="1.5x" />
+		</button>
+	</div>
+</div>
 
 <!-- {#key weekOffset} -->
 {#if monday}

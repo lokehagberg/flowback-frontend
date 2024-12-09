@@ -298,7 +298,7 @@
 			<div class="flex items-center select-none">
 				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => (year -= 1)}
+					on:click={() => year--}
 				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</button>
@@ -306,7 +306,7 @@
 
 				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => (year += 1)}
+					on:click={() => year++}
 				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</button>
@@ -315,7 +315,7 @@
 			<div class="flex items-center ml-6 select-none">
 				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => (month -= 1)}
+					on:click={() => month--}
 				>
 					<Fa icon={faChevronLeft} size="1.5x" />
 				</button>
@@ -323,7 +323,7 @@
 
 				<button
 					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => (month += 1)}
+					on:click={() => month++}
 				>
 					<Fa icon={faChevronRight} size="1.5x" />
 				</button>

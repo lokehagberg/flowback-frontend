@@ -140,10 +140,13 @@
 </script>
 
 <div class="flex">
+	<!-- Buttons that the user presses to go between years or weeks -->
 	<div class="flex items-center select-none">
+		<!-- Had to include type="button" due to an odd bug where these buttons would act as submit buttons in forms -->
 		<button
 			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 			on:click={() => year--}
+			type="button"
 		>
 			<Fa icon={faChevronLeft} size="1.5x" />
 		</button>
@@ -152,6 +155,7 @@
 		<button
 			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 			on:click={() => year++}
+			type="button"
 		>
 			<Fa icon={faChevronRight} size="1.5x" />
 		</button>
@@ -161,6 +165,7 @@
 		<button
 			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 			on:click={() => weekOffset--}
+			type="button"
 		>
 			<Fa icon={faChevronLeft} size="1.5x" />
 		</button>
@@ -172,6 +177,7 @@
 		<button
 			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 			on:click={() => weekOffset++}
+			type="button"
 		>
 			<Fa icon={faChevronRight} size="1.5x" />
 		</button>

@@ -155,7 +155,7 @@
 			{:else if selectedPage === 'thread'}
 				<h1 class="text-2xl">{$_('Create a Thread')}</h1>
 			{/if}
-			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
+			<TextInput inputClass="bg-white " required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 
 			<FileUploads bind:images />

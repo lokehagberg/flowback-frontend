@@ -11,7 +11,7 @@
 		onBlur = () => {},
 		inputClass = '',
 		placeholder = '',
-		max = 100,
+		max: number | null = 100,
 		type: 'text' | 'password' = 'text',
 		name: string = '';
 
@@ -22,18 +22,21 @@
 </script>
 
 <label class={`w-full ${Class}`}>
-	{#if label}
-		<p class="text-gray-400 text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
-	{/if}
-	{#if required}
-		<p class="inline text-red-600">*</p>
-	{/if}
+	<div class="flex justify-between w-full items-center">
+		<div>
+			{#if label}
+				<p class="text-sm mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
+			{/if}
+			{#if required}
+				<p class="inline text-red-600">*</p>
+			{/if}
+		</div>
 
-	{#if max}
-		<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-300 text-xs">
-			{value.length}/{max}
-		</p>{/if}
-
+		{#if max}
+			<p class="dark:brightness-50 dark:text-darkmodeText text-gray-400 text-xs">
+				{value.length}/{max}
+			</p>{/if}
+	</div>
 	{#if type === 'text'}
 		<input
 			bind:value

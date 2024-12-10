@@ -165,7 +165,7 @@
 			{#if selectedPage === 'poll'}
 				<div class="border border-gray-200 dark:border-gray-500 p-2">
 					<div class="flex justify-between">
-						<h2>{$_('Days between phases')}: </h2>
+						<h2>{$_('Days between phases')}:</h2>
 						<input
 							type="number"
 							class="dark:bg-darkbackground show-buttons-all-times text-right"
@@ -194,33 +194,30 @@
 						{/if}
 					</button>
 
-					<!-- {#key daysBetweenPhases} -->
-						{#if advancedTimeSettings}
-							<AdvancedTimeSettings
-								bind:selected_poll
-								bind:advancedTimeSettings
-								bind:start_date
-								bind:area_vote_end_date
-								bind:proposal_end_date
-								bind:prediction_statement_end_date
-								bind:prediction_bet_end_date
-								bind:delegate_vote_end_date
-								bind:vote_end_date
-								bind:end_date
-								bind:daysBetweenPhases
-							/>
-						{/if}
-					<!-- {/key} -->
+					{#if advancedTimeSettings}
+						<AdvancedTimeSettings
+							bind:selected_poll
+							bind:advancedTimeSettings
+							bind:start_date
+							bind:area_vote_end_date
+							bind:proposal_end_date
+							bind:prediction_statement_end_date
+							bind:prediction_bet_end_date
+							bind:delegate_vote_end_date
+							bind:vote_end_date
+							bind:end_date
+							bind:daysBetweenPhases
+						/>
+					{/if}
 				</div>
 			{/if}
-			<!-- <Schedule type="pollcreation"/> -->
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 			{/if}
 
 			{#if selectedPage === 'poll'}
-				<RadioButtons bind:Yes={isFF} label="Fast Foward?" />
+				<RadioButtons bind:Yes={isFF} label="Fast Forward?" />
 			{/if}
 
 			{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}

@@ -405,5 +405,11 @@
     "Thread":"Diskussionstråd",
     "Poll Content":"Beslut",
     "Text Poll":"Förslag",
-    "Date Poll": "Datum"
+    "Date Poll": "Datum",
+    "Fast Forward":"Snabbspolning",
+    "Fast Forward?":"Snabbspolning?",
+    "Display advanced time settings":"Visa advancerade tidsinställningar",
+    "Hide advanced time settings":"Göm advancerade tidsinställningar",
+    "Calendar":"Kalender",
+    "List":"Lista"
 }

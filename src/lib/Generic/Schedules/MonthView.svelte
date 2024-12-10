@@ -23,8 +23,7 @@
 	// w = 200,
 	// h = 300;
 
-	$: console.log(end_date, "DATAs");
-	
+	$: console.log(end_date, 'DATAs');
 
 	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
@@ -129,7 +128,7 @@
 		// 	return todaysWeek + weekOffset
 		// else if (todaysWeek + weekOffset >= 52) {
 		// 	year++;
-		// 	return 
+		// 	return
 		// } else if (todaysWeek + weekOffset + incriment <= 0) {
 		// 	weekOffset = 52;
 		// 	year--;
@@ -188,8 +187,11 @@
 		</button>
 
 		{(() => {
+			let date = new Date();
+			date.setDate(date.getDate() + 7 * weekOffset);
+			year = date.getFullYear();
 			//@ts-ignore
-			return new Date().getWeek() + weekOffset;
+			return date.getWeek();
 		})()}
 
 		<!-- {weekDisplay()} -->

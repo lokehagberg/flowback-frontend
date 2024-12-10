@@ -9,7 +9,7 @@
 </script>
 
 <div class={` break-all dark:text-darkmodeText ${Class}`}>
-	<p class=" text-black">
+	<p class="text-black dark:text-darkmodeText">
 		<!-- TODO: Ensure that the 5000 description limit is accessible more easily and universally across files -->
 		{elipsis(description, readMore ? 5000 : limit)}
 	</p>

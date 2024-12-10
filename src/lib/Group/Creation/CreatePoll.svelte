@@ -18,8 +18,8 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { env } from '$env/dynamic/public';
-	import { faAlignLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
+	import { faAlignLeft, faCalendarAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	let title = '',
 		description = '',
@@ -163,39 +163,54 @@
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}
-				<div class="border border-gray-200 dark:border-gray-500 p-6">
-					<div>
-						<h2>{$_('Days between phases')}</h2>
+				<div class="border border-gray-200 dark:border-gray-500 p-2">
+					<div class="flex justify-between">
+						<h2>{$_('Days between phases')}: </h2>
 						<input
 							type="number"
-							class="dark:bg-darkbackground show-buttons-all-times"
+							class="dark:bg-darkbackground show-buttons-all-times text-right"
 							bind:value={daysBetweenPhases}
 							min="0"
 							max="1000"
 						/>
 					</div>
 
-					<Button
+					<!-- <Button
 						Class={`!bg-blue-600 mt-4 !block`}
 						action={() => (advancedTimeSettings = !advancedTimeSettings)}
 						buttonStyle="secondary">{$_('Advanced time settings')}</Button
-					>
+					> -->
 
-					{#key daysBetweenPhases}
-					<AdvancedTimeSettings
-						bind:selected_poll
-						bind:advancedTimeSettings
-						bind:start_date
-						bind:area_vote_end_date
-						bind:proposal_end_date
-						bind:prediction_statement_end_date
-						bind:prediction_bet_end_date
-						bind:delegate_vote_end_date
-						bind:vote_end_date
-						bind:end_date
-						bind:daysBetweenPhases
-					/>
-					{/key}
+					<button
+						class="w-full flex justify-center items-center border-t-2"
+						type="button"
+						on:click={() => (advancedTimeSettings = !advancedTimeSettings)}
+					>
+						<Fa icon={faChevronDown} rotate={advancedTimeSettings ? 180 : 0} />
+						{#if !advancedTimeSettings}
+							<p>{$_('Display advanced time settings')}</p>
+						{:else}
+							<p>{$_('Hide advanced time settings')}</p>
+						{/if}
+					</button>
+
+					<!-- {#key daysBetweenPhases} -->
+						{#if advancedTimeSettings}
+							<AdvancedTimeSettings
+								bind:selected_poll
+								bind:advancedTimeSettings
+								bind:start_date
+								bind:area_vote_end_date
+								bind:proposal_end_date
+								bind:prediction_statement_end_date
+								bind:prediction_bet_end_date
+								bind:delegate_vote_end_date
+								bind:vote_end_date
+								bind:end_date
+								bind:daysBetweenPhases
+							/>
+						{/if}
+					<!-- {/key} -->
 				</div>
 			{/if}
 			<!-- <Schedule type="pollcreation"/> -->
@@ -218,3 +233,10 @@
 		</div></Loader
 	>
 </form>
+
+<style>
+	.show-buttons-all-times::-webkit-inner-spin-button,
+	.show-buttons-all-times::-webkit-outer-spin-button {
+		opacity: 1;
+	}
+</style>

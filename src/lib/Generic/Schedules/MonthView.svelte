@@ -19,10 +19,12 @@
 		prediction_bet_end_date: Date,
 		delegate_vote_end_date: Date,
 		vote_end_date: Date,
-		end_date: Date,
-		daysBetweenPhases = 1;
+		end_date: Date;
 	// w = 200,
 	// h = 300;
+
+	$: console.log(end_date, "DATAs");
+	
 
 	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
@@ -119,6 +121,21 @@
 		});
 	};
 
+	const weekDisplay = () => {
+		//@ts-ignore
+		const todaysWeek = new Date().getWeek();
+
+		// if (todaysWeek + weekOffset < 52 && todaysWeek + weekOffset > 0)
+		// 	return todaysWeek + weekOffset
+		// else if (todaysWeek + weekOffset >= 52) {
+		// 	year++;
+		// 	return 
+		// } else if (todaysWeek + weekOffset + incriment <= 0) {
+		// 	weekOffset = 52;
+		// 	year--;
+		// }
+	};
+
 	onMount(() => {
 		setUpDraggable();
 	});
@@ -174,6 +191,9 @@
 			//@ts-ignore
 			return new Date().getWeek() + weekOffset;
 		})()}
+
+		<!-- {weekDisplay()} -->
+
 		<button
 			class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
 			on:click={() => weekOffset++}

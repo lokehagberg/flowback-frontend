@@ -12,6 +12,7 @@
 			class="cursor-pointer border-blue-500 pb-2 text-center text-xl font-light text-gray-500 dark:text-darkmodeText dark:bg-darkobject"
 			class:border-b-2={selectedPage === tab}
 			on:click={() => (selectedPage = tab)}
+			type="button"
 		>
 			{$_(displayNames[i])}
 		</button>

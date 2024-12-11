@@ -6,11 +6,15 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 
-	export let deletePollModalShow = false;
+	export let deletePollModalShow = false,
+		pollId: string|number;
 
 	const deletePoll = async () => {
-		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
-		if (res.ok) goto(`/groups/${$page.params.groupId}`);
+		const { res, json } = await fetchRequest('POST', `group/poll/${pollId}/delete`);
+        if (!res.ok) return;
+
+		goto(`/groups/${$page.params.groupId}`);
+        deletePollModalShow = false;
 	};
 </script>
 

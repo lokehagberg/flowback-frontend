@@ -112,7 +112,7 @@
 	{/if} -->
 </div>
 
-<DeletePollModal bind:deletePollModalShow/>
+<DeletePollModal bind:deletePollModalShow pollId={$page.params.groupId}/>
 
 <Poppup bind:poppup />
 

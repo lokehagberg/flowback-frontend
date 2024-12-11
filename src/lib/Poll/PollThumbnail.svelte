@@ -151,7 +151,7 @@
 					async () => (phase = await nextPhase(poll.poll_type, poll.id, phase)),
 					() => (deletePollModalShow = true)
 				]}
-				Class="justify-self-center mt-2"
+				Class="text-black justify-self-center mt-2"
 			/>
 		</div>
 	</div>
@@ -325,7 +325,7 @@
 	</div>
 </div>
 
-<DeletePollModal bind:deletePollModalShow />
+<DeletePollModal bind:deletePollModalShow pollId={poll.id} />
 
 <Poppup bind:poppup />
 

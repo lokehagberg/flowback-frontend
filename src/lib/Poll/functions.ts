@@ -83,7 +83,7 @@ export const getGroupInfo = async (id: number | string) => {
 };
 
 
-export const nextPhase = async (pollType: 3 | 4, pollId: string | number, phase: Phase) => {
+export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
 	pollId = Number(pollId);
 	let _phase: Phase = 'pre_start';
 

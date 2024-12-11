@@ -32,6 +32,7 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
+	import DeletePollModal from './DeletePollModal.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -44,7 +45,8 @@
 		selectedTag: number,
 		darkMode: boolean,
 		voting = true,
-		poppup: poppup;
+		poppup: poppup,
+		deletePollModalShow = false;
 
 	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
@@ -143,6 +145,14 @@
 					/>
 				</button>
 			{/if}
+			<MultipleChoices
+				labels={['Fast Forward', 'Delete Poll']}
+				functions={[
+					async () => (phase = await nextPhase(poll.poll_type, poll.id, phase)),
+					() => (deletePollModalShow = true)
+				]}
+				Class="justify-self-center mt-2"
+			/>
 		</div>
 	</div>
 
@@ -163,12 +173,6 @@
 				color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 			/>
 		{/if}
-
-		<!-- <MultipleChoices
-			labels={['Fast Forward', 'Delete Poll']}
-			functions={[nextPhase, () => (deletePollModalShow = true)]}
-			Class="justify-self-center mt-2"
-		/> -->
 
 		<!-- Fast Forward Icon -->
 		{#if poll.allow_fast_forward}
@@ -283,29 +287,45 @@
 				<Button
 					Class="w-[47%]"
 					buttonStyle="primary-light"
-					action={() =>
-						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 					>{$_('Mange bets')}</Button
 				>
 				<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
 			</div>
 
-			<!-- PHASE 5: DELEGATE VOTING -->
+			<!-- PHASE 5 & 6: VOTING -->
 		{:else if phase === 'delegate_vote' || phase === 'vote'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange votes')}</Button>
-				<p class="w-[47%]">{$_('You have not voted yet!')}</p>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					>{$_('Mange votes')}</Button
+				>
+				<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
 			</div>
 
-			<!-- PHASE 6: NON-DELEGATE VOTING -->
+			<!-- PHASE 7: RESULTS -->
 		{:else if phase === 'prediction_vote' || phase === 'result'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('View detailed results')}</Button>
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Evaluate predictions')}</Button>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					>{$_('View detailed results')}</Button
+				>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					>{$_('Evaluate predictions')}</Button
+				>
 			</div>
 		{/if}
 	</div>
 </div>
+
+<DeletePollModal bind:deletePollModalShow />
 
 <Poppup bind:poppup />
 

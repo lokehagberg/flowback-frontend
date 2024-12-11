@@ -53,7 +53,7 @@
 	};
 
 	const submitTagVote = async (tag: number) => {
-		const { json, res } = await fetchRequest('POST', `group/poll/${poll.group_id}/area/update`, {
+		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/area/update`, {
 			tag,
 			vote: true
 		});
@@ -207,7 +207,7 @@
 	<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
 
 	<div class="!mt-4">
-		<!-- Area Voting -->
+		<!-- PHASE 1: AREA VOTE -->
 		{#if phase === 'area_vote'}
 			<form
 				on:submit|preventDefault={() => submitTagVote(selectedTag)}
@@ -216,10 +216,11 @@
 				<Select
 					label={''}
 					labels={tags.map((tag) => tag.name)}
-					values={tags.map((tag) => tag.id)}
 					bind:value={selectedTag}
-					classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
+					values={tags.map((tag) => tag.id)}
 					Class="w-[47%] "
+					classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
+					onInput={() => voting = true}
 				/>
 				{#if voting}
 					<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light"
@@ -229,6 +230,8 @@
 					<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
 				{/if}
 			</form>
+
+			<!-- PHASE 2: PROPOSAL CREATION -->
 		{:else if phase === 'proposal'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light"
@@ -236,6 +239,8 @@
 				>
 				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Proposal')}</Button>
 			</div>
+
+			<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
 		{:else if phase === 'prediction_statement'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light"
@@ -243,16 +248,22 @@
 				>
 				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Prediction')}</Button>
 			</div>
+
+			<!-- PHASE 4: PREDICTION BETTING -->
 		{:else if phase === 'prediction_bet'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange bets')}</Button>
 				<p class="w-[47%]">{$_('You have not betted yet!')}</p>
 			</div>
+
+			<!-- PHASE 5: DELEGATE VOTING -->
 		{:else if phase === 'delegate_vote' || phase === 'vote'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange votes')}</Button>
 				<p class="w-[47%]">{$_('You have not voted yet!')}</p>
 			</div>
+
+			<!-- PHASE 6: NON-DELEGATE VOTING -->
 		{:else if phase === 'prediction_vote' || phase === 'result'}
 			<div class="flex justify-between">
 				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('View detailed results')}</Button>

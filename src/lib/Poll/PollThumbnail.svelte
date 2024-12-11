@@ -238,14 +238,15 @@
 				<Button
 					Class="w-[47%]"
 					buttonStyle="primary-light"
-					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					action={() =>
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
 					>{$_('See Proposals')} ({poll.total_proposals})</Button
 				>
 				<Button
 					Class="w-[47%]"
 					buttonStyle="primary-light"
 					action={() =>
-						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=false`)}
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
 					>{$_('Create a Proposal')}</Button
 				>
 			</div>
@@ -253,10 +254,20 @@
 			<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
 		{:else if phase === 'prediction_statement'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light"
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() =>
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
 					>{$_('See Predictions')} ({poll.total_predictions})</Button
 				>
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Prediction')}</Button>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() =>
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
+					>{$_('Create a Prediction')}</Button
+				>
 			</div>
 
 			<!-- PHASE 4: PREDICTION BETTING -->

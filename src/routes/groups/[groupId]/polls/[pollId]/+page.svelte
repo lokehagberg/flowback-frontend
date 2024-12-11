@@ -192,11 +192,11 @@
 							</div>
 							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
-						{:else if proposalsToPredictionMarket.length === 0}
+						{:else if proposalsToPredictionMarket.length === 0 && displayForm}
 							<span class="text-center block text-primary font-semibold">
 								{$_('To make a prediction, please select atleast one proposal')}
 							</span>
-						{:else}
+						{:else if displayForm}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>

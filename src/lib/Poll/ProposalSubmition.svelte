@@ -18,20 +18,18 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
 
+	export let proposals: proposal[], poll: poll, displayForm: boolean;
+
 	let title: string,
 		description: string,
 		loading = false,
 		status: StatusMessageInfo,
 		poppup: poppup = { message: '', success: true, show: true },
-		show = false,
 		blockchain = true,
 		images: File[];
 
-	export let proposals: proposal[], poll: poll;
-
 	const addProposal = async () => {
 		loading = true;
-		console.log('Hello?');
 
 		let blockchain_id;
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
@@ -89,6 +87,12 @@
 		if (!res.ok) return;
 		return json.results[0].id;
 	};
+
+	const cancelSubmission = () => {
+		displayForm = false;
+		title = '';
+		description = '';
+	};
 </script>
 
 <form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded">
@@ -96,7 +100,12 @@
 		<span class="block text-left text-md text-primary font-semibold">{$_('Create a Proposal')}</span
 		>
 		<TextInput required label="Title" bind:value={title} />
-		<TextArea Class="mt-4" areaClass="max-h-[12rem] resize-y" label="Description" bind:value={description} />
+		<TextArea
+			Class="mt-4"
+			areaClass="max-h-[12rem] resize-y"
+			label="Description"
+			bind:value={description}
+		/>
 		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
@@ -116,6 +125,7 @@
 			Class="absolute bottom-0 right-0 w-[50%]"
 			type="button"
 			label="Cancel"
+			action={cancelSubmission}
 		/>
 
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}

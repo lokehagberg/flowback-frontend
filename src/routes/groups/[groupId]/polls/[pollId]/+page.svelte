@@ -34,7 +34,7 @@
 		selectedProposal: proposal | null,
 		proposalsToPredictionMarket: proposal[] = [],
 		poppup: poppup,
-		displayForm = false;
+		displayForm: boolean;
 
 	onMount(async () => {
 		getGroupUser();
@@ -43,6 +43,7 @@
 		scrollToSection();
 		checkForLinks(poll?.description, 'poll-description');
 		document.title = poll.title;
+		getDisplayForm();
 	});
 
 	const getPollData = async () => {
@@ -88,6 +89,14 @@
 			scrollTo?.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 		}, 200);
 	};
+
+	const getDisplayForm = () => {
+		const display = $page.url.searchParams.get('display');
+		console.log(display, 'IDS');
+
+		if (display === null || display === undefined || display === '0') displayForm = false;
+		if (display === '1') displayForm = true;
+	};
 </script>
 
 <Layout centered>
@@ -126,7 +135,10 @@
 						<Button
 							Class="w-full"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>{$_('Add Proposal')}</Button
+							action={() => {
+								selectedProposal = null;
+								displayForm = true;
+							}}>{$_('Add Proposal')}</Button
 						>
 					</div>
 					<div slot="right" class="relative h-full">
@@ -145,7 +157,7 @@
 								</div>
 							{/if}
 						{:else if displayForm}
-							<ProposalSubmition bind:proposals {poll} />
+							<ProposalSubmition bind:proposals {poll} bind:displayForm />
 						{/if}
 					</div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>

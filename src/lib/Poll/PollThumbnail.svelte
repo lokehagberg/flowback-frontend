@@ -244,7 +244,8 @@
 				<Button
 					Class="w-[47%]"
 					buttonStyle="primary-light"
-					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					action={() =>
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=false`)}
 					>{$_('Create a Proposal')}</Button
 				>
 			</div>

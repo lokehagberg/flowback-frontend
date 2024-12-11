@@ -33,7 +33,8 @@
 		proposals: proposal[],
 		selectedProposal: proposal | null,
 		proposalsToPredictionMarket: proposal[] = [],
-		poppup: poppup;
+		poppup: poppup,
+		displayForm = false;
 
 	onMount(async () => {
 		getGroupUser();
@@ -111,7 +112,7 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center text-primary font-semibold text-md"
+						<span class="text-center ext-primary font-semibold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="h-[90%] overflow-y-auto">
@@ -143,7 +144,7 @@
 									{/each}
 								</div>
 							{/if}
-						{:else}
+						{:else if displayForm}
 							<ProposalSubmition bind:proposals {poll} />
 						{/if}
 					</div>

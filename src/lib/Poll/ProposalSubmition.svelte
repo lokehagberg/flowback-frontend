@@ -91,7 +91,7 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal} class=" h-full dark:border-gray-500 rounded">
+<form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
 		<span class="block text-left text-md text-primary font-semibold">{$_('Create a Proposal')}</span
 		>
@@ -114,7 +114,7 @@
 		<Button
 			buttonStyle="warning-light"
 			Class="absolute bottom-0 right-0 w-[50%]"
-			type="submit"
+			type="button"
 			label="Cancel"
 		/>
 

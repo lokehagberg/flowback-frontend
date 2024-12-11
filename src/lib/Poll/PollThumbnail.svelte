@@ -30,6 +30,7 @@
 		faCalendarAlt,
 		faSlash
 	} from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -220,7 +221,7 @@
 					values={tags.map((tag) => tag.id)}
 					Class="w-[47%] "
 					classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
-					onInput={() => voting = true}
+					onInput={() => (voting = true)}
 				/>
 				{#if voting}
 					<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light"
@@ -234,10 +235,18 @@
 			<!-- PHASE 2: PROPOSAL CREATION -->
 		{:else if phase === 'proposal'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light"
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 					>{$_('See Proposals')} ({poll.total_proposals})</Button
 				>
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Create a Proposal')}</Button>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					>{$_('Create a Proposal')}</Button
+				>
 			</div>
 
 			<!-- PHASE 3: PREDICTION STATEMENT CREATION -->

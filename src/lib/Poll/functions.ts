@@ -1,6 +1,7 @@
 import { fetchRequest } from '$lib/FetchRequest';
 import type { Phase, poll } from './interface';
 
+
 export const formatDate = (dateInput: string) => {
 	const date = new Date(dateInput);
 	return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} klockan ${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
@@ -79,4 +80,29 @@ export const getGroupInfo = async (id: number | string) => {
 	id = Number(id);
 	const { res, json } = await fetchRequest('GET', `group/list?id=${id}`);
 	return { res, json };
+};
+
+
+export const nextPhase = async (pollType: 3 | 4, pollId: string | number, phase: Phase) => {
+	pollId = Number(pollId);
+	let _phase: Phase = 'pre_start';
+
+	if (pollType === 3) {
+		if (phase === 'area_vote') _phase = 'proposal';
+		else if (phase === 'proposal') _phase = 'prediction_statement';
+		else if (phase === 'prediction_statement') _phase = 'prediction_bet';
+		else if (phase === 'prediction_bet') _phase = 'delegate_vote';
+		else if (phase === 'delegate_vote') _phase = 'vote';
+		else if (phase === 'vote') _phase = 'prediction_vote';
+	} else if (pollType === 4) _phase = 'result';
+
+	const { res, json } = await fetchRequest(
+		'POST',
+		`group/poll/${pollId}/fast_forward`,
+		{
+			phase: _phase
+		}
+	);
+
+	return _phase
 };

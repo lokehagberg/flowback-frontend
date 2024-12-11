@@ -10,7 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { onMount } from 'svelte';
-	import { getPhase, getPhaseUserFriendlyName } from './functions';
+	import { getPhase, getPhaseUserFriendlyName, nextPhase } from './functions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
@@ -31,6 +31,7 @@
 		faSlash
 	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -163,6 +164,12 @@
 			/>
 		{/if}
 
+		<!-- <MultipleChoices
+			labels={['Fast Forward', 'Delete Poll']}
+			functions={[nextPhase, () => (deletePollModalShow = true)]}
+			Class="justify-self-center mt-2"
+		/> -->
+
 		<!-- Fast Forward Icon -->
 		{#if poll.allow_fast_forward}
 			<HeaderIcon
@@ -273,8 +280,14 @@
 			<!-- PHASE 4: PREDICTION BETTING -->
 		{:else if phase === 'prediction_bet'}
 			<div class="flex justify-between">
-				<Button Class="w-[47%]" buttonStyle="primary-light">{$_('Mange bets')}</Button>
-				<p class="w-[47%]">{$_('You have not betted yet!')}</p>
+				<Button
+					Class="w-[47%]"
+					buttonStyle="primary-light"
+					action={() =>
+						goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+					>{$_('Mange bets')}</Button
+				>
+				<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
 			</div>
 
 			<!-- PHASE 5: DELEGATE VOTING -->

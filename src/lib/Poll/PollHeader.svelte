@@ -12,7 +12,7 @@
 	import Fa from 'svelte-fa';
 	import { faArrowLeft, faDownLong } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
-	import { getPhaseUserFriendlyName } from './functions';
+	import { getPhaseUserFriendlyName, nextPhase } from './functions';
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
@@ -29,35 +29,6 @@
 
 	let deletePollModalShow = false,
 		poppup: poppup;
-
-	const nextPhase = async () => {
-		let _phase: Phase = 'pre_start';
-
-		if (pollType === 3) {
-			if (phase === 'area_vote') _phase = 'proposal';
-			else if (phase === 'proposal') _phase = 'prediction_statement';
-			else if (phase === 'prediction_statement') _phase = 'prediction_bet';
-			else if (phase === 'prediction_bet') _phase = 'delegate_vote';
-			else if (phase === 'delegate_vote') _phase = 'vote';
-			else if (phase === 'vote') _phase = 'prediction_vote';
-		} else if (pollType === 4) _phase = 'result';
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/fast_forward`,
-			{
-				phase: _phase
-			}
-		);
-
-		if (!res.ok) {
-			// const message = json.detail[0] || 'Could not fast forward poll';
-			poppup = { message: 'Could not fast forward poll', success: false };
-			return;
-		}
-
-		phase = _phase;
-	};
 
 	const deletePoll = async () => {
 		const { res, json } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/delete`);
@@ -90,7 +61,10 @@
 		<!-- {#if groupUser?.is_admin} -->
 		<MultipleChoices
 			labels={['Fast Forward', 'Delete Poll']}
-			functions={[nextPhase, () => (deletePollModalShow = true)]}
+			functions={[
+				async () => (phase = await nextPhase(pollType, $page.params.pollId, phase)),
+				() => (deletePollModalShow = true)
+			]}
 			Class="justify-self-center mt-2"
 		/>
 		<!-- {/if} -->

@@ -85,7 +85,7 @@ export const getGroupInfo = async (id: number | string) => {
 
 export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
 	pollId = Number(pollId);
-	let _phase: Phase = 'pre_start';
+	let _phase: Phase = 'area_vote';
 
 	if (pollType === 3) {
 		if (phase === 'area_vote') _phase = 'proposal';

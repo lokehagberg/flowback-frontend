@@ -145,11 +145,14 @@
 					/>
 				</button>
 			{/if}
+
 			<MultipleChoices
-				labels={['Fast Forward', 'Delete Poll']}
+				labels={phase === 'result' || phase === 'prediction_vote'
+					? ['Delete Poll']
+					: ['Delete Poll', 'Fast Forward']}
 				functions={[
-					async () => (phase = await nextPhase(poll.poll_type, poll.id, phase)),
-					() => (deletePollModalShow = true)
+					() => (deletePollModalShow = true),
+					async () => (phase = await nextPhase(poll.poll_type, $page.params.pollId, phase))
 				]}
 				Class="text-black justify-self-center mt-2"
 			/>

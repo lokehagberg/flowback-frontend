@@ -27,7 +27,6 @@
 
 	let deletePollModalShow = false,
 		poppup: poppup;
-
 </script>
 
 <div
@@ -54,10 +53,12 @@
 		/>
 		<!-- {#if groupUser?.is_admin} -->
 		<MultipleChoices
-			labels={['Fast Forward', 'Delete Poll']}
+			labels={phase === 'result' || phase === 'prediction_vote'
+				? ['Delete Poll']
+				: ['Delete Poll', 'Fast Forward']}
 			functions={[
-				async () => (phase = await nextPhase(pollType, $page.params.pollId, phase)),
-				() => (deletePollModalShow = true)
+				() => (deletePollModalShow = true),
+				async () => (phase = await nextPhase(pollType, $page.params.pollId, phase))
 			]}
 			Class="justify-self-center mt-2"
 		/>
@@ -112,7 +113,7 @@
 	{/if} -->
 </div>
 
-<DeletePollModal bind:deletePollModalShow pollId={$page.params.groupId}/>
+<DeletePollModal bind:deletePollModalShow pollId={$page.params.groupId} />
 
 <Poppup bind:poppup />
 

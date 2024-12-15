@@ -207,7 +207,7 @@
 					}}>{$_('See delegate history')}</button
 				>
 
-				{#if delegate.isInRelation}
+				{#if delegate.isInRelation && !userIsDelegate}
 					<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
 						>{$_('Remove as delegate')}</Button
 					>

@@ -411,5 +411,7 @@
     "Display advanced time settings":"Visa advancerade tidsinställningar",
     "Hide advanced time settings":"Göm advancerade tidsinställningar",
     "Calendar":"Kalender",
-    "List":"Lista"
+    "List":"Lista",
+    "Select Delegates": "Välj delegater",
+    "Select Tags for Delegates":"Välj taggar för dina delegater"
 }

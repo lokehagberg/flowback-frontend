@@ -95,7 +95,6 @@
 
 		delegateRelations.forEach((relation) => {
 			const info = delegatesUserInfo.find((user) => user.user.id === relation.delegates[0].user_id);
-			console.log(delegatesUserInfo, delegateRelations, info, 'LOG');
 
 			const delegate: Delegate = {
 				pool_id: relation.delegate_pool_id,

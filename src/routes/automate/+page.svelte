@@ -14,7 +14,7 @@
 			participate yourself.`)}
 		</p>
 	</div>
-	<div class="flex w-[80%] mt-6 gap-6">
+	<div class="flex w-[80%] my-6 gap-6">
 		<div class="bg-white p-6 shadow">
 			<ul>
 				<li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li>

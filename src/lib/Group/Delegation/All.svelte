@@ -8,7 +8,6 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
-	import { goto } from '$app/navigation';
 	import {
 		becomeDelegate,
 		delegate

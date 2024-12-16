@@ -3,7 +3,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
-	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegaions.svelte';
+	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegations.svelte';
 	import StopBeingDelegate from '$lib/Group/Delegation/StopBeingDelegate.svelte';
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
@@ -70,6 +70,11 @@
 			<ul>
 				<li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li>
 				<li>
+					<p>
+						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende
+						för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika
+						ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.
+					</p>
 					<input type="checkbox" />
 					{$_('Auto-vote')}
 					{#if userIsDelegate}
@@ -85,7 +90,9 @@
 		</div>
 
 		<div class="bg-white p-6 shadow flex-grow">
-			<NewerDelegaions {group} bind:delegates />
+			{#if group}
+				<NewerDelegaions bind:group bind:delegates />
+			{/if}
 		</div>
 	</div>
 </Layout>

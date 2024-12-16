@@ -2,19 +2,15 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
-	import type {  Group, Tag } from '../interface';
-	import type { Delegate, DelegatePool } from './interfaces';
+	import type { Group, Tag } from '../interface';
+	import type { Delegate } from './interfaces';
 
-	let group: Group,
-		tags: Tag[] = [],
+	export let group: Group,
 		delegates: Delegate[] = [];
 
-	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/list`);
-
-		if (!res.ok) return;
-		group = json.results[0];
-	};
+	let tags: Tag[] = [],
+		userIsDelegate = false,
+		expandedSection: any = null;
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
@@ -24,31 +20,25 @@
 		if (!res.ok) return;
 	};
 
-/*
+	/*
 		Temporary fix to make each delegate pool be associated with one user.
 		TODO: Implement delegate pool feature in the front end (Figma design first)
 	*/
 	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest(
-			'GET',
-			`group/${group.id}/delegate/pools?limit=1000`
-		);
+		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
 
 		if (!res.ok) return;
 
 		delegates = json.results.map((delegatePool: any) => {
 			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
 		});
-
 	};
-	let expandedSection: any = null;
 
 	const toggleSection = (index: any) => {
 		expandedSection = expandedSection === index ? null : index;
 	};
 
 	onMount(async () => {
-		await getGroups();
 		getGroupTags();
 		getDelegatePools();
 	});
@@ -69,12 +59,12 @@
 				<div class="voter-list">
 					{#each delegates as delegate}
 						<div class="voter-item">
-							{delegate.user.username}	
+							{delegate.user.username}
 							<!-- {delegate.delegates[0]} -->
 							<!-- <span>{delegate.delegates[0]}</span> -->
 							<span>
 								<!-- {delegate.percentage}% -->
-								<!-- <input type="radio" name={delegate.username} /> -->
+								<input type="radio" name={tag.name} />
 							</span>
 						</div>
 					{/each}

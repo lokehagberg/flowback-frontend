@@ -3,7 +3,6 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import { _ } from 'svelte-i18n';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';

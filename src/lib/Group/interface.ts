@@ -47,7 +47,7 @@ export interface DelegatePools {
 	];
 }
 
-export interface Delegate {
+export interface DelegateMinimal {
 	username: string;
 	id: number;
 	pool_id: number;

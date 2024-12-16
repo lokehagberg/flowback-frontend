@@ -5,7 +5,7 @@
 
 	import Tag from '../Tag.svelte';
 	import Fa from 'svelte-fa';
-	import type { Delegate, Tag as TagType } from '../interface';
+	import type { DelegateMinimal, Tag as TagType } from '../interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -18,7 +18,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 
-	let delegates: Delegate[] = [],
+	let delegates: DelegateMinimal[] = [],
 		tags: TagType[] = [],
 		poppup: poppup,
 		loading = false;
@@ -96,7 +96,7 @@
 		delegateRelations.forEach((relation) => {
 			const info = delegatesUserInfo.find((user) => user.user.id === relation.delegates[0].user_id);
 
-			const delegate: Delegate = {
+			const delegate: DelegateMinimal = {
 				pool_id: relation.delegate_pool_id,
 				id: relation.id,
 				profile_image: info.profile_image,

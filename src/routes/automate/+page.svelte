@@ -70,11 +70,6 @@
 			<ul>
 				<li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li>
 				<li>
-					<p>
-						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende
-						för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika
-						ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.
-					</p>
 					<input type="checkbox" />
 					{$_('Auto-vote')}
 					{#if userIsDelegate}
@@ -84,6 +79,11 @@
 							>{$_('Become delegate')}</Button
 						>
 					{/if}
+					<p>
+						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende
+						för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika
+						ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.
+					</p>
 				</li>
 				<li><input type="checkbox" /> {$_('Smart secretary')}</li>
 			</ul>

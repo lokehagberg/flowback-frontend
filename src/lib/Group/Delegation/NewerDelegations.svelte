@@ -3,14 +3,15 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import type { Group, Tag } from '../interface';
-	import type { Delegate } from './interfaces';
+	import type { Delegate, DelegateRelation } from './interfaces';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
 
 	let tags: Tag[] = [],
 		userIsDelegate = false,
-		expandedSection: any = null;
+		expandedSection: any = null,
+		delegateRelations: DelegateRelation[] = [];
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
@@ -38,9 +39,24 @@
 		expandedSection = expandedSection === index ? null : index;
 	};
 
+	const getDelegateRelations = async () => {
+		const { json } = await fetchRequest('GET', `group/${group.id}/delegates?limit=1000`);
+
+		//Determines whether to show the "remove as delegate" or "add as delegate" buttons, depening on if user already has delegated or not earlier.
+		json.results.forEach((relation: any) => {
+			delegates.map((delegate) => {
+				if (delegate.pool_id === relation.delegate_pool_id) delegate.isInRelation = true;
+				return delegate;
+			});
+		});
+		// delegateRelations = json.results;
+		delegateRelations = json.results;
+	};
+
 	onMount(async () => {
 		getGroupTags();
 		getDelegatePools();
+		getDelegateRelations();
 	});
 </script>
 
@@ -64,7 +80,15 @@
 							<!-- <span>{delegate.delegates[0]}</span> -->
 							<span>
 								<!-- {delegate.percentage}% -->
-								<input type="radio" name={tag.name} />
+								<input
+									type="radio"
+									name={tag.name}
+									checked={delegateRelations.find(
+										(relation) =>
+											relation.delegate_pool_id === delegate.pool_id &&
+											relation.tags.find((tag) => tag?.id === tag.id)
+									) !== undefined}
+								/>
 							</span>
 						</div>
 					{/each}

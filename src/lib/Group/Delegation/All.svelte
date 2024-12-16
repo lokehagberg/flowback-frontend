@@ -12,12 +12,12 @@
 		delegate
 	} from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 	import { isNumber } from 'chart.js/helpers';
-	import type { Delegate } from './interfaces';
+	import type { Delegate, DelegateRelation } from './interfaces';
 	import { env } from '$env/dynamic/public';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	let delegates: Delegate[] = [],
-		delegateRelations: any[] = [],
+		delegateRelations: DelegateRelation[] = [],
 		userIsDelegate: boolean = false,
 		userId: number,
 		loading = false,

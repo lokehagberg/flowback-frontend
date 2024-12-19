@@ -65,12 +65,16 @@
 
 		if (regretting) {
 			userUpVote = 0;
+			comment.user_vote = null;
 			if (_vote === 1) comment.score += -1;
 			else if (_vote === -1) comment.score += 1;
 		} else {
 			userUpVote = _vote;
 			if (comment.score !== 0) comment.score += 2 * _vote;
 			else comment.score += _vote;
+
+			if (_vote === -1) comment.user_vote = false;
+			else if (_vote === 1) comment.user_vote = true;
 		}
 	};
 
@@ -92,12 +96,12 @@
 		{api}
 	/>
 {:else}
-<!-- class:bg-gray-100={comment.reply_depth % 2 === 1} -->
-<!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
+	<!-- class:bg-gray-100={comment.reply_depth % 2 === 1} -->
+	<!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
 	<div
 		class={`p-3 text-sm border-0 border-l-gray-400`}
 		style:margin-left={`${comment.reply_depth * 20}px`}
-		class:border-l-2={comment.reply_depth > 0} 
+		class:border-l-2={comment.reply_depth > 0}
 	>
 		<div class="flex gap-2">
 			<ProfilePicture
@@ -132,16 +136,18 @@
 					<Fa icon={faReply} />{$_('Reply')}
 				</button>
 				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+					class:text-primary={comment.user_vote === true}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
 					on:click={() => commentVote(1)}
 				>
-					<Fa icon={faArrowUp} color={userUpVote === 1 ? 'blue' : ''} />
+					<Fa icon={faArrowUp} />
 				</button>
 				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+					class:text-primary={comment.user_vote === false}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
 					on:click={() => commentVote(-1)}
 				>
-					<Fa icon={faArrowDown} color={userUpVote === -1 ? 'blue' : ''} />
+					<Fa icon={faArrowDown} />
 				</button>
 				{comment.score}
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}

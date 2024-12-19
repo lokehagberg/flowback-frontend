@@ -10,6 +10,8 @@
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
 	import {
+		faArrowDown,
+		faArrowUp,
 		faComment,
 		faThumbsDown,
 		faThumbsUp,
@@ -135,11 +137,17 @@
 				<div>
 					<div class="flex gap-1">
 						{thread.score}
-						<button on:click={() => threadVote(thread, 'up')}>
-							<Fa icon={faThumbsUp} />
+						<button
+							class:text-primary={thread.user_vote === true}
+							on:click={() => threadVote(thread, 'up')}
+						>
+							<Fa icon={faArrowUp} />
 						</button>
-						<button on:click={() => threadVote(thread, 'down')}>
-							<Fa icon={faThumbsDown} />
+						<button
+							class:text-primary={thread.user_vote === false}
+							on:click={() => threadVote(thread, 'down')}
+						>
+							<Fa icon={faArrowDown} />
 						</button>
 					</div>
 				</div>

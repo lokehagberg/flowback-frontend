@@ -12,7 +12,8 @@
 	let group: Group,
 		userIsDelegate = false,
 		loading = false,
-		delegates: Delegate[] = [];
+		delegates: Delegate[] = [],
+		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list`);
@@ -68,30 +69,51 @@
 	<div class="flex w-[80%] my-6 gap-6">
 		<div class="bg-white p-6 shadow">
 			<ul>
-				<li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li>
+				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					<input type="checkbox" />
+					<input type="checkbox" on:input={() => (selectedPage = 'delegate')} />
 					{$_('Auto-vote')}
-					{#if userIsDelegate}
-						<StopBeingDelegate bind:delegates bind:userIsDelegate groupId={group.id} bind:loading />
-					{:else}
-						<Button action={createDelegationPool} buttonStyle="primary-light"
-							>{$_('Become delegate')}</Button
-						>
-					{/if}
 					<p>
 						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende
 						för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika
 						ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.
 					</p>
+
+					<Button
+						Class="w-full mt-3"
+						action={() => (selectedPage = 'become-delegate')}
+						buttonStyle="primary-light">{$_('Become delegate')}</Button
+					>
 				</li>
-				<li><input type="checkbox" /> {$_('Smart secretary')}</li>
+				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
 			</ul>
 		</div>
 
 		<div class="bg-white p-6 shadow flex-grow">
-			{#if group}
+			{#if selectedPage === 'none'}
+				<div />
+			{:else if selectedPage === 'delegate'}
 				<NewerDelegaions bind:group bind:delegates />
+			{:else}
+				Som offentliga röstare väljer du att visa offentligt för alla hur du röstar. Välj inom vilka
+				ämnesområden du vill bli en offentlig röstare nedan. Som offentlig röstare rekommenderar vi
+				att du gör några av de värde-kompasser som skapats av medlemmar. Hur svarar på frågor i de
+				värde-kompasser som finns används som grund för att matcha dig med andra användare på
+				Reforum.
+
+				{#if userIsDelegate}
+					<StopBeingDelegate
+						Class="w-full mt-3"
+						bind:delegates
+						bind:userIsDelegate
+						groupId={group.id}
+						bind:loading
+					/>
+				{:else}
+					<Button Class="w-full mt-3" action={createDelegationPool} buttonStyle="primary-light"
+						>{$_('Become delegate')}</Button
+					>
+				{/if}
 			{/if}
 		</div>
 	</div>

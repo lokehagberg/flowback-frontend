@@ -6,7 +6,11 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { Delegate } from './interfaces';
 
-	export let userIsDelegate: boolean, loading: boolean, groupId: number, delegates: Delegate[];
+	export let userIsDelegate: boolean,
+		loading: boolean,
+		groupId: number,
+		delegates: Delegate[],
+		Class = '';
 	let poppup: poppup;
 
 	const deleteDelegation = async () => {
@@ -50,5 +54,5 @@
 	};
 </script>
 
-<Button Class="mt-3 bg-red-500" action={deleteDelegation}>{$_('Stop being delegate')}</Button>
+<Button Class={`bg-red-500 ${Class}`} action={deleteDelegation}>{$_('Stop being delegate')}</Button>
 <Poppup bind:poppup />

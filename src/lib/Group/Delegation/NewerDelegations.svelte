@@ -7,6 +7,7 @@
 	import { deepCopy } from '$lib/Generic/GenericFunctions';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
@@ -107,7 +108,7 @@
 	{#each tags as tag, index}
 		<div class="section">
 			<button
-				class=" flex justify-between w-full section-title"
+				class=" flex text-primary justify-between w-full section-title"
 				on:click={() => toggleSection(index)}
 			>
 				<span class="break-all text-left">{tag.name}</span>
@@ -118,7 +119,13 @@
 				<div class="voter-list">
 					{#each delegates as delegate}
 						<div class="voter-item">
-							{delegate.user.username}
+							<ProfilePicture
+								displayName
+								username={delegate.user.username}
+								userId={delegate.user.id}
+								profilePicture={delegate.user.profile_image}
+							/>
+							<!-- {delegate.user.username} -->
 							<!-- {delegate.delegates[0]} -->
 							<!-- <span>{delegate.delegates[0]}</span> -->
 							<span>

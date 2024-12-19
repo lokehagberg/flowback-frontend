@@ -91,8 +91,4 @@
 		width: 100px;
 		height: 100px;
 	}
-
-	.mt-auto {
-		margin-top: auto;
-	}
 </style>

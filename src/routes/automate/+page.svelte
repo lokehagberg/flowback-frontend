@@ -71,7 +71,7 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					<input type="checkbox" on:input={() => (selectedPage = 'delegate')} />
+					<input type="checkbox" on:input={() => (selectedPage = 'delegate')} disabled={userIsDelegate} />
 					{$_('Auto-vote')}
 					<p>
 						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende

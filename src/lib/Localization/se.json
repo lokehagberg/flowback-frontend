@@ -414,5 +414,6 @@
     "List":"Lista",
     "Select Delegates": "Välj delegater",
     "Select Tags for Delegates":"Välj taggar för dina delegater",
-    "Successfully saved new delegation":"Lyckades spara ny delegat"
+    "Successfully saved new delegation":"Lyckades spara ny delegat",
+    "Automate":"Automatisera"
 }

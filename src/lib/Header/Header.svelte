@@ -153,12 +153,15 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 				
+				{env.PUBLIC_ONE_GROUP_FLOWBACK}
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
 				<HeaderIcon
 					icon={faCog}
 					text={'Automate'}
 					href="automate"
 					color={darkMode ? 'white' : 'black'}
 				/>
+				{/if}
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">

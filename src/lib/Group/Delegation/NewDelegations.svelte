@@ -10,7 +10,6 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import type { Delegate, DelegatePool } from './interfaces';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
-	import { delegate } from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 
 	let loading = false,
 		tags: Tag[] = [],

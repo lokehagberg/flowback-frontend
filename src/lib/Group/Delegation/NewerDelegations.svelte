@@ -4,6 +4,9 @@
 	import { onMount } from 'svelte';
 	import type { Group, Tag } from '../interface';
 	import type { Delegate, DelegateRelation } from './interfaces';
+	import { deepCopy } from '$lib/Generic/GenericFunctions';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
@@ -11,7 +14,8 @@
 	let tags: Tag[] = [],
 		userIsDelegate = false,
 		expandedSection: any = null,
-		delegateRelations: DelegateRelation[] = [];
+		delegateRelations: DelegateRelation[] = [],
+		poppup: poppup;
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
@@ -53,6 +57,51 @@
 		delegateRelations = json.results;
 	};
 
+	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
+		// delegateRelations.forEach((relation) => {
+		// 	if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
+		// 	if (tags.find((_tag) => _tag.id === tag.id))
+		// 		relation.tags.splice(tags.findIndex((_tag) => _tag.id === tag.id));
+		// });
+		// delegateRelations = delegateRelations;
+
+		delegateRelations.forEach((relation, i) => {
+			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
+			if (previousTagRelationIndex) relation.tags.splice(previousTagRelationIndex);
+			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
+		});
+
+		await createDelegateRelation(delegate.pool_id);
+		saveDelegation();
+	};
+
+	const createDelegateRelation = async (delegate_pool_id: number) => {
+		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/create`, {
+			delegate_pool_id
+		});
+
+		if (!res.ok) return;
+
+		delegates[
+			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
+		].isInRelation = true;
+	};
+
+	const saveDelegation = async () => {
+		const toSendDelegates = delegateRelations.map(({ tags, delegate_pool_id }) => ({
+			delegate_pool_id,
+			tags: tags.map(({ id }) => id)
+		}));
+
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${group.id}/delegate/update`,
+			toSendDelegates
+		);
+
+		if (res.ok) poppup = { message: 'Successfully saved new delegation', success: true };
+	};
+
 	onMount(async () => {
 		getGroupTags();
 		getDelegatePools();
@@ -81,6 +130,7 @@
 							<span>
 								<!-- {delegate.percentage}% -->
 								<input
+									on:input={() => changeDelegation(delegate, tag)}
 									type="radio"
 									name={tag.name}
 									checked={delegateRelations.find(
@@ -100,6 +150,8 @@
 		</div>
 	{/each}
 </div>
+
+<Poppup bind:poppup />
 
 <style>
 	.section {

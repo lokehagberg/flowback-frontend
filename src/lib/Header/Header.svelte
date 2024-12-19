@@ -153,7 +153,6 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 				
-				{env.PUBLIC_ONE_GROUP_FLOWBACK}
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
 				<HeaderIcon
 					icon={faCog}

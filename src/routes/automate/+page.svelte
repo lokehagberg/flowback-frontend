@@ -95,11 +95,9 @@
 			{:else if selectedPage === 'delegate'}
 				<NewerDelegaions bind:group bind:delegates />
 			{:else}
-				Som offentliga röstare väljer du att visa offentligt för alla hur du röstar. Välj inom vilka
-				ämnesområden du vill bli en offentlig röstare nedan. Som offentlig röstare rekommenderar vi
-				att du gör några av de värde-kompasser som skapats av medlemmar. Hur svarar på frågor i de
-				värde-kompasser som finns används som grund för att matcha dig med andra användare på
-				Reforum.
+				{$_(
+					'As a public voter, you choose to publicly show everyone how you vote. Choose within which subject areas you want to become a public voter below. As a public voter, we recommend that you make some of the value compasses created by members. How to answer questions in them value compasses that exist are used as a basis for matching you with other users on Reform forum.'
+				)}
 
 				{#if userIsDelegate}
 					<StopBeingDelegate

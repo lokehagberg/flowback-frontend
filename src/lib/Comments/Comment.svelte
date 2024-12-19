@@ -108,6 +108,7 @@
 				profilePicture={comment.author_profile_image}
 				username={comment.author_name}
 				displayName
+				userId={comment.author_id}
 			/>
 		</div>
 		<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>

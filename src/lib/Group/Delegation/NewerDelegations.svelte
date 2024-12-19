@@ -58,16 +58,10 @@
 	};
 
 	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
-		// delegateRelations.forEach((relation) => {
-		// 	if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
-		// 	if (tags.find((_tag) => _tag.id === tag.id))
-		// 		relation.tags.splice(tags.findIndex((_tag) => _tag.id === tag.id));
-		// });
-		// delegateRelations = delegateRelations;
-
 		delegateRelations.forEach((relation, i) => {
 			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
-			if (previousTagRelationIndex) relation.tags.splice(previousTagRelationIndex);
+
+			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
 			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
 		});
 

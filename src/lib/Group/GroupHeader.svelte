@@ -6,7 +6,6 @@
 	import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
 	import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons/faGlobeEurope';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
-	import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
 
@@ -24,9 +23,9 @@
 	];
 </script>
 
-<div class="relative flex justify-center">
+<div class="relative">
 	<img
-		class="cover"
+		class="cover w-full"
 		src={group.cover_image
 			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 					group.cover_image

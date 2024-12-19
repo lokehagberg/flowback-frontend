@@ -18,7 +18,6 @@
 		faMoon,
 		faUserFriends,
 		faCog
-
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
@@ -137,14 +136,12 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon
-						icon={faList}
-						text="My Kanban"
-						href="kanban"
-						color={darkMode ? 'white' : 'black'}
-					/>
-				{/if}
+				<HeaderIcon
+					icon={faList}
+					text="My Kanban"
+					href="kanban"
+					color={darkMode ? 'white' : 'black'}
+				/>
 
 				<HeaderIcon
 					icon={faCoins}
@@ -152,14 +149,14 @@
 					href="ledger"
 					color={darkMode ? 'white' : 'black'}
 				/>
-				
-				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE"}
-				<HeaderIcon
-					icon={faCog}
-					text={'Automate'}
-					href="automate"
-					color={darkMode ? 'white' : 'black'}
-				/>
+
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+					<HeaderIcon
+						icon={faCog}
+						text={'Automate'}
+						href="automate"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
 			</nav>
 

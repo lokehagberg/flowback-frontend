@@ -187,7 +187,7 @@
 				<StatusMessage Class="" bind:status />
 			</div>
 			<div class="dark:text-darkmodeText">
-				<div class="text-primary font-bold">Contact Information</div>
+				<div class="text-primary font-bold">{$_("Contact Information")}</div>
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}
 				</a>
@@ -264,7 +264,7 @@
 					on:click={() => (currentlyEditing = 'phone')}
 					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
 				>
-					{$_(userEdit.contact_phone || 'Add Phone Number')}
+					{$_(userEdit.contact_phone || 'Add phone number')}
 				</button>
 			{/if}
 

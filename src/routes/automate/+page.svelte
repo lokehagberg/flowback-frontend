@@ -2,6 +2,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
 	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegations.svelte';
 	import StopBeingDelegate from '$lib/Group/Delegation/StopBeingDelegate.svelte';
@@ -71,12 +72,18 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					<input type="checkbox" on:input={() => (selectedPage = 'delegate')} disabled={userIsDelegate} />
+					<input
+						type="checkbox"
+						on:input={() => (selectedPage = 'delegate')}
+						disabled={userIsDelegate}
+					/>
+
+					<Toggle checked />
 					{$_('Auto-vote')}
 					<p>
-						Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende
-						för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika
-						ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.
+						{$_(
+							'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
+						)}
 					</p>
 
 					<Button
@@ -88,12 +95,11 @@
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
 			</ul>
 		</div>
-
 		<div class="bg-white p-6 shadow flex-grow">
-			{#if selectedPage === 'none'}
-				<div />
-			{:else if selectedPage === 'delegate'}
-				<NewerDelegaions bind:group bind:delegates />
+			{#if selectedPage === 'delegate' || !userIsDelegate}
+				{#if group?.id}
+					<NewerDelegaions bind:group bind:delegates />
+				{/if}
 			{:else}
 				{$_(
 					'As a public voter, you choose to publicly show everyone how you vote. Choose within which subject areas you want to become a public voter below. As a public voter, we recommend that you make some of the value compasses created by members. How to answer questions in them value compasses that exist are used as a basis for matching you with other users on Reform forum.'

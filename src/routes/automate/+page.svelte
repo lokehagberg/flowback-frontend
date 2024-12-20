@@ -54,7 +54,8 @@
 
 	onMount(async () => {
 		await getGroups();
-		getUserInfo();
+		await getUserInfo();
+		selectedPage = userIsDelegate ? 'become-delegate' : 'delegate';
 	});
 </script>
 
@@ -96,11 +97,7 @@
 			</ul>
 		</div>
 		<div class="bg-white p-6 shadow flex-grow">
-			{#if selectedPage === 'delegate' || !userIsDelegate}
-				{#if group?.id}
-					<NewerDelegaions bind:group bind:delegates />
-				{/if}
-			{:else}
+			{#if selectedPage === 'become-delegate'}
 				{$_(
 					'As a public voter, you choose to publicly show everyone how you vote. Choose within which subject areas you want to become a public voter below. As a public voter, we recommend that you make some of the value compasses created by members. How to answer questions in them value compasses that exist are used as a basis for matching you with other users on Reform forum.'
 				)}
@@ -117,6 +114,10 @@
 					<Button Class="w-full mt-3" action={createDelegationPool} buttonStyle="primary-light"
 						>{$_('Become delegate')}</Button
 					>
+				{/if}
+			{:else if selectedPage === 'delegate'}
+				{#if group?.id}
+					<NewerDelegaions bind:group bind:delegates />
 				{/if}
 			{/if}
 		</div>

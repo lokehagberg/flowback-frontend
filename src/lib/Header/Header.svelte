@@ -157,6 +157,13 @@
 						href="automate"
 						color={darkMode ? 'white' : 'black'}
 					/>
+				{:else}
+					<HeaderIcon
+						icon={faCog}
+						text={'Delegations'}
+						href="automate"
+						color={darkMode ? 'white' : 'black'}
+					/>
 				{/if}
 			</nav>
 

@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { env } from '$env/dynamic/public';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import Select from '$lib/Generic/Select.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
 	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegations.svelte';
@@ -11,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 
 	let group: Group,
+		groups: Group[],
 		userIsDelegate = false,
 		loading = false,
 		delegates: Delegate[] = [],
@@ -20,6 +23,7 @@
 		const { res, json } = await fetchRequest('GET', `group/list`);
 
 		if (!res.ok) return;
+		groups = json.results;
 		group = json.results[0];
 	};
 
@@ -70,6 +74,14 @@
 	</div>
 	<div class="flex w-[80%] my-6 gap-6">
 		<div class="bg-white p-6 shadow">
+			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
+				<Select
+					labels={groups?.map((group) => group.name)}
+					values={groups}
+					bind:value={group}
+					classInner="w-full bg-white p-4"
+				/>
+			{/if}
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>

@@ -20,7 +20,7 @@
 		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
 
 	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/list`);
+		const { res, json } = await fetchRequest('GET', `group/list?limit=1000`);
 
 		if (!res.ok) return;
 		groups = json.results;

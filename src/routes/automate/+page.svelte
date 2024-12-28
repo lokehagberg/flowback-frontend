@@ -63,7 +63,7 @@
 </script>
 
 <Layout centered>
-	<div class="bg-white p-6 shadow w-full text-left">
+	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-full text-left">
 		<h1 class="text-xl font-semibold text-primary text-left">{$_('Automate')}</h1>
 		<p>
 			{$_(
@@ -72,13 +72,13 @@
 		</p>
 	</div>
 	<div class="flex w-[80%] max-w-[1200px] my-6 gap-6">
-		<div class="bg-white p-6 shadow w-[50%]">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 				<Select
 					labels={groups?.map((group) => group.name)}
 					values={groups}
 					bind:value={group}
-					classInner="w-full bg-white p-4"
+					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-4"
 				/>
 			{/if}
 			<ul>
@@ -105,7 +105,7 @@
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
 			</ul>
 		</div>
-		<div class="bg-white p-6 shadow w-[50%]">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if selectedPage === 'become-delegate'}
 				{$_(
 					'As a public voter, you choose to publicly show everyone how you vote. Choose within which subject areas you want to become a public voter below. As a public voter, we recommend that you make some of the value compasses created by members. How to answer questions in them value compasses that exist are used as a basis for matching you with other users on Reform forum.'

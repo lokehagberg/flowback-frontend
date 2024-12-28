@@ -102,6 +102,8 @@
 		getDelegatePools();
 		getDelegateRelations();
 	});
+
+	$: if (group) getGroupTags();
 </script>
 
 <div>

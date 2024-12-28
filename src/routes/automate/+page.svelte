@@ -91,7 +91,9 @@
 						disabled={userIsDelegate}
 					/>
 
-					<Toggle checked />
+					<Toggle onInput={() => {
+						selectedPage = selectedPage === 'delegate' ? 'become-delegate' : 'delegate'
+					}}   />
 					{$_('Auto-vote')}
 					<p>
 						{$_(

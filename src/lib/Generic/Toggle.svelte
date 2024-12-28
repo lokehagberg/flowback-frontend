@@ -1,7 +1,8 @@
 <script lang="ts">
-    export let checked:any
+	export let checked: boolean = false,
+		onInput = () => {};
 
-
+	$: if (true || checked) onInput();
 </script>
 
 <label class="switch">

@@ -1,12 +1,10 @@
 <script lang="ts">
 	export let checked: boolean = false,
-		onInput = () => {};
-
-	$: if (true || checked) onInput();
+		onInput = (checked: boolean) => {};
 </script>
 
 <label class="switch">
-	<input type="checkbox" bind:checked />
+	<input type="checkbox" bind:checked on:input={() => onInput(!checked)} />
 	<span class="slider round" />
 </label>
 

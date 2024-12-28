@@ -59,7 +59,6 @@
 	onMount(async () => {
 		await getGroups();
 		await getUserInfo();
-		selectedPage = userIsDelegate ? 'become-delegate' : 'delegate';
 	});
 </script>
 
@@ -85,15 +84,11 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					<input
-						type="checkbox"
-						on:input={() => (selectedPage = 'delegate')}
-						disabled={userIsDelegate}
+					<Toggle
+						onInput={(checked) => {
+							selectedPage = checked ? 'delegate' : 'none';
+						}}
 					/>
-
-					<Toggle onInput={() => {
-						selectedPage = selectedPage === 'delegate' ? 'become-delegate' : 'delegate'
-					}}   />
 					{$_('Auto-vote')}
 					<p>
 						{$_(

@@ -32,7 +32,9 @@
 			'GET',
 			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
+
 		if (json.results.length === 1) userIsDelegate = true;
+		else userIsDelegate = false;
 	};
 
 	/*
@@ -60,6 +62,8 @@
 		await getGroups();
 		await getUserInfo();
 	});
+
+	$: if (group) getUserInfo();
 </script>
 
 <Layout centered>

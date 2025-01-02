@@ -20,11 +20,11 @@
 		assignee: number | null = null,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
-			'Very high priority',
-			'High priority',
-			'Medium priority',
-			'Low priority',
-			'Very low priority'
+    		$_('Very high priority'),
+    		$_('High priority'),
+    		$_('Medium priority'),
+    		$_('Low priority'),
+    		$_('Very low priority')
 		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
@@ -83,7 +83,7 @@
 			assignee: {
 				id: assignee || 0,
 				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || 'unasigned'
+				username: userAssigned?.user.username || 'unassigned'
 			},
 			group: { id: 0, image: '', name: '' },
 			description,
@@ -98,6 +98,9 @@
 			priority,
 			end_date: end_date?.toString() || null
 		});
+
+		console.log('Assignee:', assignee);
+		console.log('UserAssigned:', userAssigned);
 
 		kanbanEntries = kanbanEntries;
 

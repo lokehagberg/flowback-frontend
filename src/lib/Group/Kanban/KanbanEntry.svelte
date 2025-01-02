@@ -34,11 +34,11 @@
 		status: StatusMessageInfo,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
-			'Very high priority',
-			'High priority',
-			'Medium priority',
-			'Low priority',
-			'Very low priority'
+    		$_('Very high priority'),
+    		$_('High priority'),
+    		$_('Medium priority'),
+    		$_('Low priority'),
+    		$_('Very low priority')
 		],
 		isEditing = false,
 		innerWidth: number,

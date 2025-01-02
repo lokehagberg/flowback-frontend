@@ -271,7 +271,7 @@
 								const endDate = new Date(event.end_date);
 
 								if (selectedDate.getDate() === startDate.getDate())
-									return `Start: ${
+									return `${$_('Start:')} ${
 										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
 									}:${
 										startDate.getMinutes() > 9
@@ -279,7 +279,7 @@
 											: '0' + startDate.getMinutes()
 									}`;
 								else if (selectedDate.getDate() === endDate.getDate())
-									return `Ends: ${
+									return `${$_('Ends:')} ${
 										endDate.getHours() > 9 ? endDate.getHours() : '0' + endDate.getHours()
 									}:${
 										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()

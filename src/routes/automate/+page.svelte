@@ -20,7 +20,7 @@
 		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
 
 	const getGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/list?limit=1000`);
+		const { res, json } = await fetchRequest('GET', `group/list?limit=1000&joined=true`);
 
 		if (!res.ok) return;
 		groups = json.results;
@@ -33,7 +33,9 @@
 			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 
-		if (json.results.length === 1) userIsDelegate = true;
+		if (!res.ok) return
+
+		if (json?.results?.length === 1) userIsDelegate = true;
 		else userIsDelegate = false;
 	};
 

@@ -34,17 +34,23 @@
 		});
 	};
 
-	const navs = [
+	let navs = [
 		{
 			title: 'User Profile',
 			action: () => goto('/user')
 		},
-		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },
 		{ title: 'Log Out', action: logOut }
 	];
 
 	onMount(() => {
+		console.log('env.PUBLIC_SUPPORT_PHONE', env.PUBLIC_SUPPORT_PHONE);
+
+		if (env.PUBLIC_SUPPORT_PHONE || env.PUBLIC_SUPPORT_MAIL) {
+			navs.splice(2,0,{ title: 'Support', action: () => (open_support = true) });
+			navs = navs;
+		}
+
 		closeWindowWhenClickingOutside();
 	});
 </script>

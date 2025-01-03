@@ -473,5 +473,6 @@
     "Upload a valid image. The file you uploaded was either not an image or a corrupted image.": "Ladda upp en giltig bild. Filen du laddade upp var antingen inte en bild eller en skadad bild.",
     "Enter a valid phone number.": "Ange ett giltigt telefonnummer.",
     "Do you accept terms and conditions?": "Accepterar du villkoren?",
-    "Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.": "Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill."
+    "Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.": "Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.",
+    "No description provided": "Ingen beskrivning har angetts."
 }

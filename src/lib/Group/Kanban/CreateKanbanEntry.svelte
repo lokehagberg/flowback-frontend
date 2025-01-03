@@ -54,7 +54,10 @@
 		if (end_date) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
-		if (description !== '') formData.append('description', description);
+		
+		description = description.trim() === '' ? $_('No description provided') : description;
+		formData.append('description', description);
+		// if (description !== '') formData.append('description', description);
 		if (images)
 			images.forEach((image) => {
 				formData.append('attachments', image);

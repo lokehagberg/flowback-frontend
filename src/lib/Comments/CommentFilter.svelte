@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Select from '$lib/Generic/Select.svelte';
+	import { _ } from 'svelte-i18n';
 
 	export let sortBy: string | null = null, Class = ""
 </script>
 
 <div class={Class}>
 	<Select
-		innerLabel="Select Sorting"
+		innerLabel={$_('Select Sorting')}
 		values={[
 			'created_at_asc',
 			'created_at_desc',
@@ -18,11 +19,11 @@
 		]}
 		bind:value={sortBy}
 		labels={[
-			'Recent',
-			'Oldest',
-			'Top',
-			'Controversial',
-			'Hot'
+			$_('Recent'),
+			$_('Oldest'),
+			$_('Top'),
+			$_('Controversial'),
+			$_('Hot')
 		]}
 		{Class}
 	/>

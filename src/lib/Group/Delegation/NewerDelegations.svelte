@@ -109,7 +109,6 @@
 	}
 </script>
 
-{@debug delegates}
 <div>
 	{#each tags as tag, index}
 		<div class="section">

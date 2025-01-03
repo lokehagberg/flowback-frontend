@@ -207,19 +207,19 @@
 		align-self: stretch;
 	}
 
-	header > .inline-flex {
+	/* header > .inline-flex {
 		gap: calc(8vw - 60px);
-	}
+	} */
 
 	header {
 		flex-wrap: wrap-reverse;
 	}
 
-	@media only screen and (max-width: 768px) {
+	/* @media only screen and (max-width: 768px) {
 		header > .inline-flex {
 			gap: calc(15vw - 70px);
 		}
-	}
+	} */
 
 	@media only screen and (max-width: 500px) {
 		header > div:last-child {

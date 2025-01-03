@@ -1,6 +1,7 @@
 @echo off
 
 REM This file allows for convenient setup for flowback backend and frontend at once. 
+REM TODO: Add one for linux users
 
 REM Make sure to change "cd ..; cd flowback-backend;" if your instalation path for flowback-backend is different
 REM Also make sure that docker is running

@@ -4,7 +4,6 @@
 	import { onMount } from 'svelte';
 	import type { Group, Tag } from '../interface';
 	import type { Delegate, DelegateRelation } from './interfaces';
-	import { deepCopy } from '$lib/Generic/GenericFunctions';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
@@ -102,8 +101,15 @@
 		getDelegatePools();
 		getDelegateRelations();
 	});
+
+	$: if (group) {
+		getGroupTags();
+		getDelegatePools();
+		getDelegateRelations();
+	}
 </script>
 
+{@debug delegates}
 <div>
 	{#each tags as tag, index}
 		<div class="section">

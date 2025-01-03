@@ -187,12 +187,11 @@
 				<StatusMessage Class="" bind:status />
 			</div>
 			<div class="dark:text-darkmodeText">
-				<div class="text-primary font-bold">{$_("Contact Information")}</div>
+				<div class="text-primary font-bold">{$_('Contact Information')}</div>
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}
 				</a>
 				<!-- <div>Phone number</div> -->
-				<!-- <div>Thing</div> -->
 			</div>
 		</div>
 		<!-- Editing your own profile -->
@@ -200,8 +199,8 @@
 		<!-- Banner Image -->
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
-				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview}
-				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview || DefaultBanner}
+				class="w-full cover transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -213,14 +212,14 @@
 			/>
 		</label>
 		<form
-			class="w-full bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
+			class="w-full bg-white shadow rounded p-8 dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">
 				<!-- Profile PIcture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 					alt="avatar"
 					id="avatar"
 				/>
@@ -245,7 +244,7 @@
 			{:else}
 				<button
 					on:click={() => (currentlyEditing = 'name')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
 				>
 					{$_(userEdit.username || 'Add Username')}
 				</button>
@@ -262,7 +261,7 @@
 			{:else}
 				<button
 					on:click={() => (currentlyEditing = 'phone')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
 				>
 					{$_(userEdit.contact_phone || 'Add phone number')}
 				</button>
@@ -279,7 +278,7 @@
 			{:else}
 				<button
 					on:click={() => (currentlyEditing = 'web')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
+					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
 				>
 					{userEdit.website || $_('Add Website')}
 				</button>
@@ -299,16 +298,16 @@
 					on:keydown
 					role="button"
 					tabindex="0"
-					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"
+					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl whitespace-pre-wrap"
 				>
 					{userEdit.bio || $_('Add Bio')}
 				</div>
 			{/if}
 
 			<StatusMessage Class="mt-4" bind:status />
-			<div class="mt-6">
-				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>
-				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+			<div class="flex justify-end gap-2">
+				<Button Class="" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}

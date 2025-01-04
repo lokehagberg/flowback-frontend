@@ -30,7 +30,8 @@
 			// 	//@ts-ignore
 			// 	value = e?.target?.value;
 		}}
-		class={`dark:bg-darkobject ${classInner}`}
+		style="width:100%"
+		class={`rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject ${classInner}`}
 		bind:value
 	>
 		<option value="" disabled selected>{innerLabel}</option>

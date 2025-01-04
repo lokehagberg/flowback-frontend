@@ -271,7 +271,7 @@
 								const endDate = new Date(event.end_date);
 
 								if (selectedDate.getDate() === startDate.getDate())
-									return `Start: ${
+									return `${$_('Start:')} ${
 										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
 									}:${
 										startDate.getMinutes() > 9
@@ -279,7 +279,7 @@
 											: '0' + startDate.getMinutes()
 									}`;
 								else if (selectedDate.getDate() === endDate.getDate())
-									return `Ends: ${
+									return `${$_('Ends:')} ${
 										endDate.getHours() > 9 ? endDate.getHours() : '0' + endDate.getHours()
 									}:${
 										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
@@ -381,22 +381,31 @@
 				<TextInput placeholder="Event name" label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
 				{#if type === 'group'}
-					{$_('Work Group')}
-					<Select
-						bind:value={workGroup}
-						labels={workGroups.map((group) => group.name)}
-						values={workGroups.map((group) => group.id)}
-					/>
+					<div class="text-left">
+						{$_('Work Group')}
+						<Select
+							bind:value={workGroup}
+							labels={workGroups.map((group) => group.name)}
+							values={workGroups.map((group) => group.id)}
+						/>
+					</div>
 				{/if}
 				<!-- <input bind:value={start_date} type="datetime-local" />
 				<input bind:value={end_date} type="datetime-local" /> -->
-				<DateInput bind:value={start_date} />
-				<DateInput bind:value={end_date} />
-				<Button type="submit">{$_('Submit')}</Button>
+				<div class="text-left">
+					{$_('Start date')}
+					<DateInput bind:value={start_date} />
+				</div>
+				<div class="text-left">
+					{$_('End date')}
+					<DateInput bind:value={end_date} />
+				</div>
 			</form>
 		</Loader>
 	</div>
-	<div slot="footer" />
+	<div slot="footer">
+		<Button type="submit">{$_('Submit')}</Button>
+	</div>
 </Modal>
 
 <!-- Opens a window which allows users to edit a schedule (TODO: refactor so there's just one combined modal for edit and create) -->
@@ -410,10 +419,12 @@
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<TextInput label="Event title" bind:value={title} />
 				<TextArea label="Event description" bind:value={description} />
-				<Button type="submit">{$_('Submit')}</Button>
-				<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
 			</form>
 		</Loader>
+	</div>
+	<div slot="footer">
+		<Button type="submit">{$_('Submit')}</Button>
+		<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
 	</div>
 </Modal>
 

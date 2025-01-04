@@ -71,7 +71,7 @@
 		formData.append('dynamic', selected_poll === 'Text Poll' ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
-		formData.append('tag', '1');
+		formData.append('tag', '5');
 
 		images.forEach((image) => {
 			formData.append('attachments', image);

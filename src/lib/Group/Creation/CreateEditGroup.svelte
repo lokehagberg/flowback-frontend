@@ -72,7 +72,7 @@
 			return;
 		}
 
-		if (groupToEdit === null) {
+		if (groupToEdit === null || groupToEdit === undefined) {
 			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
 				name: 'Uncategorised' //Default
 			});

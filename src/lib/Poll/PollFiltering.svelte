@@ -90,7 +90,7 @@
 			Class="rounded-md p-1"
 			onInput={handleFinishedSelection}
 			values={['all', 'unfinished', 'finished']}
-			labels={['All', 'Ongoing', 'Done']}
+			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
 			bind:value={filter.finishedSelection}
 		/>
 
@@ -98,7 +98,7 @@
 			Class="rounded-md p-1"
 			onInput={handleSort}
 			values={['start_date_desc', 'start_date_asc']}
-			labels={['Newest first', 'Oldest first']}
+			labels={[$_('Newest first'), $_('Oldest first')]}
 			bind:value={filter.order_by}
 		/>
 

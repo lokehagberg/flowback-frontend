@@ -20,11 +20,11 @@
 		assignee: number | null = null,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
-			'Very high priority',
-			'High priority',
-			'Medium priority',
-			'Low priority',
-			'Very low priority'
+    		$_('Very high priority'),
+    		$_('High priority'),
+    		$_('Medium priority'),
+    		$_('Low priority'),
+    		$_('Very low priority')
 		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
@@ -42,7 +42,8 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		const dateString = `${end_date?.getFullYear()}-${end_date?.getMonth()}-${end_date?.getDate()}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
+		const isoDate = end_date?.toISOString();
+		const dateString = `${isoDate?.slice(0, 10)}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
 		const formData = new FormData();
 
 		formData.append('title', title);
@@ -53,7 +54,10 @@
 		if (end_date) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
-		if (description !== '') formData.append('description', description);
+		
+		description = description.trim() === '' ? $_('No description provided') : description;
+		formData.append('description', description);
+		// if (description !== '') formData.append('description', description);
 		if (images)
 			images.forEach((image) => {
 				formData.append('attachments', image);
@@ -83,7 +87,7 @@
 			assignee: {
 				id: assignee || 0,
 				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || 'unasigned'
+				username: userAssigned?.user.username || $_('Unassigned'),
 			},
 			group: { id: 0, image: '', name: '' },
 			description,
@@ -98,6 +102,9 @@
 			priority,
 			end_date: end_date?.toString() || null
 		});
+
+		console.log('Assignee:', assignee);
+		console.log('UserAssigned:', userAssigned);
 
 		kanbanEntries = kanbanEntries;
 
@@ -121,7 +128,7 @@
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
-<Modal bind:open Class="!overflow-visible mt-[5%]" onSubmit={createKanbanEntry}>
+<Modal bind:open onSubmit={createKanbanEntry}>
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>

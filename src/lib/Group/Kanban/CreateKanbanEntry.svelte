@@ -87,7 +87,7 @@
 			assignee: {
 				id: assignee || 0,
 				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || 'unassigned'
+				username: userAssigned?.user.username || $_('Unassigned'),
 			},
 			group: { id: 0, image: '', name: '' },
 			description,
@@ -128,7 +128,7 @@
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
-<Modal bind:open Class="!overflow-visible mt-[5%]" onSubmit={createKanbanEntry}>
+<Modal bind:open onSubmit={createKanbanEntry}>
 	<div slot="header">{$_('Create Task')}</div>
 	<div slot="body">
 		<Loader bind:loading>

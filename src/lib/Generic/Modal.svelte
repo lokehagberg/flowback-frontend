@@ -51,8 +51,8 @@
 	<div
 		id="popup-modal"
 		tabindex="-1"
-		class={`dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
-		border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 h-modal ${Class}`}
+		class={`max-h-[80vh] mt-10 dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
+		border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 ${Class}`}
 		on:click={stopPropagation}
 		on:keydown
 		role="button"

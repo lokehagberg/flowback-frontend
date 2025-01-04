@@ -47,7 +47,7 @@
 	</button>
 	<img
 		src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`}
-		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+		class="bg-white rounded-full w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		alt="profile"
 	/>

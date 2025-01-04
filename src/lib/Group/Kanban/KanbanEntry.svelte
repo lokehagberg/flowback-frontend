@@ -20,6 +20,7 @@
 	import PriorityIcons from './PriorityIcons.svelte';
 	import { DateInput } from 'date-picker-svelte';
 	import { goto } from '$app/navigation';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -271,13 +272,7 @@
 		<div slot="body">
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
-				<!-- <TextArea
-					rows={10}
-					bind:value={kanbanEdited.description}
-					label=""
-					Class="h-full"
-					inputClass="border-none"
-				/> -->
+				<TextArea bind:value={kanbanEdited.description} label="Description" rows={5}/>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						{$_('Assignee')}
@@ -317,6 +312,11 @@
 				<div class="mt-6 text-left">
 					<span>
 						{$_('Assignee')}: {kanban?.assignee?.username}
+					</span>
+				</div>
+				<div class="text-left">
+					<span>
+						{$_('Work Group')}: {kanban?.work_group?.name}
 					</span>
 					<div class="flex gap-2 align-middle">
 						<span>{$_('Priority')}:</span>

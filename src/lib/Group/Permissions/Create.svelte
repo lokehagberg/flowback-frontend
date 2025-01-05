@@ -4,14 +4,13 @@
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { _ } from 'svelte-i18n';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
-	let status: StatusMessageInfo,
-		loading = false;
+	let loading = false,
+		poppup: poppup;
 
 	const perms = [
 		{
@@ -47,26 +46,26 @@
 		{ title: 'Delete Poll', description: 'Allows user to delete any poll' },
 		{ title: 'Force Delete Proposal', description: 'Allows user to delete any proposal' },
 		{ title: 'Delete Comment', description: 'Allows user to delete any comment' },
-		 { 
-            title: 'Create Prediction Statement', 
-            description: 'Allows user to create prediction statements in polls' 
-        },
-        { 
-            title: 'Delete Prediction Statement', 
-            description: 'Allows user to delete prediction statements in polls' 
-        },
-        { 
-            title: 'Create Prediction Bet', 
-            description: 'Allows user to create prediction bets in polls' 
-        },
-        { 
-            title: 'Update Prediction Bet', 
-            description: 'Allows user to modify prediction bets in polls' 
-        },
-        { 
-            title: 'Delete Prediction Bet', 
-            description: 'Allows user to delete prediction bets in polls' 
-        }
+		{
+			title: 'Create Prediction Statement',
+			description: 'Allows user to create prediction statements in polls'
+		},
+		{
+			title: 'Delete Prediction Statement',
+			description: 'Allows user to delete prediction statements in polls'
+		},
+		{
+			title: 'Create Prediction Bet',
+			description: 'Allows user to create prediction bets in polls'
+		},
+		{
+			title: 'Update Prediction Bet',
+			description: 'Allows user to modify prediction bets in polls'
+		},
+		{
+			title: 'Delete Prediction Bet',
+			description: 'Allows user to delete prediction bets in polls'
+		}
 	];
 
 	let roleName = '';
@@ -100,7 +99,12 @@
 		);
 
 		loading = false;
-		status = statusMessageFormatter(res, json, $_('Successfully created role'));
+
+		if (!res.ok) {
+			poppup = { message: 'Could not create role', success: false };
+			return;
+		}
+		poppup = { message: 'Successfully created role', success: true };
 	};
 </script>
 
@@ -118,8 +122,9 @@
 					<Toggle bind:checked={rolePerms[i]} />
 				</div>
 			{/each}
-			<StatusMessage bind:status />
 			<Button type="submit">{$_('Create Role')}</Button>
 		</form>
 	</div>
 </Loader>
+
+<Poppup bind:poppup />

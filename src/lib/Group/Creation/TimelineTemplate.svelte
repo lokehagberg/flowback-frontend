@@ -22,7 +22,6 @@
 
 	const templateList = async () => {
 		const groupId = $page.url.searchParams.get('id');
-		console.log(groupId, 'HEI');
 
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/poll/template/list`);
 
@@ -65,11 +64,12 @@
 
 <form on:submit|preventDefault={templateCreate}>
 	<TextInput label="name" required bind:value={name} />
+	¨
 	<Button type="submit">{$_('Save Timetemplate')}</Button>
 </form>
 
 {#each templates as template}
-	<button class="block" on:click={() => handleSelectTemplate(template)} on:keydown type="button"> 
+	<button class="block" on:click={() => handleSelectTemplate(template)} on:keydown type="button">
 		{template.name}
 	</button>
 {/each}

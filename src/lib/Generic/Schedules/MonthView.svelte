@@ -23,8 +23,6 @@
 		dates: Date[] = [];
 
 	const getRecentMonday = (d: Date) => {
-		console.log('getRecentMonday');
-
 		let mondayOffset = d.getDate() - d.getDay() + 1;
 		let month = mondayOffset < 0 ? d.getMonth() - 1 : d.getMonth();
 
@@ -32,8 +30,6 @@
 	};
 
 	const setUpDraggable = async () => {
-		console.log('setUpDraggable');
-
 		const { Swappable } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('monthView'), {
 			draggable: 'swappable'

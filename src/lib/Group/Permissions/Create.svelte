@@ -15,43 +15,58 @@
 
 	const perms = [
 		{
-			title: $_('Invite'),
-			description: $_('Allows user to invite other people in the invitation tab')
+			title: 'Invite',
+			description: 'Allows user to invite other people in the invitation tab'
 		},
-		{ title: $_('Create poll'), description: $_('Allows user to create polls') },
+		{ title: 'Create poll', description: 'Allows user to create polls' },
 		{
-			title: $_('Voting rights'),
-			description: $_('Allows user to vote on proposals in polls')
-		},
-		{
-			title: $_('Kick users'),
-			description: $_('Allows user to kick users from the group')
-		},
-		{ title: $_('Ban users'), description: $_('Allows user to ban users from the group') },
-		{
-			title: $_('Fast Forward Poll'),
-			description: $_('Allows user to change timeline phase on a poll')
+			title: 'Voting rights',
+			description: 'Allows user to vote on proposals in polls'
 		},
 		{
-			title: $_('Create Proposal'),
-			description: $_('Allows user to create proposals in polls during proposal phase')
+			title: 'Kick users',
+			description: 'Allows user to kick users from the group'
+		},
+		{ title: 'Ban users', description: 'Allows user to ban users from the group' },
+		{
+			title: 'Fast Forward Poll',
+			description: 'Allows user to change timeline phase on a poll'
 		},
 		{
-			title: $_('Update Proposal'),
-			description: $_('Allows user to change any proposal in a poll')
+			title: 'Create Proposal',
+			description: 'Allows user to create proposals in polls during proposal phase'
 		},
 		{
-			title: $_('Delete Proposal'),
-			description: $_('Allows user to remove any proposal in a poll')
+			title: 'Update Proposal',
+			description: 'Allows user to change any proposal in a poll'
 		},
-		{ title: $_('Delete Poll'), description: $_('Allows user to delete any poll') },
-		{ title: $_('Delete Proposal'), description: $_('Allows user to delete any proposal') },
-		{ title: $_('Delete Comment'), description: $_('Allows user to delete any comment') },
-		{ title: $_('prediction_statement_create'), description: '' },
-		{ title: $_('prediction_statement_delete'), description: '' },
-		{ title: $_('prediction_bet_create'), description: '' },
-		{ title: $_('prediction_bet_update'), description: '' },
-		{ title: $_('prediction_bet_delete'), description: '' }
+		{
+			title: 'Delete Proposal',
+			description: 'Allows user to remove any proposal in a poll'
+		},
+		{ title: 'Delete Poll', description: 'Allows user to delete any poll' },
+		{ title: 'Force Delete Proposal', description: 'Allows user to delete any proposal' },
+		{ title: 'Delete Comment', description: 'Allows user to delete any comment' },
+		 { 
+            title: 'Create Prediction Statement', 
+            description: 'Allows user to create prediction statements in polls' 
+        },
+        { 
+            title: 'Delete Prediction Statement', 
+            description: 'Allows user to delete prediction statements in polls' 
+        },
+        { 
+            title: 'Create Prediction Bet', 
+            description: 'Allows user to create prediction bets in polls' 
+        },
+        { 
+            title: 'Update Prediction Bet', 
+            description: 'Allows user to modify prediction bets in polls' 
+        },
+        { 
+            title: 'Delete Prediction Bet', 
+            description: 'Allows user to delete prediction bets in polls' 
+        }
 	];
 
 	let roleName = '';
@@ -97,8 +112,8 @@
 			{#each perms as perm, i}
 				<div class="flex justify-between">
 					<details>
-						<summary>{perm.title}</summary>
-						{perm.description}
+						<summary>{$_(perm.title)}</summary>
+						{$_(perm.description)}
 					</details>
 					<Toggle bind:checked={rolePerms[i]} />
 				</div>

@@ -476,5 +476,16 @@
     "Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.": "Auto-röstning innebär att du automatiskt röstar likadant som någon du har förtroende för. Du kan auto-rösta i enlighet med hur offentliga röstare har röstat i specifika ämnesområden. Du kan alltid ändra din röst i efterhand om du har tid och vill.",
     "No description provided": "Ingen beskrivning har angetts.",
     "schedule": "schema",
-    "We use cookies to improve the experience of Flowback": "Vi använder cookies för att förbättra upplevelsen av Flowback"
+    "We use cookies to improve the experience of Flowback": "Vi använder cookies för att förbättra upplevelsen av Flowback",
+    "Create Prediction Statement": "Skapa förutsägelse",
+    "Delete Prediction Statement": "Ta bort förutsägelse",
+    "Create Prediction Bet": "Skapa prediktion",
+    "Update Prediction Bet": "Uppdatera prediktion",
+    "Force Delete Proposal":"Tvångs-ta bort förslag",
+    "Delete Prediction Bet": "Ta bort prediktion",
+    "Allows user to create prediction statements in polls": "Tillåter användaren att skapa förutsägelser i omröstningar",
+    "Allows user to delete prediction statements in polls": "Tillåter användaren att ta bort förutsägelser i omröstningar",
+    "Allows user to create prediction bets in polls": "Tillåter användaren att skapa prediktioner i omröstningar",
+    "Allows user to modify prediction bets in polls": "Tillåter användaren att ändra prediktioner i omröstningar",
+    "Allows user to delete prediction bets in polls": "Tillåter användaren att ta bort prediktioner i omröstningar"
 }

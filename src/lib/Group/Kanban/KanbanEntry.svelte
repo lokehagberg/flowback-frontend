@@ -261,9 +261,9 @@
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words">
-		<div slot="header" class="">
+		<div slot="header">
 			{#if isEditing}
-				<TextInput bind:value={kanbanEdited.title} label="" inputClass="border-none" />
+				{$_('Edit Task')}
 			{:else}
 				{kanban.title}
 			{/if}
@@ -272,6 +272,7 @@
 		<div slot="body">
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
+				<TextInput bind:value={kanbanEdited.title} required label="Title" inputClass="border-none" />
 				<TextArea bind:value={kanbanEdited.description} label="Description" rows={5}/>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
@@ -319,7 +320,7 @@
 						{$_('Work Group')}: {kanban?.work_group?.name}
 					</span>
 					<div class="flex gap-2 align-middle">
-						<span>{$_('Priority')}:</span>
+						<span>{$_('Priority')}: {kanbanEdited.priority != null ? priorityText[priorityText.length - kanbanEdited.priority] : $_('No priority')}</span>
 						<PriorityIcons Class="ruby" priority={kanban?.priority} />
 					</div>
 				</div>

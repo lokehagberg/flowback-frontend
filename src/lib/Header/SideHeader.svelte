@@ -34,17 +34,23 @@
 		});
 	};
 
-	const navs = [
+	let navs = [
 		{
 			title: 'User Profile',
 			action: () => goto('/user')
 		},
-		{ title: 'Support', action: () => (open_support = true) },
 		{ title: 'TOS', action: () => (open_tos = true) },
 		{ title: 'Log Out', action: logOut }
 	];
 
 	onMount(() => {
+		console.log('env.PUBLIC_SUPPORT_PHONE', env.PUBLIC_SUPPORT_PHONE);
+
+		if (env.PUBLIC_SUPPORT_PHONE || env.PUBLIC_SUPPORT_MAIL) {
+			navs.splice(2,0,{ title: 'Support', action: () => (open_support = true) });
+			navs = navs;
+		}
+
 		closeWindowWhenClickingOutside();
 	});
 </script>
@@ -66,17 +72,23 @@
 	{/each}
 </button>
 
-<Modal bind:open={open_support}>
-	<div slot="header" class="p-4">
-		{$_('Support')}
-	</div>
+{#if env.PUBLIC_SUPPORT_PHONE || env.PUBLIC_SUPPORT_MAIL}
+	<Modal bind:open={open_support}>
+		<div slot="header" class="p-4">
+			{$_('Support')}
+		</div>
 
-	<div slot="body" class="text-left">
-		<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
-		<div>{$_('Number: +46737482562')}</div>
-		<div>{$_(`Mail: ${env.PUBLIC_SUPPORT_MAIL}`)}</div>
-	</div>
-</Modal>
+		<div slot="body" class="text-left">
+			{#if env.PUBLIC_SUPPORT_PHONE}
+				<div>{$_('Phone support is only between 15:30 and 17:30 CET')}</div>
+				<div>{$_('Number: +46737482562')}</div>
+			{/if}
+			{#if env.PUBLIC_SUPPORT_MAIL}
+				<div>{$_(`Mail: ${env.PUBLIC_SUPPORT_MAIL}`)}</div>
+			{/if}
+		</div>
+	</Modal>
+{/if}
 
 <Modal bind:open={open_tools}>
 	<div slot="header" class="p-4">

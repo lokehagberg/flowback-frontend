@@ -12,7 +12,8 @@
 		href: string | null = null,
 		Class = '',
 		color = '',
-		size = 'xl';
+		size = 'xl',
+		tabindex = 0;
 
 	let hovering = false,
 		selectedPage = false;
@@ -37,6 +38,7 @@
 		href={href === '/' ? window.location.href : '/' + href}
 		class={`relative cursor-pointer ${Class}`}
 		id={href}
+		{tabindex}
 	>
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}

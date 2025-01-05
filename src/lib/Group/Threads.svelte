@@ -15,24 +15,31 @@
 		faComment,
 		faThumbsDown,
 		faThumbsUp,
-		faThumbTack
+		faThumbTack,
+		faMagnifyingGlass
 	} from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 	import Description from '$lib/Poll/Description.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let isAdmin = true;
 
 	let threads: Thread[] = [],
 		prev = '',
 		next = '',
-		poppup: poppup;
+		poppup: poppup,
+		searchQuery = '',
+		searched = true;
 
 	const getThreads = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/thread/list?limit=${threadsLimit}`
-		);
+		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}`;
+		if (searchQuery) {
+			url += `&title=${searchQuery}`;
+		}
+
+		const { res, json } = await fetchRequest('GET', url);
 
 		if (!res.ok) {
 			poppup = { message: 'Could not load threads', success: false };
@@ -42,6 +49,14 @@
 		next = json.next;
 		prev = json.previous;
 		threads = json.results;
+
+		console.log(threads);
+		
+	};
+
+	const handleSearch = () => {
+		searched = true;
+		getThreads();
 	};
 
 	//Launches whenever the user clicks upvote or downvote on a thread
@@ -81,6 +96,27 @@
 </script>
 
 <div>
+	<form 
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
+		on:submit|preventDefault={handleSearch}
+	>
+		<TextInput
+			Class="w-4/5"
+			onInput={() => (searched = false)}
+			label={$_('Search')}
+			bind:value={searchQuery}
+		/>
+
+		<Button
+			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
+				searched ? 'bg-blue-300' : 'bg-blue-600'
+			}`}
+			type="submit"
+		>
+			<Fa icon={faMagnifyingGlass} />
+		</Button>
+	</form>
+
 	{#if threads.length === 0}
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"

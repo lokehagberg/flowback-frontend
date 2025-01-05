@@ -20,6 +20,7 @@
 		daysBetweenPhases = 1;
 
 	let calendarView = '1';
+	let templateCounter = 0; // Add counter
 
 	// This might look tautologous (exluded middle) but the code says that whenever "daysBetweenPhases" changes, the dates are updated.
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
@@ -42,6 +43,7 @@
 		);
 		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
 		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
+		templateCounter++; // Increment counter
 	};
 
 	const changeDaysBetweenPhases = () => {
@@ -80,7 +82,7 @@
 			labels={['Calendar', 'List']}
 		/>
 		{#if calendarView === '1'}
-			{#key daysBetweenPhases}
+			{#key [daysBetweenPhases, templateCounter]}
 				<MonthView
 					bind:start_date
 					bind:area_vote_end_date

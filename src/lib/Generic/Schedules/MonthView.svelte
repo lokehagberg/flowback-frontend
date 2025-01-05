@@ -1,14 +1,7 @@
 <script lang="ts">
-	import {
-		faCheck,
-		faChevronLeft,
-		faChevronRight,
-		faThumbTack
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { onMount, tick } from 'svelte';
-	import { fetchRequest } from '$lib/FetchRequest';
-	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	export let x = 7,
 		y = 7,
@@ -20,10 +13,6 @@
 		delegate_vote_end_date: Date,
 		vote_end_date: Date,
 		end_date: Date;
-	// w = 200,
-	// h = 300;
-
-	$: console.log(end_date, 'DATAs');
 
 	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
@@ -33,24 +22,9 @@
 		mounted: boolean,
 		dates: Date[] = [];
 
-	onMount(() => {
-		mounted = true;
-		initialMonday = getRecentMonday(new Date());
-		dates = [
-			start_date,
-			area_vote_end_date,
-			proposal_end_date,
-			prediction_statement_end_date,
-			prediction_bet_end_date,
-			delegate_vote_end_date,
-			vote_end_date,
-			end_date
-		];
-		dates.map((date) => date.setHours(0, 0, 0, 0));
-		dates = dates;
-	});
-
 	const getRecentMonday = (d: Date) => {
+		console.log('getRecentMonday');
+
 		let mondayOffset = d.getDate() - d.getDay() + 1;
 		let month = mondayOffset < 0 ? d.getMonth() - 1 : d.getMonth();
 
@@ -58,19 +32,17 @@
 	};
 
 	const setUpDraggable = async () => {
+		console.log('setUpDraggable');
+
 		const { Swappable } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('monthView'), {
 			draggable: 'swappable'
 		});
 
 		draggable.on('drag:stop', (e: any) => {
-			// console.log(e.source.parentElement);
-			// console.log(e.source.parentElement.id[0]);
 			let x: string = e.source.parentElement.id[0];
 			let y: string = e.source.parentElement.id[2];
-			console.log(e.originalSource.id);
 
-			// tick();
 			const newDate = new Date(
 				monday?.getFullYear(),
 				monday?.getMonth(),
@@ -113,31 +85,29 @@
 				default:
 					break;
 			}
-
-			// start_date =
-
-			// console.log(start_date, monday, x, y);
 		});
-	};
-
-	const weekDisplay = () => {
-		//@ts-ignore
-		const todaysWeek = new Date().getWeek();
-
-		// if (todaysWeek + weekOffset < 52 && todaysWeek + weekOffset > 0)
-		// 	return todaysWeek + weekOffset
-		// else if (todaysWeek + weekOffset >= 52) {
-		// 	year++;
-		// 	return
-		// } else if (todaysWeek + weekOffset + incriment <= 0) {
-		// 	weekOffset = 52;
-		// 	year--;
-		// }
 	};
 
 	onMount(() => {
 		setUpDraggable();
+
+		mounted = true;
+		initialMonday = getRecentMonday(new Date());
+		dates = [
+			start_date,
+			area_vote_end_date,
+			proposal_end_date,
+			prediction_statement_end_date,
+			prediction_bet_end_date,
+			delegate_vote_end_date,
+			vote_end_date,
+			end_date
+		];
+		dates.map((date) => date.setHours(0, 0, 0, 0));
+		dates = dates;
 	});
+
+
 
 	$: monday = getRecentMonday(
 		new Date(

@@ -69,7 +69,7 @@
 </form>
 
 {#each templates as template}
-	<button class="block" on:click={() => handleSelectTemplate(template)} on:keydown type="button">
+	<button class="block" on:click={() => handleSelectTemplate(template)} type="button">
 		{template.name}
 	</button>
 {/each}

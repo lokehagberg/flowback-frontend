@@ -20,11 +20,11 @@
 		assignee: number | null = null,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
-    		$_('Very high priority'),
-    		$_('High priority'),
-    		$_('Medium priority'),
-    		$_('Low priority'),
-    		$_('Very low priority')
+			$_('Very high priority'),
+			$_('High priority'),
+			$_('Medium priority'),
+			$_('Low priority'),
+			$_('Very low priority')
 		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
@@ -54,7 +54,7 @@
 		if (end_date) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
-		
+
 		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
 		// if (description !== '') formData.append('description', description);
@@ -87,7 +87,7 @@
 			assignee: {
 				id: assignee || 0,
 				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || $_('Unassigned'),
+				username: userAssigned?.user.username || $_('Unassigned')
 			},
 			group: { id: 0, image: '', name: '' },
 			description,
@@ -102,9 +102,6 @@
 			priority,
 			end_date: end_date?.toString() || null
 		});
-
-		console.log('Assignee:', assignee);
-		console.log('UserAssigned:', userAssigned);
 
 		kanbanEntries = kanbanEntries;
 
@@ -143,7 +140,7 @@
 								on:input={handleChangeAssignee}
 								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
-								<option value={null}>Select</option>
+								<option value={null}>{$_('Select')}</option>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
 								{/each}

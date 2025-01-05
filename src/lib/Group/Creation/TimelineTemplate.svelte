@@ -5,6 +5,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { template } from './interface';
+	import { _ } from 'svelte-i18n';
 
 	export let area_vote_time_delta: number,
 		proposal_time_delta: number,
@@ -43,14 +44,18 @@
 			poll_type,
 			name,
 			poll_is_dynamic: false
-		}
+		};
 
-		const { res, json } = await fetchRequest('POST', `group/${groupId}/poll/template/create`, template);
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${groupId}/poll/template/create`,
+			template
+		);
 
 		if (!res.ok) return;
 
-		templates.push(template)
-		templates = templates
+		templates.push(template);
+		templates = templates;
 	};
 
 	onMount(() => {
@@ -60,12 +65,11 @@
 
 <form on:submit|preventDefault={templateCreate}>
 	<TextInput label="name" required bind:value={name} />
-	<Button type="submit">Save Timetemplate</Button>
+	<Button type="submit">{$_('Save Timetemplate')}</Button>
 </form>
 
 {#each templates as template}
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click={() => handleSelectTemplate(template)} on:keydown >
-	{template.name}
-	</div>
+	<button class="block" on:click={() => handleSelectTemplate(template)} on:keydown type="button"> 
+		{template.name}
+	</button>
 {/each}

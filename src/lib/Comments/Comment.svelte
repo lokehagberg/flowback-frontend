@@ -150,7 +150,9 @@
 				>
 					<Fa icon={faArrowDown} />
 				</button>
+
 				{comment.score}
+
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"

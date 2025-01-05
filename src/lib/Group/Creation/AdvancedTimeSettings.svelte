@@ -21,6 +21,7 @@
 
 	let calendarView = '1';
 
+	// This might look tautologous (exluded middle) but the code says that whenever "daysBetweenPhases" changes, the dates are updated.
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
 	const handleSelectTemplate = (template: template) => {

@@ -104,6 +104,7 @@
 		});
 
 		kanbanEntries = kanbanEntries;
+		open = false;
 
 		description = '';
 		title = '';

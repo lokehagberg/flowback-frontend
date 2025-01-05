@@ -59,8 +59,12 @@
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
 		//@ts-ignore
-		if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
-
+		// if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
+		if (kanbanEdited.end_date === null) {
+		kanbanEdited.end_date = null;
+	} else if (kanbanEdited.end_date instanceof Date) {
+		kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
+	}
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -74,7 +78,11 @@
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
 		kanban.priority = kanbanEdited.priority;
-
+		if (kanbanEdited.end_date !== null) {
+			kanban.end_date = kanbanEdited.end_date.toISOString();
+		} else {
+			kanban.end_date = null;
+		}
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
 		if (assignee)
 			kanban.assignee = {
@@ -311,6 +319,11 @@
 					{kanban?.description}
 				</div>
 				<div class="mt-6 text-left">
+					<span>
+						{$_('End Date')}: {kanban?.end_date ? new Date(kanban.end_date).toISOString().split('T')[0] : $_('No end date set')}
+					</span>
+				</div>
+				<div class="text-left">
 					<span>
 						{$_('Assignee')}: {kanban?.assignee?.username}
 					</span>

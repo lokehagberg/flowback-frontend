@@ -86,7 +86,7 @@
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
-			<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
+			<a class="text-white" href={`/createpoll?id=${$page.params.groupId}&type=${selectedPage === 'threads' ? 'thread' : 'poll'}`}>
 				<GroupSidebarButton
 					text="Create a post"
 					icon={faCheckToSlot}

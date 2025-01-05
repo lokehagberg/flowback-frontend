@@ -41,7 +41,7 @@
 		isFF = true,
 		pushToBlockchain = true,
 		selected_poll: pollType = 'Text Poll',
-		selectedPage: 'poll' | 'thread' = 'poll',
+		selectedPage: 'poll' | 'thread' = $page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
 		tags: { id: number }[] = [];
 
 	const groupId = $page.url.searchParams.get('id');

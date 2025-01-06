@@ -33,19 +33,6 @@
 		if (!res.ok) return;
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
-
-		if (!res.ok) return;
-
-		delegates = json.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-	};
 
 	const toggleSection = (index: any) => {
 		expandedSection = expandedSection === index ? null : index;
@@ -113,7 +100,6 @@
 
 	const initialSetup = async () => {
 		getGroupTags();
-		getDelegatePools();
 		await getDelegateRelations();
 		setupDelegationTagStructure();
 	};

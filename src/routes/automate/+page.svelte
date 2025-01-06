@@ -49,6 +49,22 @@
 	};
 
 	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
+
+		if (!res.ok) return;
+
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
+
+		selectedPage = delegates.length > 0 ? 'delegate' : 'none';
+	};
+
+	/*
 	 	Makes the currently logged in user into a delegate(pool)
 	 */
 	const createDelegationPool = async () => {
@@ -73,25 +89,15 @@
 	};
 
 	const removeAllDelegations = async (group: Group) => {
-		const promises = delegates.map(delegate => 
+		const promises = delegates.map((delegate) =>
 			fetchRequest('POST', `group/${group.id}/delegate/delete`, {
 				delegate_pool_id: delegate.pool_id
 			})
 		);
-	
-		try {
-			const results = await Promise.all(promises);
-			const failed = results.some(({ res }) => !res.ok);
-			
-			if (failed) {
-				poppup = { message: 'Could not remove all delegations', success: false };
-				return;
-			}
-	
-			userIsDelegate = false;
-		} catch (error) {
-			poppup = { message: 'Could not remove all delegations', success: false };
-		}
+
+		const results = await Promise.all(promises);
+
+		poppup = { message: 'Removed delegations', success: true };
 	};
 
 	onMount(async () => {
@@ -100,6 +106,7 @@
 	});
 
 	$: if (group) getUserInfo();
+	$: if (group) getDelegatePools();
 </script>
 
 <Layout centered>
@@ -124,12 +131,15 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					<Toggle
-						onInput={(checked) => {
-							selectedPage = checked ? 'delegate' : 'none';
-							if (!checked) removeAllDelegations(group);
-						}}
-					/>
+					{#key delegates}
+						<Toggle
+							onInput={(checked) => {
+								selectedPage = checked ? 'delegate' : 'none';
+								if (!checked) removeAllDelegations(group);
+							}}
+							checked={delegates.length > 0}
+						/>
+					{/key}
 					{$_('Auto-vote')}
 					<p>
 						{$_(

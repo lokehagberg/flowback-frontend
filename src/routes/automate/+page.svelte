@@ -73,16 +73,25 @@
 	};
 
 	const removeAllDelegations = async (group: Group) => {
-		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/delete`, {
-			delegate_pool_id: 0
-		});
-
-		if (!res.ok) {
+		const promises = delegates.map(delegate => 
+			fetchRequest('POST', `group/${group.id}/delegate/delete`, {
+				delegate_pool_id: delegate.pool_id
+			})
+		);
+	
+		try {
+			const results = await Promise.all(promises);
+			const failed = results.some(({ res }) => !res.ok);
+			
+			if (failed) {
+				poppup = { message: 'Could not remove all delegations', success: false };
+				return;
+			}
+	
+			userIsDelegate = false;
+		} catch (error) {
 			poppup = { message: 'Could not remove all delegations', success: false };
-			return;
 		}
-
-		userIsDelegate = false;
 	};
 
 	onMount(async () => {

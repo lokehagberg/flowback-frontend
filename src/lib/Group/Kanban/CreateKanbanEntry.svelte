@@ -20,11 +20,11 @@
 		assignee: number | null = null,
 		priorities = [5, 4, 3, 2, 1],
 		priorityText = [
-			$_('Very high priority'),
-			$_('High priority'),
-			$_('Medium priority'),
-			$_('Low priority'),
-			$_('Very low priority')
+			'Very high priority',
+			'High priority',
+			'Medium priority',
+			'Low priority',
+			'Very low priority'
 		],
 		priority: undefined | number = 3,
 		end_date: null | Date = null,
@@ -157,7 +157,7 @@
 						>
 							{#each priorities as i}
 								<option value={i}>
-									{priorityText[priorityText.length - i]}
+									{$_(priorityText[priorityText.length - i])}
 								</option>
 							{/each}
 						</select>

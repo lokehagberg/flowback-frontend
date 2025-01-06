@@ -18,13 +18,11 @@
 		poppup: poppup,
 		delegationTagsStructure: { delegate_pool_id: number; tags: number[] }[] = [];
 
-	const updateDelegationTagStructure = () => {
+	const setupDelegationTagStructure = () => {
 		delegationTagsStructure = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)
 		}));
-
-		console.log(delegationTagsStructure);
 	};
 
 	const getGroupTags = async () => {
@@ -117,7 +115,7 @@
 		getGroupTags();
 		getDelegatePools();
 		await getDelegateRelations();
-		updateDelegationTagStructure();
+		setupDelegationTagStructure();
 	});
 
 	$: if (group) {
@@ -125,9 +123,11 @@
 			getGroupTags();
 			getDelegatePools();
 			await getDelegateRelations();
-			updateDelegationTagStructure();
+			setupDelegationTagStructure();
 		};
 	}
+
+	$: console.log(delegationTagsStructure);
 </script>
 
 <div>
@@ -160,9 +160,9 @@
 									on:input={() => changeDelegation(delegate, tag)}
 									type="radio"
 									name={tag.name}
-									checked={delegationTagsStructure.find(
-										(relation) => relation.delegate_pool_id === delegate.pool_id
-									)?.tags.find((_tag) => _tag === tag.id) !== undefined}
+									checked={delegationTagsStructure
+										.find((relation) => relation.delegate_pool_id === delegate.pool_id)
+										?.tags.find((_tag) => _tag === tag.id) !== undefined}
 								/>
 							</span>
 						</div>

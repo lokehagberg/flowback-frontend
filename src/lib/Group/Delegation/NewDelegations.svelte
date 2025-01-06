@@ -1,3 +1,4 @@
+<!-- Depricated, use NewerDelegations. TODO: Eventually remove the old delegation files -->
 <script lang="ts">
 	import Loader from '$lib/Generic/Loader.svelte';
 	import type { Tag } from '../interface';
@@ -10,13 +11,17 @@
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import type { Delegate, DelegatePool } from './interfaces';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { _ } from 'svelte-i18n';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let loading = false,
 		tags: Tag[] = [],
 		delegates: Delegate[] = [],
 		selectedTag: Tag,
 		value: number | null,
-		resetValue = () => {};
+		resetValue = () => {},
+		poppup: poppup = { message: '', success: false },
+		delegationTagsStructure: any[];
 
 	const getTagsLocal = async () => {
 		loading = true;
@@ -154,9 +159,21 @@
 		await getTagsLocal();
 		await getDelegatePools();
 		setDelegators();
+
+
+		
+		delegationTagsStructure =  delegates.map((delegate) => {
+			return {
+				delegate_id: delegate.pool_id,
+				tags: delegate.tags.map((tag) => tag.id)
+			};
+		});
+		console.log(delegationTagsStructure, 'DELEGATION TAGS STRUCTURE');
 	});
 
 	$: if (selectedTag) handleTagChange();
+
+
 </script>
 
 <Loader bind:loading>
@@ -193,7 +210,7 @@
 					bind:resetValue
 				/>
 			{:else}
-				<span class="text-primary font-bold text-2xl">Select Tag</span>
+				<span class="text-primary font-bold text-2xl">{$_('Select Tag')}</span>
 			{/if}
 		</div>
 	</div>

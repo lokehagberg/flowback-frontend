@@ -15,7 +15,17 @@
 		userIsDelegate = false,
 		expandedSection: any = null,
 		delegateRelations: DelegateRelation[] = [],
-		poppup: poppup;
+		poppup: poppup,
+		delegationTagsStructure: { delegate_pool_id: number; tags: number[] }[] = [];
+
+	const updateDelegationTagStructure = () => {
+		delegationTagsStructure = delegateRelations.map(({ tags, delegate_pool_id }) => ({
+			delegate_pool_id,
+			tags: tags.map(({ id }) => id)
+		}));
+
+		console.log(delegationTagsStructure);
+	};
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
@@ -58,15 +68,26 @@
 	};
 
 	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
-		delegateRelations.forEach((relation, i) => {
-			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
+		
+		delegationTagsStructure.forEach((relation, i) => {
+			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag === tag.id);
 
 			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
-			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
+			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag.id);
 		});
+		
+		
+		console.log(delegationTagsStructure);
 
-		await createDelegateRelation(delegate.pool_id);
-		saveDelegation();
+		// delegateRelations.forEach((relation, i) => {
+		// 	const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
+
+		// 	if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
+		// 	else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
+		// });
+
+		// await createDelegateRelation(delegate.pool_id);
+		// saveDelegation();
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
@@ -99,13 +120,17 @@
 	onMount(async () => {
 		getGroupTags();
 		getDelegatePools();
-		getDelegateRelations();
+		await getDelegateRelations();
+		updateDelegationTagStructure();
 	});
 
 	$: if (group) {
-		getGroupTags();
-		getDelegatePools();
-		getDelegateRelations();
+		async () => {
+			getGroupTags();
+			getDelegatePools();
+			await getDelegateRelations();
+			updateDelegationTagStructure();
+		};
 	}
 </script>
 

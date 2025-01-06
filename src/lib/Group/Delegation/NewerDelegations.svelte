@@ -111,23 +111,20 @@
 		if (res.ok) poppup = { message: 'Successfully saved new delegation', success: true };
 	};
 
-	onMount(async () => {
+	const initialSetup = async () => {
 		getGroupTags();
 		getDelegatePools();
 		await getDelegateRelations();
 		setupDelegationTagStructure();
+	};
+
+	onMount(async () => {
+		initialSetup();
 	});
 
 	$: if (group) {
-		async () => {
-			getGroupTags();
-			getDelegatePools();
-			await getDelegateRelations();
-			setupDelegationTagStructure();
-		};
+		initialSetup();
 	}
-
-	$: console.log(delegationTagsStructure);
 </script>
 
 <div>

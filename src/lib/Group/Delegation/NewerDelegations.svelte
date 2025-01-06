@@ -68,26 +68,22 @@
 	};
 
 	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
-		
 		delegationTagsStructure.forEach((relation, i) => {
 			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag === tag.id);
 
 			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
 			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag.id);
 		});
-		
-		
-		console.log(delegationTagsStructure);
 
-		// delegateRelations.forEach((relation, i) => {
-		// 	const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
+		delegateRelations.forEach((relation, i) => {
+			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
 
-		// 	if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
-		// 	else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
-		// });
+			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
+			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
+		});
 
-		// await createDelegateRelation(delegate.pool_id);
-		// saveDelegation();
+		await createDelegateRelation(delegate.pool_id);
+		saveDelegation();
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
@@ -164,11 +160,9 @@
 									on:input={() => changeDelegation(delegate, tag)}
 									type="radio"
 									name={tag.name}
-									checked={delegateRelations.find(
-										(relation) =>
-											relation.delegate_pool_id === delegate.pool_id &&
-											relation.tags.find((tag) => tag?.id === tag.id)
-									) !== undefined}
+									checked={delegationTagsStructure.find(
+										(relation) => relation.delegate_pool_id === delegate.pool_id
+									)?.tags.find((_tag) => _tag === tag.id) !== undefined}
 								/>
 							</span>
 						</div>

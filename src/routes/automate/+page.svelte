@@ -49,22 +49,6 @@
 	};
 
 	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
-
-		if (!res.ok) return;
-
-		delegates = json.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-
-		selectedPage = delegates.length > 0 ? 'delegate' : 'none';
-	};
-
-	/*
 	 	Makes the currently logged in user into a delegate(pool)
 	 */
 	const createDelegationPool = async () => {
@@ -106,7 +90,6 @@
 	});
 
 	$: if (group) getUserInfo();
-	$: if (group) getDelegatePools();
 </script>
 
 <Layout centered>
@@ -131,15 +114,14 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					{#key delegates}
-						<Toggle
-							onInput={(checked) => {
-								selectedPage = checked ? 'delegate' : 'none';
-								if (!checked) removeAllDelegations(group);
-							}}
-							checked={delegates.length > 0}
-						/>
-					{/key}
+					
+					<Toggle
+						onInput={(checked) => {
+							selectedPage = checked ? 'delegate' : 'none';
+							if (!checked) removeAllDelegations(group);
+						}}
+						checked={delegates.length > 0}
+					/>
 					{$_('Auto-vote')}
 					<p>
 						{$_(

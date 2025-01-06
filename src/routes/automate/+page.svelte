@@ -17,6 +17,7 @@
 	let group: Group,
 		groups: Group[],
 		userIsDelegate = false,
+		autovote = false,
 		loading = false,
 		delegates: Delegate[] = [],
 		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
@@ -84,12 +85,22 @@
 		poppup = { message: 'Removed delegations', success: true };
 	};
 
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
+
+		autovote = res.ok && json.results.length > 0;
+	};
+
 	onMount(async () => {
 		await getGroups();
 		await getUserInfo();
 	});
 
-	$: if (group) getUserInfo();
+	$: if (group) {
+		getUserInfo();
+		getDelegatePools();
+		selectedPage = autovote ? 'delegate' : 'none';
+	}
 </script>
 
 <Layout centered>
@@ -114,13 +125,12 @@
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li>
-					
 					<Toggle
 						onInput={(checked) => {
 							selectedPage = checked ? 'delegate' : 'none';
 							if (!checked) removeAllDelegations(group);
 						}}
-						checked={delegates.length > 0}
+						checked={autovote}
 					/>
 					{$_('Auto-vote')}
 					<p>

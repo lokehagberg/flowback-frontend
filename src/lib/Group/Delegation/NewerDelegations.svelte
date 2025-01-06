@@ -112,21 +112,20 @@
 	};
 
 	const initialSetup = async () => {
-			getGroupTags();
-			getDelegatePools();
-			await getDelegateRelations();
-			setupDelegationTagStructure();
-		}
+		getGroupTags();
+		getDelegatePools();
+		await getDelegateRelations();
+		setupDelegationTagStructure();
+	};
 
 	onMount(async () => {
-	initialSetup();
-});
+		initialSetup();
+	});
 
-$: if (group) {
+	$: if (group) {
 		initialSetup();
 	}
-
-
+	
 </script>
 
 <div>

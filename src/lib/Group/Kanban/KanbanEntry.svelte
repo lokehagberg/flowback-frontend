@@ -13,7 +13,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { checkForLinks, elipsis, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import type { GroupUser, kanban } from '../interface';
+	import type { GroupUser } from '../interface';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
@@ -21,6 +21,7 @@
 	import { DateInput } from 'date-picker-svelte';
 	import { goto } from '$app/navigation';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import type { kanbanEdited, kanban} from './Kanban';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -45,9 +46,8 @@
 		innerWidth: number,
 		outerWidth: number,
 		// initializes the kanban to be edited when modal is opened
-		kanbanEdited = {
+		kanbanEdited : kanbanEdited = {
 			entry_id: kanban.id,
-			id: kanban.id,
 			description: kanban.description,
 			title: kanban.title,
 			assignee: kanban.assignee?.id,
@@ -61,10 +61,10 @@
 		//@ts-ignore
 		// if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
 		if (kanbanEdited.end_date === null) {
-		kanbanEdited.end_date = null;
-	} else if (kanbanEdited.end_date instanceof Date) {
-		kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
-	}
+			delete kanbanEdited.end_date;
+		} else if (kanbanEdited.end_date instanceof Date) {
+			kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
+		}
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
@@ -79,12 +79,12 @@
 		kanban.description = kanbanEdited.description;
 		kanban.priority = kanbanEdited.priority;
 		if (kanbanEdited.end_date !== null) {
-			kanban.end_date = kanbanEdited.end_date.toISOString();
+			kanban.end_date = kanbanEdited.end_date?.toISOString();
 		} else {
 			kanban.end_date = null;
 		}
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
-		if (assignee)
+		if (assignee && kanbanEdited?.assignee)
 			kanban.assignee = {
 				id: kanbanEdited?.assignee,
 				username: assignee?.user.username || '',
@@ -169,7 +169,6 @@
 		(() => {
 			kanbanEdited = {
 				entry_id: kanban.id,
-				id: kanban.id,
 				description: kanban.description,
 				title: kanban.title,
 				assignee: kanban.assignee?.id,
@@ -189,7 +188,7 @@
 		selectedEntry = kanban.id;
 	}}
 >
-	{#if kanban.end_date !== null && endDate}
+	{#if kanban.end_date && endDate}
 		<div class="text-sm">
 			{#if new Date(kanban.end_date) < new Date()}
 				{$_('Ended')}
@@ -202,7 +201,9 @@
 	<div class="flex justify-between w-full items-start">
 		<div class="text-primary text-left break-before-auto font-semibold">{kanban.title}</div>
 		<div class="cursor-pointer hover:underline">
-			<KanbanIcons bind:priority={kanban.priority} />
+			{#if kanban.priority}
+				<KanbanIcons bind:priority={kanban.priority} />
+			{/if}
 		</div>
 	</div>
 	<button
@@ -334,7 +335,9 @@
 					</span>
 					<div class="flex gap-2 align-middle">
 						<span>{$_('Priority')}: {kanbanEdited.priority != null ? priorityText[priorityText.length - kanbanEdited.priority] : $_('No priority')}</span>
-						<PriorityIcons Class="ruby" priority={kanban?.priority} />
+						{#if kanban.priority}
+							<PriorityIcons Class="ruby" priority={kanban?.priority} />
+						{/if}
 					</div>
 				</div>
 			{/if}

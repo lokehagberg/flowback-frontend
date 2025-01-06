@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
-	export let value = '',
+	export let value:string | null = '',
 		label: string,
 		required = false,
 		Class = '',
@@ -56,7 +56,7 @@
 
 		{#if max}
 			<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400 text-xs">
-				{value.length}/{max}
+				{value?.length}/{max}
 			</p>{/if}
 	</div>
 	<textarea

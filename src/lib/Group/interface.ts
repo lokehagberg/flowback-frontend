@@ -128,26 +128,6 @@ export const userGroupInfo = writable({
 export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
 
-export interface kanban {
-	assignee: { id: number; profile_image: string; username: string };
-	group: {
-		id: number;
-		image: string;
-		name: string;
-	};
-	created_by: number;
-	description: string;
-	id: number;
-	lane: number;
-	work_group?:{name:string; id:number};
-	title: string;
-	origin_id: number;
-	origin_type: 'group' | 'user';
-	group_name: string;
-	priority: undefined | number;
-	end_date: null | string;
-}
-
 export interface Thread {
 	created_by: {
 		id: number;

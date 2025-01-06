@@ -8,11 +8,12 @@
 	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
-	import type { GroupUser, kanban } from '../interface';
+	import type { GroupUser } from '../interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import type {kanban} from './Kanban';
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -143,7 +144,7 @@
 								on:input={handleChangeAssignee}
 								class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							>
-								<option value={null}>Select</option>
+								<option value={null}>{$_("Select")}</option>
 								{#each users as user}
 									<option value={user.user.id}>{user.user.username}</option>
 								{/each}

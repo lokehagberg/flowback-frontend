@@ -326,12 +326,12 @@
 				</div>
 				<div class="text-left">
 					<span>
-						{$_('Assignee')}: {kanban?.assignee?.username}
+						{$_('Assignee')}: {kanban?.assignee?.username || $_('Unassigned')}
 					</span>
 				</div>
 				<div class="text-left">
 					<span>
-						{$_('Work Group')}: {kanban?.work_group?.name}
+						{$_('Work Group')}: {kanban?.work_group?.name || $_('Unassigned')}
 					</span>
 					<div class="flex gap-2 align-middle">
 						<span>{$_('Priority')}: {kanbanEdited.priority != null ? priorityText[priorityText.length - kanbanEdited.priority] : $_('No priority')}</span>

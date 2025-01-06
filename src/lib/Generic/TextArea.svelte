@@ -56,7 +56,7 @@
 
 		{#if max}
 			<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400 text-xs">
-				{value.length || 0}/{max}
+				{value?.length || 0}/{max}
 			</p>
 		{/if}
 	</div>

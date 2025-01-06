@@ -6,6 +6,8 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { template } from './interface';
 	import { _ } from 'svelte-i18n';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let area_vote_time_delta: number,
 		proposal_time_delta: number,
@@ -18,14 +20,18 @@
 		handleSelectTemplate = (template: template) => {};
 
 	let name: string,
-		templates: template[] = [];
+		templates: template[] = [],
+		poppup: poppup;
 
 	const templateList = async () => {
 		const groupId = $page.url.searchParams.get('id');
 
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/poll/template/list`);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not load templates', success: false };
+			return;
+		}
 
 		templates = json.results;
 	};
@@ -51,10 +57,14 @@
 			template
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not create template', success: false };
+			return;
+		}
 
 		templates.push(template);
 		templates = templates;
+		poppup = { message: 'Successfully created template', success: true };
 	};
 
 	onMount(() => {
@@ -73,3 +83,5 @@
 		{template.name}
 	</button>
 {/each}
+
+<Poppup bind:poppup />

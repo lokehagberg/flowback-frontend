@@ -120,7 +120,7 @@
     "Send mail": "Skicka mail",
     "Successfully created role": "Roll skapad",
     "Group statistics": "Gruppstatistik",
-    "Areas":"Taggar",
+    "Areas": "Taggar",
     "Statistics": "Statistik",
     "Create Poll": "Skapa poll",
     "Video Conference": "Videokonferens",
@@ -482,11 +482,15 @@
     "Delete Prediction Statement": "Ta bort förutsägelse",
     "Create Prediction Bet": "Skapa prediktion",
     "Update Prediction Bet": "Uppdatera prediktion",
-    "Force Delete Proposal":"Tvångs-ta bort förslag",
+    "Force Delete Proposal": "Tvångs-ta bort förslag",
     "Delete Prediction Bet": "Ta bort prediktion",
     "Allows user to create prediction statements in polls": "Tillåter användaren att skapa förutsägelser i omröstningar",
     "Allows user to delete prediction statements in polls": "Tillåter användaren att ta bort förutsägelser i omröstningar",
     "Allows user to create prediction bets in polls": "Tillåter användaren att skapa prediktioner i omröstningar",
     "Allows user to modify prediction bets in polls": "Tillåter användaren att ändra prediktioner i omröstningar",
-    "Allows user to delete prediction bets in polls": "Tillåter användaren att ta bort prediktioner i omröstningar"
+    "Allows user to delete prediction bets in polls": "Tillåter användaren att ta bort prediktioner i omröstningar",
+    "Could not get groups": "Kunde inte hämta grupper",
+    "Could not get user info": "Kunde inte hämta användarinformation",
+    "Could not create delegation pool": "Kunde inte skapa delegeringspool",
+    "Could not remove all delegations": "Kunde inte ta bort alla delegeringar"
 }

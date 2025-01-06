@@ -3,6 +3,8 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
@@ -17,12 +19,16 @@
 		userIsDelegate = false,
 		loading = false,
 		delegates: Delegate[] = [],
-		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
+		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
+		poppup: poppup;
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?limit=1000&joined=true`);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not get groups', success: false };
+			return;
+		}
 		groups = json.results;
 		group = json.results[0];
 	};
@@ -33,7 +39,10 @@
 			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 
-		if (!res.ok) return
+		if (!res.ok) {
+			poppup = { message: 'Could not get user info', success: false };
+			return;
+		}
 
 		if (json?.results?.length === 1) userIsDelegate = true;
 		else userIsDelegate = false;
@@ -56,8 +65,24 @@
 
 		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/pool/create`, {});
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not create delegation pool', success: false };
+			return;
+		}
 		userIsDelegate = true;
+	};
+
+	const removeAllDelegations = async (group: Group) => {
+		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/delete`, {
+			delegate_pool_id: 0
+		});
+
+		if (!res.ok) {
+			poppup = { message: 'Could not remove all delegations', success: false };
+			return;
+		}
+
+		userIsDelegate = false;
 	};
 
 	onMount(async () => {
@@ -93,6 +118,7 @@
 					<Toggle
 						onInput={(checked) => {
 							selectedPage = checked ? 'delegate' : 'none';
+							if (!checked) removeAllDelegations(group);
 						}}
 					/>
 					{$_('Auto-vote')}
@@ -138,3 +164,5 @@
 		</div>
 	</div>
 </Layout>
+
+<Poppup bind:poppup />

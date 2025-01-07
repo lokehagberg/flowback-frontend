@@ -31,6 +31,8 @@
 		getUserIsGroupAdmin
 	} from '$lib/Generic/GenericFunctions';
 	import Permissions from './Permissions/Permissions.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -40,7 +42,8 @@
 		clickedExpandSidebar = false,
 		userIsOwner = false,
 		areYouSureModal = false,
-		userIsPermittedToCreatePost = false;
+		userIsPermittedToCreatePost = false,
+		poppup: poppup;
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
@@ -99,6 +102,11 @@
 				href={`/createpoll?id=${$page.params.groupId}&type=${
 					selectedPage === 'threads' ? 'thread' : 'poll'
 				}`}
+					on:click={() => {
+						console.log("HELLO??");
+						
+						poppup = { message: 'You do not have permission to create a post', success: false };
+					}}
 			>
 				<GroupSidebarButton
 					text="Create a post"
@@ -220,3 +228,5 @@
 		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />

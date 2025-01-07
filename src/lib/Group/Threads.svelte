@@ -49,9 +49,6 @@
 		next = json.next;
 		prev = json.previous;
 		threads = json.results;
-
-		console.log(threads);
-		
 	};
 
 	const handleSearch = () => {

@@ -93,7 +93,6 @@
 			description,
 			lane,
 			title,
-			work_group: { id: workGroup?.id || 0, name: workGroup?.name || '' },
 			id: json,
 			created_by: 1,
 			origin_id: 1,

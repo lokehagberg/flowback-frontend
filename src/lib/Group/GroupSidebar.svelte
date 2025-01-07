@@ -97,25 +97,22 @@
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
-			<a
-				class="text-white"
-				href={`/createpoll?id=${$page.params.groupId}&type=${
-					selectedPage === 'threads' ? 'thread' : 'poll'
-				}`}
-					on:click={() => {
-						console.log("HELLO??");
-						
-						poppup = { message: 'You do not have permission to create a post', success: false };
-					}}
-			>
-				<GroupSidebarButton
-					text="Create a post"
-					disabled={!userIsPermittedToCreatePost}
-					icon={faCheckToSlot}
-					isSelected={false}
-					Class="hover:!bg-blue-800 active:!bg-blue-900 disabled:!bg-gray-300 dark:disabled:!bg-gray-800 disabled:hover:!bg-gray-300 disabled:active:!bg-gray-300 bg-primary shadow rounded w-full"
-				/></a
-			>
+			<GroupSidebarButton
+				action={() => {
+					if (userIsPermittedToCreatePost)
+						goto(
+							`/createpoll?id=${$page.params.groupId}&type=${
+								selectedPage === 'threads' ? 'thread' : 'poll'
+							}`
+						);
+					else poppup = { message: 'You do not have permission to create a post', success: false };
+				}}
+				text="Create a post"
+				disabled={!userIsPermittedToCreatePost}
+				icon={faCheckToSlot}
+				isSelected={false}
+				Class="text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
+			/>
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
 			<GroupSidebarButton

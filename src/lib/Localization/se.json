@@ -495,5 +495,6 @@
     "Could not remove all delegations": "Kunde inte ta bort alla delegeringar",
     "Could not load templates": "Kunde inte ladda mallar",
     "Could not create template": "Kunde inte skapa mall",
-    "Successfully created template": "Lyckades skapa mall"
+    "Successfully created template": "Lyckades skapa mall",
+    "You do not have permission to create a post": "Du har inte behörighet att skapa ett inlägg"
 }

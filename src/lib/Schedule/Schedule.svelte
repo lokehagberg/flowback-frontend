@@ -233,8 +233,7 @@
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
 		start_date = selectedDate;
-		// if (selectedDate)
-		// end_date = addDateOffset(selectedDate, 1, 'hour');
+		if (selectedDate) end_date = new Date(selectedDate.getTime() + 60 * 60 * 1000);
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
@@ -400,11 +399,11 @@
 					{$_('End date')}
 					<DateInput bind:value={end_date} />
 				</div>
+				<div>
+					<Button type="submit">{$_('Submit')}</Button>
+				</div>
 			</form>
 		</Loader>
-	</div>
-	<div slot="footer">
-		<Button type="submit">{$_('Submit')}</Button>
 	</div>
 </Modal>
 

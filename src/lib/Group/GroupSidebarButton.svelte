@@ -7,7 +7,8 @@
 		action = () => {},
 		icon = faPoll,
 		isSelected = true,
-		Class = '';
+		Class = '',
+		disabled = false;
 
 	let hovering = false;
 </script>
@@ -17,11 +18,14 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
+	{disabled}
 	class={`${Class} select-none flex item-center items-center  dark:outline-gray-700 rounded-md transition-all  ${
-		!isSelected && 'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
+		!isSelected &&
+		'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
 	} outline-1 cursor-pointer p-3 ${
 		isSelected && 'text-gray-400 dark:text-gray-500 border-l-2 border-primary rounded-none'
 	} `}
+	
 >
 	<Fa {icon} />
 	<div class="ml-2">

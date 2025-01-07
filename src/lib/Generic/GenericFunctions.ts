@@ -86,8 +86,25 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 		'GET',
 		`group/${groupId}/permissions?id=${permissionId}`
 	);
+
+	console.log(res, json, "PERMISSIONS");
+	
 	return json.results[0];
 };
+
+export const getPermissionsFast = async (groupId: number | string) => {
+	
+	const userInfo = await getGroupUserInfo(groupId);
+	if (userInfo === undefined) return;
+	
+	try {
+		const hi =  await getPermissions(groupId, userInfo.permission_id);
+		console.log("hi", hi);
+		return hi
+	} catch (error) {
+		return null;
+	}
+}
 
 export const elipsis = (label: string, charMax = 30) => {
 	return label.length > charMax ? label.substring(0, charMax) + '...' : label

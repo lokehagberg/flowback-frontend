@@ -25,7 +25,12 @@
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import {
+		getPermissions,
+		getPermissionsFast,
+		getUserIsGroupAdmin
+	} from '$lib/Generic/GenericFunctions';
+	import Permissions from './Permissions/Permissions.svelte';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -34,7 +39,8 @@
 	let innerWidth = 0,
 		clickedExpandSidebar = false,
 		userIsOwner = false,
-		areYouSureModal = false;
+		areYouSureModal = false,
+		userIsPermittedToCreatePost = false;
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
@@ -52,6 +58,10 @@
 
 	onMount(async () => {
 		userIsOwner = await getUserIsGroupAdmin($page.params.groupId);
+
+		const permission: Permissions = await getPermissionsFast($page.params.groupId);
+		userIsPermittedToCreatePost =
+			(permission !== undefined && permission !== null && permission.create_poll) || userIsOwner;
 	});
 
 	//@ts-ignore
@@ -71,7 +81,6 @@
 		<button
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
-			on:keydown
 		>
 			<Fa icon={faBars} />
 		</button>
@@ -80,18 +89,23 @@
 			<button
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
-				on:keydown
 			>
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
-			<a class="text-white" href={`/createpoll?id=${$page.params.groupId}&type=${selectedPage === 'threads' ? 'thread' : 'poll'}`}>
+			<a
+				class="text-white"
+				href={`/createpoll?id=${$page.params.groupId}&type=${
+					selectedPage === 'threads' ? 'thread' : 'poll'
+				}`}
+			>
 				<GroupSidebarButton
 					text="Create a post"
+					disabled={!userIsPermittedToCreatePost}
 					icon={faCheckToSlot}
 					isSelected={false}
-					Class="hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
+					Class="hover:!bg-blue-800 active:!bg-blue-900 disabled:!bg-gray-300 dark:disabled:!bg-gray-800 disabled:hover:!bg-gray-300 disabled:active:!bg-gray-300 bg-primary shadow rounded w-full"
 				/></a
 			>
 		</div>

@@ -50,7 +50,7 @@
 		formData.append('tag', lane.toString());
 		formData.append('lane', lane.toString());
 
-		if (assignee) formData.append('assignee', assignee.toString());
+		if (assignee) formData.append('assignee_id', assignee.toString());
 		if (end_date) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());

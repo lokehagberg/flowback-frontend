@@ -36,7 +36,7 @@
 	const getThreads = async () => {
 		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}`;
 		if (searchQuery) {
-			url += `&title=${searchQuery}`;
+			url += `&title__icontains=${searchQuery}`;
 		}
 
 		const { res, json } = await fetchRequest('GET', url);

@@ -90,7 +90,7 @@
 		bind:proposals
 		bind:comments
 		bind:beingEdited={comment.being_edited}
-		message={comment.message}
+		message={comment.message || ''}
 		parent_id={comment.parent_id}
 		id={comment.id}
 		{api}
@@ -111,9 +111,11 @@
 				userId={comment.author_id}
 			/>
 		</div>
-		<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
-			{comment.message}
-		</div>
+		{#if comment.message}
+			<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
+				{comment.message}
+			</div>
+		{/if}	
 		<div class="text-xs text-gray-400 dark:text-darkmodeText">
 			{comment.edited ? '(edited)' : ''}
 		</div>
@@ -164,7 +166,7 @@
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
 						on:click={() => {
 							comment.being_edited = true;
-							comment.being_edited_message = comment.message;
+							comment.being_edited_message = comment.message || '';
 						}}
 					>
 						{$_('Edit')}

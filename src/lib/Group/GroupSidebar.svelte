@@ -106,12 +106,12 @@
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
-			/>
+			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
 				text="Work Groups"

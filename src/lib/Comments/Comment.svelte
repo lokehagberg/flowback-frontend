@@ -115,7 +115,7 @@
 			<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
 				{comment.message}
 			</div>
-		{/if}	
+		{/if}
 		<div class="text-xs text-gray-400 dark:text-darkmodeText">
 			{comment.edited ? '(edited)' : ''}
 		</div>
@@ -123,8 +123,13 @@
 			<div>
 				{#each comment.attachments as attachment}
 					<img
-						class=""
-						src={`${env.PUBLIC_API}/media/${attachment.file}`}
+						src={(() => {
+							if (typeof attachment.file === 'string')
+								return attachment.file.substring(0, 4) === 'blob'
+									? attachment.file
+									: `${env.PUBLIC_API}/media/${attachment.file}`;
+							else return URL.createObjectURL(attachment.file);
+						})()}
 						alt="attachment to the comment"
 					/>
 				{/each}

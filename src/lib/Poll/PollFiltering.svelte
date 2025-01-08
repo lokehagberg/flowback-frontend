@@ -103,17 +103,21 @@
 		/>
 
 		{#if tagFiltering}
-			<select on:input={handleTags} class="rounded-md p-1 dark:bg-darkobject">
-				<option value={null}>{$_('Any')}</option>
-				{#each tags as tag}
-					<option value={tag.id}>{elipsis(tag.name, 15)}</option>
-				{/each}
-			</select>
+			<div class="rounded-md p-1">
+				<select on:input={handleTags} class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject">
+					<option value={null}>{$_('Any')}</option>
+					{#each tags as tag}
+						<option value={tag.id}>{elipsis(tag.name, 15)}</option>
+					{/each}
+				</select>
+			</div>
 		{/if}
-
-		<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}
-			>{$_('Reset Filter')}</Button
-		>
+		
+		<div class="rounded-md p-1">
+			<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}
+				>{$_('Reset Filter')}</Button
+			>
+		</div>
 
 		<!-- <CheckboxButtons
 			label={''}

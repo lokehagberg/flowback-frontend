@@ -37,4 +37,5 @@ export interface kanbanEdited {
 	assignee: number | null;
 	priority?: number | undefined | null;
 	end_date?: Date | null
+	images?: File[]
 }

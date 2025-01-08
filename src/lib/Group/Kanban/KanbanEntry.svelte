@@ -22,6 +22,7 @@
 	import { goto } from '$app/navigation';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import type { kanbanEdited, kanban} from './Kanban';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -314,6 +315,10 @@
 						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
 						<!-- {/if} -->
 					</div>
+					<div class="text-left">
+						{$_('Attachments')}
+						<FileUploads bind:images={kanbanEdited.images} />
+					</div>
 				</div>
 			{:else}
 				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
@@ -339,6 +344,18 @@
 							<PriorityIcons Class="ruby" priority={kanban?.priority} />
 						{/if}
 					</div>
+				</div>
+				<div class="text-left">					
+					{#if kanbanEdited.images && kanbanEdited.images.length > 0}
+						{$_('Attachments:')}
+						{#each kanbanEdited.images as file}
+							<li>
+								<span>{file.name}</span>
+							</li>
+						{/each}
+					{:else}
+						<p>{$_('No attachments available.')}</p>
+					{/if}
 				</div>
 			{/if}
 		</div>

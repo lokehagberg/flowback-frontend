@@ -497,5 +497,7 @@
     "Delegate Voting end date": "Slutdatum för röstning för delegater",
     "Voting end date": "Slutdatum för röstning",
     "Successfully voted for area": "Framgångsrik röstat för området",
-    "Could not vote on tag": "Kunde inte rösta på taggen"
+    "Could not vote on tag": "Kunde inte rösta på taggen",
+    "Attachments": "Bilagor",
+    "No attachments available.": "Inga bilagor tillgängliga."
 }

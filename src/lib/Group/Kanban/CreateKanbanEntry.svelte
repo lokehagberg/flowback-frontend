@@ -185,8 +185,11 @@
 						{$_('End date')}
 						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
+					<div class="text-left">
+						{$_('Attachments')}
+						<FileUploads bind:images />
+					</div>
 				</div>
-				<FileUploads bind:images />
 			</div>
 		</Loader>
 	</div>

@@ -499,5 +499,6 @@
     "Successfully voted for area": "Framgångsrik röstat för området",
     "Could not vote on tag": "Kunde inte rösta på taggen",
     "Attachments": "Bilagor",
-    "No attachments available.": "Inga bilagor tillgängliga."
+    "No attachments available.": "Inga bilagor tillgängliga.",
+    "Successfully added proposal": "Förslaget har lagts till"
 }

@@ -2,7 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { poppup } from './Poppup';
 	import Fa from 'svelte-fa';
-	import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+	import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 	export let poppup: poppup | null;
 
@@ -28,7 +28,10 @@
 		class:show
 		hidden={!show}
 	>
-		<Fa icon={faCheckCircle} color={poppup.success ? 'green' : 'red'} />
+		<Fa 
+			icon={poppup.success ? faCheckCircle : faTimesCircle} 
+			color={poppup.success ? 'green' : 'red'} 
+		/>
 		{$_(poppup.message)}
 	</div>
 {/if}

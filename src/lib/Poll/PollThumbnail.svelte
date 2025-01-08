@@ -291,7 +291,7 @@
 					Class="w-[47%]"
 					buttonStyle="primary-light"
 					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-					>{$_('Mange bets')}</Button
+					>{$_('Manage bets')}</Button
 				>
 				<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
 			</div>
@@ -303,7 +303,7 @@
 					Class="w-[47%]"
 					buttonStyle="primary-light"
 					action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-					>{$_('Mange votes')}</Button
+					>{$_('Manage votes')}</Button
 				>
 				<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
 			</div>

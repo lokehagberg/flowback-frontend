@@ -115,14 +115,14 @@
 
 		<Button
 			buttonStyle="primary-light"
-			Class="absolute bottom-0 w-[50%]"
+			Class="absolute bottom-0 w-[49%]"
 			type="submit"
 			label="Confirm"
 		/>
 
 		<Button
 			buttonStyle="warning-light"
-			Class="absolute bottom-0 right-0 w-[50%]"
+			Class="absolute bottom-0 right-0 w-[49%]"
 			type="button"
 			label="Cancel"
 			action={cancelSubmission}

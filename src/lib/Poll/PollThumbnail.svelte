@@ -205,13 +205,17 @@
 				<span class="inline">{poll.total_comments}</span>
 			</a>
 
-			<!-- Phase -->
+			<!-- Tag -->
+			{#if poll.poll_type === 4}
 			<Tag
 				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
 			/>
+			{/if}
+
+			<!-- Phase -->
 			<div class="text-sm font-semibold text-primary">
 				{$_('Current phase:')}
-				{getPhaseUserFriendlyName(phase)}
+				{$_(getPhaseUserFriendlyName(phase))}
 			</div>
 		</div>
 

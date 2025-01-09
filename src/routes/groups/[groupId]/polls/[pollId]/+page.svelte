@@ -113,13 +113,13 @@
 				<div class="bg-white p-6 mt-6"><Comments bind:proposals api="poll" /></div>
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right" class="!p-0"><Comments bind:proposals api="poll" /></div>
 				</Structure>
 				<!-- PHASE 2: PROPOSAL CREATION -->
 			{:else if phase === 'proposal'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center ext-primary font-semibold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
@@ -165,7 +165,7 @@
 
 				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
 			{:else if phase === 'prediction_statement'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
@@ -205,7 +205,7 @@
 
 				<!-- PHASE 4: PREDICTION BETTING -->
 			{:else if phase === 'prediction_bet'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
@@ -233,7 +233,7 @@
 
 				<!-- PHASE 5: DELEGATE VOTING -->
 			{:else if phase === 'delegate_vote'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
@@ -260,7 +260,7 @@
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
 			{:else if phase === 'vote'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary font-bold text-md"
 							>{$_('All proposals')} ({proposals?.length})</span
@@ -287,7 +287,7 @@
 				</Structure>
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
-				<Structure bind:poll>
+				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full overflow-y-auto">
 						{#if proposals}
 							<PredictionStatements selectedProposal={proposals[0]} bind:phase bind:poll />

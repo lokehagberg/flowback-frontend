@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { poll } from '../interface';
+	import type { Phase, poll } from '../interface';
 	import Timeline from './Timeline.svelte';
 
 	export let poll: poll | null = null,
-		Class = '';
+		Class = '',
+		phase: Phase;
 
 	let genericStyle =
 		'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
@@ -12,9 +13,14 @@
 	onMount(() => {});
 </script>
 
-<div class={`${Class} ${poll ? "poll-grid" : "poll-grid-no-timeline"} p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}>
+<div
+	class={`${Class} ${
+		poll ? 'poll-grid' : 'poll-grid-no-timeline'
+	} p-12 max-w-[1200px] w-full gap-4 lg:gap-6`}
+>
 	{#if poll}
 		<Timeline
+			bind:phase
 			displayDetails={false}
 			bind:poll
 			pollType={4}

@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid py-4"
 >
 	<button
 		class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
@@ -65,7 +65,7 @@
 		<!-- {/if} -->
 	</div>
 
-	<div class="flex gap-4 items-baseline grid-area-items mt-1">
+	<div class="flex gap-4 items-baseline grid-area-items my-1">
 		{#if poll.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
 			<HeaderIcon Class="cursor-default" icon={faAlignLeft} text={'Text Poll'} />
@@ -74,7 +74,7 @@
 		{/if}
 		<!-- Group Profile -->
 		{#if displayTag}
-			<Tag Class="w-32" tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
+			<Tag tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
 		{/if}
 		{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 			<a

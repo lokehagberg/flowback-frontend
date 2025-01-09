@@ -508,5 +508,6 @@
     "Vote Failed": "Röstningen misslyckades",
     "Successfully voted": "Röstade framgångsrikt",
     "Successfully evaluated prediction": "Förutsägelse har utvärderats framgångsrikt",
-    "Current phase:": "Pågående fas:"
+    "Current phase:": "Pågående fas:",
+    "Could not submit tag vote": "Kunde inte skicka taggröstning"
 }

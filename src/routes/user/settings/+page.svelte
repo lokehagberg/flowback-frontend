@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Fa from 'svelte-fa';
-	import { faUser, faBell, faPieChart } from '@fortawesome/free-solid-svg-icons';
+	import { faUser, faBell, faPieChart, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 
@@ -34,6 +34,10 @@
 <Layout centered>
 	<div class="flex mt-6 gap-6">
 		<div class="bg-white w-[300px] p-6">
+			<button class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors mb-4" on:click={() => history.back()}>
+				<Fa icon={faArrowLeft} />
+				{$_('Back')}
+			</button>
 			<h1 class="text-xl text-left text-primary font-bold">{$_('Settings')}</h1>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->

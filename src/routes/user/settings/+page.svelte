@@ -3,6 +3,7 @@
 	import Fa from 'svelte-fa';
 	import { faUser, faBell, faPieChart } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
+	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' = 'notifications',
 		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
@@ -67,7 +68,20 @@
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
 					<li>{$_('Profile')}</li>
-					<!-- TODO: Create generic list of lists with checkbox component -->
+					<RadioButtons2
+						name="radio1"
+						label="Who can see my profile"
+						labels={['All', 'Only people in my groups', 'Only group admins']}
+						values={['1', '2', '3']}
+					/>
+					<RadioButtons2
+						name="radio2"
+						label="Who can contact me in chat"
+						labels={['All', 'Only people in my groups', 'Only group admins']}
+						values={['1', '2', '3']}
+					/>
+					<div>{$_('Give me all data')}</div>
+					<div>{$_('Delete account')}</div>
 				{:else if selectedPage === 'notifications'}
 					{$_('Notify me when')}...
 					{#each notificationSettingsTitles as title, i}

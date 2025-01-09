@@ -496,5 +496,10 @@
     "Could not load templates": "Kunde inte ladda mallar",
     "Could not create template": "Kunde inte skapa mall",
     "Successfully created template": "Lyckades skapa mall",
-    "You do not have permission to create a post": "Du har inte behörighet att skapa ett inlägg"
+    "You do not have permission to create a post": "Du har inte behörighet att skapa ett inlägg",
+    "Users requesting invite": "Användare som begär inbjudan",
+    "Successfully betted": "Lyckades satsa",
+    "Betting failed": "Satsning misslyckades",
+    "Successfully updated bet": "Lyckades uppdatera satsning"
+
 }

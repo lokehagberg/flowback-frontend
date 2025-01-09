@@ -14,7 +14,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { faMagnifyingGlass, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 
@@ -22,9 +22,10 @@
 		usersAskingForInvite: any[] = [],
 		loading = true,
 		selectedPage: SelectablePages = 'Members',
-		searchUser = '',
+		searchUserQuery = '',
 		searchedUsers: User[] = [],
-		poppup: poppup;
+		poppup: poppup,
+		searched = false;
 
 	onMount(async () => {
 		getUsers();
@@ -44,6 +45,21 @@
 		loading = false;
 	};
 
+	const searchUser = async (username: string) => {
+		//TODO: Search users
+		//This code can be used to not show every user unless the user has typed in something
+		if (username === '') {
+			searchedUsers = [];
+			return;
+		}
+
+		const { json } = await fetchRequest(
+			'GET',
+			`users?username=${username}`
+		);
+		searchedUsers = json.results;
+	};
+
 	const searchUsers = async (username: string) => {
 		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
@@ -54,7 +70,7 @@
 
 		const { json } = await fetchRequest(
 			'GET',
-			`users?limit=${groupMembersLimit}&username=${username}`
+			`users?limit=${groupMembersLimit}&username__icontains=${username}`
 		);
 		searchedUsers = json.results;
 	};
@@ -107,8 +123,8 @@
 
 		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
 			<TextInput
-				onInput={() => searchUsers(searchUser)}
-				bind:value={searchUser}
+				onInput={() => searchUser(searchUserQuery)}
+				bind:value={searchUserQuery}
 				label={$_('User to invite')}
 				placeholder="Username"
 			/>
@@ -145,7 +161,7 @@
 
 		{#if usersAskingForInvite.length > 0}
 			<div class="w-full shadow rounded bg-white p-2">
-				<span>Users requesting invite</span>
+				<span>{$_('Users requesting invite')}</span>
 				{#each usersAskingForInvite as user}
 					{#if user.external === true}
 						<div
@@ -172,6 +188,29 @@
 				{/each}
 			</div>
 		{/if}
+
+		<!-- Search in Members list -->
+<!-- 
+		<form
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
+			on:submit|preventDefault={() => searchUsers(searchUserQuery)}
+		>
+			<TextInput
+				Class="w-4/5"
+				onInput={() => (searched = false)}
+				label={$_('Search')}
+				bind:value={searchUserQuery}
+			/>
+
+			<Button
+				Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
+					searched ? 'bg-blue-300' : 'bg-blue-600'
+				}`}
+				type="submit"
+			>
+				<Fa icon={faMagnifyingGlass} />
+			</Button>
+		</form> -->
 
 		<!-- Members List -->
 

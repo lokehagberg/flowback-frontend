@@ -111,12 +111,14 @@
 					{formatDate(poll.start_date)}
 				</div>
 				<div class="bg-white p-6 mt-6"><Comments bind:proposals api="poll" /></div>
+
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right" class="!p-0"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+
 				<!-- PHASE 2: PROPOSAL CREATION -->
 			{:else if phase === 'proposal'}
 				<Structure bind:phase bind:poll>

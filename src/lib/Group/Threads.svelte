@@ -34,7 +34,7 @@
 		searched = true;
 
 	const getThreads = async () => {
-		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}`;
+		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}&order_by=pinned`;
 		if (searchQuery) {
 			url += `&title__icontains=${searchQuery}`;
 		}

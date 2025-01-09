@@ -33,6 +33,7 @@
 	});
 
 	$: if (phase) {
+		dates[currentPhaseIndex] = dates[currentPhaseIndex - 1]
 		currentPhaseIndex++;
 		setupDates();
 	}
@@ -63,6 +64,7 @@
 	};
 </script>
 
+{#key phase}
 <div class={`relative flex flex-col items-center ${Class}`}>
 	<div class="text-center">
 		<span class="font-semibold text-primary">
@@ -124,3 +126,4 @@
 		</button>
 	{/if}
 </div>
+{/key}

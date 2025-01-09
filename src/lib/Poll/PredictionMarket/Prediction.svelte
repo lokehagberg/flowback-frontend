@@ -185,9 +185,6 @@
 	onMount(() => {
 		getPredictionBet();
 	});
-
-	$: if (prediction) getPredictionBet();
-	
 </script>
 
 <div class="">
@@ -198,7 +195,9 @@
 	{/if}
 	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		
+			<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+	
 	{/if}
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">

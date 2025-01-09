@@ -7,27 +7,31 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	export let selectedProposal: proposal, phase: Phase, poll: poll;
 
-	let predictions: PredictionStatement[] = [];
+	let predictions: PredictionStatement[] = [],
+		loading = false;
 
 	const getPredictionStatements = async (selectedProposal: proposal) => {
-		// loading = true;
+		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}
             &proposals=${selectedProposal.id}`
 		);
+		loading = false;
 		predictions = json.results;
 	};
 
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
 </script>
 
-<div class="border-t-2">
-	<div class="text-gray-500 text-sm py-2">{$_('Predictions')}({predictions.length})</div>
+<Loader bind:loading>
+	<div class="border-t-2">
+		<div class="text-gray-500 text-sm py-2">{$_('Predictions')}({predictions.length})</div>
 		{#each predictions as prediction}
 			<div
 				class="border-b-2 flex flex-col break-all"
@@ -52,4 +56,5 @@
 				{/if}
 			</div>
 		{/each}
-</div>
+	</div>
+</Loader>

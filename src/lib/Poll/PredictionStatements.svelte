@@ -28,25 +28,28 @@
 
 <div class="border-t-2">
 	<div class="text-gray-500 text-sm py-2">{$_('Predictions')}({predictions.length})</div>
-	{#each predictions as prediction}
-		<div class="border-b-2 flex flex-col break-all" class:select-none={phase === 'prediction_bet'}>
-			<span class="text-primary font-semibold">{prediction.title}</span>
-			{#if prediction.description}
-				<Description description={prediction.description} limit={30} />
-			{/if}
-			<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
-			{#if phase === 'delegate_vote' || phase === 'vote'}
-				<span class="text-sm text-right"
-					>{$_('Bet')}:
-					{#if prediction.combined_bet}
-						{prediction.combined_bet}
-					{:else}
-						{$_('none')}
-					{/if}
-				</span>
-			{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}
-				<Prediction bind:phase bind:poll bind:prediction />
-			{/if}
-		</div>
-	{/each}
+		{#each predictions as prediction}
+			<div
+				class="border-b-2 flex flex-col break-all"
+				class:select-none={phase === 'prediction_bet'}
+			>
+				<span class="text-primary font-semibold">{prediction.title}</span>
+				{#if prediction.description}
+					<Description description={prediction.description} limit={30} />
+				{/if}
+				<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
+				{#if phase === 'delegate_vote' || phase === 'vote'}
+					<span class="text-sm text-right"
+						>{$_('Bet')}:
+						{#if prediction.combined_bet}
+							{prediction.combined_bet}
+						{:else}
+							{$_('none')}
+						{/if}
+					</span>
+				{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}
+					<Prediction bind:phase bind:poll bind:prediction />
+				{/if}
+			</div>
+		{/each}
 </div>

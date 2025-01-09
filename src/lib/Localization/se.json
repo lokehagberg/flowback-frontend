@@ -500,6 +500,7 @@
     "Users requesting invite": "Användare som begär inbjudan",
     "Successfully betted": "Lyckades satsa",
     "Betting failed": "Satsning misslyckades",
-    "Successfully updated bet": "Lyckades uppdatera satsning"
+    "Successfully updated bet": "Lyckades uppdatera satsning",
+    "Due Date": "Förfallodatum"
 
 }

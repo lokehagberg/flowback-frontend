@@ -16,6 +16,7 @@
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import VotingSlider from '../VotingSlider.svelte';
 	import { env } from '$env/dynamic/public';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
@@ -26,10 +27,6 @@
 	let showPoppup = false,
 		showDetails = false,
 		poppup: poppup;
-
-	onMount(() => {
-		getPredictionBet();
-	});
 
 	const getPredictionBet = async () => {
 		// if (!score) return;
@@ -44,7 +41,7 @@
 		if (!res.ok) showPoppup = true;
 		else {
 			const previousBet = json.results.find(
-				(result: any) => result.created_by.id.toString() === localStorage.getItem('userId')
+				(result: any) => result.created_by.user.id.toString() === localStorage.getItem('userId')
 			);
 
 			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
@@ -184,29 +181,24 @@
 
 		score = Number(newScore);
 	};
+
+	onMount(() => {
+		getPredictionBet();
+	});
+
+	$: if (prediction) getPredictionBet();
+	
 </script>
 
 <div class="">
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<!-- <span
-		on:click={() => (showDetails = true)}
-		on:keydown
-		class="hover:underline cursor-pointer overflow-hidden"
-	>
-		{prediction.description}</span
-	>
-	<span>{formatDate(prediction.end_date)}</span> -->
+	{#if prediction.description}
+		<span class="hover:underline cursor-pointer overflow-hidden">
+			{elipsis(prediction.description)}</span
+		>
+	{/if}
+	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} />
-		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
-		<!-- <Select
-			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
-			values={[null, 0, 1, 2, 3, 4, 5]}
-			bind:value={score}
-			onInput={
-				
-			}
-		/> -->
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
 	{/if}
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">

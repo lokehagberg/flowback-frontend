@@ -230,6 +230,7 @@
 					</div>
 					<div slot="bottom"><Comments bind:proposals api="poll" /></div>
 				</Structure>
+
 				<!-- PHASE 5: DELEGATE VOTING -->
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:poll>

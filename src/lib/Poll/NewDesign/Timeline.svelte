@@ -64,7 +64,7 @@
 		</span>
 		{$_('Phase')}
 		{currentPhaseIndex + 1}
-		{dateLabels[currentPhaseIndex]}
+		{dateLabels[currentPhaseIndex + 1]}
 	</div>
 
 	{#if displayTimeline}

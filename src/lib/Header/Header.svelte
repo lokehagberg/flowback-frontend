@@ -213,6 +213,7 @@
 
 	header {
 		flex-wrap: wrap-reverse;
+		padding: 0rem 1rem;
 	}
 
 	/* @media only screen and (max-width: 768px) {

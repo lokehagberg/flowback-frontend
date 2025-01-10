@@ -16,7 +16,8 @@
 		tabindex = 0;
 
 	let hovering = false,
-		selectedPage = false;
+		selectedPage = false,
+		selectedCurrent = "";
 
 	const checkIfSelected = () => {
 		selectedPage = window.location.pathname === '/' + href;
@@ -36,7 +37,7 @@
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		href={href === '/' ? window.location.href : '/' + href}
-		class={`relative cursor-pointer ${Class}`}
+		class={`relative cursor-pointer ${selectedPage ? `active-icon` : ''} ${Class}`}
 		id={href}
 		{tabindex}
 	>
@@ -45,8 +46,7 @@
 				<Fa
 					{icon}
 					{size}
-					class="inline"
-					color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
+					class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
 				/>
 			{/each}
 		</div>
@@ -64,7 +64,7 @@
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		aria-haspopup="true"
-		class={`relative cursor-pointer ${Class}`}
+		class={`relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class}`}
 		id={href}
 	>
 		<div on:load={checkIfSelected}>
@@ -72,8 +72,7 @@
 				<Fa
 					{icon}
 					{size}
-					class="inline"
-					color={color !== '' ? color : selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}
+					class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
 				/>
 			{/each}
 		</div>
@@ -93,5 +92,21 @@
 		left: calc(50% - 50px);
 		text-align: center;
 		filter: opacity(0.8);
+	}
+
+	.active-icon {
+		color: #015BC0;
+		position: relative;
+	}
+
+	.active-icon::after {
+		content: '';
+		position: absolute;
+		bottom: -1.5rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 4rem;
+		height: 2px;
+		background-color: #015BC0;
 	}
 </style>

@@ -208,11 +208,20 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`px-4 py-1 ${
-					prediction.user_prediction_statement_vote === true && 'brightness-200'
+				Class={`w-12 px-4 py-1 border-2 ${
+					prediction.user_prediction_statement_vote === true
+						? 'bg-green-600 text-white border-green-600'
+						: 'hover:bg-green-100 border-green-600 text-green-800'
 				}`}
 			>
-				<Fa icon={faCheck} />
+			<Fa
+            icon={faCheck}
+            class={`${
+                prediction.user_prediction_statement_vote === true
+                    ? 'text-white'
+                    : 'text-green-700'
+            }`}
+        />
 			</Button>
 			<Button
 				action={() =>
@@ -221,11 +230,20 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`px-4 py-1 ml-2 ${
-					prediction.user_prediction_statement_vote === false && 'brightness-200'
+				Class={`w-12 px-4 py-1 ml-2 border-2 ${
+					prediction.user_prediction_statement_vote === false
+						? 'bg-red-700 text-white border-red-700'
+						: 'hover:bg-red-100 border-red-500 text-red-600'
 				}`}
 			>
-				<Fa icon={faX} />
+			<Fa
+            icon={faX}
+            class={`${
+                prediction.user_prediction_statement_vote === false
+                    ? 'text-white'
+                    : 'text-red-600'
+            }`}
+        />
 			</Button>
 		</div>
 	{/if}

@@ -83,12 +83,12 @@
 				class="text-black dark:text-darkmodeText"
 			>
 				<img
-					class="h-8 w-8 inline rounded-full"
+					class="h-8 w-8 inline rounded-full break-all"
 					src={`${env.PUBLIC_API_URL}${poll.group_image}`}
 					alt="group thumbnail"
 					on:error={(e) => onThumbnailError(e, DefaultBanner)}
 				/>
-				<span class="inline">{poll.group_name}</span>
+				<span class="inline break-all">{poll.group_name}</span>
 			</a>
 			<!-- Current Phase -->
 			<div>

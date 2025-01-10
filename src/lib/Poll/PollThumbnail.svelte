@@ -118,7 +118,7 @@
 					>
 						<span class="inline">{poll.group_name}</span>
 						<img
-							class="h-8 w-8 inline rounded-full"
+							class="h-8 w-8 inline rounded-full break-all"
 							src={`${env.PUBLIC_API}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 								poll.group_image
 							}`}

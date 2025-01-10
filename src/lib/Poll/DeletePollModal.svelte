@@ -24,8 +24,8 @@
 		{$_('Are you sure you want to delete this poll?')}
 	</div>
 	<div slot="footer">
-		<div class="flex justify-center gap-16">
-			<Button action={deletePoll} Class="bg-red-500">{$_('Yes')}</Button><Button
+		<div class="flex justify-center gap-2">
+			<Button action={deletePoll} Class="bg-red-500 w-1/2">{$_('Yes')}</Button><Button
 				action={() => (deletePollModalShow = false)}
 				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 			>

@@ -8,11 +8,12 @@
 	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
-	import type { GroupUser, kanban } from '../interface';
+	import type { GroupUser } from '../interface';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import type {kanban} from './Kanban';
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -181,8 +182,11 @@
 						{$_('End date')}
 						<DateInput bind:value={end_date} min={new Date()} />
 					</div>
+					<div class="text-left">
+						{$_('Attachments')}
+						<FileUploads bind:images />
+					</div>
 				</div>
-				<FileUploads bind:images />
 			</div>
 		</Loader>
 	</div>

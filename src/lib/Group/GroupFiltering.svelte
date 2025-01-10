@@ -48,15 +48,17 @@
 			<Fa icon={faMagnifyingGlass} />
 		</Button>
 	</div>
-	<div>
-		<select on:input={handleChangeMember} class="dark:bg-darkobject text-gray-300">
+	<div class="flex">
+		<select on:input={handleChangeMember} class="rounded-sm m-1 p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject">
 			<option value="all">{$_('All')}</option>
 			<option value="member">{$_('Member')}</option>
 			<option value="not-member">{$_('Not member')}</option>
 		</select>
 
-		<Button Class="!p-1" action={resetFilter} buttonStyle="primary-light"
+		<div class="rounded-md p-1">
+			<Button Class="!p-1" action={resetFilter} buttonStyle="primary-light"
 			>{$_('Reset Filter')}</Button
-		>
+			>
+		</div>
 	</div>
 </form>

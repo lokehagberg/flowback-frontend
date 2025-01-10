@@ -53,10 +53,7 @@
 			return;
 		}
 
-		const { json } = await fetchRequest(
-			'GET',
-			`users?username=${username}`
-		);
+		const { json } = await fetchRequest('GET', `users?username=${username}`);
 		searchedUsers = json.results;
 	};
 
@@ -72,7 +69,12 @@
 			'GET',
 			`users?limit=${groupMembersLimit}&username__icontains=${username}`
 		);
+
 		searchedUsers = json.results;
+		users = json.results;
+		users = users
+		console.log(json, 'JSOn', users);
+		
 	};
 
 	const getInvitesList = async () => {
@@ -190,7 +192,7 @@
 		{/if}
 
 		<!-- Search in Members list -->
-<!-- 
+
 		<form
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
 			on:submit|preventDefault={() => searchUsers(searchUserQuery)}
@@ -210,7 +212,7 @@
 			>
 				<Fa icon={faMagnifyingGlass} />
 			</Button>
-		</form> -->
+		</form>
 
 		<!-- Members List -->
 

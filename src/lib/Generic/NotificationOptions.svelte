@@ -6,6 +6,7 @@
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import SuccessPoppup from './SuccessPoppup.svelte';
+	import { page } from '$app/stores';
 
 	export let notificationOpen = false,
 		categories: string[],
@@ -64,8 +65,12 @@
 	};
 
 	const notificationUnsubscription = async (category: string) => {
+
+		const groupId = $page.params.groupId;
+		const pollId = $page.params.pollId;
+
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
-			channel_sender_type: 'poll',
+			channel_sender_type: pollId ? 'poll' : groupId ? 'group' : 'user',
 			channel_sender_id: id,
 			channel_category: category
 		});

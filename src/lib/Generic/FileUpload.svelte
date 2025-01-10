@@ -13,7 +13,8 @@
 		shouldCrop: boolean = true,
 		minimalist = false,
 		onCrop = () => {},
-		disableImagePreview = false;
+		disableImagePreview = false,
+		disableCropping = false;
 
 	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
@@ -21,7 +22,8 @@
 		const files: File[] = Array.from(e.target.files);
 		croppedImage = files[0];
 		imageString = URL.createObjectURL(croppedImage);
-		currentlyCropping = true;
+		if (disableCropping) currentlyCropping = true;
+		else onCrop();
 	};
 </script>
 

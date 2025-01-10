@@ -11,7 +11,7 @@
 		faCircleExclamation,
 		faMinus
 	} from '@fortawesome/free-solid-svg-icons';
-	import type { poll } from '../interface';
+	import type { Phase, poll } from '../interface';
 	import { onMount } from 'svelte';
 
 	export let displayDetails = true,
@@ -19,7 +19,8 @@
 		Class = '',
 		dates: Date[] = [],
 		pollType: number,
-		poll: poll;
+		poll: poll,
+		phase:Phase;
 
 	let datesArray: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
@@ -30,6 +31,12 @@
 	onMount(() => {
 		setupDates();
 	});
+
+	$: if (phase) {
+		dates[currentPhaseIndex] = dates[currentPhaseIndex - 1]
+		currentPhaseIndex++;
+		setupDates();
+	}
 
 	const setupDates = () => {
 		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
@@ -57,6 +64,7 @@
 	};
 </script>
 
+{#key phase}
 <div class={`relative flex flex-col items-center ${Class}`}>
 	<div class="text-center">
 		<span class="font-semibold text-primary">
@@ -118,3 +126,4 @@
 		</button>
 	{/if}
 </div>
+{/key}

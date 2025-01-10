@@ -90,10 +90,10 @@ export type Phase =
 export interface Comment {
 	author_id: number;
 	author_name: string;
-	author_profile_image: string;
+	author_profile_image: string | null;
 	parent_id?: number;
 	reply_depth: number;
-	message: string;
+	message: string | null;
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
@@ -102,7 +102,7 @@ export interface Comment {
 	//False if comment has been deleted
 	active: boolean;
 	edited: boolean;
-	attachments: { file: string }[];
+	attachments: { file: string | File }[];
 	user_vote: boolean | null;
 }
 

@@ -3,6 +3,8 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
@@ -15,14 +17,19 @@
 	let group: Group,
 		groups: Group[],
 		userIsDelegate = false,
+		autovote = false,
 		loading = false,
 		delegates: Delegate[] = [],
-		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
+		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
+		poppup: poppup;
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?limit=1000&joined=true`);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not get groups', success: false };
+			return;
+		}
 		groups = json.results;
 		group = json.results[0];
 	};
@@ -33,7 +40,10 @@
 			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
 		);
 
-		if (!res.ok) return
+		if (!res.ok) {
+			poppup = { message: 'Could not get user info', success: false };
+			return;
+		}
 
 		if (json?.results?.length === 1) userIsDelegate = true;
 		else userIsDelegate = false;
@@ -56,8 +66,29 @@
 
 		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/pool/create`, {});
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Could not create delegation pool', success: false };
+			return;
+		}
 		userIsDelegate = true;
+	};
+
+	const removeAllDelegations = async (group: Group) => {
+		const promises = delegates.map((delegate) =>
+			fetchRequest('POST', `group/${group.id}/delegate/delete`, {
+				delegate_pool_id: delegate.pool_id
+			})
+		);
+
+		const results = await Promise.all(promises);
+
+		poppup = { message: 'Removed delegations', success: true };
+	};
+
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
+
+		autovote = res.ok && json.results.length > 0;
 	};
 
 	onMount(async () => {
@@ -65,7 +96,11 @@
 		await getUserInfo();
 	});
 
-	$: if (group) getUserInfo();
+	$: if (group) {
+		getUserInfo();
+		getDelegatePools();
+		selectedPage = autovote ? 'delegate' : 'none';
+	}
 </script>
 
 <Layout centered>
@@ -93,7 +128,9 @@
 					<Toggle
 						onInput={(checked) => {
 							selectedPage = checked ? 'delegate' : 'none';
+							if (!checked) removeAllDelegations(group);
 						}}
+						checked={autovote}
 					/>
 					{$_('Auto-vote')}
 					<p>
@@ -138,3 +175,5 @@
 		</div>
 	</div>
 </Layout>
+
+<Poppup bind:poppup />

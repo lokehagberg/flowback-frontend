@@ -20,6 +20,7 @@
 	import { env } from '$env/dynamic/public';
 	import { faAlignLeft, faCalendarAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import { onMount } from 'svelte';
 
 	let title = '',
 		description = '',
@@ -40,11 +41,19 @@
 		isFF = true,
 		pushToBlockchain = true,
 		selected_poll: pollType = 'Text Poll',
-		selectedPage: 'poll' | 'thread' = 'poll';
+		selectedPage: 'poll' | 'thread' = $page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
+		tags: { id: number }[] = [];
 
 	const groupId = $page.url.searchParams.get('id');
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
+
+	const getGroupTags = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/tag/list`);
+		if (res.ok) {
+			tags = json.results;
+		}
+	};
 
 	const createPoll = async () => {
 		loading = true;
@@ -71,7 +80,7 @@
 		formData.append('dynamic', selected_poll === 'Text Poll' ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
-		formData.append('tag', '5');
+		formData.append('tag', tags[0]?.id?.toString() || '1');
 
 		images.forEach((image) => {
 			formData.append('attachments', image);
@@ -135,6 +144,10 @@
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
 	};
+
+	onMount(() => {
+		getGroupTags();
+	});
 </script>
 
 <form

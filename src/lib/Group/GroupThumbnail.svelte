@@ -35,12 +35,12 @@
 		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
 	} transition-shadow rounded-2xl`}
 >
-	<button on:click={goToGroup}>
+	<button on:click={goToGroup} class="w-full">
 		<img
 			src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 				group.cover_image
 			}`}
-			class="cover rounded-t-2xl"
+			class="cover rounded-t-2xl w-full"
 			alt="cover"
 			on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		/>

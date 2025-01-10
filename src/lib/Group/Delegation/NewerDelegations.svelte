@@ -15,7 +15,15 @@
 		userIsDelegate = false,
 		expandedSection: any = null,
 		delegateRelations: DelegateRelation[] = [],
-		poppup: poppup;
+		poppup: poppup,
+		delegationTagsStructure: { delegate_pool_id: number; tags: number[] }[] = [];
+
+	const setupDelegationTagStructure = () => {
+		delegationTagsStructure = delegateRelations.map(({ tags, delegate_pool_id }) => ({
+			delegate_pool_id,
+			tags: tags.map(({ id }) => id)
+		}));
+	};
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
@@ -58,6 +66,13 @@
 	};
 
 	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
+		delegationTagsStructure.forEach((relation, i) => {
+			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag === tag.id);
+
+			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
+			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag.id);
+		});
+
 		delegateRelations.forEach((relation, i) => {
 			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
 
@@ -96,17 +111,21 @@
 		if (res.ok) poppup = { message: 'Successfully saved new delegation', success: true };
 	};
 
-	onMount(async () => {
+	const initialSetup = async () => {
 		getGroupTags();
 		getDelegatePools();
-		getDelegateRelations();
+		await getDelegateRelations();
+		setupDelegationTagStructure();
+	};
+
+	onMount(async () => {
+		initialSetup();
 	});
 
 	$: if (group) {
-		getGroupTags();
-		getDelegatePools();
-		getDelegateRelations();
+		initialSetup();
 	}
+	
 </script>
 
 <div>
@@ -139,11 +158,9 @@
 									on:input={() => changeDelegation(delegate, tag)}
 									type="radio"
 									name={tag.name}
-									checked={delegateRelations.find(
-										(relation) =>
-											relation.delegate_pool_id === delegate.pool_id &&
-											relation.tags.find((tag) => tag?.id === tag.id)
-									) !== undefined}
+									checked={delegationTagsStructure
+										.find((relation) => relation.delegate_pool_id === delegate.pool_id)
+										?.tags.find((_tag) => _tag === tag.id) !== undefined}
 								/>
 							</span>
 						</div>

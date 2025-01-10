@@ -88,8 +88,9 @@
 		formData.append('website', userEdit.website || '');
 		formData.append('contact_email', userEdit.contact_email || '');
 		formData.append('contact_phone', userEdit.contact_phone || '');
-		if (bannerImageToSend) formData.append('banner_image', bannerImageToSend);
-		if (imageToSend) formData.append('profile_image', imageToSend);
+
+		if (bannerImagePreview !== '') formData.append('banner_image', bannerImageToSend);
+		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
 		if (res.ok) {

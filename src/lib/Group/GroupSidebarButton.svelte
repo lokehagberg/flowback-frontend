@@ -7,7 +7,8 @@
 		action = () => {},
 		icon = faPoll,
 		isSelected = true,
-		Class = '';
+		Class = '',
+		disabled = false;
 
 	let hovering = false;
 </script>
@@ -18,10 +19,14 @@
 	on:focus
 	on:click={action}
 	class={`${Class} select-none flex item-center items-center  dark:outline-gray-700 rounded-md transition-all  ${
-		!isSelected && 'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
+		!isSelected &&
+		'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
 	} outline-1 cursor-pointer p-3 ${
 		isSelected && 'text-gray-400 dark:text-gray-500 border-l-2 border-primary rounded-none'
 	} `}
+	    aria-disabled={disabled}
+		class:opacity-50={disabled}
+		class:saturate-0={disabled}
 >
 	<Fa {icon} />
 	<div class="ml-2">

@@ -53,7 +53,7 @@
 		<li class=" p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
 				<div class="flex">
-					<ProfilePicture user={user.user} displayName />
+					<ProfilePicture username={user.user.username} profilePicture={user.user.profile_image} displayName />
 				</div>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
 					<Tag tag={{active:true, id:1, name:user.permission_name}} />

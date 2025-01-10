@@ -25,7 +25,14 @@
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import {
+		getPermissions,
+		getPermissionsFast,
+		getUserIsGroupAdmin
+	} from '$lib/Generic/GenericFunctions';
+	import Permissions from './Permissions/Permissions.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -34,7 +41,9 @@
 	let innerWidth = 0,
 		clickedExpandSidebar = false,
 		userIsOwner = false,
-		areYouSureModal = false;
+		areYouSureModal = false,
+		userIsPermittedToCreatePost = false,
+		poppup: poppup;
 
 	const leaveGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
@@ -52,6 +61,10 @@
 
 	onMount(async () => {
 		userIsOwner = await getUserIsGroupAdmin($page.params.groupId);
+
+		const permission: Permissions = await getPermissionsFast($page.params.groupId);
+		userIsPermittedToCreatePost =
+			(permission !== undefined && permission !== null && permission.create_poll) || userIsOwner;
 	});
 
 	//@ts-ignore
@@ -71,7 +84,6 @@
 		<button
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
-			on:keydown
 		>
 			<Fa icon={faBars} />
 		</button>
@@ -80,20 +92,27 @@
 			<button
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
-				on:keydown
 			>
 				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
-			<a class="text-white" href={`/createpoll?id=${$page.params.groupId}`}>
-				<GroupSidebarButton
-					text="Create a post"
-					icon={faCheckToSlot}
-					isSelected={false}
-					Class="hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
-				/></a
-			>
+			<GroupSidebarButton
+				action={() => {
+					if (userIsPermittedToCreatePost)
+						goto(
+							`/createpoll?id=${$page.params.groupId}&type=${
+								selectedPage === 'threads' ? 'thread' : 'poll'
+							}`
+						);
+					else poppup = { message: 'You do not have permission to create a post', success: false };
+				}}
+				text="Create a post"
+				disabled={!userIsPermittedToCreatePost}
+				icon={faCheckToSlot}
+				isSelected={false}
+				Class="text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
+			/>
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
 			<GroupSidebarButton
@@ -106,12 +125,12 @@
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
-			/>
+			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
 				text="Work Groups"
@@ -206,3 +225,5 @@
 		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
+
+<Poppup bind:poppup />

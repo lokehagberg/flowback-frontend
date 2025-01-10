@@ -22,7 +22,7 @@
 			<Fa icon={faArrowLeft} />
 		</button>
 		<div class="bg-white rounded p-6 shadow ml-6 w-[30%]">
-			<h1 class="text-xl font-semibold text-primary text-left">{$_('Admin Settings')}</h1>
+			<h1 class="text-xl font-semibold text-primary text-left break-all">{$_('Admin Settings')}</h1>
 			<ul>
 				<li
 					class={`cursor-pointer ${
@@ -51,7 +51,7 @@
 						>{$_('Permissions')}</button
 					>
 				</li>
-				<li
+				<!-- <li
 					class={`cursor-pointer ${
 						selectedPage === 'blockchain' && 'bg-gray-100 border-l-2 border-primary transition-all'
 					}`}
@@ -59,7 +59,7 @@
 					<button class="w-full text-left" on:click={() => (selectedPage = 'blockchain')}
 						>{$_('Blockhain')}</button
 					>
-				</li>
+				</li> -->
 			</ul>
 		</div>
 		<div class="bg-white p-6 shadow flex-grow rounded">
@@ -70,7 +70,7 @@
 			{:else if selectedPage === 'perms'}
 				<Permissions />
 			{:else if selectedPage === 'blockchain'}
-				block
+				<!-- block -->
 			{/if}
 		</div>
 	</div>

@@ -87,10 +87,16 @@
 		);
 
 		if (!res.ok) {
-			poppup = {
-				message: "Vote Failed",
-				success: false
-			};
+			if (json.detail[0] === 'groupuserdelegatepool does not exist')
+				poppup = {
+					message: 'You cannot vote on this poll since you are not a delegate',
+					success: false
+				};
+			else
+				poppup = {
+					message: 'Vote Failed',
+					success: false
+				};
 			return;
 		}
 		poppup = {
@@ -109,9 +115,10 @@
 			}
 		);
 
+		console.log(json, 'JSON');
 		if (!res.ok) {
 			poppup = {
-				message: "Vote Failed",
+				message: 'Vote Failed',
 				success: false
 			};
 			return;
@@ -147,7 +154,7 @@
 							bind:selectedProposal
 							bind:phase
 						>
-							{#if phase === 'delegate_vote' || phase === "vote"}
+							{#if phase === 'delegate_vote' || phase === 'vote'}
 								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
 								<VotingSlider
 									onSelection={(pos) => {

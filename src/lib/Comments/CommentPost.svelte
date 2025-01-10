@@ -63,8 +63,9 @@
 				being_replied: false,
 				score: 0,
 				edited: false,
-				//TODO Fix so attachments show up immediately
-				attachments: [],
+				attachments: images.map((image) => {
+					return { file: URL.createObjectURL(image) };
+				}),
 				message,
 				id: json,
 				parent_id,
@@ -80,7 +81,7 @@
 
 			comments = comments;
 
-			console.log(comments);
+			console.log(comments, newComment);
 
 			// comments = await commentSetup(comments);
 			showMessage = 'Successfully posted comment';

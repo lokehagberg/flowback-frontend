@@ -6,6 +6,7 @@
 	import type { pollType, template } from './interface';
 	import MonthView from '$lib/Generic/Schedules/MonthView.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { poll } from 'ethers/lib/utils';
 
 	export let selected_poll: pollType,
 		advancedTimeSettings = false,
@@ -19,8 +20,10 @@
 		end_date = new Date(),
 		daysBetweenPhases = 1;
 
-	let calendarView = '1';
+	let calendarView = '0';
+	let templateCounter = 0; // Add counter
 
+	// This might look tautologous (exluded middle) but the code says that whenever "daysBetweenPhases" changes, the dates are updated.
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
 	const handleSelectTemplate = (template: template) => {
@@ -41,31 +44,54 @@
 		);
 		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
 		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
+
+		templateCounter++; // Increment counter
 	};
 
 	const changeDaysBetweenPhases = () => {
-		const now = new Date();
 		start_date = new Date();
 		start_date.setHours(0, 0, 0, 0);
+		//Time incrementer
+		const inc = new Date();
 
-		//For debug purposes this puts one minute delay between each phase.
-		if (daysBetweenPhases === 0) {
-			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			proposal_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			prediction_statement_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			prediction_bet_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			delegate_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			//For users to select over multiple days
-		} else {
-			area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		if (selected_poll === 'Text Poll')
+			if (daysBetweenPhases === 0) {
+				//For debug purposes this puts one minute delay between each phase.
+				area_vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				proposal_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				prediction_statement_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				prediction_bet_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				delegate_vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+			} else {
+				//For users to select over multiple days
+				area_vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				proposal_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				prediction_statement_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				prediction_bet_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				delegate_vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+			}
+		else if (selected_poll === 'Date Poll') {
+			if (daysBetweenPhases === 0) {
+				area_vote_end_date = inc;
+				proposal_end_date = inc;
+				prediction_statement_end_date = inc;
+				prediction_bet_end_date = inc;
+				delegate_vote_end_date = inc;
+				vote_end_date = inc;
+				end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+			} else {
+				area_vote_end_date = inc;
+				proposal_end_date = inc;
+				prediction_statement_end_date = inc;
+				prediction_bet_end_date = inc;
+				delegate_vote_end_date = inc;
+				vote_end_date = inc;
+				end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+			}
 		}
 	};
 </script>
@@ -75,11 +101,11 @@
 		<RadioButtons2
 			name="advancedTimeSettingChoice"
 			bind:value={calendarView}
-			values={['1', '0']}
-			labels={['Calendar', 'List']}
+			values={['0', '1']}
+			labels={['List', 'Calendar']}
 		/>
 		{#if calendarView === '1'}
-			{#key daysBetweenPhases}
+			{#key [daysBetweenPhases, templateCounter]}
 				<MonthView
 					bind:start_date
 					bind:area_vote_end_date

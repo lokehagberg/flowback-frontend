@@ -63,7 +63,7 @@
 				<CrossButton action={() => (open = false)} />
 			</div>
 			{#if onSubmit !== (() => {})}
-				<form on:submit={onSubmit}>
+				<form on:submit|preventDefault={onSubmit}>
 					<div class="p-6 text-center">
 						<slot name="body" />
 					</div>

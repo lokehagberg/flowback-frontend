@@ -21,12 +21,13 @@
 			<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 			<Fa icon={faArrowLeft} />
 		</button>
-		<div class="bg-white rounded p-6 shadow ml-6 w-[30%]">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded p-6 shadow ml-6 w-[30%]">
 			<h1 class="text-xl font-semibold text-primary text-left break-all">{$_('Admin Settings')}</h1>
 			<ul>
 				<li
 					class={`cursor-pointer ${
-						selectedPage === 'group' && 'bg-gray-100 border-l-2 border-primary transition-all'
+						selectedPage === 'group' &&
+						'bg-gray-100 dark:bg-darkbackground border-l-2 border-primary transition-all'
 					}`}
 				>
 					<button class="w-full text-left" on:click={() => (selectedPage = 'group')}
@@ -35,7 +36,8 @@
 				</li>
 				<li
 					class={`cursor-pointer ${
-						selectedPage === 'areas' && 'bg-gray-100 border-l-2 border-primary transition-all'
+						selectedPage === 'areas' &&
+						'bg-gray-100 dark:bg-darkbackground border-l-2 border-primary transition-all'
 					}`}
 				>
 					<button class="w-full text-left" on:click={() => (selectedPage = 'areas')}
@@ -44,7 +46,8 @@
 				</li>
 				<li
 					class={`cursor-pointer ${
-						selectedPage === 'perms' && 'bg-gray-100 border-l-2 border-primary transition-all'
+						selectedPage === 'perms' &&
+						'bg-gray-100 dark:bg-darkbackground border-l-2 border-primary transition-all'
 					}`}
 				>
 					<button class="w-full text-left" on:click={() => (selectedPage = 'perms')}
@@ -62,7 +65,7 @@
 				</li> -->
 			</ul>
 		</div>
-		<div class="bg-white p-6 shadow flex-grow rounded">
+		<div class="bg-white dark:text-darkmodeText dark:bg-darkobject p-6 shadow flex-grow rounded">
 			{#if selectedPage === 'group'}
 				<EditGroup />
 			{:else if selectedPage === 'areas'}

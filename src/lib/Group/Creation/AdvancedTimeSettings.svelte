@@ -19,7 +19,7 @@
 		end_date = new Date(),
 		daysBetweenPhases = 1;
 
-	let calendarView = '1';
+	let calendarView = '0';
 	let templateCounter = 0; // Add counter
 
 	// This might look tautologous (exluded middle) but the code says that whenever "daysBetweenPhases" changes, the dates are updated.
@@ -78,9 +78,10 @@
 		<RadioButtons2
 			name="advancedTimeSettingChoice"
 			bind:value={calendarView}
-			values={['1', '0']}
-			labels={['Calendar', 'List']}
+			values={['0', '1']}
+			labels={['List', 'Calendar']}
 		/>
+		{@debug calendarView}
 		{#if calendarView === '1'}
 			{#key [daysBetweenPhases, templateCounter]}
 				<MonthView

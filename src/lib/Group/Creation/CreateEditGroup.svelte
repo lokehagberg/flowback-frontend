@@ -45,9 +45,9 @@
 	const createGroup = async () => {
 		loading = true;
 		const formData = new FormData();
-		const blockchain_id = Math.floor(
-			(1 + Math.random()) * 1000000 * name.length * description.length
-		);
+
+		//This must be less than or equal to 2147483647
+		const blockchain_id = Math.floor(Math.random() * 2147483647);
 
 		//Formdata used to transfer images
 		formData.append('name', name);
@@ -60,8 +60,7 @@
 		if (image) formData.append('image', await blobifyImages(image));
 		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
 
-		console.log(groupToEdit, "EDITABLE");
-		
+		console.log(groupToEdit, 'EDITABLE');
 
 		let api = groupToEdit ? `group/${groupToEdit}/update` : 'group/create';
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);

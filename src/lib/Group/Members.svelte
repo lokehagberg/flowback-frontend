@@ -17,6 +17,7 @@
 	import { faMagnifyingGlass, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -25,6 +26,7 @@
 		searchUserQuery = '',
 		searchedUsers: User[] = [],
 		poppup: poppup,
+		showInvite = false,
 		searched = false;
 
 	onMount(async () => {
@@ -72,9 +74,8 @@
 
 		searchedUsers = json.results;
 		users = json.results;
-		users = users
+		users = users;
 		console.log(json, 'JSOn', users);
-		
 	};
 
 	const getInvitesList = async () => {
@@ -117,12 +118,11 @@
 	};
 </script>
 
-<Loader bind:loading>
-	<div
-		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
-	>
-		<!-- Inviting -->
+<Button action={() => (showInvite = true)}>{$_('Show Invitations')}</Button>
 
+<Modal bind:open={showInvite}>
+	<div slot="body">
+		<!-- Inviting -->
 		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
 			<TextInput
 				onInput={() => searchUser(searchUserQuery)}
@@ -190,7 +190,13 @@
 				{/each}
 			</div>
 		{/if}
+	</div>
+</Modal>
 
+<Loader bind:loading>
+	<div
+		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
+	>
 		<!-- Search in Members list -->
 
 		<form

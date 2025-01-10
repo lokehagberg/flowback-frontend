@@ -19,7 +19,7 @@
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=1000`
+			`group/poll/${$page.params.pollId}/proposals?limit=1000&order_by=score`
 		);
 
 		if (pollType === 4) proposals = json.results;

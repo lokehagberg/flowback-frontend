@@ -6,6 +6,7 @@
 	import type { pollType, template } from './interface';
 	import MonthView from '$lib/Generic/Schedules/MonthView.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { poll } from 'ethers/lib/utils';
 
 	export let selected_poll: pollType,
 		advancedTimeSettings = false,
@@ -43,32 +44,54 @@
 		);
 		vote_end_date = new Date(delegate_vote_end_date.getTime() + template.vote_time_delta);
 		end_date = new Date(vote_end_date.getTime() + template.end_time_delta);
+
 		templateCounter++; // Increment counter
 	};
 
 	const changeDaysBetweenPhases = () => {
-		const now = new Date();
 		start_date = new Date();
 		start_date.setHours(0, 0, 0, 0);
+		//Time incrementer
+		const inc = new Date();
 
-		//For debug purposes this puts one minute delay between each phase.
-		if (daysBetweenPhases === 0) {
-			area_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			proposal_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			prediction_statement_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			prediction_bet_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			delegate_vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			vote_end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			end_date = new Date(now.setMinutes(now.getMinutes() + 1));
-			//For users to select over multiple days
-		} else {
-			area_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			proposal_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			prediction_statement_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			prediction_bet_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			delegate_vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
-			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
+		if (selected_poll === 'Text Poll')
+			if (daysBetweenPhases === 0) {
+				//For debug purposes this puts one minute delay between each phase.
+				area_vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				proposal_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				prediction_statement_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				prediction_bet_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				delegate_vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				vote_end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+				end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+			} else {
+				//For users to select over multiple days
+				area_vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				proposal_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				prediction_statement_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				prediction_bet_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				delegate_vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				vote_end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+				end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+			}
+		else if (selected_poll === 'Date Poll') {
+			if (daysBetweenPhases === 0) {
+				area_vote_end_date = inc;
+				proposal_end_date = inc;
+				prediction_statement_end_date = inc;
+				prediction_bet_end_date = inc;
+				delegate_vote_end_date = inc;
+				vote_end_date = inc;
+				end_date = new Date(inc.setMinutes(inc.getMinutes() + 1));
+			} else {
+				area_vote_end_date = inc;
+				proposal_end_date = inc;
+				prediction_statement_end_date = inc;
+				prediction_bet_end_date = inc;
+				delegate_vote_end_date = inc;
+				vote_end_date = inc;
+				end_date = new Date(inc.setDate(inc.getDate() + daysBetweenPhases));
+			}
 		}
 	};
 </script>
@@ -81,7 +104,6 @@
 			values={['0', '1']}
 			labels={['List', 'Calendar']}
 		/>
-		{@debug calendarView}
 		{#if calendarView === '1'}
 			{#key [daysBetweenPhases, templateCounter]}
 				<MonthView

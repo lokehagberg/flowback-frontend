@@ -101,7 +101,7 @@
 	<div class="mx-2">
 		<div class="flex items-center justify-between text-primary">
 			<a
-				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all "
+				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all"
 				href={onHoverGroup
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -129,6 +129,7 @@
 				{/if}
 				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 				<NotificationOptions
+					type="poll"
 					id={poll.id}
 					api={`group/poll/${poll.id}`}
 					categories={['poll', 'timeline', 'comment_all']}
@@ -207,9 +208,7 @@
 
 			<!-- Tag -->
 			{#if poll.poll_type === 4}
-			<Tag
-				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }}
-			/>
+				<Tag tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
 			{/if}
 
 			<!-- Phase -->

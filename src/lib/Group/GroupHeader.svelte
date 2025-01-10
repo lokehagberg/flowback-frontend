@@ -44,12 +44,11 @@
 	/>
 </div>
 <!-- TODO: Fix layout design -->
-<div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 px-4 pb-4"
->
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 px-4 pb-4">
 	<div class=" flex justify-evenly align-middle">
 		<div class="flex items-center relative" id="notifications-list-group">
 			<NotificationOptions
+				type="group"
 				api={`group/${$page.params.groupId}`}
 				id={Number($page.params.groupId)}
 				categories={groupNotificationCategories}

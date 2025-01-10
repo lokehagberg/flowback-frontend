@@ -93,7 +93,7 @@
 </script>
 
 <div>
-	<form 
+	<form
 		class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
 		on:submit|preventDefault={handleSearch}
 	>
@@ -132,6 +132,7 @@
 
 				<div class="flex gap-3">
 					<NotificationOptions
+						type="group_thread"
 						api={`group/thread/${thread.id}`}
 						categories={['comment']}
 						id={thread.id}

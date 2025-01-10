@@ -10,6 +10,7 @@
 
 	export let notificationOpen = false,
 		categories: string[],
+		type:'poll' | 'group' | 'group_thread',
 		labels: string[],
 		api: string,
 		id: number,
@@ -25,6 +26,9 @@
 		channel_sender_id: number;
 		channel_sender_type: string;
 	}
+
+	const groupId = $page.params.groupId;
+	const pollId = $page.params.pollId;
 
 	const closeWindowWhenClickingOutside = () => {
 		window.addEventListener('click', function (e) {
@@ -56,7 +60,7 @@
 			notifications.push({
 				channel_category: category,
 				channel_sender_id: id,
-				channel_sender_type: 'poll'
+			channel_sender_type: type
 			});
 			popupMessage = 'Subscribed';
 		} else popupMessage = 'Something went wrong';
@@ -65,14 +69,10 @@
 	};
 
 	const notificationUnsubscription = async (category: string) => {
-
-		const groupId = $page.params.groupId;
-		const pollId = $page.params.pollId;
-
 		const { res, json } = await fetchRequest('POST', `notification/unsubscribe`, {
-			channel_sender_type: pollId ? 'poll' : groupId ? 'group' : 'user',
 			channel_sender_id: id,
-			channel_category: category
+			channel_category: category,
+			channel_sender_type: type
 		});
 		if (res.ok) {
 			notifications = notifications.filter((object) => object.channel_category !== category);

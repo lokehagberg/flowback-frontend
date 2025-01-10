@@ -44,6 +44,7 @@
 
 	<div class="flex gap-3 justify-center m-auto">
 		<NotificationOptions
+		type="poll"
 			id={poll.id}
 			api={`group/poll/${poll.id}`}
 			categories={['poll', 'timeline', 'comment_all']}

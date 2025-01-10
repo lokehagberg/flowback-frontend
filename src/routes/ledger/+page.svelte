@@ -318,15 +318,15 @@
 							newTransaction = true;
 						}}>Add Transaction</Button
 					>
-					<Button action={() => (show_account = true)}>Create Account</Button>
-					<Button action={() => (showDeleteAccount = true)}>Delete An Account</Button>
+					<Button action={() => (show_account = true)}>{$_("Create Account")}</Button>
+					<Button action={() => (showDeleteAccount = true)}>{$_("Delete An Account")}</Button>
 					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
-						>Generate Printable HTML file {filter.date_before !== null || filter.date_after !== null
+						>{$_("Generate Printable HTML file")} {filter.date_before !== null || filter.date_after !== null
 							? 'between selected dates'
 							: ''}</Button
 					>
 					<div class="mt-4 flex gap-2">
-						Show on page:
+						{$_("Show on page")}:
 						<Select
 							labels={['20', '50', '100', 'All']}
 							values={[20, 50, 100, 10000]}
@@ -493,6 +493,6 @@
 		</div>
 	</div>
 	<div slot="footer">
-		<Button action={deleteAccount} buttonStyle="warning">Delete Account</Button>
+		<Button action={deleteAccount} buttonStyle="warning">{$_("Delete Account")}</Button>
 	</div>
 </Modal>

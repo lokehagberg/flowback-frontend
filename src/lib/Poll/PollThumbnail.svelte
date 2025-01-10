@@ -12,7 +12,7 @@
 	import { onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyName, nextPhase } from './functions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
-	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import { elipsis, onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
 	import { getTags } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
@@ -101,12 +101,12 @@
 	<div class="mx-2">
 		<div class="flex items-center justify-between text-primary">
 			<a
-				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all"
+				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all "
 				href={onHoverGroup
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
 			>
-				{poll.title}
+				{elipsis(poll.title)}
 			</a>
 
 			<div class="inline-flex items-center gap-4">

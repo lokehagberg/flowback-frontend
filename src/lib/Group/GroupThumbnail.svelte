@@ -53,7 +53,7 @@
 	/>
 
 	<button on:click={goToGroup}>
-		<h1 class="text-2xl p-4 mt-10 text-center">
+		<h1 class="text-2xl p-4 mt-10 text-center break-all">
 			{group.name}
 		</h1>
 		<!-- <p class="pl-6 pr-6 pb-6 break-words">

@@ -96,6 +96,8 @@
 			description
 		};
 
+		if (description === "") delete payload.description;
+
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {

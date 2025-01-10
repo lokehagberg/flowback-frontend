@@ -8,6 +8,8 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import Description from '$lib/Poll/Description.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -43,42 +45,49 @@
 </div>
 <!-- TODO: Fix layout design -->
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 flex justify-evenly align-middle pl-4 pr-4 pb-4"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 px-4 pb-4"
 >
-	<div class="flex items-center relative" id="notifications-list-group">
-		<NotificationOptions
-			api={`group/${$page.params.groupId}`}
-			id={Number($page.params.groupId)}
-			categories={groupNotificationCategories}
-			labels={groupNotificationCategories}
-			Class="mt-auto"
-		/>
+	<div class=" flex justify-evenly align-middle">
+		<div class="flex items-center relative" id="notifications-list-group">
+			<NotificationOptions
+				api={`group/${$page.params.groupId}`}
+				id={Number($page.params.groupId)}
+				categories={groupNotificationCategories}
+				labels={groupNotificationCategories}
+				Class="mt-auto"
+			/>
 
-		<button
-			class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
-			on:click={() => (selectedPage = 'flow')}
-		>
-			{group.name}
-		</button>
-	</div>
-	<div class="flex items-center">
-		<button
-			class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
-			on:click={() => (selectedPage = 'members')}
-		>
-			{memberCount}
-			{$_('members')}
-		</button>
-		<div class="ml-3">
-			{#if typeof window !== 'undefined'}
-				{#if group.public}
-					<Fa icon={faGlobeEurope} />
-				{:else}
-					<Fa icon={faLock} />
+			<button
+				class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+				on:click={() => (selectedPage = 'flow')}
+			>
+				{group.name}
+			</button>
+		</div>
+		<div class="flex items-center">
+			<button
+				class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+				on:click={() => (selectedPage = 'members')}
+			>
+				{memberCount}
+				{$_('members')}
+			</button>
+			<div class="ml-3">
+				{#if typeof window !== 'undefined'}
+					{#if group.public}
+						<Fa icon={faGlobeEurope} />
+					{:else}
+						<Fa icon={faLock} />
+					{/if}
 				{/if}
-			{/if}
+			</div>
 		</div>
 	</div>
+	{#if group.description.length > 0}
+		<div class="mb-2 mt-6 mx-auto w-[50%] grid-area-description break-all">
+			<Description limit={400} description={group.description} />
+		</div>
+	{/if}
 </div>
 
 <style>

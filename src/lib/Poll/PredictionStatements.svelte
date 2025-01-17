@@ -8,6 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { onMount } from 'svelte';
 
 	export let selectedProposal: proposal, phase: Phase, poll: poll;
 
@@ -24,6 +25,8 @@
 		);
 		loading = false;
 		predictions = json.results;
+		console.log(predictions, 'predictions');
+		
 	};
 
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
@@ -32,6 +35,7 @@
 <Loader bind:loading>
 	<div class="border-t-2">
 		<div class="text-gray-500 text-sm py-2">{$_('Predictions')}({predictions.length})</div>
+		{#key selectedProposal}
 		{#each predictions as prediction}
 			<div
 				class="border-b-2 flex flex-col break-all"
@@ -56,5 +60,6 @@
 				{/if}
 			</div>
 		{/each}
+		{/key}
 	</div>
 </Loader>

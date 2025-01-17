@@ -12,7 +12,7 @@
 		const nearestSnap = snapPoints.reduce((prev, curr) =>
 			Math.abs(curr - width) < Math.abs(prev - width) ? curr : prev
 		);
-		
+
 		lineWidth = nearestSnap;
 		currentSnapPosition = nearestSnap;
 		return nearestSnap;
@@ -47,12 +47,10 @@
 		const container = document.getElementById('track-container');
 		const rect = container?.getBoundingClientRect();
 		if (rect) snapPointsInPixels = snapPoints.map((point) => (rect.width * point) / 100);
-
 	});
-	
-	$: if (score) snapToSnapPoint(score * 20);
-	$: if (score) console.log(score, "score");
-	
+
+	$: if (score !== null) snapToSnapPoint(score * 20);
+	$: if (score !== null) console.log(score, 'score');
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

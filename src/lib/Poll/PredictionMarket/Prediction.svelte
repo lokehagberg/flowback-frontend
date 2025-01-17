@@ -31,7 +31,8 @@
 	const getPredictionBet = async () => {
 		// if (!score) return;
 		loading = true;
-
+		console.log(prediction.id, prediction.title, 'prediction.id');
+		
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
@@ -67,7 +68,7 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully betted', success: true, show: true };
+		poppup = { message: 'Successfully placed bet', success: true, show: true };
 	};
 
 	const predictionBetUpdate = async (score: string | number) => {
@@ -88,7 +89,7 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully updated bet', success: true, show: true };
+		poppup = { message: 'Successfully placed bet', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -105,7 +106,7 @@
 			poppup = { message: 'Betting failed to be deleted', success: false };
 			return;
 		}
-		poppup = { message: 'Successfully updated bet', success: true };
+		poppup = { message: 'Successfully placed bet', success: true };
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -187,18 +188,18 @@
 	});
 </script>
 
-<div class="">
+<div>
 	{#if prediction.description}
 		<span class="hover:underline cursor-pointer overflow-hidden">
 			{elipsis(prediction.description)}</span
 		>
 	{/if}
 	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
+
 	{#if phase === 'prediction_bet'}
-		
-			<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
-	
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
 	{/if}
+
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">
 			<Button
@@ -214,14 +215,12 @@
 						: 'hover:bg-green-100 border-green-600 text-green-800'
 				}`}
 			>
-			<Fa
-            icon={faCheck}
-            class={`${
-                prediction.user_prediction_statement_vote === true
-                    ? 'text-white'
-                    : 'text-green-700'
-            }`}
-        />
+				<Fa
+					icon={faCheck}
+					class={`${
+						prediction.user_prediction_statement_vote === true ? 'text-white' : 'text-green-700'
+					}`}
+				/>
 			</Button>
 			<Button
 				action={() =>
@@ -236,14 +235,12 @@
 						: 'hover:bg-red-100 border-red-500 text-red-600'
 				}`}
 			>
-			<Fa
-            icon={faX}
-            class={`${
-                prediction.user_prediction_statement_vote === false
-                    ? 'text-white'
-                    : 'text-red-600'
-            }`}
-        />
+				<Fa
+					icon={faX}
+					class={`${
+						prediction.user_prediction_statement_vote === false ? 'text-white' : 'text-red-600'
+					}`}
+				/>
 			</Button>
 		</div>
 	{/if}

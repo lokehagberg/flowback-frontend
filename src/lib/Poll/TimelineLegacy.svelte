@@ -26,7 +26,7 @@
 		// Date placement on Timeline
 		const toDateTime = date.getTime() - dates[0].getTime();
 		datePlacement[i] = (100 * toDateTime) / totalTime;
-		datesDisplay[i] = formatDate(date.toString());
+		datesDisplay[i] = date.toDateString()
 	});
 </script>
 

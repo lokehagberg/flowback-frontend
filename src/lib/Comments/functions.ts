@@ -34,7 +34,8 @@ export const getComments = async (
 	id: number | string | null | undefined,
 	api: 'poll' | 'thread' | 'delegate-history',
 	offset = 0,
-	sortBy: string | null = null
+	sortBy: string | null = null,
+	searchString: string = ''
 ) => {
 	let _api = '';
 	if (api === 'poll') _api += `group/poll/${id}`;
@@ -44,6 +45,7 @@ export const getComments = async (
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
 	_api += `&offset=${offset}`;
 	if (sortBy !== null) _api += `&order_by=${sortBy}`;
+	if (searchString !== '') _api += `&message__icontains=[${searchString}]`;
 
 	const { res, json } = await fetchRequest('GET', _api);
 

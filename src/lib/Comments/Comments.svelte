@@ -21,12 +21,13 @@
 		poppup: poppup,
 		offset = 0,
 		showReadMore = true,
-		sortBy: null | string = null;
-
-
+		sortBy: null | string = null,
+		searchString: string = '';
 
 	const setUpComments = async () => {
-		const { comments, next } = await getComments(getId(), api, offset, sortBy);
+		console.log("hiii");
+		
+		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
 	};
@@ -41,16 +42,16 @@
 	};
 
 	const getId = () => {
-		if (api === 'poll') return $page.params.pollId
-		else if (api === 'thread') return $page.params.threadId
-		else if (api === 'delegate-history') return delegate_pool_id
-	}
+		if (api === 'poll') return $page.params.pollId;
+		else if (api === 'thread') return $page.params.threadId;
+		else if (api === 'delegate-history') return delegate_pool_id;
+	};
 
 	onMount(async () => {
 		setUpComments();
 	});
 
-	$: if (sortBy || !sortBy) setUpComments();
+	$: if (sortBy || !sortBy || searchString) setUpComments();
 </script>
 
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
@@ -63,14 +64,14 @@
 		{delegate_pool_id}
 	/>
 
-	<CommentFilter bind:sortBy Class="inline"/>
+	<CommentFilter bind:sortBy bind:searchString Class="inline" />
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each _comments as comment}
 			<Comment {comment} bind:comments={_comments} bind:api bind:proposals />
 		{/each}
 		{#if showReadMore}
-			<button on:click={readMore}>{$_("Read more")}</button>
+			<button on:click={readMore}>{$_('Read more')}</button>
 		{/if}
 	</div>
 	{#if _comments.length === 0}

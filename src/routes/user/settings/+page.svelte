@@ -4,6 +4,7 @@
 	import { faUser, faBell, faPieChart, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
+	import { fetchRequest } from '$lib/FetchRequest';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' = 'notifications',
 		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
@@ -28,13 +29,30 @@
 				'Delegate voting',
 				'Voting'
 			]
-		];
+		],
+		userConfig = { notificationSettings: { schedule: 
+			{
+				invited_to_event: true,
+				event_date_changed: true,
+				event_canceled: true,
+				new_member_added: true,
+				event_frequency_changed: true
+			}, kanban: {}, posts: {} } };
+
+	const userUpdate = async () => {
+		const { res, json } = await fetchRequest('POST', '/user/update', {
+			user_config: JSON.stringify(userConfig)
+		});
+	};
 </script>
 
 <Layout centered>
 	<div class="flex mt-6 gap-6">
 		<div class="bg-white w-[300px] p-6">
-			<button class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors mb-4" on:click={() => history.back()}>
+			<button
+				class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors mb-4"
+				on:click={() => history.back()}
+			>
 				<Fa icon={faArrowLeft} />
 				{$_('Back')}
 			</button>
@@ -88,11 +106,11 @@
 					<div>{$_('Delete account')}</div>
 				{:else if selectedPage === 'notifications'}
 					{$_('Notify me when')}...
-					{#each notificationSettingsTitles as title, i}
+					{#each Object.entries(userConfig.notificationSettings) as [key, settings]}
 						<li>
-							<span class="text-xl text-primary font-bold">{title}</span>
+							<span class="text-xl text-primary font-bold">{key}</span>
 							<ul>
-								{#each notificationSettings[i] as setting}
+								{#each Object.entries(settings) as setting}
 									<li class="flex justify-between">
 										<span>{setting}</span>
 										<input type="checkbox" />

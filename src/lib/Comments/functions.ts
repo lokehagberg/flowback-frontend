@@ -45,7 +45,7 @@ export const getComments = async (
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
 	_api += `&offset=${offset}`;
 	if (sortBy !== null) _api += `&order_by=${sortBy}`;
-	if (searchString !== '') _api += `&message__icontains=[${searchString}]`;
+	if (searchString !== '') _api += `&message__icontains=${searchString}`;
 
 	const { res, json } = await fetchRequest('GET', _api);
 

@@ -30,20 +30,43 @@
 				'Voting'
 			]
 		],
-		userConfig = { notificationSettings: { schedule: 
-			{
-				invited_to_event: true,
-				event_date_changed: true,
-				event_canceled: true,
-				new_member_added: true,
-				event_frequency_changed: true
-			}, kanban: {}, posts: {} } };
+		userConfig = {
+			notificationSettings: {
+				schedule: {
+					invited_to_event: true,
+					event_date_changed: true,
+					event_canceled: true,
+					new_member_added: true,
+					event_frequency_changed: true
+				},
+				kanban: {
+					task_assigned: true,
+					task_priority_changed: true,
+					task_status_changed: true
+				},
+				posts: {
+					new_thread_created: true,
+					new_poll_created: true,
+					vote_on_comment: true
+				}
+			},
+			pollSettings: {
+				area_voting: true,
+				proposal_creation: true,
+				prediction_statement_creation: true,
+				prediction_betting: true,
+				delegate_voting: true,
+				voting: true
+			}
+		};
 
 	const userUpdate = async () => {
-		const { res, json } = await fetchRequest('POST', '/user/update', {
+		const { res, json } = await fetchRequest('POST', 'user/update', {
 			user_config: JSON.stringify(userConfig)
 		});
 	};
+
+	$: if (userConfig) userUpdate();
 </script>
 
 <Layout centered>
@@ -110,10 +133,10 @@
 						<li>
 							<span class="text-xl text-primary font-bold">{key}</span>
 							<ul>
-								{#each Object.entries(settings) as setting}
+								{#each Object.entries(settings) as [key, setting]}
 									<li class="flex justify-between">
-										<span>{setting}</span>
-										<input type="checkbox" />
+										<span>{key}</span>
+										<input type="checkbox" bind:checked={setting} />
 									</li>
 								{/each}
 							</ul>
@@ -122,10 +145,10 @@
 				{:else if selectedPage === 'poll-process'}
 					<span class="text-xl text-primary font-bold">{$_('Poll Phases')}</span>
 					<span>{$_('Select the phases you want to participate in')}.</span>
-					{#each pollSettings[0] as setting}
+					{#each Object.entries(userConfig.pollSettings) as [key, settings]}
 						<li class="flex justify-between">
-							<span>{setting}</span>
-							<input type="checkbox" />
+							<span>{key}</span>
+							<input type="checkbox" bind:value={settings} />
 						</li>
 					{/each}
 				{/if}

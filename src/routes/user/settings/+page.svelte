@@ -6,7 +6,7 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
-    import { configToReadable } from '$lib/utils/configToReadable';
+	import { configToReadable } from '$lib/utils/configToReadable';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' = 'notifications',
 		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
@@ -133,7 +133,7 @@
 							<ul>
 								{#each Object.entries(settings) as [key2, setting]}
 									<li class="flex justify-between">
-										<span>{configToReadable(key2)}</span>
+										<span>{$_(configToReadable(key2))}</span>
 										<input
 											type="checkbox"
 											on:input={(e) => {
@@ -156,7 +156,7 @@
 					<span>{$_('Select the phases you want to participate in')}.</span>
 					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
 						<li class="flex justify-between">
-							<span>{configToReadable(key)}</span>
+							<span>{$_(configToReadable(key))}</span>
 							<input
 								type="checkbox"
 								on:input={(e) => {

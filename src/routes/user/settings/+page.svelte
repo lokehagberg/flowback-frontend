@@ -5,6 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import { onMount } from 'svelte';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' = 'notifications',
 		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
@@ -61,14 +62,33 @@
 		};
 
 	const userUpdate = async () => {
-		console.log(userConfig);
-
 		const { res, json } = await fetchRequest('POST', 'user/update', {
 			user_config: JSON.stringify(userConfig)
 		});
 	};
 
-	$: if (userConfig) userUpdate();
+	const getUserConfig = async () => {
+		const { res, json } = await fetchRequest('GET', 'user');
+		if (res.ok) {
+			console.log('HEHEHRHERE');
+
+			userConfig = JSON.parse(json.user_config);
+		}
+	};
+
+	const a = (key1: string, key2: string) => {
+		console.log(userConfig, 'userConfig');
+
+		//@ts-ignore
+		console.log(userConfig.notificationSettings[key1][key2]);
+
+		//@ts-ignore
+		return userConfig.notificationSettings[key1][key2];
+	};
+
+	onMount(() => {
+		getUserConfig();
+	});
 </script>
 
 <Layout centered>
@@ -138,13 +158,17 @@
 								{#each Object.entries(settings) as [key2, setting]}
 									<li class="flex justify-between">
 										<span>{key2}</span>
-										<!-- {@debug setting} -->
 										<input
 											type="checkbox"
 											on:input={(e) => {
 												//@ts-ignore
-												userConfig.notificationSettings[key1][key2] = e.target.value === "on" ? true : false;
+												userConfig.notificationSettings[key1][key2] =
+													//@ts-ignore
+													e.target.value === 'on' ? true : false;
+
+												userUpdate();
 											}}
+											checked={a(key1, key2)}
 										/>
 									</li>
 								{/each}

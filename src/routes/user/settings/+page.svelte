@@ -74,9 +74,13 @@
 		}
 	};
 
-	const a = (key1: string, key2: string) => {
+	const a = (key1: string, key2: string = '') => {
+		if (key2 === '') {
+			//@ts-ignore
+			return userConfig.pollSettings[key1];
+		}
 		//@ts-ignore
-		return userConfig.notificationSettings[key1][key2];
+		else return userConfig.notificationSettings[key1][key2];
 	};
 
 	onMount(() => {
@@ -174,7 +178,18 @@
 					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
 						<li class="flex justify-between">
 							<span>{key}</span>
-							<input type="checkbox" bind:checked={setting} />
+							<input
+								type="checkbox"
+								on:input={(e) => {
+									//@ts-ignore
+									userConfig.pollSettings[key] =
+										//@ts-ignore
+										e.target.checked;
+
+									userUpdate();
+								}}
+								checked={a(key)}
+							/>
 						</li>
 					{/each}
 				{/if}

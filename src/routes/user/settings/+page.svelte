@@ -33,34 +33,36 @@
 		userConfig = {
 			notificationSettings: {
 				schedule: {
-					invited_to_event: true,
-					event_date_changed: true,
-					event_canceled: true,
-					new_member_added: true,
-					event_frequency_changed: true
+					invited_to_event: false,
+					event_date_changed: false,
+					event_canceled: false,
+					new_member_added: false,
+					event_frequency_changed: false
 				},
 				kanban: {
-					task_assigned: true,
-					task_priority_changed: true,
-					task_status_changed: true
+					task_assigned: false,
+					task_priority_changed: false,
+					task_status_changed: false
 				},
 				posts: {
-					new_thread_created: true,
-					new_poll_created: true,
-					vote_on_comment: true
+					new_thread_created: false,
+					new_poll_created: false,
+					vote_on_comment: false
 				}
 			},
 			pollSettings: {
-				area_voting: true,
-				proposal_creation: true,
-				prediction_statement_creation: true,
-				prediction_betting: true,
-				delegate_voting: true,
-				voting: true
+				area_voting: false,
+				proposal_creation: false,
+				prediction_statement_creation: false,
+				prediction_betting: false,
+				delegate_voting: false,
+				voting: false
 			}
 		};
 
 	const userUpdate = async () => {
+		console.log(userConfig);
+
 		const { res, json } = await fetchRequest('POST', 'user/update', {
 			user_config: JSON.stringify(userConfig)
 		});
@@ -129,14 +131,21 @@
 					<div>{$_('Delete account')}</div>
 				{:else if selectedPage === 'notifications'}
 					{$_('Notify me when')}...
-					{#each Object.entries(userConfig.notificationSettings) as [key, settings]}
+					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-xl text-primary font-bold">{key}</span>
+							<span class="text-xl text-primary font-bold">{key1}</span>
 							<ul>
-								{#each Object.entries(settings) as [key, setting]}
+								{#each Object.entries(settings) as [key2, setting]}
 									<li class="flex justify-between">
-										<span>{key}</span>
-										<input type="checkbox" bind:checked={setting} />
+										<span>{key2}</span>
+										<!-- {@debug setting} -->
+										<input
+											type="checkbox"
+											on:input={(e) => {
+												//@ts-ignore
+												userConfig.notificationSettings[key1][key2] = e.target.value === "on" ? true : false;
+											}}
+										/>
 									</li>
 								{/each}
 							</ul>
@@ -145,10 +154,10 @@
 				{:else if selectedPage === 'poll-process'}
 					<span class="text-xl text-primary font-bold">{$_('Poll Phases')}</span>
 					<span>{$_('Select the phases you want to participate in')}.</span>
-					{#each Object.entries(userConfig.pollSettings) as [key, settings]}
+					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
 						<li class="flex justify-between">
 							<span>{key}</span>
-							<input type="checkbox" bind:value={settings} />
+							<input type="checkbox" bind:checked={setting} />
 						</li>
 					{/each}
 				{/if}

@@ -70,18 +70,11 @@
 	const getUserConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 		if (res.ok) {
-			console.log('HEHEHRHERE');
-
 			userConfig = JSON.parse(json.user_config);
 		}
 	};
 
 	const a = (key1: string, key2: string) => {
-		console.log(userConfig, 'userConfig');
-
-		//@ts-ignore
-		console.log(userConfig.notificationSettings[key1][key2]);
-
 		//@ts-ignore
 		return userConfig.notificationSettings[key1][key2];
 	};
@@ -164,7 +157,7 @@
 												//@ts-ignore
 												userConfig.notificationSettings[key1][key2] =
 													//@ts-ignore
-													e.target.value === 'on' ? true : false;
+													e.target.checked;
 
 												userUpdate();
 											}}

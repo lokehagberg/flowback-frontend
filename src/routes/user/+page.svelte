@@ -18,6 +18,7 @@
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import History from '$lib/Group/Delegation/History.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -312,6 +313,9 @@
 			</div>
 		</form>
 	{/if}
+
+	<History history={62} groupId={1}/>
+	
 </Layout>
 
 <style>

@@ -40,7 +40,7 @@ export const getComments = async (
 	let _api = '';
 	if (api === 'poll') _api += `group/poll/${id}`;
 	else if (api === 'thread') _api += `group/thread/${id}`;
-	else if (api === 'delegate-history') _api += `group/delegate/pool/${1}`;
+	else if (api === 'delegate-history') _api += `group/delegate/pool/${id}`;
 
 	_api += `/comment/list?limit=${pollCommentsLimit}`;
 	_api += `&offset=${offset}`;

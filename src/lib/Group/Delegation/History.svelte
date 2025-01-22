@@ -9,7 +9,7 @@
 	import { goto } from '$app/navigation';
 	import Comments from '$lib/Comments/Comments.svelte';
 
-	export let history: null | number;
+	export let history: null | number, groupId = 0;
 
 	let loading = false,
 		delegatePool: DelegatePool,
@@ -27,7 +27,7 @@
 	const getDelegateInfo = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/delegate/pools?id=${history}`
+			`group/${$page.params.groupId || groupId}/delegate/pools?id=${history}`
 		);
 
 		delegatePool = json.results[0];

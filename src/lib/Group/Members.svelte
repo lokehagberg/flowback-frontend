@@ -24,7 +24,9 @@
 		loading = true,
 		selectedPage: SelectablePages = 'Members',
 		searchUserQuery = '',
-		searchedUsers: User[] = [],
+		searchInvitationQuery = '',
+		searchedInvitationUsers: User[] = [],
+		searchedUsers: GroupUser[] = [],
 		poppup: poppup,
 		showInvite = false,
 		searched = false;
@@ -33,6 +35,7 @@
 		getUsers();
 
 		getInvitesList();
+		searchUsers('');
 
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
@@ -51,31 +54,29 @@
 		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
 		if (username === '') {
-			searchedUsers = [];
+			searchedInvitationUsers = [];
 			return;
 		}
 
 		const { json } = await fetchRequest('GET', `users?username=${username}`);
-		searchedUsers = json.results;
+		searchedInvitationUsers = json.results;
 	};
 
 	const searchUsers = async (username: string) => {
 		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
-		if (username === '') {
-			searchedUsers = [];
-			return;
-		}
+		// if (username === '') {
+		// 	searchedInvitationUsers = [];
+		// 	return;
+		// }
 
 		const { json } = await fetchRequest(
 			'GET',
-			`users?limit=${groupMembersLimit}&username__icontains=${username}`
+			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}&username__icontains=${username}`
 		);
 
+		searchedInvitationUsers = json.results;
 		searchedUsers = json.results;
-		users = json.results;
-		users = users;
-		console.log(json, 'JSOn', users);
 	};
 
 	const getInvitesList = async () => {
@@ -125,22 +126,22 @@
 		<!-- Inviting -->
 		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
 			<TextInput
-				onInput={() => searchUser(searchUserQuery)}
-				bind:value={searchUserQuery}
+				onInput={() => searchUser(searchInvitationQuery)}
+				bind:value={searchInvitationQuery}
 				label={$_('User to invite')}
 				placeholder="Username"
 			/>
 			<ul>
-				{#each searchedUsers as searchedUser}
+				{#each searchedInvitationUsers as searchedUser}
 					<li
 						class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
 					>
 						<div class="flex">
 							<ProfilePicture
+								displayName
 								username={searchedUser.username}
 								profilePicture={searchedUser.profile_image}
 							/>
-							<div class="w-64 ml-10">{searchedUser.username}</div>
 						</div>
 
 						<div class="flex">
@@ -201,7 +202,7 @@
 
 		<form
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
-			on:submit|preventDefault={() => searchUsers(searchUserQuery)}
+			on:input|preventDefault={() => searchUsers(searchUserQuery)}
 		>
 			<TextInput
 				Class="w-4/5"
@@ -222,9 +223,9 @@
 
 		<!-- Members List -->
 
-		{#if users.length > 0}
+		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
-				{#each users as user}
+				{#each searchedUsers as user}
 					<div class="flex items-center">
 						<ProfilePicture
 							Class="w-[30%]"

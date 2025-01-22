@@ -73,7 +73,7 @@
 		});
 	};
 
-	const addUserToGroup = async (groupUserId: number, workGroupId:number) => {
+	const addUserToGroup = async (groupUserId: number, workGroupId: number) => {
 		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroupId}/user/add`, {
 			is_moderator: false,
 			target_group_user_id: groupUserId
@@ -113,10 +113,10 @@
 								<b class="font-semibold">{invite.group_user.user.username}</b>
 								{$_('wants to join')} <b class="font-semibold">{invite.work_group_name}</b>
 							</div>
-							{@debug invite}
 							<Button
 								buttonStyle="primary-light"
-								action={() => addUserToGroup(invite.group_user.id, invite.work_group_id)}>{$_('Add User')}</Button
+								action={() => addUserToGroup(invite.group_user.id, invite.work_group_id)}
+								>{$_('Add User')}</Button
 							>
 						</div>
 					</div>

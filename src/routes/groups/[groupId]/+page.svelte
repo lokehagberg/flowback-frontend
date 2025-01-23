@@ -18,7 +18,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Tags from '$lib/Group/Tags.svelte';
-	import Kanban from '$lib/Group/Kanban/Kanban.svelte';
+	import Kanban from '$lib/Group/Kanban/KanbanBoard.svelte';
 	import { _ } from 'svelte-i18n';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import Permissions from '$lib/Group/Permissions/Permissions.svelte';
@@ -26,6 +26,7 @@
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Group/Threads.svelte';
 	import { pushState } from '$app/navigation';
+	import WorkGroups from '$lib/Group/WorkingGroups/WorkGroups.svelte';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -102,9 +103,8 @@
 		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
 		<GroupHeader bind:selectedPage {group} {memberCount} />
-		<div class="flex justify-center">
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
-				<div
+				<main
 					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 
 				`}
 				>
@@ -137,12 +137,13 @@
 						<Schedule type="group" />
 					{:else if selectedPage === 'threads'}
 						<Threads />
+					{:else if selectedPage === 'working-groups'}
+						<WorkGroups />
 					{/if}
-				</div>
+				</main>
 
 				<GroupSidebar Class={``} {group} bind:selectedPage />
 			</div>
-		</div>
 	{:else}
 		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
 			{$_('You are not a memeber of this group!')}

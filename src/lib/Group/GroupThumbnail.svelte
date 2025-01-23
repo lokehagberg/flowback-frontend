@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
+	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { Group } from './interface';
 	import { _ } from 'svelte-i18n';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	export let group: Group;
 	let pending: boolean = false;
@@ -23,50 +23,48 @@
 	const joinGroup = async () => {
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
 		if (res.ok) {
-			console.log(group, import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', 'BLOCKY');
 			group.joined = !group.joined;
-			if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE')
-				becomeMemberOfGroup(group.blockchain_id);
-			if (group.direct_join) goToGroup();
+			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(group.blockchain_id);
 		}
 	};
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+<button
 	on:click={goToGroup}
-	on:keydown
 	class={`w-4/6 md:w-2/5 max-w-[650px] bg-white relative shadow-md dark:bg-darkobject dark:text-darkmodeText ${
 		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
 	} transition-shadow rounded-2xl`}
 >
-	<div on:click={goToGroup} on:keydown>
+	<button on:click={goToGroup} class="w-full">
 		<img
-			src={`${env.PUBLIC_API_URL}${
-				env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-			}${group.cover_image}`}
-			class="cover rounded-t-2xl"
+			src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+				group.cover_image
+			}`}
+			class="cover rounded-t-2xl w-full"
 			alt="cover"
 			on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		/>
-	</div>
+	</button>
 	<img
-		src={`${env.PUBLIC_API_URL}${
-			env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-		}${group.image}`}
-		class="bg-white rounded-full inline w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+		src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`}
+		class="bg-white rounded-full w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		alt="profile"
 	/>
 
-	<div on:click={goToGroup} on:keydown>
-		<h1 class="text-2xl p-4 mt-10 text-center">
+	<button on:click={goToGroup}>
+		<h1 class="text-2xl p-4 mt-10 text-center break-all">
 			{group.name}
 		</h1>
-		<p class="pl-6 pr-6 pb-6 break-words">
+		<!-- <p class="pl-6 pr-6 pb-6 break-words">
 			{group.description}
-		</p>
-	</div>
+		</p> -->
+		{#if group.description.length > 0}
+			<div class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-all">
+				<p class="line-clamp-2">{group.description} </p>
+			</div>
+		{/if}
+	</button>
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
@@ -77,7 +75,7 @@
 			<div>{$_('Pending invite')}</div>
 		{/if}
 	</div>
-</div>
+</button>
 
 <style>
 	.vote-thumbnail:hover {

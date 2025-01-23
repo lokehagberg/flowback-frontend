@@ -1,20 +1,5 @@
 export interface PredictionStatement {
-	created_by: {
-		group_image: string;
-		group_name: string;
-		end_date: Date;
-		id: number;
-		is_admin: boolean;
-		permission_id: number;
-		permission_name: string;
-		user: {
-			banner_image: null | string;
-			id: number;
-			profile_image: null | string;
-			username: string;
-		};
-	};
-
+	title: string;
 	blockchain_id: number | null;
 	description: string;
 	id: number;
@@ -33,6 +18,23 @@ export interface PredictionStatement {
 	];
 	user_prediction: null | number;
 	user_prediction_statement_vote: null | boolean;
+
+	created_by: {
+		group_image: string;
+
+		group_name: string;
+		end_date: Date;
+		id: number;
+		is_admin: boolean;
+		permission_id: number;
+		permission_name: string;
+		user: {
+			banner_image: null | string;
+			id: number;
+			profile_image: null | string;
+			username: string;
+		};
+	};
 }
 
 export interface PredictionBet {

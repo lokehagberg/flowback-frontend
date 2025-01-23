@@ -5,19 +5,21 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
-	import { poll } from 'ethers/lib/utils';
+	import Fa from 'svelte-fa';
+	import { faStar } from '@fortawesome/free-solid-svg-icons';
+	import Description from './Description.svelte';
 
-	let proposals: any[] = [],
-		votes: number[] = [],
+	let votes: number[] = [],
 		labels: string[] = [];
 
 	//4 for score voting, 3 for date
-	export let pollType = 1;
+	export let pollType = 1,
+		proposals: any[] = [];
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=1000`
+			`group/poll/${$page.params.pollId}/proposals?limit=1000&order_by=score_desc`
 		);
 
 		if (pollType === 4) proposals = json.results;
@@ -39,21 +41,27 @@
 	});
 </script>
 
-<div class="border border-gray- p-4 rounded">
-	<h1 class="text-4xl mb-6">{$_('Results')}</h1>
+<div class="w-full">
+	<span class="text-primary font-semibold text-xl text-center block">{$_('Results')}</span>
 	{#if pollType === 4}
-		<Statistics bind:votes bind:labels />
-		{#each proposals as proposal}
-			<div class="border p-4 mt-4">
-				<h1 class="text-xl">{proposal.title}</h1>
-				<div>{proposal.description}</div>
-				<!-- {@debug proposal} -->
-				<b class="text-xl font-bold">{$_('Points')}: {proposal.score || '0'}</b>
+		<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
+		{#if proposals[0]?.score > 0}
+			<Statistics bind:votes bind:labels />
+		{/if}
+		{#each proposals as proposal, i}
+			<div class="border-gray-300 border-b-2 mt-3 pb-1">
+				<span class="text-primary font-semibold flex items-center gap-1 break-all"
+					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
+					{proposal.title}</span
+				>
+				<Description description={proposal.description} limit={50} />
+				<span class="block text-right"
+					><span class="text-primary font-semibold">{$_('Points')}:</span>
+					{proposal.score || '0'}</span
+				>
 			</div>
 		{/each}
 	{:else if pollType === 3}
-	<div>
-		Results in Group Schedule
-	</div>
+		<div>{$_('Results in Group Schedule')}</div>
 	{/if}
 </div>

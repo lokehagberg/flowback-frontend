@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import type { Account, Filter } from './interface';
-	import Select from '$lib/Generic/Select.svelte';
 	import DateInput from 'date-picker-svelte/DateInput.svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { onMount } from 'svelte';
-	import MultiSelect from '$lib/Generic/MultiSelect.svelte';
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';

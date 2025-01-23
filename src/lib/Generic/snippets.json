@@ -1,0 +1,35 @@
+{
+  "Print to console": {
+    "prefix": "log",
+    "body": ["console.log('$1');", "$2"],
+    "description": "Log output to console"
+  },
+  "Fetch Request": {
+    "prefix": "get",
+    "body": ["const { res, json } = await fetchRequest('GET', `$1`);", "$2"],
+    "description": "Log output to console"
+  },
+  "Post Request": {
+    "prefix": "post",
+    "body": [
+      "const { res, json } = await fetchRequest('POST', `$1`, $2);",
+      "$3"
+    ],
+    "description": "Log output to console"
+  },
+  "Page Group Id": {
+    "prefix": "page",
+    "body": ["$$page.params.groupId"],
+    "description": "Log output to console"
+  },
+  "Error help": {
+    "prefix": "resok",
+    "body": [
+      "if (!res.ok) {",
+      "poppup = {message:'$1', success:$2}",
+      "return;",
+      "}"
+    ],
+    "description": "Log output to console"
+  }
+}

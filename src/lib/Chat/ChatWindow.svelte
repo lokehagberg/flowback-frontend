@@ -8,8 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/environment';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { faSmile } from '@fortawesome/free-solid-svg-icons/faSmile';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
@@ -18,7 +17,7 @@
 	import Socket from './Socket';
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
-	import {env} from "$env/dynamic/public";
+	import { env } from '$env/dynamic/public';
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -30,7 +29,8 @@
 			success: boolean;
 		},
 		messages: Message[] = [],
-		socket: WebSocket;
+		socket: WebSocket,
+		chatWindow: any;
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -39,10 +39,6 @@
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
 		isLookingAtOlderMessages: boolean;
-
-	onMount(() => {
-		recieveMessage();
-	});
 
 	const getRecentMesseges = async () => {
 		if (!selectedChatChannelId) return;
@@ -60,7 +56,7 @@
 	};
 
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json;
 	};
 
@@ -92,10 +88,11 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
-		if (!selectedChatChannelId) return;
-		console.log(selectedChatChannelId, selectedChat)
-		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
+		if (!channelId) return;
 
+		if (!selectedChatChannelId) return;
+
+		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
 			messages.push({
@@ -105,7 +102,7 @@
 			});
 
 		messages = messages;
-		message = import.meta.env.VITE_MODE === 'DEV' ? message + 'a' : '';
+		message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
 
 		updateUserData(selectedChat, new Date());
 	};
@@ -182,6 +179,18 @@
 		}
 	};
 
+	const correctHeightRelativeToHeader = () => {
+		const headerHeight = document.querySelector('#header')?.clientHeight;
+		if (headerHeight && chatWindow)
+			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
+	};
+
+	onMount(() => {
+		recieveMessage();
+		correctHeightRelativeToHeader();
+		window.addEventListener('resize', correctHeightRelativeToHeader);
+	});
+
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
@@ -191,7 +200,8 @@
 		else isLookingAtOlderMessages = false;
 	}
 
-	//When messages are recieved and not looking at history, scroll.
+	//When messages are recieved and not looking at history, scroll to bottom.
+	//TODO: Question if we need this, discord doesn't have this feature and I like that.
 	$: messages &&
 		(async () => {
 			if (newerMessages) return;
@@ -203,99 +213,20 @@
 			}, 100);
 		})();
 
-	//@ts-ignore
-	$: if (user) socket = Socket.createSocket(user.id);
-
-	// const getRecentMesseges = async () => {
-	// 	if (!selectedChat) return;
-
-	// 	const { res, json } = await fetchRequest(
-	// 		'GET',
-	// 		`chat/${selectedPage}/${selectedChat}?order_by=created_at_desc&limit=${25}`
-	// 	);
-
-	// 	if (res.ok) messages = json.results.reverse();
-
-	// 	//Temporary fix before json.next issue is fixed
-	// 	olderMessages = json.next;
-	// 	newerMessages = '';
-	// };
-
-	//Runs when changing chats
-	// const postMessage = async () => {
-	// 	if (message.length === 0) return;
-	// 	if (!selectedChat) return;
-	// 	//If only spaces, return
-	// 	if (message.match(/^\s+$/)) return;
-
-	// 	//When sending, go to most recent messages
-	// 	if (newerMessages) getRecentMesseges();
-
-	// 	//Updates preview window to display recently typed chat message
-	// 	let previewMessage = (selectedPage === 'direct' ? previewDirect : previewGroup).find(
-	// 		(previewMessage) =>
-	// 			(selectedPage === 'direct' &&
-	// 				((previewMessage.user_id === user.id && previewMessage.target_id === selectedChat) ||
-	// 					(previewMessage.target_id === user.id && previewMessage.user_id === selectedChat))) ||
-	// 			(selectedPage === 'group' && previewMessage.group_id === selectedChat)
-	// 	);
-	// 	if (previewMessage) {
-	// 		previewMessage.message = message;
-	// 		previewMessage.created_at = new Date().toString();
-	// 	} else {
-	// 		//For brand new chats, create new preview message
-	// 		(selectedPage === 'direct' ? previewDirect : previewGroup).push({
-	// 			created_at: new Date().toString(),
-	// 			message,
-	// 			timestamp: new Date().toString(),
-	// 			username: user.username,
-	// 			user_id: user.id,
-	// 			target_id: selectedPage === 'direct' ? selectedChat : 0,
-	// 			target_username: user.username,
-	// 			profile_image: '',
-	// 			group_id: selectedPage === 'group' ? selectedChat : 0
-	// 		});
-	// 	}
-
-	// 	selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
-
-	// 	const didSend = await sendMessageToSocket(message, selectedChat, selectedPage);
-
-	// 	if (!didSend) status = { message: 'Could not send message', success: false };
-	// 	else
-	// 		messages.push({
-	// 			message,
-	// 			user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-	// 			created_at: new Date().toString()
-	// 		});
-
-	// 	messages = messages;
-	// 	message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
-
-	// 	setTimeStamp(selectedChat, selectedPage);
-	// };
-
-	// const showOlderMessages = async () => {
-	// 	const { res, json } = await fetchRequest('GET', olderMessages);
-
-	// 	if (!res.ok) return;
-	// 	// nextMessagesAPI = json.next
-	// 	newerMessages = json.previous;
-	// 	olderMessages = json.next;
-
-	// 	messages = json.results.reverse();
-	// };
-
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
 	}
+
+	//@ts-ignore
+	$: if (user) socket = Socket.createSocket(user.id);
 </script>
 
 {#if selectedChat !== null || true}
 	<ul
-		class="dark:bg-darkobject col-start-2 col-end-3 bg-white h-[100%] overflow-y-scroll overflow-x-hidden break-all"
+		class="col-start-2 col-end-3 overflow-y-auto overflow-x-hidden break-all"
 		id="chat-window"
+		bind:this={chatWindow}
 	>
 		{#if messages.length === 0}
 			<span class="self-center">{'Chat is currently empty, maybe say hello?'}</span>
@@ -305,12 +236,22 @@
 				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
 			</li>
 		{/if}
-		<!-- <div class="absolute bottom-0 right-0">{$_("New messages")}</div> -->
+
 		{#each messages as message}
-			<li class="p-3 hover:bg-gray-200 hover:dark:bg-darkbackground">
+			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
+			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
 				<span>{message.user?.username || message.username}</span>
-				<span class="text-[14px] text-gray-400 ml-3">{formatDate(message.created_at)}</span>
-				<p>{message.message}</p>
+				<p
+					class="p-2 rounded-xl"
+					class:bg-primary={sentByUser}
+					class:dark:bg-gray-600={sentByUser}
+					class:text-white={sentByUser}
+					class:bg-gray-300={!sentByUser}
+					class:dark:bg-gray-500={!sentByUser}
+				>
+					{message.message}
+				</p>
+				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
 			</li>
 		{/each}
 		{#if newerMessages}
@@ -324,12 +265,9 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="dark:bg-darkobject col-start-2 col-end-3 bg-white shadow rounded p-2 w-full">
+	<div class="">
 		<!-- Here the user writes a message to be sent -->
-		<form
-			class="w-full flex gap-2 md:mt-2 lg:mt-5 xl:mt-14 items-center"
-			on:submit|preventDefault={postMessage}
-		>
+		<form class="flex gap-1 items-center" on:submit|preventDefault={postMessage}>
 			<TextArea
 				autofocus
 				label=""
@@ -343,6 +281,7 @@
 				max={3000}
 				bind:value={message}
 				Class="w-full"
+				areaClass="max-h-[4rem] resize-y"
 			/>
 
 			{#if env.PUBLIC_MODE === 'DEV'}

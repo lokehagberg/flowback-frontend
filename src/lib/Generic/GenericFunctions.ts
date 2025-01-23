@@ -16,7 +16,8 @@ export type StatusMessageInfo = {
 	success: boolean;
 };
 
-export const checkForLinks = (text: string, id: string) => {
+// Makes links clickable. For comments and descriptions
+export const checkForLinks = (text: string | null, id: string) => {
 	if (text === null) return '';
 
 	const linkPattern = /https?:\/\/[^\s]+/g;
@@ -57,12 +58,14 @@ interface UserInfo {
 // When User enters a group, group user info and permissions about the user is taken in
 export let userInfo = writable<UserInfo>();
 
+//Get info about user (the information you'd see on the user page)
 export const getUserInfo = async () => {
 	const { res, json } = await fetchRequest('GET', `user`);
 	if (!res.ok) return {};
 	return json;
 };
 
+//Get info about user as in the group (permissions, is admin, workgroups and the user itself)
 export const getGroupUserInfo = async (groupId: number | string) => {
 	groupId = Number(groupId);
 
@@ -83,5 +86,42 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 		'GET',
 		`group/${groupId}/permissions?id=${permissionId}`
 	);
+
+	console.log(res, json, "PERMISSIONS");
+	
 	return json.results[0];
+};
+
+export const getPermissionsFast = async (groupId: number | string) => {
+	
+	const userInfo = await getGroupUserInfo(groupId);
+	if (userInfo === undefined) return;
+	
+	try {
+		const hi =  await getPermissions(groupId, userInfo.permission_id);
+		console.log("hi", hi);
+		return hi
+	} catch (error) {
+		return null;
+	}
+}
+
+export const elipsis = (label: string, charMax = 30) => {
+	return label.length > charMax ? label.substring(0, charMax) + '...' : label
+}
+
+// Returns true if user is admin in the given group, false otherwise.
+// TODO: Make sure that as the user navigates the site, between different groups, that there will be dynamic loading of it's group user information. Right now the code is a mess! 
+export const getUserIsGroupAdmin = async (groupId: number | string) => {
+	const userData = await fetchRequest('GET', 'user');
+	const groupAdmins = await fetchRequest(
+		'GET',
+		`group/${groupId}/users?is_admin=true`
+	);
+
+	if (groupAdmins.json.results.find(
+		(user: any) => user.user.id === userData.json.id && user.is_admin
+	) !== undefined)
+		return true
+	else return false;
 };

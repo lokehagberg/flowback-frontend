@@ -1,14 +1,16 @@
 import { fetchRequest } from '$lib/FetchRequest';
 import type { Phase, poll } from './interface';
 
+
 export const formatDate = (dateInput: string) => {
 	const date = new Date(dateInput);
-	return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} klockan ${
-		date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
-	}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
+	return `${date.getDay()}/${date.getMonth()} ${date.getFullYear()} klockan ${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`
+		}:${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`;
 };
 
 export const getPhase = (poll: poll): Phase => {
+	console.log(poll, 'poll');
+	
 	const now = new Date();
 	if (now < new Date(poll?.start_date)) return 'pre_start';
 	else if (now >= new Date(poll?.start_date) && now < new Date(poll?.area_vote_end_date))
@@ -38,7 +40,7 @@ export const getPhase = (poll: poll): Phase => {
 
 // Labels for the circles on the timeline
 export const dateLabels = [
-	'Pre Start',
+	'Hasn\'t started yet',
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
@@ -51,19 +53,61 @@ export const dateLabels = [
 export const dateLabelsDatePoll = ['Start', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
-	if (phase === 'pre_start') return dateLabels[0];
-	else if (phase === 'area_vote') return dateLabels[1];
-	else if (phase === 'proposal') return dateLabels[2];
-	else if (phase === 'prediction_statement') return dateLabels[3];
-	else if (phase === 'prediction_bet') return dateLabels[4];
-	else if (phase === 'delegate_vote') return dateLabels[5];
-	else if (phase === 'vote') return dateLabels[6];
-	else if (phase === 'prediction_vote' || phase === 'result') return dateLabels[7];
+	console.log(phase, 'phase');
+	
+	switch (phase) {
+		case 'pre_start':
+			return dateLabels[0];
+		case 'area_vote':
+			return dateLabels[1];
+		case 'proposal':
+			return dateLabels[2];
+		case 'prediction_statement':
+			return dateLabels[3];
+		case 'prediction_bet':
+			return dateLabels[4];
+		case 'delegate_vote':
+			return dateLabels[5];
+		case 'vote':
+			return dateLabels[6];
+		case 'prediction_vote':
+			return dateLabels[7];
+		case 'result':
+			return dateLabels[8];
+		default:
+			return "";
+	}
 };
 
 //TODO: To prevent many API calls, use svelte stores to transfer information between files about groups
 export const getGroupInfo = async (id: number | string) => {
-	id = Number(id)
+	id = Number(id);
 	const { res, json } = await fetchRequest('GET', `group/list?id=${id}`);
 	return { res, json };
+};
+
+
+export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
+	if (phase === 'result' || phase === "prediction_vote") return 'prediction_vote';
+	pollId = Number(pollId);
+	let _phase: Phase = 'area_vote';
+
+	if (pollType === 3) {
+		if (phase === 'area_vote') _phase = 'proposal';
+		else if (phase === 'proposal') _phase = 'prediction_statement';
+		else if (phase === 'prediction_statement') _phase = 'prediction_bet';
+		else if (phase === 'prediction_bet') _phase = 'delegate_vote';
+		else if (phase === 'delegate_vote') _phase = 'vote';
+		else if (phase === 'vote') _phase = 'prediction_vote';
+	} else if (pollType === 4) _phase = 'result';
+
+	const { res, json } = await fetchRequest(
+		'POST',
+		`group/poll/${pollId}/fast_forward`,
+		{
+			phase: _phase
+		}
+	);
+
+	return _phase
 };

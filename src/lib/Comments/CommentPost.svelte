@@ -6,10 +6,10 @@
 	import { page } from '$app/stores';
 	import type { Comment } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
-	import ImageUpload from '$lib/Generic/ImageUpload.svelte';
-	import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
-	import { commentSetup, getCommentDepth } from './functions';
+	import { getCommentDepth } from './functions';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import Fa from 'svelte-fa';
+	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -63,12 +63,13 @@
 				being_replied: false,
 				score: 0,
 				edited: false,
-				//TODO Fix so attachments show up immediately
-				attachments: [],
+				attachments: images.map((image) => {
+					return { file: URL.createObjectURL(image) };
+				}),
 				message,
 				id: json,
 				parent_id,
-				author_thumbnail: window.localStorage.getItem('pfp-link') || '',
+				author_profile_image: window.localStorage.getItem('pfp-link') || '',
 				being_edited_message: '',
 				reply_depth: 0
 			};
@@ -80,7 +81,7 @@
 
 			comments = comments;
 
-			console.log(comments);
+			console.log(comments, newComment);
 
 			// comments = await commentSetup(comments);
 			showMessage = 'Successfully posted comment';
@@ -120,42 +121,42 @@
 </script>
 
 <form
-	class="mt-4 relative"
+	class="relative"
 	on:submit|preventDefault={() => (beingEdited ? commentUpdate() : commentCreate())}
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="invisible absolute bg-white dark:bg-darkbackground shadow w-full bottom-full"
-		class:!visible={recentlyTappedButton === '#'}
+		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
+		class:!block={recentlyTappedButton === '#'}
 	>
-		<ul>
-			{#each proposals as proposal}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<li
-					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
-					on:click={() => {
-						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
-						recentlyTappedButton = '';
-					}}
-					on:keydown
-				>
-					{proposal.title}
-				</li>
-			{/each}
-		</ul>
+		{#each proposals as proposal}
+			<button
+				class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
+				on:click={() => {
+					message = `${message}${proposal.title.replaceAll(' ', '-')} `;
+					recentlyTappedButton = '';
+				}}
+				on:keydown
+			>
+				{proposal.title}
+			</button>
+		{/each}
 	</div>
-	<TextArea label="Comment" bind:value={message} bind:recentlyTappedButton />
-	<FileUploads bind:images />
-	<!-- <ImageUpload
-		icon={faUser}
-		shouldCrop={false}
-		bind:croppedImage={image}
-		label=""
-		iconSize={'2x'}
-		Class="flex !flex-row-reverse"
-		minimalist
-	/> -->
-	<!-- {#if message !== "" || attachments.length > 0} -->
-	<Button Class="mt-4" type="submit" label="Send" />
-	<!-- {/if} -->
+	<div class="flex">
+		<div class="flex flex-grow">
+			<TextArea
+				label=""
+				bind:value={message}
+				bind:recentlyTappedButton
+				inputClass="bg-gray-100 h-8"
+				Class="w-full"
+			/>
+		</div>
+		<div class="flex ml-2">
+			<FileUploads bind:images minimalist />
+			<Button Class="bg-white" type="submit" label=""
+				><Fa icon={faPaperPlane} color="black" /></Button
+			>
+		</div>
+	</div>
 </form>

@@ -8,31 +8,39 @@
 	import CommentPost from './CommentPost.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { onMount } from 'svelte';
+	import { env } from '$env/dynamic/public';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[];
 
-	let userUpVote: -1 | 0 | 1 = 0;
+	let userUpVote: -1 | 0 | 1 = 0,
+		poppup: poppup;
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
 		if (api === 'poll') _api += `${$page.params.pollId}/`;
+		else if (api === 'thread') _api += `${$page.params.threadId}/`;
 		_api += `comment/${id}/delete`;
 
 		const { res, json } = await fetchRequest('POST', _api);
 
-		if (res.ok) {
-			comments = comments.map((comment) => {
-				if (comment.id !== id) return comment;
-
-				comment.message = '[Deleted]';
-				comment.active = false;
-				return comment;
-			});
-			comments = comments;
+		if (!res.ok) {
+			poppup = { message: 'Failed to delete comment', success: false };
+			return;
 		}
+
+		comments = comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			comment.message = '[Deleted]';
+			comment.active = false;
+			return comment;
+		});
+		comments = comments;
 	};
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
@@ -50,21 +58,27 @@
 			vote
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Comment vote failed', success: false };
+			return;
+		}
 
 		if (regretting) {
 			userUpVote = 0;
+			comment.user_vote = null;
 			if (_vote === 1) comment.score += -1;
 			else if (_vote === -1) comment.score += 1;
 		} else {
 			userUpVote = _vote;
 			if (comment.score !== 0) comment.score += 2 * _vote;
 			else comment.score += _vote;
+
+			if (_vote === -1) comment.user_vote = false;
+			else if (_vote === 1) comment.user_vote = true;
 		}
 	};
 
 	onMount(() => {
-		console.log(comment, 'LE COMMENT');
 		if (comment.user_vote === null || comment.user_vote === undefined) userUpVote = 0;
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
@@ -76,30 +90,32 @@
 		bind:proposals
 		bind:comments
 		bind:beingEdited={comment.being_edited}
-		message={comment.message}
+		message={comment.message || ''}
 		parent_id={comment.parent_id}
 		id={comment.id}
 		{api}
 	/>
 {:else}
+	<!-- class:bg-gray-100={comment.reply_depth % 2 === 1} -->
+	<!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
 	<div
-		class={`p-3 text-sm border border-l-gray-400`}
-		style:margin-left={`${comment.reply_depth * 10}px`}
-		class:bg-gray-100={comment.reply_depth % 2 === 1}
-		class:dark:bg-darkbackground={comment.reply_depth % 2 === 1}
+		class={`p-3 text-sm border-0 border-l-gray-400`}
+		style:margin-left={`${comment.reply_depth * 20}px`}
+		class:border-l-2={comment.reply_depth > 0}
 	>
-		<!-- TODO: Improve the <ProfilePicture /> component and use it here -->
 		<div class="flex gap-2">
-			<!-- <img class="w-6 h-6 rounded-full" src={DefaultPFP} alt="default pfp" /> -->
 			<ProfilePicture
-				profilePicture={comment.author_thumbnail}
+				profilePicture={comment.author_profile_image}
 				username={comment.author_name}
 				displayName
+				userId={comment.author_id}
 			/>
 		</div>
-		<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
-			{comment.message}
-		</div>
+		{#if comment.message}
+			<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
+				{comment.message}
+			</div>
+		{/if}
 		<div class="text-xs text-gray-400 dark:text-darkmodeText">
 			{comment.edited ? '(edited)' : ''}
 		</div>
@@ -107,8 +123,13 @@
 			<div>
 				{#each comment.attachments as attachment}
 					<img
-						class=""
-						src={`${import.meta.env.VITE_API}/media/${attachment.file}`}
+						src={(() => {
+							if (typeof attachment.file === 'string')
+								return attachment.file.substring(0, 4) === 'blob'
+									? attachment.file
+									: `${env.PUBLIC_API}/media/${attachment.file}`;
+							else return URL.createObjectURL(attachment.file);
+						})()}
 						alt="attachment to the comment"
 					/>
 				{/each}
@@ -116,51 +137,45 @@
 		{/if}
 		{#if comment.active}
 			<div class="flex gap-3 text-xs">
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
 					on:click={() => (comment.being_replied = true)}
-					on:keydown
 				>
 					<Fa icon={faReply} />{$_('Reply')}
-				</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+				</button>
+				<button
+					class:text-primary={comment.user_vote === true}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
 					on:click={() => commentVote(1)}
-					on:keydown
 				>
-					<Fa icon={faArrowUp} color={userUpVote === 1 ? 'blue' : ''} />
-				</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+					<Fa icon={faArrowUp} />
+				</button>
+				<button
+					class:text-primary={comment.user_vote === false}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
 					on:click={() => commentVote(-1)}
-					on:keydown
 				>
-					<Fa icon={faArrowDown} color={userUpVote === -1 ? 'blue' : ''} />
-				</div>
+					<Fa icon={faArrowDown} />
+				</button>
+
 				{comment.score}
+
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
+					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
 						on:click={() => deleteComment(comment.id)}
-						on:keydown
 					>
 						{$_('Delete')}
-					</div>
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div
+					</button>
+					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
 						on:click={() => {
 							comment.being_edited = true;
-							comment.being_edited_message = comment.message;
+							comment.being_edited_message = comment.message || '';
 						}}
-						on:keydown
 					>
 						{$_('Edit')}
-					</div>
+					</button>
 				{/if}
 			</div>
 		{/if}
@@ -175,3 +190,5 @@
 		{api}
 	/>
 {/if}
+
+<Poppup bind:poppup />

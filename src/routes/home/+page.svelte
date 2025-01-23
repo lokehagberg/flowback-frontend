@@ -9,8 +9,8 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
-	import { becomeMemberOfGroup } from '$lib/Blockchain/javascript/rightToVote';
-	import {env} from "$env/dynamic/public";
+	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
+	import { env } from '$env/dynamic/public';
 	import { goto } from '$app/navigation';
 
 	interface Invitation {
@@ -22,15 +22,15 @@
 		profile_image: string;
 	}
 
-	let invitations: Invitation[] = [];
-	let polls: poll[] = [],
+	let invitations: Invitation[] = [],
 		status: StatusMessageInfo;
 
 	onMount(async () => {
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE") goto('groups/1')
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') goto('groups/1');
 
 		getInvitations();
 		getPolls();
+		getHome();
 	});
 
 	const getInvitations = async () => {
@@ -47,7 +47,7 @@
 
 		invitations = invitations.filter((invite) => invite.group !== id);
 		invitations = invitations;
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === "TRUE") becomeMemberOfGroup(id);
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(id);
 	};
 
 	const rejectInvitation = async (id: number) => {
@@ -58,13 +58,15 @@
 		const { res, json } = await fetchRequest('GET', `home/polls?limit=${homePollsLimit}`);
 		status = statusMessageFormatter(res, json);
 	};
+
+	const getHome = async () => {
+		const { res, json } = await fetchRequest('GET', `user/home`);
+		status = statusMessageFormatter(res, json);
+	};
 </script>
 
-<!-- TODO: stuck on loading when no polls -->
 <Layout centered>
-	<!-- <StatusMessage Class={`${status?.success && "invisible"}`} bind:status /> -->
 	<ul class="w-full mt-6 flex flex-col gap-6 max-w-[700px]">
-		<!-- {#if import.meta.env.MODE === 'DEV'} -->
 		{#each invitations as invite}
 			{#if !invite.external}
 				<li class="bg-white p-6 shadow rounded dark:bg-darkobject dark:text-darkmodeText">
@@ -77,7 +79,6 @@
 				</li>
 			{/if}
 		{/each}
-		<!-- {/if} -->
 	</ul>
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>

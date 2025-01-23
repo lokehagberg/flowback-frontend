@@ -2,18 +2,14 @@
 	import ChatWindow from './ChatWindow.svelte';
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
-	// @ts-ignore
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { Message, PreviewMessage } from './interfaces';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
-	import { updateUserData } from './functions';
-	import Socket from './Socket';
 	import { env } from '$env/dynamic/public';
+	import Fa from 'svelte-fa';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -32,10 +28,6 @@
 
 	onMount(async () => {
 		await getUser();
-		// await setUpMessageSending();
-		// console.log(socket, user, user.id, 'IDD');
-
-		// testNewAPI();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 	});
@@ -48,19 +40,17 @@
 	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
-		if (res.ok) user = json;
 		if (!res.ok) return;
+		user = json;
 	};
 
-	$: if (chatOpen === false) {
-		if (selectedChat) updateUserData(selectedChat, null, new Date());
-		selectedChat = null;
-		// selectedPage === 'direct';
-	}
+	// $: if (!chatOpen) {
+	// 	if (selectedChat) updateUserData(selectedChat, null, new Date());
+	// 	selectedChat = null;
+	// 	// selectedPage === 'direct';
+	// }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <svelte:head>
 	<title>
 		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
@@ -70,54 +60,45 @@
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText fixed z-40 w-full grid grid-width-fix grid-sizing h-[100vh]"
+	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
-	<div class="col-start-2 col-end-3 flex justify-between bg-white dark:bg-darkobject p-2 h-[100vh]">
-		<div class="text-xl font-light text-gray-400">{$_('Chat')}</div>
+	<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
 
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="w-full h-full" on:keydown>
-			<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
+	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
+		<div class="bg-white w-[40%] flex-grow my-12 ml-6 dark:bg-darkobject p-2">
+			<Preview
+				bind:selectedChat
+				bind:selectedPage
+				bind:previewDirect
+				bind:previewGroup
+				bind:selectedChatChannelId
+			/>
+		</div>
+		<div class="bg-white w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
+			<ChatWindow
+				bind:selectedChat
+				bind:selectedChatChannelId
+				bind:selectedPage
+				bind:previewDirect
+				bind:previewGroup
+				bind:isLookingAtOlderMessages
+				{user}
+			/>
 		</div>
 	</div>
-	<Preview
-		bind:selectedChat
-		bind:selectedPage
-		bind:previewDirect
-		bind:previewGroup
-		bind:selectedChatChannelId
-	/>
-	<ChatWindow
-		bind:selectedChat
-		bind:selectedChatChannelId
-		bind:selectedPage
-		bind:previewDirect
-		bind:previewGroup
-		bind:isLookingAtOlderMessages
-		{user}
-	/>
 </div>
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
+
+<!-- Button which launches the chat, visible in bottom left corner when not in chat -->
+<button
 	on:click={() => (chatOpen = true)}
-	on:keydown
 	class:small-notification={previewDirect.find((preview) => preview.notified)}
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
 	<Fa icon={faComment} size="1.3x" />
-</div>
+</button>
 
 <style>
-	.grid-width-fix {
-		grid-template-columns: 30% 70%;
-		grid-template-rows: 2.9rem 58vh 28vh;
-		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and 
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved */
-		height: calc(100vh - 2rem - 40px - 28px);
-	}
-
 	.small-notification:before {
 		position: absolute;
 		content: '';
@@ -137,9 +118,5 @@
 		background-color: rgb(147, 197, 235);
 		border-radius: 100%;
 		padding: 10px;
-	}
-
-	.grid-sizing {
-		grid-template-rows: 8% 77% 15%;
 	}
 </style>

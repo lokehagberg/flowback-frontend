@@ -16,6 +16,9 @@
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import History from '$lib/Group/Delegation/History.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -24,6 +27,8 @@
 		profile_image: '',
 		username: '',
 		website: '',
+		contact_email: '',
+		contact_phone: '',
 		id: 0
 	};
 
@@ -34,6 +39,8 @@
 		profile_image: '',
 		username: '',
 		website: '',
+		contact_email: '',
+		contact_phone: '',
 		id: 0
 	};
 
@@ -41,7 +48,7 @@
 		isEditing = false,
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
-		currentlyEditing: null | 'bio' | 'web' | 'name' = null,
+		currentlyEditing: null | 'bio' | 'web' | 'name' | 'phone' | 'email' = null,
 		status: StatusMessageInfo | undefined,
 		currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
@@ -62,7 +69,11 @@
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
 		user = isUser ? json : json.results[0];
 		userEdit = user;
-		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}/api${user.profile_image}`;
+
+		if (userEdit.bio === null) userEdit.bio = '';
+		if (userEdit.website === null) userEdit.website = '';
+
+		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
 
 		document.title = `${user.username}'s profile`;
@@ -76,8 +87,11 @@
 		formData.append('username', userEdit.username);
 		formData.append('bio', userEdit.bio || '');
 		formData.append('website', userEdit.website || '');
-		if (bannerImageToSend) formData.append('banner_image', bannerImageToSend);
-		if (imageToSend) formData.append('profile_image', imageToSend);
+		formData.append('contact_email', userEdit.contact_email || '');
+		formData.append('contact_phone', userEdit.contact_phone || '');
+
+		if (bannerImagePreview !== '') formData.append('banner_image', bannerImageToSend);
+		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
 		if (res.ok) {
@@ -130,44 +144,65 @@
 {/if}
 
 <!-- Viewing someone's profile -->
-<Layout centered>
+<Layout centered Class="bg-white dark:bg-darkobject shadow">
 	{#if !isEditing}
-		<img
-			src={bannerImagePreview || DefaultBanner}
-			class="bg-gray-200 w-full cover aspect-ratio-5"
-			alt="banner"
-		/>
-		<div
-			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
-		>
+		<div class="relative w-full">
+			<img
+				src={bannerImagePreview || DefaultBanner}
+				class="w-full cover aspect-ratio-5"
+				alt="banner"
+			/>
+
+			{#if isUser}
+				<Button
+					action={() => (isEditing = true)}
+					Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+				>
+					<div class="text-gray-800 dark:text-gray-200">
+						<Fa icon={faPen} />
+					</div>
+				</Button>
+			{/if}
+			<Button
+				action={() => history.back()}
+				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+			>
+				<div class="text-gray-800 dark:text-gray-200">
+					<Fa icon={faArrowLeft} />
+				</div>
+			</Button>
+		</div>
+		<div class="flex justify-around w-full max-w-[600px]">
 			<img
 				src={profileImagePreview}
-				class="h-36 w-36 inline rounded-full profile"
+				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
 				alt="avatar"
 				id="avatar"
 			/>
-			<h1 class="inline ml-8">{user.username}</h1>
-			<a class={`block mt-6`} href={user.website || ''}>
-				{user.website || ''}
-			</a>
-			<p class="mt-6 whitespace-pre-wrap">
-				{user.bio || $_('This user has no bio')}
-			</p>
-			<StatusMessage Class="mt-6" bind:status />
-			{#if isUser}
-				<div class="mt-8">
-					<Button action={() => (isEditing = true)}>{$_('Edit profile')}</Button>
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[50%]">
+				<div class="text-xl text-primary font-bold max-w-[600px] break-words">
+					{user.username}
 				</div>
-			{/if}
+				<p class=" whitespace-pre-wrap">
+					{user.bio || $_('This user has no bio')}
+				</p>
+				<StatusMessage Class="" bind:status />
+			</div>
+			<div class="dark:text-darkmodeText">
+				<div class="text-primary font-bold">{$_('Contact Information')}</div>
+				<a class={``} href={user.website || ''}>
+					{user.website || ''}
+				</a>
+				<!-- <div>Phone number</div> -->
+			</div>
 		</div>
-
 		<!-- Editing your own profile -->
 	{:else}
 		<!-- Banner Image -->
 		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
 			<img
-				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview}
-				class="w-full cover transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview || DefaultBanner}
+				class="w-full cover transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 				alt="banner"
 			/>
 			<input
@@ -179,14 +214,14 @@
 			/>
 		</label>
 		<form
-			class="w-full md:w-2/3 bg-white shadow rounded p-8 mb-8 dark:bg-darkobject dark:text-darkmodeText"
+			class="w-full bg-white shadow rounded p-8 dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">
 				<!-- Profile PIcture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:brightness-[90%] backdrop-grayscale"
+					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 					alt="avatar"
 					id="avatar"
 				/>
@@ -209,33 +244,48 @@
 					Class="mt-6 pt-8 pb-8 inline"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<h1
+				<button
 					on:click={() => (currentlyEditing = 'name')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl inline"
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
 				>
 					{$_(userEdit.username || 'Add Username')}
-				</h1>
+				</button>
 			{/if}
+
+			{#if currentlyEditing === 'phone'}
+				<TextInput
+					autofocus
+					onBlur={() => (currentlyEditing = null)}
+					label={'Phone Number'}
+					bind:value={userEdit.contact_phone}
+					Class="mt-6 pt-8 pb-8 inline"
+				/>
+			{:else}
+				<button
+					on:click={() => (currentlyEditing = 'phone')}
+					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
+				>
+					{$_(userEdit.contact_phone || 'Add phone number')}
+				</button>
+			{/if}
+
 			{#if currentlyEditing === 'web'}
 				<TextInput
 					autofocus
 					onBlur={() => (currentlyEditing = null)}
 					label={'Website'}
 					bind:value={userEdit.website}
-					Class="pt-8 pb-8 "
+					Class="pt-8 pb-8"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p
+				<button
 					on:click={() => (currentlyEditing = 'web')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl"
+					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
 				>
 					{userEdit.website || $_('Add Website')}
-				</p>
+				</button>
 			{/if}
+
 			{#if currentlyEditing === 'bio'}
 				<TextArea
 					autofocus
@@ -245,22 +295,27 @@
 					Class="pt-8 pb-8 whitespace-pre-wrap"
 				/>
 			{:else}
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p
+				<div
 					on:click={() => (currentlyEditing = 'bio')}
-					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-300 rounded-xl whitespace-pre-wrap"
+					on:keydown
+					role="button"
+					tabindex="0"
+					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl whitespace-pre-wrap"
 				>
 					{userEdit.bio || $_('Add Bio')}
-				</p>
+				</div>
 			{/if}
+
 			<StatusMessage Class="mt-4" bind:status />
-			<div class="mt-6">
-				<Button Class="mt-4" action={updateProfile}>{$_('Save changes')}</Button>
-				<Button Class="mt-4" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+			<div class="flex justify-end gap-2">
+				<Button Class="" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}
+
+	<History history={62} groupId={1}/>
+	
 </Layout>
 
 <style>
@@ -276,5 +331,9 @@
 
 	.aspect-ratio-5 {
 		aspect-ratio: 5;
+	}
+
+	.bg-semi-transparent {
+		background-color: rgb(209, 213, 219);
 	}
 </style>

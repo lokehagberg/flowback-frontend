@@ -6,10 +6,10 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { toPercentage } from 'chart.js/helpers';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	let tags: Tag[] = [],
-		selectedTag: number,
+		selectedTag: number | null = null,
 		poppup: poppup;
 
 	const getTags = async () => {
@@ -25,12 +25,12 @@
 		tags = json.results;
 	};
 
-	const vote = async () => {
+	const vote = async (tagId: number) => {
 		const { json, res } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/area/update`,
 			{
-				tag: selectedTag,
+				tag: tagId,
 				vote: true
 			}
 		);
@@ -40,6 +40,9 @@
 			return;
 		}
 
+		if (tagId === selectedTag) selectedTag = null;
+		else selectedTag = tagId;
+
 		poppup = { message: 'Successfully voted for area', success: true };
 	};
 
@@ -47,17 +50,12 @@
 		const { json, res } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/area/list`);
 
 		if (!res.ok) return;
-		
+
 		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
 
 		if (selectedTagName) {
 			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id;
 		}
-	};
-
-	const changeSelect = (tag: Tag) => {
-		selectedTag = tag.id;
-		vote();
 	};
 
 	onMount(async () => {
@@ -71,9 +69,9 @@
 		{#if tag.active}
 			<Button
 				buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
-				action={() => changeSelect(tag)}
+				action={() => vote(tag.id)}
 			>
-				{tag.name}
+				{elipsis(tag.name, 10)}
 			</Button>
 		{/if}
 	{/each}

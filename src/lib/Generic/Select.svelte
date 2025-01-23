@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
+	import { elipsis } from './GenericFunctions';
+
 	export let onInput: (
 			e: Event & {
 				currentTarget: EventTarget & HTMLSelectElement;
@@ -8,7 +11,10 @@
 		labels: string[] = [],
 		values: any[] = labels,
 		value = values[0],
-		Class = '';
+		Class = '',
+		classInner = '',
+		innerLabel = 'Select',
+		charlimit = 30;
 </script>
 
 <div class={`${Class}`}>
@@ -20,13 +26,17 @@
 		on:input={(e) => {
 			onInput(e);
 			//@ts-ignore
-			value = e?.target?.value;
+			// if (e?.target?.value)
+			// 	//@ts-ignore
+			// 	value = e?.target?.value;
 		}}
-		class={`dark:bg-darkobject`}
+		style="width:100%"
+		class={`rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject ${classInner}`}
 		bind:value
 	>
+		<option value="" disabled selected>{innerLabel}</option>
 		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {label} </option>
+			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
 		{/each}
 	</select>
 </div>

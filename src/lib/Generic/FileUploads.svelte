@@ -1,36 +1,60 @@
 <script lang="ts">
-	import { faUpload } from '@fortawesome/free-solid-svg-icons';
-	import ImageUpload from './ImageUpload.svelte';
+	import { faUpload, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import ImageUpload from './FileUpload.svelte';
+	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
 
-	export let images: File[] = [];
+	export let images: File[] = [],
+		minimalist = false,
+		Class = '';
+
 	let image: File | null = null;
+
+	const removeFile = (index: number) => {
+		images.splice(index, 1);
+		images = images;
+	};
 </script>
 
-<div>
+
+{#if images.length > 0}
 	<div>
-		{#each images as image}
+		{#each images as image, i}
 			<div
 				class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300"
 			>
 				{image.name}
+				<button 
+					class="ml-2 text-red-500 hover:text-red-700" 
+					on:click={() => removeFile(i)}
+					type="button"
+				>
+					<Fa icon={faTimes} />
+				</button>
 			</div>
 		{/each}
 	</div>
-	<div class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300">
-		Add media
-		<ImageUpload
-			icon={faUpload}
-			bind:croppedImage={image}
-			minimalist
-			label=""
-			iconSize="1.5x"
-			disableImagePreview
-			onCrop={() => {
-				if (image) {
-					images.push(image);
-					images = images;
-				}
-			}}
-		/>
-	</div>
+{/if}
+
+<div
+	class={minimalist
+		? 'inline m-auto'
+		: `${Class} flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
+>
+	{#if !minimalist}{$_('Add media')}{/if}
+	<ImageUpload
+		icon={faUpload}
+		bind:croppedImage={image}
+		minimalist
+		Class="!inline"
+		label=""
+		iconSize="1.5x"
+		disableImagePreview
+		onCrop={() => {
+			if (image) {
+				images.push(image);
+				images = images;
+			}
+		}}
+	/>
 </div>

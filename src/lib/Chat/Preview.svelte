@@ -45,7 +45,7 @@
 	};
 
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat/${id}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json.id;
 	};
 
@@ -77,8 +77,7 @@
 		//Update when user last saw message after clicking on channel
 
 		if (selectedPage === 'direct') {
-			console.log(chatter, 'CHATTY');
-			if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
+			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
 			let message = previewDirect.find((message) => message.channel_id === chatter.channel_id);
 
 			if (message) {
@@ -89,10 +88,10 @@
 				previewDirect = previewDirect;
 			}
 			selectedChat = chatter.channel_id;
+			selectedChatChannelId = chatter.channel_id;
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
 			if (message) {
-				
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
 				message.notified = false;
@@ -100,11 +99,8 @@
 				previewGroup = previewGroup;
 			}
 
-			
 			selectedChat = chatter.id;
-
-			if (message?.channel_id)
-			selectedChatChannelId = message.channel_id;
+			selectedChatChannelId = chatter.chat_id;
 		}
 	};
 
@@ -130,16 +126,6 @@
 	$: groups = sort(groups, previewGroup);
 </script>
 
-<!-- ${
-	(previewDirect.find(preview => preview.notified) && previewGroup.find(preview => preview.notified))
-		? 'both-message-bg'
-		: previewDirect.find(preview => preview.notified)
-		? 'direct-message-bg'
-		: previewGroup.find(preview => preview.notified)
-		? 'group-message-bg'
-		: ''}
-		
-		`} -->
 <div class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject`}>
 	<Tab
 		Class={``}
@@ -149,9 +135,7 @@
 	/>
 </div>
 
-<ul
-	class="row-start-2 row-end-4 overflow-hidden bg-white dark:bg-darkobject flex flex-col sm:h-[30-vh] md:h-[80vh] lg:h-[90vh] overflow-y-scroll pb-[40px]"
->
+<div class="max-h-[100%] overflow-y-auto">
 	<TextInput
 		label={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
 		bind:value={chatSearch}
@@ -163,24 +147,18 @@
 				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<li
+		
+		<button
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
-			class="transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+			class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 			class:bg-gray-200={selectedChat === chatter.id}
 			class:dark:bg-gray-700={selectedChat === chatter.id}
-			on:keydown
-			on:click={async () => {
+			on:click={() => {
 				clickedChatter(chatter);
-				setTimeout(() => {
-					// Fixes having to doubble click to get rid of chat notificattion
-					clickedChatter(chatter);
-				}, 200);
 			}}
 		>
-			<!-- {@debug  previewGroup} -->
 			<!-- Notification Symbol -->
 			{#if previewObject?.notified}
 				<div
@@ -189,7 +167,10 @@
 					class:bg-purple-300={selectedPage === 'direct'}
 				/>
 			{/if}
-			<ProfilePicture user={chatter} />
+			<ProfilePicture
+				username={chatter.name || chatter.username}
+				profilePicture={chatter.profile_image}
+			/>
 			<div class="flex flex-col">
 				<span class="max-w-[12vw] overflow-x-hidden overflow-ellipsis"
 					>{chatter.name || chatter.username}</span
@@ -203,9 +184,9 @@
 					{/if}
 				</span>
 			</div>
-		</li>
+		</button>
 	{/each}
-</ul>
+</div>
 
 <style>
 	.group-message-bg {

@@ -4,25 +4,22 @@
 	//Design in Figma should be done first
 
 	import Tag from '../Tag.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import type { Delegate } from '../interface';
+	import Fa from 'svelte-fa';
+	import type { DelegateMinimal, Tag as TagType } from '../interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { delegation as delegationLimit } from '../../Generic/APILimits.json';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 
-	let delegates: Delegate[] = [],
-		tags: any[] = [],
+	let delegates: DelegateMinimal[] = [],
+		tags: TagType[] = [],
 		poppup: poppup,
 		loading = false;
 
@@ -98,9 +95,8 @@
 
 		delegateRelations.forEach((relation) => {
 			const info = delegatesUserInfo.find((user) => user.user.id === relation.delegates[0].user_id);
-			console.log(delegatesUserInfo, delegateRelations, info, 'LOG');
 
-			const delegate: Delegate = {
+			const delegate: DelegateMinimal = {
 				pool_id: relation.delegate_pool_id,
 				id: relation.id,
 				profile_image: info.profile_image,
@@ -117,7 +113,7 @@
 	//Pops up the "Edit tags for delegate" screen for user with the following id, -1 being no delegate
 	let selected = -1;
 
-	const changeDelegation = (delegate: any, tag: { tag_name: string; id: number }) => {
+	const changeDelegation = (delegate: any, tag: TagType) => {
 		const delegateOld = delegates.find((delegate) =>
 			delegate.tags.find((_tag) => _tag.id === tag.id)
 		);
@@ -140,7 +136,11 @@
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b-2 border-gray-200"
 			>
 				<div class="flex">
-					<ProfilePicture user={delegate} displayName />
+					<ProfilePicture
+						username={delegate.username}
+						profilePicture={delegate.profile_image}
+						displayName
+					/>
 				</div>
 				<div class="flex items-center">
 					<div class="flex gap-2 flex-wrap mt-4">
@@ -185,7 +185,7 @@
 			</li>
 		{/each}
 	</ul>
-	
+
 	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
 		>{$_('Save changes')}</Button
 	>
@@ -206,4 +206,3 @@
 		transform: rotate(45deg);
 	}
 </style>
-

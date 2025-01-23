@@ -1,17 +1,23 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Layout from '$lib/Generic/Layout.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Thread } from '$lib/Group/interface';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import Fa from 'svelte-fa';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import { _ } from 'svelte-i18n';
 	import Comments from '$lib/Comments/Comments.svelte';
-	import type { Comment } from '$lib/Poll/interface';
+	import Layout from '$lib/Generic/Layout.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Description from '$lib/Poll/Description.svelte';
 
-	let thread: Thread, comments: Comment[];
+	let thread: Thread, poppup: poppup;
 
 	onMount(() => {
 		getThread();
-		console.log($page.params.threadId, "THREADID")
 	});
 
 	const getThread = async () => {
@@ -19,21 +25,67 @@
 			'GET',
 			`group/${$page.params.groupId}/thread/list?id=${$page.params.threadId}`
 		);
-		console.log(json, 'JSON');
-		if (!res.ok) return;
+
+		if (!res.ok) {
+			poppup = { message: 'Could not get Thread', success: false };
+			return;
+		}
 
 		thread = json.results[0];
+		if (thread.description === null) thread.description = '';
 	};
 </script>
 
 <Layout centered>
 	{#if thread}
 		<div
-			class="p-10 m-10 bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow pt-6 flex flex-col gap-8 w-full md:w-3/4 lg:w-2/3 lg:max-w-[1000px]"
+			class="pt-4 max-w-[1000px] bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center"
 		>
-			<h1 class="text-left text-2xl">{thread.title}</h1>
+			<div
+				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
+				on:click={() => goto(`/groups/${$page.params.groupId}?page=threads`)}
+				on:keydown
+				role="button"
+				tabindex="0"
+			>
+				<Fa icon={faArrowLeft} />
+			</div>
 
-			<Comments api={'thread'} />
+			<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
+
+			<NotificationOptions
+				type="group_thread"
+				id={thread.id}
+				api={`group/thread/${thread.id}`}
+				categories={['thread']}
+				labels={['thread']}
+			/>
+
+			{#if thread.description.length > 0}
+				<div class="grid-area-description">
+					<Description readMore bind:description={thread.description} limit={500} Class="" />
+				</div>
+			{/if}
 		</div>
 	{/if}
+
+	<Comments api={'thread'} Class="w-full max-w-[1000px] bg-white dark:bg-darkobject p-6 mt-6" />
 </Layout>
+
+<Poppup bind:poppup />
+
+<style>
+	.poll-header-grid {
+		display: grid;
+		grid-template-columns: 0.3fr 4fr 0.3fr;
+		grid-template-rows: 0.1fr 0.1fr 1fr;
+	}
+
+	.grid-area-items {
+		grid-area: 2 / 2 / 3 / 3;
+	}
+
+	.grid-area-description {
+		grid-area: 3 / 2 / 4 / 3;
+	}
+</style>

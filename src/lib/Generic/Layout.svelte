@@ -1,23 +1,15 @@
 <script>
-	import Chat from '$lib/Chat/Chat.svelte';
-	import Header from '$lib/Header/Header.svelte';
 	import { onMount } from 'svelte';
 	import Cookies from './Cookies.svelte';
 	import { TriggerDarkMode } from './DarkMode';
-	export let centered = false;
+	export let centered = false, Class = ""
 
 	onMount(() => {
-		let backed = false;
 		TriggerDarkMode();
-
 	});
 </script>
 
-<!-- <Header /> -->
-
-<!-- <Chat /> -->
-
-<div class={`${centered ? 'flex justify-center flex-col items-center' : ''}`}>
+<div class={`${centered ? 'flex justify-center flex-col items-center' : ''} ${Class}`}>
 	<slot />
 </div>
 <Cookies />

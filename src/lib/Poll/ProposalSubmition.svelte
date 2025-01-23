@@ -9,36 +9,49 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
-	import { createProposal } from '$lib/Blockchain/javascript/pollsBlockchain';
+	import { createProposal } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import { env } from '$env/dynamic/public';
+
+	export let proposals: proposal[], poll: poll, displayForm: boolean;
 
 	let title: string,
 		description: string,
 		loading = false,
 		status: StatusMessageInfo,
-		show = false,
-		blockchain = true;
-
-	export let proposals: proposal[], poll: poll;
+		poppup: poppup = { message: '', success: true, show: true },
+		blockchain = true,
+		images: File[];
 
 	const addProposal = async () => {
 		loading = true;
 
 		let blockchain_id;
-		console.log(poll.blockchain_id)
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
 			blockchain_id = await createProposal(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
 		if (blockchain_id) proposal.blockchain_id = blockchain_id;
 
+		const formData = new FormData();
+		formData.append('title', title);
+		formData.append('description', description);
+
+		images.forEach((image) => {
+			formData.append('attachments', image);
+		});
+
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/create`,
-			proposal
+			formData,
+			true,
+			false
 		);
 
 		const id = json;
@@ -46,7 +59,8 @@
 
 		if (!res.ok) return;
 
-		show = true;
+		poppup = { message: 'Successfully added proposal', success: true };
+
 		let created_by = await getUserInfo();
 		loading = false;
 
@@ -55,7 +69,8 @@
 			description,
 			id,
 			created_by,
-			poll: Number($page.params.pollId)
+			poll: Number($page.params.pollId),
+			attachments: []
 		});
 		proposals = proposals;
 
@@ -72,27 +87,53 @@
 		if (!res.ok) return;
 		return json.results[0].id;
 	};
+
+	const cancelSubmission = () => {
+		displayForm = false;
+		title = '';
+		description = '';
+	};
 </script>
 
-<SuccessPoppup bind:show />
-<form
-	on:submit|preventDefault={addProposal}
-	class="p-4 border border-gray-200 dark:border-gray-500 rounded"
->
+<form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
-		<h1 class="text-left text-2xl">{$_('Create a Proposal')}</h1>
+		<span class="block text-left text-md text-primary font-semibold">{$_('Create a Proposal')}</span
+		>
 		<TextInput required label="Title" bind:value={title} />
-		<TextArea Class="mt-4" label="Description" bind:value={description} />
-		{#if import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+		<TextArea
+			Class="mt-4"
+			areaClass="max-h-[12rem] resize-y"
+			label="Description"
+			bind:value={description}
+		/>
+		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
 
+		<FileUploads bind:images />
 		<StatusMessage bind:status />
-		<Button type="submit" label="Add" />
-		{#if import.meta.env.VITE_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button action={async () => (title = await getProposals(poll.title))}
+
+		<Button
+			buttonStyle="primary-light"
+			Class="absolute bottom-0 w-[49%]"
+			type="submit"
+			label="Confirm"
+		/>
+
+		<Button
+			buttonStyle="warning-light"
+			Class="absolute bottom-0 right-0 w-[49%]"
+			type="button"
+			label="Cancel"
+			action={cancelSubmission}
+		/>
+
+		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
+			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button
 			>
 		{/if}
 	</Loader>
 </form>
+
+<Poppup bind:poppup />

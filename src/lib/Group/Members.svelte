@@ -7,26 +7,35 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { GroupUser, SelectablePages, User } from './interface';
 	import { _ } from 'svelte-i18n';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { faMagnifyingGlass, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import Button from '$lib/Generic/Button.svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
 		loading = true,
 		selectedPage: SelectablePages = 'Members',
-		searchUser = '',
-		searchedUsers: User[] = [],
-		poppup: poppup;
+		searchUserQuery = '',
+		searchInvitationQuery = '',
+		searchedInvitationUsers: User[] = [],
+		searchedUsers: GroupUser[] = [],
+		poppup: poppup,
+		showInvite = false,
+		searched = false;
 
 	onMount(async () => {
 		getUsers();
 
 		getInvitesList();
+		searchUsers('');
 
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
@@ -41,25 +50,39 @@
 		loading = false;
 	};
 
-	const searchUsers = async (username: string) => {
+	const searchUser = async (username: string) => {
 		//TODO: Search users
 		//This code can be used to not show every user unless the user has typed in something
 		if (username === '') {
-			searchedUsers = [];
+			searchedInvitationUsers = [];
 			return;
 		}
 
+		const { json } = await fetchRequest('GET', `users?username=${username}`);
+		searchedInvitationUsers = json.results;
+	};
+
+	const searchUsers = async (username: string) => {
+		//TODO: Search users
+		//This code can be used to not show every user unless the user has typed in something
+		// if (username === '') {
+		// 	searchedInvitationUsers = [];
+		// 	return;
+		// }
+
 		const { json } = await fetchRequest(
 			'GET',
-			`users?limit=${groupMembersLimit}&username=${username}`
+			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}&username__icontains=${username}`
 		);
+
+		searchedInvitationUsers = json.results;
 		searchedUsers = json.results;
 	};
 
 	const getInvitesList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 		if (res.ok) usersAskingForInvite = json.results;
-		else poppup = { message: "Couldn't get invites list", success: false };
+		// else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {
@@ -94,104 +117,146 @@
 		});
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 	};
-
-	$: if (selectedPage === 'Invite') searchUsers('');
 </script>
+
+<Button action={() => (showInvite = true)}>{$_('Show Invitations')}</Button>
+
+<Modal bind:open={showInvite}>
+	<div slot="body">
+		<!-- Inviting -->
+		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
+			<TextInput
+				onInput={() => searchUser(searchInvitationQuery)}
+				bind:value={searchInvitationQuery}
+				label={$_('User to invite')}
+				placeholder="Username"
+			/>
+			<ul>
+				{#each searchedInvitationUsers as searchedUser}
+					<li
+						class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
+					>
+						<div class="flex">
+							<ProfilePicture
+								displayName
+								username={searchedUser.username}
+								profilePicture={searchedUser.profile_image}
+							/>
+						</div>
+
+						<div class="flex">
+							<div
+								class="ml-2 cursor-pointer"
+								on:click={() => inviteUser(searchedUser.id)}
+								on:keydown
+								tabindex="0"
+								role="button"
+							>
+								<Fa size="2x" icon={faEnvelope} />
+							</div>
+						</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
+
+		<!-- Invites -->
+
+		{#if usersAskingForInvite.length > 0}
+			<div class="w-full shadow rounded bg-white p-2">
+				<span>{$_('Users requesting invite')}</span>
+				{#each usersAskingForInvite as user}
+					{#if user.external === true}
+						<div
+							class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						>
+							<ProfilePicture
+								Class="w-full"
+								displayName
+								username={user.username}
+								profilePicture={user.profile_image}
+							/>
+							<Button
+								Class="py-1 mr-4 px-2"
+								buttonStyle="primary-light"
+								action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+							>
+							<Button
+								Class="py-2  px-2"
+								buttonStyle="warning"
+								action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
+							>
+						</div>
+					{/if}
+				{/each}
+			</div>
+		{/if}
+	</div>
+</Modal>
 
 <Loader bind:loading>
 	<div
-		class="flex flex-col items-center gap-2 mb-24 bg-white shadow rounded relative dark:bg-darkobject dark:text-darkmodeText pb-2"
+		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
-		<Tab bind:selectedPage tabs={import.meta.env.VITE_ONE_GROUP_FLOWBACK ? ['Members'] : ['Members', 'Pending Invites', 'Invite']} />
-		{#if selectedPage === 'Members' && users.length > 0}
-			<div class="w-full p-6 flex flex-col gap-6">
-				{#each users as user}
-					<a
-						class="text-black flex bg-white p-2 hover:outline outline-gray-200 cursor-pointer w-full dark:text-darkmodeText dark:bg-darkobject"
-						href={`/user?id=${user.user.id}`}
-					>
-						<ProfilePicture user={user.user} />
-						<div class="w-64 ml-10 hover:underline">{user.user.username}</div>
-					</a>
-				{/each}
-			</div>
-		{:else if selectedPage === 'Pending Invites' && users.length > 0}
-			{#if usersAskingForInvite?.length === 0}
-				{$_('There are currently no pending invites')}
-			{/if}
-			{#each usersAskingForInvite as user}
-				{#if user.external === true}
-					<div
-						class="text-black flex bg-white p-2 outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
-					>
-						<ProfilePicture {user} />
-						<div class="w-64 ml-10 hover">{user.username}</div>
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
-						<div
-							class="w-64 ml-10 hover:underline cursor-pointer"
-							on:click={() => acceptInviteUser(user.user)}
-							on:keydown
-						>
-							{$_('ACCEPT')}
+		<!-- Search in Members list -->
+
+		<form
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
+			on:input|preventDefault={() => searchUsers(searchUserQuery)}
+		>
+			<TextInput
+				Class="w-4/5"
+				onInput={() => (searched = false)}
+				label={$_('Search')}
+				bind:value={searchUserQuery}
+			/>
+
+			<Button
+				Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
+					searched ? 'bg-blue-300' : 'bg-blue-600'
+				}`}
+				type="submit"
+			>
+				<Fa icon={faMagnifyingGlass} />
+			</Button>
+		</form>
+
+		<!-- Members List -->
+
+		{#if searchedUsers.length > 0}
+			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
+				{#each searchedUsers as user}
+					<div class="flex items-center">
+						<ProfilePicture
+							Class="w-[30%]"
+							username={user.user.username}
+							profilePicture={user.user.profile_image}
+							displayName
+						/>
+						{#if user.is_delegate}
+							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
+								{$_('Delegate')}
+							</div>
+						{/if}
+						{#if user.is_admin}
+							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
+								{$_('Admin')}
+							</div>
+						{/if}
+						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
+							{user.permission_name}
 						</div>
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<div
-							class="w-64 ml-10 hover:underline cursor-pointer"
-							on:click={() => denyInviteUser(user.user)}
+							on:click={() => goto(`/user?id=${user.user.id}`)}
 							on:keydown
+							tabindex="0"
+							role="button"
+							Class="right-6 absolute"
 						>
-							{$_('DECLINE')}
+							<Fa icon={faPaperPlane} rotate="60" />
 						</div>
 					</div>
-				{/if}
-			{/each}
-		{:else if selectedPage === 'Invite'}
-			<div class="w-full p-6">
-				<TextInput
-					onInput={() => searchUsers(searchUser)}
-					bind:value={searchUser}
-					label="User to invite"
-					placeholder="Username"
-				/>
-				<ul>
-					{#each searchedUsers as searchedUser}
-						<li
-							class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
-						>
-							<div class="flex">
-								<ProfilePicture user={searchedUser} />
-								<div class="w-64 ml-10">{searchedUser.username}</div>
-							</div>
-
-							<div class="flex">
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<!-- <div
-									class="cursor-pointer"
-									on:click={() => acceptInviteUser(searchedUser.id)}
-									on:keydown
-								>
-									<Fa size="2x" color="blue" icon={faCheck} />
-								</div> -->
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<!-- <div
-									class="ml-2 cursor-pointer"
-									on:click={() => denyInviteUser(searchedUser.id)}
-									on:keydown
-								>
-									<Fa size="2x" color="#CC4444" icon={faX} />
-								</div> -->
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<div
-									class="ml-2 cursor-pointer"
-									on:click={() => inviteUser(searchedUser.id)}
-									on:keydown
-								>
-									<Fa size="2x" icon={faEnvelope} />
-								</div>
-							</div>
-						</li>
-					{/each}
-				</ul>
+				{/each}
 			</div>
 		{/if}
 	</div>

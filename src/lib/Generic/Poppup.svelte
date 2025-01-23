@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import type { poppup } from './Poppup';
+	import Fa from 'svelte-fa';
+	import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 	export let poppup: poppup | null;
 
@@ -20,16 +22,17 @@
 </script>
 
 {#if poppup?.message}
-	<div class="fixed bottom-5 right-5 z-50" hidden={!show}>
-		<div
-			id="popup"
-			class={`${
-				poppup.success ? 'bg-green-600' : 'bg-red-600'
-			} text-white px-4 py-2 rounded-md shadow-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
-			class:show
-		>
-			{$_(poppup.message)}
-		</div>
+	<div
+		id="popup"
+		class={`bg-white dark:bg-darkobject dark:text-darkmodeText fixed bottom-5 right-5 z-50 shadow-xl flex gap-2 items-center px-4 py-2 rounded-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
+		class:show
+		hidden={!show}
+	>
+		<Fa 
+			icon={poppup.success ? faCheckCircle : faTimesCircle} 
+			color={poppup.success ? 'green' : 'red'} 
+		/>
+		{$_(poppup.message)}
 	</div>
 {/if}
 

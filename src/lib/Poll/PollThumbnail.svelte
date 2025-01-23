@@ -1,27 +1,38 @@
 <script lang="ts">
-	import Timeline from './Timeline.svelte';
+	//@ts-ignore
+	import TimelineLegacy from './TimelineLegacy.svelte';
 	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
-	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import { faThumbtack } from '@fortawesome/free-solid-svg-icons/faThumbtack';
-	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
-	import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
-	import { onDestroy, onMount } from 'svelte';
-	import { getPhase, getPhaseUserFriendlyName } from './functions';
-	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { getPhase, getPhaseUserFriendlyName, nextPhase } from './functions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
-	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import { elipsis, onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
 	import { getTags } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
-	import {env} from "$env/dynamic/public";
+	import { darkModeStore } from '$lib/Generic/DarkMode';
+	import Button from '$lib/Generic/Button.svelte';
+	import Description from './Description.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import { env } from '$env/dynamic/public';
+	import {
+		faAnglesRight,
+		faThumbtack,
+		faComment,
+		faAlignLeft,
+		faCalendarAlt,
+		faSlash
+	} from '@fortawesome/free-solid-svg-icons';
+	import { goto } from '$app/navigation';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
+	import DeletePollModal from './DeletePollModal.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -31,8 +42,13 @@
 		// If text poll, have all phases. Date polls have fewer phases to display
 		dates: Date[],
 		tags: TagType[] = [],
-		selectedTag: number;
+		selectedTag: number,
+		darkMode: boolean,
+		voting = true,
+		poppup: poppup,
+		deletePollModalShow = false;
 
+	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
 		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/update`, {
 			pinned: !poll.pinned
@@ -40,20 +56,26 @@
 		if (res.ok) poll.pinned = !poll.pinned;
 	};
 
-	const vote = async (tag: number) => {
-		console.log(tag, 'TAGGo');
-		const { json, res } = await fetchRequest('POST', `group/poll/${poll.group_id}/area/update`, {
+	const submitTagVote = async (tag: number) => {
+		const { json, res } = await fetchRequest('POST', `group/poll/${poll.id}/area/update`, {
 			tag,
 			vote: true
 		});
+
+		if (!res.ok) {
+			poppup = { message: 'Could not submit tag vote', success: false };
+			return;
+		}
+
+		voting = false;
 	};
 
 	onMount(async () => {
 		phase = getPhase(poll);
 		if (phase === 'area_vote') tags = await getTags(poll.group_id);
-	});
 
-	$: if (selectedTag) vote(selectedTag);
+		darkModeStore.subscribe((dark) => (darkMode = dark));
+	});
 
 	$: if (poll)
 		dates =
@@ -71,16 +93,76 @@
 </script>
 
 <div
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-2 pl-5 pr-5 shadow-lg rounded-md transition-all vote-thumbnail"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText poll-thumbnail-shadow rounded-md p-4"
+	class:poll-thumbnail-shadow={!darkMode}
+	class:poll-thumbnail-shadow-dark={darkMode}
 	id={`poll-thumbnail-${poll.id.toString()}`}
-	>
-	<div class="flex items-center justify-between mt-1">
-		<div class="flex gap-2">
-			<Tag
-				tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac:0}}
-				Class="inline cursor-default"
-			/>
-			
+>
+	<div class="mx-2">
+		<div class="flex items-center justify-between text-primary">
+			<a
+				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
+			>
+				{elipsis(poll.title)}
+			</a>
+
+			<div class="inline-flex items-center gap-4">
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
+					<a
+						href={poll.group_joined ? `groups/${poll.group_id}` : ''}
+						class:hover:underline={poll.group_joined}
+						class="text-black dark:text-darkmodeText"
+					>
+						<span class="inline break-all">{poll.group_name}</span>
+						<img
+							class="h-8 w-8 inline rounded-full break-all"
+							src={`${env.PUBLIC_API}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+								poll.group_image
+							}`}
+							on:error={(e) => onThumbnailError(e, DefaultBanner)}
+							alt={'Poll Thumbnail'}
+						/>
+					</a>
+				{/if}
+				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
+				<NotificationOptions
+					type="poll"
+					id={poll.id}
+					api={`group/poll/${poll.id}`}
+					categories={['poll', 'timeline', 'comment_all']}
+					labels={['Poll', 'Timeline', 'Comments']}
+					Class="text-black dark:text-darkmodeText"
+					ClassOpen="right-0"
+				/>
+				{#if isAdmin || poll.pinned}
+					<button class="" class:cursor-pointer={isAdmin} on:click={pinPoll}>
+						<Fa
+							size="1.2x"
+							icon={faThumbtack}
+							color={poll.pinned ? '#999' : '#CCC'}
+							rotate={poll.pinned ? '0' : '45'}
+						/>
+					</button>
+				{/if}
+
+				<MultipleChoices
+					labels={phase === 'result' || phase === 'prediction_vote'
+						? [$_('Delete Poll')]
+						: [$_('Delete Poll'), $_('Fast Forward')]}
+					functions={[
+						() => (deletePollModalShow = true),
+						async () => (phase = await nextPhase(poll.poll_type, $page.params.pollId, phase))
+					]}
+					Class="text-black justify-self-center mt-2"
+				/>
+			</div>
+		</div>
+
+		<div class="flex gap-4 my-2 items-center">
+			<!-- Poll Type Icons -->
 			{#if poll.poll_type === 4}
 				<HeaderIcon
 					Class="!p-0 !cursor-default"
@@ -96,104 +178,170 @@
 					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
 				/>
 			{/if}
-		</div>
-		<div class="ml-2 inline-flex gap-3 items-center">
-			{#if !(import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<a
-					href={poll.group_joined ? `groups/${poll.group_id}` : ''}
-					class:hover:underline={poll.group_joined}
-					class="text-black dark:text-darkmodeText"
-				>
-					<span class="inline">{poll.group_name}</span>
-					<img
-						class="h-8 w-8 inline rounded-full"
-						src={`${import.meta.env.VITE_API}${
-							import.meta.env.VITE_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-						}${poll.group_image}`}
-						on:error={(e) => onThumbnailError(e, DefaultBanner)}
-						alt={'Poll Thumbnail'}
-					/>
-				</a>
-			{/if}
-			<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
-			{#if isAdmin || poll.pinned}
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="" class:cursor-pointer={isAdmin} on:click={pinPoll} on:keydown>
-					<Fa
-						size="1.2x"
-						icon={faThumbtack}
-						color={poll.pinned ? '#999' : '#CCC'}
-						rotate={poll.pinned ? '0' : '90'}
-					/>
+
+			<!-- Fast Forward Icon -->
+			{#if poll.allow_fast_forward}
+				<HeaderIcon
+					Class="!p-0 !cursor-default"
+					icon={faAnglesRight}
+					text={'Fast Forward'}
+					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
+				/>
+			{:else}
+				<div class="relative w-4 h-4">
+					<Fa style="position:absolute" icon={faAnglesRight} />
+
+					<Fa style="position:absolute" icon={faSlash} rotate="90" />
 				</div>
 			{/if}
-			<NotificationOptions
-				id={poll.id}
-				api={`group/poll/${poll.id}`}
-				categories={['poll', 'timeline', 'comment_all']}
-				labels={['Poll', 'Timeline', 'Comments']}
-			/>
+
+			<!-- Comment icon. When user clicks it leads to the comment section on the poll -->
+			<a
+				class="flex gap-1 items-center text-black dark:text-darkmodeText hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm"
+				href={onHoverGroup
+					? '/groups/1'
+					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
+			>
+				<Fa class="inline" icon={faComment} />
+				<span class="inline">{poll.total_comments}</span>
+			</a>
+
+			<!-- Tag -->
+			{#if poll.poll_type === 4}
+				<Tag tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
+			{/if}
+
+			<!-- Phase -->
+			<div class="text-sm font-semibold text-primary">
+				{$_('Current phase:')}
+				{$_(getPhaseUserFriendlyName(phase))}
+			</div>
+		</div>
+
+		{#if poll.description.length > 0}
+			<Description limit={500} description={poll.description} Class="mt-2" />
+		{/if}
+
+		<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+
+		<div class="!mt-4">
+			<!-- PHASE 1: AREA VOTE -->
+			{#if phase === 'area_vote'}
+				<form
+					on:submit|preventDefault={() => submitTagVote(selectedTag)}
+					class="flex justify-between"
+				>
+					<Select
+						label={''}
+						labels={tags.map((tag) => tag.name)}
+						bind:value={selectedTag}
+						values={tags.map((tag) => tag.id)}
+						Class="w-[47%] "
+						classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
+						onInput={() => (voting = true)}
+					/>
+					{#if voting}
+						<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light"
+							>{$_('Save Vote')}</Button
+						>
+					{:else}
+						<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
+					{/if}
+				</form>
+
+				<!-- PHASE 2: PROPOSAL CREATION -->
+			{:else if phase === 'proposal'}
+				<div class="flex justify-between">
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
+						>{$_('See Proposals')} ({poll.total_proposals})</Button
+					>
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
+						>{$_('Create a Proposal')}</Button
+					>
+				</div>
+
+				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
+			{:else if phase === 'prediction_statement'}
+				<div class="flex justify-between">
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
+						>{$_('See Predictions')} ({poll.total_predictions})</Button
+					>
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
+						>{$_('Create a Prediction')}</Button
+					>
+				</div>
+
+				<!-- PHASE 4: PREDICTION BETTING -->
+			{:else if phase === 'prediction_bet'}
+				<div class="flex justify-between">
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						>{$_('Manage bets')}</Button
+					>
+					<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
+				</div>
+
+				<!-- PHASE 5 & 6: VOTING -->
+			{:else if phase === 'delegate_vote' || phase === 'vote'}
+				<div class="flex justify-between">
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						>{$_('Manage votes')}</Button
+					>
+					<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
+				</div>
+
+				<!-- PHASE 7: RESULTS -->
+			{:else if phase === 'prediction_vote' || phase === 'result'}
+				<div class="flex justify-between">
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						>{$_('View detailed results')}</Button
+					>
+					<Button
+						Class="w-[47%]"
+						buttonStyle="primary-light"
+						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						>{$_('Evaluate predictions')}</Button
+					>
+				</div>
+			{/if}
 		</div>
 	</div>
-	<div class="flex justify-between items-center text-black dark:text-darkmodeText relative">
-		<a
-			class="cursor-pointer text-black"
-			href={onHoverGroup
-				? '/groups/1'
-				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-		>
-			<h1 class="text-left text-3xl mt-3 p-1 pl-0 dark:text-darkmodeText hover:underline">
-				{poll.title}
-			</h1>
-		</a>
-	</div>
-	<a
-		class="cursor-pointe text-black"
-		href={onHoverGroup
-			? '/groups/1'
-			: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
-	>
-		<p class="mt-2 whitespace-pre-wrap break-words mb-4 dark:text-darkmodeText hover:underline">
-			{poll.description}
-		</p></a
-	>
-
-	<!-- Area Voting -->
-	{#if phase === 'area_vote'}
-		<Select
-			label={'Select Area'}
-			labels={tags.map((tag) => tag.name)}
-			values={tags.map((tag) => tag.id)}
-			bind:value={selectedTag}
-		/>
-	{/if}
-
-	<Timeline displayDetails={false} pollType={poll.poll_type} bind:dates />
-	<div class="text-sm">{$_('Current phase:')} {getPhaseUserFriendlyName(phase)}</div>
-	<div
-		class="flex justify-between text-sm text-gray-600 dark:text-darkmodeText mt-2 pointer-default"
-	>
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<p
-			class="hover:underline"
-			on:mouseover={() => (onHoverGroup = true)}
-			on:mouseleave={() => (onHoverGroup = false)}
-			on:click={() => goto('/groups/1')}
-			on:focus
-			on:keydown
-		/>
-	</div>
-	<div
-		class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText px-1 mb-2"
-	>
-		<a
-			class="text-black dark:text-darkmodeText"
-			href={onHoverGroup
-				? '/groups/1'
-				: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
-		>
-			<Fa class="inline" icon={faComment} />
-			<span class="inline">{poll.total_comments} {$_('comments')}</span>
-		</a>
-	</div>
 </div>
+
+<DeletePollModal bind:deletePollModalShow pollId={poll.id} />
+
+<Poppup bind:poppup />
+
+<style>
+	.poll-thumbnail-shadow {
+		box-shadow: 0 0 5px rgb(203, 203, 203);
+	}
+
+	.poll-thumbnail-shadow-dark {
+		box-shadow: 0 0 10px rgb(24, 24, 24);
+	}
+</style>

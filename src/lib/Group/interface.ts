@@ -12,7 +12,9 @@ export type SelectablePage =
 	| 'kanban'
 	| 'perms'
 	| 'schedule'
-	| 'threads';
+	| 'threads'
+	| 'working-groups'
+	;
 
 export interface User {
 	username: string;
@@ -26,6 +28,7 @@ export interface GroupUser {
 	group_name: string;
 	id: number;
 	is_admin: boolean;
+	is_delegate:boolean;
 	permission_id: number | null;
 	permission_name: string;
 	user: { banner_image: string; id: number; profile_image: string; username: string };
@@ -44,13 +47,14 @@ export interface DelegatePools {
 	];
 }
 
-export interface Delegate {
+export interface DelegateMinimal {
 	username: string;
 	id: number;
 	pool_id: number;
-	profile_image: File;
+	profile_image: string;
 
-	tags: { id: number; tag_name: string, name: string, active: boolean }[];
+	tags: Tag[];
+
 }
 
 export interface Group {
@@ -124,25 +128,6 @@ export const userGroupInfo = writable({
 export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
 
-export interface kanban {
-	assignee: { id: number; profile_image: string; username: string };
-	group: {
-		id: number;
-		image: string;
-		name: string;
-	};
-	created_by: number;
-	description: string;
-	id: number;
-	tag: number;
-	title: string;
-	origin_id: number;
-	origin_type: 'group' | 'user';
-	group_name: string;
-	priority: undefined | number;
-	end_date: null | string;
-}
-
 export interface Thread {
 	created_by: {
 		id: number;
@@ -152,8 +137,14 @@ export interface Thread {
 	};
 	title: string;
 	id: number;
-	total_comments: number;
+	total_comments:number;
+	description:string;
+	pinned:boolean;
+	attachments:string[];
+	user_vote:null|boolean
+	score:number;
+
 }
 
-
 export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }
+

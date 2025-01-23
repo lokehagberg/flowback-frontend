@@ -4,8 +4,7 @@
 	import type { Permission } from './interface';
 	import type { groupUser } from '../interface';
 	import Tag from '../Tag.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
@@ -54,7 +53,7 @@
 		<li class=" p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
 				<div class="flex">
-					<ProfilePicture user={user.user} displayName />
+					<ProfilePicture username={user.user.username} profilePicture={user.user.profile_image} displayName />
 				</div>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
 					<Tag tag={{active:true, id:1, name:user.permission_name}} />

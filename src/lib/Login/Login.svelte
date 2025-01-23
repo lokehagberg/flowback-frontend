@@ -7,12 +7,15 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/Generic/Button.svelte';
+	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	// import { userInfo } from '$lib/Generic/GenericFunctions';
 
 	let username: string,
 		password: string,
 		status: StatusMessageInfo,
-		loading = false;
+		loading = false,
+		remainLoggedIn = false;
 
 	export let selectedPage: string;
 
@@ -24,6 +27,16 @@
 		if (!res.ok) status = { message: json.detail.non_field_errors[0], success: false };
 		else if (json?.token) {
 			await localStorage.setItem('token', json.token);
+
+			//Checks if user has selected the "Remain logged in" button and acts accordingly
+			if (remainLoggedIn) await localStorage.removeItem('sessionExpirationTime');
+			else
+				await localStorage.setItem(
+					'sessionExpirationTime',
+					//A session is set to 24 hours with "1000 * 3600 * 24"
+					(new Date().getTime() + 1000 * 3600 * 24).toString()
+				);
+
 			{
 				const { json } = await fetchRequest('GET', 'user');
 				localStorage.setItem('userId', json.id);
@@ -39,23 +52,44 @@
 
 <Loader bind:loading>
 	<form class="p-6 gap-6 flex flex-col items-center" on:submit|preventDefault={logIn}>
-		<TextInput label={'Email'} bind:value={username} required />
-		<TextInput label={'Password'} bind:value={password} type={'password'} required />
+		<TextInput label={'Email'} bind:value={username} required name="email" />
+		<div class="w-full">
+			<TextInput
+				label={'Password'}
+				bind:value={password}
+				type={'password'}
+				required
+				name="password"
+			/>
+			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+			<div class="flex justify-between">
+				<CheckboxButtons
+					Class="cursor-pointer"
+					label=""
+					labels={[{ label: 'Remain logged in', checked: false, id: 1 }]}
+					onChange={(e) => (remainLoggedIn = !remainLoggedIn)}
+				/>
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="cursor-pointer hover:underline text-gray-400"
+					on:click={() => (selectedPage = 'ForgotPassword')}
+					on:keydown
+					tabindex="0"
+				>
+					{$_('Forgot password?')}
+				</div>
+			</div>
+		</div>
 
-		<input
+		<hr class="border-b-1 border-gray-300 w-full" />
+
+		<Button
 			type="submit"
-			value={$_('Login')}
-			class="inline bg-blue-600 text-white pl-6 pr-6 pt-2 pb-2 mt-5 mb-5 rounded cursor-pointer"
-		/>
+			buttonStyle="primary-light"
+			disabled={username === '' || password === ''}
+			Class="w-[250px]">{$_('Login')}</Button
+		>
 
 		<StatusMessage bind:status />
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="mb-4 cursor-pointer hover:underline"
-			on:click={() => (selectedPage = 'ForgotPassword')}
-			on:keydown
-		>
-			{$_('Forgot password?')}
-		</div>
 	</form>
 </Loader>

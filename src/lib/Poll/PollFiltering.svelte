@@ -2,8 +2,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -11,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import type { Tag } from '$lib/Group/interface';
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
+	import Select from '$lib/Generic/Select.svelte';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let filter: Filter,
 		handleSearch: () => {},
@@ -21,18 +22,15 @@
 
 	const handleFinishedSelection = (e: any) => {
 		filter.finishedSelection = e.target.value;
-
 	};
 
 	const handleSort = (e: any) => {
 		filter.order_by = e.target.value;
-
 	};
 
 	const handleTags = (e: any) => {
 		if (e.target.value === 'null') filter.tag = null;
 		else filter.tag = e.target.value;
-
 	};
 
 	const getTags = async () => {
@@ -53,19 +51,18 @@
 			public: false,
 			order_by: 'start_date_desc',
 			tag: null
-		}
-
-	}
+		};
+	};
 
 	onMount(() => {
 		getTags();
 	});
 
-	$: if (filter) handleSearch()
+	$: if (filter) handleSearch();
 </script>
 
 <form
-	class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-6 flex flex-col w-full gap-4"
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-col w-full gap-4"
 	on:submit|preventDefault={() => {
 		searched = true;
 		handleSearch();
@@ -88,31 +85,39 @@
 			<Fa icon={faMagnifyingGlass} />
 		</Button>
 	</div>
-	<div>
-		<select
-			on:input={handleFinishedSelection}
-			class="dark:bg-darkbackground bg-gray-100 rounded-md p-1"
-		>
-			<option value="all">{$_('All')}</option>
-			<option value="unfinished">{$_('Ongoing')}</option>
-			<option value="finished">{$_('Done')}</option>
-		</select>
+	<div class="flex">
+		<Select
+			Class="rounded-md p-1"
+			onInput={handleFinishedSelection}
+			values={['all', 'unfinished', 'finished']}
+			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
+			bind:value={filter.finishedSelection}
+		/>
 
-		<select on:input={handleSort} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
-			<option value="start_date_desc">{$_('Newest first')}</option>
-			<option value="start_date_asc">{$_('Oldest first')}</option>
-		</select>
+		<Select
+			Class="rounded-md p-1"
+			onInput={handleSort}
+			values={['start_date_desc', 'start_date_asc']}
+			labels={[$_('Newest first'), $_('Oldest first')]}
+			bind:value={filter.order_by}
+		/>
 
 		{#if tagFiltering}
-			<select on:input={handleTags} class="dark:bg-darkbackground bg-gray-100 rounded-md p-1">
-				<option value={null}>{$_('Any')}</option>
-				{#each tags as tag}
-					<option value={tag.id}>{tag.name}</option>
-				{/each}
-			</select>
+			<div class="rounded-md p-1">
+				<select on:input={handleTags} class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject">
+					<option value={null}>{$_('Any')}</option>
+					{#each tags as tag}
+						<option value={tag.id}>{elipsis(tag.name, 15)}</option>
+					{/each}
+				</select>
+			</div>
 		{/if}
-
-		<Button action={resetFilter}>Reset Filter</Button>
+		
+		<div class="rounded-md p-1">
+			<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}
+				>{$_('Reset Filter')}</Button
+			>
+		</div>
 
 		<!-- <CheckboxButtons
 			label={''}

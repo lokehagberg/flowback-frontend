@@ -2,10 +2,11 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
-	export let value = '',
+	export let value:string | null = '',
 		label: string,
 		required = false,
 		Class = '',
+		areaClass = '',
 		onBlur = () => {},
 		autofocus = false,
 		max = 5000,
@@ -44,20 +45,23 @@
 	});
 </script>
 
-<label class={`${Class}`} {id}
-	><p class="text-sm mb-1 inline">{$_(label)}</p>
-	{#if required}
-		<p class="inline text-red-600">*</p>
-	{/if}
+<label class={`${Class}`} {id}>
+	<div class="flex justify-between w-full items-center">
+		<div>
+			<p class="text-sm mb-1 inline">{$_(label)}</p>
+			{#if required}
+				<p class="inline text-red-600">*</p>
+			{/if}
+		</div>
 
-	{#if max}
-		<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400">
-			{value.length}/{max}
-		</p>
-	{/if}
-
+		{#if max}
+			<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400 text-xs">
+				{value?.length || 0}/{max}
+			</p>
+		{/if}
+	</div>
 	<textarea
-		class={`dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+		class={`${areaClass} dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 		id="textarea"
 		{required}
 		{rows}

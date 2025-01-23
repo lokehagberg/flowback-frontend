@@ -11,8 +11,8 @@
 	import type { Group, GroupFilter } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json'
-	import {env} from "$env/dynamic/public";
+	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
+	import { env } from '$env/dynamic/public';
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
@@ -34,7 +34,10 @@
 
 		urlFilter = `${urlFilter}&name__icontains=${filter.search}`;
 
-		const { res, json } = await fetchRequest('GET', `group/list?limit=${groupMembersLimit}` + urlFilter);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/list?limit=${groupMembersLimit}` + urlFilter
+		);
 		status = statusMessageFormatter(res, json);
 
 		if (!res.ok) return;
@@ -55,8 +58,10 @@
 	<Loader bind:loading Class="w-full">
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
-			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'false' || env.PUBLIC_DISABLE_GROUP_CREATION === undefined}
-				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl">{$_("Create Group")}</Button>
+			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'FALSE' || env.PUBLIC_DISABLE_GROUP_CREATION === undefined}
+				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl"
+					>{$_('Create Group')}</Button
+				>
 			{/if}
 
 			<GroupFiltering bind:filter {getGroups} />

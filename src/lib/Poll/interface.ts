@@ -1,3 +1,5 @@
+import type { GroupUser } from "$lib/User/interfaces";
+
 export interface proposal {
 	title: string;
 	description: string;
@@ -5,10 +7,25 @@ export interface proposal {
 	created_by: number;
 	poll: number;
 	blockchain_id?: number;
+	attachments: { file: string; file_name: string }[];
+}
+
+export interface timeProposal {
+	attachments: null | string;
+	blockchain_id: null | number;
+	created_by: GroupUser
+	description: string | null;
+	end_date: string
+	id: number
+	poll: number
+	score: null | number;
+	start_date: string;
+	title: null | string;
 }
 
 export interface poll {
 	attachments: { file: string }[];
+	allow_fast_forward: boolean;
 	created_by: number;
 	description: string;
 	dynamic: boolean;
@@ -31,12 +48,14 @@ export interface poll {
 	prediction_statement_end_date: string;
 	prediction_bet_end_date: string;
 	vote_end_date: string;
-	blockchain_id:number|null;
+	blockchain_id: number | null;
 	group_name?: string;
 	group_image?: string;
 	joined: boolean;
 	group_joined: boolean;
 	total_comments: number;
+	total_proposals: number;
+	total_predictions: number;
 	pinned: boolean;
 	status: number;
 }
@@ -71,10 +90,10 @@ export type Phase =
 export interface Comment {
 	author_id: number;
 	author_name: string;
-	author_thumbnail: string;
+	author_profile_image: string | null;
 	parent_id?: number;
 	reply_depth: number;
-	message: string;
+	message: string | null;
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
@@ -83,8 +102,8 @@ export interface Comment {
 	//False if comment has been deleted
 	active: boolean;
 	edited: boolean;
-	attachments: { file: string }[];
+	attachments: { file: string | File }[];
 	user_vote: boolean | null;
 }
 
-export interface CommentEdited {}
+export interface CommentEdited { }

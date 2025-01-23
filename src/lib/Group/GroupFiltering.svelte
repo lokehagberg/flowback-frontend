@@ -1,8 +1,7 @@
 <script lang="ts">
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { _ } from 'svelte-i18n';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { GroupFilter } from './interface';
@@ -29,7 +28,7 @@
 </script>
 
 <form
-	class="bg-white dark:bg-darkobject shadow rounded p-6 flex flex-col md:w-[40%] w-[90%] gap-4"
+	class="bg-white dark:bg-darkobject shadow rounded px-4 py-2 flex flex-col md:w-[40%] w-[90%] gap-2"
 	on:submit|preventDefault={handleSearch}
 >
 	<div class="w-full flex items-end">
@@ -41,7 +40,7 @@
 		/>
 
 		<Button
-			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
+			Class={`w-7 h-7 ml-4 flex justify-center items-center ${
 				searched ? 'bg-blue-300' : 'bg-blue-600'
 			}`}
 			type="submit"
@@ -49,13 +48,17 @@
 			<Fa icon={faMagnifyingGlass} />
 		</Button>
 	</div>
-	<div>
-		<select on:input={handleChangeMember} class="dark:bg-darkobject text-gray-300">
+	<div class="flex">
+		<select on:input={handleChangeMember} class="rounded-sm m-1 p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject">
 			<option value="all">{$_('All')}</option>
 			<option value="member">{$_('Member')}</option>
 			<option value="not-member">{$_('Not member')}</option>
 		</select>
 
-		<Button action={resetFilter}>Reset Filter</Button>
+		<div class="rounded-md p-1">
+			<Button Class="!p-1" action={resetFilter} buttonStyle="primary-light"
+			>{$_('Reset Filter')}</Button
+			>
+		</div>
 	</div>
 </form>

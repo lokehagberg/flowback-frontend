@@ -20,8 +20,6 @@
 	let showUI = false,
 		scrolledY = '';
 
-	initializeLocalization();
-
 	const updateUserInfo = async () => {
 		let userNeedsUpdate = false;
 		let groupId = Number($page.params.groupId);
@@ -79,6 +77,14 @@
 
 		if (window.localStorage.getItem('token') === undefined) goto('/login');
 		else if (pathname === '/') goto('/home');
+
+		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime')
+		if (sessionExpiration)
+		
+		if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
+			localStorage.removeItem('token');
+		// 	goto('/login')
+		} 
 	};
 
 	beforeNavigate(() => {
@@ -94,6 +100,9 @@
 			html?.scrollIntoView();
 		}, 200);
 	});
+
+	//Initialize Translation, which should happen before any lifecycle hooks.
+	initializeLocalization();
 
 	onMount(() => {
 		showUI = shouldShowUI();

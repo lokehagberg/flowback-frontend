@@ -1,121 +1,101 @@
+<!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
-	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
-	import type { proposal } from './interface';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { fetchRequest } from '$lib/FetchRequest';
-	import { page } from '$app/stores';
-	import type { groupUser } from '$lib/Group/interface';
-	import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
-	import Modal from '$lib/Generic/Modal.svelte';
-	import TextArea from '$lib/Generic/TextArea.svelte';
+	import type { Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
-	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
-	import SuccessPoppup from '$lib/Generic/SuccessPoppup.svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
+	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	export let proposal: proposal,
 		Class = '',
-		groupUser: groupUser,
-		proposals: proposal[],
-		editable: boolean = false;
+		onChange = (e: Event) => {},
+		isVoting = true,
+		voting: { score: number; proposal: number }[] = [],
+		selectedProposal: proposal | null = null,
+		proposalsToPredictionMarket: proposal[] = [],
+		phase: Phase;
 
 	export const id: number = 0;
-
-	let isHoveredOver = false,
-		newTitle = proposal.title,
-		newDescription = proposal.description,
-		open = false,
-		show = false;
-
-	const deleteProposal = async () => {
-		const { res, json } = await fetchRequest('POST', `group/poll/proposal/${proposal.id}/delete`);
-		if (!res.ok) return;
-		proposals = proposals.filter((proposalInList) => proposalInList.id !== proposal.id);
-		proposals = proposals;
-		show = true;
-	};
-
-	//TODO: Actual Edit
-	const editProposal = async () => {
-		await deleteProposal();
-
-		let newProposal = proposal;
-		newProposal.title = newTitle;
-		newProposal.description = newDescription;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/proposal/create`,
-			newProposal
-		);
-
-		if (!res.ok) return;
-
-		proposals.push({ ...newProposal, title: newTitle, description: newDescription });
-		proposals = proposals;
-		proposal.title = newTitle;
-		proposal.description = newDescription;
-		show = true;
-	};
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 	});
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class={`select-none dark:bg-darkobject hover:shadow-2xl proposal flex justify-between items-center bg-white gap-8 p-4 border border-gray-200 dark:border-gray-500 lg:h-36 xl:h-40 ${Class}`}
-	on:dragenter|preventDefault={() => (isHoveredOver = true)}
-	on:dragleave|preventDefault={() => (isHoveredOver = false)}
-	class:hidden={isHoveredOver}
+<button
+	class={`dark:bg-darkobject bg-white w-full py-1 px-2 transition-all
+	 dark:border-gray-500 ${Class}`}
+	class:!bg-blue-100={selectedProposal === proposal}
+	class:border-l-2={selectedProposal === proposal}
+	class:border-primary={selectedProposal === proposal}
 >
-	<div><Fa icon={faBars} /></div>
-	<div class="h-full w-2/3">
-		<h1 class="text-lg text-left">{proposal.title}</h1>
-		<p class="elipsis text-sm mt-2" id={`proposal-${proposal.id}-description`}>
-			{proposal.description}
-		</p>
-	</div>
-	<input id="amount" class="dark:bg-darkobject" type="number" min={0} />
-	
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	{#if editable}
-		<!-- TODO and also before proposal end date -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div on:click={() => (open = true)} class="cursor-pointer" on:keydown>
-			<Fa icon={faPen} />
-		</div>
-		<div on:click={deleteProposal} class="cursor-pointer" on:keydown>
-			<Fa icon={faX} />
-		</div>
-	{/if}
-	<slot />
-</div>
-
-<Modal bind:open>
-	<span slot="header">{$_('Edit proposal')}</span>
-	<div slot="body">
-		<form
-			on:submit|preventDefault={() => {
-				open = false;
-				editProposal();
-			}}
+	<div class="flex gap-2 items-baseline">
+		{#if phase === 'prediction_statement'}
+			{@const proposalInList = proposalsToPredictionMarket.findIndex(
+				(prop) => prop.id === proposal.id
+			)}
+			{#if proposalInList !== -1}
+				<button
+					on:click={() => {
+						proposalsToPredictionMarket.splice(proposalInList, 1);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquareCheck} color={'black'} class="cursor-pointer" />
+				</button>
+			{:else}
+				<button
+					on:click={() => {
+						proposalsToPredictionMarket.push(proposal);
+						proposalsToPredictionMarket = proposalsToPredictionMarket;
+					}}
+				>
+					<Fa icon={faSquareCheck} color={'white'} class="border border-black cursor-pointer" />
+				</button>
+			{/if}
+		{/if}
+		<!-- Proposal Title -->
+		<span class="text-md text-primary font-semibold align-text-top text-left break-all"
+			>{proposal.title}</span
 		>
-			<TextInput label="Title" bind:value={newTitle} />
-			<TextArea label="Description" bind:value={newDescription} />
-			<Button type="submit">{$_('Submit')}</Button>
-		</form>
 	</div>
-	<div slot="footer" />
-</Modal>
+	<!-- Proposal Description -->
+	<p class="elipsis text-sm text-left my-1 break-all" id={`proposal-${proposal.id}-description`}>
+		{proposal.description}
+	</p>
 
-<SuccessPoppup bind:show message="Successfully edited proposal" />
+	<slot />
+
+	<div class="flex justify-between w-full">
+		<div class="my-auto">
+			<Fa icon={faComment} />
+		</div>
+		<button
+			on:click={() => {
+				selectedProposal = proposal;
+			}}
+			class="hover:underline cursor-pointer"
+		>
+			{$_('See More')}
+		</button>
+	</div>
+</button>
+
+{#if isVoting}
+	<input
+		value={voting.find((vote) => vote.proposal === proposal.id)?.score}
+		id="amount"
+		class="dark:bg-darkobject dark:border-gray-600 dark:hover:brightness-110 border-b-2"
+		type="number"
+		on:change={(e) => onChange(e)}
+		min={0}
+		max={100}
+	/>
+{:else}
+	<!-- Ensures flex design stays intact -->
+	<div />
+{/if}
 
 <style>
 	.elipsis {

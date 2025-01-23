@@ -1,16 +1,13 @@
 import type { GroupUser } from '$lib/User/interfaces';
-
-export interface DelegatePool {
-	delegates: Delegate[];
-	id: number;
-}
+import type { DelegateMinimal, Tag } from '../interface';
 
 export interface Delegate {
+	tags: { id: number; tag_name: string; name: string; active: boolean }[];
 	isInRelation: boolean;
 	active: boolean;
 	group_id: number;
 	group_image: string;
-	profile_image:string;
+	profile_image: string;
 	group_name: string;
 	id: number;
 	pool_id: number;
@@ -29,4 +26,21 @@ export interface VoteHistory {
 	poll_id: number;
 	poll_title: string;
 	vote: null;
+}
+
+export interface DelegatePool {
+	blockchain_id: null | number;
+	delegate_pool_id: number;
+	delegates: { delegate_id: number; group_user_id: number; user_id: number }[];
+	id: number;
+	tags: { id: number; name: string, tag_name?: string; active?: boolean }[];
+}
+
+
+export interface DelegateRelation {
+	blockchain_id: null | number;
+	delegate_pool_id: number;
+	delegates: DelegateMinimal[];
+	id: number;
+	tags: { name: string; id: number }[]
 }

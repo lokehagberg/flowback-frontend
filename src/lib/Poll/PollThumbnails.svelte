@@ -13,9 +13,13 @@
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 	import Pagination from '$lib/Generic/Pagination.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import type { DelegateMinimal } from '$lib/Group/interface';
 
 	export let Class = '',
-		infoToGet: 'group' | 'home' | 'public';
+		infoToGet: 'group' | 'home' | 'public' | 'delegate',
+		delegate: DelegateMinimal = { id: 0, pool_id: 0, profile_image: '', tags: [], username: '' };
 
 	let polls: Poll[] = [],
 		filter: Filter = {
@@ -28,17 +32,22 @@
 		loading = false,
 		isAdmin = false,
 		next = '',
-		prev = '';
+		prev = '',
+		poppup: poppup;
 
 	const getAPI = async () => {
 		let API = '';
+		// console.log(delegate, {}, delegate === {});
 
 		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
+		//@ts-ignore
+		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
 		else if (infoToGet === 'home') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
-		if (filter.order_by) API += `&order_by=${filter.order_by}`;
+		if (filter.order_by) API += `&order_by=pinned,${filter.order_by}`;
+		else API+=`&order_by=pinned`
 
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
@@ -46,7 +55,7 @@
 		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
-			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
+			API += `&status=${filter.finishedSelection === 'finished' ? '-1' : '0'}`;
 
 		// API += '&pinned=false';
 
@@ -64,7 +73,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			status = statusMessageFormatter(res, json);
+			poppup = { message: 'Could not get polls', success: false };
 			return;
 		}
 
@@ -78,14 +87,13 @@
 	onMount(async () => {
 		await getPolls();
 		//TODO: Part of refactoring with svelte stores includes thsi
-		if ($page.params.groupId) isAdmin = await getUserIsOwner($page.params.groupId) || false;
+		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
 </script>
 
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>
-			<StatusMessage bind:status disableSuccess />
 			<PollFiltering
 				tagFiltering={infoToGet === 'group'}
 				handleSearch={async () => {
@@ -122,3 +130,5 @@
 		/>
 	</Loader>
 </div>
+
+<Poppup bind:poppup />

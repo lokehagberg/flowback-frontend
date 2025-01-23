@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import Select from '$lib/Generic/Select.svelte';
-	//@ts-ignore
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
 	import type { Phase, poll } from '../interface';
 	import type { PredictionStatement } from './interfaces';
 	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
@@ -14,22 +13,26 @@
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain/javascript/predictionsBlockchain';
+	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
+	import VotingSlider from '../VotingSlider.svelte';
+	import { env } from '$env/dynamic/public';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
 
-	export let prediction: PredictionStatement, loading: boolean, score: null | number, phase: Phase, poll:poll;
+	export let prediction: PredictionStatement,
+		loading: boolean = false,
+		score: null | number = null,
+		phase: Phase,
+		poll: poll;
 
 	let showPoppup = false,
 		showDetails = false,
 		poppup: poppup;
 
-	onMount(() => {
-		getPredictionBet();
-	});
-
 	const getPredictionBet = async () => {
 		// if (!score) return;
 		loading = true;
-
+		console.log(prediction.id, prediction.title, 'prediction.id');
+		
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
@@ -39,7 +42,7 @@
 		if (!res.ok) showPoppup = true;
 		else {
 			const previousBet = json.results.find(
-				(result: any) => result.created_by.id.toString() === localStorage.getItem('userId')
+				(result: any) => result.created_by.user.id.toString() === localStorage.getItem('userId')
 			);
 
 			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
@@ -47,36 +50,46 @@
 		}
 	};
 
-	const predictionBetCreate = async (score: string) => {
-		if (!score) return;
+	const predictionBetCreate = async (score: string | number) => {
+		// if (!score) return;
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/create`,
 			{
-				score
+				score: `${score}`
 			}
 		);
 		loading = false;
 
-		if (!res.ok) showPoppup = true;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed', success: false };
+			return;
+		}
+
+		poppup = { message: 'Successfully placed bet', success: true, show: true };
 	};
 
-	const predictionBetUpdate = async (score: string) => {
-		if (!score) return;
+	const predictionBetUpdate = async (score: string | number) => {
+		if (score === null) return;
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/prediction/${prediction.id}/bet/update`,
 			{
-				score
+				score: `${score}`
 			}
 		);
 		loading = false;
 
-		if (!res.ok) showPoppup = true;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed', success: false };
+			return;
+		}
+
+		poppup = { message: 'Successfully placed bet', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -89,7 +102,11 @@
 
 		loading = false;
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Betting failed to be deleted', success: false };
+			return;
+		}
+		poppup = { message: 'Successfully placed bet', success: true };
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -100,7 +117,7 @@
 		);
 
 		if (!res.ok) {
-			poppup = { message: 'Something went wrong', success: false };
+			poppup = { message: 'Evaluation failed', success: false };
 			return;
 		}
 
@@ -143,49 +160,55 @@
 
 	//TODO: Fix AI integration
 	const getAIPredictionBets = async () => {
+		console.log("Hiii");
+		
 		const { res, json } = await fetchRequest('POST', 'ai/prediction_bets', {
-			proposals: 'Eat soup',
+			proposals: prediction.segments.map((segment) => segment.proposal_title),
 			predictions: "You'll get fed\n You'll get food poison"
 		});
 	};
 
-	const handleChangeBetScore = async (e: any) => {
-		//@ts-ignore
-		const newScore = e?.target?.value;
-
-		if (!newScore) predictionBetDelete();
+	const handleChangeBetScore = async (newScore: number) => {
+		if (newScore === null) predictionBetDelete();
 		else if (score === null) {
 			predictionBetCreate(newScore);
 		} else predictionBetUpdate(newScore);
 
-		console.log(import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE', poll.blockchain_id, prediction)
-		if (import.meta.env.VITE_BLOCKCHAIN_INTEGRATION === 'TRUE' && poll.blockchain_id && prediction.blockchain_id && score)
-		createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
+		if (
+			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
+			poll.blockchain_id &&
+			prediction.blockchain_id &&
+			score
+		)
+			createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
 
 		score = Number(newScore);
 	};
+
+	onMount(() => {
+		getPredictionBet();
+	});
 </script>
 
-<div class="flex justify-between">
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<span
-		on:click={() => (showDetails = true)}
-		on:keydown
-		class="hover:underline cursor-pointer overflow-hidden"
-	>
-		{prediction.description}</span
-	>
-	{#if phase === 'prediction_bet'}
-		<!-- <Button action={getAIPredictionBets}>Let AI decide</Button> -->
-		<Select
-			labels={['Not selected', '0', '20', '40', '60', '80', '100']}
-			values={[null, 0, 1, 2, 3, 4, 5]}
-			bind:value={score}
-			onInput={handleChangeBetScore}
-		/>
+<div>
+	{#if prediction.description}
+		<span class="hover:underline cursor-pointer overflow-hidden">
+			{elipsis(prediction.description)}</span
+		>
 	{/if}
+	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
+
+	{#if phase === 'prediction_bet'}
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
+			<Button action={getAIPredictionBets}>
+				{$_('Get AI Prediction Bets')}
+			</Button>
+		{/if}
+	{/if}
+
 	{#if phase === 'result' || phase === 'prediction_vote'}
-		<div class="flex">
+		<div class="flex justify-end mb-3">
 			<Button
 				action={() =>
 					prediction.user_prediction_statement_vote === null
@@ -193,9 +216,18 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`${prediction.user_prediction_statement_vote === true && 'brightness-200'}`}
+				Class={`w-12 px-4 py-1 border-2 ${
+					prediction.user_prediction_statement_vote === true
+						? 'bg-green-600 text-white border-green-600'
+						: 'hover:bg-green-100 border-green-600 text-green-800'
+				}`}
 			>
-				<Fa icon={faCheck} />
+				<Fa
+					icon={faCheck}
+					class={`${
+						prediction.user_prediction_statement_vote === true ? 'text-white' : 'text-green-700'
+					}`}
+				/>
 			</Button>
 			<Button
 				action={() =>
@@ -204,9 +236,18 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`${prediction.user_prediction_statement_vote === false && 'brightness-200'}`}
+				Class={`w-12 px-4 py-1 ml-2 border-2 ${
+					prediction.user_prediction_statement_vote === false
+						? 'bg-red-700 text-white border-red-700'
+						: 'hover:bg-red-100 border-red-500 text-red-600'
+				}`}
 			>
-				<Fa icon={faX} />
+				<Fa
+					icon={faX}
+					class={`${
+						prediction.user_prediction_statement_vote === false ? 'text-white' : 'text-red-600'
+					}`}
+				/>
 			</Button>
 		</div>
 	{/if}
@@ -220,13 +261,11 @@
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>
 			{/each}
 		</ul>
-		<!-- {@debug prediction} -->
-		<div>Deadline: {formatDate(prediction.end_date.toString())}</div>
+		<div>{$_('Deadline')}: {formatDate(prediction.end_date.toString())}</div>
 		{#if prediction.combined_bet}
-			<div>Aggregated Bet: {prediction.combined_bet}</div>
+			<div>{$_('Aggregated Bet')}: {prediction.combined_bet}</div>
 		{/if}
 	</div>
 </Modal>
 
-<!-- <SuccessPoppup bind:show={showPoppup} message={'Something went wrong'} /> -->
 <Poppup bind:poppup />

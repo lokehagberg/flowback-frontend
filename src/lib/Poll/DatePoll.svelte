@@ -2,13 +2,14 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { faCheck, faCross, faX } from '@fortawesome/free-solid-svg-icons';
 	import { DateInput } from 'date-picker-svelte';
-	import Fa from 'svelte-fa';
 	import { page } from '$app/stores';
-	import { deepCopy } from 'ethers/lib/utils';
-	import Proposal from './Proposal.svelte';
+	import Proposal from './ProposalLegacy.svelte';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
+	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
+	import Structure from './NewDesign/Structure.svelte';
+	import Comments from '$lib/Comments/Comments.svelte';
 
 	let open = false,
 		date: Date,
@@ -31,7 +32,7 @@
 	};
 
 	let getProposals = async () => {
-		const { res, json } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/proposals`);
+		const { res, json } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/proposals?limit=10000`);
 
 		proposals = json.results;
 	};
@@ -68,6 +69,8 @@
 	});
 </script>
 
+<!-- 
+
 <div class="flex">
 	{#each proposals as proposal}
 		{@const hasVoted = votes.find((vote) => vote === proposal.id)}
@@ -95,23 +98,33 @@
 						<Fa icon={faX} />
 					{/if}
 				</Button>
-				<!-- <Button
+				 <Button
 					Class="flex justify-center w-[90%] rounded-none"
 					buttonStyle="secondary"
 					action={() => updateProposalVote(proposal.id, false)}><Fa icon={faX} /></Button
-				> -->
+				> 
 			</div>
 		</div>
 	{/each}
-</div>
+</div> -->
 
-<Button action={() => (open = true)}>New Proposal</Button>
+<!-- <Button action={() => (open = true)}>{$_('New Proposal')}</Button> -->
+
+<Structure>
+	<div slot="left">
+		<div class="overflow-auto">
+			<WeekView x={7} y={24} />
+		</div>
+	</div>
+
+	<div slot="right"><Comments api="poll" /></div>
+</Structure>
 
 <Modal bind:open onSubmit={handlePostProposal}>
 	<div slot="body" class="min-w-[400px] min-h-[300px]">
 		<DateInput bind:value={date} />
 	</div>
 	<div slot="footer">
-		<Button type="submit">Submit</Button>
+		<Button type="submit">{$_('Submit')}</Button>
 	</div>
 </Modal>

@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import Role from './Role.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json'
+	import { _ } from 'svelte-i18n';
 	
 	let roles: Permission[] = [];
 
@@ -23,12 +24,12 @@
 
 <table class="w-full">
     <tr class="">
-        <th>Name</th>
-        <th>Invite</th>
-        <th>Poll creation</th>
-        <th>Voting</th>
-        <th>Kick</th>
-        <th>Ban</th>
+        <th>{$_('Name')}</th>
+        <th>{$_('Invite')}</th>
+        <th>{$_('Poll creation')}</th>
+        <th>{$_('Voting')}</th>
+        <th>{$_('Kick')}</th>
+        <th>{$_('Ban')}</th>
     </tr>
 	{#each roles as role}
 		<tr class="font-light">

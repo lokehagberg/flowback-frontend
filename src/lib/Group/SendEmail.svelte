@@ -7,6 +7,7 @@
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import {env} from "$env/dynamic/public";
 
 	let title: string,
 		message: string,
@@ -38,7 +39,7 @@
 			<TextArea required label="Message" bind:value={message} />
 			<StatusMessage bind:status />
 			<div class="font-bold">
-				Warning: This will send a mail to {import.meta.env.VITE_ONE_GROUP_FLOWBACK === 'TRUE'
+				Warning: This will send a mail to {env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
 					? 'everyone'
 					: 'everyone in the group'}
 			</div>

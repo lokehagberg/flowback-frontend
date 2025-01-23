@@ -160,8 +160,10 @@
 
 	//TODO: Fix AI integration
 	const getAIPredictionBets = async () => {
+		console.log("Hiii");
+		
 		const { res, json } = await fetchRequest('POST', 'ai/prediction_bets', {
-			proposals: 'Eat soup',
+			proposals: prediction.segments.map((segment) => segment.proposal_title),
 			predictions: "You'll get fed\n You'll get food poison"
 		});
 	};
@@ -198,6 +200,11 @@
 
 	{#if phase === 'prediction_bet'}
 		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
+			<Button action={getAIPredictionBets}>
+				{$_('Get AI Prediction Bets')}
+			</Button>
+		{/if}
 	{/if}
 
 	{#if phase === 'result' || phase === 'prediction_vote'}

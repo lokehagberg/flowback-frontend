@@ -15,18 +15,16 @@
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null,
-		Class = '';
+		Class = '',
+		_comments: CommentType[] = [];
 
-	let _comments: CommentType[] = [],
-		poppup: poppup,
+	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
 		sortBy: null | string = null,
 		searchString: string = '';
 
 	const setUpComments = async () => {
-		console.log("hiii");
-		
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;

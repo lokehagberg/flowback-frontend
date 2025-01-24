@@ -31,8 +31,6 @@
 	const getPredictionBet = async () => {
 		// if (!score) return;
 		loading = true;
-		console.log(prediction.id, prediction.title, 'prediction.id');
-		
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
@@ -160,11 +158,9 @@
 
 	//TODO: Fix AI integration
 	const getAIPredictionBets = async () => {
-		console.log("Hiii");
-		
 		const { res, json } = await fetchRequest('POST', 'ai/prediction_bets', {
 			proposals: prediction.segments.map((segment) => segment.proposal_title),
-			predictions: "You'll get fed\n You'll get food poison"
+			predictions: prediction.title
 		});
 	};
 

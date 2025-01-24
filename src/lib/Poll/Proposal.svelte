@@ -1,11 +1,12 @@
 <!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
-	import type { Phase, proposal } from './interface';
+	import type { Comment, Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let proposal: proposal,
 		Class = '',
@@ -14,9 +15,15 @@
 		voting: { score: number; proposal: number }[] = [],
 		selectedProposal: proposal | null = null,
 		proposalsToPredictionMarket: proposal[] = [],
-		phase: Phase;
+		phase: Phase,
+		comments: Comment[] = [];
 
 	export const id: number = 0;
+
+	const filterComments = () => {
+		//@ts-ignore
+		comments = comments.filter((comment) => comment.message.includes(`#${proposal.description}`));
+	}
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
@@ -68,9 +75,9 @@
 	<slot />
 
 	<div class="flex justify-between w-full">
-		<div class="my-auto">
+		<Button action={filterComments} Class="my-auto">
 			<Fa icon={faComment} />
-		</div>
+		</Button>
 		<button
 			on:click={() => {
 				selectedProposal = proposal;
@@ -104,6 +111,7 @@
 		/* // Addition lines for 2 line or multiline ellipsis */
 		display: -webkit-box !important;
 		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		white-space: normal;
 	}

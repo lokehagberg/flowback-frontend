@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import type { Phase, proposal } from '$lib/Poll/interface';
+	import type { Comment, Phase, proposal } from '$lib/Poll/interface';
 	import Proposal from './Proposal.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
@@ -15,7 +15,8 @@
 		selectedProposal: proposal | null = null,
 		phase: Phase,
 		proposalsToPredictionMarket: proposal[] = [],
-		Class = '';
+		Class = '',
+		comments: Comment[] = [];
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
@@ -153,6 +154,7 @@
 							bind:proposalsToPredictionMarket
 							bind:selectedProposal
 							bind:phase
+							bind:comments
 						>
 							{#if phase === 'delegate_vote' || phase === 'vote'}
 								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}

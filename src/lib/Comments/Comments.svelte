@@ -76,13 +76,11 @@
 
 	<div class="flex flex-col gap-4 mt-6">
 		
-		{#key _comments}
 		{#each _comments as comment}
-		<!-- {#key comment} -->
+		{#key comment}
 		<Comment {comment} comments={_comments} bind:api bind:proposals />
-		<!-- {/key} -->
-		{/each}
 		{/key}
+		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>
 		{/if}

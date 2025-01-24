@@ -6,8 +6,11 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
+	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-	export let workGroup: WorkGroup;
+	export let workGroup: WorkGroup,
+	handleRemoveGroup: (id: number) => void;
 
 	let poppup: poppup,
 		workGroupUserList: WorkGroupUser[] = [];
@@ -68,6 +71,20 @@
 		);
 	};
 
+	const deleteWorkGroup = async () => {
+		const {res, json} = await fetchRequest('POST', `group/workgroup/${workGroup.id}/delete`);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to delete workgroup', success: false };
+			return;
+		}
+		else {
+			poppup = { message: 'Workgroup deleted', success: true };
+		}
+
+		handleRemoveGroup(workGroup.id);
+	}
+
 	onMount(() => {
 		getUserList();
 	});
@@ -87,6 +104,7 @@
 				>{$_("Ask to join")}</Button
 			>
 		{/if}
+		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash}/></Button>
 	{/key}
 </div>
 

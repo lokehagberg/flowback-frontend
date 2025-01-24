@@ -20,4 +20,4 @@ function createCommentStore() {
     };
 }
 
-export const comments = createCommentStore();
+export const commentsStore = createCommentStore();

@@ -22,8 +22,8 @@
 
 	const filterComments = () => {
 		//@ts-ignore
-		comments = comments.filter((comment) => comment.message.includes(`#${proposal.description}`));
-	}
+		comments = comments.filter((comment) => !comment.message.includes(`#${proposal.title.replaceAll(" ", "-")}`));
+	};
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);

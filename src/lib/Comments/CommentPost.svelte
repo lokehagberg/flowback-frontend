@@ -129,6 +129,7 @@
 		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
 		class:!block={recentlyTappedButton === '#'}
 	>
+	{#if proposals}
 		{#each proposals as proposal}
 			<button
 				class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
@@ -141,6 +142,7 @@
 				{proposal.title}
 			</button>
 		{/each}
+		{/if}
 	</div>
 	<div class="flex">
 		<div class="flex flex-grow">

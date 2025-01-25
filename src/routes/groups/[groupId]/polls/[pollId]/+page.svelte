@@ -296,7 +296,7 @@
 							<PredictionStatements selectedProposal={proposals[0]} bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="right"><Results bind:proposals {pollType} /></div>
+					<div slot="right"><Results  {pollType} /></div>
 					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
 				</Structure>
 			{/if}

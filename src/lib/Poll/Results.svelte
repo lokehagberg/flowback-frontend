@@ -21,9 +21,11 @@
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=1000&order_by=score_desc`
 		);
+		console.log('WHAAAATTT', json, pollType);
 
 		if (pollType === 4) proposals = json.results;
 		else if (pollType === 3)
+			//Only one proposal wins in date poll
 			proposals = [
 				{
 					id: json.results[0].id,
@@ -43,6 +45,7 @@
 
 <div class="w-full">
 	<span class="text-primary font-semibold text-xl text-center block">{$_('Results')}</span>
+
 	{#if pollType === 4}
 		<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
 		{#if proposals[0]?.score > 0}

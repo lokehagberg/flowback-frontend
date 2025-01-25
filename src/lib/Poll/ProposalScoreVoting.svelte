@@ -35,10 +35,14 @@
 	});
 
 	const getProposals = async () => {
+		console.log("Hiiiiiii");
+		
 		const { json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
+		console.log(json.results, 'JSON', "I'MMM HEEERERERE");
+		
 
 		proposals = json.results;
 	};

@@ -64,10 +64,10 @@
 			<li
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
 			>
-			{@debug delegatePool}
 				<button
 					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
-					on:click={() => goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
+					on:click={() =>
+						goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
 				>
 					{vote.poll_title}</button
 				>

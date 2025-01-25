@@ -31,7 +31,7 @@ export interface VoteHistory {
 export interface DelegatePool {
 	blockchain_id: null | number;
 	delegate_pool_id: number;
-	delegates: { delegate_id: number; group_user_id: number; user_id: number }[];
+	delegates: { delegate_id: number; group_user_id: number; user_id: number, group_user:GroupUser }[];
 	id: number;
 	tags: { id: number; name: string, tag_name?: string; active?: boolean }[];
 }

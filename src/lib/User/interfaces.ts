@@ -22,5 +22,6 @@ export interface GroupUser {
 	profile_image: null;
 	user_id: number;
 	username: string;
-	user: User
+	user: User;
+	group_id: number;
 }

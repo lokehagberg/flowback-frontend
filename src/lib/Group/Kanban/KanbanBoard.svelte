@@ -3,7 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
-	import type { GroupUser, kanban } from '../interface';
+	import type { GroupUser } from '../interface';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -15,6 +15,7 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
+	import type { kanban } from './Kanban';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -135,7 +136,7 @@
 					<ul class="flex flex-col gap-2">
 						{#each kanbanEntries as kanban}
 							{#if kanban.lane === i}
-								<KanbanEntry bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
+								<KanbanEntry bind:workGroups bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>

@@ -1,3 +1,5 @@
+import type { WorkGroup } from "../WorkingGroups/interface";
+
 export interface kanban {
 	assignee: { id: number; profile_image: string; username: string };
 	group: {
@@ -9,7 +11,7 @@ export interface kanban {
 	description: string | null;
 	id: number;
 	lane: number;
-	work_group?:{name:string; id:number};
+	work_group?: { name: string; id: number };
 	title: string;
 	origin_id: number;
 	origin_type: 'group' | 'user';
@@ -27,7 +29,7 @@ export interface KanbanEntry {
 	origin_type: string;
 	tag: number;
 	title: string;
-    group_name:string
+	group_name: string
 }
 
 export interface kanbanEdited {
@@ -37,5 +39,6 @@ export interface kanbanEdited {
 	assignee: number | null;
 	priority?: number | undefined | null;
 	end_date?: Date | null
-	images?: File[]
+	images?: File[],
+	work_group?: { name: string; id: number } | null
 }

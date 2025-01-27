@@ -28,6 +28,8 @@
 		commentSubscription:any;
 
 	const setUpComments = async () => {
+		console.log(api, "PIIII");
+		
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
@@ -36,7 +38,7 @@
 		// console.log(commentsStore, "STORE");
 		
 	};
-
+	
 	const readMore = async () => {
 		offset += pollCommentsLimit;
 		const { comments, next } = await getComments(getId(), api, offset, sortBy);
@@ -78,7 +80,7 @@
 		
 		{#each _comments as comment}
 		{#key comment}
-		<Comment {comment} comments={_comments} bind:api bind:proposals />
+		<Comment {comment} comments={_comments} {api} bind:proposals />
 		{/key}
 		{/each}
 		{#if showReadMore}

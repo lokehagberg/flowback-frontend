@@ -111,13 +111,13 @@
 					{$_('This poll will start at')}
 					{formatDate(poll.start_date)}
 				</div>
-				<div class="bg-white p-6 mt-6"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+				<div class="bg-white p-6 mt-6"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
-					<div slot="right" class="!p-0"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="right" class="!p-0"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 
 				<!-- PHASE 2: PROPOSAL CREATION -->
@@ -163,7 +163,7 @@
 							<ProposalSubmition bind:proposals {poll} bind:displayForm />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 
 				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
@@ -203,7 +203,7 @@
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 
 				<!-- PHASE 4: PREDICTION BETTING -->
@@ -231,7 +231,7 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 
 				<!-- PHASE 5: DELEGATE VOTING -->
@@ -259,7 +259,7 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
 			{:else if phase === 'vote'}
@@ -286,7 +286,7 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
@@ -297,7 +297,7 @@
 						{/if}
 					</div>
 					<div slot="right"><Results  {pollType} /></div>
-					<div slot="bottom"><Comments bind:_comments={comments} bind:proposals api="poll" /></div>
+					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
 				</Structure>
 			{/if}
 		{:else if pollType === 3}

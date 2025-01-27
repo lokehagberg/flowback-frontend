@@ -93,7 +93,7 @@
 			_api = `user/schedule?limit=1000`;
 		}
 
-		console.log("hei");
+		console.log("hei", _api);
 		
 
 		const { json, res } = await fetchRequest('GET', _api);
@@ -237,6 +237,8 @@
 		else workGroupFilter.push(workGroup.id);
 
 		workGroupFilter = workGroupFilter;
+		console.log(workGroupFilter);
+		
 		setUpScheduledPolls();
 	};
 

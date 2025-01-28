@@ -9,7 +9,8 @@
 		type: buttontypes = 'button',
 		disabled = false,
 		label: string = '',
-		href = '';
+		href = '',
+		hoverEffect = true
 
 	//If all you send in is ref without noClick, the button will automatically send one to that link if pressed.
 	onMount(() => {
@@ -42,12 +43,14 @@
 	}}
 	class={`text-center ${
 		Class.includes('bg-') ? '' : 'bg-primary'
-	} ${Class} filter hover:brightness-[90%] inline text-white rounded-md cursor-pointer p-2 active:brightness-[92%] transition-all duration-50 
+	} ${Class} filter inline text-white rounded-md cursor-pointer p-2 transition-all duration-50 
 	${buttonStyle === 'primary-light' && ' bg-white dark:bg-darkobject primary-light-inner-shadow'}
 	${
 		buttonStyle === 'warning-light' &&
 		' bg-white dark:bg-darkobject dark:text-darkmodeText !text-red-400 border-[1px] border-red-400'
 	}`}
+	class:hover:brightness-[90%]={hoverEffect}
+	class:active:brightness-[92%]={hoverEffect}
 	class:!border-gray-300={disabled}
 	class:!text-gray-300={disabled}
 	class:!bg-secondary={buttonStyle == 'secondary'}

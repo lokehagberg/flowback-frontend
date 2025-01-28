@@ -50,16 +50,17 @@
 			</Button>
 
 			<Button
-				Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+				hoverEffect={false}
+				Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject "
 			>
 				<NotificationOptions
-					hoverEffect={true}
+					hoverEffect={false}
 					type="group"
 					api={`group/${$page.params.groupId}`}
 					id={Number($page.params.groupId)}
 					categories={groupNotificationCategories}
 					labels={groupNotificationCategories}
-					Class="text-gray-800 dark:text-gray-200 w-full h-full !left-[-90px]"
+					Class="text-gray-800 dark:text-gray-200"
 					ClassOpen="-left-[90px]"
 				/>
 			</Button>
@@ -93,7 +94,7 @@
 				<div class="ml-2">
 					{#if typeof window !== 'undefined' && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 						{#if group.public}
-							<Fa icon={faGlobeEurope} size={"xs"} />
+							<Fa icon={faGlobeEurope} size={'xs'} />
 						{:else}
 							<Fa icon={faLock} />
 						{/if}

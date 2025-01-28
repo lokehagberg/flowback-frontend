@@ -7,6 +7,8 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import Fa from 'svelte-fa';
+	import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
@@ -125,19 +127,29 @@
 	$: if (group) {
 		initialSetup();
 	}
-	
 </script>
 
 <div>
 	{#each tags as tag, index}
 		<div class="section">
 			<button
-				class=" flex text-primary justify-between w-full section-title"
+				class="transition-all flex text-primary justify-between w-full section-title"
 				on:click={() => toggleSection(index)}
 			>
 				<span class="break-all text-left">{tag.name}</span>
-				<span>{expandedSection === index ? '▲' : '▼'}</span>
+
+				<!-- Always use chevron-down and rotate when expanded -->
+				<div class="chevron {expandedSection === index ? 'expanded' : ''}">
+					<Fa icon={faChevronDown} />
+				</div>
 			</button>
+
+			<!-- {#if expandedSection === index}
+				 flip={expandedSection !== index}
+					<Fa icon={faChevronUp} />
+				{:else}
+					<Fa icon={faChevronDown} />
+				{/if} -->
 			{#if expandedSection === index}
 				<!-- {#if section.voters.length > 0} -->
 				<div class="voter-list">
@@ -200,5 +212,13 @@
 	}
 	.voter-item input[type='radio'] {
 		margin-left: 0.5rem;
+	}
+
+	.chevron {
+		transition: transform 0.4s ease;
+	}
+
+	.expanded {
+		transform: rotate(180deg);
 	}
 </style>

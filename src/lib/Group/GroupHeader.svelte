@@ -10,6 +10,8 @@
 	import Fa from 'svelte-fa';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import Description from '$lib/Poll/Description.svelte';
+	import Button from '$lib/Generic/Button.svelte';
+	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -26,17 +28,44 @@
 </script>
 
 <div class="relative">
+	<div class="relative">
+		<img
+			class="cover w-full"
+			src={group.cover_image
+				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+						group.cover_image
+				  }`
+				: DefaultBanner}
+			alt="cover"
+		/>
+
+		<Button
+			action={() => history.back()}
+			Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		>
+			<div class="text-gray-800 dark:text-gray-200">
+				<Fa icon={faArrowLeft} />
+			</div>
+		</Button>
+
+		<Button
+			Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		>
+			<NotificationOptions
+				hoverEffect={true}
+				type="group"
+				api={`group/${$page.params.groupId}`}
+				id={Number($page.params.groupId)}
+				categories={groupNotificationCategories}
+				labels={groupNotificationCategories}
+				Class="text-gray-800 dark:text-gray-200 w-full h-full !left-[-90px]"
+				ClassOpen="-left-[90px]"
+			/>
+		</Button>
+	</div>
+
 	<img
-		class="cover w-full"
-		src={group.cover_image
-			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-					group.cover_image
-			  }`
-			: DefaultBanner}
-		alt="cover"
-	/>
-	<img
-		class="h-36 w-36 absolute -bottom-8 left-[15%] md:left-[25%] profile rounded-full"
+		class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
 		src={group.image
 			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
 			: DefaultBanner}
@@ -47,15 +76,6 @@
 <div class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 px-4 pb-4">
 	<div class=" flex justify-evenly align-middle">
 		<div class="flex items-center relative" id="notifications-list-group">
-			<NotificationOptions
-				type="group"
-				api={`group/${$page.params.groupId}`}
-				id={Number($page.params.groupId)}
-				categories={groupNotificationCategories}
-				labels={groupNotificationCategories}
-				Class="mt-auto"
-			/>
-
 			<button
 				class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 				on:click={() => (selectedPage = 'flow')}
@@ -72,7 +92,7 @@
 				{$_('members')}
 			</button>
 			<div class="ml-3">
-				{#if typeof window !== 'undefined'}
+				{#if typeof window !== 'undefined' && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					{#if group.public}
 						<Fa icon={faGlobeEurope} />
 					{:else}
@@ -80,6 +100,8 @@
 					{/if}
 				{/if}
 			</div>
+
+
 		</div>
 	</div>
 	{#if group.description.length > 0}

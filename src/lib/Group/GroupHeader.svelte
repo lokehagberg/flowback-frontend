@@ -51,7 +51,7 @@
 
 			<Button
 				hoverEffect={false}
-				Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject "
+				Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject"
 			>
 				<NotificationOptions
 					hoverEffect={false}

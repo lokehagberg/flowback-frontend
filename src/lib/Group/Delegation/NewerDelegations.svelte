@@ -215,7 +215,7 @@
 	}
 
 	.chevron {
-		transition: transform 0.4s ease;
+		transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
 	}
 
 	.expanded {

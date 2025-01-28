@@ -78,22 +78,22 @@
 		<div class="">
 			<div class="flex align-baseline items-baseline relative" id="notifications-list-group">
 				<button
-					class="text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+					class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 					on:click={() => (selectedPage = 'flow')}
 				>
 					{group.name}
 				</button>
 				<button
-					class="text-md ml-6 hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+					class="text-sm ml-6 hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 					on:click={() => (selectedPage = 'members')}
 				>
 					{memberCount}
 					{$_('members')}
 				</button>
-				<div class="ml-3">
+				<div class="ml-2">
 					{#if typeof window !== 'undefined' && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 						{#if group.public}
-							<Fa icon={faGlobeEurope} />
+							<Fa icon={faGlobeEurope} size={"xs"} />
 						{:else}
 							<Fa icon={faLock} />
 						{/if}
@@ -102,7 +102,7 @@
 			</div>
 		</div>
 		{#if group.description.length > 0}
-			<div class="grid-area-description break-all">
+			<div class="text-xs mt-2 pb-4 grid-area-description break-all">
 				<Description limit={400} description={group.description} />
 			</div>
 		{/if}

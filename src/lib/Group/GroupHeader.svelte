@@ -27,88 +27,86 @@
 	];
 </script>
 
-<div class="relative">
+<div class="bg-white">
 	<div class="relative">
-		<img
-			class="cover w-full"
-			src={group.cover_image
-				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-						group.cover_image
-				  }`
-				: DefaultBanner}
-			alt="cover"
-		/>
-
-		<Button
-			action={() => history.back()}
-			Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
-		>
-			<div class="text-gray-800 dark:text-gray-200">
-				<Fa icon={faArrowLeft} />
-			</div>
-		</Button>
-
-		<Button
-			Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
-		>
-			<NotificationOptions
-				hoverEffect={true}
-				type="group"
-				api={`group/${$page.params.groupId}`}
-				id={Number($page.params.groupId)}
-				categories={groupNotificationCategories}
-				labels={groupNotificationCategories}
-				Class="text-gray-800 dark:text-gray-200 w-full h-full !left-[-90px]"
-				ClassOpen="-left-[90px]"
+		<div class="relative">
+			<img
+				class="cover w-full"
+				src={group.cover_image
+					? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+							group.cover_image
+					  }`
+					: DefaultBanner}
+				alt="cover"
 			/>
-		</Button>
+
+			<Button
+				action={() => history.back()}
+				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+			>
+				<div class="text-gray-800 dark:text-gray-200">
+					<Fa icon={faArrowLeft} />
+				</div>
+			</Button>
+
+			<Button
+				Class="absolute right-0 top-0 p-3 m-4 transition-all  bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+			>
+				<NotificationOptions
+					hoverEffect={true}
+					type="group"
+					api={`group/${$page.params.groupId}`}
+					id={Number($page.params.groupId)}
+					categories={groupNotificationCategories}
+					labels={groupNotificationCategories}
+					Class="text-gray-800 dark:text-gray-200 w-full h-full !left-[-90px]"
+					ClassOpen="-left-[90px]"
+				/>
+			</Button>
+		</div>
+
+		<img
+			class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
+			src={group.image
+				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
+				: DefaultBanner}
+			alt="profile"
+		/>
 	</div>
 
-	<img
-		class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
-		src={group.image
-			? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
-			: DefaultBanner}
-		alt="profile"
-	/>
-</div>
-<!-- TODO: Fix layout design -->
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText pt-12 px-4 pb-4">
-	<div class=" flex justify-evenly align-middle">
-		<div class="flex items-center relative" id="notifications-list-group">
-			<button
-				class="ml-2 text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
-				on:click={() => (selectedPage = 'flow')}
-			>
-				{group.name}
-			</button>
-		</div>
-		<div class="flex items-center">
-			<button
-				class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
-				on:click={() => (selectedPage = 'members')}
-			>
-				{memberCount}
-				{$_('members')}
-			</button>
-			<div class="ml-3">
-				{#if typeof window !== 'undefined' && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					{#if group.public}
-						<Fa icon={faGlobeEurope} />
-					{:else}
-						<Fa icon={faLock} />
+	<div class="dark:bg-darkobject dark:text-darkmodeText w-[55%] mx-auto">
+		<div class="">
+			<div class="flex align-baseline items-baseline relative" id="notifications-list-group">
+				<button
+					class="text-3xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+					on:click={() => (selectedPage = 'flow')}
+				>
+					{group.name}
+				</button>
+				<button
+					class="text-md ml-6 hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
+					on:click={() => (selectedPage = 'members')}
+				>
+					{memberCount}
+					{$_('members')}
+				</button>
+				<div class="ml-3">
+					{#if typeof window !== 'undefined' && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+						{#if group.public}
+							<Fa icon={faGlobeEurope} />
+						{:else}
+							<Fa icon={faLock} />
+						{/if}
 					{/if}
-				{/if}
+				</div>
 			</div>
-
-
 		</div>
+		{#if group.description.length > 0}
+			<div class="grid-area-description break-all">
+				<Description limit={400} description={group.description} />
+			</div>
+		{/if}
 	</div>
-	{#if group.description.length > 0}
-		<div class="mb-2 mt-6 mx-auto w-[50%] grid-area-description break-all">
-			<Description limit={400} description={group.description} />
-		</div>
-	{/if}
 </div>
 
 <style>

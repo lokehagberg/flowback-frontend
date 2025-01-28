@@ -102,7 +102,7 @@
 	{#if loading}
 		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
-		<GroupHeader bind:selectedPage {group} {memberCount} />
+			<GroupHeader bind:selectedPage {group} {memberCount} />
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<main
 					class={`w-full sm:w-[400px] md:w-[500px] lg:w-[760px] xl:w-[1000px] 

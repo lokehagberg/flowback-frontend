@@ -41,7 +41,7 @@
 		on:blur={() => (hovering = false)}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative ${Class}`}
+		class={`relative transition-all ${Class}`}
 		id={href}
 		{tabindex}
 	>

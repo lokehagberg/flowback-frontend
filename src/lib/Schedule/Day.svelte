@@ -60,8 +60,10 @@
 			{new Date(year, month, getDay(x, y)).getDate()}
 		</div>
 		{#each events as event}
-			{#if new Date(event.start_date) <= getDate(year, month, x + 1, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
-				<div class="break-all bg-secondary w-full text-white text-sm mb-1">{elipsis(event.title, 15)}</div>
+			{#if new Date(event.start_date) <= getDate(year, month, x, y) && new Date(event.end_date) >= getDate(year, month, x, y)}
+				<div class="break-all bg-secondary w-full text-white text-sm mb-1">
+					{elipsis(event.title, 15)}
+				</div>
 			{/if}
 		{/each}
 	</div>
@@ -75,7 +77,7 @@
 	.today {
 		box-shadow: inset 0 0 4px 1px var(--secondary) !important;
 	}
-	
+
 	.today.selected {
 		box-shadow: inset 0 0 10px 1px var(--secondary) !important;
 	}

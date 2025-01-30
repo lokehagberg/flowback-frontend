@@ -317,11 +317,11 @@
 			{/each}
 		</div>
 
-		{#each workGroups as group}
+		<!-- {#each workGroups as group}
 			<button on:click={() => onFilterWorkGroup(group)} class="mt-2 break-all">
 				{group.name}
 			</button>
-		{/each}
+		{/each} -->
 	</div>
 
 	<div class="w-full">

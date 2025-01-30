@@ -75,7 +75,7 @@
 		/>
 	</div>
 
-	<div class="dark:bg-darkobject dark:text-darkmodeText w-[55%] mx-auto">
+	<div class="dark:bg-darkobject dark:text-darkmodeText ml-[40%] w-[40%] md:ml-[30%] md:w-[40%]">
 		<div class="">
 			<div class="flex align-baseline items-baseline relative" id="notifications-list-group">
 				<button

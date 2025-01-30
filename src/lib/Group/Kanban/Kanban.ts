@@ -18,7 +18,7 @@ export interface kanban {
 	group_name: string;
 	priority?: undefined | number | null;
 	end_date?: null | string | Date;
-	attachments: File[];
+	attachments: {file:string; file_name:string}[];
 }
 
 export interface KanbanEntry {
@@ -40,6 +40,6 @@ export interface kanbanEdited {
 	assignee: number | null;
 	priority?: number | undefined | null;
 	end_date?: Date | null
-	images?: File[],
+	images?: {file:string; file_name:string}[],
 	work_group?: { name: string; id: number } | null
 }

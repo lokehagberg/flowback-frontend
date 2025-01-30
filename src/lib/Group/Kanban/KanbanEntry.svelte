@@ -24,6 +24,7 @@
 	import type { kanbanEdited, kanban } from './Kanban';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { WorkGroup } from '../WorkingGroups/interface';
+	import { env } from '$env/dynamic/public';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -346,7 +347,7 @@
 					</div>
 					<div class="text-left">
 						{$_('Attachments')}
-						<FileUploads bind:images={kanbanEdited.images} />
+						<!-- <FileUploads bind:images={kanbanEdited.images} /> -->
 					</div>
 					{#if type === 'group'}
 						<div class="text-left">
@@ -397,12 +398,11 @@
 					</div>
 				</div>
 				<div class="text-left">
-					{@debug kanbanEdited}
 					{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 						{$_('Attachments:')}
 						{#each kanbanEdited.images as file}
 							<li>
-								<span>{file.name}</span>
+								<img src={`${env.PUBLIC_API_URL}/media/${file.file}`} alt={file.file_name} class="w-10 h-10" />
 							</li>
 						{/each}
 					{:else}

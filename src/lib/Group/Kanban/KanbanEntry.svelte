@@ -300,7 +300,7 @@
 					label="Title"
 					inputClass="border-none"
 				/>
-				<TextArea bind:value={kanbanEdited.description} label="Description" rows={5} />
+				<TextArea bind:value={kanbanEdited.description}  label="Description" rows={5} Class="overflow-scroll"/>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						{$_('Assignee')}
@@ -354,7 +354,7 @@
 					{/if}
 				</div>
 			{:else}
-				<div class="max-h-[40vh] text-left" id={`kanban-${kanban.id}-description`}>
+				<div class="max-h-[40vh] text-left overflow-scroll" id={`kanban-${kanban.id}-description`}>
 					{kanban?.description}
 				</div>
 				<div class="mt-6 text-left">

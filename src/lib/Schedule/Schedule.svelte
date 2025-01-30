@@ -93,8 +93,7 @@
 			_api = `user/schedule?limit=1000`;
 		}
 
-		console.log("hei", _api);
-		
+		console.log('hei', _api);
 
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
@@ -238,7 +237,7 @@
 
 		workGroupFilter = workGroupFilter;
 		console.log(workGroupFilter);
-		
+
 		setUpScheduledPolls();
 	};
 
@@ -387,7 +386,7 @@
 		<div class="flex flex-col">
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
-			<span> {description} </span>
+			<span> {description || ""} </span>
 			{#if workGroup}
 				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}

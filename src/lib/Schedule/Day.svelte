@@ -67,13 +67,13 @@
 	}}
 >
 	<div class="w-full flex flex-col items-center">
-		<div
-			class={`px-1 rounded-full flex justify-center
-			${isToday() ? 'bg-secondary text-white w-[25%]' : ''}`}
-		>
-			<div>{new Date(year, month, getDay(x, y)).getDate()}</div>
-		</div>
 		{#key events || month || year || window.innerHeight}
+			<div
+				class={`px-1 rounded-full flex justify-center
+			${isToday() ? 'bg-secondary text-white w-[25%]' : ''}`}
+			>
+				<div>{new Date(year, month, getDay(x, y)).getDate()}</div>
+			</div>
 			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
 				{#if (1000 * i) / window.innerHeight < 3}
 					<div class="break-all bg-secondary w-full text-white text-sm mb-1 text-center">

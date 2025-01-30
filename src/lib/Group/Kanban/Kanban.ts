@@ -18,6 +18,7 @@ export interface kanban {
 	group_name: string;
 	priority?: undefined | number | null;
 	end_date?: null | string | Date;
+	attachments: File[];
 }
 
 export interface KanbanEntry {

@@ -56,7 +56,8 @@
 			assignee: kanban.assignee?.id,
 			priority: kanban.priority,
 			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
-			work_group: kanban.work_group || null
+			work_group: kanban.work_group || null,
+			images: kanban.attachments || []
 		},
 		endDate: TimeAgo,
 		workGroup: WorkGroup | null;
@@ -85,6 +86,10 @@
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
 		kanban.priority = kanbanEdited.priority;
+
+		if (kanbanEdited.images) kanban.attachments = kanbanEdited.images;
+		else kanban.attachments = [];
+
 		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date?.toISOString();
 		else kanban.end_date = null;
 
@@ -212,7 +217,9 @@
 		</div>
 	{/if}
 	<div class="flex justify-between w-full items-start">
-		<div class="text-primary text-left break-before-auto font-semibold break-all">{kanban.title}</div>
+		<div class="text-primary text-left break-before-auto font-semibold break-all">
+			{kanban.title}
+		</div>
 		<div class="cursor-pointer hover:underline">
 			{#if kanban.priority}
 				<KanbanIcons bind:priority={kanban.priority} />
@@ -300,7 +307,12 @@
 					label="Title"
 					inputClass="border-none"
 				/>
-				<TextArea bind:value={kanbanEdited.description}  label="Description" rows={5} Class="overflow-scroll"/>
+				<TextArea
+					bind:value={kanbanEdited.description}
+					label="Description"
+					rows={5}
+					Class="overflow-scroll"
+				/>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						{$_('Assignee')}
@@ -385,6 +397,7 @@
 					</div>
 				</div>
 				<div class="text-left">
+					{@debug kanbanEdited}
 					{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 						{$_('Attachments:')}
 						{#each kanbanEdited.images as file}

@@ -73,9 +73,9 @@
 		>
 			<div>{new Date(year, month, getDay(x, y)).getDate()}</div>
 		</div>
-		{#key events || month || year}
+		{#key events || month || year || window.innerHeight}
 			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
-				{#if i < 3}
+				{#if (1000 * i) / window.innerHeight < 3}
 					<div class="break-all bg-secondary w-full text-white text-sm mb-1 text-center">
 						{elipsis(event.title, 15)}
 					</div>

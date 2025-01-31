@@ -54,7 +54,7 @@
 			entry_id: kanban.id,
 			description: kanban.description,
 			title: kanban.title,
-			assignee: kanban.assignee?.id,
+			assignee_id: kanban.assignee?.id,
 			priority: kanban.priority,
 			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
 			work_group: kanban.work_group || null,
@@ -73,6 +73,9 @@
 
 		if (kanbanEdited.work_group === null) delete kanbanEdited.work_group;
 		else kanbanEdited.work_group = kanbanEdited.work_group;
+
+		if (kanbanEdited.assignee_id === null) delete kanbanEdited.assignee_id;
+		else kanbanEdited.assignee_id = kanbanEdited.assignee_id;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -97,10 +100,10 @@
 		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
 		else kanban.end_date = null;
 
-		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee);
-		if (assignee && kanbanEdited?.assignee)
+		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee_id);
+		if (assignee && kanbanEdited?.assignee_id)
 			kanban.assignee = {
-				id: kanbanEdited?.assignee,
+				id: kanbanEdited?.assignee_id,
 				username: assignee?.user.username || '',
 				profile_image: assignee?.user.profile_image || ''
 			};
@@ -126,7 +129,7 @@
 	};
 
 	const changeAssignee = (e: any) => {
-		kanbanEdited.assignee = Number(e.target.value);
+		kanbanEdited.assignee_id = Number(e.target.value);
 	};
 
 	const handleChangePriority = (e: any) => {
@@ -190,7 +193,7 @@
 				entry_id: kanban.id,
 				description: kanban.description,
 				title: kanban.title,
-				assignee: kanban.assignee?.id,
+				assignee_id: kanban.assignee?.id,
 				priority: kanban.priority,
 				end_date: kanban.end_date ? new Date(kanban.end_date) : null
 			};

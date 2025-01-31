@@ -119,21 +119,23 @@
 					labels={groups?.map((group) => group.name)}
 					values={groups}
 					bind:value={group}
-					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-4"
+					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
 				/>
 			{/if}
-			<ul>
+			<ul class="flex flex-col gap-4 my-4">
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
-				<li>
-					<Toggle
-						onInput={(checked) => {
-							selectedPage = checked ? 'delegate' : 'none';
-							if (!checked) removeAllDelegations(group);
-						}}
-						checked={autovote}
-					/>
-					{$_('Auto-vote')}
-					<p>
+				<li class="flex flex-col gap-2">
+					<div class="flex flex-row gap-4 items-center">
+						<Toggle
+							onInput={(checked) => {
+								selectedPage = checked ? 'delegate' : 'none';
+								if (!checked) removeAllDelegations(group);
+							}}
+							checked={autovote}
+						/>
+						{$_('Auto-vote')}
+					</div>
+					<p class="mt-2">
 						{$_(
 							'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
 						)}

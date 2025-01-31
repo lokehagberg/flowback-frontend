@@ -136,6 +136,7 @@
 		cancelAction={() => {
 			currentlyCroppingProfile = false;
 			currentlyCroppingBanner = false;
+			profileImagePreview = oldProfileImagePreview;
 		}}
 		bind:croppedImage
 		bind:currentlyCroppingProfile
@@ -308,14 +309,19 @@
 
 			<StatusMessage Class="mt-4" bind:status />
 			<div class="flex justify-end gap-2">
-				<Button Class="" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+				<Button
+					Class=""
+					action={() => {
+						isEditing = false;
+						profileImagePreview = oldProfileImagePreview;
+					}}>{$_('Cancel')}</Button
+				>
 				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}
 
-	<History history={62} groupId={1}/>
-	
+	<History history={62} groupId={1} />
 </Layout>
 
 <style>

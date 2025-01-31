@@ -65,7 +65,6 @@
 
 	const updateKanbanContent = async () => {
 		const isoDate = kanbanEdited.end_date?.toISOString();
-		const dateString = `${isoDate?.slice(0, 10)}T${kanbanEdited.end_date?.getHours()}:${kanbanEdited.end_date?.getMinutes()}`;
 		const formData = new FormData();
 
 		formData.append('title', kanbanEdited.title);
@@ -76,11 +75,20 @@
 
 		if (kanbanEdited.assignee_id)
 			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
-		if (dateString && dateString !== '') formData.append('end_date', dateString);
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
-		if (kanbanEdited.work_group)
+
+		console.log(kanbanEdited.work_group, "Workgroup");
+		
+		if (kanbanEdited.work_group?.id)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
+		if (kanbanEdited.end_date) {
+			const dateString = `${isoDate?.slice(
+				0,
+				10
+			)}T${kanbanEdited.end_date?.getHours()}:${kanbanEdited.end_date?.getMinutes()}`;
+			if (dateString && dateString !== '') formData.append('end_date', dateString);
+		}
 		// if (description !== '') formData.append('description', description);
 		// if (kanban.attachments)
 		// 	images.forEach((image) => {

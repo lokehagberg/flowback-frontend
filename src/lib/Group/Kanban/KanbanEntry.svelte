@@ -58,6 +58,7 @@
 			priority: kanban.priority,
 			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
 			work_group: kanban.work_group || null,
+			//@ts-ignore
 			images: kanban.attachments || []
 		},
 		endDate: TimeAgo,
@@ -65,8 +66,7 @@
 
 	const updateKanbanContent = async () => {
 		kanbanEdited.entry_id = kanban.id;
-		//@ts-ignore
-		// if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
+
 		if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
 		else if (kanbanEdited.end_date instanceof Date)
 			kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
@@ -254,9 +254,9 @@
 		{/if}
 	</button>
 
-	{#if kanban.work_group}
+	{#if kanban.work_group && kanban.work_group.name}
 		<div>
-			{$_('Work Group')}: {elipsis(kanban.work_group.name, 20)}
+			{$_('Work Group')}: {elipsis(kanban.work_group.name || '', 20)}
 		</div>
 	{/if}
 	<!-- Arrows -->
@@ -402,7 +402,11 @@
 						{$_('Attachments:')}
 						{#each kanbanEdited.images as file}
 							<li>
-								<img src={`${env.PUBLIC_API_URL}/media/${file.file}`} alt={file.file_name} class="w-10 h-10" />
+								<img
+									src={`${env.PUBLIC_API_URL}/media/${file.file}`}
+									alt={file.file_name}
+									class="w-10 h-10"
+								/>
 							</li>
 						{/each}
 					{:else}

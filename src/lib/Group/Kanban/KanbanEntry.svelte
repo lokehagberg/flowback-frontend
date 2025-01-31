@@ -61,31 +61,77 @@
 			//@ts-ignore
 			images: kanban.attachments || []
 		},
-		endDate: TimeAgo,
-		workGroup: WorkGroup | null;
+		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
-		kanbanEdited.entry_id = kanban.id;
+		// loading = true;
+		const isoDate = kanban.end_date?.toString();
+		let dateString = '';
+		if (kanban.end_date)
+			dateString = `${isoDate?.slice(0, 10)}T${new Date(kanban.end_date)?.getHours()}:${new Date(
+				kanban.end_date
+			)?.getMinutes()}`;
+		const formData = new FormData();
 
-		if (kanbanEdited.end_date === null) delete kanbanEdited.end_date;
-		else if (kanbanEdited.end_date instanceof Date)
-			kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
+		formData.append('title', kanbanEdited.title);
+		formData.append('tag', kanban.lane.toString());
+		formData.append('lane', kanban.lane.toString());
+		formData.append('entry_id', kanban.id.toString());
+		formData.append('description', kanbanEdited.description || '');
 
-		if (kanbanEdited.work_group === null) delete kanbanEdited.work_group;
-		else kanbanEdited.work_group = kanbanEdited.work_group;
+		if (kanbanEdited.assignee_id)
+			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
+		if (kanbanEdited.end_date) formData.append('end_date', dateString);
+		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
+		if (kanbanEdited.work_group)
+			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
-		if (kanbanEdited.assignee_id === null) delete kanbanEdited.assignee_id;
-		else kanbanEdited.assignee_id = kanbanEdited.assignee_id;
+		// if (description !== '') formData.append('description', description);
+		// if (kanban.attachments)
+		// 	images.forEach((image) => {
+		// 		formData.append('attachments', image);
+		// 	});
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			kanban.origin_type === 'group'
+			type === 'group'
 				? `group/${$page.params.groupId}/kanban/entry/update`
 				: 'user/kanban/entry/update',
-			kanbanEdited
+			formData,
+			true,
+			false
 		);
-		status = statusMessageFormatter(res, json);
-		if (!res.ok) return;
+
+		// loading = false;
+		isEditing = false;
+
+		if (!res.ok) {
+			// poppup = { message: 'Failed to create kanban task', success: false };
+			return;
+		}
+
+		// poppup = { message: 'Successfully created kanban task', success: true };
+
+		// if (kanbanEdited.kanbanEdited.end_date === null) delete kanbanEdited.end_date;
+		// else if (kanbanEdited.end_date instanceof Date)
+		// 	kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
+
+		// if (kanbanEdited.work_group === null) delete kanbanEdited.work_group;
+		// //@ts-ignore
+		// else kanbanEdited.work_group = kanbanEdited.work_group.id;
+
+		// if (kanbanEdited.assignee_id === null) delete kanbanEdited.assignee_id;
+		// else kanbanEdited.assignee_id = kanbanEdited.assignee_id;
+
+		// const { res, json } = await fetchRequest(
+		// 	'POST',
+		// 	kanban.origin_type === 'group'
+		// 		? `group/${$page.params.groupId}/kanban/entry/update`
+		// 		: 'user/kanban/entry/update',
+		// 	kanbanEdited
+		// );
+		// status = statusMessageFormatter(res, json);
+		// if (!res.ok) return;
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
@@ -97,8 +143,9 @@
 		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date?.toISOString();
 		else kanban.end_date = null;
 
+		console.log(kanbanEdited.work_group, kanban.work_group, 'workgroup');
+
 		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
-		else kanban.end_date = null;
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee_id);
 		if (assignee && kanbanEdited?.assignee_id)
@@ -108,7 +155,7 @@
 				profile_image: assignee?.user.profile_image || ''
 			};
 
-		isEditing = false;
+		// isEditing = false;
 	};
 
 	const updateKanbanLane = async (lane: number) => {
@@ -172,7 +219,8 @@
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
+		kanbanEdited.work_group =
+			workGroups.find((group) => group.id === Number(e.target.value)) || null;
 	};
 
 	onMount(async () => {
@@ -424,6 +472,7 @@
 				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
 			{:else}
 				<Button Class="px-2" action={() => (isEditing = true)}>{$_('Edit')}</Button>
+				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
 			{/if}
 		</div>
 	</Modal>

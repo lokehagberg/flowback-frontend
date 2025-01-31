@@ -83,8 +83,6 @@
 
 		poppup = { message: 'Successfully created kanban task', success: true };
 
-		console.log(workGroup, 'workGroup');
-
 		const userAssigned = users.find((user) => assignee === user.user.id);
 		kanbanEntries.push({
 			assignee: {

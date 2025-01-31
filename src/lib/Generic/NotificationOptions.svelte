@@ -10,12 +10,13 @@
 
 	export let notificationOpen = false,
 		categories: string[],
-		type:'poll' | 'group' | 'group_thread',
+		type: 'poll' | 'group' | 'group_thread',
 		labels: string[],
 		api: string,
 		id: number,
 		Class = '',
-		ClassOpen = '';
+		ClassOpen = '',
+		hoverEffect = true;
 
 	let popupMessage: string = '',
 		notifications: NotificationObject[] = [],
@@ -60,7 +61,7 @@
 			notifications.push({
 				channel_category: category,
 				channel_sender_id: id,
-			channel_sender_type: type
+				channel_sender_type: type
 			});
 			popupMessage = 'Subscribed';
 		} else popupMessage = 'Something went wrong';
@@ -95,7 +96,7 @@
 		}}
 		on:keydown
 	>
-		<Fa class="hover:cursor-pointer hover:text-primary" icon={faBell} size={'1.2x'} />
+		<Fa class={'hover:cursor-pointer hover:text-primary'} icon={faBell} size={'1.2x'} />
 	</button>
 
 	{#if notificationOpen}
@@ -103,7 +104,13 @@
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each categories as category, i}
 				<button
-					class="bg-gray-200 w-full hover:bg-gray-300 active:bg-gray-400 dark:bg-slate-700 dark:hover:bg-slate-800 dark:active:bg-slate-900 p-2 px-5 flex justify-between items-center hover:cursor-pointer transition-all"
+					class="bg-gray-200 w-full p-2 px-5 flex justify-between items-center transition-all"
+					class:active:bg-gray-400={hoverEffect}
+					class:dark:active:bg-slate-700={hoverEffect}
+					class:dark:active:bg-slate-900={hoverEffect}
+					class:hover:bg-gray-300={hoverEffect}
+					class:hover:cursor-pointer={hoverEffect}
+					class:dark:hover:bg-slate-800={hoverEffect}
 					class:!bg-white={notifications?.find(
 						(notificationObject) => notificationObject.channel_category === category
 					)}

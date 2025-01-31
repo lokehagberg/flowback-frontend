@@ -117,7 +117,7 @@
 			</div>
 		{/if}
 		<div class="text-xs text-gray-400 dark:text-darkmodeText">
-			{comment.edited ? '(edited)' : ''}
+			{comment.edited && comment.active ? '(edited)' : ''}
 		</div>
 		{#if comment.attachments?.length > 0}
 			<div>

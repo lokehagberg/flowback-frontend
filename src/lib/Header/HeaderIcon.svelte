@@ -5,6 +5,7 @@
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	export let icon = faCircle,
 		icons = [faCircle],
@@ -17,7 +18,7 @@
 
 	let hovering = false,
 		selectedPage = false,
-		selectedCurrent = "";
+		selectedCurrent = '';
 
 	const checkIfSelected = () => {
 		selectedPage = window.location.pathname === '/' + href;
@@ -28,6 +29,8 @@
 	onMount(() => {
 		checkIfSelected();
 	});
+
+	$: if ($page.url.pathname) checkIfSelected();
 </script>
 
 {#if href}
@@ -37,7 +40,8 @@
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		href={href === '/' ? window.location.href : '/' + href}
-		class={`relative cursor-pointer ${selectedPage ? `active-icon` : ''} ${Class}`}
+		class:active-icon={selectedPage}
+		class={`relative transition-all ${Class}`}
 		id={href}
 		{tabindex}
 	>
@@ -95,7 +99,7 @@
 	}
 
 	.active-icon {
-		color: #015BC0;
+		color: var(--primary);
 		position: relative;
 	}
 
@@ -107,6 +111,6 @@
 		transform: translateX(-50%);
 		width: 4rem;
 		height: 2px;
-		background-color: #015BC0;
+		background-color: var(--primary);
 	}
 </style>

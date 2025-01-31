@@ -13,7 +13,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
-	import type {kanban} from './Kanban';
+	import type { kanban } from './Kanban';
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -100,7 +100,10 @@
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
-			end_date: end_date?.toString() || null
+			end_date: end_date?.toString() || null,
+			//@ts-ignore
+			work_group: { id: workGroup?.id, name: workGroup?.name } || null,
+			attachments: []
 		});
 
 		kanbanEntries = kanbanEntries;
@@ -170,6 +173,8 @@
 								class=" rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 								on:input={handleChangeWorkGroup}
 							>
+								<option class="w-5" value={null}> {$_('Unassigned')} </option>
+
 								{#each workGroups as group}
 									<option class="w-5" value={group.id}>
 										{elipsis(group.name)}

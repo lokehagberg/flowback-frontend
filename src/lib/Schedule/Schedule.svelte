@@ -66,6 +66,7 @@
 		advancedTimeSettingsDates: Date[] = [],
 		notActivated = true,
 		workGroups: WorkGroup[] = [],
+		workGroupFilter: number[] = [],
 		poppup: poppup;
 
 	const updateMonth = () => {
@@ -80,10 +81,21 @@
 	};
 
 	const setUpScheduledPolls = async () => {
-		const { json, res } = await fetchRequest(
-			'GET',
-			groupId ? `group/${groupId}/schedule?limit=1000&work_group_ids=2` : 'user/schedule?limit=1000'
-		);
+		let _api = '';
+
+		if (groupId) {
+			_api = `group/${groupId}/schedule?limit=1000&`;
+
+			workGroupFilter.forEach((groupId) => {
+				_api += `work_group_ids=${groupId}&`;
+			});
+		} else {
+			_api = `user/schedule?limit=1000`;
+		}
+
+		console.log('hei', _api);
+
+		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
 	};
 
@@ -96,7 +108,7 @@
 			description
 		};
 
-		if (description === "") delete payload.description;
+		if (description === '') delete payload.description;
 
 		if (type === 'user') {
 			API += `user/schedule/create`;
@@ -218,6 +230,17 @@
 		workGroups = json.results;
 	};
 
+	const onFilterWorkGroup = (workGroup: WorkGroup) => {
+		if (workGroupFilter.find((groupId) => groupId === workGroup.id))
+			workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
+		else workGroupFilter.push(workGroup.id);
+
+		workGroupFilter = workGroupFilter;
+		console.log(workGroupFilter);
+
+		setUpScheduledPolls();
+	};
+
 	onMount(async () => {
 		//Prevents "document not found" error
 		deleteSelection = () => {
@@ -292,6 +315,12 @@
 				</div>
 			{/each}
 		</div>
+
+		<!-- {#each workGroups as group}
+			<button on:click={() => onFilterWorkGroup(group)} class="mt-2 break-all">
+				{group.name}
+			</button>
+		{/each} -->
 	</div>
 
 	<div class="w-full">
@@ -357,7 +386,7 @@
 		<div class="flex flex-col">
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
-			<span> {description} </span>
+			<span> {description || ""} </span>
 			{#if workGroup}
 				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}

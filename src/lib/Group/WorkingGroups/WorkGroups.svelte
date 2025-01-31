@@ -87,6 +87,10 @@
 		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
 		loading = false;
 	});
+
+	const handleRemoveGroup = (id: number) => {
+		workGroups = workGroups.filter((group) => group.id !== id);
+	};
 </script>
 
 <div class="bg-white dark:bg-darkobject p-6 shadow rounded mb-4">
@@ -126,7 +130,7 @@
 	</div>
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
-			<WorkingGroup bind:workGroup={workingGroup} />
+			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} />
 		{/each}
 	</div>
 </Loader>

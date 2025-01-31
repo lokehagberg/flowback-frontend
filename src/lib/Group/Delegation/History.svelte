@@ -9,7 +9,8 @@
 	import { goto } from '$app/navigation';
 	import Comments from '$lib/Comments/Comments.svelte';
 
-	export let history: null | number, groupId = 0;
+	export let history: null | number,
+		groupId = 0;
 
 	let loading = false,
 		delegatePool: DelegatePool,
@@ -18,7 +19,7 @@
 
 	const getDelegateHistory = async () => {
 		loading = true;
-		// const { res, json } = await fetchRequest('GET', `group/poll/pool/${history}/poll/votes`);
+		console.log('history', history, delegatePool);
 		const { json, res } = await fetchRequest('GET', `group/poll/pool/${history}/votes`);
 		loading = false;
 		if (res.ok) votingHistory = json.results;
@@ -34,9 +35,7 @@
 	};
 
 	const getUserInfo = async () => {
-		//@ts-ignore
-		const userId = delegatePool.delegates[0].group_user.id;
-		const { res, json } = await fetchRequest('GET', `users?id=${userId}`);
+		const { res, json } = await fetchRequest('GET', `users?id=${$page.url.searchParams.get('id')}`);
 
 		if (!res.ok) return {};
 		user = json.results[0];
@@ -65,11 +64,12 @@
 			<li
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
 			>
-				<a
+				<button
 					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
-					href={`${$page.params.groupId}/polls/${vote.poll_id}`}
+					on:click={() =>
+						goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
 				>
-					{vote.poll_title}</a
+					{vote.poll_title}</button
 				>
 			</li>
 

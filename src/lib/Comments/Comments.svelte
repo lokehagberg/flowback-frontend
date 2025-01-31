@@ -11,27 +11,34 @@
 	import CommentFilter from './CommentFilter.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { commentsStore } from './commentStore';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null,
-		Class = '';
+		Class = '',
+		_comments: CommentType[] = [];
 
-	let _comments: CommentType[] = [],
-		poppup: poppup,
+	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
 		sortBy: null | string = null,
-		searchString: string = '';
+		searchString: string = '',
+		done = false,
+		commentSubscription:any;
 
 	const setUpComments = async () => {
-		console.log("hiii");
+		console.log(api, "PIIII");
 		
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
+		commentsStore.set(comments);
+		// commentsStore.subscribe(commentSubscription)
+		// console.log(commentsStore, "STORE");
+		
 	};
-
+	
 	const readMore = async () => {
 		offset += pollCommentsLimit;
 		const { comments, next } = await getComments(getId(), api, offset, sortBy);
@@ -48,10 +55,13 @@
 	};
 
 	onMount(async () => {
-		setUpComments();
+		await setUpComments();
 	});
 
 	$: if (sortBy || !sortBy || searchString) setUpComments();
+	$: if (_comments) {
+		done = false;
+	}
 </script>
 
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
@@ -67,13 +77,17 @@
 	<CommentFilter bind:sortBy bind:searchString Class="inline" />
 
 	<div class="flex flex-col gap-4 mt-6">
+		
 		{#each _comments as comment}
-			<Comment {comment} bind:comments={_comments} bind:api bind:proposals />
+		{#key comment}
+		<Comment {comment} comments={_comments} {api} bind:proposals />
+		{/key}
 		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>
 		{/if}
 	</div>
+
 	{#if _comments.length === 0}
 		<div>{$_('There are currently no comments')}</div>
 	{/if}

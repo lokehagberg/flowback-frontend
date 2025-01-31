@@ -125,12 +125,12 @@
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
 				icon={faPeopleArrows}
-			/>
+			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
 				text="Work Groups"
@@ -179,22 +179,23 @@
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			<!-- These two are link tags so people are able to open them in new window/tab -->
 			<a
-				class="text-inherit"
+				class="text-inherit w-full"
 				target="_blank"
 				href={`https://meet.flowback.org/${group.jitsi_room}`}
 			>
-				<GroupSidebarButton text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
+				<GroupSidebarButton Class="w-full" text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
 			>
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
+					Class="w-full"
 					action={() => (areYouSureModal = true)}
 					text="Leave group"
 					icon={faPersonRunning}
 					isSelected={false}
 				/>
 			{:else}
-				<a class="text-inherit" href={`/ledger`}>
-					<GroupSidebarButton text="Group Ledger" icon={faCoins} isSelected={false} />
+				<a class="text-inherit w-full" href={`/ledger`} target="_blank">
+					<GroupSidebarButton Class="w-full" text="Group Ledger" icon={faCoins} isSelected={false} />
 				</a>
 			{/if}
 		</div>

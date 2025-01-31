@@ -64,13 +64,12 @@
 		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
-		// loading = true;
-		const isoDate = kanban.end_date?.toString();
+		const isoDate = kanbanEdited.end_date?.toString();
 		let dateString = '';
-		if (kanban.end_date)
-			dateString = `${isoDate?.slice(0, 10)}T${new Date(kanban.end_date)?.getHours()}:${new Date(
-				kanban.end_date
-			)?.getMinutes()}`;
+		if (kanbanEdited.end_date)
+			dateString = `${isoDate?.slice(0, 10)}T${new Date(
+				kanbanEdited.end_date
+			)?.getHours()}:${new Date(kanbanEdited.end_date)?.getMinutes()}`;
 		const formData = new FormData();
 
 		formData.append('title', kanbanEdited.title);
@@ -81,7 +80,7 @@
 
 		if (kanbanEdited.assignee_id)
 			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
-		if (kanbanEdited.end_date) formData.append('end_date', dateString);
+		if (dateString !== '') formData.append('end_date', dateString);
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 		if (kanbanEdited.work_group)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
@@ -142,8 +141,6 @@
 
 		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date?.toISOString();
 		else kanban.end_date = null;
-
-		console.log(kanbanEdited.work_group, kanban.work_group, 'workgroup');
 
 		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
 

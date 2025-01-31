@@ -64,12 +64,8 @@
 		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
-		const isoDate = kanbanEdited.end_date?.toString();
-		let dateString = '';
-		if (kanbanEdited.end_date)
-			dateString = `${isoDate?.slice(0, 10)}T${new Date(
-				kanbanEdited.end_date
-			)?.getHours()}:${new Date(kanbanEdited.end_date)?.getMinutes()}`;
+		const isoDate = kanbanEdited.end_date?.toISOString();
+		const dateString = `${isoDate?.slice(0, 10)}T${kanbanEdited.end_date?.getHours()}:${kanbanEdited.end_date?.getMinutes()}`;
 		const formData = new FormData();
 
 		formData.append('title', kanbanEdited.title);
@@ -80,7 +76,7 @@
 
 		if (kanbanEdited.assignee_id)
 			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
-		if (dateString !== '') formData.append('end_date', dateString);
+		if (dateString && dateString !== '') formData.append('end_date', dateString);
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 		if (kanbanEdited.work_group)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());

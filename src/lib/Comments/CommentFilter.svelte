@@ -9,8 +9,11 @@
 </script>
 
 <div class={Class}>
-	<TextInput label={'Search'} bind:value={searchString} placeholder={$_('Search')} />
+	<div class="mb-2">
+		<TextInput label={'Search'} bind:value={searchString} placeholder={$_('Search')} />
+	</div>
 
+	<div class="w-auto max-w-xs">
 	<Select
 		innerLabel={$_('Select Sorting')}
 		values={[
@@ -26,4 +29,5 @@
 		labels={[$_('Recent'), $_('Oldest'), $_('Top'), $_('Controversial'), $_('Hot')]}
 		{Class}
 	/>
+	</div>
 </div>

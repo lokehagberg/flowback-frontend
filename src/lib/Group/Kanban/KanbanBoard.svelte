@@ -121,11 +121,11 @@
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[120px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
+					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<div class="flex justify-between">
-						<span class="xl:text-xl text-md p-1">{$_(_tag)}</span>
+						<span class="xl:text-xl md:text-md p-1 pb-3">{$_(_tag)}</span>
 						<button
 							on:click={() => {
 								open = true;

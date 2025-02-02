@@ -265,19 +265,19 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="">
+	<div class="border-t-2 border-t-gray-200">
 		<!-- Here the user writes a message to be sent -->
-		<form class="flex gap-1 items-center" on:submit|preventDefault={postMessage}>
+		<form class="flex gap-1 items-center mt-3" on:submit|preventDefault={postMessage}>
 			<TextArea
 				autofocus
 				label=""
+				displayMax={false}
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
 						postMessage();
 						e.preventDefault();
 					}
 				}}
-				required
 				max={3000}
 				bind:value={message}
 				Class="w-full"

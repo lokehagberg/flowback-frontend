@@ -10,6 +10,7 @@
 		onBlur = () => {},
 		autofocus = false,
 		max = 5000,
+		displayMax = true,
 		onKeyPress = (e: any) => {},
 		inputClass = '',
 		rows = 2,
@@ -54,7 +55,7 @@
 			{/if}
 		</div>
 
-		{#if max}
+		{#if max && displayMax}
 			<p class="inline text-right dark:brightness-50 dark:text-darkmodeText text-gray-400 text-xs">
 				{value?.length || 0}/{max}
 			</p>

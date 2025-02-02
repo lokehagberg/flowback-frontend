@@ -47,7 +47,7 @@
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
 		if (filter.order_by) API += `&order_by=pinned,${filter.order_by}`;
-		else API+=`&order_by=pinned`
+		else API += `&order_by=pinned`;
 
 		// API += `&limit=${pollThumbnailsLimit}`
 		API += `&limit=${pollThumbnailsLimit}`;
@@ -110,7 +110,7 @@
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
 				{#key polls}
-					{#if polls.length > 0}
+					{#if polls && polls?.length > 0}
 						{#each polls as poll}
 							<PollThumbnail {poll} {isAdmin} />
 						{/each}

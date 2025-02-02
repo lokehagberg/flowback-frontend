@@ -86,13 +86,13 @@
 		</Button>
 	</div>
 	<div class="flex">
-		<Select
+		<!-- <Select
 			Class="rounded-md p-1"
 			onInput={handleFinishedSelection}
 			values={['all', 'unfinished', 'finished']}
 			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
 			bind:value={filter.finishedSelection}
-		/>
+		/> -->
 
 		<Select
 			Class="rounded-md p-1"

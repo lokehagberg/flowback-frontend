@@ -143,12 +143,14 @@
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				<HeaderIcon
-					icon={faCoins}
-					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
-					href="ledger"
-					color={darkMode ? 'white' : 'black'}
-				/>
+				{#if !(env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'FALSE')}
+					<HeaderIcon
+						icon={faCoins}
+						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
+						href="ledger"
+						color={darkMode ? 'white' : 'black'}
+					/>
+				{/if}
 
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 					<HeaderIcon

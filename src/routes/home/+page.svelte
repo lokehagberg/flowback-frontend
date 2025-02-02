@@ -66,19 +66,21 @@
 </script>
 
 <Layout centered>
-	<ul class="w-full mt-6 flex flex-col gap-6 max-w-[700px]">
-		{#each invitations as invite}
-			{#if !invite.external}
-				<li class="bg-white p-6 shadow rounded dark:bg-darkobject dark:text-darkmodeText">
-					<span>{$_('You have been invited to')} {invite.group_name}</span>
+	{#if invitations && invitations?.length > 0}
+		<ul class="w-full mt-6 flex flex-col gap-6 max-w-[700px]">
+			{#each invitations as invite}
+				{#if !invite.external}
+					<li class="bg-white p-6 shadow rounded dark:bg-darkobject dark:text-darkmodeText">
+						<span>{$_('You have been invited to')} {invite.group_name}</span>
 
-					<div class="mt-4">
-						<Button action={() => acceptInvitation(invite.group)}>{$_('Accept')}</Button>
-						<Button action={() => rejectInvitation(invite.group)}>{$_('Reject')}</Button>
-					</div>
-				</li>
-			{/if}
-		{/each}
-	</ul>
+						<div class="mt-4">
+							<Button action={() => acceptInvitation(invite.group)}>{$_('Accept')}</Button>
+							<Button action={() => rejectInvitation(invite.group)}>{$_('Reject')}</Button>
+						</div>
+					</li>
+				{/if}
+			{/each}
+		</ul>
+	{/if}
 	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>

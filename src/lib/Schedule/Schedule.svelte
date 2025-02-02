@@ -231,12 +231,16 @@
 	};
 
 	const onFilterWorkGroup = (workGroup: WorkGroup) => {
-		if (workGroupFilter.find((groupId) => groupId === workGroup.id))
-			workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
-		else workGroupFilter.push(workGroup.id);
+		//Once backend is fixed, use the commented out version
+		
+		// if (workGroupFilter.find((groupId) => groupId === workGroup.id))
+		// 	workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
+		// else workGroupFilter.push(workGroup.id);
+
+
+		workGroupFilter = [workGroup.id]
 
 		workGroupFilter = workGroupFilter;
-		console.log(workGroupFilter);
 
 		setUpScheduledPolls();
 	};
@@ -316,11 +320,19 @@
 			{/each}
 		</div>
 
-		<!-- {#each workGroups as group}
-			<button on:click={() => onFilterWorkGroup(group)} class="mt-2 break-all">
-				{group.name}
-			</button>
-		{/each} -->
+		<div class="flex flex-col">
+			{#each workGroups as group}
+				<Button
+					buttonStyle={workGroupFilter.find((_group) => _group === group.id)
+						? 'primary'
+						: 'secondary'}
+					action={() => onFilterWorkGroup(group)}
+					Class="mt-2 break-all"
+				>
+					{group.name}
+				</Button>
+			{/each}
+		</div>
 	</div>
 
 	<div class="w-full">
@@ -386,7 +398,7 @@
 		<div class="flex flex-col">
 			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
 			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
-			<span> {description || ""} </span>
+			<span> {description || ''} </span>
 			{#if workGroup}
 				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}

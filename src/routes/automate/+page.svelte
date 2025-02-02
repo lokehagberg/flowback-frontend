@@ -124,16 +124,18 @@
 			{/if}
 			<ul>
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
-				<li>
-					<Toggle
-						onInput={(checked) => {
-							selectedPage = checked ? 'delegate' : 'none';
-							if (!checked) removeAllDelegations(group);
-						}}
-						checked={autovote}
-					/>
-					{$_('Auto-vote')}
-					<p>
+				<li class="mt-3">
+					<div class="flex justify-between">
+						{$_('Turn on auto-vote')}
+						<Toggle
+							onInput={(checked) => {
+								selectedPage = checked ? 'delegate' : 'none';
+								if (!checked) removeAllDelegations(group);
+							}}
+							checked={autovote}
+						/>
+					</div>
+					<p class="mt-2">
 						{$_(
 							'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
 						)}

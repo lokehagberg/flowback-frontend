@@ -19,6 +19,9 @@
 	import Fa from 'svelte-fa';
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
+	import { goto } from '$app/navigation';
+	import { navigating } from '$app/stores';
+	import { getStores } from '$app/stores';
 
 	let user: User = {
 		banner_image: '',
@@ -55,6 +58,8 @@
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
 		croppedImage: string;
+
+	const { navigating: nav } = getStores();
 
 	onMount(() => {
 		getUser();
@@ -136,6 +141,7 @@
 		cancelAction={() => {
 			currentlyCroppingProfile = false;
 			currentlyCroppingBanner = false;
+			profileImagePreview = oldProfileImagePreview;
 		}}
 		bind:croppedImage
 		bind:currentlyCroppingProfile
@@ -164,7 +170,7 @@
 				</Button>
 			{/if}
 			<Button
-				action={() => history.back()}
+				action={() => goto($nav?.from?.url.pathname || '/')}
 				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
 				<div class="text-gray-800 dark:text-gray-200">
@@ -308,14 +314,19 @@
 
 			<StatusMessage Class="mt-4" bind:status />
 			<div class="flex justify-end gap-2">
-				<Button Class="" action={() => (isEditing = false)}>{$_('Cancel')}</Button>
+				<Button
+					Class=""
+					action={() => {
+						isEditing = false;
+						profileImagePreview = oldProfileImagePreview;
+					}}>{$_('Cancel')}</Button
+				>
 				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}
 
-	<History history={62} groupId={1}/>
-	
+	<History history={62} groupId={1} />
 </Layout>
 
 <style>

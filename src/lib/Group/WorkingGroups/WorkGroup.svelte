@@ -9,8 +9,7 @@
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-	export let workGroup: WorkGroup,
-	handleRemoveGroup: (id: number) => void;
+	export let workGroup: WorkGroup, handleRemoveGroup: (id: number) => void;
 
 	let poppup: poppup,
 		workGroupUserList: WorkGroupUser[] = [];
@@ -19,6 +18,7 @@
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
 
 		if (!res.ok) {
+			workGroupUserList = workGroupUserList;
 			// poppup = { message: 'Failed to get members in workgroup', success: false };
 			return;
 		}
@@ -61,7 +61,9 @@
 			poppup = { message: 'Failed to Leave Group', success: false };
 			return;
 		}
-
+		workGroupUserList = workGroupUserList.filter(
+			(user) => user.id === Number(localStorage.getItem('userId'))
+		);
 		getUserList();
 	};
 
@@ -72,39 +74,44 @@
 	};
 
 	const deleteWorkGroup = async () => {
-		const {res, json} = await fetchRequest('POST', `group/workgroup/${workGroup.id}/delete`);
+		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/delete`);
 
 		if (!res.ok) {
 			poppup = { message: 'Failed to delete workgroup', success: false };
 			return;
-		}
-		else {
+		} else {
 			poppup = { message: 'Workgroup deleted', success: true };
 		}
 
 		handleRemoveGroup(workGroup.id);
-	}
+	};
 
 	onMount(() => {
 		getUserList();
 	});
 </script>
 
-<div class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject min-h-14">
+<div
+	class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject min-h-14"
+>
 	<span class="text-primary w-[40%] font-semibold break-words">{workGroup.name}</span>
-	<span class="text-gray-500 text-sm w-[30%]">{$_("Members")}: {workGroupUserList.length} </span>
+	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroupUserList.length} </span>
 
 	{#key workGroupUserList}
 		{#if isMember()}
-			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}>{$_("Leave")}</Button>
+			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
+				>{$_('Leave')}</Button
+			>
 		{:else if workGroup.direct_join}
-			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}>{$_("Join")}</Button>
+			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}
+				>{$_('Join')}</Button
+			>
 		{:else}
 			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
-				>{$_("Ask to join")}</Button
+				>{$_('Ask to join')}</Button
 			>
 		{/if}
-		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash}/></Button>
+		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
 	{/key}
 </div>
 

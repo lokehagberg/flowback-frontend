@@ -231,12 +231,16 @@
 	};
 
 	const onFilterWorkGroup = (workGroup: WorkGroup) => {
-		if (workGroupFilter.find((groupId) => groupId === workGroup.id))
-			workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
-		else workGroupFilter.push(workGroup.id);
+		//Once backend is fixed, use the commented out version
+		
+		// if (workGroupFilter.find((groupId) => groupId === workGroup.id))
+		// 	workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
+		// else workGroupFilter.push(workGroup.id);
+
+
+		workGroupFilter = [workGroup.id]
 
 		workGroupFilter = workGroupFilter;
-		console.log(workGroupFilter);
 
 		setUpScheduledPolls();
 	};
@@ -318,7 +322,13 @@
 
 		<div class="flex flex-col">
 			{#each workGroups as group}
-				<Button buttonStyle={workGroupFilter.find(_group => _group === group.id) ? 'primary' : 'secondary'}   action={() => onFilterWorkGroup(group)} Class="mt-2 break-all">
+				<Button
+					buttonStyle={workGroupFilter.find((_group) => _group === group.id)
+						? 'primary'
+						: 'secondary'}
+					action={() => onFilterWorkGroup(group)}
+					Class="mt-2 break-all"
+				>
 					{group.name}
 				</Button>
 			{/each}

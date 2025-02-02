@@ -21,7 +21,7 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 text-xl rounded shadow">
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 text-m rounded shadow">
 	<p class="break-all">{description}</p>
-	<span>{$_('Creator')}: {creator.user.username}</span>
+	<span><strong>{$_('Creator')}</strong>: {creator.user.username}</span>
 </div>

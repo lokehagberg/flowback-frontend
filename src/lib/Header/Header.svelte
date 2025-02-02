@@ -27,7 +27,8 @@
 		profileImage: string | null = DefaultPFP,
 		darkMode: boolean = false,
 		isAdmin = false,
-		ledgerExists = true;
+		ledgerExists = true,
+		selectedHref = '';
 
 	onMount(() => {
 		if (location.pathname !== '/login') {
@@ -112,12 +113,13 @@
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon icon={faHome} text="Home" href="home" color={darkMode ? 'white' : 'black'} />
+					<HeaderIcon icon={faHome} text="Home" href="home" bind:selectedHref={selectedHref} color={darkMode ? 'white' : 'black'} />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
 						href="groups"
+						bind:selectedHref={selectedHref}
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
@@ -126,6 +128,7 @@
 						icon={faHome}
 						text="Home"
 						href="groups/1"
+						bind:selectedHref={selectedHref}
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
@@ -133,6 +136,7 @@
 					icon={faCalendarWeek}
 					text="My Schedule"
 					href="schedule"
+					bind:selectedHref={selectedHref}
 					color={darkMode ? 'white' : 'black'}
 				/>
 
@@ -140,14 +144,16 @@
 					icon={faList}
 					text="My Kanban"
 					href="kanban"
+					bind:selectedHref={selectedHref}
 					color={darkMode ? 'white' : 'black'}
 				/>
 
-				{#if !(env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'FALSE')}
+				{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 					<HeaderIcon
 						icon={faCoins}
 						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 						href="ledger"
+						bind:selectedHref={selectedHref}
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
@@ -157,6 +163,7 @@
 						icon={faCog}
 						text={'Automate'}
 						href="automate"
+						bind:selectedHref={selectedHref}
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{:else}
@@ -164,6 +171,7 @@
 						icon={faCog}
 						text={'Delegations'}
 						href="automate"
+						bind:selectedHref={selectedHref}
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}

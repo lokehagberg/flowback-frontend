@@ -14,11 +14,18 @@
 		Class = '',
 		color = '',
 		size = 'xl',
-		tabindex = 0;
+		tabindex = 0,
+		selectedHref: string | null;
 
 	let hovering = false,
-		selectedPage = false,
-		selectedCurrent = '';
+		selectedCurrent = '',
+		selectedPage = false;
+
+	$: selectedPage = selectedHref === href;
+
+	const handleClick = () => {
+		selectedHref = href;
+	};
 
 	const checkIfSelected = () => {
 		selectedPage = window.location.pathname === '/' + href;
@@ -27,7 +34,7 @@
 	if (icons.length === 1) icons[0] = icon;
 
 	onMount(() => {
-		checkIfSelected();
+	 	checkIfSelected();
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
@@ -39,6 +46,7 @@
 		on:mouseleave={() => (hovering = false)}
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
+		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
 		class={`relative transition-all ${Class}`}

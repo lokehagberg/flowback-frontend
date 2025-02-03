@@ -119,14 +119,17 @@
 					labels={groups?.map((group) => group.name)}
 					values={groups}
 					bind:value={group}
-					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-4"
+					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
 				/>
 			{/if}
-			<ul>
+			<ul class="flex flex-col gap-4 my-4">
 				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 				<li class="mt-3">
 					<div class="flex justify-between">
 						{$_('Turn on auto-vote')}
+					</div>
+				<li class="flex flex-col gap-2">
+					<div class="flex flex-row gap-4 items-center">
 						<Toggle
 							onInput={(checked) => {
 								selectedPage = checked ? 'delegate' : 'none';
@@ -134,6 +137,7 @@
 							}}
 							checked={autovote}
 						/>
+						{$_('Auto-vote')}
 					</div>
 					<p class="mt-2">
 						{$_(

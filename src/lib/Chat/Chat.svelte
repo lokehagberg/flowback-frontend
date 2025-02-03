@@ -7,9 +7,10 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
-	import CrossButton from '$lib/Generic/CrossButton.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
+	import Button from '$lib/Generic/Button.svelte';
+	import { faX } from '@fortawesome/free-solid-svg-icons';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -62,7 +63,14 @@
 	class:invisible={!chatOpen}
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
-	<CrossButton Class="cursor-pointer" action={() => (chatOpen = false)} />
+	<Button
+		action={() => (chatOpen = false)}
+		Class="absolute left-0 top-0 p-3 m-4 transition-all bg-white dark:bg-darkobject hover:brightness-95 active:brightness-90"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faX} />
+		</div>
+	</Button>
 
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-12 ml-6 dark:bg-darkobject p-2">

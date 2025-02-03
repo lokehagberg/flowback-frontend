@@ -280,7 +280,7 @@
     "Successfully logged in": "Lyckades logga in",
     "User is not in group": "Användare är ej i gruppen",
     "To do": "Att göra",
-    "Evaluation": "Under evaluering",
+    "Evaluation": "Utvärderas",
     "Done": "Avslutad",
     "Deleting Poll": "Ta bort omröstning",
     "Are you sure you want to delete this poll?": "Är du säker på att du vill ta bort omröstningen?",
@@ -556,5 +556,6 @@
     "voting": "Röstning",
     "kanban": "Kanban",
     "posts": "Inlägg",
-    "As a delegate, you choose to publicly show everyone how you vote. However, other users can delegate their vote to you, which means that you will vote for them.": "Som delegat väljer du att visa offentligt för alla hur du röstar. Andra användare kan dock delegera sin röst till dig, vilket innebär att du röstar för dem."
+    "As a delegate, you choose to publicly show everyone how you vote. However, other users can delegate their vote to you, which means that you will vote for them.": "Som delegat väljer du att visa offentligt för alla hur du röstar. Andra användare kan dock delegera sin röst till dig, vilket innebär att du röstar för dem.",
+    "Actions":"Utföranden"
 }

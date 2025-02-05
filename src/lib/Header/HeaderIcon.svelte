@@ -55,11 +55,11 @@
 		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative transition-all ${Class}`}
+		class={`relative transition-all w-14${Class}`}
 		id={href}
 		{tabindex}
 	>
-		<div on:load={checkIfSelected}>
+		<div on:load={checkIfSelected} class="flex flex-col items-center">
 			{#each icons as icon}
 				{#if typeof icon === 'string'}
 						<img 
@@ -75,11 +75,14 @@
 						class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
 					/>
 				{/if}
-				{$_(text)}
+				<div class="text-xs mt-2">
+
+					{$_(text)}
+				</div>
 			{/each}
 		</div>
 		<div
-			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
+			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50 "
 			class:invisible={!hovering}
 		>
 			{$_(text)}

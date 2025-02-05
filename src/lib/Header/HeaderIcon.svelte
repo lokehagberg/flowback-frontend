@@ -6,9 +6,10 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
-	export let icon = faCircle,
-		icons = [faCircle],
+	export let icon: IconDefinition | string = faCircle,
+		icons:(IconDefinition|string)[] = [faCircle],
 		text = 'icon',
 		href: string | null = null,
 		Class = '',
@@ -34,7 +35,7 @@
 	if (icons.length === 1) icons[0] = icon;
 
 	onMount(() => {
-	 	checkIfSelected();
+		checkIfSelected();
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
@@ -55,11 +56,15 @@
 	>
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}
-				<Fa
-					{icon}
-					{size}
-					class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
-				/>
+				{#if typeof icon === 'string'}
+					<img src={icon} alt="icon" />
+				{:else}
+					<Fa
+						{icon}
+						{size}
+						class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
+					/>
+				{/if}
 			{/each}
 		</div>
 		<div

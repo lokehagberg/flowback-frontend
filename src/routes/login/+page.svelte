@@ -29,7 +29,7 @@
 
 <div class="dark:bg-darkbackground bg-purple-50 h-[100vh]  flex flex-col items-center">
 	<div class="mt-16">
-		<img src={env.PUBLIC_LOGO === "REFORUM" ? Reforum : Logo} class="w-44" alt="flowback logo" />
+		<img src={env.PUBLIC_LOGO === "REFORUM" ? Reforum : Logo} class="w-[300px]" alt="flowback logo" />
 	</div>
 	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText mt-12 rounded shadow-lg w-full max-w-[600px]">
 		<Tab bind:selectedPage tabs={env.PUBLIC_DISABLE_ACCOUNT_CREATION === "true" ? ['Login'] : ['Login', 'Register']} />

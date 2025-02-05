@@ -22,6 +22,7 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
+	import a from '$lib/assets/Date_range_fill.svg';
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
@@ -113,13 +114,19 @@
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon icon={faHome} text="Home" href="home" bind:selectedHref={selectedHref} color={darkMode ? 'white' : 'black'} />
+					<HeaderIcon
+						icon={faHome}
+						text="Home"
+						href="home"
+						bind:selectedHref
+						color={darkMode ? 'white' : 'black'}
+					/>
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
 						href="groups"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
@@ -128,15 +135,15 @@
 						icon={faHome}
 						text="Home"
 						href="groups/1"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 				<HeaderIcon
-					icon={faCalendarWeek}
+					icon={a}
 					text="My Schedule"
 					href="schedule"
-					bind:selectedHref={selectedHref}
+					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
 
@@ -144,7 +151,7 @@
 					icon={faList}
 					text="My Kanban"
 					href="kanban"
-					bind:selectedHref={selectedHref}
+					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
 
@@ -153,7 +160,7 @@
 						icon={faCoins}
 						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 						href="ledger"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
@@ -163,7 +170,7 @@
 						icon={faCog}
 						text={'Automate'}
 						href="automate"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{:else}
@@ -171,7 +178,7 @@
 						icon={faCog}
 						text={'Delegations'}
 						href="automate"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}

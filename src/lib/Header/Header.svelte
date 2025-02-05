@@ -22,7 +22,10 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import a from '$lib/assets/Date_range_fill.svg';
+	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
+	import HomeIcon from '$lib/assets/Home_fill.svg';
+	import KanbanIcon from '$lib/assets/darhboard.svg';
+	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
@@ -115,7 +118,8 @@
 			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon
-						icon={faHome}
+						icon={
+				HomeIcon}
 						text="Home"
 						href="home"
 						bind:selectedHref
@@ -132,7 +136,7 @@
 				{/if}
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 					<HeaderIcon
-						icon={faHome}
+						icon={HomeIcon}
 						text="Home"
 						href="groups/1"
 						bind:selectedHref
@@ -140,15 +144,15 @@
 					/>
 				{/if}
 				<HeaderIcon
-					icon={a}
+					icon={CalendarIcon}
 					text="My Schedule"
 					href="schedule"
 					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
-
+				
 				<HeaderIcon
-					icon={faList}
+					icon={KanbanIcon}
 					text="My Kanban"
 					href="kanban"
 					bind:selectedHref
@@ -167,7 +171,7 @@
 
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 					<HeaderIcon
-						icon={faCog}
+						icon={AutomationIcon}
 						text={'Automate'}
 						href="automate"
 						bind:selectedHref
@@ -175,7 +179,7 @@
 					/>
 				{:else}
 					<HeaderIcon
-						icon={faCog}
+						icon={AutomationIcon}
 						text={'Delegations'}
 						href="automate"
 						bind:selectedHref

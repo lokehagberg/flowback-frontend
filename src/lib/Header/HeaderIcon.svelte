@@ -57,7 +57,7 @@
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}
 				{#if typeof icon === 'string'}
-					<img src={icon} alt="icon" />
+					<img class={`w-6`} src={icon} alt="icon" />
 				{:else}
 					<Fa
 						{icon}

@@ -7,7 +7,7 @@
 	import NewPassword from '$lib/Login/NewPassword.svelte';
 	import { onMount } from 'svelte';
 	import Logo from '$lib/assets/Logo.png';
-	import Reforum from '$lib/assets/Reforum.png';
+	import Reforum from '$lib/assets/ReforumTransparent.png';
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
 	import {env} from "$env/dynamic/public";

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import HeaderIcon from './HeaderIcon.svelte';
 	import Logo from '$lib/assets/Logo.png';
-	import Reforum from '$lib/assets/Reforum.png';
+	import Reforum from '$lib/assets/ReforumTransparent.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';

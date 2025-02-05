@@ -201,7 +201,7 @@
 					{#if darkMode}
 						<Sun />
 					{:else}
-						<Fa icon={faMoon} />
+						<Fa icon={faMoon} size={"25"} />
 					{/if}
 				</button>
 				<Notifications />

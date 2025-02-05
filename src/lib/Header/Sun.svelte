@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="25" height="25">
     <!-- Sun Rays -->
     <line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="8" />
     <line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="8" />

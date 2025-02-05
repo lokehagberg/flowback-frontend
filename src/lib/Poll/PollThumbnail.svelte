@@ -99,9 +99,9 @@
 	id={`poll-thumbnail-${poll.id.toString()}`}
 >
 	<div class="mx-2">
-		<div class="flex items-center justify-between text-primary dark:text-secondary dark:text-secondary">
+		<div class="flex items-center justify-between text-primary dark:text-secondary">
 			<a
-				class="cursor-pointer text-primary dark:text-secondary dark:text-secondary hover:underline text-2xl break-all"
+				class="cursor-pointer text-primary dark:text-secondary hover:underline text-2xl break-all"
 				href={onHoverGroup
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -212,7 +212,7 @@
 			{/if}
 
 			<!-- Phase -->
-			<div class="text-sm font-semibold text-primary dark:text-secondary dark:text-secondary">
+			<div class="text-sm font-semibold text-primary dark:text-secondary">
 				{$_('Current phase:')}
 				{$_(getPhaseUserFriendlyName(phase))}
 			</div>

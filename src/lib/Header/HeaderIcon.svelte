@@ -16,7 +16,7 @@
 		color = '',
 		size = 'xl',
 		tabindex = 0,
-		selectedHref: string | null;
+		selectedHref: string | null = null;
 
 	let hovering = false,
 		selectedCurrent = '',

@@ -145,7 +145,7 @@
 				{/if}
 				<HeaderIcon
 					icon={CalendarIcon}
-					text="My Schedule"
+					text="Schedule"
 					href="schedule"
 					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
@@ -153,7 +153,7 @@
 				
 				<HeaderIcon
 					icon={KanbanIcon}
-					text="My Kanban"
+					text="Kanban"
 					href="kanban"
 					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}

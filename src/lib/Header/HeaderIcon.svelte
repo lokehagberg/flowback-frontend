@@ -39,6 +39,11 @@
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
+
+	const getIconFilter = (isSelected: boolean) => {
+		if (isSelected) return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
+		return 'brightness(0)';
+	};
 </script>
 
 {#if href}
@@ -57,14 +62,20 @@
 		<div on:load={checkIfSelected}>
 			{#each icons as icon}
 				{#if typeof icon === 'string'}
-					<img class={`w-6`} src={icon} alt="icon" />
+						<img 
+							class="w-6 transition-all"
+							style="filter: {getIconFilter(selectedPage)}"
+							src={icon} 
+							alt="icon" 
+						/>
 				{:else}
 					<Fa
 						{icon}
 						{size}
-						class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
+						class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
 					/>
 				{/if}
+				{$_(text)}
 			{/each}
 		</div>
 		<div
@@ -125,5 +136,10 @@
 		width: 4rem;
 		height: 2px;
 		background-color: var(--primary);
+	}
+
+	/* Add smooth transition for color changes */
+	img {
+		transition: filter 0.2s ease-in-out;
 	}
 </style>

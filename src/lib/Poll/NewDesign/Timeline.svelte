@@ -67,7 +67,7 @@
 {#key phase}
 <div class={`relative flex flex-col items-center ${Class}`}>
 	<div class="text-center">
-		<span class="font-semibold text-primary">
+		<span class="font-semibold text-primary dark:text-secondary">
 			{$_('Current')}:
 		</span>
 		{$_('Phase')}

@@ -22,7 +22,7 @@
 			<Fa icon={faArrowLeft} />
 		</button>
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded p-6 shadow ml-6 w-[30%]">
-			<h1 class="text-xl font-semibold text-primary text-left break-all">{$_('Admin Settings')}</h1>
+			<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left break-all">{$_('Admin Settings')}</h1>
 			<ul>
 				<li
 					class={`cursor-pointer ${

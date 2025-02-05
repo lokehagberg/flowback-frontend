@@ -25,7 +25,7 @@
 		>
 			<Fa icon={faArrowLeft} />
 		</button>
-		<!-- <h1 class="text-2xl font-semibold text-primary text-center mt-4">{$_('Create a Poll')}</h1> -->
+		<!-- <h1 class="text-2xl font-semibold text-primary dark:text-secondary text-center mt-4">{$_('Create a Poll')}</h1> -->
 		<div class="flex justify-center">
 			<CreatePoll />
 		</div>

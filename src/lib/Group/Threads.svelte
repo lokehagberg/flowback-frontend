@@ -125,7 +125,7 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
 				<button
-					class="cursor-pointer hover:underline text-primary text-2xl text-left"
+					class="cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					>{thread.title}</button
 				>
@@ -172,13 +172,13 @@
 					<div class="flex gap-1">
 						{thread.score}
 						<button
-							class:text-primary={thread.user_vote === true}
+							class:text-primary dark:text-secondary={thread.user_vote === true}
 							on:click={() => threadVote(thread, 'up')}
 						>
 							<Fa icon={faArrowUp} />
 						</button>
 						<button
-							class:text-primary={thread.user_vote === false}
+							class:text-primary dark:text-secondary={thread.user_vote === false}
 							on:click={() => threadVote(thread, 'down')}
 						>
 							<Fa icon={faArrowDown} />

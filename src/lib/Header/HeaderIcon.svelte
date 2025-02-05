@@ -9,7 +9,7 @@
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 	export let icon: IconDefinition | string = faCircle,
-		icons:(IconDefinition|string)[] = [faCircle],
+		icons: (IconDefinition | string)[] = [faCircle],
 		text = 'icon',
 		href: string | null = null,
 		Class = '',
@@ -41,8 +41,11 @@
 	$: if ($page.url.pathname) checkIfSelected();
 
 	const getIconFilter = (isSelected: boolean) => {
-		if (isSelected) return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
-		return 'brightness(0)';
+		if (localStorage.getItem('theme') === 'dark')
+			return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+		else if (isSelected)
+			return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
+		else return 'brightness(0)';
 	};
 </script>
 
@@ -62,12 +65,12 @@
 		<div on:load={checkIfSelected} class="flex flex-col items-center">
 			{#each icons as icon}
 				{#if typeof icon === 'string'}
-						<img 
-							class="w-6 transition-all"
-							style="filter: {getIconFilter(selectedPage)}"
-							src={icon} 
-							alt="icon" 
-						/>
+					<img
+						class="w-6 transition-all"
+						style="filter: {getIconFilter(selectedPage)}"
+						src={icon}
+						alt="icon"
+					/>
 				{:else}
 					<Fa
 						{icon}
@@ -76,13 +79,12 @@
 					/>
 				{/if}
 				<div class="text-xs mt-2">
-
 					{$_(text)}
 				</div>
 			{/each}
 		</div>
 		<div
-			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50 "
+			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
 			class:invisible={!hovering}
 		>
 			{$_(text)}

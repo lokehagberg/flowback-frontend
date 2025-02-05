@@ -97,7 +97,7 @@
 
 <form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded">
 	<Loader bind:loading>
-		<span class="block text-left text-md text-primary font-semibold">{$_('Create a Proposal')}</span
+		<span class="block text-left text-md text-primary dark:text-secondary font-semibold">{$_('Create a Proposal')}</span
 		>
 		<TextInput required label="Title" bind:value={title} />
 		<TextArea

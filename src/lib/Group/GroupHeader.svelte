@@ -27,7 +27,7 @@
 	];
 </script>
 
-<div class="bg-white">
+<div class="bg-white dark:bg-darkobject">
 	<div class="relative">
 		<div class="relative">
 			<img

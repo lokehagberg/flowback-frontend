@@ -96,7 +96,7 @@
 		}}
 		on:keydown
 	>
-		<Fa class={'hover:cursor-pointer hover:text-primary'} icon={faBell} size={'1.2x'} />
+		<Fa class={'hover:cursor-pointer hover:text-primary dark:text-secondary'} icon={faBell} size={'1.2x'} />
 	</button>
 
 	{#if notificationOpen}

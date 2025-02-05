@@ -63,7 +63,7 @@
 			{/if}
 		{/if}
 		<!-- Proposal Title -->
-		<span class="text-md text-primary font-semibold align-text-top text-left break-all"
+		<span class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-all"
 			>{proposal.title}</span
 		>
 	</div>

@@ -33,6 +33,7 @@
 	import { goto } from '$app/navigation';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import DeletePollModal from './DeletePollModal.svelte';
+	import ChatIcon from '$lib/assets/Chat_fill.svg';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -202,7 +203,7 @@
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
 			>
-				<Fa class="inline" icon={faComment} />
+				<img class="w-5" src={ChatIcon} alt="open chat" />
 				<span class="inline">{poll.total_comments}</span>
 			</a>
 

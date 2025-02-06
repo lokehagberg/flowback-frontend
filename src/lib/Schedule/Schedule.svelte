@@ -437,7 +437,7 @@
 					<div class="text-left">
 						{$_('Start date')}
 						<!-- <DateInput bind:value={start_date} /> -->
-						<input type="datetime-local" bind:value={start_date} />
+						<input type="datetime-local" bind:value={start_date}  />
 					</div>
 
 					{$_('End date')}

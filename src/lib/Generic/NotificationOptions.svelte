@@ -99,7 +99,7 @@
 		<Fa class={'hover:cursor-pointer hover:text-primary dark:text-secondary'} icon={faBell} size={'1.2x'} />
 	</button>
 
-	{#if notificationOpen}
+	{#if notificationOpen && categories}
 		<div class={`z-50 absolute mt-2 bg-white dark:bg-darkobject shadow-xl text-sm ${ClassOpen}`}>
 			<div class="text-xs p-2">{$_('Manage Subscriptions')}</div>
 			{#each categories as category, i}

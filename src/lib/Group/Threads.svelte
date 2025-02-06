@@ -172,13 +172,13 @@
 					<div class="flex gap-1">
 						{thread.score}
 						<button
-							class:text-primary dark:text-secondary={thread.user_vote === true}
+							class:text-primary={thread.user_vote === true}
 							on:click={() => threadVote(thread, 'up')}
 						>
 							<Fa icon={faArrowUp} />
 						</button>
 						<button
-							class:text-primary dark:text-secondary={thread.user_vote === false}
+							class:text-primary={thread.user_vote === false}
 							on:click={() => threadVote(thread, 'down')}
 						>
 							<Fa icon={faArrowDown} />

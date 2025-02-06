@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 
 	export let icon: IconDefinition | string = faCircle,
 		icons: (IconDefinition | string)[] = [faCircle],
@@ -20,7 +21,8 @@
 
 	let hovering = false,
 		selectedCurrent = '',
-		selectedPage = false;
+		selectedPage = false,
+		darkMode = false;
 
 	$: selectedPage = selectedHref === href;
 
@@ -36,12 +38,15 @@
 
 	onMount(() => {
 		checkIfSelected();
+		darkModeStore.subscribe((_darkMode) => {
+			darkMode = _darkMode;
+		});
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
 
 	const getIconFilter = (isSelected: boolean) => {
-		if (localStorage.getItem('theme') === 'dark')
+		if (darkMode)
 			return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
 		else if (isSelected)
 			return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
@@ -65,12 +70,14 @@
 		<div on:load={checkIfSelected} class="flex flex-col items-center">
 			{#each icons as icon}
 				{#if typeof icon === 'string'}
-					<img
-						class="w-6 transition-all"
-						style="filter: {getIconFilter(selectedPage)}"
-						src={icon}
-						alt="icon"
-					/>
+					{#key darkMode}
+						<img
+							class="w-6 transition-all"
+							style="filter: {getIconFilter(selectedPage)}"
+							src={icon}
+							alt="icon"
+						/>
+					{/key}
 				{:else}
 					<Fa
 						{icon}

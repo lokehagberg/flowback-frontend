@@ -87,14 +87,14 @@
 	>
 		<button
 			on:click={markAllAsRead}
-			class="w-full flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
+			class="w-full flex justify-end items-center cursor-pointer border-b border-gray-200 dark:border-gray-600 border hover:shadow hover:bg-blue-100 hover:border-l-2 hover:border-l-primary transition-all"
 		>
-			{$_('Mark all as read')}
+			<span class="mr-4">{$_('Mark all as read')}</span>
 		</button>
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
 				<li
-					class="flex justify-end items-center cursor-pointer border-b border-gray-200 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
+					class="flex justify-end items-center cursor-pointer border-b border-gray-200 dark:border-gray-600 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
 					<button

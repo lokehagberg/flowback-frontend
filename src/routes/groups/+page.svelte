@@ -66,9 +66,11 @@
 
 			<GroupFiltering bind:filter {getGroups} />
 
-			{#each groupList as group}
-				<GroupThumbnail {group} />
-			{/each}
+			{#if groupList}
+				{#each groupList as group}
+					<GroupThumbnail {group} />
+				{/each}
+			{/if}
 		</div>
 	</Loader>
 </Layout>

@@ -57,7 +57,7 @@
 		on:keydown
 		role="button"
 	>
-		<div class="dark:text-darkmodeText relative p-4 w-full max-w-md h-full">
+		<div class="dark:text-darkmodeText relative p-4 w-full max-w-full h-full">
 			<div class="text-xl border-b-2 border-gray-300 border-solid">
 				<slot name="header" />
 				<CrossButton action={() => (open = false)} />

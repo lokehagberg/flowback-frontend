@@ -41,7 +41,7 @@
 				class="border-b-2 flex flex-col break-all"
 				class:select-none={phase === 'prediction_bet'}
 			>
-				<span class="text-primary font-semibold">{prediction.title}</span>
+				<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
 				{#if prediction.description}
 					<Description description={prediction.description} limit={30} />
 				{/if}

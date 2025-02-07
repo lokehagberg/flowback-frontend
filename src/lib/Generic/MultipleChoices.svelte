@@ -42,7 +42,7 @@
 		on:keydown
 	>
 		<Fa
-			class="hover:cursor-pointer hover:text-primary"
+			class="hover:cursor-pointer hover:text-primary dark:text-secondary"
 			icon={faEllipsis}
 			rotate="90"
 			size={'1.2x'}

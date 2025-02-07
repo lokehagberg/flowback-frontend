@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { onMount } from 'svelte';
 	import type { Thread } from './interface';
 	import Pagination from '$lib/Generic/Pagination.svelte';
@@ -125,7 +126,7 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
 				<button
-					class="cursor-pointer hover:underline text-primary text-2xl text-left"
+					class="cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					>{thread.title}</button
 				>
@@ -161,10 +162,10 @@
 					class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
 				>
 					<a
-						class="text-black dark:text-darkmodeText"
+						class="text-black dark:text-darkmodeText flex justify-center gap-1"
 						href={`${$page.params.groupId}/thread/${thread.id}`}
 					>
-						<Fa class="inline" icon={faComment} />
+						<img class="w-5" src={ChatIcon} alt="open chat" />
 						<span class="inline">{thread.total_comments} {'comments'}</span>
 					</a>
 				</div>

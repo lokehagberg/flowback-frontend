@@ -105,7 +105,7 @@
 
 <Layout centered>
 	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-full text-left">
-		<h1 class="text-xl font-semibold text-primary text-left">{$_('Automate')}</h1>
+		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">{$_('Automate')}</h1>
 		<p>
 			{$_(
 				`Sometimes we have limited time and cannot participate fully, but still want to contribute. Reformum has a number of functions to automate parts of your engagement when you cannot participate yourself.`

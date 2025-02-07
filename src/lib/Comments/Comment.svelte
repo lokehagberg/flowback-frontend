@@ -135,6 +135,7 @@
 				{/each}
 			</div>
 		{/if}
+
 		{#if comment.active}
 			<div class="flex gap-3 text-xs">
 				<button

@@ -185,7 +185,7 @@
 					on:click={() => (selectedTag = tag)}
 					role="button"
 					tabindex="0"
-					class="text-primary font-bold flex items-center justify-between cursor-pointer break-all"
+					class="text-primary dark:text-secondary font-bold flex items-center justify-between cursor-pointer break-all"
 				>
 					{tag.name}
 					<Fa icon={faAngleRight} />
@@ -194,7 +194,7 @@
 		</div>
 		<div class="bg-white p-4">
 			{#if selectedTag}
-				<span class="text-primary font-bold break-all">{selectedTag.name}</span>
+				<span class="text-primary dark:text-secondary font-bold break-all">{selectedTag.name}</span>
 				<RadioButtons2
 					radioSide="right"
 					Class="w-full cursor-pointer"
@@ -210,7 +210,7 @@
 					bind:resetValue
 				/>
 			{:else}
-				<span class="text-primary font-bold text-2xl">{$_('Select Tag')}</span>
+				<span class="text-primary dark:text-secondary font-bold text-2xl">{$_('Select Tag')}</span>
 			{/if}
 		</div>
 	</div>

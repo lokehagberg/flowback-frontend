@@ -33,6 +33,7 @@
 	import { goto } from '$app/navigation';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import DeletePollModal from './DeletePollModal.svelte';
+	import ChatIcon from '$lib/assets/Chat_fill.svg';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -99,9 +100,9 @@
 	id={`poll-thumbnail-${poll.id.toString()}`}
 >
 	<div class="mx-2">
-		<div class="flex items-center justify-between text-primary">
+		<div class="flex items-center justify-between text-primary dark:text-secondary">
 			<a
-				class="cursor-pointer text-primary dark:text-darkmodeText hover:underline text-2xl break-all"
+				class="cursor-pointer text-primary dark:text-secondary hover:underline text-2xl break-all"
 				href={onHoverGroup
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`}
@@ -202,7 +203,7 @@
 					? '/groups/1'
 					: `/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?section=comments`}
 			>
-				<Fa class="inline" icon={faComment} />
+				<img class="w-5" src={ChatIcon} alt="open chat" />
 				<span class="inline">{poll.total_comments}</span>
 			</a>
 
@@ -212,7 +213,7 @@
 			{/if}
 
 			<!-- Phase -->
-			<div class="text-sm font-semibold text-primary">
+			<div class="text-sm font-semibold text-primary dark:text-secondary">
 				{$_('Current phase:')}
 				{$_(getPhaseUserFriendlyName(phase))}
 			</div>

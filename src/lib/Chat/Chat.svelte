@@ -11,6 +11,7 @@
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
+	import ChatIcon from '$lib/assets/Chat_fill.svg'
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -103,7 +104,7 @@
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
-	<Fa icon={faComment} size="1.3x" />
+	<img src={ChatIcon} alt="open chat"/>
 </button>
 
 <style>

@@ -115,7 +115,7 @@
 	});
 </script>
 
-<main class="h-[100wh]">
+<main class="h-screen overflow-y-auto ">
 	{#if showUI}
 		<Chat />
 		<Header />

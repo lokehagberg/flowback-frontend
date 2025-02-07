@@ -71,13 +71,13 @@
 	<div class="flex mt-6 gap-6">
 		<div class="bg-white w-[300px] p-6">
 			<button
-				class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors mb-4"
+				class="flex items-center gap-2 text-gray-600 hover:text-primary dark:text-secondary transition-colors mb-4"
 				on:click={() => history.back()}
 			>
 				<Fa icon={faArrowLeft} />
 				{$_('Back')}
 			</button>
-			<h1 class="text-xl text-left text-primary font-bold">{$_('Settings')}</h1>
+			<h1 class="text-xl text-left text-primary dark:text-secondary font-bold">{$_('Settings')}</h1>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<ul class="mt-4">
@@ -129,7 +129,7 @@
 					{$_('Notify me when')}...
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-xl text-primary font-bold">{configToReadable(key1)}</span>
+							<span class="text-xl text-primary dark:text-secondary font-bold">{configToReadable(key1)}</span>
 							<ul>
 								{#each Object.entries(settings) as [key2, setting]}
 									<li class="flex justify-between">
@@ -152,7 +152,7 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process'}
-					<span class="text-xl text-primary font-bold">{$_('Poll Phases')}</span>
+					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span>
 					<span>{$_('Select the phases you want to participate in')}.</span>
 					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
 						<li class="flex justify-between">

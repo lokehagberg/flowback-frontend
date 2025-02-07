@@ -26,13 +26,14 @@
 }
 
 html {
-	scrollbar-gutter: stable;
+
 }
 
 body {
 	/* min-height: 100vh; */
 	margin: 0;
 	/* background: var(--darkmode-background-color); */
+
 }
 
 body::before {
@@ -135,3 +136,4 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
+

@@ -6,20 +6,23 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 
-	export let icon = faCircle,
-		icons = [faCircle],
+	export let icon: IconDefinition | string = faCircle,
+		icons: (IconDefinition | string)[] = [faCircle],
 		text = 'icon',
 		href: string | null = null,
 		Class = '',
 		color = '',
 		size = 'xl',
 		tabindex = 0,
-		selectedHref: string | null;
+		selectedHref: string | null = null;
 
 	let hovering = false,
 		selectedCurrent = '',
-		selectedPage = false;
+		selectedPage = false,
+		darkMode = false;
 
 	$: selectedPage = selectedHref === href;
 
@@ -34,10 +37,21 @@
 	if (icons.length === 1) icons[0] = icon;
 
 	onMount(() => {
-	 	checkIfSelected();
+		checkIfSelected();
+		darkModeStore.subscribe((_darkMode) => {
+			darkMode = _darkMode;
+		});
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
+
+	const getIconFilter = (isSelected: boolean) => {
+		if (darkMode)
+			return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+		else if (isSelected)
+			return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
+		else return 'brightness(0)';
+	};
 </script>
 
 {#if href}
@@ -49,17 +63,31 @@
 		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative transition-all ${Class}`}
+		class={`relative transition-all w-14${Class}`}
 		id={href}
 		{tabindex}
 	>
-		<div on:load={checkIfSelected}>
+		<div on:load={checkIfSelected} class="flex flex-col items-center">
 			{#each icons as icon}
-				<Fa
-					{icon}
-					{size}
-					class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
-				/>
+				{#if typeof icon === 'string'}
+					{#key darkMode}
+						<img
+							class="w-6 transition-all"
+							style="filter: {getIconFilter(selectedPage)}"
+							src={icon}
+							alt="icon"
+						/>
+					{/key}
+				{:else}
+					<Fa
+						{icon}
+						{size}
+						class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
+					/>
+				{/if}
+				<div class="text-xs mt-2">
+					{$_(text)}
+				</div>
 			{/each}
 		</div>
 		<div
@@ -120,5 +148,10 @@
 		width: 4rem;
 		height: 2px;
 		background-color: var(--primary);
+	}
+
+	/* Add smooth transition for color changes */
+	img {
+		transition: filter 0.2s ease-in-out;
 	}
 </style>

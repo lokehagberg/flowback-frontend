@@ -1,7 +1,7 @@
 <script lang="ts">
 	import HeaderIcon from './HeaderIcon.svelte';
 	import Logo from '$lib/assets/Logo.png';
-	import Reforum from '$lib/assets/Reforum.png';
+	import Reforum from '$lib/assets/ReforumTransparent.png';
 	import DefaultPFP from '$lib/assets/Default_pfp.png';
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
@@ -22,6 +22,10 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
+	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
+	import HomeIcon from '$lib/assets/Home_fill.svg';
+	import KanbanIcon from '$lib/assets/darhboard.svg';
+	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
@@ -113,38 +117,45 @@
 		<div class="!flex justify-between md:w-[80vw]">
 			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon icon={faHome} text="Home" href="home" bind:selectedHref={selectedHref} color={darkMode ? 'white' : 'black'} />
+					<HeaderIcon
+						icon={
+				HomeIcon}
+						text="Home"
+						href="home"
+						bind:selectedHref
+						color={darkMode ? 'white' : 'black'}
+					/>
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
 						icon={faUserFriends}
 						text="Groups"
 						href="groups"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 					<HeaderIcon
-						icon={faHome}
+						icon={HomeIcon}
 						text="Home"
 						href="groups/1"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 				<HeaderIcon
-					icon={faCalendarWeek}
-					text="My Schedule"
+					icon={CalendarIcon}
+					text="Schedule"
 					href="schedule"
-					bind:selectedHref={selectedHref}
+					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
-
+				
 				<HeaderIcon
-					icon={faList}
-					text="My Kanban"
+					icon={KanbanIcon}
+					text="Kanban"
 					href="kanban"
-					bind:selectedHref={selectedHref}
+					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
 
@@ -153,31 +164,32 @@
 						icon={faCoins}
 						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 						href="ledger"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 					<HeaderIcon
-						icon={faCog}
+						icon={AutomationIcon}
 						text={'Automate'}
 						href="automate"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{:else}
 					<HeaderIcon
-						icon={faCog}
+						icon={AutomationIcon}
 						text={'Delegations'}
 						href="automate"
-						bind:selectedHref={selectedHref}
+						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 			</nav>
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
+				<div class="mr-5 flex gap-4 items-center">
 				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
 					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
@@ -190,11 +202,11 @@
 					{#if darkMode}
 						<Sun />
 					{:else}
-						<Fa icon={faMoon} />
+						<Fa icon={faMoon} size={"25"} />
 					{/if}
 				</button>
 				<Notifications />
-
+			</div>
 				<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}

@@ -62,7 +62,7 @@
 				name="password"
 			/>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="flex justify-between">
+			<div class="flex justify-between items-end">
 				<CheckboxButtons
 					Class="cursor-pointer"
 					label=""
@@ -81,7 +81,7 @@
 			</div>
 		</div>
 
-		<hr class="border-b-1 border-gray-300 w-full" />
+		<hr class="border-b-1 border-gray-300 w-full mt-6" />
 
 		<Button
 			type="submit"

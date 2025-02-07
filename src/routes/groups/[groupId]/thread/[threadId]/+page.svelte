@@ -51,7 +51,7 @@
 				<Fa icon={faArrowLeft} />
 			</div>
 
-			<h1 class="text-left text-2xl text-primary font-bold">{thread.title}</h1>
+			<h1 class="text-left text-2xl text-primary dark:text-secondary font-bold">{thread.title}</h1>
 
 			<NotificationOptions
 				type="group_thread"

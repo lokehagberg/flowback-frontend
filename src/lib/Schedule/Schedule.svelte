@@ -10,7 +10,7 @@
 	import type { scheduledEvent } from '$lib/Schedule/interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import { DateInput } from 'date-picker-svelte';
+	// import { DateInput } from 'date-picker-svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
@@ -232,13 +232,12 @@
 
 	const onFilterWorkGroup = (workGroup: WorkGroup) => {
 		//Once backend is fixed, use the commented out version
-		
+
 		// if (workGroupFilter.find((groupId) => groupId === workGroup.id))
 		// 	workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
 		// else workGroupFilter.push(workGroup.id);
 
-
-		workGroupFilter = [workGroup.id]
+		workGroupFilter = [workGroup.id];
 
 		workGroupFilter = workGroupFilter;
 
@@ -415,7 +414,7 @@
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal bind:open={showCreateScheduleEvent}>
+<Modal Class="md:w-[700px]" bind:open={showCreateScheduleEvent}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
@@ -434,17 +433,18 @@
 				{/if}
 				<!-- <input bind:value={start_date} type="datetime-local" />
 				<input bind:value={end_date} type="datetime-local" /> -->
-				<div class="text-left">
-					{$_('Start date')}
-					<DateInput bind:value={start_date} />
-				</div>
-				<div class="text-left">
+				<div class="md:flex md:gap-4">
+					<div class="text-left">
+						{$_('Start date')}
+						<!-- <DateInput bind:value={start_date} /> -->
+						<input type="datetime-local" bind:value={start_date}  />
+					</div>
+
 					{$_('End date')}
-					<DateInput bind:value={end_date} />
+					<!-- <DateInput bind:value={end_date} /> -->
+					<input type="datetime-local" bind:value={end_date} />
 				</div>
-				<div>
-					<Button type="submit">{$_('Submit')}</Button>
-				</div>
+				<Button Class="mt-4" type="submit">{$_('Submit')}</Button>
 			</form>
 		</Loader>
 	</div>
@@ -456,8 +456,8 @@
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventEdit}>
-				<DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
-				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" />
+				<!-- <DateInput bind:value={start_date} format="yyyy-MM-dd HH:mm" />
+				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" /> -->
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<TextInput label="Event title" bind:value={title} />
 				<TextArea label="Event description" bind:value={description} />

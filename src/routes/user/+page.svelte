@@ -186,7 +186,7 @@
 				id="avatar"
 			/>
 			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[50%]">
-				<div class="text-xl text-primary font-bold max-w-[600px] break-words">
+				<div class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words">
 					{user.username}
 				</div>
 				<p class=" whitespace-pre-wrap">
@@ -195,7 +195,7 @@
 				<StatusMessage Class="" bind:status />
 			</div>
 			<div class="dark:text-darkmodeText">
-				<div class="text-primary font-bold">{$_('Contact Information')}</div>
+				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
 				<a class={``} href={user.website || ''}>
 					{user.website || ''}
 				</a>

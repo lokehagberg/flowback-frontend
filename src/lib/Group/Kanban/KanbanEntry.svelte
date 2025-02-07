@@ -270,7 +270,7 @@
 		</div>
 	{/if}
 	<div class="flex justify-between w-full items-start">
-		<div class="text-primary text-left break-before-auto font-semibold break-all">
+		<div class="text-primary dark:text-secondary dark:text-secondary text-left break-before-auto font-semibold break-all">
 			{kanban.title}
 		</div>
 		<div class="cursor-pointer hover:underline">

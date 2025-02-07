@@ -133,7 +133,7 @@
 	{#each tags as tag, index}
 		<div class="section">
 			<button
-				class="transition-all flex text-primary justify-between w-full section-title"
+				class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
 				on:click={() => toggleSection(index)}
 			>
 				<span class="break-all text-left">{tag.name}</span>

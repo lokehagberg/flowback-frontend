@@ -11,7 +11,8 @@
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faX } from '@fortawesome/free-solid-svg-icons';
-	import ChatIcon from '$lib/assets/Chat_fill.svg'
+	import ChatIcon from '$lib/assets/Chat_fill.svg';
+	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -26,12 +27,14 @@
 		notifiedGroup: number[] = [],
 		isLookingAtOlderMessages = false,
 		chatDiv: HTMLDivElement,
-		selectedChatChannelId: number | null;
+		selectedChatChannelId: number | null,
+		darkMode = false;
 
 	onMount(async () => {
 		await getUser();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
+		darkModeStore.subscribe(dm => darkMode = dm)
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -104,7 +107,7 @@
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
-	<img src={ChatIcon} alt="open chat"/>
+	<img src={ChatIcon} class="text-white" style="filter: {getIconFilter(darkMode, 'white')}" alt="open chat" />
 </button>
 
 <style>

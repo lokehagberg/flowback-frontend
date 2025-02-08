@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-	import { darkModeStore } from '$lib/Generic/DarkMode';
+	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 
 	export let icon: IconDefinition | string = faCircle,
 		icons: (IconDefinition | string)[] = [faCircle],
@@ -45,13 +45,6 @@
 
 	$: if ($page.url.pathname) checkIfSelected();
 
-	const getIconFilter = (isSelected: boolean) => {
-		if (darkMode)
-			return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
-		else if (isSelected)
-			return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
-		else return 'brightness(0)';
-	};
 </script>
 
 {#if href}

@@ -36,7 +36,7 @@
 			let groupUserData: GroupUser, permissions: Permission;
 			if (groupId) {
 				groupUserData = await getGroupUserInfo(groupId);
-				if (groupUserData.permission_id)
+				if (groupUserData?.permission_id)
 					permissions = await getPermissions(groupId, groupUserData.permission_id);
 			}
 

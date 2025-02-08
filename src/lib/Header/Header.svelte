@@ -115,15 +115,15 @@
 			/></a
 		>
 		<div class="!flex justify-between md:w-[80vw]">
-			<nav class="flex p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
+			<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<HeaderIcon
-						icon={
-				HomeIcon}
+						icon={HomeIcon}
 						text="Home"
 						href="home"
 						bind:selectedHref
 						color={darkMode ? 'white' : 'black'}
+						Class=""
 					/>
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 					<HeaderIcon
@@ -150,7 +150,7 @@
 					bind:selectedHref
 					color={darkMode ? 'white' : 'black'}
 				/>
-				
+
 				<HeaderIcon
 					icon={KanbanIcon}
 					text="Kanban"
@@ -190,23 +190,23 @@
 
 			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
 				<div class="mr-5 flex gap-4 items-center">
-				<button
-					class="dark:text-darkmodeText cursor-pointer pl-2"
-					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
-					on:keydown={() => {}}
-					on:click={() => {
-						changeDarkMode(darkMode ? 'light' : 'dark');
-						darkMode = !darkMode;
-					}}
-				>
-					{#if darkMode}
-						<Sun />
-					{:else}
-						<Fa icon={faMoon} size={"25"} />
-					{/if}
-				</button>
-				<Notifications />
-			</div>
+					<button
+						class="dark:text-darkmodeText cursor-pointer pl-2"
+						title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
+						on:keydown={() => {}}
+						on:click={() => {
+							changeDarkMode(darkMode ? 'light' : 'dark');
+							darkMode = !darkMode;
+						}}
+					>
+						{#if darkMode}
+							<Sun />
+						{:else}
+							<Fa icon={faMoon} size={'25'} />
+						{/if}
+					</button>
+					<Notifications />
+				</div>
 				<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 					<img
 						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}

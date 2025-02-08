@@ -1,7 +1,8 @@
 import { writable } from "svelte/store";
 
 export const darkModeStore = writable(false)
-
+let darkMode = false;
+darkModeStore.subscribe(mode => darkMode = mode)
 
 export const TriggerDarkMode = () => {
     if (
@@ -29,15 +30,34 @@ export const changeDarkMode = (changeTo: 'light' | 'dark') => {
     darkModeStore.set(changeTo === 'dark')
 }
 
-
 export const getIconFilter = (isSelected: boolean, color: 'white' | 'blue' = 'blue') => {
-    if (localStorage.getItem("theme") === "dark") {
-        if (color === 'blue')
-            return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
-        else if (color === 'white')
+
+    if (color === 'blue')
+        if (darkMode) {
+            if (isSelected)
+                return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+            else
+                return 'invert(31%) sepia(0%) saturate(0%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+        }
+        else {
+            if (isSelected)
+                return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
+            else
+                return 'brightness(0)'
+        }
+    else if (color === 'white')
+        if (darkMode)
             return 'invert(310%) sepia(0%) saturate(10%) hue-rotate(200deg) brightness(150%) contrast(80%)';
-    }
-    else if (isSelected)
-        return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
-    else return 'brightness(0)';
+        else
+            return 'brightness(0)'
+
+    // if (localStorage.getItem("theme") === "dark") {
+    //     if (color === 'blue' && isSelected)
+    //         return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+    //     else if (!isSelected)
+    //         return 'invert(310%) sepia(0%) saturate(10%) hue-rotate(200deg) brightness(150%) contrast(80%)';
+    //     else if (color === 'white')
+    // }
+    // else if (isSelected)
+    // else return 'brightness(0)';
 };

@@ -34,7 +34,7 @@
 		await getUser();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
-		darkModeStore.subscribe(dm => darkMode = dm)
+		darkModeStore.subscribe((dm) => (darkMode = dm));
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -107,7 +107,14 @@
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
 	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
 >
-	<img src={ChatIcon} class="text-white" style="filter: {getIconFilter(darkMode, 'white')}" alt="open chat" />
+	{#key darkMode}
+		<img
+			src={ChatIcon}
+			class="text-white"
+			style="filter: {getIconFilter(true, 'white')}"
+			alt="open chat"
+		/>
+	{/key}
 </button>
 
 <style>

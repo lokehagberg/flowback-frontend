@@ -44,7 +44,6 @@
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
-
 </script>
 
 {#if href}
@@ -56,32 +55,27 @@
 		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative transition-all w-14${Class}`}
+		class={`relative  w-14${Class}`}
 		id={href}
 		{tabindex}
 	>
 		<div on:load={checkIfSelected} class="flex flex-col items-center">
-			{#each icons as icon}
-				{#if typeof icon === 'string'}
-					{#key darkMode}
-						<img
-							class="w-6 transition-all"
-							style="filter: {getIconFilter(selectedPage)}"
-							src={icon}
-							alt="icon"
+			{#key darkMode}
+				{#each icons as icon}
+					{#if typeof icon === 'string'}
+						<img class="w-6" style="filter: {getIconFilter(selectedPage)}" src={icon} alt="icon" />
+					{:else}
+						<Fa
+							{icon}
+							{size}
+							class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
 						/>
-					{/key}
-				{:else}
-					<Fa
-						{icon}
-						{size}
-						class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
-					/>
-				{/if}
-				<div class="text-xs mt-2">
-					{$_(text)}
-				</div>
-			{/each}
+					{/if}
+					<div class="text-xs mt-2 dark:text-darkmodeText">
+						{$_(text)}
+					</div>
+				{/each}
+			{/key}
 		</div>
 		<div
 			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"

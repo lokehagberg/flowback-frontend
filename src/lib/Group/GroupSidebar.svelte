@@ -144,12 +144,14 @@
 				text="Documents"
 				icon={faFile}
 			/> -->
-			<GroupSidebarButton
-				action={() => action('kanban')}
-				isSelected={selectedPage === 'kanban'}
-				text="Group Kanban"
-				icon={faList}
-			/>
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<GroupSidebarButton
+					action={() => action('kanban')}
+					isSelected={selectedPage === 'kanban'}
+					text="Group Kanban"
+					icon={faList}
+				/>
+			{/if}
 			<GroupSidebarButton
 				action={() => action('schedule')}
 				isSelected={selectedPage === 'schedule'}

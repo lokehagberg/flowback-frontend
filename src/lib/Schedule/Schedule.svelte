@@ -413,7 +413,7 @@
 	</div>
 </Modal>
 
-{@debug start_date}
+<!-- {@debug start_date} -->
 
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="md:w-[700px]" bind:open={showCreateScheduleEvent}>

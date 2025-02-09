@@ -33,6 +33,7 @@
 	import Permissions from './Permissions/Permissions.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { PUBLIC_FLOWBACK_LEDGER_MODULE } from '$env/static/public';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -143,12 +144,14 @@
 				text="Documents"
 				icon={faFile}
 			/> -->
-			<GroupSidebarButton
-				action={() => action('kanban')}
-				isSelected={selectedPage === 'kanban'}
-				text="Group Kanban"
-				icon={faList}
-			/>
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<GroupSidebarButton
+					action={() => action('kanban')}
+					isSelected={selectedPage === 'kanban'}
+					text="Group Kanban"
+					icon={faList}
+				/>
+			{/if}
 			<GroupSidebarButton
 				action={() => action('schedule')}
 				isSelected={selectedPage === 'schedule'}
@@ -183,20 +186,32 @@
 				target="_blank"
 				href={`https://meet.flowback.org/${group.jitsi_room}`}
 			>
-				<GroupSidebarButton Class="w-full" text="Video Conference" icon={faVideoCamera} isSelected={false} /></a
-			>
-			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
 					Class="w-full"
-					action={() => (areYouSureModal = true)}
-					text="Leave group"
-					icon={faPersonRunning}
+					text="Video Conference"
+					icon={faVideoCamera}
 					isSelected={false}
-				/>
-			{:else}
-				<a class="text-inherit w-full" href={`/ledger`} target="_blank">
-					<GroupSidebarButton Class="w-full" text="Group Ledger" icon={faCoins} isSelected={false} />
-				</a>
+				/></a
+			>
+			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<GroupSidebarButton
+						Class="w-full"
+						action={() => (areYouSureModal = true)}
+						text="Leave group"
+						icon={faPersonRunning}
+						isSelected={false}
+					/>
+				{:else}
+					<a class="text-inherit w-full" href={`/ledger`}>
+						<GroupSidebarButton
+							Class="w-full"
+							text="Group Ledger"
+							icon={faCoins}
+							isSelected={false}
+						/>
+					</a>
+				{/if}
 			{/if}
 		</div>
 		{#if userIsOwner}

@@ -1,15 +1,14 @@
 services:
-  app:
+  flowback-frontend:
     restart: unless-stopped
     container_name: flowback-frontend
     image: flowback-frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
-      - 3000:3000
+      - ${PORT:-3000}:${PORT:-3000}
     env_file:
-      - .env
+      - path: ./.env
+        required: false
     networks:
       - flowback-network
 # Network to connect the separate backend docker compose

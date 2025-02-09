@@ -40,9 +40,14 @@
 	};
 
 	const getEventsAtDate = (date: Date) => {
-		return events.filter(
-			(event) => new Date(event.start_date) <= date && new Date(event.end_date) >= date
-		);
+		return events.filter((event) => {
+			let startDate = new Date(event.start_date);
+			startDate.setHours(0);
+			startDate.setMinutes(0);
+			startDate.setSeconds(0);
+
+			return startDate <= date && new Date(event.end_date) >= date;
+		});
 	};
 
 	onMount(() => {

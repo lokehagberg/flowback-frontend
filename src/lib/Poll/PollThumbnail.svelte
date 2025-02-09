@@ -110,7 +110,7 @@
 				{elipsis(poll.title)}
 			</a>
 
-			<div class="inline-flex items-center gap-4">
+			<div class="inline-flex gap-4 items-baseline">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
 					<a
 						href={poll.group_joined ? `groups/${poll.group_id}` : ''}
@@ -238,11 +238,11 @@
 						bind:value={selectedTag}
 						values={tags.map((tag) => tag.id)}
 						Class="w-[47%] "
-						classInner="w-full !p-1 bg-white p-4 border-gray-400 rounded-md border-2"
+						classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
 						onInput={() => (voting = true)}
 					/>
 					{#if voting}
-						<Button type="submit" Class="w-[47%] !p-0" buttonStyle="primary-light"
+						<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
 							>{$_('Save Vote')}</Button
 						>
 					{:else}

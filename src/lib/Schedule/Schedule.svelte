@@ -413,13 +413,15 @@
 	</div>
 </Modal>
 
+<!-- {@debug start_date} -->
+
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="md:w-[700px]" bind:open={showCreateScheduleEvent}>
 	<div slot="header">{$_('Create Event')}</div>
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
-				<TextInput placeholder="Event name" label="Title" bind:value={title} />
+				<TextInput placeholder="Event name" label="Title" bind:value={title} required />
 				<TextArea label="Description" bind:value={description} />
 				{#if type === 'group'}
 					<div class="text-left">

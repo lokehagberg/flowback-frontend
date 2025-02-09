@@ -7,14 +7,13 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-	import { darkModeStore } from '$lib/Generic/DarkMode';
+	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 
 	export let icon: IconDefinition | string = faCircle,
 		icons: (IconDefinition | string)[] = [faCircle],
 		text = 'icon',
 		href: string | null = null,
 		Class = '',
-		color = '',
 		size = 'xl',
 		tabindex = 0,
 		selectedHref: string | null = null;
@@ -44,14 +43,6 @@
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
-
-	const getIconFilter = (isSelected: boolean) => {
-		if (darkMode)
-			return 'invert(31%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(150%) contrast(80%)';
-		else if (isSelected)
-			return 'invert(31%) sepia(93%) saturate(1410%) hue-rotate(197deg) brightness(91%) contrast(101%)'; // #015BC0
-		else return 'brightness(0)';
-	};
 </script>
 
 {#if href}
@@ -63,32 +54,27 @@
 		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative transition-all w-14${Class}`}
+		class={`relative w-14 ${Class}`}
 		id={href}
 		{tabindex}
 	>
 		<div on:load={checkIfSelected} class="flex flex-col items-center">
-			{#each icons as icon}
-				{#if typeof icon === 'string'}
-					{#key darkMode}
-						<img
-							class="w-6 transition-all"
-							style="filter: {getIconFilter(selectedPage)}"
-							src={icon}
-							alt="icon"
+			{#key darkMode}
+				{#each icons as icon}
+					{#if typeof icon === 'string'}
+						<img class={`w-${size}`} style="filter: {getIconFilter(selectedPage)}" src={icon} alt="icon" />
+					{:else}
+						<Fa
+							{icon}
+							{size}
+							class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
 						/>
-					{/key}
-				{:else}
-					<Fa
-						{icon}
-						{size}
-						class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
-					/>
-				{/if}
-				<div class="text-xs mt-2">
-					{$_(text)}
-				</div>
-			{/each}
+					{/if}
+					<div class="text-xs mt-2 dark:text-darkmodeText">
+						{$_(text)}
+					</div>
+				{/each}
+			{/key}
 		</div>
 		<div
 			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
@@ -104,7 +90,7 @@
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		aria-haspopup="true"
-		class={`relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class}`}
+		class={`flex relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class}`}
 		id={href}
 	>
 		<div on:load={checkIfSelected}>

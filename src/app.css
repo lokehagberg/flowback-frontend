@@ -22,11 +22,7 @@
 	--darkmode-background-color: rgb(32, 32, 32);
 	/* --darkmode-object-color: rgb(40, 40, 40);
 	--darkmode-background-color: rgb(30, 30, 32); */
-	overflow-x: hidden;
-}
-
-html {
-
+	/* overflow-x: hidden; */
 }
 
 body {

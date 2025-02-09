@@ -14,7 +14,6 @@
 		text = 'icon',
 		href: string | null = null,
 		Class = '',
-		color = '',
 		size = 'xl',
 		tabindex = 0,
 		selectedHref: string | null = null;

@@ -112,7 +112,7 @@
 							}
 						}}
 					>
-						<div class=" max-w-[25vw] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
+						<div class=" max-w-[25%] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
 							{$_(notification.message)}
 							{timeAgo.format(new Date(notification.timestamp))}
 						</div>

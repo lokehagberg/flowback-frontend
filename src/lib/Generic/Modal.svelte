@@ -58,13 +58,13 @@
 		role="button"
 	>
 		<div class="dark:text-darkmodeText relative p-4 w-full max-w-full h-full">
-			<div class="text-xl border-b-2 border-gray-300 border-solid">
+			<div class="text-xl border-b-2 border-gray-300 border-solid  break-all">
 				<slot name="header" />
 				<CrossButton action={() => (open = false)} />
 			</div>
 			{#if onSubmit !== (() => {})}
 				<form on:submit|preventDefault={onSubmit}>
-					<div class="p-6 text-center">
+					<div class="p-6 text-center break-all">
 						<slot name="body" />
 					</div>
 					<slot name="footer" />
@@ -84,9 +84,10 @@
 		position: fixed; /* Positioning and size */
 		top: 0;
 		left: 0;
-		width: 100vw;
+		width: 100%;
 		height: 100vh;
 		background-color: rgba(128, 128, 128, 0.5); /* color */
 		z-index: 49;
+
 	}
 </style>

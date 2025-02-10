@@ -15,7 +15,8 @@
 	import { configToReadable } from '$lib/utils/configToReadable';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'notifications',
-		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
+		optionsDesign =
+			'flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-1 transition-all',
 		userConfig = {
 			notificationSettings: {
 				schedule: {
@@ -76,7 +77,7 @@
 
 <Layout centered>
 	<div class="flex mt-6 gap-6">
-		<div class="bg-white w-[300px] p-6">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6">
 			<button
 				class="flex items-center gap-2 text-gray-600 hover:text-primary dark:text-secondary transition-colors mb-4"
 				on:click={() => history.back()}
@@ -122,7 +123,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="bg-white p-6 w-[400px]">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px]">
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
 					<li>{$_('Profile')}</li>
@@ -140,7 +141,7 @@
 					/>
 					<div>{$_('Give me all data')}</div>
 					<div>{$_('Delete account')}</div>
-				{:else if selectedPage === 'notifications'}
+				{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
 					{$_('Notify me when')}...
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
@@ -168,7 +169,7 @@
 							</ul>
 						</li>
 					{/each}
-				{:else if selectedPage === 'poll-process'}
+				{:else if selectedPage === 'poll-process' && userConfig?.pollSettings}
 					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span
 					>
 					<span>{$_('Select the phases you want to participate in')}.</span>

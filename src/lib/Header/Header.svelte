@@ -114,50 +114,19 @@
 				alt="flowback logo"
 			/></a
 		>
-		<div class="!flex justify-between md:w-[80vw]">
-			<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4vw] w-[70vw]">
+		<div class="!flex justify-between md:w-[80%]">
+			<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4%] w-[70%]">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon
-						icon={HomeIcon}
-						text="Home"
-						href="home"
-						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
-						Class=""
-					/>
+					<HeaderIcon icon={HomeIcon} text="Home" href="home" bind:selectedHref />
 					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-					<HeaderIcon
-						icon={faUserFriends}
-						text="Groups"
-						href="groups"
-						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
-					/>
+					<HeaderIcon icon={faUserFriends} text="Groups" href="groups" bind:selectedHref />
 				{/if}
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-					<HeaderIcon
-						icon={HomeIcon}
-						text="Home"
-						href="groups/1"
-						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
-					/>
+					<HeaderIcon icon={HomeIcon} text="Home" href="groups/1" bind:selectedHref />
 				{/if}
-				<HeaderIcon
-					icon={CalendarIcon}
-					text="Schedule"
-					href="schedule"
-					bind:selectedHref
-					color={darkMode ? 'white' : 'black'}
-				/>
+				<HeaderIcon icon={CalendarIcon} text="Schedule" href="schedule" bind:selectedHref />
 
-				<HeaderIcon
-					icon={KanbanIcon}
-					text="Kanban"
-					href="kanban"
-					bind:selectedHref
-					color={darkMode ? 'white' : 'black'}
-				/>
+				<HeaderIcon icon={KanbanIcon} text="Kanban" href="kanban" bind:selectedHref />
 
 				{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 					<HeaderIcon
@@ -165,25 +134,17 @@
 						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 						href="ledger"
 						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 
 				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-					<HeaderIcon
-						icon={AutomationIcon}
-						text={'Automate'}
-						href="automate"
-						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
-					/>
+					<HeaderIcon icon={AutomationIcon} text={'Automate'} href="automate" bind:selectedHref />
 				{:else}
 					<HeaderIcon
 						icon={AutomationIcon}
 						text={'Delegations'}
 						href="automate"
 						bind:selectedHref
-						color={darkMode ? 'white' : 'black'}
 					/>
 				{/if}
 			</nav>
@@ -230,17 +191,19 @@
 	}
 
 	/* header > .inline-flex {
-		gap: calc(8vw - 60px);
+		gap: calc(8% - 60px);
 	} */
 
 	header {
 		flex-wrap: wrap-reverse;
 		padding: 0rem 1rem;
+		position: relative;
+		left: calc((100vw - 100%) / 2);
 	}
 
 	/* @media only screen and (max-width: 768px) {
 		header > .inline-flex {
-			gap: calc(15vw - 70px);
+			gap: calc(15% - 70px);
 		}
 	} */
 

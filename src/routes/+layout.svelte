@@ -115,7 +115,7 @@
 	});
 </script>
 
-<main class="h-screen overflow-y-auto ">
+<main class="">
 	{#if showUI}
 		<Chat />
 		<Header />

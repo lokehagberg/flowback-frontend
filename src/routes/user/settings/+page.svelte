@@ -1,14 +1,20 @@
 <script lang="ts">
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Fa from 'svelte-fa';
-	import { faUser, faBell, faPieChart, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faUser,
+		faBell,
+		faPieChart,
+		faArrowLeft,
+		faInfo
+	} from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import { configToReadable } from '$lib/utils/configToReadable';
 
-	let selectedPage: 'profile' | 'notifications' | 'poll-process' = 'notifications',
+	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'notifications',
 		optionsDesign = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 transition-all',
 		userConfig = {
 			notificationSettings: {
@@ -38,7 +44,8 @@
 				delegate_voting: false,
 				voting: false
 			}
-		};
+		},
+		version = '1.0.1';
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -105,6 +112,14 @@
 				>
 					<Fa icon={faPieChart} />{$_('Poll Process')}
 				</li>
+				<li
+					on:click={() => (selectedPage = 'info')}
+					class={`${optionsDesign}`}
+					class:border-l-2={selectedPage === 'info'}
+					class:border-primary={selectedPage === 'info'}
+				>
+					<Fa icon={faInfo} />{$_('Info')}
+				</li>
 			</ul>
 		</div>
 		<div class="bg-white p-6 w-[400px]">
@@ -129,7 +144,9 @@
 					{$_('Notify me when')}...
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-xl text-primary dark:text-secondary font-bold">{configToReadable(key1)}</span>
+							<span class="text-xl text-primary dark:text-secondary font-bold"
+								>{configToReadable(key1)}</span
+							>
 							<ul>
 								{#each Object.entries(settings) as [key2, setting]}
 									<li class="flex justify-between">
@@ -152,7 +169,8 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process'}
-					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span>
+					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span
+					>
 					<span>{$_('Select the phases you want to participate in')}.</span>
 					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
 						<li class="flex justify-between">
@@ -171,6 +189,8 @@
 							/>
 						</li>
 					{/each}
+				{:else if selectedPage === 'info'}
+					Version: {version}
 				{/if}
 			</ul>
 		</div>

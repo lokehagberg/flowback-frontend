@@ -101,9 +101,9 @@
 	};
 </script>
 
-<div class="dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
+<div class="scrollbar-position-fix dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
 	<header
-		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
+		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject "
 	>
 		<a
 			href={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
@@ -197,6 +197,9 @@
 	header {
 		flex-wrap: wrap-reverse;
 		padding: 0rem 1rem;
+	}
+
+	.scrollbar-position-fix{
 		position: relative;
 		left: calc((100vw - 100%) / 2);
 	}

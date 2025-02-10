@@ -1,18 +1,9 @@
 services:
   flowback-frontend:
     restart: unless-stopped
-    container_name: flowback-frontend
-    image: flowback-frontend
     build: .
     ports:
       - ${PORT:-3000}:${PORT:-3000}
     env_file:
       - path: ./.env
         required: false
-    networks:
-      - flowback-network
-# Network to connect the separate backend docker compose
-networks:
-  flowback-network:
-    name: flowback-network-1
-    driver: bridge

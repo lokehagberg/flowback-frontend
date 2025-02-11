@@ -12,6 +12,7 @@
 	import Description from '$lib/Poll/Description.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -40,14 +41,16 @@
 				alt="cover"
 			/>
 
-			<Button
-				action={() => history.back()}
-				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
-			>
-				<div class="text-gray-800 dark:text-gray-200">
-					<Fa icon={faArrowLeft} />
-				</div>
-			</Button>
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<Button
+					action={() => history.back()}
+					Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+				>
+					<div class="text-gray-800 dark:text-gray-200">
+						<Fa icon={faArrowLeft} />
+					</div>
+				</Button>
+			{/if}
 
 			<Button
 				hoverEffect={false}
@@ -75,7 +78,6 @@
 		/>
 	</div>
 
-	<!-- <div class="dark:bg-darkobject dark:text-darkmodeText ml-[40%] w-[40%] md:ml-[30%] md:w-[40%]"> -->
 	<div class="dark:bg-darkobject dark:text-darkmodeText w-[55%] mx-auto py-4">
 		<div class="">
 			<div class="flex align-baseline items-baseline relative" id="notifications-list-group">

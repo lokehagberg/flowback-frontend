@@ -561,5 +561,8 @@
     "You cannot vote on this poll since you are not a delegate": "Du kan inte rösta på denna omröstning eftersom du inte är en delegat",
     "Meeting link": "Möteslänk",
     "No meeting link": "Ingen möteslänk",
-    "No description": "Ingen beskrivning"
+    "No description": "Ingen beskrivning",
+    "From": "Från",
+    "To": "Till",
+    "Add a task": "Lägg till en uppgift"
 }

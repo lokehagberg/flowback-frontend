@@ -59,7 +59,7 @@
 		start_date: Date | null,
 		end_date: Date | null,
 		title: string,
-		meetingLink: string,
+		meeting_link: string,
 		description: string,
 		workGroup: { name: string; id: number } | null = null,
 		event_id: number | undefined,
@@ -107,7 +107,7 @@
 			end_date,
 			title,
 			description,
-			meetingLink
+			meeting_link
 		};
 
 		if (description === '') delete payload.description;
@@ -139,7 +139,7 @@
 			event_id: json.id,
 			score: 0,
 			title,
-			meetingLink: '',
+			meeting_link: '',
 			schedule_origin_name: 'user'
 		});
 		events = events;
@@ -148,7 +148,7 @@
 		end_date = null;
 		title = '';
 		description = '';
-		meetingLink = '';
+		meeting_link = '';
 		event_id = undefined;
 	};
 
@@ -160,7 +160,7 @@
 			end_date,
 			title,
 			description,
-			meetingLink
+			meeting_link
 		});
 
 		loading = false;
@@ -182,7 +182,7 @@
 					score: 0,
 					title,
 					schedule_origin_name: 'user',
-					meetingLink
+					meeting_link
 				};
 			else return event;
 		});
@@ -191,7 +191,7 @@
 		end_date = null;
 		title = '';
 		description = '';
-		meetingLink = '';
+		meeting_link = '';
 		event_id = undefined;
 	};
 
@@ -402,13 +402,13 @@
 	<div slot="header">{title}</div>
 	<div slot="body">
 		<div class="flex flex-col">
-			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
-			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
+			<span>{$_('From')}: {formatDate(start_date?.toString())}</span>
+			<span>{$_('To')}: {formatDate(end_date?.toString())}</span>
 			<span>{$_('Description')}: {description || $_('No description')} </span>
 			{#if workGroup}
 				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}
-			<span>{$_('Meeting link')}: {meetingLink || $_('No meeting link')}</span>
+			<span>{$_('Meeting link')}: {meeting_link || $_('No meeting link')}</span>
 		</div>
 	</div>
 	<div slot="footer">
@@ -445,16 +445,16 @@
 				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="md:flex md:gap-4">
 					<div class="text-left">
-						{$_('Start date')}
+						{$_('From')}
 						<!-- <DateInput bind:value={start_date} /> -->
 						<input type="datetime-local" bind:value={start_date}  />
 					</div>
 
-					{$_('End date')}
+					{$_('To')}
 					<!-- <DateInput bind:value={end_date} /> -->
 					<input type="datetime-local" bind:value={end_date} />
 				</div>
-				<TextInput placeholder="Meeting link" label="Meeting link" bind:value={meetingLink} />
+				<TextInput placeholder="Meeting link" label="Meeting link" bind:value={meeting_link} />
 				<Button Class="mt-4" type="submit" action={scheduleEventCreate}>{$_('Submit')}</Button>
 			</form>
 		</Loader>
@@ -474,13 +474,13 @@
 				<TextArea label="Event description" bind:value={description} />
 				<div class="md:flex md:gap-4">
 					<div class="text-left">
-						{$_('Start date')}
+						{$_('From')}
 						<input type="datetime-local" bind:value={start_date}  />
 					</div>
-					{$_('End date')}
+					{$_('To')}
 					<input type="datetime-local" bind:value={end_date} />
 				</div>
-				<TextInput label="Meeting link" bind:value={meetingLink} />
+				<TextInput label="Meeting link" bind:value={meeting_link} />
 			</form>
 		</Loader>
 	</div>

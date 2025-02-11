@@ -28,7 +28,7 @@
 			'Very low priority'
 		],
 		priority: undefined | number = 3,
-		end_date: null | Date = null,
+		end_date: null | string = null,
 		loading = false,
 		poppup: poppup,
 		images: File[],
@@ -43,8 +43,11 @@
 
 	const createKanbanEntry = async () => {
 		loading = true;
-		const isoDate = end_date?.toISOString();
-		const dateString = `${isoDate?.slice(0, 10)}T${end_date?.getHours()}:${end_date?.getMinutes()}`;
+
+		const _endDate = new Date(end_date || "");
+		
+		const isoDate = _endDate?.toISOString();
+		const dateString = `${isoDate?.slice(0, 10)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
 		const formData = new FormData();
 
 		formData.append('title', title);
@@ -52,7 +55,7 @@
 		formData.append('lane', lane.toString());
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
-		if (end_date) formData.append('end_date', dateString);
+		if (_endDate) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
 
@@ -185,7 +188,7 @@
 					{/if}
 					<div class="text-left">
 						{$_('End date')}
-						<DateInput bind:value={end_date} min={new Date()} />
+						<input type="datetime-local" bind:value={end_date} />
 					</div>
 					<div class="text-left">
 						{$_('Attachments')}

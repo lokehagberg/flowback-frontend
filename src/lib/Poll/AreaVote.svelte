@@ -64,15 +64,20 @@
 	});
 </script>
 
-<div class={`grid gap-2 grid-cols-3 grid-rows-${Math.ceil(tags.length / 3)}`}>
+<!-- <RadioButtons2
+		name="vote"
+		labels={tags.map((tag) => tag.name)}
+		values={tags.map((tag) => tag.id)}
+		ClassInner="block"
+		bind:value={selectedTag}
+	/>  -->
+<div class={`grid-rows-${Math.ceil(tags.length / 3)}`}>
 	{#each tags as tag}
 		{#if tag.active}
-			<Button
-				buttonStyle={selectedTag === tag.id ? 'primary' : 'secondary'}
-				action={() => vote(tag.id)}
-			>
-				{elipsis(tag.name, 10)}
-			</Button>
+			<div>
+				<input type="radio" name="area" on:change={() => vote(tag.id)} />
+				{elipsis(tag.name, 40)}
+			</div>
 		{/if}
 	{/each}
 </div>

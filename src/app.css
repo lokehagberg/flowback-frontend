@@ -32,6 +32,10 @@ body {
 
 }
 
+html {
+	overflow-x: hidden;
+}
+
 body::before {
 	content: '';
 	width: 80vw;

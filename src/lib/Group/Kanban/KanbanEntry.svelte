@@ -64,7 +64,6 @@
 		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
-		const isoDate = kanbanEdited.end_date?.toISOString();
 		const formData = new FormData();
 
 		formData.append('title', kanbanEdited.title);
@@ -77,18 +76,21 @@
 			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 
-		console.log(kanbanEdited.work_group, "Workgroup");
-		
+		console.log(kanbanEdited.work_group, 'Workgroup');
+
 		if (kanbanEdited.work_group?.id)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
-		if (kanbanEdited.end_date) {
+		if (kanbanEdited?.end_date) {
+			const _endDate = new Date(kanbanEdited.end_date);
+			const isoDate = _endDate?.toISOString();
 			const dateString = `${isoDate?.slice(
 				0,
 				10
-			)}T${kanbanEdited.end_date?.getHours()}:${kanbanEdited.end_date?.getMinutes()}`;
-			if (dateString && dateString !== '') formData.append('end_date', dateString);
+			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
+			if (_endDate) formData.append('end_date', dateString);
 		}
+
 		// if (description !== '') formData.append('description', description);
 		// if (kanban.attachments)
 		// 	images.forEach((image) => {
@@ -143,10 +145,20 @@
 		if (kanbanEdited.images) kanban.attachments = kanbanEdited.images;
 		else kanban.attachments = [];
 
-		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date?.toISOString();
+		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date;
 		else kanban.end_date = null;
 
 		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
+
+		if (kanbanEdited.end_date) {
+			const _endDate = new Date(kanbanEdited.end_date);
+			const isoDate = _endDate?.toISOString();
+			const dateString = `${isoDate?.slice(
+				0,
+				10
+			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
+			if (_endDate) formData.append('end_date', dateString);
+		}
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee_id);
 		if (assignee && kanbanEdited?.assignee_id)
@@ -159,6 +171,7 @@
 		// isEditing = false;
 	};
 
+	// Moves the kanban entry between the lanes
 	const updateKanbanLane = async (lane: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -270,7 +283,9 @@
 		</div>
 	{/if}
 	<div class="flex justify-between w-full items-start">
-		<div class="text-primary dark:text-secondary dark:text-secondary text-left break-before-auto font-semibold break-all">
+		<div
+			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all"
+		>
 			{kanban.title}
 		</div>
 		<div class="cursor-pointer hover:underline">
@@ -394,7 +409,7 @@
 					<div class="text-left w-[300px]">
 						<!-- {#if kanban.end_date} -->
 						{$_('End Date')}
-						<DateInput bind:value={kanbanEdited.end_date} min={new Date()} />
+						<input type="datetime-local" bind:value={kanbanEdited.end_date} />
 						<!-- {/if} -->
 					</div>
 					<div class="text-left">

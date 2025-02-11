@@ -44,18 +44,23 @@
 	const createKanbanEntry = async () => {
 		loading = true;
 
-		const _endDate = new Date(end_date || "");
-		
-		const isoDate = _endDate?.toISOString();
-		const dateString = `${isoDate?.slice(0, 10)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
 		const formData = new FormData();
+
+		if (end_date) {
+			const _endDate = new Date(end_date || '');
+			const isoDate = _endDate?.toISOString();
+			const dateString = `${isoDate?.slice(
+				0,
+				10
+			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
+			if (_endDate) formData.append('end_date', dateString);
+		}
 
 		formData.append('title', title);
 		formData.append('tag', lane.toString());
 		formData.append('lane', lane.toString());
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
-		if (_endDate) formData.append('end_date', dateString);
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
 

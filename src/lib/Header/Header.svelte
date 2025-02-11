@@ -101,88 +101,87 @@
 	};
 </script>
 
-<div class="scrollbar-position-fix dark:text-darkmodeText sticky z-50 w-100 top-0" id="header">
-	<header
-		class="md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject "
+<header
+	class="sticky top-0 z-50 md:flex justify-between flex-row items-center p-1.5 px-3 bg-white shadow select-none dark:bg-darkobject"
+	id="header"
+>
+	<a
+		href={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+		class="md:w-auto flex justify-center md:flex-none"
+		><img
+			src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
+			class="w-32 cursor-pointer"
+			alt="flowback logo"
+		/></a
 	>
-		<a
-			href={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
-			class="md:w-auto flex justify-center md:flex-none"
-			><img
-				src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
-				class="w-32 cursor-pointer"
-				alt="flowback logo"
-			/></a
-		>
-		<div class="!flex justify-between md:w-[80%]">
-			<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4%] w-[70%]">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<HeaderIcon icon={HomeIcon} text="Home" href="home" bind:selectedHref />
-					<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-					<HeaderIcon icon={faUserFriends} text="Groups" href="groups" bind:selectedHref />
-				{/if}
-				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-					<HeaderIcon icon={HomeIcon} text="Home" href="groups/1" bind:selectedHref />
-				{/if}
-				<HeaderIcon icon={CalendarIcon} text="Schedule" href="schedule" bind:selectedHref />
+	<div class="!flex justify-between md:w-[80%]">
+		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4%] w-[70%]">
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<HeaderIcon icon={HomeIcon} text="Home" href="home" bind:selectedHref />
+				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+				<HeaderIcon icon={faUserFriends} text="Groups" href="groups" bind:selectedHref />
+			{/if}
+			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+				<HeaderIcon icon={HomeIcon} text="Home" href="groups/1" bind:selectedHref />
+			{/if}
+			<HeaderIcon icon={CalendarIcon} text="Schedule" href="schedule" bind:selectedHref />
 
-				<HeaderIcon icon={KanbanIcon} text="Kanban" href="kanban" bind:selectedHref />
+			<HeaderIcon icon={KanbanIcon} text="Kanban" href="kanban" bind:selectedHref />
 
-				{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
-					<HeaderIcon
-						icon={faCoins}
-						text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
-						href="ledger"
-						bind:selectedHref
-					/>
-				{/if}
+			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+				<HeaderIcon
+					icon={faCoins}
+					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
+					href="ledger"
+					bind:selectedHref
+				/>
+			{/if}
 
-				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-					<HeaderIcon icon={AutomationIcon} text={'Automate'} href="automate" bind:selectedHref />
-				{:else}
-					<HeaderIcon
-						icon={AutomationIcon}
-						text={'Delegations'}
-						href="automate"
-						bind:selectedHref
-					/>
-				{/if}
-			</nav>
+			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+				<HeaderIcon icon={AutomationIcon} text={'Automate'} href="automate" bind:selectedHref />
+			{:else}
+				<HeaderIcon
+					icon={AutomationIcon}
+					text={'Delegations'}
+					href="automate"
+					bind:selectedHref
+				/>
+			{/if}
+		</nav>
 
-			<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
-				<div class="mr-5 flex gap-4 items-center">
-					<button
-						class="dark:text-darkmodeText cursor-pointer pl-2"
-						title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
-						on:keydown={() => {}}
-						on:click={() => {
-							changeDarkMode(darkMode ? 'light' : 'dark');
-							darkMode = !darkMode;
-						}}
-					>
-						{#if darkMode}
-							<Sun />
-						{:else}
-							<Fa icon={faMoon} size={'25'} />
-						{/if}
-					</button>
-					<Notifications />
-				</div>
-				<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
-					<img
-						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
-						class={`w-8 h-8 rounded-full cursor-pointer ${
-							sideHeaderOpen && 'border-blue-500 border-4'
-						}`}
-						alt="default pfp"
-					/>
+		<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
+			<div class="mr-5 flex gap-4 items-center">
+				<button
+					class="dark:text-darkmodeText cursor-pointer pl-2"
+					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
+					on:keydown={() => {}}
+					on:click={() => {
+						changeDarkMode(darkMode ? 'light' : 'dark');
+						darkMode = !darkMode;
+					}}
+				>
+					{#if darkMode}
+						<Sun />
+					{:else}
+						<Fa icon={faMoon} size={'25'} />
+					{/if}
 				</button>
+				<Notifications />
 			</div>
+			<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+				<img
+					src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
+					class={`w-8 h-8 rounded-full cursor-pointer ${
+						sideHeaderOpen && 'border-blue-500 border-4'
+					}`}
+					alt="default pfp"
+				/>
+			</button>
 		</div>
-	</header>
+	</div>
+</header>
 
-	<SideHeader bind:sideHeaderOpen />
-</div>
+<SideHeader bind:sideHeaderOpen />
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>
@@ -197,11 +196,6 @@
 	header {
 		flex-wrap: wrap-reverse;
 		padding: 0rem 1rem;
-	}
-
-	.scrollbar-position-fix{
-		position: relative;
-		left: calc((100vw - 100%) / 2);
 	}
 
 	/* @media only screen and (max-width: 768px) {

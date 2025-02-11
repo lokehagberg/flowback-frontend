@@ -15,7 +15,8 @@
 		centering = false,
 		ClassInner = '',
 		icons: null | IconDefinition[] = null,
-		radioSide: 'left' | 'right' = 'left';
+		radioSide: 'left' | 'right' = 'left',
+		horizontal = false;
 
 	export const resetValue = () => {
 		var elements = document.getElementsByTagName('input');
@@ -36,6 +37,8 @@
 	<h1 class="text-left text-sm">{$_(label)}</h1>
 	<div class={`mt-2 ${centering && 'flex justify-center gap-2'}`}>
 		<fieldset
+			class:flex={horizontal}
+			class="gap-4"
 			on:change={(e) => {
 				//@ts-ignore
 				value = e?.target?.value;
@@ -52,7 +55,7 @@
 							id={values[i]}
 							checked={values[i] === value}
 						/>{$_(label)}
-						{#if icons} <Fa icon={icons[i]}/> {/if}
+						{#if icons} <Fa icon={icons[i]} /> {/if}
 					{:else}
 						{$_(label)}<input
 							type="radio"

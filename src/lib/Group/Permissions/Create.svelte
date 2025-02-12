@@ -8,9 +8,9 @@
 	import { _ } from 'svelte-i18n';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { onMount } from 'svelte';
 
-	let loading = false,
-		poppup: poppup;
+	export let selectedRole: any;
 
 	const perms = [
 		{
@@ -68,8 +68,16 @@
 		}
 	];
 
-	let roleName = '';
-	let rolePerms = new Array(perms.length).fill(false);
+	let loading = false,
+		poppup: poppup,
+		roleName = '',
+		rolePerms = new Array(perms.length).fill(false);
+
+	const setRole = () => {
+		console.log(selectedRole, rolePerms);
+
+		rolePerms = selectedRole;
+	};
 
 	const createRole = async () => {
 		loading = true;
@@ -106,6 +114,10 @@
 		}
 		poppup = { message: 'Successfully created role', success: true };
 	};
+
+	onMount(() => {
+		setRole();
+	});
 </script>
 
 <Loader bind:loading>

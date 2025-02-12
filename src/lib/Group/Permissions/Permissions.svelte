@@ -5,7 +5,9 @@
 	import List from './List.svelte';
 	import { _ } from 'svelte-i18n';
 
-	let selectedPage: 'assign' | 'create' | 'list' = 'assign';
+	let selectedPage: 'assign' | 'create' | 'list' = 'assign',
+	selectedRole:any;
+
 </script>
 
 <div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 rounded">
@@ -16,9 +18,9 @@
 		displayNames={['Assign', 'List', 'Create']}
 	/>
 	{#if selectedPage === 'create'}
-		<Create />
+		<Create bind:selectedRole/>
 	{:else if selectedPage === 'list'}
-		<List />
+		<List bind:selectedPage />
 	{:else if selectedPage === 'assign'}
 		<Assign />
 	{/if}

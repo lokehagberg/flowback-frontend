@@ -25,7 +25,7 @@
 	<div class="flex justify-between w-full items-center">
 		<div>
 			{#if label}
-				<p class="text-sm mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
+				<p class="text-md mb-1 dark:text-darkmodeText inline">{$_(label)}</p>
 			{/if}
 			{#if required}
 				<p class="inline text-red-600">*</p>
@@ -41,7 +41,7 @@
 		<input
 			bind:value
 			id={`textinput-${label}`}
-			class={`bg-gray-100 dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
+			class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
 			{required}
 			maxlength={max}
 			placeholder={$_(placeholder)}

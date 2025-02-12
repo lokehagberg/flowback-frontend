@@ -369,25 +369,70 @@
 		<div slot="body">
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
-				<TextInput
-					bind:value={kanbanEdited.title}
-					required
-					label="Title"
-					inputClass="border-none"
-				/>
+				<div class="pb-2">
+					<TextInput
+						bind:value={kanbanEdited.title}
+						required
+						label="Title"
+					/>
+				</div>
 				<TextArea
 					bind:value={kanbanEdited.description}
 					label="Description"
 					rows={5}
 					Class="overflow-scroll"
 				/>
+				<!-- {#if type === 'group'} -->
+					<div class="text-left">
+						<label class="block text-md">
+							{$_('Work Group')}
+						</label>
+						<select
+							style="width:100%"
+							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							on:input={handleChangeWorkGroup}
+						>
+							{#each workGroups as group}
+								<option class="w-5 text-black" value={group.id}>
+									{elipsis(group.name)}
+								</option>
+							{/each}
+						</select>
+					</div>
+				<!-- {/if} -->
+				<div class="text-left w-[300px]">
+					<!-- {#if kanban.end_date} -->
+					<label class="block text-md pt-2">
+						{$_('End date')}
+					</label>
+					<input type="datetime-local" bind:value={kanbanEdited.end_date}
+					class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
+						   {kanbanEdited.end_date ? 'text-black' : 'text-gray-500'}" />
+					<!-- {/if} -->
+				</div>
+				<div class="text-left">
+					<label class="block text-md pt-2">
+						{$_('Priority')}
+					</label>
+					<select
+						class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						on:input={handleChangePriority}
+						value={kanban?.priority}
+					>
+						{#each priorities as i}
+							<option value={i}>{priorityText[priorityText.length - i]} </option>
+						{/each}
+					</select>
+				</div>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
-						{$_('Assignee')}
+						<label class="block text-md">
+							{$_('Assignee')}
+						</label>
 						<select
 							on:input={changeAssignee}
 							value={kanban?.assignee?.id}
-							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 						>
 							{#each users as user}
 								<option value={user.user.id}>{user.user.username}</option>
@@ -395,43 +440,11 @@
 						</select>
 					</div>
 					<div class="text-left">
-						{$_('Priority')}
-						<select
-							class="rounded-sm p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							on:input={handleChangePriority}
-							value={kanban?.priority}
-						>
-							{#each priorities as i}
-								<option value={i}>{priorityText[priorityText.length - i]} </option>
-							{/each}
-						</select>
-					</div>
-					<div class="text-left w-[300px]">
-						<!-- {#if kanban.end_date} -->
-						{$_('End Date')}
-						<input type="datetime-local" bind:value={kanbanEdited.end_date} />
-						<!-- {/if} -->
-					</div>
-					<div class="text-left">
-						{$_('Attachments')}
+						<label class="block text-md">
+							{$_('Attachments')}
+						</label>
 						<!-- <FileUploads bind:images={kanbanEdited.images} /> -->
 					</div>
-					{#if type === 'group'}
-						<div class="text-left">
-							{$_('Work Group')}
-							<select
-								style="width:100%"
-								class=" rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-								on:input={handleChangeWorkGroup}
-							>
-								{#each workGroups as group}
-									<option class="w-5" value={group.id}>
-										{elipsis(group.name)}
-									</option>
-								{/each}
-							</select>
-						</div>
-					{/if}
 				</div>
 			{:else}
 				<div class="text-center">

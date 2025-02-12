@@ -357,14 +357,14 @@
 </button>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="min-w-[400px] z-50 break-words">
-		<div slot="header">
+	<Modal bind:open={openModal} Class="min-w-[400px] max-w-[500px] z-50">
+		<!-- <div slot="header">
 			{#if isEditing}
 				{$_('Edit Task')}
 			{:else}
 				{kanban.title}
 			{/if}
-		</div>
+		</div> -->
 
 		<div slot="body">
 			{#if isEditing}
@@ -434,51 +434,68 @@
 					{/if}
 				</div>
 			{:else}
-				<div class="max-h-[40vh] text-left overflow-scroll" id={`kanban-${kanban.id}-description`}>
-					{kanban?.description}
+				<div class="text-center">
+					<h2 class="pb-1 font-semibold break-words text-xl w-full">{kanban.title}</h2>
+					<p class="w-full">{kanban?.work_group?.name || $_('No workgroup assigned')}</p>
 				</div>
-				<div class="mt-6 text-left">
-					<span>
-						{$_('End Date')}: {kanban?.end_date
-							? new Date(kanban.end_date).toISOString().split('T')[0]
-							: $_('No end date set')}
-					</span>
-				</div>
-				<div class="text-left">
-					<span>
-						{$_('Assignee')}: {kanban?.assignee?.username || $_('Unassigned')}
-					</span>
-				</div>
-				<div class="text-left">
-					<span>
-						{$_('Work Group')}: {kanban?.work_group?.name || $_('Unassigned')}
-					</span>
-					<div class="flex gap-2 align-middle">
-						<span
-							>{$_('Priority')}: {kanbanEdited.priority != null
-								? priorityText[priorityText.length - kanbanEdited.priority]
-								: $_('No priority')}</span
-						>
-						{#if kanban.priority}
-							<PriorityIcons Class="ruby" priority={kanban?.priority} />
-						{/if}
+				<div class="flex mt-4 w-full">
+					<div class="flex flex-col mr-4 text-left gap-1 w-full">
+					  <p class="font-bold">{$_('End Date')}</p>
+					  <p class="font-bold">{$_('Priority')}</p>
+					  <p class="font-bold">{$_('Assignee')}</p>
+					  <p class="font-bold">{$_('Attachments')}</p>
 					</div>
+
+					<div class="flex flex-col text-right gap-1 w-full">
+						<!-- <p>{kanban?.end_date
+							? new Date(kanban.end_date).toLocaleDateString('sv-SE', {
+							  weekday: 'short',
+							  day: '2-digit',
+							  month: 'long',
+							  year: 'numeric'
+							})
+							: $_('No end date set')}
+						</p> -->
+						<p>
+							{#if kanban?.end_date}
+							{new Intl.DateTimeFormat('sv-SE', { 
+								weekday: 'short',
+								day: '2-digit',
+								month: 'long',
+								year: 'numeric'
+							  }).format(new Date(kanban.end_date))
+								.replace(/\b\w/g, (char) => char.toUpperCase())}
+							{:else}
+								{$_('No end date set')}
+							{/if}
+						</p>
+						<div class="flex justify-end items-center gap-2 w-full">
+							{#if kanban.priority}
+								<PriorityIcons Class="ruby" priority={kanban?.priority} />
+							{/if}
+							<p>{kanbanEdited.priority != null
+								? priorityText[priorityText.length - kanbanEdited.priority]
+								: $_('No priority')}</p>
+						</div>
+						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
+						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
+							{#each kanbanEdited.images as file}
+								<li>
+									<img
+										src={`${env.PUBLIC_API_URL}/media/${file.file}`}
+										alt={file.file_name}
+										class="w-10 h-10"
+									/>
+								</li>
+							{/each}
+						{:else}
+							<p>{$_('No attachments available')}</p>
+						{/if}
+					  </div>
 				</div>
-				<div class="text-left">
-					{#if kanbanEdited.images && kanbanEdited.images.length > 0}
-						{$_('Attachments:')}
-						{#each kanbanEdited.images as file}
-							<li>
-								<img
-									src={`${env.PUBLIC_API_URL}/media/${file.file}`}
-									alt={file.file_name}
-									class="w-10 h-10"
-								/>
-							</li>
-						{/each}
-					{:else}
-						<p>{$_('No attachments available.')}</p>
-					{/if}
+				<div class="text-left mt-1 w-full">
+					<p class="font-bold">{$_('Description')}</p>
+					<p class="max-h-[25vh] overflow-scroll break-words w-full id={`kanban-${kanban.id}-description`}">{kanban?.description}</p>
 				</div>
 			{/if}
 		</div>

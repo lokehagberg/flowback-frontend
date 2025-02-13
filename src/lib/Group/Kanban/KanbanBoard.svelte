@@ -121,25 +121,35 @@
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl"
+					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl flex flex-col"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
-					<div class="flex justify-between">
-						<span class="xl:text-xl md:text-md p-1 pb-3">{$_(_tag)}</span>
-						<button
+					<div class="flex justify-between pb-3">
+						<span class="xl:text-md md:text-sm p-1 font-medium">{$_(_tag)}</span>
+						<button class="text-sm p-1"
 							on:click={() => {
 								open = true;
 								lane = i;
-							}}><Fa icon={faPlus} /></button
+							}}><Fa icon={faPlus} size="12px"/></button
 						>
 					</div>
-					<ul class="flex flex-col gap-2">
+					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
 						{#each kanbanEntries as kanban}
 							{#if kanban.lane === i}
 								<KanbanEntry bind:workGroups bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
 							{/if}
 						{/each}
 					</ul>
+					<div class="flex justify-between pt-4">
+						<button class="text-sm flex items-center gap-2"
+							on:click={() => {
+								open = true;
+								lane = i;
+							}}>
+							<span class="text-gray-600">+ {$_('Add a task')}</span>
+						</button
+						>
+					</div>
 				</div>
 			{/if}
 		{/each}

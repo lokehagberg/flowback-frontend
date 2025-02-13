@@ -81,9 +81,12 @@
 			</div>
 			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
 				{#if (1000 * i) / window.innerHeight < 3}
-					<div class="break-all bg-secondary w-full text-white text-sm mb-1 text-center">
+					<button
+						on:click={() => console.log(event)}
+						class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
+					>
 						{elipsis(event.title, 15)}
-					</div>
+					</button>
 				{/if}
 			{/each}
 		{/key}

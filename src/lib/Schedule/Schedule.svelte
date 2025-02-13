@@ -413,8 +413,6 @@
 	</div>
 </Modal>
 
-<!-- {@debug start_date} -->
-
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="md:w-[700px]" bind:open={showCreateScheduleEvent}>
 	<div slot="header">{$_('Create Event')}</div>
@@ -439,7 +437,7 @@
 					<div class="text-left">
 						{$_('Start date')}
 						<!-- <DateInput bind:value={start_date} /> -->
-						<input type="datetime-local" bind:value={start_date}  />
+						<input type="datetime-local" bind:value={start_date} />
 					</div>
 
 					{$_('End date')}

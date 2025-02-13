@@ -8,11 +8,9 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import Description from '$lib/Poll/Description.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 

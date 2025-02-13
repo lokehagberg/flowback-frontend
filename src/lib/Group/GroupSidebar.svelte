@@ -33,7 +33,6 @@
 	import Permissions from './Permissions/Permissions.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
-	import { PUBLIC_FLOWBACK_LEDGER_MODULE } from '$env/static/public';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,

@@ -265,35 +265,42 @@
 <svelte:window bind:innerWidth bind:outerWidth />
 
 <button
-	class="text-left bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded shadow hover:bg-gray-200 dark:hover:brightness-125 p-2"
+	class="text-left bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded shadow hover:bg-gray-200 dark:hover:brightness-125 p-2 border"
 	in:fade
 	on:click={() => {
 		openModal = true;
 		selectedEntry = kanban.id;
 	}}
 >
-	{#if kanban.end_date && endDate}
-		<div class="text-sm">
-			{#if new Date(kanban.end_date) < new Date()}
-				{$_('Ended')}
-			{:else}
-				{$_('Ends')}
-			{/if}
-			{endDate.format(new Date(kanban.end_date))}
-		</div>
-	{/if}
 	<div class="flex justify-between w-full items-start">
 		<div
-			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all"
+			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all pb-1"
 		>
 			{kanban.title}
 		</div>
-		<div class="cursor-pointer hover:underline">
+		<div class="cursor-pointer hover:underline p-1">
 			{#if kanban.priority}
-				<KanbanIcons bind:priority={kanban.priority} />
+				<KanbanIcons Class="text-sm" bind:priority={kanban.priority} />
 			{/if}
 		</div>
 	</div>
+	{#if kanban.end_date && endDate}
+		<div class="text-sm text-gray-700">
+			<!-- {#if new Date(kanban.end_date) < new Date()}
+				{$_('Ended')}
+			{:else}
+				{$_('Ends')}
+			{/if} -->
+
+			{new Intl.DateTimeFormat('sv-SE', { 
+				weekday: 'short',
+				day: '2-digit',
+				month: 'long'
+				}).format(new Date(kanban.end_date))
+				.replace(/\b\w/g, (char) => char.toUpperCase())}
+			
+		</div>
+	{/if}
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
@@ -460,15 +467,6 @@
 					</div>
 
 					<div class="flex flex-col text-right gap-1 w-full">
-						<!-- <p>{kanban?.end_date
-							? new Date(kanban.end_date).toLocaleDateString('sv-SE', {
-							  weekday: 'short',
-							  day: '2-digit',
-							  month: 'long',
-							  year: 'numeric'
-							})
-							: $_('No end date set')}
-						</p> -->
 						<p>
 							{#if kanban?.end_date}
 							{new Intl.DateTimeFormat('sv-SE', { 

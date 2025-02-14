@@ -59,6 +59,7 @@
 		start_date: Date | null,
 		end_date: Date | null,
 		title: string,
+		meeting_link: string,
 		description: string,
 		workGroup: { name: string; id: number } | null = null,
 		event_id: number | undefined,
@@ -105,7 +106,8 @@
 			start_date,
 			end_date,
 			title,
-			description
+			description,
+			meeting_link
 		};
 
 		if (description === '') delete payload.description;
@@ -137,6 +139,7 @@
 			event_id: json.id,
 			score: 0,
 			title,
+			meeting_link: '',
 			schedule_origin_name: 'user'
 		});
 		events = events;
@@ -145,17 +148,19 @@
 		end_date = null;
 		title = '';
 		description = '';
+		meeting_link = '';
 		event_id = undefined;
 	};
 
-	const scheduleEventEdit = async (e: any) => {
+	const scheduleEventEdit = async () => {
 		loading = true;
 		const { res, json } = await fetchRequest('POST', `user/schedule/update`, {
 			event_id,
 			start_date,
 			end_date,
 			title,
-			description
+			description,
+			meeting_link
 		});
 
 		loading = false;
@@ -173,10 +178,11 @@
 					description,
 					end_date: end_date?.toString() || '',
 					start_date: start_date?.toString() || '',
-					event_id: json,
+					event_id: json.id,
 					score: 0,
 					title,
-					schedule_origin_name: 'user'
+					schedule_origin_name: 'user',
+					meeting_link
 				};
 			else return event;
 		});
@@ -185,6 +191,7 @@
 		end_date = null;
 		title = '';
 		description = '';
+		meeting_link = '';
 		event_id = undefined;
 	};
 
@@ -395,12 +402,13 @@
 	<div slot="header">{title}</div>
 	<div slot="body">
 		<div class="flex flex-col">
-			<span>{$_('Start date')}: {formatDate(start_date?.toString())}</span>
-			<span>{$_('End date')}: {formatDate(end_date?.toString())}</span>
-			<span> {description || ''} </span>
+			<span>{$_('From')}: {formatDate(start_date?.toString())}</span>
+			<span>{$_('To')}: {formatDate(end_date?.toString())}</span>
+			<span>{$_('Description')}: {description || $_('No description')} </span>
 			{#if workGroup}
 				{$_('Work Group')}:<span>{workGroup?.name}</span>
 			{/if}
+			<span>{$_('Meeting link')}: {meeting_link || $_('No meeting link')}</span>
 		</div>
 	</div>
 	<div slot="footer">
@@ -412,8 +420,6 @@
 		>
 	</div>
 </Modal>
-
-<!-- {@debug start_date} -->
 
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="md:w-[700px]" bind:open={showCreateScheduleEvent}>
@@ -437,16 +443,17 @@
 				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="md:flex md:gap-4">
 					<div class="text-left">
-						{$_('Start date')}
+						{$_('From')}
 						<!-- <DateInput bind:value={start_date} /> -->
-						<input type="datetime-local" bind:value={start_date}  />
+						<input type="datetime-local" bind:value={start_date} />
 					</div>
 
-					{$_('End date')}
+					{$_('To')}
 					<!-- <DateInput bind:value={end_date} /> -->
 					<input type="datetime-local" bind:value={end_date} />
 				</div>
-				<Button Class="mt-4" type="submit">{$_('Submit')}</Button>
+				<TextInput placeholder="Meeting link" label="Meeting link" bind:value={meeting_link} />
+				<Button Class="mt-4" type="submit" action={scheduleEventCreate}>{$_('Submit')}</Button>
 			</form>
 		</Loader>
 	</div>
@@ -463,11 +470,20 @@
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<TextInput label="Event title" bind:value={title} />
 				<TextArea label="Event description" bind:value={description} />
+				<div class="md:flex md:gap-4">
+					<div class="text-left">
+						{$_('From')}
+						<input type="datetime-local" bind:value={start_date}  />
+					</div>
+					{$_('To')}
+					<input type="datetime-local" bind:value={end_date} />
+				</div>
+				<TextInput label="Meeting link" bind:value={meeting_link} />
 			</form>
 		</Loader>
 	</div>
 	<div slot="footer">
-		<Button type="submit">{$_('Submit')}</Button>
+		<Button type="submit" action={scheduleEventEdit}>{$_('Submit')}</Button>
 		<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
 	</div>
 </Modal>

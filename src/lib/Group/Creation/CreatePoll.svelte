@@ -162,7 +162,8 @@
 				<RadioButtons2
 					name="poll Content"
 					label="Poll Content"
-					ClassInner="inline mr-2 flex gap-2 items-center"
+					ClassInner="mr-2 flex gap-2 items-center"
+					horizontal
 					labels={['Text Poll', 'Date Poll']}
 					values={['Text Poll', 'Date Poll']}
 					icons={[faAlignLeft, faCalendarAlt]}

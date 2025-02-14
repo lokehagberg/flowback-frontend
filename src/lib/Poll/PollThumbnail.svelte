@@ -71,11 +71,28 @@
 		voting = false;
 	};
 
+	const getAreaVote = async () => {
+		const { json, res } = await fetchRequest('GET', `group/poll/${poll.id}/area/list`);
+
+		if (!res.ok) return;
+
+		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
+
+		if (selectedTagName) {
+			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id || 0; 
+		}
+	};
+
+
 	onMount(async () => {
 		phase = getPhase(poll);
-		if (phase === 'area_vote') tags = await getTags(poll.group_id);
+		if (phase === 'area_vote') {
+			tags = await getTags(poll.group_id);
+			getAreaVote();
+		} 
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
+
 	});
 
 	$: if (poll)
@@ -165,29 +182,14 @@
 		<div class="flex gap-4 my-2 items-center">
 			<!-- Poll Type Icons -->
 			{#if poll.poll_type === 4}
-				<HeaderIcon
-					Class="!p-0 !cursor-default"
-					icon={faAlignLeft}
-					text={'Text Poll'}
-					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
-				/>
+				<HeaderIcon Class="!p-0 !cursor-default" icon={faAlignLeft} text={'Text Poll'} />
 			{:else if poll.poll_type === 3}
-				<HeaderIcon
-					Class="!p-0 !cursor-default"
-					icon={faCalendarAlt}
-					text={'Date Poll'}
-					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
-				/>
+				<HeaderIcon Class="!p-0 !cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 			{/if}
 
 			<!-- Fast Forward Icon -->
 			{#if poll.allow_fast_forward}
-				<HeaderIcon
-					Class="!p-0 !cursor-default"
-					icon={faAnglesRight}
-					text={'Fast Forward'}
-					color={localStorage.getItem('theme') === 'dark' ? 'white' : 'black'}
-				/>
+				<HeaderIcon Class="!p-0 !cursor-default" icon={faAnglesRight} text={'Fast Forward'} />
 			{:else}
 				<div class="relative w-4 h-4">
 					<Fa style="position:absolute" icon={faAnglesRight} />

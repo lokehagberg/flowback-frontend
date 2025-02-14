@@ -49,7 +49,7 @@
 <label class={`${Class}`} {id}>
 	<div class="flex justify-between w-full items-center">
 		<div>
-			<p class="text-sm mb-1 inline">{$_(label)}</p>
+			<p class="text-md mb-1 inline">{$_(label)}</p>
 			{#if required}
 				<p class="inline text-red-600">*</p>
 			{/if}

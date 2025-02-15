@@ -140,12 +140,7 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon icon={AutomationIcon} text={'Automate'} href="automate" bind:selectedHref />
 			{:else}
-				<HeaderIcon
-					icon={AutomationIcon}
-					text={'Delegations'}
-					href="automate"
-					bind:selectedHref
-				/>
+				<HeaderIcon icon={AutomationIcon} text={'Delegations'} href="automate" bind:selectedHref />
 			{/if}
 		</nav>
 
@@ -179,8 +174,8 @@
 			</button>
 		</div>
 	</div>
+	<SideHeader bind:sideHeaderOpen />
 </header>
-<SideHeader bind:sideHeaderOpen />
 
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->

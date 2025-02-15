@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.1';
+		version = '0.1.2';
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -88,40 +88,40 @@
 			<h1 class="text-xl text-left text-primary dark:text-secondary font-bold">{$_('Settings')}</h1>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ul class="mt-4">
-				<li
+			<div class="mt-4">
+				<button
 					on:click={() => (selectedPage = 'profile')}
 					class={`${optionsDesign}`}
 					class:border-l-2={selectedPage === 'profile'}
 					class:border-primary={selectedPage === 'profile'}
 				>
 					<Fa icon={faUser} />{$_('Profile')}
-				</li>
-				<li
+				</button>
+				<button
 					on:click={() => (selectedPage = 'notifications')}
 					class={`${optionsDesign}`}
 					class:border-l-2={selectedPage === 'notifications'}
 					class:border-primary={selectedPage === 'notifications'}
 				>
 					<Fa icon={faBell} />{$_('Notification')}
-				</li>
-				<li
+				</button>
+				<button
 					on:click={() => (selectedPage = 'poll-process')}
 					class={`${optionsDesign}`}
 					class:border-l-2={selectedPage === 'poll-process'}
 					class:border-primary={selectedPage === 'poll-process'}
 				>
 					<Fa icon={faPieChart} />{$_('Poll Process')}
-				</li>
-				<li
+				</button>
+				<button
 					on:click={() => (selectedPage = 'info')}
 					class={`${optionsDesign}`}
 					class:border-l-2={selectedPage === 'info'}
 					class:border-primary={selectedPage === 'info'}
 				>
 					<Fa icon={faInfo} />{$_('Info')}
-				</li>
-			</ul>
+				</button>
+			</div>
 		</div>
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px]">
 			<ul class="flex flex-col">

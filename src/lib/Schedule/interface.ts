@@ -13,5 +13,6 @@ export interface scheduledEvent {
 		id:number;
 		name:string;
 	};
-	schedule_origin_name: 'user' | 'group'
+	schedule_origin_name: 'user' | 'group';
+	meeting_link?: string;
 }

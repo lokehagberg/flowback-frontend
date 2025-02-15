@@ -119,8 +119,6 @@
 	};
 </script>
 
-<Button action={() => (showInvite = true)}>{$_('Show Invitations')}</Button>
-
 <Modal bind:open={showInvite}>
 	<div slot="body">
 		<!-- Inviting -->
@@ -201,7 +199,7 @@
 		<!-- Search in Members list -->
 
 		<form
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4"
 			on:input|preventDefault={() => searchUsers(searchUserQuery)}
 		>
 			<TextInput
@@ -220,6 +218,9 @@
 				<Fa icon={faMagnifyingGlass} />
 			</Button>
 		</form>
+		
+		<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
+
 
 		<!-- Members List -->
 

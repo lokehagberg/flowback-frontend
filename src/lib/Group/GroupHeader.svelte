@@ -10,7 +10,7 @@
 	import Fa from 'svelte-fa';
 	import Description from '$lib/Poll/Description.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 

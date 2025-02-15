@@ -180,8 +180,8 @@
 		</div>
 	</div>
 </header>
-
 <SideHeader bind:sideHeaderOpen />
+
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

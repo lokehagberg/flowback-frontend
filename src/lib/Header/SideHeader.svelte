@@ -57,7 +57,7 @@
 <!-- TODO: Relative works great for phones -->
 <button
 	class:hidden={!sideHeaderOpen}
-	class="absolute right-0 bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText flex flex-col"
+	class="absolute right-0  bg-white z-50 select-none shadow slide-animation dark:bg-darkobject dark:text-darkmodeText flex flex-col"
 	id="side-header"
 	on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
 >

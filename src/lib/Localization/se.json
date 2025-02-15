@@ -566,5 +566,6 @@
     "To": "Till",
     "Add a task": "Lägg till en uppgift",
     "No workgroup assigned": "Ingen arbetsgrupp tilldelad",
-    "None": "Inga"
+    "None": "Inga",
+    "Show invitations":"Visa inbjudningar"
 }

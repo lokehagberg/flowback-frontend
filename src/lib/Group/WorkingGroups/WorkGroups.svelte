@@ -105,8 +105,8 @@
 <Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
 
 <Loader bind:loading>
-	<div class="flex flex-col gap-4 mt-4">
-		{#if isAdmin}
+	{#if isAdmin && invites?.length > 0}
+		<div class="flex flex-col gap-4 mt-4">
 			{#key invites}
 				{#each invites as invite}
 					<div
@@ -126,8 +126,8 @@
 					</div>
 				{/each}
 			{/key}
-		{/if}
-	</div>
+		</div>
+	{/if}
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
 			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} />

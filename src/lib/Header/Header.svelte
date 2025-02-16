@@ -115,21 +115,53 @@
 		/></a
 	>
 	<div class="!flex justify-between md:w-[80%]">
-		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[4%] w-[70%]">
+		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<HeaderIcon icon={HomeIcon} text="Home" href="home" bind:selectedHref />
+				<HeaderIcon
+					icon={HomeIcon}
+					text="Home"
+					href="home"
+					Class="w-[32px] "
+					bind:selectedHref
+				/>
 				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
-				<HeaderIcon icon={faUserFriends} text="Groups" href="groups" bind:selectedHref />
+				<HeaderIcon
+					icon={faUserFriends}
+					text="Groups"
+					Class="w-[32px] "
+					href="groups"
+					bind:selectedHref
+				/>
 			{/if}
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-				<HeaderIcon icon={HomeIcon} text="Home" href="groups/1" bind:selectedHref />
+				<HeaderIcon
+					icon={HomeIcon}
+					Class="w-[35px] "
+					text="Home"
+					href="groups/1"
+					bind:selectedHref
+				/>
 			{/if}
-			<HeaderIcon icon={CalendarIcon} text="Schedule" href="schedule" bind:selectedHref />
 
-			<HeaderIcon icon={KanbanIcon} text="Kanban" href="kanban" bind:selectedHref />
+			<HeaderIcon
+				icon={KanbanIcon}
+				text="Kanban"
+				href="kanban"
+				Class="w-[30px] "
+				bind:selectedHref
+			/>
+
+			<HeaderIcon
+				icon={CalendarIcon}
+				Class="w-[32px] "
+				text="Schedule"
+				href="schedule"
+				bind:selectedHref
+			/>
 
 			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 				<HeaderIcon
+					Class="w-[30px] "
 					icon={faCoins}
 					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
@@ -138,9 +170,21 @@
 			{/if}
 
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
-				<HeaderIcon icon={AutomationIcon} text={'Automate'} href="automate" bind:selectedHref />
+				<HeaderIcon
+					icon={AutomationIcon}
+					Class="w-[30px] "
+					text={'Automate'}
+					href="automate"
+					bind:selectedHref
+				/>
 			{:else}
-				<HeaderIcon icon={AutomationIcon} text={'Delegations'} href="automate" bind:selectedHref />
+				<HeaderIcon
+					icon={AutomationIcon}
+					Class="w-[30px] "
+					text={'Delegations'}
+					href="automate"
+					bind:selectedHref
+				/>
 			{/if}
 		</nav>
 
@@ -174,9 +218,9 @@
 			</button>
 		</div>
 	</div>
-	<SideHeader bind:sideHeaderOpen />
 </header>
 
+<SideHeader bind:sideHeaderOpen />
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

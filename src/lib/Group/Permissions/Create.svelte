@@ -74,9 +74,9 @@
 		rolePerms = new Array(perms.length).fill(false);
 
 	const setRole = () => {
-		console.log(selectedRole, rolePerms);
-
+		
 		rolePerms = selectedRole;
+		console.log(selectedRole, rolePerms);
 	};
 
 	const createRole = async () => {
@@ -116,6 +116,8 @@
 	};
 
 	onMount(() => {
+		console.log(selectedRole, "SELECTED ROLE");
+		
 		setRole();
 	});
 </script>
@@ -125,6 +127,7 @@
 		<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
 			<TextInput label={$_('Role name')} bind:value={roleName} required />
 			<h1 class="text-xl">{$_('Permissions')}</h1>
+			{@debug rolePerms}
 			{#each perms as perm, i}
 				<div class="flex justify-between">
 					<details>

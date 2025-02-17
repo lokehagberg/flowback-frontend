@@ -389,7 +389,7 @@
 					rows={5}
 					Class="overflow-scroll"
 				/>
-				<!-- {#if type === 'group'} -->
+				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
 							{$_('Work Group')}
@@ -406,7 +406,7 @@
 							{/each}
 						</select>
 					</div>
-				<!-- {/if} -->
+				{/if}
 				<div class="text-left w-[300px]">
 					<!-- {#if kanban.end_date} -->
 					<label class="block text-md pt-2">
@@ -456,7 +456,9 @@
 			{:else}
 				<div class="text-center">
 					<h2 class="pb-1 font-semibold break-words text-xl w-full">{kanban.title}</h2>
-					<p class="w-full">{kanban?.work_group?.name || $_('No workgroup assigned')}</p>
+					{#if type === 'group'}
+						<p class="w-full">{kanban?.work_group?.name || $_('No workgroup assigned')}</p>
+					{/if}
 				</div>
 				<div class="flex mt-4 w-full">
 					<div class="flex flex-col mr-4 text-left gap-1 w-full">

@@ -219,6 +219,7 @@
     "This prediction is finished and can no longer be voted on": "Denna prediktion är klar och kan inte längre bli röstad på",
     "Vote": "Rösta",
     "Unvote": "Ta bort röst",
+    "Notifications": "Notifikationer",
     "All notifications": "Alla notifikationer",
     "Only timeline": "Endast tidslinje",
     "Cancel notifications": "Stäng av notifikationer",
@@ -441,6 +442,7 @@
     "Invitation Required?": "Inbjudan krävs för att gå med?",
     "Hide proposal creator?": "Dölj förslagsskapare?",
     "Admin Settings": "Administratörsinställningar",
+    "Settings": "Inställningar",
     "Activate": "Aktivera",
     "Role name": "Rollnamn",
     "Invite": "Bjuda in",
@@ -567,5 +569,13 @@
     "Add a task": "Lägg till en uppgift",
     "No workgroup assigned": "Ingen arbetsgrupp tilldelad",
     "None": "Inga",
-    "Show invitations":"Visa inbjudningar"
+    "Show invitations":"Visa inbjudningar",
+    "Who can see my profile": "Vem kan se min profil",
+    "Only people in my groups": "Endast medlemmar i mina grupper",
+    "Only group admins": "Endast gruppadministratörer",
+    "Who can contact me in chat": "Vem kan kontakta mig i chatten",
+    "Give me all my data":"Begär mina uppgifter",
+    "Delete account": "Radera kontot",
+    "Poll Process": "Beslutsprocessen",
+    "General": "Allmänt"
 }

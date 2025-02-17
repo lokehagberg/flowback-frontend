@@ -7,10 +7,10 @@
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 
-	export let selectedPage: 'assign' | 'create' | 'list';
+	export let selectedPage: 'assign' | 'create' | 'list',
+	selectedRole: any;
 
-	let roles: Permission[] = [],
-		selectedRole: any;
+	let roles: Permission[] = [];
 
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
@@ -40,10 +40,5 @@
 				}}>{role.role_name}</button
 			>
 		</li>
-		<!-- <Role role={role.invite_user}/>
-	<Role role={role.create_poll}/>
-	<Role role={role.allow_vote}/>
-	<Role role={role.kick_members}/>
-	<Role role={role.ban_members}/> -->
 	{/each}
 </ul>

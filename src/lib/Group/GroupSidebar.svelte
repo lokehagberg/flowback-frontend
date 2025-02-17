@@ -150,13 +150,13 @@
 					text="Group Kanban"
 					icon={faList}
 				/>
-			{/if}
 			<GroupSidebarButton
 				action={() => action('schedule')}
 				isSelected={selectedPage === 'schedule'}
 				text="Group schedule"
 				icon={faCalendarAlt}
 			/>
+			{/if}
 			<GroupSidebarButton
 				action={() => action('members')}
 				text="Members"
@@ -169,17 +169,6 @@
 				icon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
 			/> -->
-			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<GroupSidebarButton
-					action={() => action('about')}
-					text="About"
-					icon={faCircleInfo}
-					isSelected={selectedPage === 'about'}
-				/>
-			{/if}
-		</div>
-		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			<!-- These two are link tags so people are able to open them in new window/tab -->
 			<a
 				class="text-inherit w-full"
 				target="_blank"
@@ -192,6 +181,17 @@
 					isSelected={false}
 				/></a
 			>
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<GroupSidebarButton
+					action={() => action('about')}
+					text="About"
+					icon={faCircleInfo}
+					isSelected={selectedPage === 'about'}
+				/>
+			{/if}
+			
+		</div>
+		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<GroupSidebarButton

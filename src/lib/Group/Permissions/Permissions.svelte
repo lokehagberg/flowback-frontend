@@ -20,7 +20,7 @@
 	{#if selectedPage === 'create'}
 		<Create bind:selectedRole/>
 	{:else if selectedPage === 'list'}
-		<List bind:selectedPage />
+		<List bind:selectedPage bind:selectedRole/>
 	{:else if selectedPage === 'assign'}
 		<Assign />
 	{/if}

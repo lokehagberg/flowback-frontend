@@ -18,18 +18,17 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class={`${Class} select-none flex item-center items-center  dark:outline-gray-700 rounded-md transition-all ${
-		!isSelected &&
-		'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600 '
-	} outline-1 cursor-pointer p-3 ${
-		isSelected && 'text-gray-400 dark:text-gray-400 border-l-2 border-primary rounded-none'
-	} `}
-	    aria-disabled={disabled}
-		class:opacity-50={disabled}
-		class:saturate-0={disabled}
+	class={`${Class} select-none flex items-center rounded transition-all outline-1 cursor-pointer p-3 cursor-pointer dark:outline-gray-700
+		${isSelected 
+			? 'bg-gray-200 text-black border-l-2 rounded-none border-primary dark:bg-gray-700 dark:text-white' 
+			: 'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600'
+		}
+		${disabled ? 'opacity-50 saturate-0 cursor-not-allowed' : ''}
+	`}
+	aria-disabled={disabled}
 >
-	<Fa {icon} />
-	<div class="ml-2">
+	<Fa {icon} class="max-w-[24px]"/>
+	<div class="ml-4">
 		{$_(text)}
 	</div>
 </button>

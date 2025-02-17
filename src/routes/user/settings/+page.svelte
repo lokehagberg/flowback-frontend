@@ -16,7 +16,7 @@
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'notifications',
 		optionsDesign =
-			'flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-1 transition-all',
+			'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all',
 		userConfig = {
 			notificationSettings: {
 				schedule: {
@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.2';
+		version = '0.1.3';
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -77,80 +77,93 @@
 
 <Layout centered>
 	<div class="flex mt-6 gap-6">
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6">
-			<button
-				class="flex items-center gap-2 text-gray-600 hover:text-primary dark:text-secondary transition-colors mb-4"
-				on:click={() => history.back()}
-			>
-				<Fa icon={faArrowLeft} />
-				{$_('Back')}
-			</button>
-			<h1 class="text-xl text-left text-primary dark:text-secondary font-bold">{$_('Settings')}</h1>
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6 rounded border">
+			<div class="flex items-center mb-4 gap-4">
+				<button
+					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
+					on:click={() => history.back()}
+				>
+					<Fa icon={faArrowLeft} />
+				</button>
+				<h1 class="text-xl text-left text-primary dark:text-secondary font-bold">{$_('Settings')}</h1>
+			</div>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<div class="mt-4">
 				<button
 					on:click={() => (selectedPage = 'profile')}
 					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'profile'}
 					class:border-l-2={selectedPage === 'profile'}
 					class:border-primary={selectedPage === 'profile'}
 				>
-					<Fa icon={faUser} />{$_('Profile')}
+					<Fa icon={faUser} class="w-5 h-5"/>{$_('User Profile')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'notifications')}
 					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'notifications'}
 					class:border-l-2={selectedPage === 'notifications'}
 					class:border-primary={selectedPage === 'notifications'}
 				>
-					<Fa icon={faBell} />{$_('Notification')}
+					<Fa icon={faBell} class="w-5 h-5"/>{$_('Notifications')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'poll-process')}
 					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'poll-process'}
 					class:border-l-2={selectedPage === 'poll-process'}
 					class:border-primary={selectedPage === 'poll-process'}
 				>
-					<Fa icon={faPieChart} />{$_('Poll Process')}
+					<Fa icon={faPieChart} class="w-5 h-5"/>{$_('Poll Process')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'info')}
 					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'info'}
 					class:border-l-2={selectedPage === 'info'}
 					class:border-primary={selectedPage === 'info'}
 				>
-					<Fa icon={faInfo} />{$_('Info')}
+					<Fa icon={faInfo} class="w-5 h-5"/>{$_('Information')}
 				</button>
 			</div>
 		</div>
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px]">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px] rounded border">
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
-					<li>{$_('Profile')}</li>
+				<li class="text-lg text-primary dark:text-secondary font-bold mb-3">{$_('General')}</li>
 					<RadioButtons2
+						Class="pb-4"
+						ClassInner="flex items-center justify-between px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
 						name="radio1"
 						label="Who can see my profile"
 						labels={['All', 'Only people in my groups', 'Only group admins']}
 						values={['1', '2', '3']}
+						radioSide="right"
 					/>
 					<RadioButtons2
+						ClassInner="flex items-center justify-between px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
 						name="radio2"
 						label="Who can contact me in chat"
 						labels={['All', 'Only people in my groups', 'Only group admins']}
 						values={['1', '2', '3']}
+						radioSide="right"
 					/>
-					<div>{$_('Give me all data')}</div>
-					<div>{$_('Delete account')}</div>
+
+					<div class="pt-4">
+						<div class="cursor-pointer hover:underline">{$_('Give me all my data')}</div>
+						<div class="text-red-600 cursor-pointer hover:underline mt-2">{$_('Delete account')}</div>
+					</div>
 				{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
-					{$_('Notify me when')}...
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-xl text-primary dark:text-secondary font-bold"
+							<span class="text-lg text-primary dark:text-secondary font-bold"
 								>{configToReadable(key1)}</span
 							>
-							<ul>
+							<ul class="pl-4 pt-2">
+								<span class="my-4">{$_('Notify me when')}...</span>
 								{#each Object.entries(settings) as [key2, setting]}
-									<li class="flex justify-between">
+									<li class="flex justify-between p-2 rounded hover:bg-gray-100">
 										<span>{$_(configToReadable(key2))}</span>
 										<input
 											type="checkbox"
@@ -173,23 +186,25 @@
 					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span
 					>
 					<span>{$_('Select the phases you want to participate in')}.</span>
-					{#each Object.entries(userConfig.pollSettings) as [key, setting]}
-						<li class="flex justify-between">
-							<span>{$_(configToReadable(key))}</span>
-							<input
-								type="checkbox"
-								on:input={(e) => {
-									//@ts-ignore
-									userConfig.pollSettings[key] =
+					<ul class="gap-2 pl-4">
+						{#each Object.entries(userConfig.pollSettings) as [key, setting]}
+							<li class="flex justify-between p-2 rounded hover:bg-gray-100">
+								<span>{$_(configToReadable(key))}</span>
+								<input
+									type="checkbox"
+									on:input={(e) => {
 										//@ts-ignore
-										e.target.checked;
+										userConfig.pollSettings[key] =
+											//@ts-ignore
+											e.target.checked;
 
-									userUpdate();
-								}}
-								checked={a(key)}
-							/>
-						</li>
-					{/each}
+										userUpdate();
+									}}
+									checked={a(key)}
+								/>
+							</li>
+						{/each}
+					</ul>
 				{:else if selectedPage === 'info'}
 					Version: {version}
 				{/if}

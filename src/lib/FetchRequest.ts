@@ -46,10 +46,13 @@ export async function fetchRequest(
 		// toSend
 	);
 
+	if (res.status === 401) goto('/login')
+
 	try {
 		const json = await res.json();
 		return { res, json };
 	} catch {
+
 		return { res };
 	}
 }

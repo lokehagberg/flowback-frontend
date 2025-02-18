@@ -3,7 +3,6 @@
 	import { page } from '$app/stores';
 	import type { Permission } from './interface';
 	import { onMount } from 'svelte';
-	import Role from './Role.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 

@@ -150,12 +150,12 @@
 					text="Group Kanban"
 					icon={faList}
 				/>
-			<GroupSidebarButton
-				action={() => action('schedule')}
-				isSelected={selectedPage === 'schedule'}
-				text="Group schedule"
-				icon={faCalendarAlt}
-			/>
+				<GroupSidebarButton
+					action={() => action('schedule')}
+					isSelected={selectedPage === 'schedule'}
+					text="Group schedule"
+					icon={faCalendarAlt}
+				/>
 			{/if}
 			<GroupSidebarButton
 				action={() => action('members')}
@@ -189,10 +189,9 @@
 					isSelected={selectedPage === 'about'}
 				/>
 			{/if}
-			
 		</div>
-		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+		{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<GroupSidebarButton
 						Class="w-full"
@@ -211,8 +210,8 @@
 						/>
 					</a>
 				{/if}
-			{/if}
-		</div>
+			</div>
+		{/if}
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton

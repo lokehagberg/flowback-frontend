@@ -9,6 +9,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { onMount } from 'svelte';
+	import type { Permissions } from './interface';
 
 	export let selectedRole: any;
 
@@ -74,9 +75,7 @@
 		rolePerms = new Array(perms.length).fill(false);
 
 	const setRole = () => {
-		
 		rolePerms = selectedRole;
-		console.log(selectedRole, rolePerms);
 	};
 
 	const createRole = async () => {
@@ -115,10 +114,30 @@
 		poppup = { message: 'Successfully created role', success: true };
 	};
 
+	const transformIntoRolePermType = (permissions: Permissions) => {
+		roleName = permissions.role_name;
+		rolePerms[0] = permissions.invite_user;
+		rolePerms[1] = permissions.create_poll;
+		rolePerms[2] = permissions.allow_vote;
+		rolePerms[3] = permissions.kick_members;
+		rolePerms[4] = permissions.ban_members;
+		rolePerms[5] = permissions.poll_fast_forward;
+		rolePerms[6] = permissions.create_proposal;
+		rolePerms[7] = permissions.update_proposal;
+		rolePerms[8] = permissions.delete_proposal;
+		rolePerms[9] = permissions.force_delete_poll;
+		rolePerms[10] = permissions.force_delete_proposal;
+		rolePerms[11] = permissions.force_delete_comment;
+		rolePerms[12] = permissions.prediction_statement_create;
+		rolePerms[13] = permissions.prediction_statement_delete;
+		rolePerms[14] = permissions.prediction_bet_create;
+		rolePerms[15] = permissions.prediction_bet_update;
+		rolePerms[16] = permissions.prediction_bet_delete;
+	};
+
 	onMount(() => {
-		console.log(selectedRole, "SELECTED ROLE");
-		
-		setRole();
+		// setRole();
+		transformIntoRolePermType(selectedRole)
 	});
 </script>
 
@@ -127,7 +146,6 @@
 		<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
 			<TextInput label={$_('Role name')} bind:value={roleName} required />
 			<h1 class="text-xl">{$_('Permissions')}</h1>
-			{@debug rolePerms}
 			{#each perms as perm, i}
 				<div class="flex justify-between">
 					<details>

@@ -4,9 +4,10 @@
 	import Assign from './Assign.svelte';
 	import List from './List.svelte';
 	import { _ } from 'svelte-i18n';
+	import type { Permissions } from './interface';
 
 	let selectedPage: 'assign' | 'create' | 'list' = 'assign',
-	selectedRole:any;
+	selectedRole:Permissions;
 
 </script>
 

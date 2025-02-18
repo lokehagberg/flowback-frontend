@@ -16,6 +16,8 @@
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import type { kanban } from './Kanban';
+	import type { Filter } from './Kanban.ts';
+	import KanbanFiltering from './KanbanFiltering.svelte';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -27,7 +29,11 @@
 		interval: any,
 		open = false,
 		numberOfOpen = 0,
-		filter: { assignee: number | null } = { assignee: null },
+		filter: Filter = {
+			assignee: null,
+			search: '',
+			workgroup: null
+		},
 		workGroups: WorkGroup[] = [],
 		lane: number = 1;
 
@@ -86,6 +92,8 @@
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 
+	const handleSearch = () => {};
+
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
@@ -107,13 +115,8 @@
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<!-- <Filter
-		bind:filter
-		handleSearch={getKanbanEntries}
-		iterables={users.map((user) => {
-			return { name: user.user.username, id: user.user.id };
-		})}
-	/> -->
+	<KanbanFiltering bind:filter {handleSearch} />
+
 	<div class="flex overflow-x-auto">
 		<!-- {#await promise}
 			<div>Loading...</div>
@@ -126,29 +129,38 @@
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<div class="flex justify-between pb-3">
 						<span class="xl:text-md md:text-sm p-1 font-medium">{$_(_tag)}</span>
-						<button class="text-sm p-1"
+						<button
+							class="text-sm p-1"
 							on:click={() => {
 								open = true;
 								lane = i;
-							}}><Fa icon={faPlus} size="12px"/></button
+							}}><Fa icon={faPlus} size="12px" /></button
 						>
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
 						{#each kanbanEntries as kanban}
 							{#if kanban.lane === i}
-								<KanbanEntry bind:workGroups bind:kanban {users} {type} {removeKanbanEntry} {changeNumberOfOpen} />
+								<KanbanEntry
+									bind:workGroups
+									bind:kanban
+									{users}
+									{type}
+									{removeKanbanEntry}
+									{changeNumberOfOpen}
+								/>
 							{/if}
 						{/each}
 					</ul>
 					<div class="flex justify-between pt-4">
-						<button class="text-sm flex items-center gap-2"
+						<button
+							class="text-sm flex items-center gap-2"
 							on:click={() => {
 								open = true;
 								lane = i;
-							}}>
-							<span class="text-gray-600">+ {$_('Add a task')}</span>
-						</button
+							}}
 						>
+							<span class="text-gray-600">+ {$_('Add a task')}</span>
+						</button>
 					</div>
 				</div>
 			{/if}

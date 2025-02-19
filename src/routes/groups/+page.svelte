@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
+	import { goto } from '$app/navigation';
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
@@ -20,6 +21,7 @@
 		loading = false;
 
 	onMount(() => {
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK && location.href.includes('/groups')) goto('/home');
 		getGroups();
 	});
 
@@ -45,6 +47,7 @@
 		groupList = json.results
 			.reverse()
 			.sort((group1: any, group2: any) => +group2.joined - +group1.joined);
+
 		loading = false;
 	};
 </script>

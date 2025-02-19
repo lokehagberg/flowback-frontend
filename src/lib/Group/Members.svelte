@@ -18,6 +18,8 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -218,9 +220,10 @@
 				<Fa icon={faMagnifyingGlass} />
 			</Button>
 		</form>
-		
-		<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
 
+		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+			<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
+		{/if}
 
 		<!-- Members List -->
 
@@ -228,12 +231,14 @@
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each searchedUsers as user}
 					<div class="flex items-center">
-						<ProfilePicture
-							Class="w-[30%]"
-							username={user.user.username}
-							profilePicture={user.user.profile_image}
-							displayName
-						/>
+						<button on:click={() => goto(`/user?id=${user.user.id}`)} Class="w-[30%]">
+							<ProfilePicture
+								Class=""
+								username={user.user.username}
+								profilePicture={user.user.profile_image}
+								displayName
+							/>
+						</button>
 						{#if user.is_delegate}
 							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
 								{$_('Delegate')}
@@ -247,15 +252,15 @@
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
-						<div
-							on:click={() => goto(`/user?id=${user.user.id}`)}
-							on:keydown
-							tabindex="0"
-							role="button"
+						<button
+							on:click={() => {
+								isChatOpen.set(true);
+								chatPartner.set(user.user.id);
+							}}
 							Class="right-6 absolute"
 						>
 							<Fa icon={faPaperPlane} rotate="60" />
-						</div>
+						</button>
 					</div>
 				{/each}
 			</div>

@@ -74,10 +74,6 @@
 		roleName = '',
 		rolePerms = new Array(perms.length).fill(false);
 
-	const setRole = () => {
-		rolePerms = selectedRole;
-	};
-
 	const createRole = async () => {
 		loading = true;
 		const { json, res } = await fetchRequest(
@@ -136,8 +132,7 @@
 	};
 
 	onMount(() => {
-		// setRole();
-		transformIntoRolePermType(selectedRole)
+		if (selectedRole) transformIntoRolePermType(selectedRole);
 	});
 </script>
 

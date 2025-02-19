@@ -55,19 +55,23 @@
 	};
 
 	const getKanbanEntriesGroup = async () => {
+		console.log(filter.search);
+		
 		let api = `group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
-
+		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
+		
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
-
+	
 	const getKanbanEntriesHome = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`
-		);
+		console.log(filter.search);
+		let api = `user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
+		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
+
+		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
@@ -92,7 +96,7 @@
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 
-	const handleSearch = () => {};
+	const handleSearch = (search: String) => {};
 
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
@@ -115,7 +119,7 @@
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<KanbanFiltering bind:filter {handleSearch} />
+	<KanbanFiltering bind:filter handleSearch={getKanbanEntries} />
 
 	<div class="flex overflow-x-auto">
 		<!-- {#await promise}

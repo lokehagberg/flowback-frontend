@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
-	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import { fade } from 'svelte/transition';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -18,13 +16,12 @@
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import { goto } from '$app/navigation';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import type { kanbanEdited, kanban } from './Kanban';
-	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
+	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -337,7 +334,7 @@
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">
 			<button
-				class="cursor-pointer hover:text-gray-500 py-1"
+				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
 				on:click={() => {
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
@@ -349,7 +346,7 @@
 			</button>
 
 			<button
-				class="cursor-pointer hover:text-gray-500 py-1"
+				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
 				on:click={() => {
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);

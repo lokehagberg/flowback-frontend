@@ -124,42 +124,50 @@
 >
 	<Loader bind:loading>
 		<div class="flex flex-col gap-6">
-			<h1 class="text-2xl">{$_(groupToEdit ? 'Update' : 'Create a Group')}</h1>
+			{#if !groupToEdit}
+				<h1 class="text-2xl">{$_('Create a Group')}</h1>
+			{/if}
+
 			<TextInput label="Title" bind:value={name} required />
 			<TextArea label="Description" bind:value={description} />
 			<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
 			<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'} />
-				<RadioButtons bind:Yes={publicGroup} label={'Public?'} />
-				<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} />
+				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'}
+					Class="flex items-center justify-between gap-3 w-full"/>
+				<RadioButtons bind:Yes={publicGroup} label={'Public?'} 
+					Class="flex items-center justify-between gap-3 w-full"/>
+				<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} 
+					Class="flex items-center justify-between gap-3 w-full"/>
 			{/if}
 
 			<StatusMessage bind:status />
 
-			<Button type="submit" disabled={loading}
-				><div class="flex justify-center gap-3 items-center">
-					<Fa icon={faPaperPlane} />{$_(groupToEdit ? 'Update' : 'Create Group')}
-				</div>
-			</Button>
-			{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<Modal bind:open={DeleteGroupModalShow}>
-					<div slot="header">{$_('Deleting group')}</div>
-					<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
-					<div slot="footer">
-						<div class="flex justify-center gap-16">
-							<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
-								action={() => (DeleteGroupModalShow = false)}
-								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
-							>
-						</div>
+			<div class="flex gap-4">
+				<Button type="submit" disabled={loading} buttonStyle="primary-light" Class="w-1/2"
+					><div class="flex justify-center gap-3 items-center">
+						{$_(groupToEdit ? 'Update' : 'Create Group')}
 					</div>
-				</Modal>
-				<Button buttonStyle="warning" action={() => (DeleteGroupModalShow = true)}
-					>{$_('Delete Group')}</Button
-				>
-			{/if}
+				</Button>
+				{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<Modal bind:open={DeleteGroupModalShow}>
+						<div slot="header">{$_('Deleting group')}</div>
+						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
+						<div slot="footer">
+							<div class="flex justify-center gap-16">
+								<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
+									action={() => (DeleteGroupModalShow = false)}
+									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+								>
+							</div>
+						</div>
+					</Modal>
+					<Button buttonStyle="warning-light" Class="w-1/2" action={() => (DeleteGroupModalShow = true)}
+						>{$_('Delete Group')}</Button
+					>
+				{/if}
+			</div>
 		</div>
 	</Loader>
 </form>

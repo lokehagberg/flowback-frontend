@@ -11,8 +11,8 @@
 
 </script>
 
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 rounded">
-	<h1 class="text-3xl">{$_("Permissions")}</h1>
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded">
+	<!-- <h1 class="text-3xl">{$_("Permissions")}</h1> -->
 	<Tab
 		tabs={['assign', 'list', 'create']}
 		bind:selectedPage

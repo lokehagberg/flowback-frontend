@@ -12,6 +12,11 @@
 	import Tag from './Tag.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import Fa from 'svelte-fa';
+	import {
+		faTrash
+	} from '@fortawesome/free-solid-svg-icons';
+	import Toggle from '$lib/Generic/Toggle.svelte';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
@@ -67,34 +72,51 @@
 </script>
 
 <!-- TODO: Nicer design -->
-<div class="bg-white rounded shadow p-6 dark:bg-darkobject">
+<!-- <div class="bg-white rounded shadow p-6 dark:bg-darkobject"> -->
 	<Loader bind:loading>
-		<form on:submit|preventDefault={addTag} class="p-3">
-			<TextInput label="Add tag" bind:value={tagToAdd} />
-			<Button disabled={loading} type="submit" Class="mt-2" label="Add tag" />
+		<form on:submit|preventDefault={addTag} class="pb-4 flex gap-2">
+			<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1"/>
+			<Button disabled={loading} type="submit" Class="w-1/5 mt-auto h-8 flex items-center justify-center" buttonStyle="primary-light" label="Add" />
 		</form>
-		<div class="flex flex-wrap mt-2">
+		<div class="flex flex-col justify-between gap-2 py-2">
 			{#each tags as tag}
-				<div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3">
-					<Tag {tag} Class={tag.active ? '' : 'bg-blue-200'} />
-					<div class="mt-2 w-full flex flex-col gap-2">
-						<Button disabled={loading} Class="bg-purple-500" action={() => editTag(tag)}
-							>{tag.active ? $_('Disable') : $_('Activate')}</Button
-						>
-						<Button
-							disabled={loading}
-							Class="bg-rose-500"
-							action={() => {
-								areYouSureModal = true;
-								selectedTag = tag;
-							}}>{$_('Delete')}</Button
-						>
+				<!-- <div class="md:w-1/2 lg:w-1/3 xl:w-1/4 p-3"> -->
+					<div class="flex justify-between items-center">
+						<p>{tag?.name}</p>
+						<!-- <Tag {tag} Class={tag.active ? '' : 'bg-blue-200'} /> -->
+						<div class="flex gap-2 items-center ml-auto">
+							<!-- TODO: Change button to Toggle -->
+							<!-- <Toggle bind:checked={} /> -->
+							<Button 
+								disabled={loading} 
+								buttonStyle="primary-light"
+								action={() => editTag(tag)}
+								label={tag.active ? $_('Disable') : $_('Activate')}
+							/>
+								<button 
+									class="text-red-500 p-2 text-lg cursor-pointer"
+									disabled={loading}
+									on:click={() => {
+										areYouSureModal = true;
+										selectedTag = tag;
+									}}
+								><Fa icon={faTrash} /></button>
+
+							<!-- <Button
+								disabled={loading}
+								buttonStyle="warning-light"
+								action={() => {
+									areYouSureModal = true;
+									selectedTag = tag;
+								}}>{$_('Delete')}</Button
+							> -->
+						</div>
 					</div>
-				</div>
+				<!-- </div> -->
 			{/each}
 		</div>
 	</Loader>
-</div>
+<!-- </div> -->
 
 <Modal bind:open={areYouSureModal}>
 	<div slot="header">{$_('Are you sure?')}</div>

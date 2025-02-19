@@ -18,6 +18,7 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -248,7 +249,10 @@
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
-						<button on:click={() => goto(`/user?id=${user.user.id}`)} Class="right-6 absolute">
+						<button on:click={() => {
+							isChatOpen.set(true)
+							chatPartner.set(user.user.id)
+							}} Class="right-6 absolute">
 							<Fa icon={faPaperPlane} rotate="60" />
 						</button>
 					</div>

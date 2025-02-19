@@ -9,6 +9,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { chatPreview as chatLimit } from '../Generic/APILimits.json';
 	import { updateUserData } from './functions';
+	import { chatPartner } from './ChatStore.svelte';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
@@ -88,6 +89,7 @@
 				previewDirect = previewDirect;
 			}
 			selectedChat = chatter.channel_id;
+			chatPartner.set(chatter.channel_id);
 			selectedChatChannelId = chatter.channel_id;
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
@@ -100,6 +102,7 @@
 			}
 
 			selectedChat = chatter.id;
+			chatPartner.set(chatter.channel_id);
 			selectedChatChannelId = chatter.chat_id;
 		}
 	};
@@ -147,7 +150,6 @@
 				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-		
 		<button
 			class:hidden={selectedPage === 'direct'
 				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())

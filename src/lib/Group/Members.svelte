@@ -19,6 +19,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -220,7 +221,9 @@
 			</Button>
 		</form>
 
-		<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
+		{#if env.PUBLIC_ONE_GROUP_FLOWBACK}
+			<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
+		{/if}
 
 		<!-- Members List -->
 
@@ -249,10 +252,13 @@
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
-						<button on:click={() => {
-							isChatOpen.set(true)
-							chatPartner.set(user.user.id)
-							}} Class="right-6 absolute">
+						<button
+							on:click={() => {
+								isChatOpen.set(true);
+								chatPartner.set(user.user.id);
+							}}
+							Class="right-6 absolute"
+						>
 							<Fa icon={faPaperPlane} rotate="60" />
 						</button>
 					</div>

@@ -221,7 +221,7 @@
 			</Button>
 		</form>
 
-		{#if env.PUBLIC_ONE_GROUP_FLOWBACK}
+		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE")}
 			<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
 		{/if}
 

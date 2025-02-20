@@ -173,8 +173,8 @@
 				username={chatter.name || chatter.username}
 				profilePicture={chatter.profile_image}
 			/>
-			<div class="flex flex-col">
-				<span class="max-w-[12%] text-left overflow-x-hidden overflow-ellipsis"
+			<div class="flex flex-col max-w-[40%]">
+				<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
 					>{chatter.name || chatter.username}</span
 				>
 				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">

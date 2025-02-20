@@ -144,7 +144,7 @@
 				>
 					<Fa icon={faReply} />{$_('Reply')}
 				</button>
-				{#if comment.author_id !== Number(localStorage.getItem('userId'))}
+				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
 					<button
 						class:text-primary={comment.user_vote === true}
 						class="flex items-center gap-1 cursor-pointer transition-colors"
@@ -159,7 +159,7 @@
 					>
 						<Fa icon={faArrowDown} />
 					</button>
-				{/if}
+				<!-- {/if} -->
 				{comment.score}
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}

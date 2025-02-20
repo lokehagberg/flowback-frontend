@@ -145,20 +145,20 @@
 					<Fa icon={faReply} />{$_('Reply')}
 				</button>
 				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
-					<button
-						class:text-primary={comment.user_vote === true}
-						class="flex items-center gap-1 cursor-pointer transition-colors"
-						on:click={() => commentVote(1)}
-					>
-						<Fa icon={faArrowUp} />
-					</button>
-					<button
-						class:text-primary={comment.user_vote === false}
-						class="flex items-center gap-1 cursor-pointer transition-colors"
-						on:click={() => commentVote(-1)}
-					>
-						<Fa icon={faArrowDown} />
-					</button>
+				<button
+					class:text-primary={comment.user_vote === true}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
+					on:click={() => commentVote(1)}
+				>
+					<Fa icon={faArrowUp} />
+				</button>
+				<button
+					class:text-primary={comment.user_vote === false}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
+					on:click={() => commentVote(-1)}
+				>
+					<Fa icon={faArrowDown} />
+				</button>
 				<!-- {/if} -->
 				{comment.score}
 

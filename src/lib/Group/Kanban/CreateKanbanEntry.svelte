@@ -143,7 +143,7 @@
 		<Loader bind:loading>
 			<div on:submit|preventDefault={createKanbanEntry}>
 				<div class="pb-2">
-					<TextInput  Class="text-md" required label="Title" bind:value={title} />
+					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
 				<TextArea Class="text-md" label="Description" bind:value={description} />
 				{#if type === 'group'}
@@ -170,19 +170,22 @@
 					<label class="block text-md pt-2">
 						{$_('End date')}
 					</label>
-					<input bind:value={end_date}
-					class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
+					<input
+						bind:value={end_date}
+						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
 						   {end_date ? 'text-black' : 'text-gray-500'}"
-					type="datetime-local" />
+						type="datetime-local"
+					/>
 				</div>
 				<div class="text-left">
-					<label class="block text-md pt-2">
+					<label for="handleChangePriority" class="block text-md pt-2">
 						{$_('Priority')}
 					</label>
 					<select
 						class="w-full rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 						on:input={handleChangePriority}
 						value={priority}
+						id="handleChangePriority"
 					>
 						{#each priorities as i}
 							<option value={i}>
@@ -219,6 +222,7 @@
 		</Loader>
 	</div>
 	<div slot="footer">
-		<Button Class="" type="submit">{$_('Create task')}</Button>
+		<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
+		<Button buttonStyle="warning-light" action={() => (open = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>

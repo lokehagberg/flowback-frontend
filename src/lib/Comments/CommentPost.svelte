@@ -30,12 +30,15 @@
 	// $: if(image !== null ) attachments.push(image)
 
 	const getId = () => {
+		console.log(api, 'API APA');
+
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
 		else if (api === 'delegate-history') return `delegate/pool/${delegate_pool_id}`;
 	};
 
 	const commentCreate = async () => {
+		console.log('Commenting Creatings', getId(), id, delegate_pool_id);
 		const formData = new FormData();
 		formData.append('message', message);
 		//@ts-ignore
@@ -94,6 +97,8 @@
 	};
 
 	const commentUpdate = async () => {
+		console.log('Commenting Updating', getId(), id, delegate_pool_id);
+
 		const { res, json } = await fetchRequest('POST', `group/${getId()}/comment/${id}/update`, {
 			message
 		});

@@ -20,7 +20,11 @@
 			members: null,
 			name: '',
 			id: 0,
-			work_group_id: 0
+			work_group_id: 0,
+			member_count: 0,
+			next: '',
+			previous: '',
+			total_page: 0
 		},
 		poppup: poppup,
 		open = false,

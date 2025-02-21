@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import type { WorkGroup, WorkGroupUser } from './interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -8,11 +9,13 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	export let workGroup: WorkGroup, handleRemoveGroup: (id: number) => void;
 
 	let poppup: poppup,
-		workGroupUserList: WorkGroupUser[] = [];
+		workGroupUserList: WorkGroupUser[] = [],
+		isAdmin = false;
 
 	const getUserList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
@@ -86,16 +89,19 @@
 		handleRemoveGroup(workGroup.id);
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		getUserList();
+		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
 	});
 </script>
 
 <div
 	class="bg-white w-full px-4 py-2 flex justify-between items-center shadow rounded dark:bg-darkobject min-h-14"
 >
-	<span class="text-primary dark:text-secondary w-[40%] font-semibold break-words">{workGroup.name}</span>
-	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroupUserList.length} </span>
+	<span class="text-primary dark:text-secondary w-[40%] font-semibold break-words"
+		>{workGroup.name}</span
+	>
+	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
 
 	{#key workGroupUserList}
 		{#if isMember()}
@@ -111,7 +117,10 @@
 				>{$_('Ask to join')}</Button
 			>
 		{/if}
-		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
+
+		{#if isAdmin}
+			<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
+		{/if}
 	{/key}
 </div>
 

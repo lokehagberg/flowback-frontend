@@ -6,6 +6,10 @@ export interface WorkGroup {
 	direct_join: boolean;
 	id: number;
 	work_group_id:number;
+	member_count:number;
+	total_page:number;
+	next:string;
+	previous:string
 }
 
 export interface WorkGroupUser {

@@ -15,7 +15,8 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[];
+		proposals: proposal[],
+		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup;
@@ -87,6 +88,7 @@
 
 {#if comment.being_edited}
 	<CommentPost
+		{delegate_pool_id}
 		bind:proposals
 		bind:comments
 		bind:beingEdited={comment.being_edited}
@@ -145,20 +147,20 @@
 					<Fa icon={faReply} />{$_('Reply')}
 				</button>
 				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
-					<button
-						class:text-primary={comment.user_vote === true}
-						class="flex items-center gap-1 cursor-pointer transition-colors"
-						on:click={() => commentVote(1)}
-					>
-						<Fa icon={faArrowUp} />
-					</button>
-					<button
-						class:text-primary={comment.user_vote === false}
-						class="flex items-center gap-1 cursor-pointer transition-colors"
-						on:click={() => commentVote(-1)}
-					>
-						<Fa icon={faArrowDown} />
-					</button>
+				<button
+					class:text-primary={comment.user_vote === true}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
+					on:click={() => commentVote(1)}
+				>
+					<Fa icon={faArrowUp} />
+				</button>
+				<button
+					class:text-primary={comment.user_vote === false}
+					class="flex items-center gap-1 cursor-pointer transition-colors"
+					on:click={() => commentVote(-1)}
+				>
+					<Fa icon={faArrowDown} />
+				</button>
 				<!-- {/if} -->
 				{comment.score}
 

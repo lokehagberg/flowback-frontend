@@ -15,7 +15,8 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[];
+		proposals: proposal[],
+		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup;
@@ -87,6 +88,7 @@
 
 {#if comment.being_edited}
 	<CommentPost
+		{delegate_pool_id}
 		bind:proposals
 		bind:comments
 		bind:beingEdited={comment.being_edited}

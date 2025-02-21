@@ -20,7 +20,6 @@
 	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
-	import { navigating } from '$app/stores';
 	import { getStores } from '$app/stores';
 
 	let user: User = {

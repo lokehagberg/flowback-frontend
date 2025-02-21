@@ -85,22 +85,27 @@
 						<p>{tag?.name}</p>
 						<!-- <Tag {tag} Class={tag.active ? '' : 'bg-blue-200'} /> -->
 						<div class="flex gap-2 items-center ml-auto">
-							<!-- TODO: Change button to Toggle -->
-							<!-- <Toggle bind:checked={} /> -->
-							<Button 
+							<!-- <div class="w-6 h-3"></div> -->
+								<Toggle
+									checked={tag.active}
+									onInput={() => editTag(tag)}
+								/>
+							<!-- </div> -->
+							<!-- <Button 
 								disabled={loading} 
 								buttonStyle="primary-light"
 								action={() => editTag(tag)}
 								label={tag.active ? $_('Disable') : $_('Activate')}
-							/>
+							/> -->
 								<button 
-									class="text-red-500 p-2 text-lg cursor-pointer"
+									class="text-red-500 p-2 pl-4 text-lg cursor-pointer"
 									disabled={loading}
 									on:click={() => {
 										areYouSureModal = true;
 										selectedTag = tag;
 									}}
-								><Fa icon={faTrash} /></button>
+									><Fa icon={faTrash} />
+								</button>
 
 							<!-- <Button
 								disabled={loading}

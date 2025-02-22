@@ -4,7 +4,7 @@
 </script>
 
 <fieldset class={Class}>
-	<h1 class="text-left text-sm">{$_(label)}</h1>
+	<p class="text-left">{$_(label)}</p>
 	<div class={`${centering && "flex justify-center gap-2"}`}>
         <label>
             {$_("Yes")}

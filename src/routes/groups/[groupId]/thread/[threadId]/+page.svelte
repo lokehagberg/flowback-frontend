@@ -62,7 +62,7 @@
 			/>
 
 			{#if thread.description.length > 0}
-				<div class="grid-area-description">
+				<div class="grid-area-description py-2">
 					<Description readMore bind:description={thread.description} limit={500} Class="" />
 				</div>
 			{/if}

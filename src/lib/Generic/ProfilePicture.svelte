@@ -13,7 +13,7 @@
 </script>
 
 {#if userId}
-	<a href={`/user?id=${userId}`} class={`flex gap-2 items-center ${Class}`}>
+	<a href={`/user?id=${userId}`} class={`flex gap-4 items-center ${Class}`}>
 		{#if !profilePicture}
 			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
 		{:else}

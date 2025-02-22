@@ -15,6 +15,7 @@
 		inputClass = '',
 		rows = 2,
 		recentlyTappedButton = '',
+		placeholder: string = '',
 		id = '';
 
 	const onKeyDown = (e: any) => {
@@ -71,5 +72,6 @@
 		on:blur={onBlur}
 		on:keypress={onKeyPress}
 		on:input={onKeyDown}
+		placeholder={placeholder}
 	/>
 </label>

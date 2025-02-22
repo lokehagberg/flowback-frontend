@@ -73,7 +73,7 @@
 		{delegate_pool_id}
 	/>
 
-	<CommentFilter bind:sortBy bind:searchString Class="inline" />
+	<CommentFilter bind:sortBy bind:searchString Class="flex flex-row-reverse items-center justify-end mb-2 gap-8 border-bottom-2" />
 
 	<div class="flex flex-col gap-4 mt-6">
 		{#each _comments as comment}
@@ -87,7 +87,7 @@
 	</div>
 
 	{#if _comments.length === 0}
-		<div>{$_('There are currently no comments')}</div>
+		<div class="text-center">{$_('There are currently no comments')}</div>
 	{/if}
 </div>
 

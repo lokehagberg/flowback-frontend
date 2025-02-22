@@ -9,25 +9,26 @@
 </script>
 
 <div class={Class}>
-	<div class="mb-2">
-		<TextInput label={'Search'} bind:value={searchString} placeholder={$_('Search')} />
+	<div class="">
+		<TextInput label={''} search={true} max={null} Class="w-64" inputClass="placeholder-gray-600 pl-2 pr-6 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject" bind:value={searchString} placeholder={$_('Search comments')} />
 	</div>
 
-	<div class="w-auto max-w-xs">
-	<Select
-		innerLabel={$_('Select Sorting')}
-		values={[
-			'created_at_asc',
-			'created_at_desc',
-			// 'total_replies_asc',
-			// 'total_replies_desc',
-			'score_asc',
-			'score_desc',
-			null
-		]}
-		bind:value={sortBy}
-		labels={[$_('Recent'), $_('Oldest'), $_('Top'), $_('Controversial'), $_('Hot')]}
-		{Class}
-	/>
+	<div class="w-auto max-w-xs flex flex-row items-center">
+		<p class="pr-2">{$_('Sort')}: </p>
+		<Select
+			innerLabel={$_('Select Sorting')}
+			values={[
+				'created_at_asc',
+				'created_at_desc',
+				// 'total_replies_asc',
+				// 'total_replies_desc',
+				'score_asc',
+				'score_desc',
+				null
+			]}
+			bind:value={sortBy}
+			labels={[$_('Recent'), $_('Oldest'), $_('Top'), $_('Controversial'), $_('Hot')]}
+			Class="border-0 font-semibold"
+		/>
 	</div>
 </div>

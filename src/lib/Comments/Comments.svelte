@@ -77,7 +77,7 @@
 		<CommentFilter bind:sortBy bind:searchString Class="flex flex-row-reverse items-center justify-end mb-2 gap-8" />
 	</div>
 
-	<div class="flex flex-col gap-4 mt-6">
+	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
 			{#key comment}
 				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />

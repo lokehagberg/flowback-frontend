@@ -50,7 +50,7 @@
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
 	const getGroupTags = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${groupId}/tag/list`);
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/tags`);
 		if (res.ok) {
 			tags = json.results;
 		}

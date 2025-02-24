@@ -41,7 +41,8 @@
 		isFF = true,
 		pushToBlockchain = true,
 		selected_poll: pollType = 'Text Poll',
-		selectedPage: 'poll' | 'thread' = $page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
+		selectedPage: 'poll' | 'thread' =
+			$page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
 		tags: { id: number }[] = [];
 
 	const groupId = $page.url.searchParams.get('id');
@@ -49,7 +50,7 @@
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
 
 	const getGroupTags = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${groupId}/tag/list`);
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/tags`);
 		if (res.ok) {
 			tags = json.results;
 		}
@@ -148,6 +149,9 @@
 	onMount(() => {
 		getGroupTags();
 	});
+
+	$: if (selectedPage)  status={message:null, success:false}
+	
 </script>
 
 <form
@@ -240,6 +244,7 @@
 			{/if}
 
 			<StatusMessage bind:status />
+
 			<Button type="submit" disabled={loading} Class={'bg-primary p-3 mt-3'}>{$_('Post')}</Button>
 		</div></Loader
 	>

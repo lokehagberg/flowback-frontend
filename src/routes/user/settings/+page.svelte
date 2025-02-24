@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.3';
+		version = '0.1.4';
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -77,7 +77,7 @@
 
 <Layout centered>
 	<div class="flex mt-6 gap-6">
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6 rounded border">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6 rounded border shadow">
 			<div class="flex items-center mb-4 gap-4">
 				<button
 					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
@@ -85,7 +85,7 @@
 				>
 					<Fa icon={faArrowLeft} />
 				</button>
-				<h1 class="text-xl text-left text-primary dark:text-secondary font-bold">{$_('Settings')}</h1>
+				<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold">{$_('Settings')}</h1>
 			</div>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -128,10 +128,10 @@
 				</button>
 			</div>
 		</div>
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px] rounded border">
+		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px] rounded border shadow">
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
-				<li class="text-lg text-primary dark:text-secondary font-bold mb-3">{$_('General')}</li>
+				<li class="text-lg text-primary dark:text-secondary font-semibold mb-3">{$_('General')}</li>
 					<RadioButtons2
 						Class="pb-4"
 						ClassInner="flex items-center justify-between px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -157,7 +157,7 @@
 				{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-lg text-primary dark:text-secondary font-bold"
+							<span class="text-lg text-primary dark:text-secondary font-semibold"
 								>{configToReadable(key1)}</span
 							>
 							<ul class="pl-4 pt-2">
@@ -183,7 +183,7 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process' && userConfig?.pollSettings}
-					<span class="text-xl text-primary dark:text-secondary font-bold">{$_('Poll Phases')}</span
+					<span class="text-xl text-primary dark:text-secondary font-semibold">{$_('Poll Phases')}</span
 					>
 					<span>{$_('Select the phases you want to participate in')}.</span>
 					<ul class="gap-2 pl-4">

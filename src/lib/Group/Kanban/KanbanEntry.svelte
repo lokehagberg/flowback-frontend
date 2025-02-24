@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
-	import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 	import { fade } from 'svelte/transition';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -18,13 +16,12 @@
 	import TimeAgo from 'javascript-time-ago';
 	import KanbanIcons from './PriorityIcons.svelte';
 	import PriorityIcons from './PriorityIcons.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import { goto } from '$app/navigation';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import type { kanbanEdited, kanban } from './Kanban';
-	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
+	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -292,13 +289,13 @@
 				{$_('Ends')}
 			{/if} -->
 
-			{new Intl.DateTimeFormat('sv-SE', { 
+			{new Intl.DateTimeFormat('sv-SE', {
 				weekday: 'short',
 				day: '2-digit',
 				month: 'long'
-				}).format(new Date(kanban.end_date))
+			})
+				.format(new Date(kanban.end_date))
 				.replace(/\b\w/g, (char) => char.toUpperCase())}
-			
 		</div>
 	{/if}
 	<button
@@ -337,7 +334,7 @@
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">
 			<button
-				class="cursor-pointer hover:text-gray-500 py-1"
+				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
 				on:click={() => {
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
@@ -349,7 +346,7 @@
 			</button>
 
 			<button
-				class="cursor-pointer hover:text-gray-500 py-1"
+				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
 				on:click={() => {
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);
@@ -377,11 +374,7 @@
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
 				<div class="pb-2">
-					<TextInput
-						bind:value={kanbanEdited.title}
-						required
-						label="Title"
-					/>
+					<TextInput bind:value={kanbanEdited.title} required label="Title" />
 				</div>
 				<TextArea
 					bind:value={kanbanEdited.description}
@@ -391,9 +384,9 @@
 				/>
 				{#if type === 'group'}
 					<div class="text-left">
-						<label class="block text-md">
+						<div class="block text-md">
 							{$_('Work Group')}
-						</label>
+						</div>
 						<select
 							style="width:100%"
 							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
@@ -409,18 +402,21 @@
 				{/if}
 				<div class="text-left w-[300px]">
 					<!-- {#if kanban.end_date} -->
-					<label class="block text-md pt-2">
+					<div class="block text-md pt-2">
 						{$_('End date')}
-					</label>
-					<input type="datetime-local" bind:value={kanbanEdited.end_date}
-					class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-						   {kanbanEdited.end_date ? 'text-black' : 'text-gray-500'}" />
+					</div>
+					<input
+						type="datetime-local"
+						bind:value={kanbanEdited.end_date}
+						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+						   {kanbanEdited.end_date ? 'text-black' : 'text-gray-500'}"
+					/>
 					<!-- {/if} -->
 				</div>
 				<div class="text-left">
-					<label class="block text-md pt-2">
+					<div class="block text-md pt-2">
 						{$_('Priority')}
-					</label>
+					</div>
 					<select
 						class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 						on:input={handleChangePriority}
@@ -433,9 +429,9 @@
 				</div>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
-						<label class="block text-md">
+						<div class="block text-md">
 							{$_('Assignee')}
-						</label>
+						</div>
 						<select
 							on:input={changeAssignee}
 							value={kanban?.assignee?.id}
@@ -447,9 +443,9 @@
 						</select>
 					</div>
 					<div class="text-left">
-						<label class="block text-md">
+						<div class="block text-md">
 							{$_('Attachments')}
-						</label>
+						</div>
 						<!-- <FileUploads bind:images={kanbanEdited.images} /> -->
 					</div>
 				</div>
@@ -462,22 +458,23 @@
 				</div>
 				<div class="flex mt-4 w-full">
 					<div class="flex flex-col mr-4 text-left gap-1 w-full">
-					  <p class="font-bold">{$_('End Date')}</p>
-					  <p class="font-bold">{$_('Priority')}</p>
-					  <p class="font-bold">{$_('Assignee')}</p>
-					  <p class="font-bold">{$_('Attachments')}</p>
+						<p class="font-bold">{$_('End Date')}</p>
+						<p class="font-bold">{$_('Priority')}</p>
+						<p class="font-bold">{$_('Assignee')}</p>
+						<p class="font-bold">{$_('Attachments')}</p>
 					</div>
 
 					<div class="flex flex-col text-right gap-1 w-full">
 						<p>
 							{#if kanban?.end_date}
-							{new Intl.DateTimeFormat('sv-SE', { 
-								weekday: 'short',
-								day: '2-digit',
-								month: 'long',
-								year: 'numeric'
-							  }).format(new Date(kanban.end_date))
-								.replace(/\b\w/g, (char) => char.toUpperCase())}
+								{new Intl.DateTimeFormat('sv-SE', {
+									weekday: 'short',
+									day: '2-digit',
+									month: 'long',
+									year: 'numeric'
+								})
+									.format(new Date(kanban.end_date))
+									.replace(/\b\w/g, (char) => char.toUpperCase())}
 							{:else}
 								{$_('No end date set')}
 							{/if}
@@ -486,9 +483,11 @@
 							{#if kanban.priority}
 								<PriorityIcons Class="ruby" priority={kanban?.priority} />
 							{/if}
-							<p>{kanbanEdited.priority != null
-								? priorityText[priorityText.length - kanbanEdited.priority]
-								: $_('No priority')}</p>
+							<p>
+								{kanbanEdited.priority != null
+									? priorityText[priorityText.length - kanbanEdited.priority]
+									: $_('No priority')}
+							</p>
 						</div>
 						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
 						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
@@ -504,21 +503,31 @@
 						{:else}
 							<p>{$_('No attachments available')}</p>
 						{/if}
-					  </div>
+					</div>
 				</div>
 				<div class="text-left mt-1 w-full">
 					<p class="font-bold">{$_('Description')}</p>
-					<p class="max-h-[25vh] overflow-scroll break-words w-full id={`kanban-${kanban.id}-description`}">{kanban?.description}</p>
+					<p
+						class="max-h-[25vh] overflow-scroll break-words w-full id={`kanban-${kanban.id}-description`}"
+					>
+						{kanban?.description}
+					</p>
 				</div>
 			{/if}
 		</div>
 		<div slot="footer">
 			{#if isEditing}
-				<Button action={updateKanbanContent}>{$_('Update')}</Button>
-				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
+				<Button buttonStyle="primary-light" action={updateKanbanContent}>{$_('Update')}</Button>
+				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
+					>{$_('Delete')}</Button
+				>
 			{:else}
-				<Button Class="px-2" action={() => (isEditing = true)}>{$_('Edit')}</Button>
-				<Button action={deleteKanbanEntry} Class="bg-red-500">{$_('Delete')}</Button>
+				<Button buttonStyle="primary-light" Class="px-2" action={() => (isEditing = true)}
+					>{$_('Edit')}</Button
+				>
+				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
+					>{$_('Delete')}</Button
+				>
 			{/if}
 		</div>
 	</Modal>

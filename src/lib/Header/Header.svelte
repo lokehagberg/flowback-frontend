@@ -188,7 +188,7 @@
 			{/if}
 		</nav>
 
-		<div id="side-header" class="flex gap-4 items-center float-right hover:bg-grey-800">
+		<div class="flex gap-4 items-center float-right hover:bg-grey-800">
 			<div class="mr-5 flex gap-4 items-center">
 				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
@@ -207,7 +207,7 @@
 				</button>
 				<Notifications />
 			</div>
-			<button on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
+			<button id="side-header" on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
 				<img
 					src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
 					class={`w-8 h-8 rounded-full cursor-pointer ${
@@ -218,9 +218,9 @@
 			</button>
 		</div>
 	</div>
+	<SideHeader bind:sideHeaderOpen />
 </header>
 
-<SideHeader bind:sideHeaderOpen />
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

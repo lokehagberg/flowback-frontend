@@ -1,8 +1,6 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
 	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
-	import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
-	import { faPeopleArrows } from '@fortawesome/free-solid-svg-icons/faPeopleArrows';
 	import { faUserGroup } from '@fortawesome/free-solid-svg-icons/faUserGroup';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
 	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
@@ -25,11 +23,7 @@
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
-	import {
-		getPermissions,
-		getPermissionsFast,
-		getUserIsGroupAdmin
-	} from '$lib/Generic/GenericFunctions';
+	import { getPermissionsFast, getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 	import Permissions from './Permissions/Permissions.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -150,12 +144,12 @@
 					text="Group Kanban"
 					icon={faList}
 				/>
-			<GroupSidebarButton
-				action={() => action('schedule')}
-				isSelected={selectedPage === 'schedule'}
-				text="Group schedule"
-				icon={faCalendarAlt}
-			/>
+				<GroupSidebarButton
+					action={() => action('schedule')}
+					isSelected={selectedPage === 'schedule'}
+					text="Group schedule"
+					icon={faCalendarAlt}
+				/>
 			{/if}
 			<GroupSidebarButton
 				action={() => action('members')}
@@ -189,10 +183,9 @@
 					isSelected={selectedPage === 'about'}
 				/>
 			{/if}
-			
 		</div>
-		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+		{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<GroupSidebarButton
 						Class="w-full"
@@ -211,8 +204,8 @@
 						/>
 					</a>
 				{/if}
-			{/if}
-		</div>
+			</div>
+		{/if}
 		{#if userIsOwner}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton

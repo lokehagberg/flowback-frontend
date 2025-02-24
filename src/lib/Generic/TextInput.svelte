@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
+	import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-	export let value = '',
+	export let value: string = '',
 		autofocus = false,
 		label: string,
 		required = false,
@@ -13,7 +15,12 @@
 		placeholder = '',
 		max: number | null = 100,
 		type: 'text' | 'password' = 'text',
+		search = false,
 		name: string = '';
+
+	function clearInput() {
+        value = '';
+    }
 
 	onMount(() => {
 		const input = document.getElementById(`textinput-${label}`);
@@ -38,17 +45,31 @@
 			</p>{/if}
 	</div>
 	{#if type === 'text'}
-		<input
-			bind:value
-			id={`textinput-${label}`}
-			class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
-			{required}
-			maxlength={max}
-			placeholder={$_(placeholder)}
-			on:blur={onBlur}
-			on:input={onInput}
-			{name}
-		/>
+		<div class="relative w-full">
+			{#if search}
+				<Fa icon={faSearch} class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+			{/if}
+			<input
+				bind:value
+				id={`textinput-${label}`}
+				class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass} ${search ? 'pl-10' : ''}`}
+				{required}
+				maxlength={max}
+				placeholder={$_(placeholder)}
+				on:blur={onBlur}
+				on:input={onInput}
+				{name}
+			/>
+			{#if value}
+                <button
+                    type="button"
+                    on:click={clearInput}
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                    <Fa icon={faTimes} />
+                </button>
+            {/if}
+		</div>
 	{:else if type === 'password'}
 		<input
 			id={`textinput-${label}`}

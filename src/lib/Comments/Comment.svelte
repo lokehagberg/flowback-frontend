@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Comment, proposal } from '$lib/Poll/interface';
-	import { faArrowDown, faArrowUp, faReply } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowDown, faArrowUp, faReply, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
@@ -15,7 +15,8 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[];
+		proposals: proposal[],
+		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup;
@@ -87,6 +88,7 @@
 
 {#if comment.being_edited}
 	<CommentPost
+		{delegate_pool_id}
 		bind:proposals
 		bind:comments
 		bind:beingEdited={comment.being_edited}
@@ -109,18 +111,19 @@
 				username={comment.author_name}
 				displayName
 				userId={comment.author_id}
+				Class="font-semibold"
 			/>
 		</div>
 		{#if comment.message}
-			<div class="text-md mt-1 mb-3 break-words" id={`comment-${comment.id}`}>
+			<div class="text-md mt-1 mb-3 pl-14 break-words" id={`comment-${comment.id}`}>
 				{comment.message}
 			</div>
 		{/if}
-		<div class="text-xs text-gray-400 dark:text-darkmodeText">
+		<div class="pl-14 text-xs text-gray-400 dark:text-darkmodeText">
 			{comment.edited && comment.active ? '(edited)' : ''}
 		</div>
 		{#if comment.attachments?.length > 0}
-			<div>
+			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
 					<img
 						src={(() => {
@@ -130,47 +133,50 @@
 									: `${env.PUBLIC_API}/media/${attachment.file}`;
 							else return URL.createObjectURL(attachment.file);
 						})()}
-						alt="attachment to the comment"
+						alt="Attachment to the comment"
 					/>
 				{/each}
 			</div>
 		{/if}
 
 		{#if comment.active}
-			<div class="flex gap-3 text-xs">
+			<div class="flex gap-6 text-xs pl-14">
 				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors"
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
 				>
-					<Fa icon={faReply} />{$_('Reply')}
+					<!-- <Fa icon={faReply} /> -->
+					{$_('Reply')}
 				</button>
-				{#if comment.author_id !== Number(localStorage.getItem('userId'))}
+				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
+				<div class="flex items-center gap-2">
 					<button
 						class:text-primary={comment.user_vote === true}
 						class="flex items-center gap-1 cursor-pointer transition-colors"
 						on:click={() => commentVote(1)}
 					>
-						<Fa icon={faArrowUp} />
+						<Fa icon={faThumbsUp} />
 					</button>
+					{comment.score}
 					<button
 						class:text-primary={comment.user_vote === false}
 						class="flex items-center gap-1 cursor-pointer transition-colors"
 						on:click={() => commentVote(-1)}
 					>
-						<Fa icon={faArrowDown} />
+						<Fa class="pl-0.5" icon={faThumbsDown} />
 					</button>
-				{/if}
-				{comment.score}
+				</div>
+				<!-- {/if} -->
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
-						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors"
+						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors hover:underline"
 						on:click={() => deleteComment(comment.id)}
 					>
 						{$_('Delete')}
 					</button>
 					<button
-						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words"
+						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors break-words hover:underline"
 						on:click={() => {
 							comment.being_edited = true;
 							comment.being_edited_message = comment.message || '';

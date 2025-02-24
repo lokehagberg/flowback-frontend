@@ -3,12 +3,10 @@
 	import { page } from '$app/stores';
 	import type { Permission } from './interface';
 	import { onMount } from 'svelte';
-	import Role from './Role.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 
-	export let selectedPage: 'assign' | 'create' | 'list',
-	selectedRole: any;
+	export let selectedPage: 'assign' | 'create' | 'list', selectedRole: any;
 
 	let roles: Permission[] = [];
 
@@ -30,13 +28,8 @@
 		<li>
 			<button
 				on:click={async () => {
-					console.log(role, "RULE");
-					
-					selectedRole = role
-					setTimeout(() => {
-						selectedPage = 'create';
-
-					}, 1000)
+					selectedRole = role;
+					selectedPage = 'create';
 				}}>{role.role_name}</button
 			>
 		</li>

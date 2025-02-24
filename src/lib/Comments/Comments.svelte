@@ -25,20 +25,19 @@
 		sortBy: null | string = null,
 		searchString: string = '',
 		done = false,
-		commentSubscription:any;
+		commentSubscription: any;
 
 	const setUpComments = async () => {
-		console.log(api, "PIIII");
-		
+		console.log(api, 'PIIII');
+
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
 		commentsStore.set(comments);
 		// commentsStore.subscribe(commentSubscription)
 		// console.log(commentsStore, "STORE");
-		
 	};
-	
+
 	const readMore = async () => {
 		offset += pollCommentsLimit;
 		const { comments, next } = await getComments(getId(), api, offset, sortBy);
@@ -65,23 +64,24 @@
 </script>
 
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
-	<!-- Add Comment -->
-	<CommentPost
-		bind:proposals
-		bind:comments={_comments}
-		parent_id={undefined}
-		{api}
-		{delegate_pool_id}
-	/>
+	<div class="border-b border-gray-300">
+		<!-- Add Comment -->
+		<CommentPost
+			bind:proposals
+			bind:comments={_comments}
+			parent_id={undefined}
+			{api}
+			{delegate_pool_id}
+		/>
 
-	<CommentFilter bind:sortBy bind:searchString Class="inline" />
+		<CommentFilter bind:sortBy bind:searchString Class="flex flex-row-reverse items-center justify-end mb-2 gap-8" />
+	</div>
 
-	<div class="flex flex-col gap-4 mt-6">
-		
+	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
-		{#key comment}
-		<Comment {comment} comments={_comments} {api} bind:proposals />
-		{/key}
+			{#key comment}
+				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />
+			{/key}
 		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>
@@ -89,7 +89,7 @@
 	</div>
 
 	{#if _comments.length === 0}
-		<div>{$_('There are currently no comments')}</div>
+		<div class="text-center">{$_('There are currently no comments')}</div>
 	{/if}
 </div>
 

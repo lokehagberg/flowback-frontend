@@ -9,6 +9,8 @@
 	import { mailStore } from './stores';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
+	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 
 	let verification_code: string,
 		password: string,
@@ -48,7 +50,19 @@
 					});
 				}
 
-				goto('/home');
+				//For one group flowback, immediately join the list of groups
+				if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') {
+					const joinGroup = async () => {
+						const { res } = await fetchRequest('POST', `group/1/join`, { to: 1 });
+						if (res.ok) {
+							if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
+								becomeMemberOfGroup(group.blockchain_id);
+
+							goto('/home');
+						}
+					};
+					//If multi-group flowback, just go to the list of groups
+				} else goto('/groups');
 			} else status = { message: 'Account was created but was unable to sign in', success: true };
 		} else {
 			loading = false;

@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
+	import { goto } from '$app/navigation';
 
 	let groupList: Group[] = [],
 		status: StatusMessageInfo,
@@ -20,6 +21,8 @@
 		loading = false;
 
 	onMount(() => {
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && location.href.includes('/groups'))
+			goto('/home');
 		getGroups();
 	});
 
@@ -45,6 +48,7 @@
 		groupList = json.results
 			.reverse()
 			.sort((group1: any, group2: any) => +group2.joined - +group1.joined);
+
 		loading = false;
 	};
 </script>
@@ -58,7 +62,7 @@
 	<Loader bind:loading Class="w-full">
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
-			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'FALSE' || env.PUBLIC_DISABLE_GROUP_CREATION === undefined}
+			{#if !(env.PUBLIC_DISABLE_GROUP_CREATION === 'FALSE')}
 				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl"
 					>{$_('Create Group')}</Button
 				>

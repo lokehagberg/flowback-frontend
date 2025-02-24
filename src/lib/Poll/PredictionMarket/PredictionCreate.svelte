@@ -78,7 +78,6 @@
 			title: ''
 		};
 		poppup = { message: 'Successfully created prediction statement', success: true };
-		// proposalsToPredictionMarket = []
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.

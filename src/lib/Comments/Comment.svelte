@@ -15,7 +15,7 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[],
+		proposals: proposal[] = [],
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
@@ -85,6 +85,7 @@
 		else if (comment.user_vote === false) userUpVote = -1;
 	});
 </script>
+
 
 {#if comment.being_edited}
 	<CommentPost

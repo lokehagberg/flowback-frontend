@@ -116,19 +116,19 @@
 <Poppup bind:poppup />
 
 <div
-	class={' dark:bg-darkobject dark:text-darkmodeText p-2 rounded-2xl break-words md:max-w-[calc(500px*5)]' +
+	class={' dark:bg-darkobject dark:text-darkmodeText p-2 pt-4 break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
 	<KanbanFiltering bind:filter handleSearch={getKanbanEntries} />
 
-	<div class="flex overflow-x-auto">
+	<div class="flex overflow-x-auto py-3">
 		<!-- {#await promise}
 			<div>Loading...</div>
 		{:then kanbanEntries} -->
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded-xl flex flex-col"
+					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<div class="flex justify-between pb-3">

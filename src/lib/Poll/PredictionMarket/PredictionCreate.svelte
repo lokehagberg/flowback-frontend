@@ -79,7 +79,6 @@
 		};
 		poppup = { message: 'Successfully created prediction statement', success: true };
 		// proposalsToPredictionMarket = []
-
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.
@@ -187,8 +186,8 @@
 	{/if}
 {/key}
 
-<Loader bind:loading Class="!static">
-	<form on:submit|preventDefault={createPredictionStatement}>
+<Loader bind:loading Class="!static h-full">
+	<form on:submit|preventDefault={createPredictionStatement} class="h-full">
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
 			<TextArea label="Description" bind:value={newPredictionStatement.description} />
@@ -203,10 +202,13 @@
 			/>
 		</div>
 
-		<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
-		{#if env.PUBLIC_FLOWBACK_AI_MODULE}
-			<Button action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
-		{/if}
+		<div class="flex gap-2 absolute bottom-0 w-full">
+			<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
+			<Button type="submit" buttonStyle="warning-light" Class="w-full mt-5">{$_('Cancel')}</Button>
+			{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
+				<Button Class="w-full mt-5" action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+			{/if}
+		</div>
 	</form>
 </Loader>
 

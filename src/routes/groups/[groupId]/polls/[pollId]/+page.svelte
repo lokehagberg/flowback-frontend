@@ -194,12 +194,12 @@
 							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
 							action={() => {
-								selectedProposal = null
-								displayForm = true
+								selectedProposal = null;
+								displayForm = true;
 							}}>{$_('Create Prediction')}</Button
 						>
 					</div>
-					<div slot="right" class="relative">
+					<div slot="right" class="relative h-full overflow-hidden">
 						{#if selectedProposal}
 							<div class="font-semibold text-primary dark:text-secondary text-lg">
 								{selectedProposal.title}

@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Comment, proposal } from '$lib/Poll/interface';
-	import { faArrowDown, faArrowUp, faReply, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faArrowDown,
+		faArrowUp,
+		faReply,
+		faThumbsUp,
+		faThumbsDown
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
@@ -85,7 +91,6 @@
 		else if (comment.user_vote === false) userUpVote = -1;
 	});
 </script>
-
 
 {#if comment.being_edited}
 	<CommentPost
@@ -190,6 +195,7 @@
 		{/if}
 	</div>
 {/if}
+
 {#if comment.being_replied}
 	<CommentPost
 		bind:proposals

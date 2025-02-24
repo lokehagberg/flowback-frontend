@@ -18,7 +18,12 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import Tab from '$lib/Generic/Tab.svelte';
 	import { env } from '$env/dynamic/public';
-	import { faAlignLeft, faCalendarAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faAlignLeft,
+		faArrowLeft,
+		faCalendarAlt,
+		faChevronDown
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { onMount } from 'svelte';
 
@@ -48,6 +53,11 @@
 	const groupId = $page.url.searchParams.get('id');
 
 	$: (daysBetweenPhases || !daysBetweenPhases) && changeDaysBetweenPhases();
+
+	const goBack = () => {
+		const groupId = $page.url.searchParams.get('id');
+		goto(`/groups/${groupId}`);
+	};
 
 	const getGroupTags = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/tags`);
@@ -150,14 +160,20 @@
 		getGroupTags();
 	});
 
-	$: if (selectedPage)  status={message:null, success:false}
-	
+	$: if (selectedPage) status = { message: null, success: false };
 </script>
 
 <form
 	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
-	class="md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
+	class="relative md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
 >
+	<button
+		class="absolute -left-10 top-0 z-10 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+		on:click={goBack}
+	>
+		<Fa icon={faArrowLeft} />
+	</button>
+
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />

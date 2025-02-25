@@ -55,7 +55,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable"
+	class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable relative"
 	on:mousedown={onMouseDown}
 >
 	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
@@ -74,6 +74,7 @@
 			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
 		{/each} -->
 	</div>
+	<div class={`absolute -top-[20%] left-[${lineWidth}%] z-50 bg-white px-0.5 text-sm`}>|</div>
 </div>
 
 <style>

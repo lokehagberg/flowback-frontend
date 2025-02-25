@@ -51,6 +51,9 @@
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
 	$: if (score !== null) console.log(score, 'score');
+
+	$: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
+	
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -74,7 +77,7 @@
 			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
 		{/each} -->
 	</div>
-	<div class={`absolute -top-[20%] left-[${lineWidth}%] z-50 bg-white px-0.5 text-sm`}>|</div>
+	<div class={`absolute -top-[20%] left-[${40}%] z-50 bg-white px-0.5 text-sm`}>|</div>
 </div>
 
 <style>

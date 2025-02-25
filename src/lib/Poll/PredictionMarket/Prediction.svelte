@@ -192,7 +192,7 @@
 			{elipsis(prediction.description)}</span
 		>
 	{/if}
-	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
+	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
 
 	{#if phase === 'prediction_bet'}
 		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />

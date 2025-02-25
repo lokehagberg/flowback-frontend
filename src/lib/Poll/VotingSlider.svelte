@@ -76,7 +76,24 @@
 			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
 		{/each} -->
 	</div>
-	<div class={`absolute -top-[20%] left-[${currentSnapPosition}%] z-50 bg-white px-0.5 text-sm`}>
+	<div
+		class={`absolute -top-[20%] ${
+			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
+			currentSnapPosition === null
+				? 'left-[50%]'
+				: currentSnapPosition === 0
+				? 'left-0'
+				: currentSnapPosition === 20
+				? 'left-[20%]'
+				: currentSnapPosition === 40
+				? 'left-[40%]'
+				: currentSnapPosition === 60
+				? 'left-[60%]'
+				: currentSnapPosition === 80
+				? 'left-[80%]'
+				: 'left-[100%]'
+		} z-50 bg-white px-0.5 text-sm`}
+	>
 		|
 	</div>
 </div>

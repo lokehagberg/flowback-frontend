@@ -191,7 +191,9 @@
 		<div class="mt-3">
 			<TextArea label="Description" bind:value={newPredictionStatement.description} />
 		</div>
-		<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
+		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
+			<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
+		{/if}
 		<div class="mt-3">
 			{$_('Deadline for prediction')}
 			<DateInput

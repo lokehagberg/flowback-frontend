@@ -42,10 +42,10 @@
 				class:select-none={phase === 'prediction_bet'}
 			>
 				<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
+				<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 				{#if prediction.description}
 					<Description description={prediction.description} limit={30} />
 				{/if}
-				<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 				{#if phase === 'delegate_vote' || phase === 'vote'}
 					<span class="text-sm text-right"
 						>{$_('Bet')}:
@@ -56,7 +56,7 @@
 						{/if}
 					</span>
 				{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}
-					<Prediction bind:phase bind:poll bind:prediction />
+					<Prediction Class="mt-4" bind:phase bind:poll bind:prediction />
 				{/if}
 			</div>
 		{/each}

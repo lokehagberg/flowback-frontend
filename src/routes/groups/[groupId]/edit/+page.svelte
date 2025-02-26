@@ -48,7 +48,7 @@
 				class:border-l-2={selectedPage === 'areas'}
 				class:border-primary={selectedPage === 'areas'}
 			>
-				<Fa icon={faTags} class="w-5 h-5"/>{$_('Areas')}
+				<Fa icon={faTags} class="w-5 h-5"/>{$_('Manage areas')}
 			</button>
 			<button
 				on:click={() => (selectedPage = 'perms')}
@@ -57,7 +57,7 @@
 				class:border-l-2={selectedPage === 'perms'}
 				class:border-primary={selectedPage === 'perms'}
 			>
-				<Fa icon={faShieldAlt} class="w-5 h-5"/>{$_('Permissions')}
+				<Fa icon={faShieldAlt} class="w-5 h-5"/>{$_('Manage permissions')}
 			</button>
 			<!-- <ul>
 				<li

@@ -230,9 +230,9 @@
 							<ProposalScoreVoting
 								bind:comments
 								bind:proposals
-								isVoting={false}
 								bind:phase
 								bind:selectedProposal
+								isVoting={false}
 							/>
 						</div>
 					</div>

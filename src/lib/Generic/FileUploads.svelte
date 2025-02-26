@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faUpload, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import { faUpload, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 	import ImageUpload from './FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
@@ -16,7 +16,6 @@
 	};
 </script>
 
-
 {#if images.length > 0}
 	<div>
 		{#each images as image, i}
@@ -24,8 +23,8 @@
 				class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300"
 			>
 				{image.name}
-				<button 
-					class="ml-2 text-red-500 hover:text-red-700" 
+				<button
+					class="ml-2 text-red-500 hover:text-red-700"
 					on:click={() => removeFile(i)}
 					type="button"
 				>
@@ -41,14 +40,14 @@
 		? 'inline m-auto'
 		: `${Class} flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
-	{#if !minimalist}{$_('Add media')}{/if}
+	{#if !minimalist}{$_('Add files')}{/if}
 	<ImageUpload
-		icon={faUpload}
+		icon={faPlus}
 		bind:croppedImage={image}
 		minimalist
 		Class="!inline"
 		label=""
-		iconSize="1.5x"
+		iconSize="1.2x"
 		disableImagePreview
 		onCrop={() => {
 			if (image) {

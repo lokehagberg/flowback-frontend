@@ -39,7 +39,8 @@
 		users: GroupUser[] = [],
 		kanbanEntries: kanban[],
 		workGroups: WorkGroup[] = [],
-		lane: number = 1;
+		lane: number = 1,
+		groupId;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -75,7 +76,7 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/create`
+				? `group/${groupId}/kanban/entry/create`
 				: 'user/kanban/entry/create',
 			formData,
 			true,
@@ -148,13 +149,14 @@
 				<TextArea Class="text-md" label="Description" bind:value={description} />
 				{#if type === 'group'}
 					<div class="text-left">
-						<label class="block text-md">
+						<label class="block text-md" for="work-group">
 							{$_('Work Group')}
 						</label>
 						<select
 							style="width:100%"
 							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
 							on:input={handleChangeWorkGroup}
+							id="work-group"
 						>
 							<option class="w-5" value={null}> {$_('Unassigned')} </option>
 
@@ -167,7 +169,7 @@
 					</div>
 				{/if}
 				<div class="text-left">
-					<label class="block text-md pt-2">
+					<label class="block text-md pt-2" for="end_date">
 						{$_('End date')}
 					</label>
 					<input
@@ -175,6 +177,7 @@
 						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
 						   {end_date ? 'text-black' : 'text-gray-500'}"
 						type="datetime-local"
+						id="end_date"
 					/>
 				</div>
 				<div class="text-left">
@@ -193,16 +196,16 @@
 							</option>
 						{/each}
 					</select>
-				</div>
-				<div class="flex gap-6 justify-between mt-2 flex-col">
+					<div class="flex gap-6 justify-between mt-2 flex-col" />
 					{#if type === 'group'}
 						<div class="text-left">
-							<label class="block text-md">
+							<label class="block text-md" for="handle-change-assignee">
 								{$_('Assignee')}
 							</label>
 							<select
 								on:input={handleChangeAssignee}
 								class="w-full rounded p-1 border border-gray-300 text-gray-500 dark:border-gray-600 dark:bg-darkobject"
+								id="handle-change-assignee"
 							>
 								<option value={null}>{$_('Select')}</option>
 								{#each users as user}
@@ -221,8 +224,10 @@
 			</div>
 		</Loader>
 	</div>
-	<div slot="footer">
-		<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-		<Button buttonStyle="warning-light" action={() => (open = false)}>{$_('Cancel')}</Button>
+	<div slot="footer" class="flex justify-between gap-4">
+		<Button Class="w-full" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
+		<Button Class="w-full" buttonStyle="warning-light" action={() => (open = false)}
+			>{$_('Cancel')}</Button
+		>
 	</div>
 </Modal>

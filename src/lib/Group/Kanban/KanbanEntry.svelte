@@ -508,7 +508,7 @@
 				<div class="text-left mt-1 w-full">
 					<p class="font-bold">{$_('Description')}</p>
 					<p
-						class="max-h-[25vh] overflow-scroll break-words w-full id={`kanban-${kanban.id}-description`}"
+						class="max-h-[25vh] overflow-y-auto break-words w-full id={`kanban-${kanban.id}-description`}"
 					>
 						{kanban?.description}
 					</p>

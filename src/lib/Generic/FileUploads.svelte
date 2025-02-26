@@ -16,7 +16,6 @@
 	};
 </script>
 
-
 {#if images.length > 0}
 	<div>
 		{#each images as image, i}
@@ -24,8 +23,8 @@
 				class="flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300"
 			>
 				{image.name}
-				<button 
-					class="ml-2 text-red-500 hover:text-red-700" 
+				<button
+					class="ml-2 text-red-500 hover:text-red-700"
 					on:click={() => removeFile(i)}
 					type="button"
 				>
@@ -41,7 +40,7 @@
 		? 'inline m-auto'
 		: `${Class} flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
-	{#if !minimalist}{$_('Add media')}{/if}
+	{#if !minimalist}{$_('Add files')}{/if}
 	<ImageUpload
 		icon={faPlus}
 		bind:croppedImage={image}

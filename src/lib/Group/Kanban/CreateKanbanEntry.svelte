@@ -195,8 +195,7 @@
 							</option>
 						{/each}
 					</select>
-				</div>
-				<div class="flex gap-6 justify-between mt-2 flex-col">
+					<div class="flex gap-6 justify-between mt-2 flex-col" />
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">

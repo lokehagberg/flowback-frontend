@@ -515,18 +515,26 @@
 				</div>
 			{/if}
 		</div>
-		<div slot="footer">
+		<div slot="footer" class="w-full flex gap-4">
 			{#if isEditing}
-				<Button buttonStyle="primary-light" action={updateKanbanContent}>{$_('Update')}</Button>
-				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
-					>{$_('Delete')}</Button
+				<Button Class="w-full py-1" buttonStyle="primary-light" action={updateKanbanContent}
+					>{$_('Update')}</Button
+				>
+				<Button
+					Class="w-full bg-red-500  py-1"
+					buttonStyle="warning-light"
+					action={deleteKanbanEntry}>{$_('Delete')}</Button
 				>
 			{:else}
-				<Button buttonStyle="primary-light" Class="px-2" action={() => (isEditing = true)}
-					>{$_('Edit')}</Button
+				<Button
+					Class="w-full py-1"
+					buttonStyle="primary-light"
+					action={() => (isEditing = true)}>{$_('Edit')}</Button
 				>
-				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
-					>{$_('Delete')}</Button
+				<Button
+					Class="bg-red-500 w-full  py-1"
+					buttonStyle="warning-light"
+					action={deleteKanbanEntry}>{$_('Delete')}</Button
 				>
 			{/if}
 		</div>

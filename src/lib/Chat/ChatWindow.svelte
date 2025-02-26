@@ -223,13 +223,14 @@
 </script>
 
 {#if selectedChat !== null || true}
+	<div class="flex flex-col h-full">
 	<ul
-		class="col-start-2 col-end-3 overflow-y-auto overflow-x-hidden break-all"
+		class="grow overflow-y-auto px-2 break-all"
 		id="chat-window"
 		bind:this={chatWindow}
 	>
 		{#if messages.length === 0}
-			<span class="self-center">{'Chat is currently empty, maybe say hello?'}</span>
+			<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
 		{/if}
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
@@ -265,13 +266,12 @@
 	</ul>
 	<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-	<div class="border-t-2 border-t-gray-200">
+	<div class="border-t-2 border-t-gray-200 w-full">
 		<!-- Here the user writes a message to be sent -->
-		<form class="flex gap-1 items-center mt-3" on:submit|preventDefault={postMessage}>
+		<div class="flex gap-1 justify-center items-center w-full mt-2" on:submit|preventDefault={postMessage}>
 			<TextArea
 				autofocus
 				label=""
-				displayMax={false}
 				onKeyPress={(e) => {
 					if (e.key === 'Enter' && !e.shiftKey) {
 						postMessage();
@@ -279,9 +279,11 @@
 					}
 				}}
 				max={3000}
+				rows={1}
 				bind:value={message}
-				Class="w-full"
-				areaClass="max-h-[4rem] resize-y"
+				placeholder={$_('Write a message...')}
+				Class="justify-center w-full h-2rem"
+				inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
 			/>
 
 			{#if env.PUBLIC_MODE === 'DEV'}
@@ -291,10 +293,11 @@
 				>
 			{/if}
 
-			<Button type="submit" Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"
-				><Fa icon={faPaperPlane} /></Button
-			>
-		</form>
+			<Button type="submit" Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
+					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+				>
+		</div>
+	</div>
 	</div>
 {:else}
 	<div>{'No chat selected'}</div>

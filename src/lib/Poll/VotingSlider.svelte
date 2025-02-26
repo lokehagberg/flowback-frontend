@@ -51,11 +51,13 @@
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
 	$: if (score !== null) console.log(score, 'score');
+
+	$: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable"
+	class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable relative"
 	on:mousedown={onMouseDown}
 >
 	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
@@ -73,6 +75,26 @@
 		<!-- {#each snapPointsInPixels as point (point)}
 			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
 		{/each} -->
+	</div>
+	<div
+		class={`absolute -top-[20%] ${
+			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
+			currentSnapPosition === null
+				? 'left-[50%]'
+				: currentSnapPosition === 0
+				? 'left-0'
+				: currentSnapPosition === 20
+				? 'left-[20%]'
+				: currentSnapPosition === 40
+				? 'left-[40%]'
+				: currentSnapPosition === 60
+				? 'left-[60%]'
+				: currentSnapPosition === 80
+				? 'left-[80%]'
+				: 'left-[100%]'
+		} z-50 bg-white px-0.5 text-sm`}
+	>
+		|
 	</div>
 </div>
 

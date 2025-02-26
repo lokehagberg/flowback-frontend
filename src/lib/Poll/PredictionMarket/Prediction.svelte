@@ -16,13 +16,13 @@
 	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import VotingSlider from '../VotingSlider.svelte';
 	import { env } from '$env/dynamic/public';
-	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
 		score: null | number = null,
 		phase: Phase,
-		poll: poll;
+		poll: poll,
+		Class = '';
 
 	let showPoppup = false,
 		showDetails = false,
@@ -186,13 +186,13 @@
 	});
 </script>
 
-<div>
+<div class={Class}>
 	{#if prediction.description}
-		<span class="hover:underline cursor-pointer overflow-hidden">
+		<!-- <span class="hover:underline cursor-pointer overflow-hidden">
 			{elipsis(prediction.description)}</span
-		>
+		> -->
 	{/if}
-	<span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span>
+	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
 
 	{#if phase === 'prediction_bet'}
 		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />

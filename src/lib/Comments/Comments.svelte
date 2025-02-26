@@ -80,7 +80,8 @@
 	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
 			{#key comment}
-				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />
+			{@debug proposals}
+				<!-- <Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals /> -->
 			{/key}
 		{/each}
 		{#if showReadMore}

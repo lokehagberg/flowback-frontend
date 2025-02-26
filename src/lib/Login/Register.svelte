@@ -29,9 +29,9 @@
 		loading = false;
 		if (res.ok) {
 			mailStore.set(email);
-			status = {message: "Successfully registered", success:true};
+			status = { message: 'Successfully registered', success: true };
 			selectedPage = 'Verify';
-		} else status = {message: json.detail[0], success:false};
+		} else status = { message: json.detail[0], success: false };
 	}
 </script>
 

@@ -27,6 +27,8 @@
 	import Threads from '$lib/Group/Threads.svelte';
 	import { pushState } from '$app/navigation';
 	import WorkGroups from '$lib/Group/WorkingGroups/WorkGroups.svelte';
+	import { env } from '$env/dynamic/public';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {
@@ -114,7 +116,7 @@
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 
 					{#if selectedPage === 'flow'}
-						<PollThumbnails infoToGet="group" Class={`w-full mx-auto my-0`} />
+						<PollThumbnails infoToGet={env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE" ? "user" : "group"} Class={`w-full mx-auto my-0`} />
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}

@@ -21,7 +21,8 @@
 		loading = false;
 
 	onMount(() => {
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK && location.href.includes('/groups')) goto('/home');
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && location.href.includes('/groups'))
+			goto('/home');
 		getGroups();
 	});
 
@@ -61,7 +62,7 @@
 	<Loader bind:loading Class="w-full">
 		<StatusMessage bind:status disableSuccess />
 		<div class="flex flex-col items-center mt-6 gap-6 mb-6 w-full">
-			{#if env.PUBLIC_DISABLE_GROUP_CREATION === 'FALSE' || env.PUBLIC_DISABLE_GROUP_CREATION === undefined}
+			{#if !(env.PUBLIC_DISABLE_GROUP_CREATION === 'FALSE')}
 				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl"
 					>{$_('Create Group')}</Button
 				>

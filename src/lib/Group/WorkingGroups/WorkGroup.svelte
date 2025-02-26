@@ -118,9 +118,9 @@
 			>
 		{/if}
 
-		{#if isAdmin}
-			<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
-		{/if}
+		<!-- {#if isAdmin} -->
+		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
+		<!-- {/if} -->
 	{/key}
 </div>
 

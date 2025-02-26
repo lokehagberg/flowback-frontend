@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Comment, proposal } from '$lib/Poll/interface';
-	import { faArrowDown, faArrowUp, faReply, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faArrowDown,
+		faArrowUp,
+		faReply,
+		faThumbsUp,
+		faThumbsDown
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
@@ -15,7 +21,7 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[],
+		proposals: proposal[] = [],
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
@@ -189,6 +195,7 @@
 		{/if}
 	</div>
 {/if}
+
 {#if comment.being_replied}
 	<CommentPost
 		bind:proposals

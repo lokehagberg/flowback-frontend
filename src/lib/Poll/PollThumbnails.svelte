@@ -7,8 +7,6 @@
 	import PollFiltering from './PollFiltering.svelte';
 	import type { Filter, poll as Poll } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
@@ -18,7 +16,7 @@
 	import type { DelegateMinimal } from '$lib/Group/interface';
 
 	export let Class = '',
-		infoToGet: 'group' | 'home' | 'public' | 'delegate',
+		infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user',
 		delegate: DelegateMinimal = { id: 0, pool_id: 0, profile_image: '', tags: [], username: '' };
 
 	let polls: Poll[] = [],
@@ -43,6 +41,8 @@
 		//@ts-ignore
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
 		else if (infoToGet === 'home') API += `home/polls?`;
+		// else if (infoToGet === 'user') API += `user/home?`;
+		else if (infoToGet === 'user') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 

@@ -39,7 +39,8 @@
 		users: GroupUser[] = [],
 		kanbanEntries: kanban[],
 		workGroups: WorkGroup[] = [],
-		lane: number = 1;
+		lane: number = 1,
+		groupId;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -75,7 +76,7 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/create`
+				? `group/${groupId}/kanban/entry/create`
 				: 'user/kanban/entry/create',
 			formData,
 			true,

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faUpload, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import { faUpload, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 	import ImageUpload from './FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
@@ -43,12 +43,12 @@
 >
 	{#if !minimalist}{$_('Add media')}{/if}
 	<ImageUpload
-		icon={faUpload}
+		icon={faPlus}
 		bind:croppedImage={image}
 		minimalist
 		Class="!inline"
 		label=""
-		iconSize="1.5x"
+		iconSize="1.2x"
 		disableImagePreview
 		onCrop={() => {
 			if (image) {

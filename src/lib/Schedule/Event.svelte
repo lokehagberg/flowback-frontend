@@ -13,8 +13,8 @@
 		showEditScheduleEvent = false,
 		title = '',
 		description = '',
-		start_date: Date|null,
-		end_date: Date|null,
+		start_date: Date | null,
+		end_date: Date | null,
 		meeting_link = '',
 		workGroup: any,
 		workGroups: any[] = [],
@@ -24,6 +24,8 @@
 	export const scheduleEventCreate = () => {},
 		scheduleEventEdit = () => {},
 		scheduleEventDelete = () => {};
+
+		
 </script>
 
 <!-- Allows user to see event -->
@@ -39,32 +41,34 @@
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('From')}</p>
 				<p>
-					{start_date 
-						? new Intl.DateTimeFormat('sv-SE', { 
-							weekday: 'short',
-							day: '2-digit',
-							month: 'long',
-							hour: '2-digit',
-        					minute: '2-digit'
-						  }).format(new Date(start_date))
-						  .replace(/\b\w/g, char => char.toUpperCase()) 
+					{start_date
+						? new Intl.DateTimeFormat('sv-SE', {
+								weekday: 'short',
+								day: '2-digit',
+								month: 'long',
+								hour: '2-digit',
+								minute: '2-digit'
+						  })
+								.format(new Date(start_date))
+								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No start date set')}
-				  </p>
+				</p>
 			</div>
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('To')}</p>
 				<p>
-					{end_date 
-						? new Intl.DateTimeFormat('sv-SE', { 
-							weekday: 'short',
-							day: '2-digit',
-							month: 'long',
-							hour: '2-digit',
-        					minute: '2-digit'
-						  }).format(new Date(end_date))
-						  .replace(/\b\w/g, char => char.toUpperCase()) 
+					{end_date
+						? new Intl.DateTimeFormat('sv-SE', {
+								weekday: 'short',
+								day: '2-digit',
+								month: 'long',
+								hour: '2-digit',
+								minute: '2-digit'
+						  })
+								.format(new Date(end_date))
+								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No end date set')}
-				  </p>
+				</p>
 			</div>
 		</div>
 		<div class="text-left mt-1 w-full">
@@ -121,23 +125,29 @@
 				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="w-full md:flex md:gap-4">
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="create-start-date">
 							{$_('From')}
 						</label>
-						<!-- <DateInput bind:value={start_date} /> -->
-						<input type="datetime-local" bind:value={start_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-						   {start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="create-start-date"
+							type="datetime-local"
+							bind:value={start_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+						   {start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="create-end-date">
 							{$_('To')}
 						</label>
-						<!-- <DateInput bind:value={end_date} /> -->
-						<input type="datetime-local" bind:value={end_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-							{end_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="create-end-date"
+							type="datetime-local"
+							bind:value={end_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+							{end_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 				</div>
 				<div class="pt-2">
@@ -162,9 +172,9 @@
 				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" /> -->
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<div class="pb-2">
-					<TextInput label="Title" bind:value={title} required/>
+					<TextInput label="Title" bind:value={title} required />
 				</div>
-				<TextArea label="Description" bind:value={description} rows={3} Class="overflow-scroll"/>
+				<TextArea label="Description" bind:value={description} rows={3} Class="overflow-scroll" />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -180,20 +190,28 @@
 				{/if}
 				<div class="md:flex md:gap-4">
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="edit-start-date">
 							{$_('From')}
 						</label>
-						<input type="datetime-local" bind:value={start_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-						   {start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="edit-start-date"
+							type="datetime-local"
+							bind:value={start_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+						   {start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="edit-end-date">
 							{$_('To')}
 						</label>
-						<input type="datetime-local" bind:value={end_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-							{start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="edit-end-date"
+							type="datetime-local"
+							bind:value={end_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+							{start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 				</div>
 				<div class="pt-2">

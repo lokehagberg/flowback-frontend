@@ -21,6 +21,7 @@
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
+	import { delegation as delegationLimit } from '$lib/Generic/APILimits.json';
 
 	let user: User = {
 		banner_image: '',
@@ -119,6 +120,25 @@
 		oldBannerImagePreview = bannerImagePreview;
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
 		currentlyCroppingBanner = true;
+	};
+
+	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?`
+		);
+
+		if (!res.ok) return;
+
+		const delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
+
+		console.log(delegates);
 	};
 
 	let imageToBeCropped: any;

@@ -24,6 +24,8 @@
 	export const scheduleEventCreate = () => {},
 		scheduleEventEdit = () => {},
 		scheduleEventDelete = () => {};
+
+		
 </script>
 
 <!-- Allows user to see event -->

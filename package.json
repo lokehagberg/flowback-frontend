@@ -60,6 +60,7 @@
         "svelte-easy-crop": "^2.0.1",
         "svelte-fa": "^3.0.3",
         "svelte-i18n": "^4.0.0",
+        "svelte-tel-input": "^3.6.0",
         "web3": "^4.2.1"
     }
 }

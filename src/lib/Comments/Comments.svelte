@@ -74,14 +74,17 @@
 			{delegate_pool_id}
 		/>
 
-		<CommentFilter bind:sortBy bind:searchString Class="flex flex-row-reverse items-center justify-end mb-2 gap-8" />
+		<CommentFilter
+			bind:sortBy
+			bind:searchString
+			Class="flex flex-row-reverse items-center justify-end mb-2 gap-8"
+		/>
 	</div>
 
 	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
 			{#key comment}
-			{@debug proposals}
-				<!-- <Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals /> -->
+				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />
 			{/key}
 		{/each}
 		{#if showReadMore}

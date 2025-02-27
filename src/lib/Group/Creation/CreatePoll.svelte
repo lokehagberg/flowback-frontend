@@ -29,7 +29,7 @@
 
 	let title = '',
 		description = '',
-		status: StatusMessageInfo,
+		status: StatusMessageInfo | undefined,
 		start_date = new Date(),
 		area_vote_end_date = new Date(),
 		proposal_end_date = new Date(),
@@ -160,7 +160,7 @@
 		getGroupTags();
 	});
 
-	$: if (selectedPage) status = { message: null, success: false };
+	$: if (selectedPage) status = undefined;
 </script>
 
 <form

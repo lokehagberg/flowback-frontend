@@ -224,9 +224,9 @@
 			</div>
 		</Loader>
 	</div>
-	<div slot="footer" class="flex justify-between gap-4">
-		<Button Class="w-full" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-		<Button Class="w-full" buttonStyle="warning-light" action={() => (open = false)}
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-2">
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (open = false)}
 			>{$_('Cancel')}</Button
 		>
 	</div>

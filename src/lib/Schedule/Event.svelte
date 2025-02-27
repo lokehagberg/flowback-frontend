@@ -79,22 +79,27 @@
 			<p class="font-bold">{$_('Attachments')}</p>
 		</div>
 	</div>
-	<div slot="footer">
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
 		<Button
+			Class="w-full py-1"
+			buttonStyle="primary-light"
 			action={() => {
 				showEditScheduleEvent = true;
 				showEvent = false;
-			}}>{$_('Edit Event')}</Button
+			}}>{$_('Edit')}</Button
 		>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={scheduleEventDelete}>{$_('Delete')}</Button>
 	</div>
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
-	<!-- <div slot="header">{$_('Create Event')}</div> -->
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
+				<h1 class="text-lg pb-3 text-left text-primary dark:text-secondary font-semibold">
+					{$_('Create Event')}
+				</h1>
 				<div class="pb-2">
 					<TextInput Class="text-md" label="Title" bind:value={title} required />
 				</div>
@@ -138,9 +143,12 @@
 				<div class="pt-2">
 					<TextInput label="Meeting link" bind:value={meeting_link} />
 				</div>
-				<Button Class="mt-4" type="submit" action={scheduleEventCreate}>{$_('Submit')}</Button>
 			</form>
 		</Loader>
+	</div>
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventCreate}>{$_('Create')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>
 
@@ -194,8 +202,8 @@
 			</form>
 		</Loader>
 	</div>
-	<div slot="footer">
-		<Button type="submit" action={scheduleEventEdit}>{$_('Submit')}</Button>
-		<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventEdit}>{$_('Confirm')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>

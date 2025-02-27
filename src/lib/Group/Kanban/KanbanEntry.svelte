@@ -523,7 +523,7 @@
 				<Button
 					Class="w-full bg-red-500  py-1"
 					buttonStyle="warning-light"
-					action={deleteKanbanEntry}>{$_('Delete')}</Button
+					action={() => (openModal = false)}>{$_('Cancel')}</Button
 				>
 			{:else}
 				<Button

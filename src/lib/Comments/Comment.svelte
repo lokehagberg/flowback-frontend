@@ -59,11 +59,12 @@
 		if (_vote === -1) vote = { vote: false };
 		else if (_vote === 1) vote = { vote: true };
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/comment/${comment.id}/vote`,
-			vote
-		);
+		let _api = '';
+		if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
+		else if (api === 'thread')
+			_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
+
+		const { res, json } = await fetchRequest('POST', _api, vote);
 
 		if (!res.ok) {
 			poppup = { message: 'Comment vote failed', success: false };

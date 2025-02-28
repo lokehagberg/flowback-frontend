@@ -38,7 +38,7 @@
 <div
 	class={minimalist
 		? 'inline m-auto'
-		: `${Class} flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
+		: `${Class} rounded flex justify-between items-center p-2 border dark:border-gray-500 border-gray-300`}
 >
 	{#if !minimalist}{$_('Add files')}{/if}
 	<ImageUpload

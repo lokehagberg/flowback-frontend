@@ -21,6 +21,9 @@
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
+	import { delegation as delegationLimit } from '$lib/Generic/APILimits.json';
+	import { TelInput, normalizedCountries } from 'svelte-tel-input';
+	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	let user: User = {
 		banner_image: '',
@@ -59,6 +62,18 @@
 		croppedImage: string;
 
 	const { navigating: nav } = getStores();
+
+	// Any Country Code Alpha-2 (ISO 3166)
+	let selectedCountry: CountryCode | null = 'SE';
+
+	// You must use E164 number format. It's guarantee the parsing and storing consistency.
+	let value: E164Number | null = '';
+
+	// Validity
+	let valid = true;
+
+	// Optional - Extended details about the parsed phone number
+	let detailedValue: DetailedValue | null = null;
 
 	onMount(() => {
 		getUser();
@@ -119,6 +134,23 @@
 		oldBannerImagePreview = bannerImagePreview;
 		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
 		currentlyCroppingBanner = true;
+	};
+
+	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?`
+		);
+
+		if (!res.ok) return;
+
+		const delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
 	};
 
 	let imageToBeCropped: any;
@@ -258,13 +290,40 @@
 			{/if}
 
 			{#if currentlyEditing === 'phone'}
-				<TextInput
+				<div class="wrapper">
+					<select
+						class="country-select {!valid ? 'invalid' : ''}"
+						aria-label="Default select example"
+						name="Country"
+						bind:value={selectedCountry}
+					>
+						<option value={null} hidden={selectedCountry !== null}>Please select</option>
+						{#each normalizedCountries as currentCountry (currentCountry.id)}
+							<option
+								value={currentCountry.iso2}
+								selected={currentCountry.iso2 === selectedCountry}
+								aria-selected={currentCountry.iso2 === selectedCountry}
+							>
+								{currentCountry.iso2} (+{currentCountry.dialCode})
+							</option>
+						{/each}
+					</select>
+					<TelInput
+						bind:country={selectedCountry}
+						bind:value
+						bind:valid
+						bind:detailedValue
+						class="basic-tel-input {!valid ? 'invalid' : ''}"
+					/>
+				</div>
+
+				<!-- <TextInput
 					autofocus
 					onBlur={() => (currentlyEditing = null)}
 					label={'Phone Number'}
 					bind:value={userEdit.contact_phone}
 					Class="mt-6 pt-8 pb-8 inline"
-				/>
+				/> -->
 			{:else}
 				<button
 					on:click={() => (currentlyEditing = 'phone')}
@@ -345,5 +404,27 @@
 
 	.bg-semi-transparent {
 		background-color: rgb(209, 213, 219);
+	}
+
+	.wrapper :global(.basic-tel-input) {
+		height: 32px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border-radius: 6px;
+		border: 1px solid;
+		outline: none;
+	}
+
+	.wrapper :global(.country-select) {
+		height: 36px;
+		padding-left: 12px;
+		padding-right: 12px;
+		border-radius: 6px;
+		border: 1px solid;
+		outline: none;
+	}
+
+	.wrapper :global(.invalid) {
+		border-color: red;
 	}
 </style>

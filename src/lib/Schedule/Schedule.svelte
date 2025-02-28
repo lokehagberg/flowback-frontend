@@ -98,6 +98,8 @@
 	};
 
 	const scheduleEventCreate = async () => {
+		console.log("hiiiiii");
+		
 		let API = '';
 		let payload: any = {
 			start_date,
@@ -112,7 +114,7 @@
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
-			API += `group/${$page.params.groupId}/schedule/create`;
+			API += `group/${$page.params.groupId || 1}/schedule/create`;
 			if (workGroup) payload['work_group_id'] = workGroup;
 		}
 

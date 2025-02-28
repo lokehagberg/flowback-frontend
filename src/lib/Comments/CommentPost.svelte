@@ -55,13 +55,13 @@
 		);
 		if (res.ok) {
 			let newComment: Comment = {
-				user_vote: null,
+				user_vote: true,
 				active: true,
 				author_id: Number(window.localStorage.getItem('userId')) || 0,
 				author_name: window.localStorage.getItem('userName') || '',
 				being_edited: false,
 				being_replied: false,
-				score: 0,
+				score: 1,
 				edited: false,
 				attachments: images.map((image) => {
 					return { file: URL.createObjectURL(image) };

@@ -271,7 +271,7 @@
 >
 	<div class="flex justify-between w-full items-start">
 		<div
-			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all pb-1"
+			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all pb-1 line-clamp-2"
 		>
 			{kanban.title}
 		</div>
@@ -334,7 +334,7 @@
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">
 			<button
-				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
+				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
 				on:click={() => {
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
@@ -342,11 +342,11 @@
 					}
 				}}
 			>
-				<Fa icon={faArrowLeft} size="1x" />
+				<Fa icon={faArrowLeft} size="sm" />
 			</button>
 
 			<button
-				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
+				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
 				on:click={() => {
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);
@@ -354,7 +354,7 @@
 					}
 				}}
 			>
-				<Fa icon={faArrowRight} size="1x" />
+				<Fa icon={faArrowRight} size="sm" />
 			</button>
 		</div>
 	{/if}

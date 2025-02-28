@@ -60,6 +60,7 @@
 		let api = `group/${groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
 		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
+		if (filter.workgroup) api += `&work_group_id=${filter.workgroup}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);
@@ -122,7 +123,7 @@
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 pt-4 break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<KanbanFiltering bind:filter handleSearch={getKanbanEntries} />
+	<KanbanFiltering bind:workGroups bind:filter handleSearch={getKanbanEntries} />
 
 	<div class="flex overflow-x-auto py-3">
 		<!-- {#await promise}

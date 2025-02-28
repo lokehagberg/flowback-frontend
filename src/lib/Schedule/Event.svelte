@@ -21,11 +21,11 @@
 		type = '',
 		loading = false;
 
-	export const scheduleEventCreate = () => {},
+	export let scheduleEventCreate = () => {},
 		scheduleEventEdit = () => {},
 		scheduleEventDelete = () => {};
 
-		
+	$: if (scheduleEventCreate) console.log(scheduleEventCreate);
 </script>
 
 <!-- Allows user to see event -->

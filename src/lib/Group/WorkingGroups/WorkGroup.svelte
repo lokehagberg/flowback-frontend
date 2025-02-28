@@ -10,6 +10,7 @@
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let workGroup: WorkGroup, handleRemoveGroup: (id: number) => void;
 

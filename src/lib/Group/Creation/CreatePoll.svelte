@@ -197,7 +197,7 @@
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}
-				<div class="border border-gray-200 dark:border-gray-500 p-2">
+				<div class="rounded border border-gray-200 dark:border-gray-500 p-2">
 					<div class="flex justify-between">
 						<h2>{$_('Days between phases')}:</h2>
 						<input

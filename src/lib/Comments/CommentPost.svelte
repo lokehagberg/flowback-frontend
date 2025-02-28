@@ -36,6 +36,8 @@
 	};
 
 	const commentCreate = async () => {
+		console.log(api, "APIAAIA");
+		
 		const formData = new FormData();
 		formData.append('message', message);
 		//@ts-ignore

@@ -28,8 +28,6 @@
 		commentSubscription: any;
 
 	const setUpComments = async () => {
-		console.log(api, 'PIIII');
-
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;

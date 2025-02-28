@@ -12,13 +12,19 @@
 	import { homePolls as homePollsLimit } from '$lib/Generic/APILimits.json';
 	import Select from '$lib/Generic/Select.svelte';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import type { WorkGroup } from '../WorkingGroups/interface.js';
 
 	export let filter: Filter,
-		handleSearch = () => {};
+		handleSearch = () => {},
+		workGroups: WorkGroup[] = [];
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
 
 	const resetFilter = () => {};
+
+	const onWorkGroupChange = (workGroupId: number) => {
+		filter.workgroup = workGroupId;
+	};
 
 	onMount(() => {});
 
@@ -39,6 +45,26 @@
 			label={$_('Search')}
 			bind:value={filter.search}
 		/>
+		<label class="block text-md" for="work-group">
+			{$_('Work Group')}
+		</label>
+		<select
+			style="width:100%"
+			class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
+			on:input={(e) => {
+				//@ts-ignore
+				onWorkGroupChange(e?.target?.value);
+			}}
+			id="work-group"
+		>
+			<option class="w-5" value={null}> {$_('Unassigned')} </option>
+
+			{#each workGroups as group}
+				<option class="w-5 text-black" value={group.id}>
+					{elipsis(group.name)}
+				</option>
+			{/each}
+		</select>
 
 		<Button
 			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${

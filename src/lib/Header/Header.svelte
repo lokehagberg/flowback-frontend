@@ -22,8 +22,8 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
-	import HomeIcon from '$lib/assets/Home_fill.svg';
+	import CalendarIcon from '$lib/assets/scheduleIcon.svg';
+	import HomeIcon from '$lib/assets/Home2.svg';
 	import KanbanIcon from '$lib/assets/kanbanzoomedin.svg';
 	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 

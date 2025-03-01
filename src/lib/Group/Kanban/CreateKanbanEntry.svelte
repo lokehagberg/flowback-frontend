@@ -75,9 +75,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			type === 'group'
-				? `group/${groupId}/kanban/entry/create`
-				: 'user/kanban/entry/create',
+			type === 'group' ? `group/${groupId}/kanban/entry/create` : 'user/kanban/entry/create',
 			formData,
 			true,
 			false
@@ -224,10 +222,11 @@
 			</div>
 		</Loader>
 	</div>
+	''
 	<div slot="footer" class="flex justify-between gap-4">
 		<Button Class="w-full" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
 		<Button Class="w-full" buttonStyle="warning-light" action={() => (open = false)}
-			>{$_('Cancel')}</Button
+			>{$_('kanbanEntry.Cancel', { default: 'Cancel' })}</Button
 		>
 	</div>
 </Modal>

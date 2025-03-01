@@ -185,8 +185,8 @@
 									<li class="flex justify-between p-2 rounded hover:bg-gray-100">
 										<span>{$_(configToReadable(key2))}</span>
 										<input
-										on:change={saveUserConfig}
-										value={userConfig.pollSettings}
+											on:change={saveUserConfig}
+											value={userConfig.pollSettings}
 											type="checkbox"
 											on:input={(e) => {
 												//@ts-ignore
@@ -214,6 +214,8 @@
 								<span>{$_(configToReadable(key))}</span>
 								<input
 									type="checkbox"
+									on:change={saveUserConfig}
+									value={userConfig.pollSettings}
 									on:input={(e) => {
 										//@ts-ignore
 										userConfig.pollSettings[key] =

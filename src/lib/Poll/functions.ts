@@ -10,7 +10,7 @@ export const formatDate = (dateInput: string) => {
 
 export const getPhase = (poll: poll): Phase => {
 	console.log(poll, 'poll');
-	
+
 	const now = new Date();
 	if (now < new Date(poll?.start_date)) return 'pre_start';
 	else if (now >= new Date(poll?.start_date) && now < new Date(poll?.area_vote_end_date))
@@ -54,7 +54,7 @@ export const dateLabelsDatePoll = ['Start', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
 	console.log(phase, 'phase');
-	
+
 	switch (phase) {
 		case 'pre_start':
 			return dateLabels[0];
@@ -88,6 +88,8 @@ export const getGroupInfo = async (id: number | string) => {
 
 
 export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
+	console.log(pollType, pollId, phase, "POLL INFORMATION");
+
 	if (phase === 'result' || phase === "prediction_vote") return 'prediction_vote';
 	pollId = Number(pollId);
 	let _phase: Phase = 'area_vote';

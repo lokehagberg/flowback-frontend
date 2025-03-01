@@ -22,8 +22,8 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
-	import HomeIcon from '$lib/assets/Home_fill.svg';
+	import CalendarIcon from '$lib/assets/scheduleIcon.svg';
+	import HomeIcon from '$lib/assets/Home2.svg';
 	import KanbanIcon from '$lib/assets/kanbanzoomedin.svg';
 	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 
@@ -163,7 +163,8 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] "
+					Class="w-[30px] absolute top-1 "
+					textClass="!mt-1"
 					text={'Automate'}
 					href="automate"
 					bind:selectedHref
@@ -171,7 +172,7 @@
 			{:else}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] "
+					Class="w-[30px] absolute top-5"
 					text={'Delegations'}
 					href="automate"
 					bind:selectedHref

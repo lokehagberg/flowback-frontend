@@ -163,7 +163,8 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] "
+					Class="w-[30px] absolute top-1 "
+					textClass="!mt-1"
 					text={'Automate'}
 					href="automate"
 					bind:selectedHref
@@ -171,7 +172,7 @@
 			{:else}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] "
+					Class="w-[30px] absolute top-5"
 					text={'Delegations'}
 					href="automate"
 					bind:selectedHref

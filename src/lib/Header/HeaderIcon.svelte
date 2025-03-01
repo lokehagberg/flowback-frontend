@@ -16,7 +16,8 @@
 		Class = '',
 		size = 'xl',
 		tabindex = 0,
-		selectedHref: string | null = null;
+		selectedHref: string | null = null,
+		textClass = "";
 
 	let hovering = false,
 		selectedCurrent = '',
@@ -62,7 +63,12 @@
 			{#key darkMode}
 				{#each icons as icon}
 					{#if typeof icon === 'string'}
-						<img class={`w-${size}`} style="filter: {getIconFilter(selectedPage)}" src={icon} alt="icon" />
+						<img
+							class={`w-${size}`}
+							style="filter: {getIconFilter(selectedPage)}"
+							src={icon}
+							alt="icon"
+						/>
 					{:else}
 						<Fa
 							{icon}
@@ -70,7 +76,7 @@
 							class={`inline ${selectedPage ? 'lightgray' : selectedPage ? '#015BC0' : 'black'}`}
 						/>
 					{/if}
-					<div class="text-xs mt-2 dark:text-darkmodeText">
+					<div class={`${textClass} text-xs mt-2 dark:text-darkmodeText`}>
 						{$_(text)}
 					</div>
 				{/each}

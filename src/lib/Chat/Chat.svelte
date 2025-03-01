@@ -10,10 +10,11 @@
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
-	import { faX } from '@fortawesome/free-solid-svg-icons';
+	import { faCog, faX } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
+	import { goto } from '$app/navigation';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -75,10 +76,23 @@
 			chatOpen = false;
 			isChatOpen.set(false);
 		}}
-		Class="absolute left-0 top-0 p-3 m-4 transition-all bg-white dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faX} />
+		</div>
+	</Button>
+
+	<Button
+		action={() => {
+			chatOpen = false;
+			isChatOpen.set(false);
+			goto('/user/settings');
+		}}
+		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faCog} />
 		</div>
 	</Button>
 

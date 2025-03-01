@@ -20,7 +20,7 @@
 </script>
 
 <Layout centered>
-	<div class="flex mt-6 gap-6">
+	<div class="flex mt-6 gap-6 max-w-[90%	]">
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[350px] p-6 rounded border shadow ">
 			<div class="flex items-center mb-4 gap-4">
 				<button

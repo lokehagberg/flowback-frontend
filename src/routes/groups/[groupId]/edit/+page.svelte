@@ -7,21 +7,18 @@
 	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
-	import {
-		faArrowLeft,
-		faCog,
-		faTags,
-		faShieldAlt
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faCog, faTags, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 
 	let selectedPage: 'group' | 'areas' | 'perms' | 'blockchain' = 'group',
 		optionsDesign =
-				'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all'
+			'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all';
 </script>
 
 <Layout centered>
 	<div class="flex mt-6 gap-6 max-w-[90%]">
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[350px] p-6 rounded border shadow ">
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[350px] p-6 rounded border shadow"
+		>
 			<div class="flex items-center mb-4 gap-4">
 				<button
 					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
@@ -29,37 +26,39 @@
 				>
 					<Fa icon={faArrowLeft} />
 				</button>
-				<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left break-all">{$_('Admin Settings')}</h1>
+				<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left break-all">
+					{$_('Admin Settings')}
+				</h1>
 			</div>
-		<div class="mt-4">
-			<button
-				on:click={() => (selectedPage = 'group')}
-				class={`${optionsDesign}`}
-				class:bg-gray-100={selectedPage === 'group'}
-				class:border-l-2={selectedPage === 'group'}
-				class:border-primary={selectedPage === 'group'}
-			>
-				<Fa icon={faCog} class="w-5 h-5"/>{$_('Edit Group')}
-			</button>
-			<button
-				on:click={() => (selectedPage = 'areas')}
-				class={`${optionsDesign}`}
-				class:bg-gray-100={selectedPage === 'areas'}
-				class:border-l-2={selectedPage === 'areas'}
-				class:border-primary={selectedPage === 'areas'}
-			>
-				<Fa icon={faTags} class="w-5 h-5"/>{$_('Areas')}
-			</button>
-			<button
-				on:click={() => (selectedPage = 'perms')}
-				class={`${optionsDesign}`}
-				class:bg-gray-100={selectedPage === 'perms'}
-				class:border-l-2={selectedPage === 'perms'}
-				class:border-primary={selectedPage === 'perms'}
-			>
-				<Fa icon={faShieldAlt} class="w-5 h-5"/>{$_('Permissions')}
-			</button>
-			<!-- <ul>
+			<div class="mt-4">
+				<button
+					on:click={() => (selectedPage = 'group')}
+					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'group'}
+					class:border-l-2={selectedPage === 'group'}
+					class:border-primary={selectedPage === 'group'}
+				>
+					<Fa icon={faCog} class="w-5 h-5" />{$_('Edit Group')}
+				</button>
+				<button
+					on:click={() => (selectedPage = 'areas')}
+					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'areas'}
+					class:border-l-2={selectedPage === 'areas'}
+					class:border-primary={selectedPage === 'areas'}
+				>
+					<Fa icon={faTags} class="w-5 h-5" />{$_('Areas')}
+				</button>
+				<button
+					on:click={() => (selectedPage = 'perms')}
+					class={`${optionsDesign}`}
+					class:bg-gray-100={selectedPage === 'perms'}
+					class:border-l-2={selectedPage === 'perms'}
+					class:border-primary={selectedPage === 'perms'}
+				>
+					<Fa icon={faShieldAlt} class="w-5 h-5" />{$_('Permissions')}
+				</button>
+				<!-- <ul>
 				<li
 					class={`cursor-pointer ${
 						selectedPage === 'blockchain' && 'bg-gray-100 border-l-2 border-primary transition-all'
@@ -70,9 +69,11 @@
 					>
 				</li>
 			</ul> -->
+			</div>
 		</div>
-	</div>
-		<div class="bg-white dark:text-darkmodeText dark:bg-darkobject p-6 shadow rounded w-[600px] border">
+		<div
+			class="bg-white dark:text-darkmodeText dark:bg-darkobject p-6 shadow rounded w-[600px] border"
+		>
 			{#if selectedPage === 'group'}
 				<EditGroup />
 			{:else if selectedPage === 'areas'}

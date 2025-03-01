@@ -76,7 +76,7 @@
 	<Loader bind:loading>
 		<form on:submit|preventDefault={addTag} class="pb-4 flex gap-2">
 			<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1"/>
-			<Button disabled={loading} type="submit" Class="w-1/5 mt-auto h-8 flex items-center justify-center" buttonStyle="primary-light" label="Add" />
+			<Button disabled={loading} type="submit" Class="w-1/5 mt-[1.65rem] h-8 flex items-center justify-center" buttonStyle="primary-light" label="Add" />
 		</form>
 		<div class="flex flex-col justify-between gap-2 py-2">
 			{#each tags as tag}

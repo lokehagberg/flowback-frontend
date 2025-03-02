@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.4';
+		version = '0.1.5';
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {

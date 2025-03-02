@@ -52,7 +52,7 @@
 			<input
 				bind:value
 				id={`textinput-${label}`}
-				class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass} ${search ? 'pl-10' : ''}`}
+				class={`dark:text-darkmodeText dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass} ${search ? ' pl-10 ' : ''}`}
 				{required}
 				maxlength={max}
 				placeholder={$_(placeholder)}
@@ -60,7 +60,7 @@
 				on:input={onInput}
 				{name}
 			/>
-			{#if value}
+			{#if value && search}
                 <button
                     type="button"
                     on:click={clearInput}

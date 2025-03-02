@@ -590,4 +590,8 @@
     "Search tasks": "Sök bland uppgifterna",
     "Phone number": "Telefonnummer",
     "None provided": "Inget angivet"
+    
+    "kanbanEntry":{
+        "Cancel":"Avbryt"
+    }
 }

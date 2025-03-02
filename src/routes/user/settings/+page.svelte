@@ -56,9 +56,18 @@
 
 	const getUserConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
-		if (res.ok) {
+
+		console.log(res, json, 'JSON');
+
+		if (res.ok && json.user_config) {
 			userConfig = JSON.parse(json.user_config);
 		}
+	};
+
+	const saveUserConfig = async () => {
+		const { res, json } = await fetchRequest('POST', 'user/update', {
+			user_config: JSON.stringify(userConfig)
+		});
 	};
 
 	const a = (key1: string, key2: string = '') => {
@@ -77,7 +86,9 @@
 
 <Layout centered>
 	<div class="flex mt-6 gap-6">
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6 rounded border shadow">
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText w-[300px] p-6 rounded border shadow"
+		>
 			<div class="flex items-center mb-4 gap-4">
 				<button
 					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
@@ -85,7 +96,9 @@
 				>
 					<Fa icon={faArrowLeft} />
 				</button>
-				<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold">{$_('Settings')}</h1>
+				<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold">
+					{$_('Settings')}
+				</h1>
 			</div>
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -97,7 +110,7 @@
 					class:border-l-2={selectedPage === 'profile'}
 					class:border-primary={selectedPage === 'profile'}
 				>
-					<Fa icon={faUser} class="w-5 h-5"/>{$_('User Profile')}
+					<Fa icon={faUser} class="w-5 h-5" />{$_('User Profile')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'notifications')}
@@ -106,7 +119,7 @@
 					class:border-l-2={selectedPage === 'notifications'}
 					class:border-primary={selectedPage === 'notifications'}
 				>
-					<Fa icon={faBell} class="w-5 h-5"/>{$_('Notifications')}
+					<Fa icon={faBell} class="w-5 h-5" />{$_('Notifications')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'poll-process')}
@@ -115,7 +128,7 @@
 					class:border-l-2={selectedPage === 'poll-process'}
 					class:border-primary={selectedPage === 'poll-process'}
 				>
-					<Fa icon={faPieChart} class="w-5 h-5"/>{$_('Poll Process')}
+					<Fa icon={faPieChart} class="w-5 h-5" />{$_('Poll Process')}
 				</button>
 				<button
 					on:click={() => (selectedPage = 'info')}
@@ -124,14 +137,18 @@
 					class:border-l-2={selectedPage === 'info'}
 					class:border-primary={selectedPage === 'info'}
 				>
-					<Fa icon={faInfo} class="w-5 h-5"/>{$_('Information')}
+					<Fa icon={faInfo} class="w-5 h-5" />{$_('Information')}
 				</button>
 			</div>
 		</div>
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px] rounded border shadow">
+		<div
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 w-[400px] rounded border shadow"
+		>
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
-				<li class="text-lg text-primary dark:text-secondary font-semibold mb-3">{$_('General')}</li>
+					<li class="text-lg text-primary dark:text-secondary font-semibold mb-3">
+						{$_('General')}
+					</li>
 					<RadioButtons2
 						Class="pb-4"
 						ClassInner="flex items-center justify-between px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -152,7 +169,9 @@
 
 					<div class="pt-4">
 						<div class="cursor-pointer hover:underline">{$_('Give me all my data')}</div>
-						<div class="text-red-600 cursor-pointer hover:underline mt-2">{$_('Delete account')}</div>
+						<div class="text-red-600 cursor-pointer hover:underline mt-2">
+							{$_('Delete account')}
+						</div>
 					</div>
 				{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
@@ -166,6 +185,8 @@
 									<li class="flex justify-between p-2 rounded hover:bg-gray-100">
 										<span>{$_(configToReadable(key2))}</span>
 										<input
+											on:change={saveUserConfig}
+											value={userConfig.pollSettings}
 											type="checkbox"
 											on:input={(e) => {
 												//@ts-ignore
@@ -183,7 +204,8 @@
 						</li>
 					{/each}
 				{:else if selectedPage === 'poll-process' && userConfig?.pollSettings}
-					<span class="text-xl text-primary dark:text-secondary font-semibold">{$_('Poll Phases')}</span
+					<span class="text-xl text-primary dark:text-secondary font-semibold"
+						>{$_('Poll Phases')}</span
 					>
 					<span>{$_('Select the phases you want to participate in')}.</span>
 					<ul class="gap-2 pl-4">
@@ -192,6 +214,8 @@
 								<span>{$_(configToReadable(key))}</span>
 								<input
 									type="checkbox"
+									on:change={saveUserConfig}
+									value={userConfig.pollSettings}
 									on:input={(e) => {
 										//@ts-ignore
 										userConfig.pollSettings[key] =

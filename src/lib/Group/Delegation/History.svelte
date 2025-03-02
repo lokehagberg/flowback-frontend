@@ -59,32 +59,36 @@
 			{user?.username}
 		</div>
 	{/if}
-	<ul class="w-full">
-		{#each votingHistory as vote}
-			<li
-				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
-			>
-				<button
-					class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
-					on:click={() =>
-						goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
-				>
-					{vote.poll_title}</button
-				>
-			</li>
-
-			<!-- <ul class="w-full block ml-4">
+	<div class="w-screen bg-[#faf5ff]">
+		<div class="w-full max-w-screen-md mx-auto p-4">
+			<ul class="w-full">
 				{#each votingHistory as vote}
 					<li
 						class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
 					>
-						{vote.poll_title}
+						<button
+							class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
+							on:click={() =>
+								goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
+						>
+							{vote.poll_title}</button
+						>
 					</li>
+
+					<!-- <ul class="w-full block ml-4">
+						{#each votingHistory as vote}
+							<li
+								class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center"
+							>
+								{vote.poll_title}
+							</li>
+						{/each}
+					</ul> -->
 				{/each}
-			</ul> -->
-		{/each}
-	</ul>
-	<div>
-		<Comments api="delegate-history" on:keydown={() => {}} delegate_pool_id={history} />
+			</ul>
+			<div class="p-4">
+				<Comments Class="bg-white p-4 shadow" api="delegate-history" on:keydown={() => {}} delegate_pool_id={history} />
+			</div>
+		</div>
 	</div>
 </Loader>

@@ -40,17 +40,17 @@
 	});
 </script>
 
-<ul>
+<ul class="flex flex-col gap-2 py-2">
 	{#each roles as role}
-		<li>
+		<li class="flex justify-between items-center">
 			<button
 				on:click={async () => {
 					selectedRole = role;
 					selectedPage = 'create';
 				}}>{role.role_name}</button
 			>
-			<Button action={() => deletePermission(role.id)} buttonStyle="warning-light">
-				<Fa icon={faTrash} />
+			<Button action={() => deletePermission(role.id)} Class="p-2 text-lg cursor-pointer bg-white">
+				<Fa class="text-red-500" icon={faTrash} />
 			</Button>
 		</li>
 	{/each}

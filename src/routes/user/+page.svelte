@@ -209,14 +209,14 @@
 				</div>
 			</Button>
 		</div>
-		<div class="flex justify-around w-full max-w-[600px]">
+		<div class="flex justify-around w-full max-w-[800px]">
 			<img
 				src={profileImagePreview}
 				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[50%]">
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6">
 				<div class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words">
 					{user.username}
 				</div>
@@ -225,12 +225,18 @@
 				</p>
 				<StatusMessage Class="" bind:status />
 			</div>
-			<div class="dark:text-darkmodeText">
+			<div class="dark:text-darkmodeText py-6">
 				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
-				<a class={``} href={user.website || ''}>
-					{user.website || ''}
+				<a class={``} href={user.website || $_('None provided')}>
+					{$_("Website")}: {user.website || ''}
 				</a>
 				<!-- <div>Phone number</div> -->
+				<p class="">
+					{$_("Phone number")}: {user.contact_phone || $_('None provided')}
+				</p>
+				<p class="">
+					{$_("E-mail")}: {user.contact_email || $_('None provided')}
+				</p>
 			</div>
 		</div>
 		<!-- Editing your own profile -->

@@ -13,17 +13,19 @@
 		showEditScheduleEvent = false,
 		title = '',
 		description = '',
-		start_date: Date|null,
-		end_date: Date|null,
+		start_date: Date | null,
+		end_date: Date | null,
 		meeting_link = '',
 		workGroup: any,
 		workGroups: any[] = [],
 		type = '',
 		loading = false;
 
-	export const scheduleEventCreate = () => {},
+	export let scheduleEventCreate = () => {},
 		scheduleEventEdit = () => {},
 		scheduleEventDelete = () => {};
+
+	$: if (scheduleEventCreate) console.log(scheduleEventCreate);
 </script>
 
 <!-- Allows user to see event -->
@@ -39,32 +41,34 @@
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('From')}</p>
 				<p>
-					{start_date 
-						? new Intl.DateTimeFormat('sv-SE', { 
-							weekday: 'short',
-							day: '2-digit',
-							month: 'long',
-							hour: '2-digit',
-        					minute: '2-digit'
-						  }).format(new Date(start_date))
-						  .replace(/\b\w/g, char => char.toUpperCase()) 
+					{start_date
+						? new Intl.DateTimeFormat('sv-SE', {
+								weekday: 'short',
+								day: '2-digit',
+								month: 'long',
+								hour: '2-digit',
+								minute: '2-digit'
+						  })
+								.format(new Date(start_date))
+								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No start date set')}
-				  </p>
+				</p>
 			</div>
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('To')}</p>
 				<p>
-					{end_date 
-						? new Intl.DateTimeFormat('sv-SE', { 
-							weekday: 'short',
-							day: '2-digit',
-							month: 'long',
-							hour: '2-digit',
-        					minute: '2-digit'
-						  }).format(new Date(end_date))
-						  .replace(/\b\w/g, char => char.toUpperCase()) 
+					{end_date
+						? new Intl.DateTimeFormat('sv-SE', {
+								weekday: 'short',
+								day: '2-digit',
+								month: 'long',
+								hour: '2-digit',
+								minute: '2-digit'
+						  })
+								.format(new Date(end_date))
+								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No end date set')}
-				  </p>
+				</p>
 			</div>
 		</div>
 		<div class="text-left mt-1 w-full">
@@ -79,22 +83,27 @@
 			<p class="font-bold">{$_('Attachments')}</p>
 		</div>
 	</div>
-	<div slot="footer">
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
 		<Button
+			Class="w-full py-1"
+			buttonStyle="primary-light"
 			action={() => {
 				showEditScheduleEvent = true;
 				showEvent = false;
-			}}>{$_('Edit Event')}</Button
+			}}>{$_('Edit')}</Button
 		>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={scheduleEventDelete}>{$_('Delete')}</Button>
 	</div>
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
 <Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
-	<!-- <div slot="header">{$_('Create Event')}</div> -->
 	<div slot="body">
 		<Loader bind:loading>
 			<form on:submit|preventDefault={scheduleEventCreate}>
+				<h1 class="text-lg pb-3 text-left text-primary dark:text-secondary font-semibold">
+					{$_('Create Event')}
+				</h1>
 				<div class="pb-2">
 					<TextInput Class="text-md" label="Title" bind:value={title} required />
 				</div>
@@ -116,31 +125,40 @@
 				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="w-full md:flex md:gap-4">
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="create-start-date">
 							{$_('From')}
 						</label>
-						<!-- <DateInput bind:value={start_date} /> -->
-						<input type="datetime-local" bind:value={start_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-						   {start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="create-start-date"
+							type="datetime-local"
+							bind:value={start_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+						   {start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="create-end-date">
 							{$_('To')}
 						</label>
-						<!-- <DateInput bind:value={end_date} /> -->
-						<input type="datetime-local" bind:value={end_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-							{end_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="create-end-date"
+							type="datetime-local"
+							bind:value={end_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+							{end_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 				</div>
 				<div class="pt-2">
 					<TextInput label="Meeting link" bind:value={meeting_link} />
 				</div>
-				<Button Class="mt-4" type="submit" action={scheduleEventCreate}>{$_('Submit')}</Button>
 			</form>
 		</Loader>
+	</div>
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventCreate}>{$_('Create')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>
 
@@ -154,9 +172,9 @@
 				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" /> -->
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<div class="pb-2">
-					<TextInput label="Title" bind:value={title} required/>
+					<TextInput label="Title" bind:value={title} required />
 				</div>
-				<TextArea label="Description" bind:value={description} rows={3} Class="overflow-scroll"/>
+				<TextArea label="Description" bind:value={description} rows={3} Class="overflow-scroll" />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -172,20 +190,28 @@
 				{/if}
 				<div class="md:flex md:gap-4">
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="edit-start-date">
 							{$_('From')}
 						</label>
-						<input type="datetime-local" bind:value={start_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-						   {start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="edit-start-date"
+							type="datetime-local"
+							bind:value={start_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+						   {start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 					<div class="text-left flex-1">
-						<label class="block text-md pt-2">
+						<label class="block text-md pt-2" for="edit-end-date">
 							{$_('To')}
 						</label>
-						<input type="datetime-local" bind:value={end_date} 
-						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject 
-							{start_date ? 'text-black' : 'text-gray-500'}"/>
+						<input
+							id="edit-end-date"
+							type="datetime-local"
+							bind:value={end_date}
+							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
+							{start_date ? 'text-black' : 'text-gray-500'}"
+						/>
 					</div>
 				</div>
 				<div class="pt-2">
@@ -194,8 +220,8 @@
 			</form>
 		</Loader>
 	</div>
-	<div slot="footer">
-		<Button type="submit" action={scheduleEventEdit}>{$_('Submit')}</Button>
-		<Button buttonStyle="warning" action={scheduleEventDelete}>{$_('Delete')}</Button>
+	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventEdit}>{$_('Confirm')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>

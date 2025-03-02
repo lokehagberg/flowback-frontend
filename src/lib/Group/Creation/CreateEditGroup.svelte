@@ -103,8 +103,9 @@
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
-		if (image) image = `${env.PUBLIC_API}${json.image}`;
-		if (coverImage) coverImage = `${env.PUBLIC_API}${json.cover_image}`;
+
+		if (json.image) image = `${env.PUBLIC_API}${json.image}`;
+		if (json.cover_image) coverImage = `${env.PUBLIC_API}${json.cover_image}`;
 	};
 
 	onMount(() => {
@@ -134,12 +135,21 @@
 			<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<RadioButtons bind:Yes={useInvite} label={'Invitation Required?'}
-					Class="flex items-center justify-between gap-3 w-full"/>
-				<RadioButtons bind:Yes={publicGroup} label={'Public?'} 
-					Class="flex items-center justify-between gap-3 w-full"/>
-				<RadioButtons bind:Yes={hiddenGroup} label={'Hide proposal creator?'} 
-					Class="flex items-center justify-between gap-3 w-full"/>
+				<RadioButtons
+					bind:Yes={useInvite}
+					label={'Invitation Required?'}
+					Class="flex items-center justify-between gap-3 w-full"
+				/>
+				<RadioButtons
+					bind:Yes={publicGroup}
+					label={'Public?'}
+					Class="flex items-center justify-between gap-3 w-full"
+				/>
+				<RadioButtons
+					bind:Yes={hiddenGroup}
+					label={'Hide proposal creator?'}
+					Class="flex items-center justify-between gap-3 w-full"
+				/>
 			{/if}
 
 			<StatusMessage bind:status />
@@ -163,8 +173,10 @@
 							</div>
 						</div>
 					</Modal>
-					<Button buttonStyle="warning-light" Class="w-1/2" action={() => (DeleteGroupModalShow = true)}
-						>{$_('Delete Group')}</Button
+					<Button
+						buttonStyle="warning-light"
+						Class="w-1/2"
+						action={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button
 					>
 				{/if}
 			</div>

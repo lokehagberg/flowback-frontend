@@ -28,8 +28,6 @@
 		commentSubscription: any;
 
 	const setUpComments = async () => {
-		console.log(api, 'PIIII');
-
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
@@ -74,7 +72,11 @@
 			{delegate_pool_id}
 		/>
 
-		<CommentFilter bind:sortBy bind:searchString Class="flex flex-row-reverse items-center justify-end mb-2 gap-8" />
+		<CommentFilter
+			bind:sortBy
+			bind:searchString
+			Class="flex flex-row-reverse items-center justify-end mb-2 gap-8"
+		/>
 	</div>
 
 	<div class="flex flex-col gap-1 mt-2">

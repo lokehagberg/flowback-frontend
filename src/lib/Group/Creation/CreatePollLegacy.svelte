@@ -31,6 +31,7 @@
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import TimelineTemplate from './TimelineTemplate.svelte';
 	import type { template } from './interface';
+	import { env } from '$env/dynamic/public';
 
 	type polltypes =
 		| 'Ranking'

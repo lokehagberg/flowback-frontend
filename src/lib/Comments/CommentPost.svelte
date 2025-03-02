@@ -30,15 +30,14 @@
 	// $: if(image !== null ) attachments.push(image)
 
 	const getId = () => {
-		console.log(api, 'API APA');
-
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
 		else if (api === 'delegate-history') return `delegate/pool/${delegate_pool_id}`;
 	};
 
 	const commentCreate = async () => {
-		console.log('Commenting Creatings', getId(), id, delegate_pool_id);
+		console.log(api, "APIAAIA");
+		
 		const formData = new FormData();
 		formData.append('message', message);
 		//@ts-ignore
@@ -58,13 +57,13 @@
 		);
 		if (res.ok) {
 			let newComment: Comment = {
-				user_vote: null,
+				user_vote: true,
 				active: true,
 				author_id: Number(window.localStorage.getItem('userId')) || 0,
 				author_name: window.localStorage.getItem('userName') || '',
 				being_edited: false,
 				being_replied: false,
-				score: 0,
+				score: 1,
 				edited: false,
 				attachments: images.map((image) => {
 					return { file: URL.createObjectURL(image) };

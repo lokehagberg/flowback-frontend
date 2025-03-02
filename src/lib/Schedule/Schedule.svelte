@@ -9,16 +9,10 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { scheduledEvent } from '$lib/Schedule/interface';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import Modal from '$lib/Generic/Modal.svelte';
-	// import { DateInput } from 'date-picker-svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import Loader from '$lib/Generic/Loader.svelte';
 	import { page } from '$app/stores';
 	import { addDateOffset, setDateToMidnight } from '$lib/Generic/Dates';
-	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Day from './Day.svelte';
-	import Select from '$lib/Generic/Select.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -43,7 +37,7 @@
 	];
 
 	const currentDate = new Date(),
-		groupId = $page.params.groupId;
+		groupId = $page.params.groupId || '1';
 
 	let month = currentDate.getMonth(),
 		year = currentDate.getFullYear(),
@@ -87,9 +81,12 @@
 		if (groupId) {
 			_api = `group/${groupId}/schedule?limit=1000&`;
 
-			workGroupFilter.forEach((groupId) => {
-				_api += `work_group_ids=${groupId}&`;
-			});
+			if (workGroupFilter.length > 0) {
+				_api += 'work_group_ids=';
+				workGroupFilter.forEach((groupId) => {
+					_api += `${groupId},`;
+				});
+			}
 		} else {
 			_api = `user/schedule?limit=1000`;
 		}
@@ -101,6 +98,8 @@
 	};
 
 	const scheduleEventCreate = async () => {
+		console.log("hiiiiii");
+		
 		let API = '';
 		let payload: any = {
 			start_date,
@@ -115,7 +114,7 @@
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
-			API += `group/${$page.params.groupId}/schedule/create`;
+			API += `group/${$page.params.groupId || 1}/schedule/create`;
 			if (workGroup) payload['work_group_id'] = workGroup;
 		}
 
@@ -231,7 +230,7 @@
 	};
 
 	const getWorkGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
 		workGroups = json.results;

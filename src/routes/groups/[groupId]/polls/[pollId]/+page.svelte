@@ -35,7 +35,7 @@
 		proposalsToPredictionMarket: proposal[] = [],
 		poppup: poppup,
 		displayForm: boolean,
-		comments:Comment[] = [];
+		comments: Comment[] = [];
 
 	onMount(async () => {
 		getGroupUser();
@@ -111,13 +111,17 @@
 					{$_('This poll will start at')}
 					{formatDate(poll.start_date)}
 				</div>
-				<div class="bg-white p-6 mt-6"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+				<div class="bg-white p-6 mt-6">
+					<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+				</div>
 
 				<!-- PHASE 1: AREA VOTE -->
 			{:else if phase === 'area_vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
-					<div slot="right" class="!p-0"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="right" class="!p-0">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 
 				<!-- PHASE 2: PROPOSAL CREATION -->
@@ -128,7 +132,8 @@
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="h-[90%] overflow-y-auto">
-							<ProposalScoreVoting bind:comments
+							<ProposalScoreVoting
+								bind:comments
 								bind:proposals
 								isVoting={false}
 								bind:selectedProposal
@@ -163,7 +168,9 @@
 							<ProposalSubmition bind:proposals {poll} bind:displayForm />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 
 				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
@@ -174,7 +181,8 @@
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-auto">
-							<ProposalScoreVoting bind:comments
+							<ProposalScoreVoting
+								bind:comments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
@@ -185,25 +193,30 @@
 						<Button
 							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
-							action={() => (selectedProposal = null)}>{$_('Create Prediction')}</Button
+							action={() => {
+								selectedProposal = null;
+								displayForm = true;
+							}}>{$_('Create Prediction')}</Button
 						>
 					</div>
-					<div slot="right" class="relative">
+					<div slot="right" class="relative h-full overflow-hidden">
 						{#if selectedProposal}
 							<div class="font-semibold text-primary dark:text-secondary text-lg">
 								{selectedProposal.title}
 							</div>
 							<Description description={selectedProposal.description} limit={30} />
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
-						{:else if proposalsToPredictionMarket.length === 0 && displayForm}
+						{:else if displayForm}
+							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
+						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary dark:text-secondary font-semibold">
 								{$_('To make a prediction, please select atleast one proposal')}
 							</span>
-						{:else if displayForm}
-							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 
 				<!-- PHASE 4: PREDICTION BETTING -->
@@ -214,11 +227,12 @@
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-full overflow-y-auto">
-							<ProposalScoreVoting bind:comments
+							<ProposalScoreVoting
+								bind:comments
 								bind:proposals
-								isVoting={false}
 								bind:phase
 								bind:selectedProposal
+								isVoting={false}
 							/>
 						</div>
 					</div>
@@ -231,7 +245,9 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 
 				<!-- PHASE 5: DELEGATE VOTING -->
@@ -242,7 +258,8 @@
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
-							<ProposalScoreVoting bind:comments
+							<ProposalScoreVoting
+								bind:comments
 								bind:proposals
 								isVoting={false}
 								bind:phase
@@ -259,7 +276,9 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
 			{:else if phase === 'vote'}
@@ -269,7 +288,8 @@
 							>{$_('All proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
-							<ProposalScoreVoting bind:comments
+							<ProposalScoreVoting
+								bind:comments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
@@ -286,7 +306,9 @@
 							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 				<!-- PHASE 6: RESULTS -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
@@ -296,8 +318,10 @@
 							<PredictionStatements selectedProposal={proposals[0]} bind:phase bind:poll />
 						{/if}
 					</div>
-					<div slot="right"><Results  {pollType} /></div>
-					<div slot="bottom"><Comments  bind:_comments={comments} bind:proposals api={"poll"} /></div>
+					<div slot="right"><Results {pollType} /></div>
+					<div slot="bottom">
+						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
+					</div>
 				</Structure>
 			{/if}
 		{:else if pollType === 3}

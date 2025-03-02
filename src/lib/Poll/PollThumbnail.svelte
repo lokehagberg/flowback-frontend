@@ -79,20 +79,18 @@
 		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
 
 		if (selectedTagName) {
-			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id || 0; 
+			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id || 0;
 		}
 	};
-
 
 	onMount(async () => {
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {
 			tags = await getTags(poll.group_id);
 			getAreaVote();
-		} 
+		}
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
-
 	});
 
 	$: if (poll)
@@ -172,7 +170,7 @@
 						: [$_('Delete Poll'), $_('Fast Forward')]}
 					functions={[
 						() => (deletePollModalShow = true),
-						async () => (phase = await nextPhase(poll.poll_type, $page.params.pollId, phase))
+						async () => (phase = await nextPhase(poll.poll_type, poll.id, phase))
 					]}
 					Class="text-black justify-self-center mt-2"
 				/>

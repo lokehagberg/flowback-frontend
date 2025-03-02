@@ -18,6 +18,7 @@
 	import type { kanban } from './Kanban';
 	import type { Filter } from './Kanban.ts';
 	import KanbanFiltering from './KanbanFiltering.svelte';
+	import { env } from '$env/dynamic/public';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -35,7 +36,8 @@
 			workgroup: null
 		},
 		workGroups: WorkGroup[] = [],
-		lane: number = 1;
+		lane: number = 1,
+		groupId = '1';
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -55,19 +57,17 @@
 	};
 
 	const getKanbanEntriesGroup = async () => {
-		console.log(filter.search);
-		
-		let api = `group/${$page.params.groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
+		let api = `group/${groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
 		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
-		
+		if (filter.workgroup) api += `&work_group_id=${filter.workgroup}`;
+
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);
 		kanbanEntries = json.results;
 	};
-	
+
 	const getKanbanEntriesHome = async () => {
-		console.log(filter.search);
 		let api = `user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
 
@@ -78,15 +78,17 @@
 	};
 
 	const getGroupUsers = async () => {
-		let api = `group/${$page.params.groupId}/users?limit=${kanbanLimit}`;
+		let api = `group/${groupId}/users?limit=${kanbanLimit}`;
 
-		const { json } = await fetchRequest('GET', api);
+		const { json, res } = await fetchRequest('GET', api);
+		if (!res.ok) return;
+
 		users = json.results;
 		if (!assignee) assignee = users[0]?.user.id;
 	};
 
 	const getWorkGroups = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
 		workGroups = json.results;
@@ -96,7 +98,7 @@
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 
-	const handleSearch = (search: String) => {};
+	// const handleSearch = (search: String) => {};
 
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
@@ -106,6 +108,8 @@
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();
 		}, 20000);
+
+		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : '$page.params.groupId';
 	});
 
 	onDestroy(() => {
@@ -119,7 +123,7 @@
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 pt-4 break-words md:max-w-[calc(500px*5)]' +
 		Class}
 >
-	<KanbanFiltering bind:filter handleSearch={getKanbanEntries} />
+	<KanbanFiltering bind:workGroups bind:filter handleSearch={getKanbanEntries} Class="" />
 
 	<div class="flex overflow-x-auto py-3">
 		<!-- {#await promise}
@@ -128,7 +132,7 @@
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white inline-block min-w-[160px] max-w-[500px] w-1/5 p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
+					class="bg-white min-w-[160px] md:min-w-[170px] lg:min-w-[200px] max-w-[230px] p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
 				>
 					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<div class="flex justify-between pb-3">
@@ -173,4 +177,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry bind:open {type} bind:kanbanEntries {users} {workGroups} bind:lane />
+<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} {workGroups} bind:lane />

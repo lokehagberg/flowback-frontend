@@ -10,10 +10,11 @@
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
-	import { faX } from '@fortawesome/free-solid-svg-icons';
+	import { faCog, faX } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
+	import { goto } from '$app/navigation';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -75,15 +76,28 @@
 			chatOpen = false;
 			isChatOpen.set(false);
 		}}
-		Class="absolute left-0 top-0 p-3 m-4 transition-all bg-white dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faX} />
 		</div>
 	</Button>
 
+	<Button
+		action={() => {
+			chatOpen = false;
+			isChatOpen.set(false);
+			goto('/user/settings');
+		}}
+		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faCog} />
+		</div>
+	</Button>
+
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
-		<div class="bg-white w-[40%] flex-grow my-12 ml-6 dark:bg-darkobject p-2">
+		<div class="bg-white w-[40%] flex-grow my-8 ml-6 dark:bg-darkobject p-2">
 			<Preview
 				bind:selectedChat
 				bind:selectedPage
@@ -92,7 +106,7 @@
 				bind:selectedChatChannelId
 			/>
 		</div>
-		<div class="bg-white w-[60%] flex-grow my-12 mr-6 dark:bg-darkobject p-2">
+		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
 			<ChatWindow
 				bind:selectedChat
 				bind:selectedChatChannelId
@@ -114,7 +128,7 @@
 	}}
 	class:small-notification={previewDirect.find((preview) => preview.notified)}
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
-	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-6 bottom-6 ml-6 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-7"
+	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	{#key darkMode}
 		<img

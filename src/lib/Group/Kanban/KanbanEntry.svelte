@@ -271,7 +271,7 @@
 >
 	<div class="flex justify-between w-full items-start">
 		<div
-			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all pb-1"
+			class="text-primary dark:text-secondary text-left break-before-auto font-semibold break-all pb-1 line-clamp-2"
 		>
 			{kanban.title}
 		</div>
@@ -334,7 +334,7 @@
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">
 			<button
-				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
+				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
 				on:click={() => {
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
@@ -342,11 +342,11 @@
 					}
 				}}
 			>
-				<Fa icon={faArrowLeft} size="1x" />
+				<Fa icon={faArrowLeft} size="sm" />
 			</button>
 
 			<button
-				class="cursor-pointer hover:text-gray-400 px-3 py-1 transition-all"
+				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
 				on:click={() => {
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);
@@ -354,7 +354,7 @@
 					}
 				}}
 			>
-				<Fa icon={faArrowRight} size="1x" />
+				<Fa icon={faArrowRight} size="sm" />
 			</button>
 		</div>
 	{/if}
@@ -508,25 +508,33 @@
 				<div class="text-left mt-1 w-full">
 					<p class="font-bold">{$_('Description')}</p>
 					<p
-						class="max-h-[25vh] overflow-scroll break-words w-full id={`kanban-${kanban.id}-description`}"
+						class="max-h-[25vh] overflow-y-auto break-words w-full id={`kanban-${kanban.id}-description`}"
 					>
 						{kanban?.description}
 					</p>
 				</div>
 			{/if}
 		</div>
-		<div slot="footer">
+		<div slot="footer" class="w-full flex gap-4">
 			{#if isEditing}
-				<Button buttonStyle="primary-light" action={updateKanbanContent}>{$_('Update')}</Button>
-				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
-					>{$_('Delete')}</Button
+				<Button Class="w-full py-1" buttonStyle="primary-light" action={updateKanbanContent}
+					>{$_('Update')}</Button
+				>
+				<Button
+					Class="w-full bg-red-500  py-1"
+					buttonStyle="warning-light"
+					action={() => (openModal = false)}>{$_('Cancel')}</Button
 				>
 			{:else}
-				<Button buttonStyle="primary-light" Class="px-2" action={() => (isEditing = true)}
-					>{$_('Edit')}</Button
+				<Button
+					Class="w-full py-1"
+					buttonStyle="primary-light"
+					action={() => (isEditing = true)}>{$_('Edit')}</Button
 				>
-				<Button buttonStyle="warning-light" action={deleteKanbanEntry} Class="bg-red-500"
-					>{$_('Delete')}</Button
+				<Button
+					Class="bg-red-500 w-full  py-1"
+					buttonStyle="warning-light"
+					action={deleteKanbanEntry}>{$_('Delete')}</Button
 				>
 			{/if}
 		</div>

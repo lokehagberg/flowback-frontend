@@ -59,7 +59,8 @@
 		let vote = {};
 		let regretting = userUpVote === _vote;
 
-		if (_vote === -1) vote = { vote: false };
+		if (regretting) vote = { vote: null };
+		else if (_vote === -1) vote = { vote: false };
 		else if (_vote === 1) vote = { vote: true };
 
 		let _api = '';

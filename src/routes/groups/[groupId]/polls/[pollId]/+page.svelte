@@ -193,6 +193,7 @@
 						<Button
 							Class="w-full absolute bottom-0"
 							buttonStyle="primary-light"
+							disabled={displayForm && !selectedProposal}
 							action={() => {
 								selectedProposal = null;
 								displayForm = true;

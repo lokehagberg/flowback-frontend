@@ -106,7 +106,9 @@
 	/>
 </div>
 
-<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+{#if isAdmin}
+	<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+{/if}
 
 <Loader bind:loading>
 	{#if isAdmin && invites?.length > 0}

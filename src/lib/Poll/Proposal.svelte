@@ -4,7 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+	import { faChevronRight, faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
 	import commentSymbol from '$lib/Assets/comment.svg';
@@ -88,9 +88,10 @@
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
-			class="hover:underline cursor-pointer"
+			class="hover:underline cursor-pointer flex gap-4 items-baseline"
 		>
 			{$_('See More')}
+			<Fa icon={faChevronRight} size="xs" />
 		</button>
 	</div>
 </button>

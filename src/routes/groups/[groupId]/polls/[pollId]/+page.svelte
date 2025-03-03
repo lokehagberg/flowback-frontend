@@ -129,7 +129,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center ext-primary font-semibold text-md"
-							>{$_('All proposals')} ({proposals?.length})</span
+							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
@@ -178,7 +178,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full relative">
 						<span class="text-center text-primary dark:text-secondary font-bold text-md"
-							>{$_('All proposals')} ({proposals?.length})</span
+							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
@@ -225,7 +225,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary dark:text-secondary font-bold text-md"
-							>{$_('All proposals')} ({proposals?.length})</span
+							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-full overflow-y-auto">
 							<ProposalScoreVoting
@@ -256,7 +256,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary dark:text-secondary font-bold text-md"
-							>{$_('All proposals')} ({proposals?.length})</span
+							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
@@ -286,7 +286,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
 						<span class="text-center text-primary dark:text-secondary font-bold text-md"
-							>{$_('All proposals')} ({proposals?.length})</span
+							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting

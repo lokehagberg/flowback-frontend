@@ -46,7 +46,8 @@
 				voting: false
 			}
 		},
-		version = '0.1.5';
+		version = '0.1.6',
+		serverConfig: any = {};
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -54,10 +55,17 @@
 		});
 	};
 
+	const getServerConfig = async () => {
+		const { res, json } = await fetchRequest('GET', 'server/config');
+		console.log(res, json, 'JSON FOR NOW');
+
+		if (!res.ok) return;
+
+		serverConfig = json;
+	};
+
 	const getUserConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
-
-		console.log(res, json, 'JSON');
 
 		if (res.ok && json.user_config) {
 			userConfig = JSON.parse(json.user_config);
@@ -81,6 +89,7 @@
 
 	onMount(() => {
 		getUserConfig();
+		getServerConfig();
 	});
 </script>
 
@@ -230,7 +239,8 @@
 						{/each}
 					</ul>
 				{:else if selectedPage === 'info'}
-					Version: {version}
+					<div>Version Frontend: {version}</div>
+					<div>Version Backennd: {serverConfig.GIT_HASH}</div>
 				{/if}
 			</ul>
 		</div>

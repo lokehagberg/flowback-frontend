@@ -103,7 +103,7 @@
 </script>
 
 {#if comment.being_edited}
-	<!-- <CommentPost
+	<CommentPost
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
@@ -112,7 +112,7 @@
 		parent_id={comment.parent_id}
 		id={comment.id}
 		{api}
-	/> -->
+	/>
 {:else}
 	<!-- class:bg-gray-100={comment.reply_depth % 2 === 1} -->
 	<!-- class:dark:bg-darkbackground={comment.reply_depth % 2 === 1} -->
@@ -207,13 +207,13 @@
 {/if}
 
 {#if comment.being_replied}
-	<!-- <CommentPost
+	<CommentPost
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}
 		parent_id={comment.id}
 		{api}
-	/> -->
+	/>
 {/if}
 
 <Poppup bind:poppup />

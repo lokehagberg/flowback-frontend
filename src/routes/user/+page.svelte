@@ -136,23 +136,6 @@
 		currentlyCroppingBanner = true;
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/delegate/pools?`
-		);
-
-		if (!res.ok) return;
-
-		const delegates = json.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-	};
-
 	let imageToBeCropped: any;
 
 	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview;
@@ -390,7 +373,9 @@
 		</form>
 	{/if}
 
-	<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
+	{#if $page.url.searchParams.get('delegate_id')}
+		<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
+	{/if}
 </Layout>
 
 <style>

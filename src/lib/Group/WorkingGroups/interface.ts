@@ -8,6 +8,7 @@ export interface WorkGroup {
 	work_group_id:number;
 	member_count:number;
 	total_page:number;
+	joined:boolean
 	next:string;
 	previous:string
 }

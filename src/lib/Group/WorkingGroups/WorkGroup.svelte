@@ -10,7 +10,6 @@
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
-	import Select from '$lib/Generic/Select.svelte';
 
 	export let workGroup: WorkGroup, handleRemoveGroup: (id: number) => void;
 
@@ -105,7 +104,7 @@
 	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
 
 	{#key workGroupUserList}
-		{#if isMember()}
+		{#if workGroup.joined}
 			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
 				>{$_('Leave')}</Button
 			>

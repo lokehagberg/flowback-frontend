@@ -228,14 +228,14 @@
 			<div class="dark:text-darkmodeText py-6">
 				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
 				<a class={``} href={user.website || $_('None provided')}>
-					{$_("Website")}: {user.website || ''}
+					{$_('Website')}: {user.website || ''}
 				</a>
 				<!-- <div>Phone number</div> -->
 				<p class="">
-					{$_("Phone number")}: {user.contact_phone || $_('None provided')}
+					{$_('Phone number')}: {user.contact_phone || $_('None provided')}
 				</p>
 				<p class="">
-					{$_("E-mail")}: {user.contact_email || $_('None provided')}
+					{$_('E-mail')}: {user.contact_email || $_('None provided')}
 				</p>
 			</div>
 		</div>
@@ -390,7 +390,7 @@
 		</form>
 	{/if}
 
-	<History history={62} groupId={1} />
+	<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
 </Layout>
 
 <style>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import Tab from '$lib/Generic/Tab.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -19,7 +18,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
+	import type { Delegate } from './Delegation/interfaces';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -31,13 +30,15 @@
 		searchedUsers: GroupUser[] = [],
 		poppup: poppup,
 		showInvite = false,
-		searched = false;
+		searched = false,
+		delegates: Delegate[] = [];
 
 	onMount(async () => {
 		getUsers();
 
 		getInvitesList();
 		searchUsers('');
+		getDelegatePools();
 
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
@@ -118,6 +119,23 @@
 			to: userId
 		});
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+	};
+
+	/*
+		Temporary fix to make each delegate pool be associated with one user.
+		TODO: Implement delegate pool feature in the front end (Figma design first)
+	*/
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?limit=1000`
+		);
+
+		if (!res.ok) return;
+
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
 	};
 </script>
 
@@ -230,8 +248,12 @@
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each searchedUsers as user}
+				{@const delegationId = delegates.find((delegate) => delegate.user.id === user.user.id)?.pool_id}
 					<div class="flex items-center">
-						<button on:click={() => goto(`/user?id=${user.user.id}`)} Class="w-[30%]">
+						<button
+							on:click={() => goto(`/user?id=${user.user.id}&delegate_id=${delegationId || ''}`)}
+							Class="w-[30%]"
+						>
 							<ProfilePicture
 								Class=""
 								username={user.user.username}

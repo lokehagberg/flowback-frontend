@@ -7,6 +7,7 @@
 	import { faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import Button from '$lib/Generic/Button.svelte';
+	import commentSymbol from '$lib/Assets/comment.svg';
 
 	export let proposal: proposal,
 		Class = '',
@@ -21,8 +22,10 @@
 	export const id: number = 0;
 
 	const filterComments = () => {
-		//@ts-ignore
-		comments = comments.filter((comment) => !comment.message.includes(`#${proposal.title.replaceAll(" ", "-")}`));
+		comments = comments.filter(
+			//@ts-ignore
+			(comment) => !comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
+		);
 	};
 
 	onMount(() => {
@@ -63,7 +66,8 @@
 			{/if}
 		{/if}
 		<!-- Proposal Title -->
-		<span class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-all"
+		<span
+			class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-all"
 			>{proposal.title}</span
 		>
 	</div>
@@ -75,9 +79,11 @@
 	<slot />
 
 	<div class="flex justify-between w-full">
-		<Button action={filterComments} Class="my-auto">
-			<Fa icon={faComment} />
-		</Button>
+		<button class="flex" on:click={filterComments}>
+			<img src={commentSymbol} alt="Comment" class="w-6 h-6" />
+			{comments.filter((comment) => comment.parent_id === null).length}
+		</button>
+
 		<button
 			on:click={() => {
 				selectedProposal = proposal;

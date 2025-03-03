@@ -25,7 +25,8 @@
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
-		poppup: poppup;
+		poppup: poppup,
+		isVoting = false;  // Add loading state
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
@@ -52,37 +53,49 @@
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
-		let vote = {};
-		let regretting = userUpVote === _vote;
+		if (isVoting) return; // Prevent multiple clicks while processing
+		isVoting = true;
 
-		// if (regretting) vote = null;
-		if (_vote === -1) vote = { vote: false };
-		else if (_vote === 1) vote = { vote: true };
+		try {
+			let vote = {};
+			let regretting = userUpVote === _vote;
 
-		let _api = '';
-		if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
-		else if (api === 'thread')
-			_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
+			if (_vote === -1) vote = { vote: false };
+			else if (_vote === 1) vote = { vote: true };
 
-		const { res, json } = await fetchRequest('POST', _api, vote);
+			let _api = '';
+			if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
+			else if (api === 'thread')
+				_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
 
-		if (!res.ok) {
-			poppup = { message: 'Comment vote failed', success: false };
-			return;
-		}
+			const { res, json } = await fetchRequest('POST', _api, vote);
 
-		if (regretting) {
-			userUpVote = 0;
-			comment.user_vote = null;
-			if (_vote === 1) comment.score += -1;
-			else if (_vote === -1) comment.score += 1;
-		} else {
-			userUpVote = _vote;
-			if (comment.score !== 0) comment.score += 2 * _vote;
-			else comment.score += _vote;
+			if (!res.ok) {
+				poppup = { message: 'Comment vote failed', success: false };
+				return;
+			}
 
-			if (_vote === -1) comment.user_vote = false;
-			else if (_vote === 1) comment.user_vote = true;
+			// Only update UI after successful API call
+			if (regretting) {
+				userUpVote = 0;
+				comment.user_vote = null;
+				if (_vote === 1) comment.score -= 1;
+				else if (_vote === -1) comment.score += 1;
+			} else {
+				if (userUpVote !== 0) {
+					// If changing vote from up to down or vice versa
+					comment.score += 2 * _vote;
+				} else {
+					comment.score += _vote;
+				}
+				userUpVote = _vote;
+				comment.user_vote = _vote === 1;
+			}
+		} finally {
+			// Add small delay before allowing next vote
+			setTimeout(() => {
+				isVoting = false;
+			}, 300);
 		}
 	};
 

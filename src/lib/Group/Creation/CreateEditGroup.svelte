@@ -60,8 +60,6 @@
 		if (image) formData.append('image', await blobifyImages(image));
 		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
 
-		console.log(groupToEdit, 'EDITABLE');
-
 		let api = groupToEdit ? `group/${groupToEdit}/update` : 'group/create';
 		const { res, json } = await fetchRequest('POST', api, formData, true, false);
 

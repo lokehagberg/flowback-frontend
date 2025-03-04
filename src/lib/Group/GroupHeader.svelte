@@ -26,7 +26,7 @@
 	];
 </script>
 
-<div class="bg-white dark:bg-darkobject">
+<div class="bg-white dark:bg-darkobject w-full max-w-[120rem]">
 	<div class="relative">
 		<div class="relative">
 			<img

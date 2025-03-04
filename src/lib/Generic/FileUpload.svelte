@@ -10,7 +10,6 @@
 		Class = '',
 		iconSize = '5x',
 		imageString: string | null = null,
-		shouldCrop: boolean = true,
 		minimalist = false,
 		onCrop = () => {},
 		disableImagePreview = false,
@@ -24,7 +23,11 @@
 		imageString = URL.createObjectURL(croppedImage);
 		if (disableCropping) currentlyCropping = true;
 		else onCrop();
-	};
+	};  
+
+	$: if (imageString) {
+		currentlyCropping = true
+	}
 </script>
 
 <div class={`image-upload ${Class}`}>
@@ -65,7 +68,7 @@
 	/>
 </div>
 
-{#if currentlyCropping && shouldCrop}
+{#if currentlyCropping}
 	<CropperModal
 		confirmAction={() => {
 			currentlyCropping = false;

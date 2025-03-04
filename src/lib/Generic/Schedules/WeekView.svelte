@@ -66,8 +66,6 @@
 		
 	};
 
-	$: 		console.log(votes, selectedDates);
-
 	const saveSelection = async () => {
 		const array = selectedDates.map(async (date) => {
 			const start_date = date;
@@ -131,7 +129,7 @@
 		selectedDates = [];
 	};
 
-	function getMondayForOffset(offset: number): Date {
+	const getMondayForOffset = (offset: number): Date => {
 		const today = new Date();
 		const todayDay = today.getDay();
 		const daysSinceMonday = todayDay === 0 ? 6 : todayDay - 1; // Söndag är 0
@@ -141,7 +139,7 @@
 		return monday;
 	}
 
-	function getWeekDates(monday: Date): Date[] {
+	const getWeekDates = (monday: Date): Date[] => {
 		return Array.from({ length: 7 }, (_, i) => {
 			const date = new Date(monday);
 			date.setDate(monday.getDate() + i);
@@ -149,7 +147,7 @@
 		});
 	}
 
-	function getMonthAndYear(weekDates: Date[]): { month: string; year: number } {
+	const getMonthAndYear = (weekDates: Date[]): { month: string; year: number } => {
 		const middleOfWeek = weekDates[3];
 		return {
 			month: months[middleOfWeek.getMonth()],
@@ -157,27 +155,19 @@
 		};
 	}
 
-	$: {
-		const monday = getMondayForOffset(weekOffset);
-		weekDates = getWeekDates(monday);
-		const { month, year } = getMonthAndYear(weekDates);
-		currentMonth = month;
-		currentYear = year;
-	}
-
-	function prevWeek() {
+	const prevWeek = () => {
 		weekOffset--;
 	}
 
-	function nextWeek() {
+	const nextWeek = () => {
 		weekOffset++;
 	}
 
-	function isSelected(date: Date) {
+	const isSelected = (date: Date) => {
 		return selectedDates.find((_date) => _date?.getTime() === date?.getTime())
 	}
 
-	function toggleDate(date: Date) {
+	const toggleDate = (date: Date) => {
 		if (isSelected(date)) {
 			selectedDates = selectedDates.filter(d => d.getTime() !== date.getTime());
 		} else {
@@ -190,6 +180,16 @@
 		getProposalVote();
 		initialMonday = getRecentMonday(new Date());
 	});
+
+	$: console.log(votes, selectedDates);
+
+	$: {
+		const monday = getMondayForOffset(weekOffset);
+		weekDates = getWeekDates(monday);
+		const { month, year } = getMonthAndYear(weekDates);
+		currentMonth = month;
+		currentYear = year;
+	}
 
 	$: monday = getRecentMonday(
 		new Date(

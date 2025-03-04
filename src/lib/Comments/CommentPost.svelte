@@ -36,8 +36,6 @@
 	};
 
 	const commentCreate = async () => {
-		console.log(api, "APIAAIA");
-		
 		const formData = new FormData();
 		formData.append('message', message);
 		//@ts-ignore
@@ -55,49 +53,51 @@
 			true,
 			false
 		);
-		if (res.ok) {
-			let newComment: Comment = {
-				user_vote: true,
-				active: true,
-				author_id: Number(window.localStorage.getItem('userId')) || 0,
-				author_name: window.localStorage.getItem('userName') || '',
-				being_edited: false,
-				being_replied: false,
-				score: 1,
-				edited: false,
-				attachments: images.map((image) => {
-					return { file: URL.createObjectURL(image) };
-				}),
-				message,
-				id: json,
-				parent_id,
-				author_profile_image: window.localStorage.getItem('pfp-link') || '',
-				being_edited_message: '',
-				reply_depth: 0
-			};
 
-			newComment.reply_depth = getCommentDepth(newComment, comments);
+		if (!res.ok) return;
 
-			const i = comments.findIndex((comment) => comment.id === parent_id);
-			comments.splice(i + 1, 0, newComment);
+		let newComment: Comment = {
+			user_vote: true,
+			active: true,
+			author_id: Number(window.localStorage.getItem('userId')) || 0,
+			author_name: window.localStorage.getItem('userName') || '',
+			being_edited: false,
+			being_replied: false,
+			score: 1,
+			edited: false,
+			attachments: images.map((image) => {
+				return { file: URL.createObjectURL(image) };
+			}),
+			message,
+			id: json,
+			parent_id,
+			author_profile_image: window.localStorage.getItem('pfp-link') || '',
+			being_edited_message: '',
+			reply_depth: comments.find((comment) => comment.id === parent_id)?.reply_depth || 0
+		};
 
-			comments = comments;
+		console.log(message, 'message');
 
-			console.log(comments, newComment);
+		newComment.reply_depth = getCommentDepth(newComment, comments);
 
-			// comments = await commentSetup(comments);
-			showMessage = 'Successfully posted comment';
-			show = true;
-			message = '';
+		const i = comments.findIndex((comment) => comment.id === parent_id);
 
-			subscribeToReplies();
-		}
+		comments.splice(i + 1, 0, newComment);
+
+		comments = comments;
+		console.log(comments, 'comments');
+
+		// comments = await commentSetup(comments);
+		showMessage = 'Successfully posted comment';
+		show = true;
+		message = '';
+
+		subscribeToReplies();
+
 		replying = false;
 	};
 
 	const commentUpdate = async () => {
-		console.log('Commenting Updating', getId(), id, delegate_pool_id);
-
 		const { res, json } = await fetchRequest('POST', `group/${getId()}/comment/${id}/update`, {
 			message
 		});

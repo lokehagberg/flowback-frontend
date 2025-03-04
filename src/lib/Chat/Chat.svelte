@@ -83,7 +83,9 @@
 		</div>
 	</Button>
 
-	<Button
+	<!-- TODO: This will link to Chat settings once that has been implemented -->
+
+	<!-- <Button
 		action={() => {
 			chatOpen = false;
 			isChatOpen.set(false);
@@ -94,7 +96,7 @@
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faCog} />
 		</div>
-	</Button>
+	</Button> -->
 
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-8 ml-6 dark:bg-darkobject p-2">

@@ -239,11 +239,11 @@
 	const onFilterWorkGroup = (workGroup: WorkGroup) => {
 		//Once backend is fixed, use the commented out version
 
-		// if (workGroupFilter.find((groupId) => groupId === workGroup.id))
-		// 	workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
-		// else workGroupFilter.push(workGroup.id);
+		if (workGroupFilter.find((groupId) => groupId === workGroup.id))
+			workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
+		else workGroupFilter.push(workGroup.id);
 
-		workGroupFilter = [workGroup.id];
+		// workGroupFilter = [workGroup.id];
 
 		workGroupFilter = workGroupFilter;
 

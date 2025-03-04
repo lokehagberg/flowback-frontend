@@ -57,10 +57,8 @@
 
 	$: if (sortBy || !sortBy || searchString) setUpComments();
 	$: if (_comments) {
-
-
 		done = false;
-		console.log('changed comments');
+		console.log('changed comments', _comments);
 	}
 </script>
 

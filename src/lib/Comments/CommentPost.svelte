@@ -78,23 +78,39 @@
 
 		console.log(message, 'message');
 
-		newComment.reply_depth = getCommentDepth(newComment, comments);
+		// Find the index where to insert the new reply
+		let insertIndex;
+		if (parent_id) {
+			// Find the last reply in the chain for this parent
+			let parentIndex = comments.findIndex(c => c.id === parent_id);
+			let replyDepth = comments[parentIndex].reply_depth + 1;
+			
+			// Find the last comment in the reply chain
+			insertIndex = parentIndex + 1;
+			while (
+				insertIndex < comments.length && 
+				comments[insertIndex].reply_depth > comments[parentIndex].reply_depth
+			) {
+				insertIndex++;
+			}
 
-		const i = comments.findIndex((comment) => comment.id === parent_id);
+			newComment.reply_depth = replyDepth;
+		} else {
+			// If it's a top-level comment, add it to the beginning
+			insertIndex = 0;
+			newComment.reply_depth = 0;
+		}
 
-		comments.splice(i + 1, 0, newComment);
-
+		// Insert the new comment at the correct position
+		comments.splice(insertIndex, 0, newComment);
 		comments = comments;
-		console.log(comments, 'comments');
 
-		// comments = await commentSetup(comments);
 		showMessage = 'Successfully posted comment';
 		show = true;
 		message = '';
+		replying = false;
 
 		subscribeToReplies();
-
-		replying = false;
 	};
 
 	const commentUpdate = async () => {

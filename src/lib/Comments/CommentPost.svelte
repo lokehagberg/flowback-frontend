@@ -82,13 +82,13 @@
 		let insertIndex;
 		if (parent_id) {
 			// Find the last reply in the chain for this parent
-			let parentIndex = comments.findIndex(c => c.id === parent_id);
+			let parentIndex = comments.findIndex((c) => c.id === parent_id);
 			let replyDepth = comments[parentIndex].reply_depth + 1;
-			
+
 			// Find the last comment in the reply chain
 			insertIndex = parentIndex + 1;
 			while (
-				insertIndex < comments.length && 
+				insertIndex < comments.length &&
 				comments[insertIndex].reply_depth > comments[parentIndex].reply_depth
 			) {
 				insertIndex++;

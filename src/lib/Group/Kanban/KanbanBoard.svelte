@@ -60,7 +60,7 @@
 		let api = `group/${groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
 		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
-		if (filter.workgroup) api += `&work_group_id=${filter.workgroup}`;
+		if (filter.workgroup) api += `&work_group_ids=${filter.workgroup}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);

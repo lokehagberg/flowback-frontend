@@ -8,7 +8,7 @@
 		phase: Phase;
 
 	let genericStyle =
-		'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
+		'bg-white dark:bg-darkobject dark:text-darkmodeText p-4 h-[100%] h-full rounded shadow-md';
 
 	onMount(() => {});
 </script>

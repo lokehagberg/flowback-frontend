@@ -11,6 +11,7 @@
 	import { page } from '$app/stores';
 	import Loader from '../Loader.svelte';
 	import type { timeProposal } from '$lib/Poll/interface';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let x = 10,
 		y = 10;
@@ -19,12 +20,14 @@
 
 	let selectedDates: Date[] = [],
 		weekOffset: number = 0,
-		year: number = new Date().getFullYear(),
 		initialMonday: Date,
 		monday: Date,
 		loading = false,
 		proposals: timeProposal[],
-		votes: number[];
+		votes: number[],
+		weekDates: Date[] = [],
+		currentMonth = '',
+		currentYear = 0;
 
 	const getRecentMonday = (d: Date) => {
 		let mondayOffset = d.getDate() - d.getDay() + 1;
@@ -33,14 +36,14 @@
 		return new Date(d.getFullYear(), month, mondayOffset);
 	};
 
-	const toggleDate = (date: Date) => {
-		const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime());
-		if (before)
-			selectedDates = selectedDates.filter((_date) => _date?.getTime() !== date?.getTime());
-		else selectedDates.push(date);
+	// const toggleDate = (date: Date) => {
+	// 	const before = selectedDates.find((_date) => _date?.getTime() === date?.getTime());
+	// 	if (before)
+	// 		selectedDates = selectedDates.filter((_date) => _date?.getTime() !== date?.getTime());
+	// 	else selectedDates.push(date);
 
-		selectedDates = selectedDates;
-	};
+	// 	selectedDates = selectedDates;
+	// };
 
 	const getProposals = async () => {
 		const { res, json } = await fetchRequest(
@@ -62,8 +65,6 @@
 
 		
 	};
-
-	$: 		console.log(votes, selectedDates);
 
 	const saveSelection = async () => {
 		const array = selectedDates.map(async (date) => {
@@ -118,11 +119,77 @@
 		return _date.getDate();
 	};
 
+	const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+	const months = [
+		'January', 'February', 'March', 'April', 'May', 'June',
+		'July', 'August', 'September', 'October', 'November', 'December'
+	];
+
+	const clearSelection = () => {
+		selectedDates = [];
+	};
+
+	const getMondayForOffset = (offset: number): Date => {
+		const today = new Date();
+		const todayDay = today.getDay();
+		const daysSinceMonday = todayDay === 0 ? 6 : todayDay - 1; // Söndag är 0
+		const monday = new Date(today);
+		monday.setDate(today.getDate() - daysSinceMonday + offset * 7);
+		monday.setHours(0, 0, 0, 0);
+		return monday;
+	}
+
+	const getWeekDates = (monday: Date): Date[] => {
+		return Array.from({ length: 7 }, (_, i) => {
+			const date = new Date(monday);
+			date.setDate(monday.getDate() + i);
+			return date;
+		});
+	}
+
+	const getMonthAndYear = (weekDates: Date[]): { month: string; year: number } => {
+		const middleOfWeek = weekDates[3];
+		return {
+			month: months[middleOfWeek.getMonth()],
+			year: middleOfWeek.getFullYear(),
+		};
+	}
+
+	const prevWeek = () => {
+		weekOffset--;
+	}
+
+	const nextWeek = () => {
+		weekOffset++;
+	}
+
+	const isSelected = (date: Date) => {
+		return selectedDates.find((_date) => _date?.getTime() === date?.getTime())
+	}
+
+	const toggleDate = (date: Date) => {
+		if (isSelected(date)) {
+			selectedDates = selectedDates.filter(d => d.getTime() !== date.getTime());
+		} else {
+			selectedDates = [...selectedDates, date];
+		}
+	}
+
 	onMount(() => {
 		getProposals();
 		getProposalVote();
 		initialMonday = getRecentMonday(new Date());
 	});
+
+	$: console.log(votes, selectedDates);
+
+	$: {
+		const monday = getMondayForOffset(weekOffset);
+		weekDates = getWeekDates(monday);
+		const { month, year } = getMonthAndYear(weekDates);
+		currentMonth = month;
+		currentYear = year;
+	}
 
 	$: monday = getRecentMonday(
 		new Date(
@@ -140,53 +207,53 @@
 	);
 </script>
 
-<!-- <button on:click={() => year++}>year up</button>
-<button on:click={() => year--}>year down</button> -->
-<button on:click={() => weekOffset--}><Fa icon={faChevronLeft} /></button>
-<button on:click={() => weekOffset++}><Fa icon={faChevronRight} /></button>
-<button on:click={saveSelection}>{$_('Submit')}</button>
-
-{year}
-{weekOffset}
-{selectedDates.length}
-
-<Loader bind:loading>
-	{#key weekOffset}
-		{#key monday}
+	<Loader bind:loading Class="flex flex-col">
+		<div class="flex items-center justify-between border-b border-gray-300 py-1 px-4">
+			<button on:click={prevWeek}><Fa icon={faChevronLeft} /></button>
+			{currentMonth} {currentYear}
+			<button on:click={nextWeek}><Fa icon={faChevronRight} /></button>
+		</div>
+			
+		<div class="relative w-full">
+			
 			<div
-				class="grid calendar text-xs"
+				class="grid w-full text-sm text-center h-[500px] overflow-y-auto overflow-x-hidden"
 				style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${
 					y + 1
 				}, 1fr);`}
 				id="weekView"
 			>
-				<div />
-				<div>{$_('Monday')} {monday.getDate()}</div>
-				<div>{$_('Tuesday')} {dateOffset(1)}</div>
-				<div>{$_('Wednesday')} {dateOffset(2)}</div>
-				<div>{$_('Thursday')} {dateOffset(3)}</div>
-				<div>{$_('Friday')} {dateOffset(4)}</div>
-				<div>{$_('Saturday')} {dateOffset(5)}</div>
-				<div>{$_('Sunday')} {dateOffset(6)}</div>
-				{#each gridDates as row, j}
-					<div class="bg-primary text-white items-center flex justify-center">{j}</div>
-					{#each row as date, i}
-						<button class="border h-24 w-24" on:click={() => toggleDate(date)}>
-							{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
-								<div class="bg-green-600 h-full w-full flex items-center justify-center">
-									<Fa icon={faCheck} color="white" size="3x" />
-								</div>
-							{:else}
-								<slot {i} {j} />
-							{/if}
-						</button>
-					{/each}
-				{/each}
-			</div>
-		{/key}
-	{/key}
-</Loader>
+			<div></div>
+			{#each weekDates as date, i}
+				<div class="flex flex-col items-center">
+					<div class="font-semibold pt-2">{date.getDate()}</div>
+					<div class="text-gray-600">{$_(weekdays[i])}</div>
+				</div>
+			{/each}
 
+			{#each gridDates as row, j}
+				<div class="bg-primary text-white items-center flex justify-center px-0.5">{j}</div>
+				{#each row as date, i}
+					<button class="border h-12 w-24" on:click={() => toggleDate(date)}>
+						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}
+							<div class="bg-green-600 h-full w-full flex items-center justify-center">
+								<Fa icon={faCheck} color="white" size="2x" />
+							</div>
+						{:else}
+							<slot {i} {j} />
+						{/if}
+					</button>
+				{/each}
+			{/each}
+		</div>
+
+		<div class="pt-4 px-4 border-t flex gap-4 bg-white">
+			<Button onClick={saveSelection} buttonStyle="primary-light" Class="flex-1">{$_('Submit')}</Button>
+			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1">{$_('Cancel')}</Button>
+		</div>
+	</Loader>
+	
+	
 <style>
 	.calendar {
 		display: grid;

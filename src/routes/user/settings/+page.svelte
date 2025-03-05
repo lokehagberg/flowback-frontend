@@ -14,7 +14,7 @@
 	import { onMount } from 'svelte';
 	import { configToReadable } from '$lib/utils/configToReadable';
 
-	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'notifications',
+	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'profile',
 		optionsDesign =
 			'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all',
 		userConfig = {

@@ -10,6 +10,10 @@
 	const request = async (api: string) => {
 		const { res, json } = await fetchRequest('GET', api);
 
+		console.log(res, json, api, 'Pagination');
+
+		if (!res.ok) return;
+
 		next = json.next;
 		prev = json.previous;
 		iterable = json.results;

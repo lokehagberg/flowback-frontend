@@ -98,16 +98,17 @@
 	};
 
 	const scheduleEventCreate = async () => {
-		console.log("hiiiiii");
-		
+		console.log('hiiiiii');
+
 		let API = '';
 		let payload: any = {
 			start_date,
 			end_date,
 			title,
-			description,
-			meeting_link
+			description
 		};
+
+		if (meeting_link !== '') payload['meeting_link'] = meeting_link;
 
 		if (description === '') delete payload.description;
 

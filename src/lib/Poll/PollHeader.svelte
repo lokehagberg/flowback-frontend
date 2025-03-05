@@ -59,7 +59,7 @@
 				: [$_('Delete Poll'), $_('Fast Forward')]}
 			functions={[
 				() => (deletePollModalShow = true),
-				async () => (phase = await nextPhase(pollType, $page.params.pollId, phase))
+				async () => (phase = await nextPhase(poll.poll_type, $page.params.pollId, phase))
 			]}
 			Class="justify-self-center mt-2"
 		/>

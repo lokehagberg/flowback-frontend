@@ -1,4 +1,5 @@
 import { fetchRequest } from '$lib/FetchRequest';
+import { _ } from 'svelte-i18n';
 import type { Phase, poll } from './interface';
 
 
@@ -88,20 +89,22 @@ export const getGroupInfo = async (id: number | string) => {
 
 
 export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
+
+	
 	console.log(pollType, pollId, phase, "POLL INFORMATION");
 
 	if (phase === 'result' || phase === "prediction_vote") return 'prediction_vote';
 	pollId = Number(pollId);
 	let _phase: Phase = 'area_vote';
 
-	if (pollType === 3) {
+	if (pollType === 4) {
 		if (phase === 'area_vote') _phase = 'proposal';
 		else if (phase === 'proposal') _phase = 'prediction_statement';
 		else if (phase === 'prediction_statement') _phase = 'prediction_bet';
 		else if (phase === 'prediction_bet') _phase = 'delegate_vote';
 		else if (phase === 'delegate_vote') _phase = 'vote';
 		else if (phase === 'vote') _phase = 'prediction_vote';
-	} else if (pollType === 4) _phase = 'result';
+	} else if (pollType === 3) _phase = 'result';
 
 	const { res, json } = await fetchRequest(
 		'POST',
@@ -111,5 +114,7 @@ export const nextPhase = async (pollType: number, pollId: string | number, phase
 		}
 	);
 
+	console.log(_phase, 'PHASE');
+	
 	return _phase
 };

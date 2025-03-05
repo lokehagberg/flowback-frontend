@@ -34,17 +34,17 @@
 
 <Loader bind:loading>
 	<div class="border-t-2">
-		<div class="text-gray-500 text-sm py-2">{$_('Predictions')}({predictions.length})</div>
+		<div class="text-gray-500 text-sm pt-3 font-semibold">{$_('Predictions')}({predictions.length})</div>
 		{#key selectedProposal}
 		{#each predictions as prediction}
 			<div
-				class="border-b-2 flex flex-col break-all"
+				class="border-b-2 flex flex-col break-all py-2 gap-1"
 				class:select-none={phase === 'prediction_bet'}
 			>
 				<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
 				<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 				{#if prediction.description}
-					<Description description={prediction.description} limit={30} />
+					<Description description={prediction.description} limit={130} />
 				{/if}
 				{#if phase === 'delegate_vote' || phase === 'vote'}
 					<span class="text-sm text-right"

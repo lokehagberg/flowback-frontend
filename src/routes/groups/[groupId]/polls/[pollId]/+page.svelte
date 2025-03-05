@@ -128,10 +128,10 @@
 			{:else if phase === 'proposal'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center ext-primary font-semibold text-md"
+						<span class="text-xl font-semibold mb-4 ml-3 text-primary dark:text-secondary"
 							>{$_('Proposals')} ({proposals?.length})</span
 						>
-						<div class="h-[90%] overflow-y-auto">
+						<div class="h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:comments
 								bind:proposals
@@ -141,7 +141,7 @@
 							/>
 						</div>
 						<Button
-							Class="w-full"
+							Class="w-full mt-2"
 							buttonStyle="primary-light"
 							action={() => {
 								selectedProposal = null;
@@ -151,12 +151,14 @@
 					</div>
 					<div slot="right" class="relative h-full">
 						{#if selectedProposal}
-							<span class="text-primary dark:text-secondary font-semibold block break-words">
-								{selectedProposal.title}</span
-							>
-							<span class="break-words">
-								{selectedProposal.description}
-							</span>
+							<div class="flex flex-col space-y-2 p-2">
+								<span class="text-primary text-lg dark:text-secondary font-semibold block break-words">
+									{selectedProposal.title}</span
+								>
+								<span class="break-words">
+									{selectedProposal.description}
+								</span>
+							</div>
 							{#if selectedProposal.attachments}
 								<div>
 									{#each selectedProposal.attachments as file}
@@ -177,7 +179,7 @@
 			{:else if phase === 'prediction_statement'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full relative">
-						<span class="text-center text-primary dark:text-secondary font-bold text-md"
+						<span class="text-xl font-semibold mb-4 ml-3 text-primary dark:text-secondary"
 							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[80%] overflow-y-auto">
@@ -191,7 +193,7 @@
 							/>
 						</div>
 						<Button
-							Class="w-full absolute bottom-0"
+							Class="w-full absolute bottom-0 mt-2"
 							buttonStyle="primary-light"
 							disabled={displayForm && !selectedProposal}
 							action={() => {
@@ -202,15 +204,17 @@
 					</div>
 					<div slot="right" class="relative h-full overflow-hidden">
 						{#if selectedProposal}
-							<div class="font-semibold text-primary dark:text-secondary text-lg">
-								{selectedProposal.title}
+							<div class="flex flex-col space-y-2 p-2">
+								<div class="font-semibold text-primary dark:text-secondary text-lg">
+									{selectedProposal.title}
+								</div>
+								<Description description={selectedProposal.description} limit={130} />
+								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
-							<Description description={selectedProposal.description} limit={30} />
-							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{:else if displayForm}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />
 						{:else if proposalsToPredictionMarket.length === 0}
-							<span class="text-center block text-primary dark:text-secondary font-semibold">
+							<span class="text-center block text-primary dark:text-secondary font-semibold pt-4">
 								{$_('To make a prediction, please select atleast one proposal')}
 							</span>
 						{/if}
@@ -224,7 +228,7 @@
 			{:else if phase === 'prediction_bet'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center text-primary dark:text-secondary font-bold text-md"
+						<span class="text-xl font-semibold mb-4 ml-3 text-primary dark:text-secondary"
 							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-full overflow-y-auto">
@@ -239,11 +243,13 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<div class="font-semibold text-primary dark:text-secondary text-lg">
-								{selectedProposal.title}
+							<div class="flex flex-col space-y-2 p-2">
+								<div class="font-semibold text-primary dark:text-secondary text-lg">
+									{selectedProposal.title}
+								</div>
+								<Description description={selectedProposal.description} limit={130} />
+								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
-							<Description description={selectedProposal.description} limit={30} />
-							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
 					<div slot="bottom">
@@ -255,7 +261,7 @@
 			{:else if phase === 'delegate_vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center text-primary dark:text-secondary font-bold text-md"
+						<span class="text-xl font-semibold mb-4 ml-3 text-primary dark:text-secondary"
 							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
@@ -270,11 +276,13 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<div class="font-semibold text-primary dark:text-secondary text-lg">
-								{selectedProposal.title}
+							<div class="flex flex-col space-y-2 p-2">
+								<div class="font-semibold text-primary dark:text-secondary text-lg">
+									{selectedProposal.title}
+								</div>
+								<Description description={selectedProposal.description} limit={130} />
+								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
-							<Description description={selectedProposal.description} limit={30} />
-							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
 					<div slot="bottom">
@@ -285,7 +293,7 @@
 			{:else if phase === 'vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full">
-						<span class="text-center text-primary dark:text-secondary font-bold text-md"
+						<span class="text-xl font-semibold mb-4 ml-3 text-primary dark:text-secondary"
 							>{$_('Proposals')} ({proposals?.length})</span
 						>
 						<div class="max-h-[90%] overflow-y-auto">
@@ -300,11 +308,13 @@
 					</div>
 					<div slot="right">
 						{#if selectedProposal}
-							<div class="font-semibold text-primary dark:text-secondary text-lg">
-								{selectedProposal.title}
+							<div class="flex flex-col space-y-2 p-2">
+								<div class="font-semibold text-primary dark:text-secondary text-lg">
+									{selectedProposal.title}
+								</div>
+								<Description description={selectedProposal.description} limit={130} />
+								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
-							<Description description={selectedProposal.description} limit={30} />
-							<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 						{/if}
 					</div>
 					<div slot="bottom">

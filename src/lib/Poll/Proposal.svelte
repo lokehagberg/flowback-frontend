@@ -34,7 +34,7 @@
 </script>
 
 <button
-	class={`dark:bg-darkobject bg-white w-full py-1 px-2 transition-all
+	class={`dark:bg-darkobject bg-white w-full py-3 px-3 transition-all
 	 dark:border-gray-500 ${Class}`}
 	class:!bg-blue-100={selectedProposal === proposal}
 	class:border-l-2={selectedProposal === proposal}
@@ -80,7 +80,7 @@
 
 	<div class="flex justify-between w-full">
 		<button class="flex" on:click={filterComments}>
-			<img src={commentSymbol} alt="Comment" class="w-6 h-6" />
+			<img src={commentSymbol} alt="Comment" class="w-6 h-6 mr-2" />
 			{comments.filter((comment) => comment.parent_id === null).length}
 		</button>
 

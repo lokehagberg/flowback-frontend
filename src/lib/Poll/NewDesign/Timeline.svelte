@@ -20,7 +20,8 @@
 		dates: Date[] = [],
 		pollType: number,
 		poll: poll,
-		phase: Phase;
+		phase: Phase,
+		horizontal = false;
 
 	let datesArray: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,

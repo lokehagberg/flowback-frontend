@@ -5,7 +5,7 @@
 
 	export let poll: poll | null = null,
 		Class = '',
-		phase: Phase;
+		phase: Phase = "area_vote";
 
 	let genericStyle =
 		'bg-white dark:bg-darkobject dark:text-darkmodeText p-4 h-[100%] h-full rounded shadow-md';

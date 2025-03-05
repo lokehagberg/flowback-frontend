@@ -20,23 +20,13 @@
 		dates: Date[] = [],
 		pollType: number,
 		poll: poll,
-		phase:Phase;
+		phase: Phase;
 
 	let datesArray: string[] = [],
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
-
-	onMount(() => {
-		setupDates();
-	});
-
-	$: if (phase) {
-		dates[currentPhaseIndex] = dates[currentPhaseIndex - 1]
-		currentPhaseIndex++;
-		setupDates();
-	}
 
 	const setupDates = () => {
 		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
@@ -62,9 +52,16 @@
 			datesArray[i] = formatDate(date.toString());
 		});
 	};
+
+	onMount(() => {
+		setupDates();
+	});
+
+	$: if (phase) {
+		setupDates();
+	}
 </script>
 
-{#key phase}
 <div class={`relative flex flex-col items-center ${Class}`}>
 	<div class="text-center">
 		<span class="font-semibold text-primary dark:text-secondary">
@@ -126,4 +123,3 @@
 		</button>
 	{/if}
 </div>
-{/key}

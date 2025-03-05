@@ -5,7 +5,7 @@
 
 	export let poll: poll | null = null,
 		Class = '',
-		phase: Phase = "area_vote";
+		phase: Phase = 'area_vote';
 
 	let genericStyle =
 		'bg-white dark:bg-darkobject dark:text-darkmodeText p-4 h-[100%] h-full rounded shadow-md';
@@ -21,8 +21,8 @@
 	{#if poll}
 		<Timeline
 			bind:phase
-			displayDetails={false}
 			bind:poll
+			displayDetails={false}
 			pollType={4}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 		/>

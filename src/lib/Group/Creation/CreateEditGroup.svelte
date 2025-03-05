@@ -130,8 +130,7 @@
 			<TextInput label="Title" bind:value={name} required />
 			<TextArea label="Description" bind:value={description} />
 			}
-			{@debug image}
-			{@debug coverImage}
+
 			<FIleUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
 			<FIleUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 

@@ -40,7 +40,25 @@
 			new Date(poll.end_date)
 		];
 
-		currentPhaseIndex = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
+		//TODO: Refactor so this works by making it easy for varying number of phases.
+		if (pollType === 4) {
+			if (phase === 'area_vote' || phase === 'pre_start') {
+				currentPhaseIndex = 0;
+			} else if (phase === 'proposal') {
+				currentPhaseIndex = 1;
+			} else if (phase === 'prediction_statement') {
+				currentPhaseIndex = 2;
+			} else if (phase === 'prediction_bet') {
+				currentPhaseIndex = 3;
+			} else if (phase === 'delegate_vote') {
+				currentPhaseIndex = 4;
+			} else if (phase === 'vote') {
+				currentPhaseIndex = 5;
+			} else if (phase === 'result' || phase === 'prediction_vote') {
+				currentPhaseIndex = 6;
+			}
+		}
+
 		fraction = (currentPhaseIndex + 1) / dates.length;
 
 		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();

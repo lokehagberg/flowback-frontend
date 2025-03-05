@@ -34,6 +34,7 @@
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import DeletePollModal from './DeletePollModal.svelte';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
+	import Timeline from './NewDesign/Timeline.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -224,6 +225,7 @@
 		{/if}
 
 		<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+		
 
 		<div class="!mt-4">
 			<!-- PHASE 1: AREA VOTE -->

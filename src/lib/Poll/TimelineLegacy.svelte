@@ -14,10 +14,9 @@
 		pollType: number;
 
 	let datesDisplay: string[] = [],
-		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll;
-
-	const currentPhase = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
-	const fraction = (currentPhase + 1) / dates.length;
+		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
+		currentPhase = 0,
+		fraction = (currentPhase + 1) / dates.length;
 
 	const totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
@@ -26,8 +25,9 @@
 		// Date placement on Timeline
 		const toDateTime = date.getTime() - dates[0].getTime();
 		datePlacement[i] = (100 * toDateTime) / totalTime;
-		datesDisplay[i] = date.toDateString()
+		datesDisplay[i] = date.toDateString();
 	});
+	
 </script>
 
 <div class={`relative ${Class}`}>

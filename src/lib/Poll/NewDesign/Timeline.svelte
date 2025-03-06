@@ -115,8 +115,8 @@
 					size="1x"
 					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
 					{icon}
-					color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
-				/>
+					/>
+					<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
 			{/each}
 		</div>
 	{/if}

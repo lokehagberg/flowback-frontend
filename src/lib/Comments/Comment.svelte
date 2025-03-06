@@ -146,7 +146,7 @@
 							if (typeof attachment.file === 'string')
 								return attachment.file.substring(0, 4) === 'blob'
 									? attachment.file
-									: `${env.PUBLIC_API}/media/${attachment.file}`;
+									: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
 							else return URL.createObjectURL(attachment.file);
 						})()}
 						alt="Attachment to the comment"

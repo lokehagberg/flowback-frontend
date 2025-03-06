@@ -24,7 +24,8 @@
 			member_count: 0,
 			next: '',
 			previous: '',
-			total_page: 0
+			total_page: 0,
+			joined:false
 		},
 		poppup: poppup,
 		open = false,
@@ -100,7 +101,7 @@
 <div class="bg-white dark:bg-darkobject p-6 shadow rounded mb-4">
 	<TextInput
 		label=""
-		placeholder="search work group"
+		placeholder="Search work group"
 		bind:value={search}
 		onInput={getWorkingGroupList}
 	/>
@@ -136,7 +137,7 @@
 	{/if}
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
-			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} />
+			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} bind:isAdmin />
 		{/each}
 	</div>
 </Loader>

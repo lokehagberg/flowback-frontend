@@ -11,11 +11,12 @@
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
-	export let workGroup: WorkGroup, handleRemoveGroup: (id: number) => void;
+	export let workGroup: WorkGroup,
+		handleRemoveGroup: (id: number) => void,
+		isAdmin = false;
 
 	let poppup: poppup,
-		workGroupUserList: WorkGroupUser[] = [],
-		isAdmin = false;
+		workGroupUserList: WorkGroupUser[] = [];
 
 	const getUserList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
@@ -37,7 +38,7 @@
 			return;
 		}
 
-		await getUserList();
+		// await getUserList();
 	};
 
 	const askToJoin = async () => {
@@ -67,7 +68,7 @@
 		workGroupUserList = workGroupUserList.filter(
 			(user) => user.id === Number(localStorage.getItem('userId'))
 		);
-		getUserList();
+		// getUserList();
 	};
 
 	const isMember = () => {
@@ -90,8 +91,7 @@
 	};
 
 	onMount(async () => {
-		getUserList();
-		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
+		// getUserList();
 	});
 </script>
 
@@ -103,25 +103,23 @@
 	>
 	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
 
-	{#key workGroupUserList}
-		{#if workGroup.joined}
-			<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
-				>{$_('Leave')}</Button
-			>
-		{:else if workGroup.direct_join}
-			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}
-				>{$_('Join')}</Button
-			>
-		{:else}
-			<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
-				>{$_('Ask to join')}</Button
-			>
-		{/if}
+	{#if workGroup.joined}
+		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
+			>{$_('Leave')}</Button
+		>
+	{:else if workGroup.direct_join}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}
+			>{$_('Join')}</Button
+		>
+	{:else}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
+			>{$_('Ask to join')}</Button
+		>
+	{/if}
 
-		{#if isAdmin}
-			<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
-		{/if}
-	{/key}
+	{#if isAdmin}
+		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
+	{/if}
 </div>
 
 <Poppup bind:poppup />

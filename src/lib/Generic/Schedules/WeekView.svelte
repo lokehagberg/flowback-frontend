@@ -62,8 +62,6 @@
 
 		votes = json.results.map((vote: any) => vote.proposal);
 		// selectedDates = votes;
-
-		
 	};
 
 	const saveSelection = async () => {
@@ -80,8 +78,7 @@
 				(proposal) => new Date(proposal.end_date).getTime() === end_date.getTime()
 			);
 
-			console.log(existingProposal, "EXi");
-			
+			console.log(existingProposal, 'EXi');
 
 			let resC, jsonC;
 			if (!existingProposal) {
@@ -97,8 +94,7 @@
 				jsonC = json;
 			}
 
-			console.log("hiello?");
-			
+			console.log('hiello?');
 
 			const { res, json } = await fetchRequest(
 				'POST',
@@ -121,8 +117,18 @@
 
 	const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 	const months = [
-		'January', 'February', 'March', 'April', 'May', 'June',
-		'July', 'August', 'September', 'October', 'November', 'December'
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
 	];
 
 	const clearSelection = () => {
@@ -137,7 +143,7 @@
 		monday.setDate(today.getDate() - daysSinceMonday + offset * 7);
 		monday.setHours(0, 0, 0, 0);
 		return monday;
-	}
+	};
 
 	const getWeekDates = (monday: Date): Date[] => {
 		return Array.from({ length: 7 }, (_, i) => {
@@ -145,35 +151,35 @@
 			date.setDate(monday.getDate() + i);
 			return date;
 		});
-	}
+	};
 
 	const getMonthAndYear = (weekDates: Date[]): { month: string; year: number } => {
 		const middleOfWeek = weekDates[3];
 		return {
 			month: months[middleOfWeek.getMonth()],
-			year: middleOfWeek.getFullYear(),
+			year: middleOfWeek.getFullYear()
 		};
-	}
+	};
 
 	const prevWeek = () => {
 		weekOffset--;
-	}
+	};
 
 	const nextWeek = () => {
 		weekOffset++;
-	}
+	};
 
 	const isSelected = (date: Date) => {
-		return selectedDates.find((_date) => _date?.getTime() === date?.getTime())
-	}
+		return selectedDates.find((_date) => _date?.getTime() === date?.getTime());
+	};
 
 	const toggleDate = (date: Date) => {
 		if (isSelected(date)) {
-			selectedDates = selectedDates.filter(d => d.getTime() !== date.getTime());
+			selectedDates = selectedDates.filter((d) => d.getTime() !== date.getTime());
 		} else {
 			selectedDates = [...selectedDates, date];
 		}
-	}
+	};
 
 	onMount(() => {
 		getProposals();
@@ -207,23 +213,23 @@
 	);
 </script>
 
-	<Loader bind:loading Class="flex flex-col">
-		<div class="flex items-center justify-between border-b border-gray-300 py-1 px-4">
-			<button on:click={prevWeek}><Fa icon={faChevronLeft} /></button>
-			{currentMonth} {currentYear}
-			<button on:click={nextWeek}><Fa icon={faChevronRight} /></button>
-		</div>
-			
-		<div class="relative w-full">
-			
-			<div
-				class="grid w-full text-sm text-center h-[500px] overflow-y-auto overflow-x-hidden"
-				style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${
-					y + 1
-				}, 1fr);`}
-				id="weekView"
-			>
-			<div></div>
+<Loader bind:loading Class="flex flex-col">
+	<div class="flex items-center justify-between border-b border-gray-300 py-1 px-4">
+		<button on:click={prevWeek}><Fa icon={faChevronLeft} /></button>
+		{currentMonth}
+		{currentYear}
+		<button on:click={nextWeek}><Fa icon={faChevronRight} /></button>
+	</div>
+
+	<div class="relative w-full">
+		<div
+			class="grid w-full text-sm text-center h-[500px] overflow-y-auto overflow-x-hidden"
+			style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${
+				y + 1
+			}, 1fr);`}
+			id="weekView"
+		>
+			<div />
 			{#each weekDates as date, i}
 				<div class="flex flex-col items-center">
 					<div class="font-semibold pt-2">{date.getDate()}</div>
@@ -248,12 +254,16 @@
 		</div>
 
 		<div class="pt-4 px-4 border-t flex gap-4 bg-white">
-			<Button onClick={saveSelection} buttonStyle="primary-light" Class="flex-1">{$_('Submit')}</Button>
-			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1">{$_('Cancel')}</Button>
+			<Button onClick={saveSelection} buttonStyle="primary-light" Class="flex-1"
+				>{$_('Submit')}</Button
+			>
+			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1"
+				>{$_('Cancel')}</Button
+			>
 		</div>
-	</Loader>
-	
-	
+	</div></Loader
+>
+
 <style>
 	.calendar {
 		display: grid;

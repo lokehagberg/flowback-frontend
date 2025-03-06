@@ -14,29 +14,21 @@
 	import type { Phase, poll } from '../interface';
 	import { onMount } from 'svelte';
 
-	export let displayDetails = true,
+	export let enableDetails = false,
 		displayTimeline = true,
 		Class = '',
 		dates: Date[] = [],
 		pollType: number,
 		poll: poll,
-		phase:Phase;
+		phase: Phase,
+		horizontal = false;
 
 	let datesArray: string[] = [],
+		displayDetails = false,
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
-
-	onMount(() => {
-		setupDates();
-	});
-
-	$: if (phase) {
-		dates[currentPhaseIndex] = dates[currentPhaseIndex - 1]
-		currentPhaseIndex++;
-		setupDates();
-	}
 
 	const setupDates = () => {
 		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
@@ -50,7 +42,25 @@
 			new Date(poll.end_date)
 		];
 
-		currentPhaseIndex = dates.findLastIndex((date: Date) => new Date(date) <= new Date());
+		//TODO: Refactor so this works by making it easy for varying number of phases.
+		if (pollType === 4) {
+			if (phase === 'area_vote' || phase === 'pre_start') {
+				currentPhaseIndex = 0;
+			} else if (phase === 'proposal') {
+				currentPhaseIndex = 1;
+			} else if (phase === 'prediction_statement') {
+				currentPhaseIndex = 2;
+			} else if (phase === 'prediction_bet') {
+				currentPhaseIndex = 3;
+			} else if (phase === 'delegate_vote') {
+				currentPhaseIndex = 4;
+			} else if (phase === 'vote') {
+				currentPhaseIndex = 5;
+			} else if (phase === 'result' || phase === 'prediction_vote') {
+				currentPhaseIndex = 6;
+			}
+		}
+
 		fraction = (currentPhaseIndex + 1) / dates.length;
 
 		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
@@ -62,9 +72,16 @@
 			datesArray[i] = formatDate(date.toString());
 		});
 	};
+
+	onMount(() => {
+		setupDates();
+	});
+
+	$: if (phase) {
+		setupDates();
+	}
 </script>
 
-{#key phase}
 <div class={`relative flex flex-col items-center ${Class}`}>
 	<div class="text-center">
 		<span class="font-semibold text-primary dark:text-secondary">
@@ -77,10 +94,14 @@
 
 	{#if displayTimeline}
 		<div
-			class="mt-4 flex flex-col gap-20 justify-between rounded-md max-w-4"
-			style={`background: linear-gradient(180deg, rgba(189, 208, 255, 1) ${
-				fraction * 100 - 2
-			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
+			class={`mt-4 flex gap-20 justify-between rounded-md 
+			${horizontal ? 'flex-row' : 'flex-col'}
+			${horizontal ? 'w-full' : 'w-4'}
+			${horizontal ? 'max-h-4' : 'max-w-4'}
+			`}
+			style={`background: linear-gradient(${
+				horizontal ? '90deg' : '180deg'
+			}, rgba(189, 208, 255, 1) ${fraction * 100 - 2}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
 				{@const icon =
@@ -95,12 +116,12 @@
 					size="1x"
 					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
 					{icon}
-					color={`${dates[i] <= new Date() ? '#015BC0' : ''}`}
 				/>
+				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
 			{/each}
 		</div>
 	{/if}
-	{#if displayDetails}
+	{#if enableDetails && displayDetails}
 		<ul class="p-2">
 			<button
 				class="hover:underline flex items-center gap-2 cursor-pointer"
@@ -116,7 +137,7 @@
 				</li>
 			{/each}
 		</ul>
-	{:else if displayDetails}
+	{:else if enableDetails}
 		<button
 			class="hover:underline flex items-center gap-1 cursor-pointer text-xs"
 			on:click={() => (displayDetails = true)}
@@ -126,4 +147,3 @@
 		</button>
 	{/if}
 </div>
-{/key}

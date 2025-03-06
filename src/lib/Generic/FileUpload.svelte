@@ -21,12 +21,12 @@
 		const files: File[] = Array.from(e.target.files);
 		croppedImage = files[0];
 		imageString = URL.createObjectURL(croppedImage);
-		if (disableCropping) currentlyCropping = true;
+		if (!disableCropping) currentlyCropping = true;
 		else onCrop();
-	};  
+	};
 
-	$: if (imageString) {
-		currentlyCropping = true
+	$: if (imageString !== null) {
+		// currentlyCropping = true;
 	}
 </script>
 

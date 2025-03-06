@@ -108,7 +108,7 @@
 	<!-- TODO: fix attachments in poll -->
 	<!-- {#if poll.attachments && poll.attachments.length > 0}
 		<img
-			src={`${env.PUBLIC_API}/api/media/${poll.attachments[0].file}` || ''}
+			src={`${env.PUBLIC_API_URL}/api/media/${poll.attachments[0].file}` || ''}
 			alt="attachment to the poll"
 		/>
 	{/if} -->

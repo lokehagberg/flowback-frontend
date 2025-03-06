@@ -4,7 +4,7 @@
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ImageUpload from '$lib/Generic/FileUpload.svelte';
+	import FIleUpload from '$lib/Generic/FileUpload.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
@@ -102,8 +102,8 @@
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
 
-		if (json.image) image = `${env.PUBLIC_API}${json.image}`;
-		if (json.cover_image) coverImage = `${env.PUBLIC_API}${json.cover_image}`;
+		if (json.image) image = `${env.PUBLIC_API_URL}${json.image}`;
+		if (json.cover_image) coverImage = `${env.PUBLIC_API_URL}${json.cover_image}`;
 	};
 
 	onMount(() => {
@@ -129,8 +129,9 @@
 
 			<TextInput label="Title" bind:value={name} required />
 			<TextArea label="Description" bind:value={description} />
-			<ImageUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
-			<ImageUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
+
+			<FIleUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
+			<FIleUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<RadioButtons

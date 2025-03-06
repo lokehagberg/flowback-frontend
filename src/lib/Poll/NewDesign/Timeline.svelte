@@ -93,8 +93,12 @@
 
 	{#if displayTimeline}
 		<div
-			class="mt-4 flex flex-col gap-20 justify-between rounded-md max-w-4"
-			style={`background: linear-gradient(180deg, rgba(189, 208, 255, 1) ${
+			class={`mt-4 flex gap-20 justify-between rounded-md 
+			${horizontal ? 'flex-row' : 'flex-col'}
+			${horizontal ? 'w-full' : 'w-4'}
+			${horizontal ? 'max-h-4' : 'max-w-4'}
+			`}
+			style={`background: linear-gradient(${horizontal ? "90deg" : "180deg"}, rgba(189, 208, 255, 1) ${
 				fraction * 100 - 2
 			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>

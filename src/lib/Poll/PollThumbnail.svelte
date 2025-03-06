@@ -224,10 +224,10 @@
 			<Description limit={500} description={poll.description} Class="mt-2" />
 		{/if}
 
-			<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+			<!-- <TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates /> -->
 			
 
-		<!-- <Timeline
+		<Timeline
 			bind:phase
 			bind:poll
 			displayDetails={true}
@@ -235,7 +235,7 @@
 			Class={'!absolute md:!relative left-4 md:left-0'}
 			horizontal
 			
-		/> -->
+		/>
 
 		<div class="!mt-4">
 			<!-- PHASE 1: AREA VOTE -->

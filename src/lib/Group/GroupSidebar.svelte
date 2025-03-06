@@ -127,7 +127,7 @@
 			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
-				text="Work Groups"
+				text={env.PUBLIC_LOGO === "REFORUM" ? "Work- and local Groups" : "Work Groups"}
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>

@@ -1,6 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import TimelineLegacy from './TimelineLegacy.svelte';
 	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
@@ -224,17 +222,13 @@
 			<Description limit={500} description={poll.description} Class="mt-2" />
 		{/if}
 
-			<!-- <TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates /> -->
-			
-
 		<Timeline
 			bind:phase
 			bind:poll
-			displayDetails={true}
+			enableDetails
 			pollType={4}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 			horizontal
-			
 		/>
 
 		<div class="!mt-4">

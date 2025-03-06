@@ -14,7 +14,7 @@
 	import type { Phase, poll } from '../interface';
 	import { onMount } from 'svelte';
 
-	export let displayDetails = true,
+	export let enableDetails = false,
 		displayTimeline = true,
 		Class = '',
 		dates: Date[] = [],
@@ -24,6 +24,7 @@
 		horizontal = false;
 
 	let datesArray: string[] = [],
+		displayDetails = false,
 		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhaseIndex: number,
 		fraction: number,
@@ -98,9 +99,9 @@
 			${horizontal ? 'w-full' : 'w-4'}
 			${horizontal ? 'max-h-4' : 'max-w-4'}
 			`}
-			style={`background: linear-gradient(${horizontal ? "90deg" : "180deg"}, rgba(189, 208, 255, 1) ${
-				fraction * 100 - 2
-			}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
+			style={`background: linear-gradient(${
+				horizontal ? '90deg' : '180deg'
+			}, rgba(189, 208, 255, 1) ${fraction * 100 - 2}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
 				{@const icon =
@@ -115,12 +116,12 @@
 					size="1x"
 					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
 					{icon}
-					/>
-					<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
+				/>
+				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
 			{/each}
 		</div>
 	{/if}
-	{#if displayDetails}
+	{#if enableDetails && displayDetails}
 		<ul class="p-2">
 			<button
 				class="hover:underline flex items-center gap-2 cursor-pointer"
@@ -136,7 +137,7 @@
 				</li>
 			{/each}
 		</ul>
-	{:else if displayDetails}
+	{:else if enableDetails}
 		<button
 			class="hover:underline flex items-center gap-1 cursor-pointer text-xs"
 			on:click={() => (displayDetails = true)}

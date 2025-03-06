@@ -22,7 +22,7 @@
 		<Timeline
 			bind:phase
 			bind:poll
-			displayDetails={false}
+			enableDetails={false}
 			pollType={4}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 		/>

@@ -21,11 +21,12 @@
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
-		proposals: proposal[] = [],
+		proposals: proposal[] = [], // Give it a default empty array
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
-		poppup: poppup;
+		poppup: poppup,
+		isVoting = false; // Add loading state
 
 	const deleteComment = async (id: number) => {
 		let _api = `group/${api}/`;
@@ -52,11 +53,14 @@
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
+		if (isVoting) return; // Prevent multiple clicks while processing
+		isVoting = true;
+
 		let vote = {};
 		let regretting = userUpVote === _vote;
 
-		// if (regretting) vote = null;
-		if (_vote === -1) vote = { vote: false };
+		if (regretting) vote = { vote: null };
+		else if (_vote === -1) vote = { vote: false };
 		else if (_vote === 1) vote = { vote: true };
 
 		let _api = '';
@@ -71,19 +75,24 @@
 			return;
 		}
 
+		// Only update UI after successful API call
 		if (regretting) {
 			userUpVote = 0;
 			comment.user_vote = null;
-			if (_vote === 1) comment.score += -1;
+			if (_vote === 1) comment.score -= 1;
 			else if (_vote === -1) comment.score += 1;
 		} else {
+			if (userUpVote !== 0) {
+				// If changing vote from up to down or vice versa
+				comment.score += 2 * _vote;
+			} else {
+				comment.score += _vote;
+			}
 			userUpVote = _vote;
-			if (comment.score !== 0) comment.score += 2 * _vote;
-			else comment.score += _vote;
-
-			if (_vote === -1) comment.user_vote = false;
-			else if (_vote === 1) comment.user_vote = true;
+			comment.user_vote = _vote === 1;
 		}
+
+		isVoting = false;
 	};
 
 	onMount(() => {
@@ -137,7 +146,7 @@
 							if (typeof attachment.file === 'string')
 								return attachment.file.substring(0, 4) === 'blob'
 									? attachment.file
-									: `${env.PUBLIC_API}/media/${attachment.file}`;
+									: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
 							else return URL.createObjectURL(attachment.file);
 						})()}
 						alt="Attachment to the comment"

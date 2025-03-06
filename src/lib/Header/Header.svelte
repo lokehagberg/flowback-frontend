@@ -22,8 +22,8 @@
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import CalendarIcon from '$lib/assets/scheduleIcon.svg';
-	import HomeIcon from '$lib/assets/Home2.svg';
+	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
+	import HomeIcon from '$lib/assets/Home_fill.svg';
 	import KanbanIcon from '$lib/assets/kanbanzoomedin.svg';
 	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 
@@ -78,7 +78,10 @@
 		if (res.ok && json.profile_image)
 			profileImage = `${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${json.profile_image}`;
 
-		localStorage.setItem('pfp-link', json.profile_image);
+		localStorage.setItem(
+			'pfp-link',
+			`${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${json.profile_image}`
+		);
 
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
@@ -114,7 +117,13 @@
 	<div class="!flex justify-between md:w-[80%]">
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<HeaderIcon icon={HomeIcon} text="Home" href="home" Class="w-[32px] " bind:selectedHref />
+				<HeaderIcon
+					icon={HomeIcon}
+					text="Home"
+					href="home"
+					Class="w-[32px] "
+					bind:selectedHref
+				/>
 				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
 					icon={faUserFriends}
@@ -163,8 +172,7 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] absolute top-1 "
-					textClass="!mt-1"
+					Class="w-[30px] "
 					text={'Automate'}
 					href="automate"
 					bind:selectedHref
@@ -172,7 +180,7 @@
 			{:else}
 				<HeaderIcon
 					icon={AutomationIcon}
-					Class="w-[30px] absolute top-5"
+					Class="w-[30px] "
 					text={'Delegations'}
 					href="automate"
 					bind:selectedHref
@@ -212,6 +220,7 @@
 	</div>
 	<SideHeader bind:sideHeaderOpen />
 </header>
+
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

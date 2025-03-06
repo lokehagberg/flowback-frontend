@@ -1,6 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import TimelineLegacy from './TimelineLegacy.svelte';
 	import type { Phase, poll } from './interface';
 	import { page } from '$app/stores';
 	import Tag from '$lib/Group/Tag.svelte';
@@ -34,6 +32,7 @@
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import DeletePollModal from './DeletePollModal.svelte';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
+	import Timeline from './NewDesign/Timeline.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -135,7 +134,7 @@
 						<span class="inline break-all">{poll.group_name}</span>
 						<img
 							class="h-8 w-8 inline rounded-full break-all"
-							src={`${env.PUBLIC_API}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+							src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
 								poll.group_image
 							}`}
 							on:error={(e) => onThumbnailError(e, DefaultBanner)}
@@ -223,7 +222,14 @@
 			<Description limit={500} description={poll.description} Class="mt-2" />
 		{/if}
 
-		<TimelineLegacy Class="mt-2" displayDetails={false} pollType={poll.poll_type} bind:dates />
+		<Timeline
+			bind:phase
+			bind:poll
+			enableDetails
+			pollType={4}
+			Class={'!absolute md:!relative left-4 md:left-0'}
+			horizontal
+		/>
 
 		<div class="!mt-4">
 			<!-- PHASE 1: AREA VOTE -->

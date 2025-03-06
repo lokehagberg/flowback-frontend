@@ -136,23 +136,6 @@
 		currentlyCroppingBanner = true;
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/delegate/pools?`
-		);
-
-		if (!res.ok) return;
-
-		const delegates = json.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-	};
-
 	let imageToBeCropped: any;
 
 	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview;
@@ -228,14 +211,14 @@
 			<div class="dark:text-darkmodeText py-6">
 				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
 				<a class={``} href={user.website || $_('None provided')}>
-					{$_("Website")}: {user.website || ''}
+					{$_('Website')}: {user.website || ''}
 				</a>
 				<!-- <div>Phone number</div> -->
 				<p class="">
-					{$_("Phone number")}: {user.contact_phone || $_('None provided')}
+					{$_('Phone number')}: {user.contact_phone || $_('None provided')}
 				</p>
 				<p class="">
-					{$_("E-mail")}: {user.contact_email || $_('None provided')}
+					{$_('E-mail')}: {user.contact_email || $_('None provided')}
 				</p>
 			</div>
 		</div>
@@ -390,7 +373,9 @@
 		</form>
 	{/if}
 
-	<History history={62} groupId={1} />
+	{#if $page.url.searchParams.get('delegate_id')}
+		<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
+	{/if}
 </Layout>
 
 <style>

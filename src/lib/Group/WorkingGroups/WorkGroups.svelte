@@ -24,7 +24,8 @@
 			member_count: 0,
 			next: '',
 			previous: '',
-			total_page: 0
+			total_page: 0,
+			joined:false
 		},
 		poppup: poppup,
 		open = false,
@@ -36,7 +37,7 @@
 	const getWorkingGroupList = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/list?limit=100&name__icontains=${search}&order_by=name_desc`
+			`group/${$page.params.groupId}/list?limit=100&name__icontains=${search}&order_by=name_asc`
 		);
 
 		if (!res.ok) {
@@ -100,13 +101,15 @@
 <div class="bg-white dark:bg-darkobject p-6 shadow rounded mb-4">
 	<TextInput
 		label=""
-		placeholder="search work group"
+		placeholder="Search work group"
 		bind:value={search}
 		onInput={getWorkingGroupList}
 	/>
 </div>
 
-<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+{#if isAdmin}
+	<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+{/if}
 
 <Loader bind:loading>
 	{#if isAdmin && invites?.length > 0}
@@ -134,7 +137,7 @@
 	{/if}
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
-			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} />
+			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} bind:isAdmin />
 		{/each}
 	</div>
 </Loader>

@@ -58,6 +58,7 @@
 	$: if (sortBy || !sortBy || searchString) setUpComments();
 	$: if (_comments) {
 		done = false;
+		console.log('changed comments', _comments);
 	}
 </script>
 
@@ -81,9 +82,7 @@
 
 	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
-			{#key comment}
-				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />
-			{/key}
+			<Comment {delegate_pool_id} {comment} bind:comments={_comments} {api} {proposals} />
 		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>

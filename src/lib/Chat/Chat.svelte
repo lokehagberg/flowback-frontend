@@ -83,6 +83,8 @@
 		</div>
 	</Button>
 
+	<!-- TODO: This will link to Chat settings once that has been implemented -->
+
 	<Button
 		action={() => {
 			chatOpen = false;

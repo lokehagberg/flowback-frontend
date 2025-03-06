@@ -52,7 +52,7 @@
 	$: if (score !== null) snapToSnapPoint(score * 20);
 	$: if (score !== null) console.log(score, 'score');
 
-	$: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
+	// $: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -87,12 +87,14 @@
 				? 'left-[20%]'
 				: currentSnapPosition === 40
 				? 'left-[40%]'
+				: currentSnapPosition === 50
+				? 'left-[50%]'
 				: currentSnapPosition === 60
 				? 'left-[60%]'
 				: currentSnapPosition === 80
 				? 'left-[80%]'
 				: 'left-[100%]'
-		} z-50 bg-white px-0.5 text-sm`}
+		} z-40 bg-white px-0.5 text-sm`}
 	>
 		|
 	</div>

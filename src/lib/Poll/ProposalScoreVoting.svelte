@@ -142,12 +142,15 @@
 		voting[i].score = Number(score);
 		voting = voting;
 	};
+
+	$:console.log(proposals, needsReload, 'Proposals');
+	
 </script>
 
 <div class={`box-border ${Class}`}>
 	<div class="mt-4 h-[100%]">
 		{#if proposals}
-			{#key needsReload}
+			<!-- {#key needsReload} -->
 				{#each proposals as proposal}
 					<div class="border-b-2 border-gray-300 select-none">
 						<Proposal
@@ -174,7 +177,7 @@
 						</Proposal>
 					</div>
 				{/each}
-			{/key}
+			<!-- {/key} -->
 		{/if}
 	</div>
 </div>

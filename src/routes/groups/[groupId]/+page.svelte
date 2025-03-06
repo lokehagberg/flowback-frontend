@@ -104,6 +104,7 @@
 	{#if loading}
 		<Loader bind:loading Class="mt-24" />
 	{:else if userInGroup}
+		<div class="flex flex-col items-center">
 			<GroupHeader bind:selectedPage {group} {memberCount} />
 			<div class="flex justify-center mt-4 md:mt-10 lg:mt-16 gap-4 md:gap-10 lg:gap-16 mb-16">
 				<main
@@ -116,7 +117,10 @@
 					<!-- TODO: Simplify this, look in SideBarButtons file to simplify more there -->
 
 					{#if selectedPage === 'flow'}
-						<PollThumbnails infoToGet={env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE" ? "user" : "group"} Class={`w-full mx-auto my-0`} />
+						<PollThumbnails
+							infoToGet={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? 'user' : 'group'}
+							Class={`w-full mx-auto my-0`}
+						/>
 					{:else if selectedPage === 'delegation'}
 						<Delegation />
 					{:else if selectedPage === 'members'}
@@ -146,6 +150,7 @@
 
 				<GroupSidebar Class={``} {group} bind:selectedPage />
 			</div>
+		</div>
 	{:else}
 		<div class="bg-white w-full text-center md:w-1/2 shadow rounded p-16 mt-8">
 			{$_('You are not a memeber of this group!')}

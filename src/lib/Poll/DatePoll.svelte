@@ -32,7 +32,10 @@
 	};
 
 	let getProposals = async () => {
-		const { res, json } = await fetchRequest('GET', `group/poll/${$page.params.pollId}/proposals?limit=10000`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/poll/${$page.params.pollId}/proposals?limit=10000`
+		);
 
 		proposals = json.results;
 	};
@@ -110,7 +113,7 @@
 
 <!-- <Button action={() => (open = true)}>{$_('New Proposal')}</Button> -->
 
-<Structure>
+<Structure Class="!max-w-[1400px]" poll={null} >
 	<div slot="left">
 		<div class="overflow-auto">
 			<WeekView x={7} y={24} />

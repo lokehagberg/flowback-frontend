@@ -36,8 +36,6 @@
 	};
 
 	const commentCreate = async () => {
-		console.log(api, "APIAAIA");
-		
 		const formData = new FormData();
 		formData.append('message', message);
 		//@ts-ignore
@@ -55,49 +53,67 @@
 			true,
 			false
 		);
-		if (res.ok) {
-			let newComment: Comment = {
-				user_vote: true,
-				active: true,
-				author_id: Number(window.localStorage.getItem('userId')) || 0,
-				author_name: window.localStorage.getItem('userName') || '',
-				being_edited: false,
-				being_replied: false,
-				score: 1,
-				edited: false,
-				attachments: images.map((image) => {
-					return { file: URL.createObjectURL(image) };
-				}),
-				message,
-				id: json,
-				parent_id,
-				author_profile_image: window.localStorage.getItem('pfp-link') || '',
-				being_edited_message: '',
-				reply_depth: 0
-			};
 
-			newComment.reply_depth = getCommentDepth(newComment, comments);
+		if (!res.ok) return;
 
-			const i = comments.findIndex((comment) => comment.id === parent_id);
-			comments.splice(i + 1, 0, newComment);
+		let newComment: Comment = {
+			user_vote: true,
+			active: true,
+			author_id: Number(window.localStorage.getItem('userId')) || 0,
+			author_name: window.localStorage.getItem('userName') || '',
+			being_edited: false,
+			being_replied: false,
+			score: 1,
+			edited: false,
+			attachments: images.map((image) => {
+				return { file: URL.createObjectURL(image) };
+			}),
+			message,
+			id: json,
+			parent_id,
+			author_profile_image: window.localStorage.getItem('pfp-link') || '',
+			being_edited_message: '',
+			reply_depth: comments.find((comment) => comment.id === parent_id)?.reply_depth || 0
+		};
 
-			comments = comments;
+		console.log(message, 'message');
 
-			console.log(comments, newComment);
+		// Find the index where to insert the new reply
+		let insertIndex;
+		if (parent_id) {
+			// Find the last reply in the chain for this parent
+			let parentIndex = comments.findIndex((c) => c.id === parent_id);
+			let replyDepth = comments[parentIndex].reply_depth + 1;
 
-			// comments = await commentSetup(comments);
-			showMessage = 'Successfully posted comment';
-			show = true;
-			message = '';
+			// Find the last comment in the reply chain
+			insertIndex = parentIndex + 1;
+			while (
+				insertIndex < comments.length &&
+				comments[insertIndex].reply_depth > comments[parentIndex].reply_depth
+			) {
+				insertIndex++;
+			}
 
-			subscribeToReplies();
+			newComment.reply_depth = replyDepth;
+		} else {
+			// If it's a top-level comment, add it to the beginning
+			insertIndex = 0;
+			newComment.reply_depth = 0;
 		}
+
+		// Insert the new comment at the correct position
+		comments.splice(insertIndex, 0, newComment);
+		comments = comments;
+
+		showMessage = 'Successfully posted comment';
+		show = true;
+		message = '';
 		replying = false;
+
+		subscribeToReplies();
 	};
 
 	const commentUpdate = async () => {
-		console.log('Commenting Updating', getId(), id, delegate_pool_id);
-
 		const { res, json } = await fetchRequest('POST', `group/${getId()}/comment/${id}/update`, {
 			message
 		});

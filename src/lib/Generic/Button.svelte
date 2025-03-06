@@ -52,6 +52,8 @@
 	class:hover:brightness-[90%]={hoverEffect}
 	class:active:brightness-[92%]={hoverEffect}
 	class:!border-gray-300={disabled}
+	class:!cursor-default={disabled}
+	class:!hover:bg-white={disabled}
 	class:!text-gray-300={disabled}
 	class:!bg-secondary={buttonStyle == 'secondary'}
 	class:!bg-red-500={buttonStyle === 'warning'}

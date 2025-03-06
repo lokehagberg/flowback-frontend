@@ -44,7 +44,7 @@
 </script>
 
 <div class="w-full">
-	<span class="text-primary dark:text-secondary font-semibold text-xl text-center block">{$_('Results')}</span>
+	<span class="text-primary dark:text-secondary font-semibold text-xl text-center block py-2">{$_('Results')}</span>
 
 	{#if pollType === 4}
 		<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
@@ -57,7 +57,7 @@
 					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 					{proposal.title}</span
 				>
-				<Description description={proposal.description} limit={50} />
+				<Description description={proposal.description} limit={60} />
 				<span class="block text-right"
 					><span class="text-primary dark:text-secondary font-semibold">{$_('Points')}:</span>
 					{proposal.score || '0'}</span

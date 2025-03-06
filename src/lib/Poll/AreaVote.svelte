@@ -7,6 +7,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import { _ } from 'svelte-i18n';
 
 	let tags: Tag[] = [],
 		selectedTag: number | null = null,
@@ -25,12 +26,38 @@
 		tags = json.results;
 	};
 
-	const vote = async (tagId: number) => {
-		const { json, res } = await fetchRequest(
+	// const vote = async (tagId: number) => {
+	// 	const { json, res } = await fetchRequest(
+	// 		'POST',
+	// 		`group/poll/${$page.params.pollId}/area/update`,
+	// 		{
+	// 			tag: tagId,
+	// 			vote: true
+	// 		}
+	// 	);
+
+	// 	if (!res.ok) {
+	// 		poppup = { message: 'Could not vote on tag', success: false };
+	// 		return;
+	// 	}
+
+	// 	if (tagId === selectedTag) selectedTag = null;
+	// 	else selectedTag = tagId;
+
+	// 	poppup = { message: 'Successfully voted for area', success: true };
+	// };
+
+	const submitVote = async () => {
+		if (selectedTag === null) {
+			poppup = { message: 'Please select a tag before submitting.', success: false };
+			return;
+		}
+
+		const { res } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/area/update`,
 			{
-				tag: tagId,
+				tag: selectedTag,
 				vote: true
 			}
 		);
@@ -39,9 +66,6 @@
 			poppup = { message: 'Could not vote on tag', success: false };
 			return;
 		}
-
-		if (tagId === selectedTag) selectedTag = null;
-		else selectedTag = tagId;
 
 		poppup = { message: 'Successfully voted for area', success: true };
 	};
@@ -58,6 +82,10 @@
 		}
 	};
 
+	const cancelVote = () => {
+		selectedTag = null;
+	};
+
 	onMount(async () => {
 		await getTags();
 		getAreaVote();
@@ -71,15 +99,47 @@
 		ClassInner="block"
 		bind:value={selectedTag}
 	/>  -->
-<div class={`grid-rows-${Math.ceil(tags.length / 3)}`}>
-	{#each tags as tag}
-		{#if tag.active}
-			<div>
-				<input type="radio" name="area" on:change={() => vote(tag.id)} />
-				{elipsis(tag.name, 40)}
-			</div>
-		{/if}
-	{/each}
+
+<div class="m-4 flex flex-col h-[800px]">
+	<h2 class="text-xl font-semibold mb-4 text-primary dark:text-secondary">
+		{$_('Areas')} ({tags.length})
+	</h2>
+
+	<div class="flex-grow flex flex-col gap-3 overflow-auto">
+		{#each tags as tag}
+			{#if tag.active}
+				<div class="flex items-center space-x-3">
+					<input 
+						type="radio"
+						name="area"
+						on:change={() => selectedTag = tag.id}
+						checked={selectedTag === tag.id}
+						class="cursor-pointer" 
+					/>
+					<span>{elipsis(tag.name, 40)}</span>
+				</div>
+			{/if}
+		{/each}
+	</div>
+
+	<div class="mt-auto pt-4 flex gap-2">
+		<Button
+			type="button"
+			buttonStyle="primary-light"
+			Class="flex-1"
+			onClick={submitVote}
+		>
+			{$_('Submit')}
+		</Button>
+		<Button
+			type="button"
+			buttonStyle="warning-light"
+			Class="flex-1"
+			onClick={cancelVote}
+		>
+			{$_('Cancel')}
+		</Button>
+	</div>
 </div>
 
 <Poppup bind:poppup />

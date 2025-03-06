@@ -161,11 +161,13 @@
 	$: if (proposalsToPredictionMarket) handleChangeProposalSelection();
 </script>
 
-<div class="flex">
-	<span class="font-semibold text-primary dark:text-secondary">{$_('New Prediction')}</span>
-	<Question
-		message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
-	/><br />
+<div class="flex flex-row mb-4">
+	<span class="flex-1 font-semibold text-primary dark:text-secondary">{$_('New Prediction')}</span>
+	<div class="flex-1">
+		<Question
+			message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
+		/><br />
+	</div>
 </div>
 
 {#key proposalsToPredictionMarket}
@@ -185,7 +187,7 @@
 	{/if}
 {/key}
 
-<Loader bind:loading Class="!static h-full">
+<Loader bind:loading Class="!static h-full pt-3">
 	<form on:submit|preventDefault={createPredictionStatement} class="h-full">
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
@@ -194,7 +196,7 @@
 		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
 		{/if}
-		<div class="mt-3">
+		<div class="mt-2">
 			{$_('Deadline for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}

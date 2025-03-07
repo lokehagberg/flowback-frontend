@@ -82,7 +82,7 @@
 
 {#if notificationsOpen}
 	<ul
-		class="absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation z-[60]"
+		class="max-h-[90vh] overflow-y-scroll absolute right-0 top-full bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow slide-animation z-[60]"
 		id="notifications-list"
 	>
 		<button
@@ -94,11 +94,11 @@
 		{#if notifications?.length > 0}
 			{#each notifications as notification}
 				<li
-					class="flex justify-end items-center cursor-pointer border-b border-gray-200 dark:border-gray-600 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
+					class="flex justify-between max-w-[25rem] border-gray-200 dark:border-gray-600 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
 					<button
-						class="pt-3 pb-3 pr-10 pl-6"
+						class=""
 						on:click={async () => {
 							if (notification.channel_sender_type === 'group')
 								goto(`groups/${notification.channel_id}?page=${notification.channel_category}`);
@@ -112,14 +112,14 @@
 							}
 						}}
 					>
-						<div class=" max-w-[25%] overflow-x-hidden overflow-ellipsis whitespace-nowrap">
+						<div class="break-words pr-8 text-left pl-4 py-2">
 							{$_(notification.message)}
 							{timeAgo.format(new Date(notification.timestamp))}
 						</div>
 					</button>
 					<button
 						style="z-index: 1;"
-						class="mr-8"
+						class="pr-4"
 						on:click={() => {
 							readNotification(notification.id);
 							setTimeout(() => {

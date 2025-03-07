@@ -16,7 +16,10 @@
 	const getNotifications = async () => {
 		//Prevents infinite reload in /login where <Header /> is hidden
 		if (location.pathname === '/login') return;
-		const { json, res } = await fetchRequest('GET', 'notification/list');
+		const { json, res } = await fetchRequest(
+			'GET',
+			'notification/list?order_by=notification_object__timestamp_desc'
+		);
 		if (res.ok) notifications = json.results;
 	};
 

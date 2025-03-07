@@ -3,9 +3,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { GroupUser } from '../interface';
@@ -222,7 +220,7 @@
 			</div>
 		</Loader>
 	</div>
-	''
+
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-2">
 		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
 		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (open = false)}

@@ -23,7 +23,7 @@
 		const html = document.querySelector('html');
 		if (!html) return;
 
-		html.style.overflowY = hide ? 'hidden' : 'visible';
+		html.style.overflowY = hide ? 'hidden' : 'scroll';
 	};
 
 	const onOpenModal = () => {
@@ -36,7 +36,7 @@
 		onClose();
 	};
 
-	$: if (open) onOpenModal();
+	// $: if (open) onOpenModal();
 </script>
 
 <div
@@ -89,6 +89,5 @@
 		height: 100vh;
 		background-color: rgba(128, 128, 128, 0.5); /* color */
 		z-index: 49;
-
 	}
 </style>

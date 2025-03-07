@@ -4,8 +4,6 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
 	import type { GroupUser } from '../interface';
-	import { page } from '$app/stores';
-	import Button from '$lib/Generic/Button.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';

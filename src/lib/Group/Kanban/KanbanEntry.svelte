@@ -88,12 +88,6 @@
 			if (_endDate) formData.append('end_date', dateString);
 		}
 
-		// if (description !== '') formData.append('description', description);
-		// if (kanban.attachments)
-		// 	images.forEach((image) => {
-		// 		formData.append('attachments', image);
-		// 	});
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
@@ -111,29 +105,6 @@
 			// poppup = { message: 'Failed to create kanban task', success: false };
 			return;
 		}
-
-		// poppup = { message: 'Successfully created kanban task', success: true };
-
-		// if (kanbanEdited.kanbanEdited.end_date === null) delete kanbanEdited.end_date;
-		// else if (kanbanEdited.end_date instanceof Date)
-		// 	kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
-
-		// if (kanbanEdited.work_group === null) delete kanbanEdited.work_group;
-		// //@ts-ignore
-		// else kanbanEdited.work_group = kanbanEdited.work_group.id;
-
-		// if (kanbanEdited.assignee_id === null) delete kanbanEdited.assignee_id;
-		// else kanbanEdited.assignee_id = kanbanEdited.assignee_id;
-
-		// const { res, json } = await fetchRequest(
-		// 	'POST',
-		// 	kanban.origin_type === 'group'
-		// 		? `group/${$page.params.groupId}/kanban/entry/update`
-		// 		: 'user/kanban/entry/update',
-		// 	kanbanEdited
-		// );
-		// status = statusMessageFormatter(res, json);
-		// if (!res.ok) return;
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
@@ -526,10 +497,8 @@
 					action={() => (openModal = false)}>{$_('Cancel')}</Button
 				>
 			{:else}
-				<Button
-					Class="w-full py-1"
-					buttonStyle="primary-light"
-					action={() => (isEditing = true)}>{$_('Edit')}</Button
+				<Button Class="w-full py-1" buttonStyle="primary-light" action={() => (isEditing = true)}
+					>{$_('Edit')}</Button
 				>
 				<Button
 					Class="bg-red-500 w-full  py-1"

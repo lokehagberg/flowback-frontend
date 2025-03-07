@@ -53,6 +53,19 @@
 		notifications = [];
 	};
 
+	const gotoNotificationSource = async (notification: notification) => {
+		if (notification.channel_sender_type === 'group')
+			goto(`/groups/${notification.channel_id}?page=${notification.channel_category}`);
+		else if (notification.channel_sender_type === 'poll') {
+			const { res, json } = await fetchRequest(
+				'GET',
+				`home/polls?id=${notification.channel_sender_id}`
+			);
+			const groupId = json.results[0].group_id;
+			goto(`/groups/${groupId}/polls/${notification.channel_sender_id}`);
+		}
+	};
+
 	let timeAgo: TimeAgo;
 	onMount(async () => {
 		const en = (await import('javascript-time-ago/locale/en')).default;
@@ -97,24 +110,10 @@
 					class="flex justify-between max-w-[25rem] border-gray-200 dark:border-gray-600 border hover:shadow transition-all hover:bg-blue-100 hover:border-l-2 hover:border-l-primary"
 					class:bg-gray-200={hovered.find((hover) => hover === notification.id)}
 				>
-					<button
-						class=""
-						on:click={async () => {
-							if (notification.channel_sender_type === 'group')
-								goto(`groups/${notification.channel_id}?page=${notification.channel_category}`);
-							else if (notification.channel_sender_type === 'poll') {
-								const { res, json } = await fetchRequest(
-									'GET',
-									`home/polls?id=${notification.channel_sender_id}`
-								);
-								const groupId = json.results[0].group_id;
-								goto(`/groups/${groupId}/polls/${notification.channel_sender_id}`);
-							}
-						}}
-					>
+					<button on:click={() => gotoNotificationSource(notification)}>
 						<div class="break-words pr-8 text-left pl-4 py-2">
-							{$_(notification.message)}
-							{timeAgo.format(new Date(notification.timestamp))}
+							<div>{$_(notification.message)}</div>
+							<div class="text-sm">{timeAgo.format(new Date(notification.timestamp))}</div>
 						</div>
 					</button>
 					<button

@@ -170,10 +170,11 @@
 				label=""
 				bind:value={message}
 				bind:recentlyTappedButton
-				inputClass="bg-gray-100 h-8 border-0 placeholder-gray-600 pl-2"
+				inputClass="bg-gray-100 border-0 placeholder-gray-600 pl-2"
 				Class="w-full"
 				placeholder={$_('Write a comment...')}
 				displayMax={false}
+
 			/>
 		</div>
 		<div class="flex ml-2">

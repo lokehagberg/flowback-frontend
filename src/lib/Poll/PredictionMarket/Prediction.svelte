@@ -75,7 +75,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.prediction_statement_id}/bet/update`,
+			`group/poll/prediction/${prediction.id}/bet/update`,
 			{
 				score: `${score}`
 			}

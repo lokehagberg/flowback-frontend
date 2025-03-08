@@ -178,7 +178,7 @@
 			/>
 		</div>
 		<div class="flex ml-2">
-			<FileUploads bind:images minimalist />
+			<FileUploads bind:images minimalist disableCropping/>
 			<Button Class="bg-white" type="submit" label=""
 				><Fa icon={faPaperPlane} color="black" /></Button
 			>

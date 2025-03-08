@@ -6,7 +6,8 @@
 
 	export let images: File[] = [],
 		minimalist = false,
-		Class = '';
+		Class = '',
+		disableCropping = false;
 
 	let image: File | null = null;
 
@@ -55,5 +56,6 @@
 				images = images;
 			}
 		}}
+		{disableCropping}
 	/>
 </div>

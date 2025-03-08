@@ -10,7 +10,7 @@
 
 <div class={Class}>
 	<div class="">
-		<TextInput label={''} search={true} max={null} Class="w-64" inputClass="placeholder-gray-600 pl-2 pr-6 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject" bind:value={searchString} placeholder={$_('Search comments')} />
+		<TextInput label={''} search={true} max={null} Class="w-[100rem]" inputClass="placeholder-gray-600 pl-6 pr-6 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject" bind:value={searchString} placeholder={$_('Search comments')} />
 	</div>
 
 	<div class="w-auto max-w-xs flex flex-row items-center">

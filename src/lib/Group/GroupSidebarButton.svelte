@@ -18,7 +18,7 @@
 	on:mouseleave={() => (hovering = false)}
 	on:focus
 	on:click={action}
-	class={`${Class} select-none flex items-center rounded transition-all outline-1 cursor-pointer p-3 pr-5 dark:outline-gray-700
+	class={`${Class} text-left select-none flex items-center rounded transition-all outline-1 cursor-pointer p-3 pr-5 dark:outline-gray-700
 		${isSelected 
 			? 'bg-gray-200 text-black border-l-2 rounded-none border-primary dark:bg-gray-700 dark:text-white' 
 			: 'hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-gray-700 active:dark:bg-gray-600'
@@ -28,7 +28,7 @@
 	aria-disabled={disabled}
 >
 	<Fa {icon} class="max-w-[24px]"/>
-	<div class="ml-4">
+	<div class="ml-4 text-left">
 		{$_(text)}
 	</div>
 </button>

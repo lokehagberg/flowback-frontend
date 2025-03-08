@@ -31,8 +31,9 @@
 </script>
 
 <div class={`image-upload ${Class}`}>
+	{#if label}
 	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
-
+{/if}
 	{#if imageString && !disableImagePreview}
 		<img
 			id="image"

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faUpload, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+	import { faUpload, faTimes, faPlus, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 	import ImageUpload from './FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
@@ -42,10 +42,10 @@
 >
 	{#if !minimalist}{$_('Add files')}{/if}
 	<ImageUpload
-		icon={faPlus}
+		icon={faPaperclip}
 		bind:croppedImage={image}
 		minimalist
-		Class="!inline"
+		Class=""
 		label=""
 		iconSize="1.2x"
 		disableImagePreview

@@ -152,7 +152,9 @@
 					<div slot="right" class="relative h-full">
 						{#if selectedProposal}
 							<div class="flex flex-col space-y-2 p-2">
-								<span class="text-primary text-lg dark:text-secondary font-semibold block break-words">
+								<span
+									class="text-primary text-lg dark:text-secondary font-semibold block break-words"
+								>
 									{selectedProposal.title}</span
 								>
 								<span class="break-words">

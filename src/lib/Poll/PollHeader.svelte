@@ -39,12 +39,14 @@
 		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 		<Fa icon={faArrowLeft} />
 	</button>
-	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-all">{poll.title}</h1>
+	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-all">
+		{poll.title}
+	</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 
 	<div class="flex gap-3 justify-center m-auto">
 		<NotificationOptions
-		type="poll"
+			type="poll"
 			id={poll.id}
 			api={`group/poll/${poll.id}`}
 			categories={['poll', 'timeline', 'comment_all']}
@@ -104,15 +106,27 @@
 			<Description limit={400} description={poll.description} />
 		</div>
 	{/if}
-
-	<!-- TODO: fix attachments in poll -->
-	<!-- {#if poll.attachments && poll.attachments.length > 0}
-		<img
-			src={`${env.PUBLIC_API_URL}/api/media/${poll.attachments[0].file}` || ''}
-			alt="attachment to the poll"
-		/>
-	{/if} -->
 </div>
+
+{#if poll.attachments && poll.attachments.length > 0}
+	<div>
+		<div class="grid-area-attachments">
+			{#each poll.attachments as attachment}
+				<div class="attachment-item">
+					<a
+						href={`${env.PUBLIC_API_URL}/media/${attachment.file}`}
+						download
+						target="_blank"
+						rel="noopener noreferrer"
+						class="download-link text-blue-600 hover:underline"
+					>
+						{`${env.PUBLIC_API_URL}/media/${attachment.file}`}
+					</a>
+				</div>
+			{/each}
+		</div>
+	</div>
+{/if}
 
 <DeletePollModal bind:deletePollModalShow pollId={$page.params.pollId} />
 

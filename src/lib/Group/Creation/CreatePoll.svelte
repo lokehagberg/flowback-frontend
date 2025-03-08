@@ -198,7 +198,7 @@
 
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
-			<FileUploads bind:images />
+			<FileUploads bind:images disableCropping />
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}

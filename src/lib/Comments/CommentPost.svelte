@@ -76,8 +76,6 @@
 			reply_depth: comments.find((comment) => comment.id === parent_id)?.reply_depth || 0
 		};
 
-		console.log(message, 'message');
-
 		// Find the index where to insert the new reply
 		let insertIndex;
 		if (parent_id) {
@@ -114,9 +112,23 @@
 	};
 
 	const commentUpdate = async () => {
-		const { res, json } = await fetchRequest('POST', `group/${getId()}/comment/${id}/update`, {
-			message
-		});
+		const formData = new FormData();
+		formData.append('message', message);
+		//@ts-ignore
+		if (parent_id) formData.append('parent_id', parent_id);
+		// await console.log(await image.text())
+		if (images)
+			images.forEach((image) => {
+				formData.append('attachments', image);
+			});
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${getId()}/comment/${id}/update`,
+			formData,
+			true,
+			false
+		);
 		if (res.ok) {
 			show = true;
 			showMessage = 'Edited Comment';
@@ -174,11 +186,10 @@
 				Class="w-full"
 				placeholder={$_('Write a comment...')}
 				displayMax={false}
-
 			/>
 		</div>
 		<div class="flex ml-2">
-			<FileUploads bind:images minimalist disableCropping/>
+			<FileUploads bind:images minimalist disableCropping />
 			<Button Class="bg-white" type="submit" label=""
 				><Fa icon={faPaperPlane} color="black" /></Button
 			>

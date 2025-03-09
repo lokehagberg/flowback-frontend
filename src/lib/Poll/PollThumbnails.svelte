@@ -40,8 +40,8 @@
 		if (infoToGet === 'home') API += `home/polls?`;
 		else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
-		else if (infoToGet === 'user') API += `user/home?`;
-		// else if (infoToGet === 'user') API += `home/polls?`;
+		// else if (infoToGet === 'user') API += `user/home?`;
+		else if (infoToGet === 'user') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 

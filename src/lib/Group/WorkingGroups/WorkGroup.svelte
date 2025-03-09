@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import type { WorkGroup, WorkGroupUser } from './interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -9,7 +8,6 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	export let workGroup: WorkGroup,
 		handleRemoveGroup: (id: number) => void,

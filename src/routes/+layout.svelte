@@ -143,7 +143,7 @@
 
 	<slot />
 </main>
-<div id="mobile-support">{$_('No support for mobile devices yet')}</div>
+<div id="mobile-support">{$_('No support for mobile devices yet, try Flowback on a non-mobile device')}</div>
 
 <style>
 	#mobile-support {

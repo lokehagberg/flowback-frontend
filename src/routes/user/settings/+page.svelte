@@ -240,7 +240,7 @@
 					</ul>
 				{:else if selectedPage === 'info'}
 					<div>Version Frontend: {version}</div>
-					<div>Version Backennd: {serverConfig.GIT_HASH}</div>
+					<div>Version Backend: {serverConfig.GIT_HASH}</div>
 				{/if}
 			</ul>
 		</div>

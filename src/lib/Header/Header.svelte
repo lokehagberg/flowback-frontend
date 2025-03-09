@@ -117,13 +117,7 @@
 	<div class="!flex justify-between md:w-[80%]">
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<HeaderIcon
-					icon={HomeIcon}
-					text="Home"
-					href="home"
-					Class="w-[32px] "
-					bind:selectedHref
-				/>
+				<HeaderIcon icon={HomeIcon} text="Home" href="home" Class="w-[32px] " bind:selectedHref />
 				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
 					icon={faUserFriends}
@@ -220,7 +214,6 @@
 	</div>
 	<SideHeader bind:sideHeaderOpen />
 </header>
-
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

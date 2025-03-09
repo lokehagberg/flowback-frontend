@@ -14,6 +14,7 @@
 	import type { GroupUser } from '$lib/Group/interface';
 	import type { Permission } from '$lib/Group/Permissions/interface';
 	import Chat from '$lib/Chat/Chat.svelte';
+	import { _ } from 'svelte-i18n';
 
 	export const prerender = true;
 
@@ -78,13 +79,12 @@
 		if (window.localStorage.getItem('token') === undefined) goto('/login');
 		else if (pathname === '/') goto('/home');
 
-		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime')
+		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime');
 		if (sessionExpiration)
-		
-		if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
-			localStorage.removeItem('token');
-		// 	goto('/login')
-		} 
+			if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
+				localStorage.removeItem('token');
+				// 	goto('/login')
+			}
 	};
 
 	beforeNavigate(() => {
@@ -123,3 +123,20 @@
 
 	<slot />
 </main>
+<div id="mobile-support">{$_('No support for mobile devices yet')}</div>
+
+<style>
+	#mobile-support {
+		display: none;
+	}
+
+	@media (max-width: 500px) {
+		main {
+			display: none !important;
+		}
+
+		#mobile-support {
+			display: block !important;
+		}
+	}
+</style>

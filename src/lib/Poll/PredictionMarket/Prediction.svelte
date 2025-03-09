@@ -165,6 +165,9 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
+		console.log(newScore, "newScore");
+
+		predictionBetCreate(newScore);
 		if (newScore === null) predictionBetDelete();
 		else if (score === null) {
 			predictionBetCreate(newScore);

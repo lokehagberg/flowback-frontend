@@ -11,6 +11,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
+	import workinggroupsymbol from '$lib/assets/workinggroupsymbol.svg';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -127,10 +128,12 @@
 			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
-				text={env.PUBLIC_LOGO === "REFORUM" ? "Work- and local Groups" : "Work Groups"}
+				text={env.PUBLIC_LOGO === 'REFORUM' ? 'Work- and local Groups' : 'Work Groups'}
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>
+			<img src={workinggroupsymbol} />
+
 			<!-- <GroupSidebarButton
 				action={() => action('documents')}
 				isSelected={selectedPage === 'documents'}

@@ -11,7 +11,7 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
-	import workinggroupsymbol from '$lib/assets/workinggroupsymbol.svg';
+	import workgroupsymbol from '$lib/assets/workgroupsymbol.svg';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -132,7 +132,7 @@
 				isSelected={selectedPage === 'working-groups'}
 				icon={faUserGroup}
 			/>
-			<img src={workinggroupsymbol} />
+			<img src={workgroupsymbol} />
 
 			<!-- <GroupSidebarButton
 				action={() => action('documents')}

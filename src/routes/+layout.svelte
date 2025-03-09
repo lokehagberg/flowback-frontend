@@ -15,6 +15,8 @@
 	import type { Permission } from '$lib/Group/Permissions/interface';
 	import Chat from '$lib/Chat/Chat.svelte';
 	import { _ } from 'svelte-i18n';
+	import { env } from '$env/dynamic/public';
+	import { fetchRequest } from '$lib/FetchRequest';
 
 	export const prerender = true;
 
@@ -73,10 +75,36 @@
 		return true;
 	};
 
-	const redirect = () => {
+	//TODO: Avoid code duplication and introduce group stores for storing group data.
+	const getGrouplist = async () => {
+		const { res, json } = await fetchRequest('GET', 'group/list');
+		if (!res.ok) return;
+		else return json.results;
+	};
+
+	let repeats = 0;
+
+	const redirect = async () => {
+		const groups = await getGrouplist();
+		console.log(groups, 'GROUPY');
+		if (repeats < 10) {
+			const relativePath = new URL(location.href).pathname;
+			console.log('hi', relativePath);
+		}
+		const relativePath = new URL(location.href).pathname;
+
+		repeats++;
+
 		let pathname = window?.location?.pathname;
 
 		if (window.localStorage.getItem('token') === undefined) goto('/login');
+		else if (
+			//For one group flowback, if no group has been setup, redirect to create group.
+			env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' &&
+			relativePath !== '/creategroup' &&
+			groups.length === 0
+		)
+			goto('/creategroup');
 		else if (pathname === '/') goto('/home');
 
 		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime');

@@ -38,7 +38,8 @@
 			return;
 		}
 
-		// await getUserList();
+		workGroup.member_count++;
+		workGroup.joined = true;
 	};
 
 	const askToJoin = async () => {
@@ -68,7 +69,9 @@
 		workGroupUserList = workGroupUserList.filter(
 			(user) => user.id === Number(localStorage.getItem('userId'))
 		);
-		// getUserList();
+
+		workGroup.member_count--;
+		workGroup.joined = false;
 	};
 
 	const isMember = () => {

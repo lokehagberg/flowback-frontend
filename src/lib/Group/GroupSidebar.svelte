@@ -80,7 +80,7 @@
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
 		>
-			<Fa icon={faBars} />
+			<Fa faIcon={faBars} />
 		</button>
 	{:else}
 		{#if innerWidth < 700}
@@ -88,7 +88,7 @@
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
 			>
-				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
+				<Fa faIcon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
@@ -104,7 +104,7 @@
 				}}
 				text="Create a post"
 				disabled={!userIsPermittedToCreatePost}
-				icon={faCheckToSlot}
+				faIcon={faCheckToSlot}
 				isSelected={false}
 				Class="text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
 			/>
@@ -124,46 +124,46 @@
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
-				icon={faPeopleArrows}
+				faIcon={faPeopleArrows}
 			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
 				text={env.PUBLIC_LOGO === 'REFORUM' ? 'Work- and local Groups' : 'Work Groups'}
 				isSelected={selectedPage === 'working-groups'}
-				icon={faUserGroup}
+				faIcon={faUserGroup}
 			/>
-			<img src={workgroupsymbol} />
+			<!-- svgIcon={workgroupsymbol} -->
 
 			<!-- <GroupSidebarButton
 				action={() => action('documents')}
 				isSelected={selectedPage === 'documents'}
 				text="Documents"
-				icon={faFile}
+				faIcon={faFile}
 			/> -->
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
 					action={() => action('kanban')}
 					isSelected={selectedPage === 'kanban'}
 					text="Group Kanban"
-					icon={faList}
+					faIcon={faList}
 				/>
 				<GroupSidebarButton
 					action={() => action('schedule')}
 					isSelected={selectedPage === 'schedule'}
 					text="Group schedule"
-					icon={faCalendarAlt}
+					faIcon={faCalendarAlt}
 				/>
 			{/if}
 			<GroupSidebarButton
 				action={() => action('members')}
 				text="Members"
-				icon={faUserGroup}
+				faIcon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
 			<!-- <GroupSidebarButton
 				action={() => (action('statistics'))}
 				text="Statistics"
-				icon={faChartColumn}
+				faIcon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
 			/> -->
 			<a
@@ -174,7 +174,7 @@
 				<GroupSidebarButton
 					Class="w-full"
 					text="Video Conference"
-					icon={faVideoCamera}
+					faIcon={faVideoCamera}
 					isSelected={false}
 				/></a
 			>
@@ -182,7 +182,7 @@
 				<GroupSidebarButton
 					action={() => action('about')}
 					text="About"
-					icon={faCircleInfo}
+					faIcon={faCircleInfo}
 					isSelected={selectedPage === 'about'}
 				/>
 			{/if}
@@ -194,7 +194,7 @@
 						Class="w-full"
 						action={() => (areYouSureModal = true)}
 						text="Leave group"
-						icon={faPersonRunning}
+						faIcon={faPersonRunning}
 						isSelected={false}
 					/>
 				{:else}
@@ -202,7 +202,7 @@
 						<GroupSidebarButton
 							Class="w-full"
 							text="Group Ledger"
-							icon={faCoins}
+							faIcon={faCoins}
 							isSelected={false}
 						/>
 					</a>
@@ -214,13 +214,13 @@
 				<GroupSidebarButton
 					action={() => action('email')}
 					text="Send Email"
-					icon={faMailReplyAll}
+					faIcon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton
 					action={() => goto(`/groups/${$page.params.groupId}/edit`)}
 					text="Edit Group"
-					icon={faCog}
+					faIcon={faCog}
 					isSelected={false}
 				/>
 			</div>

@@ -85,7 +85,7 @@
 		if (!assignee) assignee = users[0]?.user.id;
 	};
 
-	const getWorkGroups = async () => {
+	const getWorkGroupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
@@ -101,7 +101,7 @@
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
-		getWorkGroups();
+		getWorkGroupList();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();

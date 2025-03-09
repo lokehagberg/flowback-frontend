@@ -230,7 +230,7 @@
 		showEvent = true;
 	};
 
-	const getWorkGroups = async () => {
+	const getWorkGroupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
@@ -258,7 +258,7 @@
 		};
 
 		setUpScheduledPolls();
-		getWorkGroups();
+		getWorkGroupList();
 	});
 
 	$: month && year && deleteSelection();

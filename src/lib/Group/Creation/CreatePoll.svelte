@@ -26,6 +26,8 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { onMount } from 'svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import type { WorkGroup } from '../WorkingGroups/interface';
 
 	let title = '',
 		description = '',
@@ -48,7 +50,9 @@
 		selected_poll: pollType = 'Text Poll',
 		selectedPage: 'poll' | 'thread' =
 			$page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
-		tags: { id: number }[] = [];
+		tags: { id: number }[] = [],
+		workGroups: WorkGroup[] = [],
+		workGroup: number;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -115,13 +119,13 @@
 	};
 
 	const createThread = async () => {
-		let thread: { title: string; description?: string; work_group_id: number | null } = {
-			title,
-			work_group_id: 13
+		let thread: { title: string; description?: string; work_group_id?: number | null } = {
+			title
 		};
+
 		if (description) thread.description = description;
 
-		thread.work_group_id = 13;
+		if (workGroup) thread.work_group_id = workGroup;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -130,8 +134,10 @@
 		);
 		if (!res.ok) {
 			// poppup = { message: "Couldn't create Thread", success: false };
+			return;
 		}
-		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
+
+		goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
 
 	//TODO: Refactor so arbitrary number of phases can be done
@@ -159,6 +165,13 @@
 			vote_end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 			end_date = new Date(now.setDate(now.getDate() + daysBetweenPhases));
 		}
+	};
+
+	const getWorkGroupList = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
+
+		if (!res.ok) return;
+		workGroups = json.results;
 	};
 
 	onMount(() => {
@@ -199,6 +212,11 @@
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:images disableCropping />
+			<Select
+				labels={workGroups.map((workGroup) => workGroup.name)}
+				values={workGroups.map((workGroup) => workGroup.id)}
+				bind:value={workGroup}
+			/>
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}

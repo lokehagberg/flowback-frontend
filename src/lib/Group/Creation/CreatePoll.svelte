@@ -176,6 +176,7 @@
 
 	onMount(() => {
 		getGroupTags();
+		getWorkGroupList();
 	});
 
 	$: if (selectedPage) status = undefined;

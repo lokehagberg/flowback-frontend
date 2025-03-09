@@ -32,7 +32,8 @@
 		next = '',
 		poppup: poppup,
 		searchQuery = '',
-		searched = true;
+		searched = true,
+		workGroups: any[] = [];
 
 	const getThreads = async () => {
 		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}&order_by=pinned,created_at_desc`;
@@ -88,6 +89,17 @@
 		threads = threads;
 	};
 
+	const getWorkGroupList = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to get workgroups', success: false };
+			return;
+		}
+
+		workGroups = json.results;
+	};
+
 	onMount(() => {
 		getThreads();
 	});
@@ -123,6 +135,7 @@
 		</div>
 	{/if}
 	{#each threads as thread}
+	{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 			<div class="flex justify-between items-center">
 				<button
@@ -130,6 +143,9 @@
 					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
 					>{thread.title}</button
 				>
+				{#if workGroup}
+					<span class="text-sm text-gray-500 dark:text-darkmodeText">{workGroup}</span>
+				{/if}
 
 				<div class="flex gap-3">
 					<NotificationOptions

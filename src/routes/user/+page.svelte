@@ -299,7 +299,7 @@
 					</select>
 					<TelInput
 						bind:country={selectedCountry}
-						bind:value
+						bind:value={userEdit.contact_phone}
 						bind:valid
 						bind:detailedValue
 						class="basic-tel-input {!valid ? 'invalid' : ''}"

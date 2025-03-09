@@ -14,7 +14,7 @@
 
 {#if userId}
 	<a href={`/user?id=${userId}`} class={`flex gap-4 items-center ${Class}`}>
-		{#if !profilePicture}
+		{#if !profilePicture || profilePicture === '' || profilePicture === 'null'}
 			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
 		{:else}
 			<img
@@ -33,7 +33,7 @@
 	</a>
 {:else}
 	<div class={`flex gap-2 items-center ${Class}`}>
-		{#if !profilePicture}
+		{#if !profilePicture || profilePicture === '' || profilePicture === 'null'}
 			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
 		{:else}
 			<img

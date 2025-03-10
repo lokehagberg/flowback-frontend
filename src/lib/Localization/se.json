@@ -594,7 +594,8 @@
     "No support for mobile devices yet, try Flowback on a non-mobile device": "Inget stöd för mobila enheter ännu, försök Flowback på en icke-mobil enhet",
     "Save Timetemplate": "Spara Tidsmall",
     "Successfully saved timetemplate": "Tidsmallen har sparats",
-    
+    "View results & evaluate predictions": "Visa resultat och utvärdera förutsägelser",
+
     "kanbanEntry":{
         "Cancel":"Avbryt"
     }

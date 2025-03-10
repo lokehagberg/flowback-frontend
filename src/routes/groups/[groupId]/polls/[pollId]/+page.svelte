@@ -133,11 +133,11 @@
 						>
 						<div class="h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
-								bind:comments
-								bind:proposals
-								isVoting={false}
 								bind:selectedProposal
+								bind:proposals
+								bind:comments
 								bind:phase
+								isVoting={false}
 							/>
 						</div>
 						<Button
@@ -323,7 +323,7 @@
 						<Comments bind:_comments={comments} bind:proposals api={'poll'} />
 					</div>
 				</Structure>
-				<!-- PHASE 6: RESULTS -->
+				<!-- PHASE 7: RESULTS AND EVALUATION -->
 			{:else if phase === 'result' || phase === 'prediction_vote'}
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full overflow-y-auto">

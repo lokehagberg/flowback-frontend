@@ -90,9 +90,6 @@ export const getGroupInfo = async (id: number | string) => {
 
 export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
 
-	
-	console.log(pollType, pollId, phase, "POLL INFORMATION");
-
 	if (phase === 'result' || phase === "prediction_vote") return 'prediction_vote';
 	pollId = Number(pollId);
 	let _phase: Phase = 'area_vote';
@@ -114,7 +111,6 @@ export const nextPhase = async (pollType: number, pollId: string | number, phase
 		}
 	);
 
-	console.log(_phase, 'PHASE');
-	
+
 	return _phase
 };

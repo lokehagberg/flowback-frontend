@@ -35,14 +35,10 @@
 	});
 
 	const getProposals = async () => {
-		console.log("Hiiiiiii");
-		
 		const { json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
-		console.log(json.results, 'JSON', "I'MMM HEEERERERE");
-		
 
 		proposals = json.results;
 	};
@@ -142,41 +138,38 @@
 		voting[i].score = Number(score);
 		voting = voting;
 	};
-
-	$:console.log(proposals, needsReload, 'Proposals');
-	
 </script>
 
 <div class={`box-border ${Class}`}>
 	<div class="mt-4 h-[100%]">
 		{#if proposals}
 			<!-- {#key needsReload} -->
-				{#each proposals as proposal}
-					<div class="border-b-2 border-gray-300 select-none">
-						<Proposal
-							{proposal}
-							{isVoting}
-							{voting}
-							onChange={() => {}}
-							bind:proposalsToPredictionMarket
-							bind:selectedProposal
-							bind:phase
-							bind:comments
-						>
-							{#if phase === 'delegate_vote' || phase === 'vote'}
-								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
-								<VotingSlider
-									onSelection={(pos) => {
-										changingVote(pos, proposal.id);
-										if (phase === 'delegate_vote') delegateVote();
-										else if (phase === 'vote') vote();
-									}}
-									lineWidth={score ? score * 20 : 0}
-								/>
-							{/if}
-						</Proposal>
-					</div>
-				{/each}
+			{#each proposals as proposal}
+				<div class="border-b-2 border-gray-300 select-none">
+					<Proposal
+						bind:proposalsToPredictionMarket
+						bind:selectedProposal
+						bind:comments
+						bind:phase
+						onChange={() => {}}
+						{proposal}
+						{isVoting}
+						{voting}
+					>
+						{#if phase === 'delegate_vote' || phase === 'vote'}
+							{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
+							<VotingSlider
+								onSelection={(pos) => {
+									changingVote(pos, proposal.id);
+									if (phase === 'delegate_vote') delegateVote();
+									else if (phase === 'vote') vote();
+								}}
+								lineWidth={score ? score * 20 : 0}
+							/>
+						{/if}
+					</Proposal>
+				</div>
+			{/each}
 			<!-- {/key} -->
 		{/if}
 	</div>

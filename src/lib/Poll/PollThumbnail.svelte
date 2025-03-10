@@ -320,20 +320,14 @@
 					<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
 				</div>
 
-				<!-- PHASE 7: RESULTS -->
+				<!-- PHASE 7: RESULTS AND EVALUATION -->
 			{:else if phase === 'prediction_vote' || phase === 'result'}
 				<div class="flex justify-between">
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
 						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-						>{$_('View detailed results')}</Button
-					>
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-						>{$_('Evaluate predictions')}</Button
+						>{$_('View results & evaluate predictions')}</Button
 					>
 				</div>
 			{/if}

@@ -9,7 +9,6 @@
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -24,6 +23,8 @@
 	import { delegation as delegationLimit } from '$lib/Generic/APILimits.json';
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
 	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	let user: User = {
 		banner_image: '',
@@ -54,7 +55,7 @@
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
 		currentlyEditing: null | 'bio' | 'web' | 'name' | 'phone' | 'email' = null,
-		status: StatusMessageInfo | undefined,
+		poppup: poppup | null = null,
 		currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
@@ -86,6 +87,10 @@
 		else isUser = userId === localStorage.getItem('userId');
 
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
+		if (!res.ok) {
+			poppup = { message: 'Could not fetch user', success: false };
+			return;
+		}
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 
@@ -94,6 +99,9 @@
 
 		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
+
+		if (!user.contact_email) userEdit.contact_email = '';
+		if (!user.contact_phone) userEdit.contact_phone = '';
 
 		document.title = `${user.username}'s profile`;
 	};
@@ -113,13 +121,18 @@
 		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
-		if (res.ok) {
-			user = userEdit;
-			isEditing = false;
-			pfpStore.set(`${imageToSend.name}${Math.floor(Math.random() * 1000000)}`);
+
+		if (!res.ok) {
+			const message = json.detail[Object.keys(json.detail)[0]][0] || 'Could not update profile';
+
+			poppup = { message, success: false };
+			return;
 		}
 
-		status = statusMessageFormatter(res, json);
+		user = userEdit;
+		isEditing = false;
+		pfpStore.set(`${imageToSend.name}${Math.floor(Math.random() * 1000000)}`);
+		poppup = { message: 'Profile successfully updated', success: true };
 	};
 
 	const handleCropProfileImage = async (e: any) => {
@@ -206,7 +219,6 @@
 				<p class=" whitespace-pre-wrap">
 					{user.bio || $_('This user has no bio')}
 				</p>
-				<StatusMessage Class="" bind:status />
 			</div>
 			<div class="dark:text-darkmodeText py-6">
 				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
@@ -339,6 +351,24 @@
 				</button>
 			{/if}
 
+			{#if currentlyEditing === 'email'}
+				<TextInput
+					autofocus
+					onBlur={() => (currentlyEditing = null)}
+					label={'Mail'}
+					type="email"
+					bind:value={userEdit.contact_email}
+					Class="pt-8 pb-8"
+				/>
+			{:else}
+				<button
+					on:click={() => (currentlyEditing = 'email')}
+					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
+				>
+					{userEdit.contact_email || $_('Add display email')}
+				</button>
+			{/if}
+
 			{#if currentlyEditing === 'bio'}
 				<TextArea
 					autofocus
@@ -359,7 +389,6 @@
 				</div>
 			{/if}
 
-			<StatusMessage Class="mt-4" bind:status />
 			<div class="flex justify-end gap-2">
 				<Button
 					Class=""
@@ -377,6 +406,8 @@
 		<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
 	{/if}
 </Layout>
+
+<Poppup bind:poppup />
 
 <style>
 	img.cover {

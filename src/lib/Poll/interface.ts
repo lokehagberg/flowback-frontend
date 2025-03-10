@@ -85,7 +85,8 @@ export type Phase =
 	| 'delegate_vote'
 	| 'vote'
 	| 'result'
-	| 'prediction_vote';
+	| 'prediction_vote'
+	| 'schedule';
 
 export interface Comment {
 	author_id: number;

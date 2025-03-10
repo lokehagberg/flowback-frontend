@@ -51,7 +51,7 @@ export const dateLabels = [
 	'Results and evaluation'
 ];
 
-export const dateLabelsDatePoll = ['Start', 'Results'];
+export const dateLabelsDatePoll = ['Schedule', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
 	console.log(phase, 'phase');

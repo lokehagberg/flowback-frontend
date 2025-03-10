@@ -228,7 +228,6 @@
 			bind:phase
 			bind:poll
 			enableDetails
-			pollType={4}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 			horizontal
 		/>
@@ -302,7 +301,8 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('Manage bets')}</Button
 					>
 					<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
@@ -314,7 +314,8 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('Manage votes')}</Button
 					>
 					<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
@@ -326,7 +327,8 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() =>
+							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('View results & evaluate predictions')}</Button
 					>
 				</div>

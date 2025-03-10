@@ -38,7 +38,6 @@
 	on:click={() => {
 		//The button used to only have action, but onClick is standard for svelte. TODO: Refactor so we only have onClick on all buttons in the code.
 		onClick();
-		onClick();
 	}}
 	class={`text-center ${
 		Class.includes('bg-') ? '' : 'bg-primary'

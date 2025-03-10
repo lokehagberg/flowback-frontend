@@ -146,7 +146,11 @@
 
 		loading = true;
 
-		const { res, json } = await fetchRequest('POST', groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`, payload);
+		const { res, json } = await fetchRequest(
+			'POST',
+			groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			payload
+		);
 
 		loading = false;
 
@@ -163,9 +167,13 @@
 	};
 
 	const scheduleEventDelete = async () => {
-		const { res, json } = await fetchRequest('POST', `user/schedule/delete`, {
-			event_id: selectedEvent.event_id
-		});
+		const { res, json } = await fetchRequest(
+			'POST',
+			groupId ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			{
+				event_id: selectedEvent.event_id
+			}
+		);
 
 		loading = false;
 
@@ -178,7 +186,7 @@
 		events = events.filter((event) => event.event_id !== selectedEvent.event_id);
 		events = events;
 
-		showEditScheduleEvent = false;
+		showEvent = false;
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {

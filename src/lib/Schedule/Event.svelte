@@ -20,8 +20,6 @@
 	export let scheduleEventCreate = () => {},
 		scheduleEventEdit = () => {},
 		scheduleEventDelete = () => {};
-
-	$: if (scheduleEventCreate) console.log(scheduleEventCreate);
 </script>
 
 <!-- Allows user to see event -->
@@ -98,7 +96,7 @@
 <Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
 	<div slot="body">
 		<Loader bind:loading>
-			<form on:submit|preventDefault={scheduleEventCreate}>
+			<form>
 				<h1 class="text-lg pb-3 text-left text-primary dark:text-secondary font-semibold">
 					{$_('Create Event')}
 				</h1>

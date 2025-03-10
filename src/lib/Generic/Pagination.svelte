@@ -10,19 +10,19 @@
 		Class = '';
 
 	const request = async (api: string) => {
-		api = commaCleanUp(api);
+		api = commaCleanup(api);
 		api = api.replace(`${env.PUBLIC_API_URL}/`, '');
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) return;
 
-		next = commaCleanUp(json.next);
-		prev = commaCleanUp(json.previous);
+		next = commaCleanup(json.next);
+		prev = commaCleanup(json.previous);
 		iterable = json.results;
 	};
 
-	const commaCleanUp = (api: string) => {
-		return api.replace('%2C', ',');
+	const commaCleanup = (api: string) => {
+		return api?.replace('%2C', ',');
 	};
 </script>
 

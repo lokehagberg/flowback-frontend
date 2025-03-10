@@ -330,21 +330,16 @@
 
 		<div class="flex flex-col">
 			{#each workGroups as workGroup}
-				<input
-					type="checkbox"
-					id={workGroup.id.toString()}
-					value={workGroupFilter.find((_workGroup) => _workGroup === workGroup.id)}
-					on:input={() => onFilterWorkGroup(workGroup)}
-				/>
-				<Button
-					buttonStyle={workGroupFilter.find((_group) => _group === workGroup.id)
-						? 'primary'
-						: 'secondary'}
-					onClick={() => onFilterWorkGroup(workGroup)}
-					Class="mt-2 break-all"
-				>
-					{workGroup.name}
-				</Button>
+				<div class="flex items-center gap-2">
+					<input
+						type="checkbox"
+						id={workGroup.id.toString()}
+						value={workGroupFilter.find((_workGroup) => _workGroup === workGroup.id)}
+						on:input={() => onFilterWorkGroup(workGroup)}
+					/>
+
+					<span>{workGroup.name}</span>
+				</div>
 			{/each}
 		</div>
 	</div>

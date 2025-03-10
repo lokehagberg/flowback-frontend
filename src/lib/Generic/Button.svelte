@@ -9,7 +9,7 @@
 		disabled = false,
 		label: string = '',
 		href = '',
-		hoverEffect = true
+		hoverEffect = true;
 
 	//If all you send in is ref without noClick, the button will automatically send one to that link if pressed.
 	onMount(() => {

@@ -188,7 +188,7 @@
 
 			{#if isUser}
 				<Button
-					action={() => (isEditing = true)}
+					onClick={() => (isEditing = true)}
 					Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 				>
 					<div class="text-gray-800 dark:text-gray-200">
@@ -197,7 +197,7 @@
 				</Button>
 			{/if}
 			<Button
-				action={() => goto($nav?.from?.url.pathname || '/')}
+				onClick={() => goto($nav?.from?.url.pathname || '/')}
 				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
 				<div class="text-gray-800 dark:text-gray-200">
@@ -392,12 +392,12 @@
 			<div class="flex justify-end gap-2">
 				<Button
 					Class=""
-					action={() => {
+					onClick={() => {
 						isEditing = false;
 						profileImagePreview = oldProfileImagePreview;
 					}}>{$_('Cancel')}</Button
 				>
-				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
+				<Button Class="" onClick={updateProfile}>{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}

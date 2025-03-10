@@ -264,14 +264,14 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() =>
+						onClick={() =>
 							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
 						>{$_('See Proposals')} ({poll.total_proposals})</Button
 					>
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() =>
+						onClick={() =>
 							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
 						>{$_('Create a Proposal')}</Button
 					>
@@ -283,14 +283,14 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() =>
+						onClick={() =>
 							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
 						>{$_('See Predictions')} ({poll.total_predictions})</Button
 					>
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() =>
+						onClick={() =>
 							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
 						>{$_('Create a Prediction')}</Button
 					>
@@ -302,7 +302,7 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('Manage bets')}</Button
 					>
 					<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
@@ -314,7 +314,7 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('Manage votes')}</Button
 					>
 					<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
@@ -326,13 +326,13 @@
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('View detailed results')}</Button
 					>
 					<Button
 						Class="w-[47%]"
 						buttonStyle="primary-light"
-						action={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+						onClick={() => goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
 						>{$_('Evaluate predictions')}</Button
 					>
 				</div>

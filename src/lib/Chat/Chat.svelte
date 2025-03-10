@@ -72,7 +72,7 @@
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
 	<Button
-		action={() => {
+		onClick={() => {
 			chatOpen = false;
 			isChatOpen.set(false);
 		}}
@@ -86,7 +86,7 @@
 	<!-- TODO: This will link to Chat settings once that has been implemented -->
 
 	<Button
-		action={() => {
+		onClick={() => {
 			chatOpen = false;
 			isChatOpen.set(false);
 			goto('/user/settings');

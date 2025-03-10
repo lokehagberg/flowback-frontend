@@ -107,21 +107,21 @@
 	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
 
 	{#if workGroup.joined}
-		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
+		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" onClick={leaveGroup}
 			>{$_('Leave')}</Button
 		>
 	{:else if workGroup.direct_join}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" onClick={joinGroup}
 			>{$_('Join')}</Button
 		>
 	{:else}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" onClick={askToJoin}
 			>{$_('Ask to join')}</Button
 		>
 	{/if}
 
 	{#if isAdmin}
-		<Button buttonStyle="warning-light" action={() => (showDeleteModal = true)}
+		<Button buttonStyle="warning-light" onClick={() => (showDeleteModal = true)}
 			><Fa icon={faTrash} /></Button
 		>
 	{/if}
@@ -133,12 +133,12 @@
 			<h2 class="text-xl font-semibold mb-4">{$_('Confirm Deletion')}</h2>
 			<p class="mb-6">{$_('Are you sure you want to delete this workgroup?')}</p>
 			<div class="flex justify-end space-x-2">
-				<Button buttonStyle="primary-light" action={() => (showDeleteModal = false)}>
+				<Button buttonStyle="primary-light" onClick={() => (showDeleteModal = false)}>
 					{$_('Cancel')}
 				</Button>
 				<Button
 					buttonStyle="warning-light"
-					action={() => {
+					onClick={() => {
 						deleteWorkGroup();
 						showDeleteModal = false;
 					}}

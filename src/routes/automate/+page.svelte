@@ -147,7 +147,7 @@
 
 					<Button
 						Class="w-full mt-3"
-						action={() => (selectedPage = 'become-delegate')}
+						onClick={() => (selectedPage = 'become-delegate')}
 						buttonStyle="primary-light">{$_('Become delegate')}</Button
 					>
 				</li>
@@ -169,7 +169,7 @@
 						bind:loading
 					/>
 				{:else}
-					<Button Class="w-full mt-3" action={createDelegationPool} buttonStyle="primary-light"
+					<Button Class="w-full mt-3" onClick={createDelegationPool} buttonStyle="primary-light"
 						>{$_('Become delegate')}</Button
 					>
 				{/if}

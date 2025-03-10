@@ -200,7 +200,7 @@
 	{#if phase === 'prediction_bet'}
 		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button action={getAIPredictionBets}>
+			<Button onClick={getAIPredictionBets}>
 				{$_('Get AI Prediction Bets')}
 			</Button>
 		{/if}
@@ -209,7 +209,7 @@
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">
 			<Button
-				action={() =>
+				onClick={() =>
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(true)
 						: prediction.user_prediction_statement_vote === true
@@ -229,7 +229,7 @@
 				/>
 			</Button>
 			<Button
-				action={() =>
+				onClick={() =>
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(false)
 						: prediction.user_prediction_statement_vote === false

@@ -488,22 +488,22 @@
 		</div>
 		<div slot="footer" class="w-full flex gap-4">
 			{#if isEditing}
-				<Button Class="w-full py-1" buttonStyle="primary-light" action={updateKanbanContent}
+				<Button Class="w-full py-1" buttonStyle="primary-light" onClick={updateKanbanContent}
 					>{$_('Update')}</Button
 				>
 				<Button
 					Class="w-full bg-red-500  py-1"
 					buttonStyle="warning-light"
-					action={() => (openModal = false)}>{$_('Cancel')}</Button
+					onClick={() => (openModal = false)}>{$_('Cancel')}</Button
 				>
 			{:else}
-				<Button Class="w-full py-1" buttonStyle="primary-light" action={() => (isEditing = true)}
+				<Button Class="w-full py-1" buttonStyle="primary-light" onClick={() => (isEditing = true)}
 					>{$_('Edit')}</Button
 				>
 				<Button
 					Class="bg-red-500 w-full  py-1"
 					buttonStyle="warning-light"
-					action={deleteKanbanEntry}>{$_('Delete')}</Button
+					onClick={deleteKanbanEntry}>{$_('Delete')}</Button
 				>
 			{/if}
 		</div>

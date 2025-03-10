@@ -232,8 +232,8 @@
 	<div slot="header">{$_('Are you sure?')}</div>
 	<div slot="body">{$_('You are about to leave the group!')}</div>
 	<div slot="footer">
-		<Button action={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
-		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+		<Button onClick={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
+		<Button onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
 

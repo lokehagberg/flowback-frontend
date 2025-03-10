@@ -197,12 +197,12 @@
 							<Button
 								Class="py-1 mr-4 px-2"
 								buttonStyle="primary-light"
-								action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+								onClick={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
 							>
 							<Button
 								Class="py-2  px-2"
 								buttonStyle="warning"
-								action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
+								onClick={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
 							>
 						</div>
 					{/if}
@@ -240,7 +240,7 @@
 		</form>
 
 		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
+			<Button Class="flex " onClick={() => (showInvite = true)}>{$_('Show invitations')}</Button>
 		{/if}
 
 		<!-- Members List -->

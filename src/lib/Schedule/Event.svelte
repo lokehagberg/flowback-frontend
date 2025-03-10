@@ -87,12 +87,12 @@
 		<Button
 			Class="w-full py-1"
 			buttonStyle="primary-light"
-			action={() => {
+			onClick={() => {
 				showEditScheduleEvent = true;
 				showEvent = false;
 			}}>{$_('Edit')}</Button
 		>
-		<Button Class="w-full py-1" buttonStyle="warning-light" action={scheduleEventDelete}>{$_('Delete')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={scheduleEventDelete}>{$_('Delete')}</Button>
 	</div>
 </Modal>
 
@@ -157,8 +157,8 @@
 		</Loader>
 	</div>
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
-		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventCreate}>{$_('Create')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button>
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" onClick={scheduleEventCreate}>{$_('Create')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>
 
@@ -221,7 +221,7 @@
 		</Loader>
 	</div>
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
-		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" action={scheduleEventEdit}>{$_('Confirm')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button>
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" onClick={scheduleEventEdit}>{$_('Confirm')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button>
 	</div>
 </Modal>

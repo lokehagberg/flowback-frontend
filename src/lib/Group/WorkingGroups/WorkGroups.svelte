@@ -108,7 +108,7 @@
 </div>
 
 {#if isAdmin}
-	<Button action={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
+	<Button onClick={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
 {/if}
 
 <Loader bind:loading>
@@ -126,7 +126,7 @@
 							</div>
 							<Button
 								buttonStyle="primary-light"
-								action={() => addUserToGroup(invite.group_user.id, invite.work_group_id)}
+								onClick={() => addUserToGroup(invite.group_user.id, invite.work_group_id)}
 								>{$_('Add User')}</Button
 							>
 						</div>

@@ -53,8 +53,8 @@
 		<img src={croppedImage} class="hidden" alt="Cropped profile" /><br /> -->
 	{/if}
 	<div class="mt-6 mb-2">
-		<Button buttonStyle="primary" action={handleCrop}>{$_('Confirm')}</Button>
-		<Button buttonStyle="secondary" action={cancelAction} Class="bg-gray-500">{$_('Cancel')}</Button
+		<Button buttonStyle="primary" onClick={handleCrop}>{$_('Confirm')}</Button>
+		<Button buttonStyle="secondary" onClick={cancelAction} Class="bg-gray-500">{$_('Cancel')}</Button
 		>
 	</div>
 </div>

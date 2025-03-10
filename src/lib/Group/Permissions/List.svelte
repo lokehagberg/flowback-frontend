@@ -50,7 +50,7 @@
 					selectedPage = 'create';
 				}}>{role.role_name}</button
 			>
-			<Button action={() => (showDeleteModal = true)} Class="p-2 text-lg cursor-pointer bg-white">
+			<Button onClick={() => (showDeleteModal = true)} Class="p-2 text-lg cursor-pointer bg-white">
 				<Fa class="text-red-500" icon={faTrash} />
 			</Button>
 		</li>
@@ -61,12 +61,12 @@
 					<h2 class="text-xl font-semibold mb-4">{$_('Confirm Deletion')}</h2>
 					<p class="mb-6">{$_('Are you sure you want to delete this workgroup?')}</p>
 					<div class="flex justify-end space-x-2">
-						<Button buttonStyle="primary-light" action={() => (showDeleteModal = false)}>
+						<Button buttonStyle="primary-light" onClick={() => (showDeleteModal = false)}>
 							{$_('Cancel')}
 						</Button>
 						<Button
 							buttonStyle="warning-light"
-							action={() => {
+							onClick={() => {
 								deletePermission(role.id);
 								showDeleteModal = false;
 							}}

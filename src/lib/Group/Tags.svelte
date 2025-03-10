@@ -132,8 +132,8 @@
 		<span>{$_('You are removing')}: {selectedTag?.name}</span>
 	</div>
 	<div slot="footer" class="flex gap-2">
-		<Button action={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2">{$_('Yes')}</Button>
-		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+		<Button onClick={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2">{$_('Yes')}</Button>
+		<Button onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
 

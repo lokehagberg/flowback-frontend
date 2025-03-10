@@ -74,8 +74,8 @@
 						<span>{$_('You have been invited to')} {invite.group_name}</span>
 
 						<div class="mt-4">
-							<Button action={() => acceptInvitation(invite.group)}>{$_('Accept')}</Button>
-							<Button action={() => rejectInvitation(invite.group)}>{$_('Reject')}</Button>
+							<Button onClick={() => acceptInvitation(invite.group)}>{$_('Accept')}</Button>
+							<Button onClick={() => rejectInvitation(invite.group)}>{$_('Reject')}</Button>
 						</div>
 					</li>
 				{/if}

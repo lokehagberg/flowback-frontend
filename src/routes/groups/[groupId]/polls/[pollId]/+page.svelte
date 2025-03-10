@@ -143,7 +143,7 @@
 						<Button
 							Class="w-full mt-2"
 							buttonStyle="primary-light"
-							action={() => {
+							onClick={() => {
 								selectedProposal = null;
 								displayForm = true;
 							}}>{$_('Add Proposal')}</Button
@@ -198,7 +198,7 @@
 							Class="w-full absolute bottom-0 mt-2"
 							buttonStyle="primary-light"
 							disabled={displayForm && !selectedProposal}
-							action={() => {
+							onClick={() => {
 								selectedProposal = null;
 								displayForm = true;
 							}}>{$_('Create Prediction')}</Button

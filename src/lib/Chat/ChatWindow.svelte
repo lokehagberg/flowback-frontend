@@ -234,7 +234,7 @@
 		{/if}
 		{#if olderMessages}
 			<li class="text-center mt-6 mb-6">
-				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
+				<Button onClick={showOlderMessages}>{$_('Show older messages')}</Button>
 			</li>
 		{/if}
 
@@ -257,7 +257,7 @@
 		{/each}
 		{#if newerMessages}
 			<li class="text-center mt-6 mb-6">
-				<Button action={showEarlierMessages} buttonStyle="secondary"
+				<Button onClick={showEarlierMessages} buttonStyle="secondary"
 					>{$_('Show earlier messages')}</Button
 				>
 			</li>
@@ -288,7 +288,7 @@
 
 			{#if env.PUBLIC_MODE === 'DEV'}
 				<Button
-					action={() => (showEmoji = !showEmoji)}
+					onClick={() => (showEmoji = !showEmoji)}
 					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
 				>
 			{/if}

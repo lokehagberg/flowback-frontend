@@ -103,8 +103,6 @@
 		dates = dates;
 	});
 
-
-
 	$: monday = getRecentMonday(
 		new Date(
 			initialMonday?.getFullYear(),

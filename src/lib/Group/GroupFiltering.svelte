@@ -56,7 +56,7 @@
 		</select>
 
 		<div class="rounded-md p-1">
-			<Button Class="!p-1" action={resetFilter} buttonStyle="primary-light"
+			<Button Class="!p-1" onClick={resetFilter} buttonStyle="primary-light"
 			>{$_('Reset Filter')}</Button
 			>
 		</div>

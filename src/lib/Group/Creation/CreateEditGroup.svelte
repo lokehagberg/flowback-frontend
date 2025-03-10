@@ -165,8 +165,8 @@
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
 						<div slot="footer">
 							<div class="flex justify-center gap-16">
-								<Button action={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
-									action={() => (DeleteGroupModalShow = false)}
+								<Button onClick={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
+									onClick={() => (DeleteGroupModalShow = false)}
 									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 								>
 							</div>
@@ -175,7 +175,7 @@
 					<Button
 						buttonStyle="warning-light"
 						Class="w-1/2"
-						action={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button
+						onClick={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button
 					>
 				{/if}
 			</div>

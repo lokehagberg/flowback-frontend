@@ -68,7 +68,7 @@
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<Button action={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
+			<Button onClick={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
 		{:else if pending}

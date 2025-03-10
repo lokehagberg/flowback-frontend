@@ -27,8 +27,8 @@
 	</div>
 	<div slot="footer">
 		<div class="flex justify-center gap-8">
-			<Button action={removeAccount} Class="bg-red-500 w-1/2">{$_('Remove')}</Button>
-			<Button action={() => (open = false)} Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button>
+			<Button onClick={removeAccount} Class="bg-red-500 w-1/2">{$_('Remove')}</Button>
+			<Button onClick={() => (open = false)} Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button>
 		</div>
 	</div>
 </Modal>

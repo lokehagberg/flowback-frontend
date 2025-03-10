@@ -17,6 +17,8 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Event from './Event.svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	export let Class = '',
 		type: 'user' | 'group';
@@ -327,15 +329,21 @@
 		</div>
 
 		<div class="flex flex-col">
-			{#each workGroups as group}
+			{#each workGroups as workGroup}
+				<input
+					type="checkbox"
+					id={workGroup.id.toString()}
+					value={workGroupFilter.find((_workGroup) => _workGroup === workGroup.id)}
+					on:input={() => onFilterWorkGroup(workGroup)}
+				/>
 				<Button
-					buttonStyle={workGroupFilter.find((_group) => _group === group.id)
+					buttonStyle={workGroupFilter.find((_group) => _group === workGroup.id)
 						? 'primary'
 						: 'secondary'}
-					action={() => onFilterWorkGroup(group)}
+					onClick={() => onFilterWorkGroup(workGroup)}
 					Class="mt-2 break-all"
 				>
-					{group.name}
+					{workGroup.name}
 				</Button>
 			{/each}
 		</div>

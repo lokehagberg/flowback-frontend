@@ -114,7 +114,7 @@
 		{/if}
 		
 		<div class="rounded-md p-1">
-			<Button Class="!p-1 ml-1" buttonStyle="primary-light" action={resetFilter}
+			<Button Class="!p-1 ml-1" buttonStyle="primary-light" onClick={resetFilter}
 				>{$_('Reset Filter')}</Button
 			>
 		</div>

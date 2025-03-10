@@ -177,15 +177,15 @@
 		</form>
 	</div>
 	<div slot="footer">
-		<Button action={updateTransaction}>Create Transaction</Button>
+		<Button onClick={updateTransaction}>Create Transaction</Button>
 	</div>
 </Modal>
 
 <Modal bind:open={openDelete}>
 	<div slot="header">Are you sure?</div>
 	<div slot="body">
-		<Button buttonStyle="warning" action={deleteTransaction}>Delete</Button>
-		<Button action={() => (openDelete = false)}>Cancel</Button>
+		<Button buttonStyle="warning" onClick={deleteTransaction}>Delete</Button>
+		<Button onClick={() => (openDelete = false)}>Cancel</Button>
 	</div>
 </Modal>
 

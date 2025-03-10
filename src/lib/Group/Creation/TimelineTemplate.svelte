@@ -64,7 +64,7 @@
 
 		templates.push(template);
 		templates = templates;
-		poppup = { message: 'Successfully created template', success: true };
+		poppup = { message: 'Successfully saved timetemplate', success: true };
 	};
 
 	onMount(() => {
@@ -72,10 +72,9 @@
 	});
 </script>
 
-<form on:submit|preventDefault={templateCreate}>
-	<TextInput label="name" required bind:value={name} />
-	¨
-	<Button type="submit">{$_('Save Timetemplate')}</Button>
+<form class="mt-2" on:submit|preventDefault={templateCreate}>
+	<TextInput label="Name" required bind:value={name} />
+	<Button Class="mt-2" type="submit">{$_('Save Timetemplate')}</Button>
 </form>
 
 {#each templates as template}

@@ -63,7 +63,7 @@
 				}}
 				id="work-group"
 			>
-				<option class="w-5" value={null}> {$_('Unassigned')} </option>
+				<option class="w-5" value={null}> {$_('All')} </option>
 
 				{#each workGroups as group}
 					<option class="w-5 text-black" value={group.id}>

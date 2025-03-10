@@ -76,7 +76,7 @@
 		console.log(kanbanEdited.work_group, 'Workgroup');
 
 		if (kanbanEdited.work_group?.id)
-			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
+			formData.append('work_group', kanbanEdited.work_group.id.toString());
 
 		if (kanbanEdited?.end_date) {
 			const _endDate = new Date(kanbanEdited.end_date);
@@ -91,7 +91,9 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/update`
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			formData,
 			true,
@@ -144,7 +146,9 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/update`
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			{
 				lane,

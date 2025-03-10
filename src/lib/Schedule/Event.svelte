@@ -7,16 +7,12 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
+	import type { scheduledEvent } from './interface';
 
 	export let showEvent = false,
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
-		title = '',
-		description = '',
-		start_date: Date | null,
-		end_date: Date | null,
-		meeting_link = '',
-		workGroup: any,
+		selectedEvent:scheduledEvent,
 		workGroups: any[] = [],
 		type = '',
 		loading = false;
@@ -32,16 +28,16 @@
 <Modal bind:open={showEvent} Class="min-w-[400px] max-w-[500px] z-50">
 	<div slot="body">
 		<div class="text-center">
-			<h2 class="pb-1 font-semibold break-words text-xl w-full">{title}</h2>
+			<h2 class="pb-1 font-semibold break-words text-xl w-full">{selectedEvent.title}</h2>
 			{#if type === 'group'}
-				<p class="w-full">{workGroup?.name || $_('No workgroup assigned')}</p>
+				<p class="w-full">{selectedEvent.work_group?.name || $_('No workgroup assigned')}</p>
 			{/if}
 		</div>
 		<div class="flex flex-col gap-1 mt-4 w-full">
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('From')}</p>
 				<p>
-					{start_date
+					{selectedEvent.start_date
 						? new Intl.DateTimeFormat('sv-SE', {
 								weekday: 'short',
 								day: '2-digit',
@@ -49,7 +45,7 @@
 								hour: '2-digit',
 								minute: '2-digit'
 						  })
-								.format(new Date(start_date))
+								.format(new Date(selectedEvent.start_date))
 								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No start date set')}
 				</p>
@@ -57,7 +53,7 @@
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('To')}</p>
 				<p>
-					{end_date
+						{selectedEvent.end_date
 						? new Intl.DateTimeFormat('sv-SE', {
 								weekday: 'short',
 								day: '2-digit',
@@ -65,7 +61,7 @@
 								hour: '2-digit',
 								minute: '2-digit'
 						  })
-								.format(new Date(end_date))
+								.format(new Date(selectedEvent.end_date))
 								.replace(/\b\w/g, (char) => char.toUpperCase())
 						: $_('No end date set')}
 				</p>
@@ -73,11 +69,11 @@
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Meeting link')}</p>
-			<p class="w-full}">{meeting_link}</p>
+			<p class="w-full}">{selectedEvent.meeting_link}</p>
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Description')}</p>
-			<p class="max-h-[25vh] overflow-scroll break-words w-full}">{description}</p>
+			<p class="max-h-[25vh] overflow-scroll break-words w-full}">{selectedEvent.description}</p>
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Attachments')}</p>
@@ -105,9 +101,9 @@
 					{$_('Create Event')}
 				</h1>
 				<div class="pb-2">
-					<TextInput Class="text-md" label="Title" bind:value={title} required />
+					<TextInput Class="text-md" label="Title" bind:value={selectedEvent.title} required />
 				</div>
-				<TextArea Class="text-md" label="Description" bind:value={description} />
+				<TextArea Class="text-md" label="Description" bind:value={selectedEvent.description} />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -115,7 +111,7 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={workGroup}
+							bind:value={selectedEvent.work_group}
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
 						/>
@@ -131,9 +127,9 @@
 						<input
 							id="create-start-date"
 							type="datetime-local"
-							bind:value={start_date}
+							bind:value={selectedEvent.start_date}
 							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
-						   {start_date ? 'text-black' : 'text-gray-500'}"
+						   {selectedEvent.start_date ? 'text-black' : 'text-gray-500'}"
 						/>
 					</div>
 
@@ -144,14 +140,14 @@
 						<input
 							id="create-end-date"
 							type="datetime-local"
-							bind:value={end_date}
+							bind:value={selectedEvent.end_date}
 							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
-							{end_date ? 'text-black' : 'text-gray-500'}"
+							{selectedEvent.end_date ? 'text-black' : 'text-gray-500'}"
 						/>
 					</div>
 				</div>
 				<div class="pt-2">
-					<TextInput label="Meeting link" bind:value={meeting_link} />
+					<TextInput label="Meeting link" bind:value={selectedEvent.meeting_link} />
 				</div>
 			</form>
 		</Loader>
@@ -172,9 +168,9 @@
 				<DateInput bind:value={end_date} format="yyyy-MM-dd HH:mm" /> -->
 				<!-- min={start_date ? addDateOffset(start_date, 1, 'hour') : new Date()} -->
 				<div class="pb-2">
-					<TextInput label="Title" bind:value={title} required />
+					<TextInput label="Title" bind:value={selectedEvent.title} required />
 				</div>
-				<TextArea label="Description" bind:value={description} rows={3} Class="overflow-scroll" />
+				<TextArea label="Description" bind:value={selectedEvent.description} rows={3} Class="overflow-scroll" />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -182,7 +178,7 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={workGroup}
+							bind:value={selectedEvent.work_group}
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
 						/>
@@ -196,9 +192,9 @@
 						<input
 							id="edit-start-date"
 							type="datetime-local"
-							bind:value={start_date}
+							bind:value={selectedEvent.start_date}
 							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
-						   {start_date ? 'text-black' : 'text-gray-500'}"
+						   {selectedEvent.start_date ? 'text-black' : 'text-gray-500'}"
 						/>
 					</div>
 					<div class="text-left flex-1">
@@ -208,14 +204,14 @@
 						<input
 							id="edit-end-date"
 							type="datetime-local"
-							bind:value={end_date}
+							bind:value={selectedEvent.end_date}
 							class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
-							{start_date ? 'text-black' : 'text-gray-500'}"
+							{selectedEvent.start_date ? 'text-black' : 'text-gray-500'}"
 						/>
 					</div>
 				</div>
 				<div class="pt-2">
-					<TextInput label="Meeting link" bind:value={meeting_link} />
+					<TextInput label="Meeting link" bind:value={selectedEvent.meeting_link} />
 				</div>
 			</form>
 		</Loader>

@@ -1,10 +1,10 @@
 export interface scheduledEvent {
 	created_by: number;
-	description: string;
+	description?: string;
 	end_date: string;
 	event_id: number;
 	poll?: number;
-	score: number | null;
+	score?: number | null;
 	start_date: string;
 	title: string;
 	group_id?: number;

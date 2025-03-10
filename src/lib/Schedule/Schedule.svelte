@@ -131,18 +131,22 @@
 		events = events;
 	};
 
-	const scheduleEventEdit = async () => {
+	const scheduleEventUpdate = async () => {
 		let payload: any = selectedEvent;
 
 		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
 
-		if (selectedEvent.description === '') delete payload.description;
+		if (selectedEvent.description === '' || selectedEvent.description === null)
+			delete payload.description;
+		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === null)
+			delete payload.meeting_link;
 
 		if (type === 'group' && selectedEvent.work_group)
 			payload['work_group_id'] = selectedEvent.work_group;
 
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `user/schedule/update`, payload);
+
+		const { res, json } = await fetchRequest('POST', groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`, payload);
 
 		loading = false;
 
@@ -364,7 +368,7 @@
 	bind:loading
 	bind:type
 	{scheduleEventCreate}
-	{scheduleEventEdit}
+	scheduleEventEdit={scheduleEventUpdate}
 	{scheduleEventDelete}
 />
 

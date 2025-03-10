@@ -12,7 +12,7 @@
 	export let showEvent = false,
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
-		selectedEvent:scheduledEvent,
+		selectedEvent: scheduledEvent,
 		workGroups: any[] = [],
 		type = '',
 		loading = false;
@@ -53,7 +53,7 @@
 			<div class="flex justify-between w-full">
 				<p class="font-bold">{$_('To')}</p>
 				<p>
-						{selectedEvent.end_date
+					{selectedEvent.end_date
 						? new Intl.DateTimeFormat('sv-SE', {
 								weekday: 'short',
 								day: '2-digit',
@@ -88,7 +88,9 @@
 				showEvent = false;
 			}}>{$_('Edit')}</Button
 		>
-		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={scheduleEventDelete}>{$_('Delete')}</Button>
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={scheduleEventDelete}
+			>{$_('Delete')}</Button
+		>
 	</div>
 </Modal>
 
@@ -153,8 +155,17 @@
 		</Loader>
 	</div>
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
-		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" onClick={scheduleEventCreate}>{$_('Create')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button>
+		<Button
+			Class="w-full py-1"
+			buttonStyle="primary-light"
+			type="submit"
+			onClick={scheduleEventCreate}>{$_('Create')}</Button
+		>
+		<Button
+			Class="w-full py-1"
+			buttonStyle="warning-light"
+			onClick={() => (showCreateScheduleEvent = false)}>{$_('Cancel')}</Button
+		>
 	</div>
 </Modal>
 
@@ -170,7 +181,12 @@
 				<div class="pb-2">
 					<TextInput label="Title" bind:value={selectedEvent.title} required />
 				</div>
-				<TextArea label="Description" bind:value={selectedEvent.description} rows={3} Class="overflow-scroll" />
+				<TextArea
+					label="Description"
+					bind:value={selectedEvent.description}
+					rows={3}
+					Class="overflow-scroll"
+				/>
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -189,6 +205,7 @@
 						<label class="block text-md pt-2" for="edit-start-date">
 							{$_('From')}
 						</label>
+
 						<input
 							id="edit-start-date"
 							type="datetime-local"
@@ -217,7 +234,16 @@
 		</Loader>
 	</div>
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-3">
-		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit" onClick={scheduleEventEdit}>{$_('Confirm')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button>
+		<Button
+			Class="w-full py-1"
+			buttonStyle="primary-light"
+			type="submit"
+			onClick={scheduleEventEdit}>{$_('Confirm')}</Button
+		>
+		<Button
+			Class="w-full py-1"
+			buttonStyle="warning-light"
+			onClick={() => (showEditScheduleEvent = false)}>{$_('Cancel')}</Button
+		>
 	</div>
 </Modal>

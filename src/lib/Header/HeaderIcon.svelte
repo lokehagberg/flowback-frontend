@@ -17,7 +17,8 @@
 		size = 'xl',
 		tabindex = 0,
 		selectedHref: string | null = null,
-		textClass = '';
+		textClass = '',
+		disableTextOnHover = false;
 
 	let hovering = false,
 		selectedCurrent = '',

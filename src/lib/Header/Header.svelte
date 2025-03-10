@@ -117,9 +117,17 @@
 	<div class="!flex justify-between md:w-[80%]">
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<HeaderIcon icon={HomeIcon} text="Home" href="home" Class="w-[32px] " bind:selectedHref />
-				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
+					disableTextOnHover
+					icon={HomeIcon}
+					text="Home"
+					href="home"
+					Class="w-[32px] "
+					bind:selectedHref
+				/>
+				<!-- <HeaderIcon disableTextOnHover icon={faGlobeEurope} text="Public" href="public" /> -->
+				<HeaderIcon
+					disableTextOnHover
 					icon={faUserFriends}
 					text="Groups"
 					Class="w-[32px] "
@@ -129,6 +137,7 @@
 			{/if}
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
+					disableTextOnHover
 					icon={HomeIcon}
 					Class="w-[35px] "
 					text="Home"
@@ -138,6 +147,7 @@
 			{/if}
 
 			<HeaderIcon
+				disableTextOnHover
 				icon={KanbanIcon}
 				text="Kanban"
 				href="kanban"
@@ -146,6 +156,7 @@
 			/>
 
 			<HeaderIcon
+				disableTextOnHover
 				icon={CalendarIcon}
 				Class="w-[32px] "
 				text="Schedule"
@@ -155,6 +166,7 @@
 
 			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 				<HeaderIcon
+					disableTextOnHover
 					Class="w-[30px] "
 					icon={faCoins}
 					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
@@ -165,6 +177,7 @@
 
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
+					disableTextOnHover
 					icon={AutomationIcon}
 					Class="w-[30px] "
 					text={'Automate'}
@@ -173,6 +186,7 @@
 				/>
 			{:else}
 				<HeaderIcon
+					disableTextOnHover
 					icon={AutomationIcon}
 					Class="w-[30px] "
 					text={'Delegations'}

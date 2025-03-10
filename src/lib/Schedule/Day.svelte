@@ -92,8 +92,6 @@
 				{#if (1000 * i) / window.innerHeight < 3}
 					<button
 						on:click={() => {
-							console.log(event);
-							
 							selectedEvent = event;
 							showEvent = true;
 						}}

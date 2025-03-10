@@ -104,6 +104,7 @@
 		let payload: any = selectedEvent;
 
 		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
+		if (selectedEvent.meeting_link === '') delete payload.meeting_link;
 
 		if (selectedEvent.description === '') delete payload.description;
 
@@ -225,7 +226,7 @@
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
 
-
+	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -337,17 +338,17 @@
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<Day
 						bind:showCreateScheduleEvent
-						bind:selectedDatePosition
-						bind:selectedDate
-						bind:year
-						bind:month
 						bind:advancedTimeSettingsDates
+						bind:selectedDatePosition
+						bind:selectedEvent
+						bind:selectedDate
 						bind:showEvent
 						bind:events
+						bind:month
+						bind:year
 						{x}
 						{y}
-						/>
-						<!-- bind:clickedEvent={selectedEvent} -->
+					/>
 				{/each}
 			{/each}
 		</div>
@@ -355,13 +356,13 @@
 </div>
 
 <Event
-	bind:showEvent
 	bind:showCreateScheduleEvent
 	bind:showEditScheduleEvent
 	bind:selectedEvent
 	bind:workGroups
-	bind:type
+	bind:showEvent
 	bind:loading
+	bind:type
 	{scheduleEventCreate}
 	{scheduleEventEdit}
 	{scheduleEventDelete}

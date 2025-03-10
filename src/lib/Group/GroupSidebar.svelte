@@ -20,7 +20,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import { faCoins, faLink } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
@@ -171,6 +171,7 @@
 				target="_blank"
 				href={`https://meet.flowback.org/${group.jitsi_room}`}
 			>
+			<!-- TODO: Bad UX should have icon for external link -->
 				<GroupSidebarButton
 					Class="w-full"
 					text="Video Conference"

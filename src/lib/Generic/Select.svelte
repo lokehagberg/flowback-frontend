@@ -22,7 +22,7 @@
 		<label for={label}>{label}</label> <br />
 	{/if}
 	<select
-		name={label}
+		bind:value
 		on:input={(e) => {
 			onInput(e);
 			//@ts-ignore
@@ -30,11 +30,11 @@
 			// 	//@ts-ignore
 			// 	value = e?.target?.value;
 		}}
-		style="width:100%"
 		class={`rounded p-1 dark:bg-darkobject ${classInner}`}
-		bind:value
+		style="width:100%"
+		name={label}
 	>
-		<option value="" disabled selected>{innerLabel}</option>
+		<option value="" selected>{innerLabel}</option>
 		{#each labels as label, i}
 			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
 		{/each}

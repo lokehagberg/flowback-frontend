@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
-	export let value:string | null = '',
+	export let value: string | null = '',
 		label: string,
 		required = false,
 		Class = '',
@@ -16,14 +16,16 @@
 		rows = 2,
 		recentlyTappedButton = '',
 		placeholder: string = '',
-		id = '';
+		id = 'default';
 
 	const onKeyDown = (e: any) => {
 		recentlyTappedButton = e.target.value[e.target.value.length - 1];
 	};
 
 	const expandableTextArea = () => {
-		const textarea = document.getElementById('textarea');
+		const textarea = document.getElementById(`textarea-${id}`);
+		console.log(textarea);
+
 		if (!textarea) return;
 
 		textarea.oninput = function () {
@@ -35,7 +37,7 @@
 	};
 
 	const focus = () => {
-		const textarea = document.getElementById('textarea');
+		const textarea = document.getElementById(`textarea-${id}`);
 		if (!textarea) return;
 
 		textarea.focus();
@@ -64,7 +66,7 @@
 	</div>
 	<textarea
 		class={`${areaClass} dark:bg-darkbackground border border-gray-300 border-solid rounded focus:bg-gray-100 p-0.5 w-full outline-none ${inputClass}`}
-		id="textarea"
+		id={`textarea-${id}`}
 		{required}
 		{rows}
 		maxlength={max}
@@ -72,6 +74,6 @@
 		on:blur={onBlur}
 		on:keypress={onKeyPress}
 		on:input={onKeyDown}
-		placeholder={placeholder}
+		{placeholder}
 	/>
 </label>

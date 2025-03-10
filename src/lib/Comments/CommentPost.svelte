@@ -10,6 +10,8 @@
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
+	import { onMount } from 'svelte';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -25,7 +27,8 @@
 		showMessage = '',
 		recentlyTappedButton = '',
 		attachments: File[] = [],
-		images: File[];
+		images: File[],
+		darkmode = false;
 
 	// $: if(image !== null ) attachments.push(image)
 
@@ -150,6 +153,12 @@
 			categories: ['comment_self']
 		});
 	};
+
+	onMount(() => {
+		darkModeStore.subscribe((value) => {
+			darkmode = value;
+		});
+	});
 </script>
 
 <form
@@ -191,8 +200,8 @@
 		</div>
 		<div class="flex ml-2">
 			<FileUploads bind:images minimalist disableCropping />
-			<Button Class="bg-white" type="submit" label=""
-				><Fa icon={faPaperPlane} color="black" /></Button
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100" type="submit" label=""
+				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
 			>
 		</div>
 	</div>

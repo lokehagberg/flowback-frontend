@@ -25,7 +25,8 @@
 			next: '',
 			previous: '',
 			total_page: 0,
-			joined:false
+			joined:false,
+			chat:1
 		},
 		poppup: poppup,
 		open = false,
@@ -49,6 +50,7 @@
 	};
 
 	const createWorkingGroup = async () => {
+		workGroupEdit.chat = 1
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/workgroup/create`,

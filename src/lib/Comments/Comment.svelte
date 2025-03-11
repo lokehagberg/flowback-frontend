@@ -67,6 +67,8 @@
 		if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
 		else if (api === 'thread')
 			_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
+		else if (api === 'delegate-history')
+			_api = `group/delegate/pool/${delegate_pool_id}/comment/${comment.id}/vote`;
 
 		const { res, json } = await fetchRequest('POST', _api, vote);
 

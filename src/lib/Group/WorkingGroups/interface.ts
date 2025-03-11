@@ -11,6 +11,7 @@ export interface WorkGroup {
 	joined:boolean
 	next:string;
 	previous:string
+	chat:1
 }
 
 export interface WorkGroupUser {

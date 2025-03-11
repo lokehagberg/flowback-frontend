@@ -22,6 +22,7 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -360,17 +361,13 @@
 						<div class="block text-md">
 							{$_('Work Group')}
 						</div>
-						<select
-							style="width:100%"
-							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							on:input={handleChangeWorkGroup}
-						>
-							{#each workGroups as group}
-								<option class="w-5 text-black" value={group.id}>
-									{elipsis(group.name)}
-								</option>
-							{/each}
-						</select>
+
+						<Select
+							Class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							labels={workGroups.map((group) => elipsis(group.name))}
+							values={workGroups.map((group) => group.id)}
+							onInput={handleChangeWorkGroup}
+						/>
 					</div>
 				{/if}
 				<div class="text-left w-[300px]">

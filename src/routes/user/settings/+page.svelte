@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.8',
+		version = '0.1.9',
 		serverConfig: any = {};
 
 	const userUpdate = async () => {
@@ -239,8 +239,8 @@
 						{/each}
 					</ul>
 				{:else if selectedPage === 'info'}
-					<div>Version Frontend: {version}</div>
-					<div>Version Backend: {serverConfig.GIT_HASH}</div>
+					<div>Version: {version}</div>
+					<!-- <div>Version Backend: {serverConfig.GIT_HASH}</div> -->
 				{/if}
 			</ul>
 		</div>

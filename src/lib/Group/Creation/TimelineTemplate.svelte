@@ -29,7 +29,7 @@
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/poll/template/list`);
 
 		if (!res.ok) {
-			poppup = { message: 'Could not load templates', success: false };
+			poppup = { message: 'Could not get templates', success: false };
 			return;
 		}
 

@@ -44,7 +44,7 @@
 		const { res, json } = await fetchRequest('GET', url);
 
 		if (!res.ok) {
-			poppup = { message: 'Could not load threads', success: false };
+			poppup = { message: 'Could not get threads', success: false };
 			return;
 		}
 

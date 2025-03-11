@@ -34,7 +34,7 @@
 		style="width:100%"
 		name={label}
 	>
-		<option value="" selected>{innerLabel}</option>
+		<option value="" selected>{$_(innerLabel)}</option>
 		{#each labels as label, i}
 			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
 		{/each}

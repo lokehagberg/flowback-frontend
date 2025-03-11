@@ -10,6 +10,11 @@
 		//TODO: Fix so one can use size
 		size: number = 40,
 		userId: null | string | number = null;
+
+	// TODO: Fix this bad hardcoded solution and general solution for decreasing reliance on hardcoded solutions to API in urls
+	$: if (profilePicture?.includes('api/api')) {
+		profilePicture = profilePicture.replace('api/api', 'api');
+	}
 </script>
 
 {#if userId}

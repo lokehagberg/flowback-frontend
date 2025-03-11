@@ -584,20 +584,23 @@
     "Write a comment...": "Skriv en kommentar...",
     "Read more": "Läs mer",
     "Write a message...": "Skriv ett meddelande...",
-    "Add":"Lägg till",
+    "Add": "Lägg till",
     "Manage areas": "Hantera ämnesområden",
     "Manage permissions": "Hantera behörigheter",
     "Search tasks": "Sök bland uppgifterna",
     "Phone number": "Telefonnummer",
     "None provided": "Inget angivet",
-    "Work- and local Groups" : "Arbets- och lokala grupper",
+    "Work- and local Groups": "Arbets- och lokala grupper",
     "No support for mobile devices yet, try Flowback on a non-mobile device": "Inget stöd för mobila enheter ännu, försök Flowback på en icke-mobil enhet",
     "Save Timetemplate": "Spara Tidsmall",
     "Successfully saved timetemplate": "Tidsmallen har sparats",
     "View results & evaluate predictions": "Visa resultat och utvärdera förutsägelser",
     "Profile successfully updated": "Profilen uppdaterades framgångsrikt",
-
-    "kanbanEntry":{
-        "Cancel":"Avbryt"
+    "Could not get polls": "Kunde inte hämta omröstningar",
+    "Could not get poll": "Kunde inte hämta omröstning",
+    "Could not get threads": "Kunde inte hämta trådar",
+    "Could not get thread": "Kunde inte hämta tråd",
+    "kanbanEntry": {
+        "Cancel": "Avbryt"
     }
 }

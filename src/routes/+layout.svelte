@@ -80,6 +80,7 @@
 		const { res, json } = await fetchRequest('GET', 'group/list');
 		if (!res.ok) return;
 		else return json.results;
+		
 	};
 
 	const redirect = async () => {

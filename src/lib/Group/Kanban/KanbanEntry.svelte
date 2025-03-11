@@ -75,7 +75,7 @@
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 
 		if (kanbanEdited.work_group?.id)
-			formData.append('work_group_ids', kanbanEdited.work_group.id.toString());
+			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
 		if (kanbanEdited?.end_date) {
 			const _endDate = new Date(kanbanEdited.end_date);

@@ -138,7 +138,7 @@
 			</div>
 		{/if}
 		<div class="pl-14 text-xs text-gray-400 dark:text-darkmodeText">
-			{comment.edited && comment.active ? '(edited)' : ''}
+			{comment.edited && comment.active ? $_('(edited)') : ''}
 		</div>
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">

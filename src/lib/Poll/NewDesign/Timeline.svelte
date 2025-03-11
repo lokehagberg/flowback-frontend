@@ -144,10 +144,12 @@
 				{$_('Time details')}
 			</button>
 			{#each dateLabels as label, i}
-				<li class="flex justify-between flex-col md:flex-row text-center">
-					<div class="mb-4 md:mb-0">{$_(label)}:</div>
-					<div class="mb-4 md:mb-0">{datesArray[i]} CET</div>
-				</li>
+				{#if i !== 0}
+					<li class="flex justify-between flex-col md:flex-row text-center">
+						<div class="mb-4 md:mb-0">{$_(label)}:</div>
+						<div class="mb-4 md:mb-0">{datesArray[i - 1]} CET</div>
+					</li>
+				{/if}
 			{/each}
 		</ul>
 	{:else if enableDetails}

@@ -41,8 +41,8 @@
 >
 	<div class="w-full flex items-end gap-4">
 		<TextInput
-			Class="flex-1"
-			inputClass="placeholder-gray-600 pl-2 pr-6 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
+			Class="flex-1 placeholder-gray-600  pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject"
+			inputClass="placeholder-gray-600 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
 			placeholder={$_('Search tasks')}
 			onInput={() => (searched = false)}
 			label=""
@@ -72,14 +72,5 @@
 				{/each}
 			</select>
 		</div>
-
-		<Button
-			Class={`w-8 h-8 !p-1 flex justify-center items-center ${
-				searched ? 'bg-blue-300' : 'bg-blue-600'
-			}`}
-			type="submit"
-		>
-			<Fa icon={faMagnifyingGlass} />
-		</Button>
 	</div>
 </form>

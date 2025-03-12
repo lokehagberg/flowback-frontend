@@ -600,6 +600,7 @@
     "Could not get poll": "Kunde inte hämta omröstning",
     "Could not get threads": "Kunde inte hämta trådar",
     "Could not get thread": "Kunde inte hämta tråd",
+    
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

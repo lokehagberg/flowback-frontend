@@ -20,9 +20,10 @@ export async function fetchRequest(
 
 	if (needs_authorization) {
 		const token = localStorage.getItem('token');
+		const relativePath = new URL(location.href).pathname;
 
 		if (token !== null) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
-		// else goto('/login');
+		else if (relativePath !== '/login') goto('/login');
 	}
 
 	if (needs_json) {
@@ -46,7 +47,8 @@ export async function fetchRequest(
 		// toSend
 	);
 
-	if (res.status === 401) goto('/login')
+	const relativePath = new URL(location.href).pathname;
+	if (res.status === 401 && relativePath !== '/login') goto('/login')
 
 	try {
 		const json = await res.json();

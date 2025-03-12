@@ -80,7 +80,6 @@
 		const { res, json } = await fetchRequest('GET', 'group/list');
 		if (!res.ok) return;
 		else return json.results;
-		
 	};
 
 	const redirect = async () => {
@@ -101,10 +100,10 @@
 		else if (pathname === '/') goto('/home');
 
 		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime');
-		if (sessionExpiration)
+		if (sessionExpiration && relativePath !== '/login')
 			if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
 				localStorage.removeItem('token');
-				// 	goto('/login')
+				goto('/login');
 			}
 	};
 
@@ -144,7 +143,9 @@
 
 	<slot />
 </main>
-<div id="mobile-support">{$_('No support for mobile devices yet, try Flowback on a non-mobile device')}</div>
+<div id="mobile-support">
+	{$_('No support for mobile devices yet, try Flowback on a non-mobile device')}
+</div>
 
 <style>
 	#mobile-support {

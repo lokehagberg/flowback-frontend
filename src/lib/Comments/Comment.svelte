@@ -28,10 +28,13 @@
 		poppup: poppup,
 		isVoting = false; // Add loading state
 
-	const deleteComment = async (id: number) => {
-		let _api = `group/${api}/`;
-		if (api === 'poll') _api += `${$page.params.pollId}/`;
-		else if (api === 'thread') _api += `${$page.params.threadId}/`;
+	const commentDelete = async (id: number) => {
+		let _api = `group/`;
+
+		if (api === 'poll') _api += `poll/${$page.params.pollId}/`;
+		else if (api === 'thread') _api += `thread/${$page.params.threadId}/`;
+		else if (api === 'delegate-history') _api += `delegate/pool/${delegate_pool_id}/`;
+
 		_api += `comment/${id}/delete`;
 
 		const { res, json } = await fetchRequest('POST', _api);
@@ -41,11 +44,12 @@
 			return;
 		}
 
-		comments = comments.map((comment) => {
+		comments.map((comment) => {
 			if (comment.id !== id) return comment;
 
 			comment.message = '[Deleted]';
 			comment.active = false;
+			console.log(comment, 'COMMNEt');
 			return comment;
 		});
 		comments = comments;
@@ -132,11 +136,13 @@
 				Class="font-semibold"
 			/>
 		</div>
-		{#if comment.message}
-			<div class="text-md mt-1 mb-3 pl-14 break-words" id={`comment-${comment.id}`}>
-				{comment.message}
-			</div>
-		{/if}
+		{#key comment.message}
+			{#if comment.message}
+				<div class="text-md mt-1 mb-3 pl-14 break-words" id={`comment-${comment.id}`}>
+					{comment.message}
+				</div>
+			{/if}
+		{/key}
 		<div class="pl-14 text-xs text-gray-400 dark:text-darkmodeText">
 			{comment.edited && comment.active ? $_('(edited)') : ''}
 		</div>
@@ -189,7 +195,7 @@
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors hover:underline"
-						on:click={() => deleteComment(comment.id)}
+						on:click={() => commentDelete(comment.id)}
 					>
 						{$_('Delete')}
 					</button>

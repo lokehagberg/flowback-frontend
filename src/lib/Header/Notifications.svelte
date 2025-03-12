@@ -9,16 +9,17 @@
 	import TimeAgo from 'javascript-time-ago';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { goto } from '$app/navigation';
+	import {notifications as notificationLimit} from '$lib/Generic/APILimits.json';
 
 	let notifications: notification[],
 		hovered: number[] = [];
 
-	const getNotifications = async () => {
+	const notificationList = async () => {
 		//Prevents infinite reload in /login where <Header /> is hidden
 		if (location.pathname === '/login') return;
 		const { json, res } = await fetchRequest(
 			'GET',
-			'notification/list?order_by=notification_object__timestamp_desc'
+			`notification/list?order_by=notification_object__timestamp_desc&limit=${notificationLimit}`
 		);
 		if (res.ok) notifications = json.results;
 	};
@@ -75,7 +76,7 @@
 		TimeAgo.addDefaultLocale(en);
 		timeAgo = new TimeAgo('en');
 
-		getNotifications();
+		notificationList();
 		closeWindowWhenClickingOutside();
 	});
 

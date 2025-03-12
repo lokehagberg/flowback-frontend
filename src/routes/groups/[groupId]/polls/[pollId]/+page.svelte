@@ -102,7 +102,7 @@
 
 <Layout centered>
 	{#if poll}
-		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote'} />
+		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== "pre_start"} />
 
 		{#if pollType === 4}
 			<!-- PHASE 0: PRE-START -->

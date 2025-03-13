@@ -26,7 +26,8 @@
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
-		isVoting = false; // Add loading state
+		isVoting = false,
+		images: File[] = [];
 
 	const commentDelete = async (id: number) => {
 		let _api = `group/`;
@@ -106,6 +107,13 @@
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
 	});
+
+	$: if (images) 
+	{
+		console.log(images, 'IMAGES');
+		console.log(comment.attachments, 'comment.attachments');
+		
+	}
 </script>
 
 {#if comment.being_edited}
@@ -113,6 +121,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
+		bind:images
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -216,6 +225,7 @@
 
 {#if comment.being_replied}
 	<CommentPost
+		bind:images
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}

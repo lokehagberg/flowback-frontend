@@ -21,13 +21,13 @@
 		message = '',
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
-		delegate_pool_id: number | null = null;
+		delegate_pool_id: number | null = null,
+		images: File[];
 
 	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '',
 		attachments: File[] = [],
-		images: File[],
 		darkmode = false;
 
 	// $: if(image !== null ) attachments.push(image)
@@ -40,10 +40,8 @@
 
 	const commentCreate = async () => {
 		const formData = new FormData();
-		formData.append('message', message);
-		//@ts-ignore
-		if (parent_id) formData.append('parent_id', parent_id);
-		// await console.log(await image.text())
+		if (message !== '') formData.append('message', message);
+		if (parent_id) formData.append('parent_id', parent_id.toString());
 		if (images)
 			images.forEach((image) => {
 				formData.append('attachments', image);
@@ -116,9 +114,9 @@
 
 	const commentUpdate = async () => {
 		const formData = new FormData();
-		formData.append('message', message);
-		//@ts-ignore
-		if (parent_id) formData.append('parent_id', parent_id);
+
+		if (message !== '') formData.append('message', message);
+		if (parent_id) formData.append('parent_id', parent_id.toString());
 		// await console.log(await image.text())
 		if (images)
 			images.forEach((image) => {

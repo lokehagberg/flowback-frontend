@@ -600,6 +600,10 @@
     "Could not get poll": "Kunde inte hämta omröstning",
     "Could not get threads": "Kunde inte hämta trådar",
     "Could not get thread": "Kunde inte hämta tråd",
+    "Failed to post comment":"Misslyckades att posta kommentar",
+    "Failed to delete comment":"Misslyckades att ta bort kommentar",
+    "Failed to edit comment":"Misslyckades att redigera kommentar",
+    "Failed to get comments":"Misslyckades att hämta kommentarer",
     
     "kanbanEntry": {
         "Cancel": "Avbryt"

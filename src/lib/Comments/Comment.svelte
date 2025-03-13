@@ -108,11 +108,9 @@
 		else if (comment.user_vote === false) userUpVote = -1;
 	});
 
-	$: if (images) 
-	{
+	$: if (images) {
 		console.log(images, 'IMAGES');
 		console.log(comment.attachments, 'comment.attachments');
-		
 	}
 </script>
 

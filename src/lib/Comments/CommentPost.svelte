@@ -6,12 +6,13 @@
 	import { page } from '$app/stores';
 	import type { Comment } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
-	import { getCommentDepth } from './functions';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { onMount } from 'svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -27,10 +28,8 @@
 	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '',
-		attachments: File[] = [],
-		darkmode = false;
-
-	// $: if(image !== null ) attachments.push(image)
+		darkmode = false,
+		poppup: poppup;
 
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
@@ -55,7 +54,10 @@
 			false
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Failed to post comment', success: false };
+			return;
+		}
 
 		let newComment: Comment = {
 			user_vote: true,
@@ -115,9 +117,13 @@
 	const commentUpdate = async () => {
 		const formData = new FormData();
 
+		if (message === '' && images.length === 0) {
+			poppup = { message: 'Cannot create empty comment', success: false };
+			return;
+		}
+
 		if (message !== '') formData.append('message', message);
 		if (parent_id) formData.append('parent_id', parent_id.toString());
-		// await console.log(await image.text())
 		if (images)
 			images.forEach((image) => {
 				formData.append('attachments', image);
@@ -130,19 +136,24 @@
 			true,
 			false
 		);
-		if (res.ok) {
-			show = true;
-			showMessage = 'Edited Comment';
-			const index = comments.findIndex((comment) => comment.id === id);
-			let comment = comments.find((comment) => comment.id === id);
-			if (comment) {
-				comment.message = message;
-				comments.splice(index, 1, comment);
-				comments = comments;
-				comment.edited = true;
-			}
-		}
+
 		beingEdited = false;
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to edit comment', success: false };
+			return;
+		}
+
+		show = true;
+		showMessage = 'Edited Comment';
+		const index = comments.findIndex((comment) => comment.id === id);
+		let comment = comments.find((comment) => comment.id === id);
+		if (comment) {
+			comment.message = message;
+			comments.splice(index, 1, comment);
+			comments = comments;
+			comment.edited = true;
+		}
 	};
 
 	//TODO: Optimize so that this doesn't fire every time a comment is made
@@ -204,3 +215,5 @@
 		</div>
 	</div>
 </form>
+
+<Poppup bind:poppup />

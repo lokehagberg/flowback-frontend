@@ -18,7 +18,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
 
-	export let proposals: proposal[], poll: poll, displayForm: boolean;
+	export let proposals: proposal[] = [], poll: poll, displayForm: boolean;
 
 	let title: string,
 		description: string,
@@ -127,11 +127,11 @@
 			Class="absolute bottom-0 right-0 w-[49%]"
 			type="button"
 			label="Cancel"
-			action={cancelSubmission}
+			onClick={cancelSubmission}
 		/>
 
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
+			<Button Class="pr-3 pl-3" onClick={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button
 			>
 		{/if}

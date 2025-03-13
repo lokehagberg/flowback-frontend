@@ -170,7 +170,7 @@
 								</div>
 							{/if}
 						{:else if displayForm}
-							<ProposalSubmition bind:proposals {poll} bind:displayForm />
+							<ProposalSubmition  {poll} bind:proposals bind:displayForm />
 						{/if}
 					</div>
 					<div slot="bottom">

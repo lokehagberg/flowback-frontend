@@ -6,7 +6,6 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faChevronRight, faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import Button from '$lib/Generic/Button.svelte';
 	import commentSymbol from '$lib/assets/comment.svg';
 
 	export let proposal: proposal,
@@ -71,6 +70,7 @@
 			>{proposal.title}</span
 		>
 	</div>
+
 	<!-- Proposal Description -->
 	<p class="elipsis text-sm text-left my-1 break-all" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}

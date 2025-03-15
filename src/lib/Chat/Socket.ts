@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { type Message1 } from './interfaces';
-import {env} from "$env/dynamic/public";
+import { env } from "$env/dynamic/public";
 
 export const messageStore = writable<Message1>();
 
@@ -11,9 +11,7 @@ const createSocket = (userId: number) => {
 
 	if (token === undefined) return;
 
-	const link = `${env.PUBLIC_WEBSOCKET_API}${
-		env.PUBLIC_HAS_API === 'TRUE' ? '/api' : ''
-	}/chat/ws?token=${token}`;
+	const link = `${env.PUBLIC_WEBSOCKET_API}/chat/ws?token=${token}`;
 
 	socket = new WebSocket(link);
 
@@ -51,7 +49,10 @@ const sendMessage = async (
 	attachments_id: number | null = null,
 	parent_id: number | null = null
 ) => {
+
 	if (socket.readyState <= 1 && message.length > 0) {
+		
+		
 		const res = await socket.send(
 			JSON.stringify({
 				channel_id,

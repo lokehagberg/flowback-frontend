@@ -54,14 +54,15 @@
 		olderMessages = json.next;
 		newerMessages = '';
 	};
-
+	
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${2}`);
 		return json;
 	};
-
+	
 	//Runs when changing chats
 	const postMessage = async () => {
+
 		if (!selectedChat) return;
 		if (message.length === 0) return;
 		//If only spaces, return
@@ -88,11 +89,17 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
+		console.log(channelId, 'channelId');
+		
+
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
 
+		
+
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
+
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
 			messages.push({
@@ -273,6 +280,7 @@
 				autofocus
 				label=""
 				onKeyPress={(e) => {
+					
 					if (e.key === 'Enter' && !e.shiftKey) {
 						postMessage();
 						e.preventDefault();

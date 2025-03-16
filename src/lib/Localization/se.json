@@ -601,10 +601,12 @@
     "Could not get threads": "Kunde inte hämta trådar",
     "Could not get thread": "Kunde inte hämta tråd",
     "Failed to post comment":"Misslyckades att posta kommentar",
-    "Failed to delete comment":"Misslyckades att ta bort kommentar",
     "Failed to edit comment":"Misslyckades att redigera kommentar",
     "Failed to get comments":"Misslyckades att hämta kommentarer",
-    
+    "Successfully reverted edits":"Lyckades ångra redigeringar",
+    "Failed to revert edits":"Misslyckades att ångra redigeringar",
+    "Reset": "Återställ",
+
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

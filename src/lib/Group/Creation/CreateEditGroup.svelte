@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Fa from 'svelte-fa';
-	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import FIleUpload from '$lib/Generic/FileUpload.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -34,7 +32,8 @@
 		publicGroup = true,
 		hiddenGroup = false,
 		loading = false,
-		poppup: poppup;
+		poppup: poppup,
+		oldGroup: any;
 
 	//This page also supports the edit of groups
 	const groupToEdit = $page.url.searchParams.get('group') || $page.params.groupId;
@@ -46,7 +45,7 @@
 		loading = true;
 		const formData = new FormData();
 
-		//This must be less than or equal to 2147483647
+		//This must be less than or equal to 2147483647, I forgot why
 		const blockchain_id = Math.floor(Math.random() * 2147483647);
 
 		//Formdata used to transfer images
@@ -104,6 +103,21 @@
 
 		if (json.image) image = `${env.PUBLIC_API_URL}${json.image}`;
 		if (json.cover_image) coverImage = `${env.PUBLIC_API_URL}${json.cover_image}`;
+
+		oldGroup = { ...json };
+		console.log(oldGroup, 'oldGroup');
+	};
+
+	const resetEdits = async () => {
+		name = oldGroup.name;
+		description = oldGroup.description;
+		useInvite = !oldGroup.direct_join;
+		publicGroup = oldGroup.public;
+
+		if (oldGroup.image) image = `${env.PUBLIC_API_URL}${oldGroup.image}`;
+		if (oldGroup.cover_image) coverImage = `${env.PUBLIC_API_URL}${oldGroup.cover_image}`;
+
+		poppup = { message: 'Successfully reverted edits', success: true };
 	};
 
 	onMount(() => {
@@ -114,7 +128,7 @@
 </script>
 
 <svelte:head>
-	<title>{$_('Creating a Group')}</title>
+	<title>{$_('Creating or Editing a Group')}</title>
 </svelte:head>
 
 <form
@@ -159,6 +173,13 @@
 						{$_(groupToEdit ? 'Update' : 'Create Group')}
 					</div>
 				</Button>
+				{#if groupToEdit !== null}
+					<Button disabled={loading} onClick={resetEdits} buttonStyle="primary-light" Class="w-1/2"
+						><div class="flex justify-center gap-3 items-center">
+							{$_('Reset')}
+						</div>
+					</Button>
+				{/if}
 				{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<Modal bind:open={DeleteGroupModalShow}>
 						<div slot="header">{$_('Deleting group')}</div>

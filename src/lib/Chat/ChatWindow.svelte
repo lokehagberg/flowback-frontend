@@ -18,6 +18,7 @@
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
+	import { chatPartner } from './ChatStore.svelte';
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -56,7 +57,7 @@
 	};
 
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${3}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json;
 	};
 
@@ -86,7 +87,7 @@
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		let channelId = selectedChat;
-		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
+		if (selectedPage === 'direct') channelId = selectedChat
 
 		console.log(channelId, 'channelId');
 

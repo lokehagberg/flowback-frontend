@@ -20,12 +20,14 @@
 		selectedChatChannelId: number | null,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [];
+		previewGroup: PreviewMessage[] = [],
+		inviteList: any[] = [];
 
 	onMount(async () => {
 		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
+		UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
 	});
@@ -102,8 +104,7 @@
 			}
 
 			selectedChat = chatter.id;
-			chatPartner.set(chatter.channel_id);
-
+			chatPartner.set(chatter.id);
 			selectedChatChannelId = chatter.id;
 		}
 	};
@@ -126,6 +127,17 @@
 		});
 		return chatter;
 	};
+
+	const UserChatInviteList = async () => {
+		const { res, json } = await fetchRequest('GET', `user/chat/invite/list`);
+		if (!res.ok) return;
+
+		inviteList = json.results;
+		console.log(inviteList, 'inviteList');
+		
+	};
+
+
 
 	$: groups = sort(groups, previewGroup);
 </script>

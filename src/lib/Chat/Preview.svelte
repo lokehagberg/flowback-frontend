@@ -103,7 +103,8 @@
 
 			selectedChat = chatter.id;
 			chatPartner.set(chatter.channel_id);
-			selectedChatChannelId = chatter.chat_id;
+
+			selectedChatChannelId = chatter.id;
 		}
 	};
 
@@ -142,7 +143,7 @@
 	<div class="border-b-2 w-full">
 		<TextInput
 			placeholder={selectedPage === 'direct' ? 'Search users' : 'Search groups'}
-			label=''
+			label=""
 			max={null}
 			bind:value={chatSearch}
 			inputClass="mt-4 mb-2 placeholder-gray-600 py-1 pl-2 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"

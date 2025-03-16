@@ -54,15 +54,14 @@
 		olderMessages = json.next;
 		newerMessages = '';
 	};
-	
+
 	const getChannelId = async (id: number) => {
-		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${2}`);
+		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${3}`);
 		return json;
 	};
-	
+
 	//Runs when changing chats
 	const postMessage = async () => {
-
 		if (!selectedChat) return;
 		if (message.length === 0) return;
 		//If only spaces, return
@@ -90,13 +89,10 @@
 		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
 
 		console.log(channelId, 'channelId');
-		
 
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
-
-		
 
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
 
@@ -231,81 +227,81 @@
 
 {#if selectedChat !== null || true}
 	<div class="flex flex-col h-full">
-	<ul
-		class="grow overflow-y-auto px-2 break-all"
-		id="chat-window"
-		bind:this={chatWindow}
-	>
-		{#if messages.length === 0}
-			<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-		{/if}
-		{#if olderMessages}
-			<li class="text-center mt-6 mb-6">
-				<Button onClick={showOlderMessages}>{$_('Show older messages')}</Button>
-			</li>
-		{/if}
-
-		{#each messages as message}
-			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
-			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
-				<span>{message.user?.username || message.username}</span>
-				<p
-					class="p-2 rounded-xl"
-					class:bg-primary={sentByUser}
-					class:dark:bg-gray-600={sentByUser}
-					class:text-white={sentByUser}
-					class:bg-gray-300={!sentByUser}
-					class:dark:bg-gray-500={!sentByUser}
-				>
-					{message.message}
-				</p>
-				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
-			</li>
-		{/each}
-		{#if newerMessages}
-			<li class="text-center mt-6 mb-6">
-				<Button onClick={showEarlierMessages} buttonStyle="secondary"
-					>{$_('Show earlier messages')}</Button
-				>
-			</li>
-		{/if}
-		<StatusMessage bind:status disableSuccess />
-	</ul>
-	<!-- <div class:invisible={!showEmoji} class="fixed">
-	</div> -->
-	<div class="border-t-2 border-t-gray-200 w-full">
-		<!-- Here the user writes a message to be sent -->
-		<div class="flex gap-1 justify-center items-center w-full mt-2" on:submit|preventDefault={postMessage}>
-			<TextArea
-				autofocus
-				label=""
-				onKeyPress={(e) => {
-					
-					if (e.key === 'Enter' && !e.shiftKey) {
-						postMessage();
-						e.preventDefault();
-					}
-				}}
-				max={3000}
-				rows={1}
-				bind:value={message}
-				placeholder={$_('Write a message...')}
-				Class="justify-center w-full h-2rem"
-				inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
-			/>
-
-			{#if env.PUBLIC_MODE === 'DEV'}
-				<Button
-					onClick={() => (showEmoji = !showEmoji)}
-					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
-				>
+		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
+			{#if messages.length === 0}
+				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+			{/if}
+			{#if olderMessages}
+				<li class="text-center mt-6 mb-6">
+					<Button onClick={showOlderMessages}>{$_('Show older messages')}</Button>
+				</li>
 			{/if}
 
-			<Button type="submit" Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
+			{#each messages as message}
+				{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
+				<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
+					<span>{message.user?.username || message.username}</span>
+					<p
+						class="p-2 rounded-xl"
+						class:bg-primary={sentByUser}
+						class:dark:bg-gray-600={sentByUser}
+						class:text-white={sentByUser}
+						class:bg-gray-300={!sentByUser}
+						class:dark:bg-gray-500={!sentByUser}
+					>
+						{message.message}
+					</p>
+					<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+				</li>
+			{/each}
+			{#if newerMessages}
+				<li class="text-center mt-6 mb-6">
+					<Button onClick={showEarlierMessages} buttonStyle="secondary"
+						>{$_('Show earlier messages')}</Button
+					>
+				</li>
+			{/if}
+			<StatusMessage bind:status disableSuccess />
+		</ul>
+		<!-- <div class:invisible={!showEmoji} class="fixed">
+	</div> -->
+		<div class="border-t-2 border-t-gray-200 w-full">
+			<!-- Here the user writes a message to be sent -->
+			<div
+				class="flex gap-1 justify-center items-center w-full mt-2"
+				on:submit|preventDefault={postMessage}
+			>
+				<TextArea
+					autofocus
+					label=""
+					onKeyPress={(e) => {
+						if (e.key === 'Enter' && !e.shiftKey) {
+							postMessage();
+							e.preventDefault();
+						}
+					}}
+					max={3000}
+					rows={1}
+					bind:value={message}
+					placeholder={$_('Write a message...')}
+					Class="justify-center w-full h-2rem"
+					inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
+				/>
+
+				{#if env.PUBLIC_MODE === 'DEV'}
+					<Button
+						onClick={() => (showEmoji = !showEmoji)}
+						Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
+					>
+				{/if}
+
+				<Button
+					type="submit"
+					Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
 					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
 				>
+			</div>
 		</div>
-	</div>
 	</div>
 {:else}
 	<div>{'No chat selected'}</div>

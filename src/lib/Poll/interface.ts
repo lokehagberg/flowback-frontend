@@ -92,7 +92,7 @@ export interface Comment {
 	author_id: number;
 	author_name: string;
 	author_profile_image: string | null;
-	parent_id?: number;
+	parent_id: number | null;
 	reply_depth: number;
 	message: string | null;
 	score: number;

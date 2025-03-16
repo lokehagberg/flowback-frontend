@@ -16,14 +16,14 @@
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
-		parent_id: number | undefined = undefined,
+		parent_id: number | null = null,
 		id = 0,
 		beingEdited = false,
 		message = '',
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: number | null = null,
-		images: File[];
+		images: File[] = [];
 
 	let show = false,
 		showMessage = '',

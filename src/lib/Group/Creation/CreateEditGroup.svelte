@@ -104,7 +104,7 @@
 		if (json.image) image = `${env.PUBLIC_API_URL}${json.image}`;
 		if (json.cover_image) coverImage = `${env.PUBLIC_API_URL}${json.cover_image}`;
 
-		oldGroup = { ...json };
+		oldGroup = { ...json, image, coverImage };
 		console.log(oldGroup, 'oldGroup');
 	};
 
@@ -114,8 +114,8 @@
 		useInvite = !oldGroup.direct_join;
 		publicGroup = oldGroup.public;
 
-		if (oldGroup.image) image = `${env.PUBLIC_API_URL}${oldGroup.image}`;
-		if (oldGroup.cover_image) coverImage = `${env.PUBLIC_API_URL}${oldGroup.cover_image}`;
+		if (oldGroup.image) image = oldGroup.image;
+		if (oldGroup.cover_image) coverImage = oldGroup.coverImage;
 
 		poppup = { message: 'Successfully reverted edits', success: true };
 	};
@@ -125,6 +125,8 @@
 			getGroupToEdit();
 		}
 	});
+
+	$: console.log(oldGroup?.image, 'oldGroup.image', image, 'image');
 </script>
 
 <svelte:head>
@@ -174,7 +176,14 @@
 					</div>
 				</Button>
 				{#if groupToEdit !== null}
-					<Button disabled={loading} onClick={resetEdits} buttonStyle="primary-light" Class="w-1/2"
+					<Button
+						onClick={resetEdits}
+						buttonStyle="primary-light"
+						disabled={oldGroup?.name === name &&
+							oldGroup?.description === description &&
+							oldGroup?.image === image &&
+							oldGroup?.coverImage === coverImage}
+						Class="w-1/2"
 						><div class="flex justify-center gap-3 items-center">
 							{$_('Reset')}
 						</div>

@@ -606,6 +606,7 @@
     "Successfully reverted edits":"Lyckades ångra redigeringar",
     "Failed to revert edits":"Misslyckades att ångra redigeringar",
     "Reset": "Återställ",
+    "Allows user to delete any proposal": "Tillåter användaren att ta bort valfritt förslag",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

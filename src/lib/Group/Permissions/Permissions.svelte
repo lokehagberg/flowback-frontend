@@ -19,7 +19,7 @@
 		displayNames={['Assign', 'List', 'Create']}
 	/>
 	{#if selectedPage === 'create'}
-		<Create bind:selectedRole/>
+		<Create bind:selectedPage bind:selectedRole/>
 	{:else if selectedPage === 'list'}
 		<List bind:selectedPage bind:selectedRole/>
 	{:else if selectedPage === 'assign'}

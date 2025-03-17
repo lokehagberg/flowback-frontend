@@ -10,7 +10,6 @@ export const formatDate = (dateInput: string) => {
 };
 
 export const getPhase = (poll: poll): Phase => {
-	console.log(poll, 'poll');
 
 	const now = new Date();
 	if (now < new Date(poll?.start_date)) return 'pre_start';

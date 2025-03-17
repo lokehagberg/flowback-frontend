@@ -27,7 +27,8 @@
 		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
-		UserChatInviteList();
+		await UserChatInviteList();
+		UserChatInvite();
 		await getChattable();
 		await setUpPreview();
 	});
@@ -134,9 +135,17 @@
 
 		inviteList = json.results;
 		console.log(inviteList, 'inviteList');
-		
 	};
 
+	const UserChatInvite = async () => {
+		
+		const { res, json } = await fetchRequest('POST', `user/chat/invite`, {
+			invite_id: inviteList[0].id,
+			accept: false
+		});
+		console.log("WHYUYYY");
+		if (!res.ok) return;
+	}
 
 
 	$: groups = sort(groups, previewGroup);

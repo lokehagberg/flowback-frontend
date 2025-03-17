@@ -62,7 +62,6 @@
 			}
 		} else if (poll.poll_type === 3) {
 			dates = [new Date(poll.start_date), new Date(poll.end_date)];
-			console.log(dates, phase, 'INSIDE HERERERERE');
 
 			//TODO: Refactor so this works by making it easy for varying number of phases.
 			if (dates[1] > new Date()) {
@@ -71,8 +70,6 @@
 				currentPhaseIndex = 1;
 			}
 		}
-
-		console.log(dates, currentPhaseIndex, poll.poll_type, 'DATAS');
 
 		fraction = (currentPhaseIndex + 1) / dates.length;
 

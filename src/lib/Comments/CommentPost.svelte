@@ -153,6 +153,9 @@
 			comments.splice(index, 1, comment);
 			comments = comments;
 			comment.edited = true;
+			comment.attachments= images.map((image) => {
+				return { file: URL.createObjectURL(image) };
+			})
 		}
 	};
 

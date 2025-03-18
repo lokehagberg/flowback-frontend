@@ -53,7 +53,9 @@
 
 			<h1 class="text-left text-2xl text-primary dark:text-secondary font-bold">{thread.title}</h1>
 
-			<div class="grid-area-workgroup">{thread.work_group?.name}</div>
+			{#if thread.work_group}
+				<div class="grid-area-workgroup">{thread.work_group?.name}</div>
+			{/if}
 
 			<NotificationOptions
 				type="group_thread"

@@ -27,7 +27,8 @@
 		votes: number[],
 		weekDates: Date[] = [],
 		currentMonth = '',
-		currentYear = 0;
+		currentYear = 0,
+		noChanges = true;
 
 	const getRecentMonday = (d: Date) => {
 		let mondayOffset = d.getDate() - d.getDay() + 1;
@@ -107,6 +108,7 @@
 
 		let output = await Promise.allSettled(array);
 		loading = false;
+		noChanges = true;
 	};
 
 	const dateOffset = (offset: number) => {
@@ -133,6 +135,7 @@
 
 	const clearSelection = () => {
 		selectedDates = [];
+		noChanges = true;
 	};
 
 	const getMondayForOffset = (offset: number): Date => {
@@ -179,6 +182,7 @@
 		} else {
 			selectedDates = [...selectedDates, date];
 		}
+		noChanges = false;
 	};
 
 	onMount(() => {
@@ -254,7 +258,7 @@
 		</div>
 
 		<div class="pt-4 px-4 border-t flex gap-4 bg-white">
-			<Button onClick={saveSelection} buttonStyle="primary-light" Class="flex-1"
+			<Button bind:disabled={noChanges} onClick={saveSelection} buttonStyle="primary-light" Class="flex-1"
 				>{$_('Submit')}</Button
 			>
 			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1"

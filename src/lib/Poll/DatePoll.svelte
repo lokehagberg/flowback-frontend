@@ -20,7 +20,6 @@
 	let postProposal = async () => {
 		let end_date = new Date(date);
 		end_date.setHours(date.getHours() + 1);
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/poll/${$page.params.pollId}/proposal/create`,
@@ -113,7 +112,7 @@
 
 <!-- <Button action={() => (open = true)}>{$_('New Proposal')}</Button> -->
 
-<Structure Class="!max-w-[1400px]" poll={null} >
+<Structure Class="!max-w-[1400px]" poll={null}>
 	<div slot="left">
 		<div class="overflow-auto">
 			<WeekView x={7} y={24} />

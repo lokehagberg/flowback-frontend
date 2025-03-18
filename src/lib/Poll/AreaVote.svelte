@@ -8,6 +8,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import { _ } from 'svelte-i18n';
+	import Question from '$lib/Generic/Question.svelte';
 
 	let tags: Tag[] = [],
 		selectedTag: number | null = null,
@@ -53,14 +54,10 @@
 			return;
 		}
 
-		const { res } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/area/update`,
-			{
-				tag: selectedTag,
-				vote: true
-			}
-		);
+		const { res } = await fetchRequest('POST', `group/poll/${$page.params.pollId}/area/update`, {
+			tag: selectedTag,
+			vote: true
+		});
 
 		if (!res.ok) {
 			poppup = { message: 'Could not vote on tag', success: false };
@@ -109,34 +106,25 @@
 		{#each tags as tag}
 			{#if tag.active}
 				<div class="flex items-center space-x-3">
-					<input 
+					<input
 						type="radio"
 						name="area"
-						on:change={() => selectedTag = tag.id}
+						on:change={() => (selectedTag = tag.id)}
 						checked={selectedTag === tag.id}
-						class="cursor-pointer" 
+						class="cursor-pointer"
 					/>
 					<span>{elipsis(tag.name, 40)}</span>
+					<Question message={tag.description || 'No description provided for this tag'} />
 				</div>
 			{/if}
 		{/each}
 	</div>
 
 	<div class="mt-auto pt-4 flex gap-2">
-		<Button
-			type="button"
-			buttonStyle="primary-light"
-			Class="flex-1"
-			onClick={submitVote}
-		>
+		<Button type="button" buttonStyle="primary-light" Class="flex-1" onClick={submitVote}>
 			{$_('Submit')}
 		</Button>
-		<Button
-			type="button"
-			buttonStyle="warning-light"
-			Class="flex-1"
-			onClick={cancelVote}
-		>
+		<Button type="button" buttonStyle="warning-light" Class="flex-1" onClick={cancelVote}>
 			{$_('Cancel')}
 		</Button>
 	</div>

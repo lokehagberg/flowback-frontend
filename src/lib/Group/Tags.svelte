@@ -78,7 +78,7 @@
 <!-- TODO: Nicer design -->
 <!-- <div class="bg-white rounded shadow p-6 dark:bg-darkobject"> -->
 <Loader bind:loading>
-	<form on:submit|preventDefault={addTag} class="pb-4 flex gap-2">
+	<form on:submit|preventDefault={addTag} class="pb-4">
 		<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1" />
 		<TextArea label="Add Tag Description" bind:value={tagDescription} />
 		<Button

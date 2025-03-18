@@ -87,7 +87,7 @@
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		let channelId = selectedChat;
-		if (selectedPage === 'direct') channelId = selectedChat
+		if (selectedPage === 'direct') channelId = selectedChat;
 
 		console.log(channelId, 'channelId');
 
@@ -268,7 +268,7 @@
 	</div> -->
 		<div class="border-t-2 border-t-gray-200 w-full">
 			<!-- Here the user writes a message to be sent -->
-			<div
+			<form
 				class="flex gap-1 justify-center items-center w-full mt-2"
 				on:submit|preventDefault={postMessage}
 			>
@@ -301,7 +301,7 @@
 					Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
 					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
 				>
-			</div>
+			</form>
 		</div>
 	</div>
 {:else}

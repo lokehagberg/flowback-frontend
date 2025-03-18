@@ -158,9 +158,7 @@
 				{#each comment.attachments as attachment}
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
-							.toLowerCase() === 'pdf' || attachment.file
-							.slice(-3)
-							.toLowerCase() === 'txt')}
+							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
 						<a
 							href={attachment.file.substring(0, 4) === 'blob'
 								? attachment.file
@@ -169,7 +167,7 @@
 							rel="noopener noreferrer"
 							class="text-primary dark:text-secondary hover:underline"
 						>
-							{$_("View File")}
+							{$_('View File')}
 						</a>
 					{:else}
 						<img
@@ -240,6 +238,7 @@
 
 {#if comment.being_replied}
 	<CommentPost
+		{delegate_pool_id}
 		bind:images
 		bind:proposals
 		bind:comments

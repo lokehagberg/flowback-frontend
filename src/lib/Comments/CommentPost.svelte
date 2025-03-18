@@ -153,9 +153,9 @@
 			comments.splice(index, 1, comment);
 			comments = comments;
 			comment.edited = true;
-			comment.attachments= files.map((image) => {
+			comment.attachments = files.map((image) => {
 				return { file: URL.createObjectURL(image) };
-			})
+			});
 		}
 	};
 
@@ -211,7 +211,7 @@
 			/>
 		</div>
 		<div class="flex ml-2">
-			<FileUploads bind:files={files} minimalist disableCropping />
+			<FileUploads bind:files minimalist disableCropping />
 			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100" type="submit" label=""
 				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
 			>

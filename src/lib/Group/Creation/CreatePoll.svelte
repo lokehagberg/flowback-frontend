@@ -254,19 +254,21 @@
 					</button>
 
 					{#if advancedTimeSettings}
-						<AdvancedTimeSettings
-							bind:selected_poll
-							bind:advancedTimeSettings
-							bind:start_date
-							bind:area_vote_end_date
-							bind:proposal_end_date
-							bind:prediction_statement_end_date
-							bind:prediction_bet_end_date
-							bind:delegate_vote_end_date
-							bind:vote_end_date
-							bind:end_date
-							bind:daysBetweenPhases
-						/>
+						{#key selected_poll}
+							<AdvancedTimeSettings
+								bind:selected_poll
+								bind:advancedTimeSettings
+								bind:start_date
+								bind:area_vote_end_date
+								bind:proposal_end_date
+								bind:prediction_statement_end_date
+								bind:prediction_bet_end_date
+								bind:delegate_vote_end_date
+								bind:vote_end_date
+								bind:end_date
+								bind:daysBetweenPhases
+							/>
+						{/key}
 					{/if}
 				</div>
 			{/if}

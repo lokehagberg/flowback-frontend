@@ -607,6 +607,7 @@
     "Failed to revert edits":"Misslyckades att ångra redigeringar",
     "Reset": "Återställ",
     "Allows user to delete any proposal": "Tillåter användaren att ta bort valfritt förslag",
+    "Add Tag Description":"Lägg till ämnesområdesbeskrivning",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

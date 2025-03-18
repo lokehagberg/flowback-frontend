@@ -15,13 +15,15 @@
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import Toggle from '$lib/Generic/Toggle.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
 		selectedTag: TagType = { active: false, id: 0, name: '', imac: 0 },
 		loading = false,
 		areYouSureModal = false,
-		poppup: poppup;
+		poppup: poppup,
+		tagDescription: string;
 
 	onMount(async () => {
 		await getTagsLocal();
@@ -36,9 +38,13 @@
 
 	const addTag = async () => {
 		loading = true;
-		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
+		let toSend: any = {
 			name: tagToAdd
-		});
+		};
+
+		if (tagDescription) toSend.description = tagDescription;
+
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, toSend);
 		if (res.ok) {
 			getTagsLocal();
 			tagToAdd = '';
@@ -74,6 +80,7 @@
 <Loader bind:loading>
 	<form on:submit|preventDefault={addTag} class="pb-4 flex gap-2">
 		<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1" />
+		<TextArea label="Add Tag Description" bind:value={tagDescription} />
 		<Button
 			disabled={loading}
 			type="submit"

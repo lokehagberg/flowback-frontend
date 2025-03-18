@@ -81,6 +81,7 @@
 
 	const cancelVote = () => {
 		selectedTag = null;
+		poppup = { message: 'Vote cancelled', success: true };
 	};
 
 	onMount(async () => {
@@ -124,7 +125,7 @@
 		<Button type="button" buttonStyle="primary-light" Class="flex-1" onClick={submitVote}>
 			{$_('Submit')}
 		</Button>
-		<Button type="button" buttonStyle="warning-light" Class="flex-1" onClick={cancelVote}>
+		<Button type="button" buttonStyle="warning-light" Class="flex-1" onClick={cancelVote} disabled={selectedTag === null}>
 			{$_('Cancel')}
 		</Button>
 	</div>

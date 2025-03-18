@@ -156,16 +156,33 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-					<img
-						src={(() => {
-							if (typeof attachment.file === 'string')
-								return attachment.file.substring(0, 4) === 'blob'
-									? attachment.file
-									: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
-							else return URL.createObjectURL(attachment.file);
-						})()}
-						alt="Attachment to the comment"
-					/>
+					{#if typeof attachment.file === 'string' && (attachment.file
+							.slice(-3)
+							.toLowerCase() === 'pdf' || attachment.file
+							.slice(-3)
+							.toLowerCase() === 'txt')}
+						<a
+							href={attachment.file.substring(0, 4) === 'blob'
+								? attachment.file
+								: `${env.PUBLIC_API_URL}/media/${attachment.file}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-primary dark:text-secondary hover:underline"
+						>
+							{$_("View File")}
+						</a>
+					{:else}
+						<img
+							src={(() => {
+								if (typeof attachment.file === 'string')
+									return attachment.file.substring(0, 4) === 'blob'
+										? attachment.file
+										: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
+								else return URL.createObjectURL(attachment.file);
+							})()}
+							alt="Attachment to the comment"
+						/>
+					{/if}
 				{/each}
 			</div>
 		{/if}

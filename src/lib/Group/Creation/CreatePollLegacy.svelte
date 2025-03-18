@@ -226,7 +226,7 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
-				<FileUploads bind:images />
+				<FileUploads bind:files={images} />
 				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<div>

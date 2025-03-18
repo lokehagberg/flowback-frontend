@@ -112,7 +112,7 @@
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
 
-		<FileUploads bind:images />
+		<FileUploads bind:files={images} />
 		<StatusMessage bind:status />
 
 		<Button

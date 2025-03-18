@@ -23,7 +23,7 @@
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: number | null = null,
-		images: File[];
+		files: File[];
 
 	let show = false,
 		showMessage = '',
@@ -41,8 +41,8 @@
 		const formData = new FormData();
 		if (message !== '') formData.append('message', message);
 		if (parent_id) formData.append('parent_id', parent_id.toString());
-		if (images)
-			images.forEach((image) => {
+		if (files)
+			files.forEach((image) => {
 				formData.append('attachments', image);
 			});
 
@@ -68,7 +68,7 @@
 			being_replied: false,
 			score: 1,
 			edited: false,
-			attachments: images.map((image) => {
+			attachments: files.map((image) => {
 				return { file: URL.createObjectURL(image) };
 			}),
 			message,
@@ -117,15 +117,15 @@
 	const commentUpdate = async () => {
 		const formData = new FormData();
 
-		if (message === '' && images.length === 0) {
+		if (message === '' && files.length === 0) {
 			poppup = { message: 'Cannot create empty comment', success: false };
 			return;
 		}
 
 		if (message !== '') formData.append('message', message);
 		if (parent_id) formData.append('parent_id', parent_id.toString());
-		if (images)
-			images.forEach((image) => {
+		if (files)
+			files.forEach((image) => {
 				formData.append('attachments', image);
 			});
 
@@ -153,7 +153,7 @@
 			comments.splice(index, 1, comment);
 			comments = comments;
 			comment.edited = true;
-			comment.attachments= images.map((image) => {
+			comment.attachments= files.map((image) => {
 				return { file: URL.createObjectURL(image) };
 			})
 		}
@@ -211,7 +211,7 @@
 			/>
 		</div>
 		<div class="flex ml-2">
-			<FileUploads bind:images minimalist disableCropping />
+			<FileUploads bind:files={files} minimalist disableCropping />
 			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100" type="submit" label=""
 				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
 			>

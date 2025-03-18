@@ -212,7 +212,7 @@
 
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
-			<FileUploads bind:images disableCropping />
+			<FileUploads bind:files={images} disableCropping />
 			<Select
 				labels={workGroups.map((workGroup) => workGroup.name)}
 				values={workGroups.map((workGroup) => workGroup.id)}

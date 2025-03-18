@@ -214,7 +214,7 @@
 						<label class="block text-md">
 							{$_('Attachments')}
 						</label>
-						<FileUploads bind:images />
+						<FileUploads bind:files={images} />
 					</div>
 				</div>
 			</div>

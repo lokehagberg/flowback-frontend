@@ -6,7 +6,7 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import { faChevronRight, faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import commentSymbol from '$lib/assets/comment.svg';
+	import commentSymbol from '$lib/assets/iconComment.svg';
 
 	export let proposal: proposal,
 		Class = '',

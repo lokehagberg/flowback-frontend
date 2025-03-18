@@ -53,6 +53,8 @@
 
 			<h1 class="text-left text-2xl text-primary dark:text-secondary font-bold">{thread.title}</h1>
 
+			<div class="grid-area-workgroup">{thread.work_group?.name}</div>
+
 			<NotificationOptions
 				type="group_thread"
 				id={thread.id}
@@ -78,7 +80,7 @@
 	.poll-header-grid {
 		display: grid;
 		grid-template-columns: 0.3fr 4fr 0.3fr;
-		grid-template-rows: 0.1fr 0.1fr 1fr;
+		grid-template-rows: 0.1fr 0.1fr 0.1fr 1fr;
 	}
 
 	.grid-area-items {
@@ -86,6 +88,10 @@
 	}
 
 	.grid-area-description {
-		grid-area: 3 / 2 / 4 / 3;
+		grid-area: 4 / 2 / 4 / 3;
+	}
+
+	.grid-area-workgroup {
+		grid-area: 3 / 2 / 3 / 3;
 	}
 </style>

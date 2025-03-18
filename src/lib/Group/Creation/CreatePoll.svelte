@@ -94,6 +94,7 @@
 		formData.append('poll_type', (selected_poll === 'Text Poll' ? 4 : 3).toString());
 		formData.append('dynamic', selected_poll === 'Text Poll' ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
+		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('tag', tags[0]?.id?.toString() || '1');
 

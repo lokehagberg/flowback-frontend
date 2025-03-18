@@ -143,7 +143,7 @@ export interface Thread {
 	attachments:string[];
 	user_vote:null|boolean
 	score:number;
-	work_group_id?:number;
+	work_group?:{id: number; name: string;};
 }
 
 export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }

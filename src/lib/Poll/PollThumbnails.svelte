@@ -82,8 +82,33 @@
 		prev = json.previous;
 	};
 
+	const sharedThreadPollFixing = async () => {
+		const pollIds = polls
+			//@ts-ignore
+			.map((poll) => (poll.related_model === 'poll' ? poll.id : undefined))
+			.filter((id) => id !== undefined);
+		//@ts-ignore
+		const threadIds = polls
+			//@ts-ignore
+			.map((poll) => (poll.related_model === 'group_thread' ? poll.id : undefined))
+			.filter((id) => id !== undefined);
+		//@ts-ignore
+
+		{
+			const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/list?id=${pollIds.concat()}`);
+		}
+
+		{
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/${$page.params.groupId}/thread/list?limit=1000&order_by=pinned,created_at_desc&id=${threadIds.concat()}`
+			);
+		}
+	};
+
 	onMount(async () => {
 		await getPolls();
+		// sharedThreadPollFixing();
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});

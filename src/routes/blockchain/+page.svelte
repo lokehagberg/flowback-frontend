@@ -6,7 +6,7 @@
 	import {
 		createPoll,
 		getPoll,
-		createProposal,
+		proposalCreate,
 		getProposalsOnPoll,
 		vote,
 		getPollResults
@@ -95,7 +95,7 @@
 	</div>
 	<div class="p-6">
 		<input type="text" bind:value={pollId} placeholder="Enter Poll Id">
-		<button on:click={() => createProposal(pollId)}>Create proposal</button>
+		<button on:click={() => proposalCreate(pollId)}>Create proposal</button>
 	</div>
 	<div class="p-6">
 		<input type="text" bind:value={pollId} placeholder="Enter Poll Id">

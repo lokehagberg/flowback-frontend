@@ -11,7 +11,7 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
-	import { createProposal } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
+	import { proposalCreate as proposalCreateBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -30,12 +30,13 @@
 		blockchain = true,
 		images: File[];
 
-	const addProposal = async () => {
+	const proposalCreate = async () => {
+		if (loading === true) return;
 		loading = true;
 
 		let blockchain_id;
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
-			blockchain_id = await createProposal(poll.blockchain_id, title);
+			blockchain_id = await proposalCreateBlockchain(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
 		if (blockchain_id) proposal.blockchain_id = blockchain_id;
@@ -97,7 +98,7 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded p-2">
+<form on:submit|preventDefault={proposalCreate} class="h-full dark:border-gray-500 rounded p-2">
 	<Loader bind:loading>
 		<div class="flex flex-col space-y-2">
 			<span class="block text-left text-md text-primary dark:text-secondary font-semibold"

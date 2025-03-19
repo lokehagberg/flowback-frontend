@@ -608,6 +608,7 @@
     "Reset": "Återställ",
     "Allows user to delete any proposal": "Tillåter användaren att ta bort valfritt förslag",
     "Add Tag Description":"Lägg till ämnesområdesbeskrivning",
+    "Vote cancelled":"Röstningen avbröts",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

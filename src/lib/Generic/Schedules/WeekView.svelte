@@ -188,15 +188,14 @@
 	};
 
 	const transformVotesIntoSelectedDates = () => {
+		console.log('HERERsE', votes.length);
+
 		if (votes.length === 0) return;
-		const prop = proposals
-		const propFiltered = prop.filter(proposal => votes.find(vote => vote === proposal.id))
-		
-		console.log(votes, proposals, propFiltered, selectedDates, proposals[0].id in votes, "PROPOÅÄÖ");
-		selectedDates = propFiltered.map(proposal => proposal.end_date)
-		
-		console.log(votes, proposals, propFiltered, selectedDates, proposals[0].id in votes, "PROPOÅÄÖ");
-	}
+		const prop = proposals;
+		const propFiltered = prop.filter((proposal) => votes.find((vote) => vote === proposal?.id));
+
+		selectedDates = propFiltered.map((proposal) => new Date(proposal.end_date));
+	};
 
 	onMount(() => {
 		// getProposals();
@@ -205,7 +204,9 @@
 		// transformVotesIntoSelectedDates()
 	});
 
-	$: if(votes && selectedDates)  transformVotesIntoSelectedDates();
+	$: if (votes && selectedDates) transformVotesIntoSelectedDates();
+
+	$: console.log(selectedDates, 'DATES');
 
 	$: {
 		const monday = getMondayForOffset(weekOffset);

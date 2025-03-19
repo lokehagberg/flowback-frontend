@@ -11,11 +11,15 @@
 	import { chatPartner } from './ChatStore.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
+	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
 		user: User,
-		chatSearch = '';
+		chatSearch = '',
+		workGroupList: WorkGroup[] = [];
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -31,6 +35,7 @@
 		await UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
+		await getWorkGroups();
 	});
 
 	const setUpPreview = async () => {
@@ -104,9 +109,11 @@
 				previewGroup = previewGroup;
 			}
 
-			selectedChat = chatter.id;
-			chatPartner.set(chatter.id);
-			selectedChatChannelId = chatter.id;
+			const id = PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
+
+			selectedChat = id;
+			chatPartner.set(id);
+			selectedChatChannelId = id;
 		}
 	};
 
@@ -144,6 +151,15 @@
 		if (!res.ok) return;
 	};
 
+	// Only for one-group flowback
+	const getWorkGroups = async () => {
+		const { res, json } = await fetchRequest('GET', 'group/1/list');
+
+		if (!res.ok) return;
+
+		workGroupList = json.results;
+	};
+
 	$: groups = sort(groups, previewGroup);
 </script>
 
@@ -178,49 +194,51 @@
 		{/if}
 	{/each}
 
-	{#each selectedPage === 'direct' ? directs : groups as chatter}
-		{@const previewObject =
-			selectedPage === 'direct'
-				? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
-				: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
+	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
+		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}
+			{@const previewObject =
+				selectedPage === 'direct'
+					? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
+					: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-		<button
-			class:hidden={selectedPage === 'direct'
-				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
-				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
-			class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
-			class:bg-gray-200={selectedChat === chatter.id}
-			class:dark:bg-gray-700={selectedChat === chatter.id}
-			on:click={() => {
-				clickedChatter(chatter);
-			}}
-		>
-			<!-- Notification Symbol -->
-			{#if previewObject?.notified}
-				<div
-					class="p-1 rounded-full"
-					class:bg-blue-300={selectedPage === 'group'}
-					class:bg-purple-300={selectedPage === 'direct'}
+			<button
+				class:hidden={selectedPage === 'direct'
+					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
+					: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
+				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+				class:bg-gray-200={selectedChat === chatter.id}
+				class:dark:bg-gray-700={selectedChat === chatter.id}
+				on:click={() => {
+					clickedChatter(chatter);
+				}}
+			>
+				<!-- Notification Symbol -->
+				{#if previewObject?.notified}
+					<div
+						class="p-1 rounded-full"
+						class:bg-blue-300={selectedPage === 'group'}
+						class:bg-purple-300={selectedPage === 'direct'}
+					/>
+				{/if}
+				<ProfilePicture
+					username={chatter.name || chatter.username}
+					profilePicture={chatter.profile_image}
 				/>
-			{/if}
-			<ProfilePicture
-				username={chatter.name || chatter.username}
-				profilePicture={chatter.profile_image}
-			/>
-			<div class="flex flex-col max-w-[40%]">
-				<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
-					>{chatter.name || chatter.username}</span
-				>
-				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
-					<!-- {@debug previewObject} -->
+				<div class="flex flex-col max-w-[40%]">
+					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
+						>{chatter.name || chatter.username}</span
+					>
+					<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
+						<!-- {@debug previewObject} -->
 
-					{#if previewObject}
-						{previewObject.user.username}:
-						{previewObject.message}
-					{/if}
-				</span>
-			</div>
-		</button>
+						{#if previewObject}
+							{previewObject.user.username}:
+							{previewObject.message}
+						{/if}
+					</span>
+				</div>
+			</button>
+		{/if}
 	{/each}
 </div>
 

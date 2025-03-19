@@ -7,7 +7,6 @@
 	import PollFiltering from './PollFiltering.svelte';
 	import type { Filter, poll as Poll } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 	import Pagination from '$lib/Generic/Pagination.svelte';
@@ -54,7 +53,9 @@
 		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
-			API += `&end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}=${new Date().toISOString()}`;
+			API += `&end_date${
+				filter.finishedSelection === 'finished' ? '__lt' : '__gt'
+			}=${new Date().toISOString()}`;
 
 		// API += '&pinned=false';
 
@@ -81,11 +82,9 @@
 		prev = json.previous;
 	};
 
-	let status: StatusMessageInfo;
-
 	onMount(async () => {
 		await getPolls();
-		//TODO: Part of refactoring with svelte stores includes thsi
+		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
 </script>

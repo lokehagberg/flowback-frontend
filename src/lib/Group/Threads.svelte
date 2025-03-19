@@ -117,14 +117,14 @@
 			bind:value={searchQuery}
 		/>
 
-		<Button
+		<!-- <Button
 			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
 				searched ? 'bg-blue-300' : 'bg-blue-600'
 			}`}
 			type="submit"
 		>
 			<Fa icon={faMagnifyingGlass} />
-		</Button>
+		</Button> -->
 	</form>
 
 	{#if threads.length === 0}

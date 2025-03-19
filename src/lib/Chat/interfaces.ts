@@ -33,7 +33,7 @@ export interface PreviewMessage {
 	profile_image: string;
 	timestamp: string;
 	user_id: number;
-	updated_at?:string;
+	updated_at?: string;
 	id: number;
 	notified: boolean;
 	//For group/preview
@@ -62,3 +62,11 @@ export const setTimeStamp = async (chatterId: number, selectedPage: 'direct' | '
 		timestamp: new Date()
 	});
 };
+
+
+export interface invite {
+	id: number;
+	message_channel_id: number;
+	message_channel_name: string;
+	rejected: null;
+}

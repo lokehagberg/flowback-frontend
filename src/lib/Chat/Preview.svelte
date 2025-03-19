@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type PreviewMessage } from './interfaces';
+	import { type invite, type PreviewMessage } from './interfaces';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
@@ -8,8 +8,9 @@
 	import { onMount } from 'svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { chatPreview as chatLimit } from '../Generic/APILimits.json';
-	import { updateUserData } from './functions';
 	import { chatPartner } from './ChatStore.svelte';
+	import Button from '$lib/Generic/Button.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
@@ -21,14 +22,13 @@
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
-		inviteList: any[] = [];
+		inviteList: invite[] = [];
 
 	onMount(async () => {
 		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
 		await UserChatInviteList();
-		UserChatInvite();
 		await getChattable();
 		await setUpPreview();
 	});
@@ -134,19 +134,15 @@
 		if (!res.ok) return;
 
 		inviteList = json.results;
-		console.log(inviteList, 'inviteList');
 	};
 
-	const UserChatInvite = async () => {
-		
+	const UserChatInvite = async (accept: boolean, invite_id: number) => {
 		const { res, json } = await fetchRequest('POST', `user/chat/invite`, {
-			invite_id: inviteList[0].id,
-			accept: false
+			invite_id,
+			accept
 		});
-		console.log("WHYUYYY");
 		if (!res.ok) return;
-	}
-
+	};
 
 	$: groups = sort(groups, previewGroup);
 </script>
@@ -170,6 +166,13 @@
 			inputClass="mt-4 mb-2 placeholder-gray-600 py-1 pl-2 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
 		/>
 	</div>
+
+	<span>Invites</span>
+	{#each inviteList as invitee}
+		<div>{invitee.message_channel_name}</div>
+		<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Accept')}</Button>
+		<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Deny')}</Button>
+	{/each}
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		{@const previewObject =
 			selectedPage === 'direct'

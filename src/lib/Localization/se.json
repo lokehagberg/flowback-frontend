@@ -609,6 +609,7 @@
     "Allows user to delete any proposal": "Tillåter användaren att ta bort valfritt förslag",
     "Add Tag Description":"Lägg till ämnesområdesbeskrivning",
     "Vote cancelled":"Röstningen avbröts",
+    "You've been invite to this chat:":"Du har blivit inbjuden till följande chatt:",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

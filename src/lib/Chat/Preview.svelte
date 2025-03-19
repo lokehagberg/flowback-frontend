@@ -167,12 +167,17 @@
 		/>
 	</div>
 
-	<span>Invites</span>
 	{#each inviteList as invitee}
-		<div>{invitee.message_channel_name}</div>
-		<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Accept')}</Button>
-		<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Deny')}</Button>
+		{#if invitee.rejected === null}
+			<div>
+				<span>{$_("You've been invite to this chat:")}</span>
+				<div>{invitee.message_channel_name}</div>
+				<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Accept')}</Button>
+				<Button onClick={() => UserChatInvite(false, invitee.id)}>{$_('Deny')}</Button>
+			</div>
+		{/if}
 	{/each}
+
 	{#each selectedPage === 'direct' ? directs : groups as chatter}
 		{@const previewObject =
 			selectedPage === 'direct'

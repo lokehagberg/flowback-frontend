@@ -75,15 +75,6 @@
 			label={$_('Search')}
 			bind:value={filter.search}
 		/>
-
-		<Button
-			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
-				searched ? 'bg-blue-300' : 'bg-blue-600'
-			}`}
-			type="submit"
-		>
-			<Fa icon={faMagnifyingGlass} />
-		</Button>
 	</div>
 	<div class="flex">
 		<Select
@@ -104,7 +95,10 @@
 
 		{#if tagFiltering}
 			<div class="rounded-md p-1">
-				<select on:input={handleTags} class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject">
+				<select
+					on:input={handleTags}
+					class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+				>
 					<option value={null}>{$_('Any')}</option>
 					{#each tags as tag}
 						<option value={tag.id}>{elipsis(tag.name, 15)}</option>
@@ -112,7 +106,7 @@
 				</select>
 			</div>
 		{/if}
-		
+
 		<div class="rounded-md p-1">
 			<Button Class="!p-1 ml-1" buttonStyle="primary-light" onClick={resetFilter}
 				>{$_('Reset Filter')}</Button

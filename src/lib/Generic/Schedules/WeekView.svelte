@@ -12,19 +12,21 @@
 	import Loader from '../Loader.svelte';
 	import type { timeProposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
+	import Proposal from '$lib/Poll/Proposal.svelte';
 
 	export let x = 10,
-		y = 10;
+		y = 10,
+		votes: number[],
+		proposals: Proposal[] = [];
 	// w = 200,
 	// h = 300;
 
-	let selectedDates: Date[] = [],
-		weekOffset: number = 0,
+	let weekOffset: number = 0,
 		initialMonday: Date,
 		monday: Date,
 		loading = false,
-		proposals: timeProposal[],
-		votes: number[],
+		// proposals: timeProposal[],
+		selectedDates: Date[] = [],
 		weekDates: Date[] = [],
 		currentMonth = '',
 		currentYear = 0,
@@ -185,13 +187,25 @@
 		noChanges = false;
 	};
 
+	const transformVotesIntoSelectedDates = () => {
+		if (votes.length === 0) return;
+		const prop = proposals
+		const propFiltered = prop.filter(proposal => votes.find(vote => vote === proposal.id))
+		
+		console.log(votes, proposals, propFiltered, selectedDates, proposals[0].id in votes, "PROPOÅÄÖ");
+		selectedDates = propFiltered.map(proposal => proposal.end_date)
+		
+		console.log(votes, proposals, propFiltered, selectedDates, proposals[0].id in votes, "PROPOÅÄÖ");
+	}
+
 	onMount(() => {
-		getProposals();
-		getProposalVote();
+		// getProposals();
+		// getProposalVote();
 		initialMonday = getRecentMonday(new Date());
+		// transformVotesIntoSelectedDates()
 	});
 
-	$: console.log(votes, selectedDates);
+	$: if(votes && selectedDates)  transformVotesIntoSelectedDates();
 
 	$: {
 		const monday = getMondayForOffset(weekOffset);
@@ -241,6 +255,7 @@
 				</div>
 			{/each}
 
+			<!-- {@debug selectedDates} -->
 			{#each gridDates as row, j}
 				<div class="bg-primary text-white items-center flex justify-center px-0.5">{j}</div>
 				{#each row as date, i}
@@ -258,8 +273,11 @@
 		</div>
 
 		<div class="pt-4 px-4 border-t flex gap-4 bg-white">
-			<Button bind:disabled={noChanges} onClick={saveSelection} buttonStyle="primary-light" Class="flex-1"
-				>{$_('Submit')}</Button
+			<Button
+				bind:disabled={noChanges}
+				onClick={saveSelection}
+				buttonStyle="primary-light"
+				Class="flex-1">{$_('Submit')}</Button
 			>
 			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1"
 				>{$_('Cancel')}</Button

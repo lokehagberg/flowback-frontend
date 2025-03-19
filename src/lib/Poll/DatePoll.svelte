@@ -65,10 +65,12 @@
 		getProposals();
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		getProposals();
 		getProposalVote();
 	});
+
+	$: console.log(votes, proposals, 'PROPOSALVA');
 </script>
 
 <!-- 
@@ -115,7 +117,7 @@
 <Structure Class="!max-w-[1400px]" poll={null}>
 	<div slot="left">
 		<div class="overflow-auto">
-			<WeekView x={7} y={24} />
+			<WeekView bind:proposals bind:votes x={7} y={24} />
 		</div>
 	</div>
 

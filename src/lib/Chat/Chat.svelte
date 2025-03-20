@@ -15,6 +15,7 @@
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
+	import CreateGroup from './CreateGroup.svelte';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -30,7 +31,8 @@
 		isLookingAtOlderMessages = false,
 		chatDiv: HTMLDivElement,
 		selectedChatChannelId: number | null,
-		darkMode = false;
+		darkMode = false,
+		creatingGroup = false;
 
 	onMount(async () => {
 		await getUser();
@@ -106,18 +108,25 @@
 				bind:previewDirect
 				bind:previewGroup
 				bind:selectedChatChannelId
+				bind:creatingGroup
 			/>
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
-			<ChatWindow
-				bind:selectedChat
-				bind:selectedChatChannelId
-				bind:selectedPage
-				bind:previewDirect
-				bind:previewGroup
-				bind:isLookingAtOlderMessages
-				{user}
-			/>
+			{#if creatingGroup}
+			
+			<CreateGroup bind:creatingGroup />
+			
+			{:else}
+				<ChatWindow
+					bind:selectedChat
+					bind:selectedChatChannelId
+					bind:selectedPage
+					bind:previewDirect
+					bind:previewGroup
+					bind:isLookingAtOlderMessages
+					{user}
+				/>
+			{/if}
 		</div>
 	</div>
 </div>

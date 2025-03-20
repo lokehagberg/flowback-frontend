@@ -20,9 +20,10 @@
 		user: User,
 		chatSearch = '',
 		workGroupList: WorkGroup[] = [];
-
-	export let selectedChat: number | null,
+		
+		export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
+		creatingGroup: boolean,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
@@ -61,17 +62,17 @@
 	const getChattable = async () => {
 		if (directs.length + groups.length !== 0) return;
 
-		directs = await getPeople();
-		groups = await getGroups();
+		directs = await userList();
+		groups = await groupList();
 	};
 
-	const getGroups = async () => {
+	const groupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=${chatLimit}`);
 		if (!res.ok) return [];
 		return json.results;
 	};
 
-	const getPeople = async () => {
+	const userList = async () => {
 		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
 		if (!res.ok) return [];
 		let chatters = json.results.filter((chatter: any) => chatter.id !== user.id);
@@ -240,6 +241,10 @@
 			</button>
 		{/if}
 	{/each}
+
+	{#if selectedPage === "group"}
+	<Button onClick={() => creatingGroup = true}>{$_("+ New Group")}</Button>
+	{/if}
 </div>
 
 <style>

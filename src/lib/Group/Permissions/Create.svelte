@@ -108,7 +108,6 @@
 			return;
 		}
 		poppup = { message: 'Successfully created role', success: true };
-
 	};
 
 	const permissionUpdate = async () => {
@@ -146,7 +145,7 @@
 			return;
 		}
 		poppup = { message: 'Successfully updated role', success: true };
-		selectedRole = undefined
+		selectedRole = undefined;
 		selectedPage = 'list';
 	};
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type invite, type PreviewMessage } from './interfaces';
+	import { type GroupMembers, type invite, type PreviewMessage } from './interfaces';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Group } from '$lib/Group/interface';
 	import Tab from '$lib/Generic/Tab.svelte';
@@ -20,14 +20,15 @@
 		user: User,
 		chatSearch = '',
 		workGroupList: WorkGroup[] = [];
-		
-		export let selectedChat: number | null,
+
+	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
 		creatingGroup: boolean,
 		selectedPage: 'direct' | 'group' = 'direct',
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
-		inviteList: invite[] = [];
+		inviteList: invite[] = [],
+		groupMembers: GroupMembers[] = [];
 
 	onMount(async () => {
 		//TODO: Get this from the userinfo sveltestore
@@ -239,11 +240,25 @@
 					</span>
 				</div>
 			</button>
+			{#if selectedPage === 'direct' && creatingGroup}
+				<Button
+					onClick={() => {
+						groupMembers.push(chatter);
+						groupMembers = groupMembers;
+						console.log('CLIKCKIn');
+					}}>ADD USER</Button
+				>
+			{/if}
 		{/if}
 	{/each}
 
-	{#if selectedPage === "group"}
-	<Button onClick={() => creatingGroup = true}>{$_("+ New Group")}</Button>
+	{#if selectedPage === 'group'}
+		<Button
+			onClick={() => {
+				creatingGroup = true;
+				selectedPage = 'direct';
+			}}>{$_('+ New Group')}</Button
+		>
 	{/if}
 </div>
 

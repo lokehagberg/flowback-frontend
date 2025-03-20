@@ -3,9 +3,10 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { _ } from 'svelte-i18n';
+	import type { GroupMembers } from './interfaces';
 
 	export let creatingGroup: boolean,
-		groupMembers: any[] = [];
+		groupMembers: GroupMembers[] = [];
 
 	let name = '';
 
@@ -17,7 +18,7 @@
 
 		if (!res.ok) return;
 
-        creatingGroup = false;
+		creatingGroup = false;
 	};
 </script>
 
@@ -27,7 +28,7 @@
 	{$_('Members')}
 	<div>
 		{#each groupMembers as member}
-			{member.name}
+			{member.username}
 		{/each}
 	</div>
 

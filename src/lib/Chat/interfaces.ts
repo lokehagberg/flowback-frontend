@@ -70,3 +70,13 @@ export interface invite {
 	message_channel_name: string;
 	rejected: null;
 }
+
+export interface GroupMembers {
+	banner_image: string | null;
+	channel_id: number;
+	chat_status: string;
+	id: number;
+	profile_image: string | null;
+	public_status: string;
+	username: string;
+}

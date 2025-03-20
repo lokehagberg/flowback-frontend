@@ -2,7 +2,7 @@
 	import ChatWindow from './ChatWindow.svelte';
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
-	import type { Message, PreviewMessage } from './interfaces';
+	import type { GroupMembers, Message, PreviewMessage } from './interfaces';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -32,7 +32,8 @@
 		chatDiv: HTMLDivElement,
 		selectedChatChannelId: number | null,
 		darkMode = false,
-		creatingGroup = false;
+		creatingGroup = false,
+		groupMembers:GroupMembers[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -109,11 +110,12 @@
 				bind:previewGroup
 				bind:selectedChatChannelId
 				bind:creatingGroup
+				bind:groupMembers
 			/>
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
 			{#if creatingGroup}
-				<CreateChatGroup bind:creatingGroup />
+				<CreateChatGroup bind:creatingGroup bind:groupMembers />
 			{:else}
 				<ChatWindow
 					bind:selectedChat

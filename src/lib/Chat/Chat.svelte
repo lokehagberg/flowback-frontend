@@ -15,7 +15,7 @@
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
-	import CreateGroup from './CreateGroup.svelte';
+	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -113,9 +113,7 @@
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
 			{#if creatingGroup}
-			
-			<CreateGroup bind:creatingGroup />
-			
+				<CreateChatGroup bind:creatingGroup />
 			{:else}
 				<ChatWindow
 					bind:selectedChat

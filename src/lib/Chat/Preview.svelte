@@ -12,7 +12,6 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 	import { env } from '$env/dynamic/public';
 
 	let groups: Group[] = [],
@@ -111,7 +110,7 @@
 				previewGroup = previewGroup;
 			}
 
-			const id = PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
+			const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
 
 			selectedChat = id;
 			chatPartner.set(id);

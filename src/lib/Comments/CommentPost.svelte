@@ -68,8 +68,8 @@
 			being_replied: false,
 			score: 1,
 			edited: false,
-			attachments: files.map((image) => {
-				return { file: URL.createObjectURL(image) };
+			attachments: files.map((file) => {
+				return { file: URL.createObjectURL(file)};
 			}),
 			message,
 			id: json,
@@ -185,12 +185,12 @@
 		{#if proposals}
 			{#each proposals as proposal}
 				<button
+					type="button"
 					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
 					on:click={() => {
 						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
 						recentlyTappedButton = '';
 					}}
-					on:keydown
 				>
 					{proposal.title}
 				</button>

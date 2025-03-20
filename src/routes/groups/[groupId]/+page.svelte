@@ -28,7 +28,6 @@
 	import { pushState } from '$app/navigation';
 	import WorkGroups from '$lib/Group/WorkingGroups/WorkGroups.svelte';
 	import { env } from '$env/dynamic/public';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 
 	let selectedPage: SelectablePage = 'flow';
 	let group: GroupDetails = {

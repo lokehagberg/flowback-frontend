@@ -156,6 +156,7 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
+				{@debug attachment}
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
 							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}

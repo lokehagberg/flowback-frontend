@@ -81,7 +81,7 @@
 	<div class="flex justify-between w-full">
 		<button class="flex" on:click={filterComments}>
 			<img src={commentSymbol} alt="Comment" class="w-6 h-6 mr-2" />
-			{comments.filter((comment) => comment.parent_id === null).length}
+			{comments.filter((comment) => comment?.message?.includes(proposal.title)).length}
 		</button>
 
 		<button

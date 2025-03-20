@@ -10,14 +10,14 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Loader from '../Loader.svelte';
-	import type { timeProposal } from '$lib/Poll/interface';
+	import type { proposal, timeProposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import Proposal from '$lib/Poll/Proposal.svelte';
 
 	export let x = 10,
 		y = 10,
 		votes: number[],
-		proposals: Proposal[] = [];
+		proposals: timeProposal[] = [];
 	// w = 200,
 	// h = 300;
 
@@ -188,12 +188,9 @@
 	};
 
 	const transformVotesIntoSelectedDates = () => {
-		console.log('HERERsE', votes.length);
-
 		if (votes.length === 0) return;
 		const prop = proposals;
 		const propFiltered = prop.filter((proposal) => votes.find((vote) => vote === proposal?.id));
-
 		selectedDates = propFiltered.map((proposal) => new Date(proposal.end_date));
 	};
 
@@ -201,12 +198,18 @@
 		// getProposals();
 		// getProposalVote();
 		initialMonday = getRecentMonday(new Date());
-		// transformVotesIntoSelectedDates()
+		transformVotesIntoSelectedDates();
+
+		//TODO: Fix this reactivity mess
+		const a = setTimeout(() => {
+			transformVotesIntoSelectedDates();
+			clearInterval(a);
+		}, 200);
 	});
 
-	$: if (votes && selectedDates) transformVotesIntoSelectedDates();
-
-	$: console.log(selectedDates, 'DATES');
+	$: if (votes && selectedDates) {
+		// transformVotesIntoSelectedDates();
+	}
 
 	$: {
 		const monday = getMondayForOffset(weekOffset);

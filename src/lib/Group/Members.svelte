@@ -13,7 +13,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { faMagnifyingGlass, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { faMagnifyingGlass, faPaperPlane, faRunning } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -31,7 +31,8 @@
 		poppup: poppup,
 		showInvite = false,
 		searched = false,
-		delegates: Delegate[] = [];
+		delegates: Delegate[] = [],
+		removeUserModalShow = false;
 
 	onMount(async () => {
 		getUsers();
@@ -136,6 +137,11 @@
 		delegates = json.results.map((delegatePool: any) => {
 			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
 		});
+	};
+
+	const userRemove = async () => {
+		// const {res, json} = await fetchRequest('POST', {
+		// } )
 	};
 </script>
 
@@ -248,7 +254,9 @@
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each searchedUsers as user}
-				{@const delegationId = delegates.find((delegate) => delegate.user.id === user.user.id)?.pool_id}
+					{@const delegationId = delegates.find(
+						(delegate) => delegate.user.id === user.user.id
+					)?.pool_id}
 					<div class="flex items-center">
 						<button
 							on:click={() => goto(`/user?id=${user.user.id}&delegate_id=${delegationId || ''}`)}
@@ -274,20 +282,32 @@
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
-						<button
-							on:click={() => {
-								isChatOpen.set(true);
-								chatPartner.set(user.user.id);
-							}}
-							Class="right-6 absolute"
-						>
-							<Fa icon={faPaperPlane} rotate="60" />
-						</button>
+						<div class="flex gap-2 right-6 absolute">
+							<Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
+								><Fa icon={faRunning} /></Button
+							>
+							<button
+								on:click={() => {
+									isChatOpen.set(true);
+									chatPartner.set(user.user.id);
+								}}
+								Class=""
+							>
+								<Fa icon={faPaperPlane} rotate="60" />
+							</button>
+						</div>
 					</div>
 				{/each}
 			</div>
 		{/if}
 	</div>
 </Loader>
+
+<Modal bind:open={removeUserModalShow}>
+	<div slot="header">Sure you want to delet?</div>
+	<div slot="body">
+		<Button buttonStyle="warning-light" onClick={userRemove} />
+	</div>
+</Modal>
 
 <Poppup bind:poppup />

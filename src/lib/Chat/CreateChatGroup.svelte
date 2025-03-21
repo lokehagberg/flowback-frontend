@@ -13,7 +13,7 @@
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}&`).join('')}`
+			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}`).join('&')}`
 		);
 ;
 

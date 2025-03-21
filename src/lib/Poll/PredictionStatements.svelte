@@ -8,7 +8,6 @@
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { onMount } from 'svelte';
 
 	export let selectedProposal: proposal, phase: Phase, poll: poll;
 
@@ -25,7 +24,6 @@
 		);
 		loading = false;
 		predictions = json.results;
-		console.log(predictions, 'predictions');
 		
 	};
 

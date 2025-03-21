@@ -19,12 +19,12 @@
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
-		score: null | number = null,
 		phase: Phase,
 		poll: poll,
 		Class = '';
-
-	let showPoppup = false,
+		
+		let showPoppup = false,
+		score: null | number = null,
 		showDetails = false,
 		poppup: poppup;
 
@@ -198,7 +198,7 @@
 	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
 
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} {score} />
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button onClick={getAIPredictionBets}>
 				{$_('Get AI Prediction Bets')}

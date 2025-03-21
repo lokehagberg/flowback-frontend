@@ -97,8 +97,6 @@
 				jsonC = json;
 			}
 
-			console.log('hiello?');
-
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,

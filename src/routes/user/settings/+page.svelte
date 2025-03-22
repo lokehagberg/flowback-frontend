@@ -57,7 +57,6 @@
 
 	const getServerConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'server/config');
-		console.log(res, json, 'JSON FOR NOW');
 
 		if (!res.ok) return;
 

@@ -22,52 +22,11 @@
 		phase: Phase,
 		poll: poll,
 		Class = '';
-		
-		let showPoppup = false,
+
+	let showPoppup = false,
 		score: null | number = null,
 		showDetails = false,
 		poppup: poppup;
-
-	const getPredictionBet = async () => {
-		// if (!score) return;
-		loading = true;
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
-		);
-
-		loading = false;
-		if (!res.ok) showPoppup = true;
-		else {
-			const previousBet = json.results.find(
-				(result: any) => result.created_by.user.id.toString() === localStorage.getItem('userId')
-			);
-
-			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
-			else score = null;
-		}
-	};
-
-	const predictionBetCreate = async (score: string | number) => {
-		// if (!score) return;
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/prediction/${prediction.id}/bet/create`,
-			{
-				score: `${score}`
-			}
-		);
-		loading = false;
-
-		if (!res.ok) {
-			poppup = { message: 'Betting failed', success: false };
-			return;
-		}
-
-		poppup = { message: 'Successfully placed bet', success: true, show: true };
-	};
 
 	const predictionBetUpdate = async (score: string | number) => {
 		if (score === null) return;
@@ -165,13 +124,12 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
-		console.log(newScore, "newScore");
-
-		predictionBetCreate(newScore);
+		// predictionBetCreate(newScore);
 		if (newScore === null) predictionBetDelete();
-		else if (score === null) {
-			predictionBetCreate(newScore);
-		} else predictionBetUpdate(newScore);
+		// else if (score === null) {
+		// predictionBetCreate(newScore);
+		// }
+		else predictionBetUpdate(newScore);
 
 		if (
 			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
@@ -185,7 +143,7 @@
 	};
 
 	onMount(() => {
-		getPredictionBet();
+		score = prediction.user_prediction_bet;
 	});
 </script>
 

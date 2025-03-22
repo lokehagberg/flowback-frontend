@@ -22,9 +22,9 @@
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}
             &proposals=${selectedProposal.id}`
 		);
+
 		loading = false;
 		predictions = json.results;
-		
 	};
 
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
@@ -32,32 +32,34 @@
 
 <Loader bind:loading>
 	<div class="border-t-2">
-		<div class="text-gray-500 text-sm pt-3 font-semibold">{$_('Predictions')}({predictions.length})</div>
+		<div class="text-gray-500 text-sm pt-3 font-semibold">
+			{$_('Predictions')}({predictions.length})
+		</div>
 		{#key selectedProposal}
-		{#each predictions as prediction}
-			<div
-				class="border-b-2 flex flex-col break-all py-2 gap-1"
-				class:select-none={phase === 'prediction_bet'}
-			>
-				<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
-				<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
-				{#if prediction.description}
-					<Description description={prediction.description} limit={130} />
-				{/if}
-				{#if phase === 'delegate_vote' || phase === 'vote'}
-					<span class="text-sm text-right"
-						>{$_('Bet')}:
-						{#if prediction.combined_bet}
-							{prediction.combined_bet}
-						{:else}
-							{$_('none')}
-						{/if}
-					</span>
-				{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}
-					<Prediction Class="mt-4" bind:phase bind:poll bind:prediction />
-				{/if}
-			</div>
-		{/each}
+			{#each predictions as prediction}
+				<div
+					class="border-b-2 flex flex-col break-all py-2 gap-1"
+					class:select-none={phase === 'prediction_bet'}
+				>
+					<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
+					<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
+					{#if prediction.description}
+						<Description description={prediction.description} limit={130} />
+					{/if}
+					{#if phase === 'delegate_vote' || phase === 'vote'}
+						<span class="text-sm text-right"
+							>{$_('Bet')}:
+							{#if prediction.combined_bet}
+								{prediction.combined_bet}
+							{:else}
+								{$_('none')}
+							{/if}
+						</span>
+					{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}
+						<Prediction Class="mt-4" bind:phase bind:poll bind:prediction />
+					{/if}
+				</div>
+			{/each}
 		{/key}
 	</div>
 </Loader>

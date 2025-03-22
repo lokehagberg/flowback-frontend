@@ -118,12 +118,14 @@
 	};
 
 	const showOlderMessages = async () => {
+		console.log(olderMessages, "NEEEXY");
 		const { res, json } = await fetchRequest('GET', olderMessages);
 
 		if (!res.ok) return;
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
+		
 		messages = json.results.reverse();
 	};
 

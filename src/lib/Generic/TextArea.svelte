@@ -74,6 +74,7 @@
 		on:blur={onBlur}
 		on:keypress={onKeyPress}
 		on:input={onKeyDown}
+		autocomplete="off"
 		{placeholder}
 	/>
 </label>

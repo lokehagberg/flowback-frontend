@@ -240,11 +240,12 @@
 				</div>
 			</button>
 			{#if selectedPage === 'direct' && creatingGroup}
+				<!-- For creating group chat, see CreateChatGroup.svelte -->
 				<Button
 					onClick={() => {
+						if (groupMembers.find((member) => member.id === chatter.id)) return;
 						groupMembers.push(chatter);
 						groupMembers = groupMembers;
-						console.log('CLIKCKIn');
 					}}>ADD USER</Button
 				>
 			{/if}

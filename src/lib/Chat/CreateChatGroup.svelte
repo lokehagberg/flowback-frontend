@@ -15,7 +15,6 @@
 			'GET',
 			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}`).join('&')}`
 		);
-;
 
 		if (!res.ok) return;
 

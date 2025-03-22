@@ -4,7 +4,7 @@
 		lineWidth = 0,
 		score: number | null = null;
 
-	let snapPoints = [0, 20, 40, 60, 80, 100],
+	let snapPoints = [0, 20, 40, 50, 60, 80, 100],
 		dragLinePosition: any = null,
 		currentSnapPosition: any;
 
@@ -50,7 +50,9 @@
 	});
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
-	$: if (score !== null) console.log(score, 'score');
+	// $: if (score !== null) console.log(score, 'score');
+	$: if (score === null) score = 2.5
+	
 
 	// $: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
 </script>

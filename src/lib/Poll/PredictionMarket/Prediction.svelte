@@ -9,7 +9,6 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -23,8 +22,7 @@
 		poll: poll,
 		Class = '';
 
-	let showPoppup = false,
-		score: null | number = null,
+	let score: null | number = null,
 		showDetails = false,
 		poppup: poppup;
 
@@ -142,9 +140,6 @@
 		score = Number(newScore);
 	};
 
-	onMount(() => {
-		score = prediction.user_prediction_bet;
-	});
 </script>
 
 <div class={Class}>
@@ -156,7 +151,7 @@
 	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
 
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} {score} />
+		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} score={prediction.user_prediction_bet} />
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button onClick={getAIPredictionBets}>
 				{$_('Get AI Prediction Bets')}

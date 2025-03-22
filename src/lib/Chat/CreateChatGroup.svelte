@@ -4,11 +4,14 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { GroupMembers } from './interfaces';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let creatingGroup: boolean,
 		groupMembers: GroupMembers[] = [];
 
-	let name = '';
+	let name = '',
+		poppup: poppup;
 
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
@@ -16,9 +19,18 @@
 			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}`).join('&')}`
 		);
 
-		if (!res.ok) return;
+		if (!res.ok){
+			poppup = { message: 'Failed to created group chat', success: false };
+			return;
+		} 
 
 		creatingGroup = false;
+		poppup = { message: 'Successfully created group chat', success: true };
+	};
+
+	const cancelGroupChatCreate = () => {
+		creatingGroup = false;
+		groupMembers = [];
 	};
 </script>
 
@@ -33,5 +45,7 @@
 	</div>
 
 	<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-	<Button buttonStyle="warning-light">{$_('Cancel')}</Button>
+	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}>{$_('Cancel')}</Button>
 </form>
+
+<Poppup bind:poppup />

@@ -204,7 +204,7 @@
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
-	//Behavior is differnet when looking at older chat messages
+	//Behavior is different when looking at older chat messages
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
@@ -239,7 +239,7 @@
 				{#if !errorState}
 					<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
 				{:else}
-					<span class="self-center">{$_('Error loading chat')}</span>
+					<span class="self-center">{$_('Non-existent chat. Try messaging to start a request')}</span>
 				{/if}
 			{/if}
 			{#if olderMessages}

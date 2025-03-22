@@ -19,13 +19,16 @@
 			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}`).join('&')}`
 		);
 
-		if (!res.ok){
-			poppup = { message: 'Failed to created group chat', success: false };
+		if (!res.ok) {
+			poppup = { message: 'Failed to created group chat', success: false, show: true };
 			return;
-		} 
+		}
 
+		//Poppup doesn't work because this goes to false
+		//TODO: Redo the poppup system to have a poppup queue that's always rendered and which is accessed via svelte store
 		creatingGroup = false;
-		poppup = { message: 'Successfully created group chat', success: true };
+		groupMembers = [];
+		poppup = { message: 'Successfully created group chat', success: true, show: true };
 	};
 
 	const cancelGroupChatCreate = () => {
@@ -46,6 +49,5 @@
 
 	<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
 	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}>{$_('Cancel')}</Button>
+	<Poppup bind:poppup Class="z-50" />
 </form>
-
-<Poppup bind:poppup />

@@ -613,6 +613,7 @@
     "+ New Group": "+ Ny Grupp",
     "Successfully created group chat": "Gruppchatt skapades framgångsrikt",
     "Failed to created group chat": "Misslyckades att skapa gruppchatt",
+    "Failed to save new delegation": "Misslyckades att spara ny delegat",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

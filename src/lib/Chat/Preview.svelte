@@ -150,6 +150,9 @@
 			accept
 		});
 		if (!res.ok) return;
+
+		inviteList.filter((invitee) => invitee.id !== invite_id);
+		inviteList = inviteList;
 	};
 
 	// Only for one-group flowback
@@ -207,8 +210,9 @@
 					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 					: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
-				class:bg-gray-200={selectedChat === chatter.id}
-				class:dark:bg-gray-700={selectedChat === chatter.id}
+				class:bg-gray-200={selectedChat === chatter.channel_id || selectedChat === chatter.chat_id}
+				class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
+					selectedChat === chatter.chat_id}
 				on:click={() => {
 					clickedChatter(chatter);
 				}}
@@ -254,6 +258,7 @@
 
 	{#if selectedPage === 'group'}
 		<Button
+			Class="mt-4"
 			onClick={() => {
 				creatingGroup = true;
 				selectedPage = 'direct';

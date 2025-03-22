@@ -18,7 +18,6 @@
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
-	import { chatPartner } from './ChatStore.svelte';
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -31,7 +30,8 @@
 		},
 		messages: Message[] = [],
 		socket: WebSocket,
-		chatWindow: any;
+		chatWindow: any,
+		errorState = false;
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -46,12 +46,20 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
+			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_asc&limit=${chatWindowLimit}`
 		);
 
-		if (res.ok) messages = json.results.reverse();
+		if (!res.ok) {
+			selectedChat = null;
+			messages = [];
+			errorState = true;
+			return;
+		}
+
+		messages = json.results;
 
 		//Temporary fix before json.next issue is fixed
+		//TODO: Fix it
 		olderMessages = json.next;
 		newerMessages = '';
 	};
@@ -88,8 +96,6 @@
 
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = selectedChat;
-
-		console.log(channelId, 'channelId');
 
 		if (!channelId) return;
 
@@ -230,7 +236,11 @@
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
 			{#if messages.length === 0}
-				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+				{#if !errorState}
+					<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+				{:else}
+					<span class="self-center">{$_('Error loading chat')}</span>
+				{/if}
 			{/if}
 			{#if olderMessages}
 				<li class="text-center mt-6 mb-6">

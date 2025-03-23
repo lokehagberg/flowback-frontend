@@ -151,7 +151,9 @@
 		});
 		if (!res.ok) return;
 
-		inviteList.filter((invitee) => invitee.id !== invite_id);
+		inviteList.map((invitee) => {
+			if (invitee.id === invite_id) invitee.rejected = !accept;
+		});
 		inviteList = inviteList;
 	};
 
@@ -187,29 +189,29 @@
 		/>
 	</div>
 
-	{#each inviteList as invitee}
-		{#if invitee.rejected === null}
-			<div>
-				<span>{$_("You've been invite to this chat:")}</span>
-				<div>{invitee.message_channel_name}</div>
-				<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Accept')}</Button>
-				<Button onClick={() => UserChatInvite(false, invitee.id)}>{$_('Deny')}</Button>
-			</div>
-		{/if}
-	{/each}
-
 	{#if selectedPage === 'group'}
 		{#each inviteList as groupChat}
 			{#if !groupChat.rejected}
+				{#if groupChat.rejected === null}
+					<span>{$_("You've been invite to this chat:")}</span>
+
+					<Button onClick={() => UserChatInvite(true, groupChat.id)}>{$_('Accept')}</Button>
+					<Button onClick={() => UserChatInvite(false, groupChat.id)}>{$_('Deny')}</Button>
+				{/if}
 				<button
-					class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+					class="w-full transition transition-color p-3 flex items-center gap-3 cursor-pointer dark:bg-darkobject"
 					class:bg-gray-200={selectedChat === groupChat.message_channel_id ||
 						selectedChat === groupChat.message_channel_id}
 					class:dark:bg-gray-700={selectedChat === groupChat.message_channel_id ||
 						selectedChat === groupChat.message_channel_id}
+					class:dark:hover:bg-darkbackground={groupChat.rejected === false}
+					class:hover:bg-gray-200={groupChat.rejected === false}
+					class:active:bg-gray-500={groupChat.rejected === false}
 					on:click={() => {
-						clickedChatter(groupChat.message_channel_id);
+						if (groupChat.rejected === false) clickedChatter(groupChat.message_channel_id);
+						else selectedChat = null;
 					}}
+					disabled={groupChat.rejected === null}
 				>
 					<ProfilePicture username={groupChat.message_channel_name} profilePicture={null} />
 					<div class="flex flex-col max-w-[40%]">

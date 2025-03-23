@@ -8,19 +8,22 @@
 	import { _ } from 'svelte-i18n';
 	import Description from './Description.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
+	import { onMount } from 'svelte';
 
-	export let selectedProposal: proposal, phase: Phase, poll: poll;
+	export let selectedProposal: proposal | null = null,
+		phase: Phase,
+		poll: poll;
 
 	let predictions: PredictionStatement[] = [],
 		loading = false;
 
-	const getPredictionStatements = async (selectedProposal: proposal) => {
+	const getPredictionStatements = async (selectedProposal: proposal | null) => {
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}
-            &proposals=${selectedProposal.id}`
+            ${selectedProposal ? `&proposals=${selectedProposal.id}` : ''}`
 		);
 
 		loading = false;
@@ -28,6 +31,10 @@
 	};
 
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
+
+	onMount(() => {
+		getPredictionStatements(selectedProposal);
+	});
 </script>
 
 <Loader bind:loading>

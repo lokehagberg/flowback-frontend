@@ -140,24 +140,28 @@
 		score = Number(newScore);
 	};
 
+	onMount(() => {
+
+		
+	})
 </script>
 
 <div class={Class}>
-	{#if prediction.description}
-		<!-- <span class="hover:underline cursor-pointer overflow-hidden">
-			{elipsis(prediction.description)}</span
-		> -->
-	{/if}
-	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
-
+	<!-- PHASE 4: PREDICTION BETTING -->
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} score={prediction.user_prediction_bet} />
+		<VotingSlider
+			onSelection={handleChangeBetScore}
+			lineWidth={50}
+			score={prediction.user_prediction_bet}
+		/>
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button onClick={getAIPredictionBets}>
 				{$_('Get AI Prediction Bets')}
 			</Button>
 		{/if}
 	{/if}
+
+	<!-- PHASE 7: RESULTS AND EVALUATION -->
 
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">

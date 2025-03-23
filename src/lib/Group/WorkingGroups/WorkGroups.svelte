@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import type { WorkGroupInvite, WorkGroup as WorkingGroupType } from './interface';
+	import {
+		workGroupsStore,
+		type WorkGroupInvite,
+		type WorkGroup as WorkingGroupType
+	} from './interface';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -25,8 +29,8 @@
 			next: '',
 			previous: '',
 			total_page: 0,
-			joined:false,
-			chat:1
+			joined: false,
+			chat: 1
 		},
 		poppup: poppup,
 		open = false,
@@ -50,7 +54,7 @@
 	};
 
 	const createWorkingGroup = async () => {
-		workGroupEdit.chat = 1
+		workGroupEdit.chat = 1;
 		const { res, json } = await fetchRequest(
 			'POST',
 			`group/${$page.params.groupId}/workgroup/create`,
@@ -90,6 +94,8 @@
 	onMount(async () => {
 		loading = true;
 		await getWorkingGroupList();
+		workGroupsStore.subscribe((_workGroups) => (workGroups = _workGroups));
+
 		getWorkGroupInvite();
 		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
 		loading = false;
@@ -139,7 +145,7 @@
 	{/if}
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
-			<WorkingGroup bind:workGroup={workingGroup} {handleRemoveGroup} bind:isAdmin />
+			<WorkingGroup bind:workGroup={workingGroup} {workGroups} {handleRemoveGroup} bind:isAdmin />
 		{/each}
 	</div>
 </Loader>

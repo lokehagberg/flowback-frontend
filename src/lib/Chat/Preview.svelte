@@ -11,7 +11,7 @@
 	import { chatPartner } from './ChatStore.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
-	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import { workGroupsStore, type WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 
 	let groups: Group[] = [],
@@ -36,7 +36,8 @@
 		await UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
-		await getWorkGroups();
+		// await getWorkGroups();
+		workGroupsStore.subscribe((_workGroups) => (workGroupList = _workGroups));
 	});
 
 	const setUpPreview = async () => {

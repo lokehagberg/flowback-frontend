@@ -33,7 +33,7 @@
 		selectedChatChannelId: number | null,
 		darkMode = false,
 		creatingGroup = false,
-		groupMembers:GroupMembers[] = [];
+		groupMembers: GroupMembers[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -74,18 +74,6 @@
 	class:invisible={!chatOpen}
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
-	<Button
-		onClick={() => {
-			chatOpen = false;
-			isChatOpen.set(false);
-		}}
-		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
-	>
-		<div class="text-gray-800 dark:text-gray-200">
-			<Fa icon={faX} />
-		</div>
-	</Button>
-
 	<!-- TODO: This will link to Chat settings once that has been implemented -->
 
 	<Button
@@ -94,10 +82,22 @@
 			isChatOpen.set(false);
 			goto('/user/settings');
 		}}
-		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faCog} />
+		</div>
+	</Button>
+
+	<Button
+		onClick={() => {
+			chatOpen = false;
+			isChatOpen.set(false);
+		}}
+		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faX} />
 		</div>
 	</Button>
 

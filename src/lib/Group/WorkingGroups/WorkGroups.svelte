@@ -93,8 +93,8 @@
 
 	onMount(async () => {
 		loading = true;
-		await getWorkingGroupList();
 		workGroupsStore.subscribe((_workGroups) => (workGroups = _workGroups));
+		await getWorkingGroupList();
 
 		getWorkGroupInvite();
 		isAdmin = await getUserIsGroupAdmin($page.params.groupId);

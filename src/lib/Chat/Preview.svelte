@@ -83,12 +83,12 @@
 		return chatters;
 	};
 
-	const clickedChatter = async (chatter: any) => {
+	const clickedChatter = async (chatterId: any) => {
 		//Update when user last saw message after clicking on channel
 
 		if (selectedPage === 'direct') {
 			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
-			let message = previewDirect.find((message) => message.channel_id === chatter.channel_id);
+			let message = previewDirect.find((message) => message.channel_id === chatterId);
 
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
@@ -97,11 +97,11 @@
 
 				previewDirect = previewDirect;
 			}
-			selectedChat = chatter.channel_id;
-			chatPartner.set(chatter.channel_id);
-			selectedChatChannelId = chatter.channel_id;
+			selectedChat = chatterId;
+			chatPartner.set(chatterId);
+			selectedChatChannelId = chatterId;
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
+			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
@@ -110,11 +110,11 @@
 				previewGroup = previewGroup;
 			}
 
-			const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
+			// const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
 
-			selectedChat = id;
-			chatPartner.set(id);
-			selectedChatChannelId = id;
+			selectedChat = chatterId;
+			chatPartner.set(chatterId);
+			selectedChatChannelId = chatterId;
 		}
 	};
 
@@ -198,6 +198,31 @@
 		{/if}
 	{/each}
 
+	{#if selectedPage === 'group'}
+		{#each inviteList as groupChat}
+			{#if !groupChat.rejected}
+				<button
+					class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+					class:bg-gray-200={selectedChat === groupChat.message_channel_id ||
+						selectedChat === groupChat.message_channel_id}
+					class:dark:bg-gray-700={selectedChat === groupChat.message_channel_id ||
+						selectedChat === groupChat.message_channel_id}
+					on:click={() => {
+						clickedChatter(groupChat.message_channel_id);
+					}}
+				>
+					<ProfilePicture username={groupChat.message_channel_name} profilePicture={null} />
+					<div class="flex flex-col max-w-[40%]">
+						<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
+							>{groupChat.message_channel_name}</span
+						>
+						<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]" />
+					</div>
+				</button>
+			{/if}
+		{/each}
+	{/if}
+
 	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
 		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}
 			{@const previewObject =
@@ -214,7 +239,7 @@
 				class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
 					selectedChat === chatter.chat_id}
 				on:click={() => {
-					clickedChatter(chatter);
+					clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id);
 				}}
 			>
 				<!-- Notification Symbol -->

@@ -83,8 +83,6 @@
 				(proposal) => new Date(proposal.start_date).getTime() === start_date.getTime()
 			);
 
-			console.log(proposals, 'PROPSAL');
-
 			if (!existingProposal) {
 				const { res, json } = await fetchRequest(
 					'POST',
@@ -96,7 +94,6 @@
 				);
 
 				savedDates.push(json);
-				console.log(json, savedDates);
 			} else savedDates.push(existingProposal.id);
 		});
 

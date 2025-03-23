@@ -118,14 +118,13 @@
 	};
 
 	const showOlderMessages = async () => {
-		console.log(olderMessages, "NEEEXY");
+		console.log(olderMessages, 'NEEEXY');
 		const { res, json } = await fetchRequest('GET', olderMessages);
 
 		if (!res.ok) return;
 		newerMessages = json.previous;
 		olderMessages = json.next;
 
-		
 		messages = json.results.reverse();
 	};
 
@@ -238,11 +237,11 @@
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
 			{#if messages.length === 0}
-				{#if !errorState}
-					<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-				{:else}
-					<span class="self-center">{$_('Non-existent chat. Try messaging to start a request')}</span>
-				{/if}
+				<!-- {#if !errorState} -->
+				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+				<!-- {:else} -->
+				<!-- <span class="self-center">{$_('Non-existent chat. Try messaging to start a request')}</span> -->
+				<!-- {/if} -->
 			{/if}
 			{#if olderMessages}
 				<li class="text-center mt-6 mb-6">

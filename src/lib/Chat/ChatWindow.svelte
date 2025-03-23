@@ -46,7 +46,7 @@
 
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_asc&limit=${chatWindowLimit}`
+			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
 
 		if (!res.ok) {
@@ -56,7 +56,7 @@
 			return;
 		}
 
-		messages = json.results;
+		messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
 		//TODO: Fix it

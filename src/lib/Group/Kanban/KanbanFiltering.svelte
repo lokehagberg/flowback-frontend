@@ -33,7 +33,7 @@
 >
 	<div class="w-full flex items-end gap-4">
 		<TextInput
-			Class="flex-1 placeholder-gray-600  pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject"
+			Class="flex-1 placeholder-gray-600 rounded pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject"
 			inputClass="placeholder-gray-600 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
 			placeholder={$_('Search tasks')}
 			onInput={() => (searched = false)}

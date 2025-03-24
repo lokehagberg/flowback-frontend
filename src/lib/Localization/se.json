@@ -205,6 +205,7 @@
     "Reveal Results JSON object": "Visa resultat-JSON-objekt",
     "Reveal Result Hash": "Visa resultat-hash",
     "Edited": "Redigerat",
+    "Edited Comment": "Redigerad kommentar",
     "Edit a Poll": "Redigera en poll",
     "No winning proposal": "Inget vinnande förslag",
     "Approval": "Godkännande",
@@ -611,6 +612,10 @@
     "Vote cancelled":"Röstningen avbröts",
     "You've been invite to this chat:":"Du har blivit inbjuden till följande chatt:",
     "+ New Group":"+ Ny Grupp",
+    "Search members": "Sök medlem",
+    "Search work groups": "Sök arbetsgrupp",
+    "Search threads": "Sök tråd",
+    "Search polls": "Sök omröstning",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

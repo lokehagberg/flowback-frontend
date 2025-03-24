@@ -113,7 +113,10 @@
 		<TextInput
 			Class="w-4/5"
 			onInput={() => (searched = false)}
-			label={$_('Search')}
+			label=''
+			max={null}
+			search={true}
+			placeholder={$_('Search threads')}
 			bind:value={searchQuery}
 		/>
 

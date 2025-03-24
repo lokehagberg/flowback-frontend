@@ -140,12 +140,12 @@
 		beingEdited = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to edit comment', success: false };
+			poppup = { message:$_('Failed to edit comment'), success: false };
 			return;
 		}
 
 		show = true;
-		showMessage = 'Edited Comment';
+		showMessage = $_('Edited Comment');
 		const index = comments.findIndex((comment) => comment.id === id);
 		let comment = comments.find((comment) => comment.id === id);
 		if (comment) {

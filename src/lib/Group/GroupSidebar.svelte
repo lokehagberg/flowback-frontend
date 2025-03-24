@@ -1,19 +1,22 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
 	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
-	import { faUserGroup } from '@fortawesome/free-solid-svg-icons/faUserGroup';
-	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
-	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
-	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
-	import { faPersonRunning } from '@fortawesome/free-solid-svg-icons/faPersonRunning';
-	import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons/faCheckToSlot';
-	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
-	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 	import workgroupsymbol from '$lib/assets/workgroupsymbol.svg';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa';
+	import {
+		faPeopleGroup,
+		faUserGroup,
+		faCircleInfo,
+		faVideoCamera,
+		faMailReplyAll,
+		faPersonRunning,
+		faCheckToSlot,
+		faBars,
+		faX,
+		faCog,
+		faList
+	} from '@fortawesome/free-solid-svg-icons';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -157,7 +160,7 @@
 			<GroupSidebarButton
 				action={() => action('members')}
 				text="Members"
-				faIcon={faUserGroup}
+				faIcon={faPeopleGroup}
 				isSelected={selectedPage === 'members'}
 			/>
 			<!-- <GroupSidebarButton

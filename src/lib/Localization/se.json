@@ -619,6 +619,7 @@
     "Search work groups": "Sök arbetsgrupp",
     "Search threads": "Sök tråd",
     "Search polls": "Sök omröstning",
+    "Failed to leave Group": "Det gick inte att lämna gruppen",
 
     "kanbanEntry": {
         "Cancel": "Avbryt"

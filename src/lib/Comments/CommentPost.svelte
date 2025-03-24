@@ -140,7 +140,7 @@
 		beingEdited = false;
 
 		if (!res.ok) {
-			poppup = { message:$_('Failed to edit comment'), success: false };
+			poppup = { message: 'Failed to edit comment', success: false };
 			return;
 		}
 

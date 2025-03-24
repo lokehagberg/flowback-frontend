@@ -58,17 +58,29 @@
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/prediction/statement/create`,
-			newPredictionStatement
-		);
+		newPredictionStatement.segments.map(async (segment) => {
+			console.log(segment, 'SEGMENT');
+			console.log(newPredictionStatement, 'SEGMENT');
+
+			const statement = {
+				end_date: newPredictionStatement.end_date,
+				segments: [segment],
+				title: newPredictionStatement.title
+			};
+
+			const { res, json } = await fetchRequest(
+				'POST',
+				`group/poll/${$page.params.pollId}/prediction/statement/create`,
+				statement
+			);
+		});
+
 		loading = false;
 
-		if (!res.ok) {
-			poppup = { message: 'Could not create prediction statement', success: false };
-			return;
-		}
+		// if (!res.ok) {
+		// 	poppup = { message: 'Could not create prediction statement', success: false };
+		// 	return;
+		// }
 
 		newPredictionStatement = {
 			segments: newPredictionStatement.segments,

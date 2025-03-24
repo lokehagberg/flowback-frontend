@@ -189,19 +189,19 @@
 					</a>
 				</div>
 				<div>
-					<div class="flex gap-1">
-						{thread.score}
+					<div class="flex items-center gap-2">
 						<button
 							class:text-primary={thread.user_vote === true}
 							on:click={() => threadVote(thread, 'up')}
-						>
-							<Fa icon={faArrowUp} />
+							>
+							<Fa icon={faThumbsUp} />
 						</button>
+						{thread.score}
 						<button
 							class:text-primary={thread.user_vote === false}
 							on:click={() => threadVote(thread, 'down')}
 						>
-							<Fa icon={faArrowDown} />
+							<Fa class="pl-0.5" icon={faThumbsDown} />
 						</button>
 					</div>
 				</div>

@@ -215,6 +215,8 @@
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:files={images} disableCropping />
 			<Select
+				classInner="border border-gray-300"
+				label={$_('Work Group')}
 				labels={workGroups.map((workGroup) => workGroup.name)}
 				values={workGroups.map((workGroup) => workGroup.id)}
 				bind:value={workGroup}

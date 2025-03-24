@@ -210,10 +210,10 @@
 				id="comment"
 			/>
 		</div>
-		<div class="flex ml-2 gap-2">
-			<FileUploads bind:files minimalist disableCropping Class="p-2 hover:bg-gray-200" />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-200" type="submit" label=""
-				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
+		<div class="flex ml-2 gap-2 items-start">
+			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 m-0 h-10" />
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 m-0 h-10" type="submit" label=""
+				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg"/></Button
 			>
 		</div>
 	</div>

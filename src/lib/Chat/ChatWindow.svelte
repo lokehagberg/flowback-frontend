@@ -236,12 +236,11 @@
 {#if selectedChat !== null || true}
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
-			{#if messages.length === 0}
-				<!-- {#if !errorState} -->
+			{@debug selectedChat}
+			{#if messages.length === 0 && selectedChat !== undefined}
 				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-				<!-- {:else} -->
-				<!-- <span class="self-center">{$_('Non-existent chat. Try messaging to start a request')}</span> -->
-				<!-- {/if} -->
+			{:else if selectedChat === undefined}
+				<span class="self-center">{$_('')}</span>
 			{/if}
 			{#if olderMessages}
 				<li class="text-center mt-6 mb-6">

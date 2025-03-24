@@ -196,7 +196,8 @@
 		/>
 	</div>
 
-	{#if selectedPage === 'group'}
+	{#if selectedPage === 'group' && inviteList}
+
 		{#each inviteList as groupChat}
 			{#if !groupChat.rejected}
 				{#if groupChat.rejected === null}

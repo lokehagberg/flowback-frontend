@@ -96,7 +96,7 @@
 				: currentSnapPosition === 80
 				? 'left-[80%]'
 				: 'left-[100%]'
-		} z-40 bg-white px-0.5 text-sm`}
+		} z-30 bg-white px-0.5 text-sm`}
 	>
 		|
 	</div>

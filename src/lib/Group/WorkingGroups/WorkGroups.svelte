@@ -106,10 +106,12 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-darkobject p-6 shadow rounded mb-4">
+<div class="bg-white dark:bg-darkobject p-4 shadow rounded mb-4">
 	<TextInput
-		label=""
-		placeholder="Search work group"
+		label=''
+		max={null}
+		search={true}
+		placeholder={$_('Search work groups')}
 		bind:value={search}
 		onInput={getWorkingGroupList}
 	/>

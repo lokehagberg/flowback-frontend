@@ -145,7 +145,7 @@
 		}
 
 		show = true;
-		showMessage = 'Edited Comment';
+		showMessage = $_('Edited Comment');
 		const index = comments.findIndex((comment) => comment.id === id);
 		let comment = comments.find((comment) => comment.id === id);
 		if (comment) {
@@ -210,10 +210,10 @@
 				id="comment"
 			/>
 		</div>
-		<div class="flex ml-2">
-			<FileUploads bind:files minimalist disableCropping />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100" type="submit" label=""
-				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
+		<div class="flex ml-2 gap-2 items-start">
+			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 m-0 h-10" />
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 m-0 h-10" type="submit" label=""
+				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg"/></Button
 			>
 		</div>
 	</div>

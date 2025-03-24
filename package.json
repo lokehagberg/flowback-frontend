@@ -46,6 +46,7 @@
     "dependencies": {
         "@fontsource/fira-mono": "^4.5.0",
         "@fortawesome/free-solid-svg-icons": "^6.1.2",
+        "@fortawesome/free-regular-svg-icons": "^6.1.2",
         "@schedule-x/svelte": "^1.8.0",
         "@schedule-x/theme-default": "^1.58.0",
         "@shopify/draggable": "^1.1.3",

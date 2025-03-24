@@ -102,7 +102,11 @@
 
 <Layout centered>
 	{#if poll}
-		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== "pre_start"} />
+		{#if pollType === 4}
+			<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== "pre_start"} />
+		{:else}
+			<PollHeader {poll} bind:phase displayTag={false} />
+		{/if}
 
 		{#if pollType === 4}
 			<!-- PHASE 0: PRE-START -->
@@ -342,7 +346,13 @@
 			{#if !finished}
 				<DatePoll />
 			{:else}
-				<Results {pollType} />
+			<Structure poll={null}>
+				<div slot="left" class="w-[600px]">
+						<Results {pollType} />
+				</div>
+			
+				<div slot="right"><Comments api="poll" /></div>
+			</Structure>
 			{/if}
 		{/if}
 	{/if}

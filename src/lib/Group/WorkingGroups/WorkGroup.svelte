@@ -74,6 +74,7 @@
 
 		workGroup.member_count--;
 		workGroup.joined = false;
+		workGroupsStore.set(workGroups);
 	};
 
 	const isMember = () => {

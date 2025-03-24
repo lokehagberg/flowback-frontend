@@ -169,6 +169,10 @@
 		workGroupList = json.results;
 	};
 
+	onMount(() => {
+		getWorkGroups();
+	});
+
 	$: groups = sort(groups, previewGroup);
 </script>
 
@@ -248,8 +252,7 @@
 				}}
 			>
 				<!-- Notification Symbol -->
-				{#if 
-				//@ts-ignore
+				{#if //@ts-ignore
 				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
 					<div
 						class="p-1 rounded-full"

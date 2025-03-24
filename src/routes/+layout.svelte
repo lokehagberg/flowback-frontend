@@ -137,6 +137,7 @@
 	initializeLocalization();
 
 	onMount(() => {
+		getWorkingGroupList();
 		showUI = shouldShowUI();
 		redirect();
 		if (showUI) updateUserInfo();

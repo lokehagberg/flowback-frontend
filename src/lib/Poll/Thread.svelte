@@ -22,20 +22,31 @@
 		poppup: poppup;
 
 	//Launches whenever the user clicks upvote or downvote on a thread
-	const threadVote = async (thread: Thread, clicked: 'down' | 'up') => {
+	const threadVote = async (_thread: Thread, clicked: 'down' | 'up') => {
 		let vote: null | false | true = null;
 
-		if (thread?.user_vote === false && clicked === 'down') vote = null;
-		else if (clicked === 'down') vote = false;
-		else if (thread?.user_vote === true && clicked === 'up') vote = null;
-		else if (clicked === 'up') vote = true;
+		if (_thread?.user_vote === false && clicked === 'down') {
+			vote = null;
+			thread.score++;
+		} else if (clicked === 'down') {
+			vote = false;
+			thread.score--;
+		} else if (_thread?.user_vote === true && clicked === 'up') {
+			vote = null;
+			thread.score--;
+		} else if (clicked === 'up') {
+			vote = true;
+			thread.score++;
+		}
 
-		const { res, json } = await fetchRequest('POST', `group/thread/${thread?.id}/vote`, { vote });
+		const { res, json } = await fetchRequest('POST', `group/thread/${_thread?.id}/vote`, { vote });
 
 		if (!res.ok) {
 			poppup = { message: 'Could not vote on thread', success: false };
 			return;
 		}
+
+		thread.user_vote = vote;
 
 		//TODO: Make this more efficient by not having to reload threads.
 		// getThreads();

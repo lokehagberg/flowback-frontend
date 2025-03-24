@@ -31,8 +31,10 @@
 	`}
 		aria-disabled={disabled}
 	>
-		<Fa icon={faIcon} class="max-w-[24px]" />
-		<div class="ml-4 text-left">
+		<div class="w-6 flex items-center justify-center">
+			<Fa icon={faIcon} class="w-6 h-6" />
+		</div>
+		<div class="ml-3 text-left">
 			{$_(text)}
 		</div>
 	</button>

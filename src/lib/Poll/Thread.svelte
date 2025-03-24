@@ -9,12 +9,14 @@
 	import { faArrowDown, faArrowUp, faThumbTack } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import Description from '$lib/Poll/Description.svelte';
-	import Thread from './Thread.svelte';
+
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import type { Thread } from '$lib/Group/interface';
+	import { onMount } from 'svelte';
 
 	export let isAdmin = true,
 		thread: Thread,
-		workGroup: WorkGroup;
+		workGroup: WorkGroup | null;
 
 	let threads: Thread[] = [],
 		poppup: poppup;
@@ -49,7 +51,13 @@
 		thread.pinned = !thread.pinned;
 		threads = threads;
 	};
+
+    onMount(() => {
+        console.log("THREEAAAADD", thread);
+        
+    })
 </script>
+
 
 <div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 	<div class="flex justify-between items-center">

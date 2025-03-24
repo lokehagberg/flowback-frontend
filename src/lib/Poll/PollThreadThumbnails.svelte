@@ -5,20 +5,22 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import PollFiltering from './PollFiltering.svelte';
-	import type { Filter, poll as Poll } from './interface';
+	import type { Filter, poll, poll as Poll, Post } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import type { DelegateMinimal } from '$lib/Group/interface';
+	import type { DelegateMinimal, Thread } from '$lib/Group/interface';
+	import ThreadThumbnail from './Thread.svelte';
+	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user',
 		delegate: DelegateMinimal = { id: 0, pool_id: 0, profile_image: '', tags: [], username: '' };
 
-	let polls: Poll[] = [],
+	let posts: Post[] = [],
 		filter: Filter = {
 			search: '',
 			finishedSelection: 'all',
@@ -26,11 +28,23 @@
 			order_by: 'start_date_desc',
 			tag: null
 		},
+		polls: poll[] = [],
+		threads: Thread[] = [],
 		loading = false,
 		isAdmin = false,
 		next = '',
 		prev = '',
-		poppup: poppup;
+		poppup: poppup,
+		workgroups: WorkGroup[] = [];
+
+	// Only for one-group flowback
+	const getWorkGroups = async () => {
+		const { res, json } = await fetchRequest('GET', 'group/1/list');
+
+		if (!res.ok) return;
+
+		workgroups = json.results;
+	};
 
 	const getAPI = async () => {
 		let API = '';
@@ -39,8 +53,8 @@
 		if (infoToGet === 'home') API += `home/polls?`;
 		else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
-		// else if (infoToGet === 'user') API += `user/home?`;
-		else if (infoToGet === 'user') API += `home/polls?`;
+		else if (infoToGet === 'user') API += `user/home?`;
+		// else if (infoToGet === 'user') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
 
@@ -66,7 +80,7 @@
 
 	const getPolls = async () => {
 		loading = true;
-		polls = [];
+		posts = [];
 
 		const { json, res } = await fetchRequest('GET', await getAPI());
 
@@ -77,18 +91,18 @@
 			return;
 		}
 
-		polls = json.results;
+		posts = json.results;
 		next = json.next;
 		prev = json.previous;
 	};
 
 	const sharedThreadPollFixing = async () => {
-		const pollIds = polls
+		const pollIds = posts
 			//@ts-ignore
 			.map((poll) => (poll.related_model === 'poll' ? poll.id : undefined))
 			.filter((id) => id !== undefined);
 		//@ts-ignore
-		const threadIds = polls
+		const threadIds = posts
 			//@ts-ignore
 			.map((poll) => (poll.related_model === 'group_thread' ? poll.id : undefined))
 			.filter((id) => id !== undefined);
@@ -100,6 +114,7 @@
 				'GET',
 				`group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`
 			);
+			polls = json.results;
 		}
 
 		{
@@ -111,12 +126,15 @@
 					$page.params.groupId
 				}/thread/list?limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
 			);
+
+			threads = json.results;
 		}
 	};
 
 	onMount(async () => {
 		await getPolls();
 		sharedThreadPollFixing();
+		getWorkGroups();
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
@@ -134,16 +152,30 @@
 				}}
 				bind:filter
 			/>
-			{#if polls.length === 0 && !loading}
+			{#if posts.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No polls currently here')}
 				</div>
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
-				{#key polls}
-					{#if polls && polls?.length > 0}
-						{#each polls as poll}
-							<PollThumbnail {poll} {isAdmin} />
+				{#key posts}
+					{@debug threads}
+					{#if posts && posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
+						{#each posts as post}
+							{#if post.related_model === 'group_thread'}
+								<!-- <ThreadThumbnail
+									{isAdmin}
+									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
+									workGroup={workgroups.find((workgroup) =>
+										threads.find((thread) => thread.work_group === workgroup.id)
+									) || null}
+								/> -->
+							{:else if post.related_model === 'poll'}
+								<PollThumbnail
+									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
+									{isAdmin}
+								/>
+							{/if}
 						{/each}
 					{:else if !loading}
 						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
@@ -156,7 +188,7 @@
 		<Pagination
 			bind:next
 			bind:prev
-			bind:iterable={polls}
+			bind:iterable={posts}
 			Class={'flex gap-2 justify-around w-full mt-6'}
 		/>
 	</Loader>

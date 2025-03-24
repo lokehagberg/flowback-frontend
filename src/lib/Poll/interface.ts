@@ -108,4 +108,19 @@ export interface Comment {
 	user_vote: boolean | null;
 }
 
+export interface Post {
+	created_at: string;
+	created_by: {
+		permission_id: number | null;
+		permission_name: string;
+	};
+	description: string;
+	group_joined: boolean;
+	id: number;
+	related_model: string;
+	title: string;
+	updated_at: string;
+	user_vote: boolean | null;
+}
+
 export interface CommentEdited { }

@@ -286,9 +286,9 @@
 							{user.permission_name}
 						</div>
 						<div class="flex gap-2 right-6 absolute">
-							<Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
+							<!-- <Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
 								><Fa icon={faRunning} /></Button
-							>
+							> -->
 							<button
 								on:click={() => {
 									isChatOpen.set(true);
@@ -307,7 +307,7 @@
 </Loader>
 
 <Modal bind:open={removeUserModalShow}>
-	<div slot="header">Sure you want to delet?</div>
+	<div slot="header">{$_('Sure you want to delete?')}</div>
 	<div slot="body">
 		<Button buttonStyle="warning-light" onClick={userRemove} />
 	</div>

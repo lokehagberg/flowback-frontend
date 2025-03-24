@@ -57,6 +57,7 @@ export interface poll {
 	total_proposals: number;
 	total_predictions: number;
 	pinned: boolean;
+	status_prediction: "0" | "1" | "2";
 	status: number;
 }
 
@@ -104,6 +105,21 @@ export interface Comment {
 	active: boolean;
 	edited: boolean;
 	attachments: { file: string | File }[];
+	user_vote: boolean | null;
+}
+
+export interface Post {
+	created_at: string;
+	created_by: {
+		permission_id: number | null;
+		permission_name: string;
+	};
+	description: string;
+	group_joined: boolean;
+	id: number;
+	related_model: string;
+	title: string;
+	updated_at: string;
 	user_vote: boolean | null;
 }
 

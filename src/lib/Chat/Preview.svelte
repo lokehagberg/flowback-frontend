@@ -13,6 +13,7 @@
 	import { _ } from 'svelte-i18n';
 	import { workGroupsStore, type WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
+	import { updateUserData } from './functions';
 
 	let groups: Group[] = [],
 		directs: any[] = [],
@@ -86,6 +87,7 @@
 
 	const clickedChatter = async (chatterId: any) => {
 		//Update when user last saw message after clicking on channel
+		updateUserData(chatterId, new Date(), new Date());
 
 		if (selectedPage === 'direct') {
 			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
@@ -167,6 +169,10 @@
 		workGroupList = json.results;
 	};
 
+	onMount(() => {
+		getWorkGroups();
+	});
+
 	$: groups = sort(groups, previewGroup);
 </script>
 
@@ -190,7 +196,8 @@
 		/>
 	</div>
 
-	{#if selectedPage === 'group'}
+	{#if selectedPage === 'group' && inviteList}
+
 		{#each inviteList as groupChat}
 			{#if !groupChat.rejected}
 				{#if groupChat.rejected === null}
@@ -246,7 +253,8 @@
 				}}
 			>
 				<!-- Notification Symbol -->
-				{#if previewObject?.notified}
+				{#if //@ts-ignore
+				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
 					<div
 						class="p-1 rounded-full"
 						class:bg-blue-300={selectedPage === 'group'}

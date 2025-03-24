@@ -83,7 +83,7 @@
 	};
 
 	onMount(async () => {
-		console.log(poll, phase, 'POLL AND PHASE');
+		// console.log(poll, phase, 'POLL AND PHASE');
 
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {

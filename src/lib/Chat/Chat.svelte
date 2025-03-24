@@ -16,6 +16,7 @@
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
+	import { updateUserData } from './functions';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -56,11 +57,11 @@
 		user = json;
 	};
 
-	// $: if (!chatOpen) {
-	// 	if (selectedChat) updateUserData(selectedChat, null, new Date());
-	// 	selectedChat = null;
-	// 	// selectedPage === 'direct';
-	// }
+	$: if (!chatOpen) {
+		// if (selectedChat) updateUserData(selectedChat, null, new Date());
+		// selectedChat = null;
+		// selectedPage === 'direct';
+	}
 </script>
 
 <svelte:head>

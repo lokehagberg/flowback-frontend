@@ -1,29 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { onMount } from 'svelte';
-	import type { Thread } from './interface';
 	import Pagination from '$lib/Generic/Pagination.svelte';
-	import { goto } from '$app/navigation';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import Fa from 'svelte-fa';
-	import {
-		faArrowDown,
-		faArrowUp,
-		faComment,
-		faThumbsDown,
-		faThumbsUp,
-		faThumbTack,
-		faMagnifyingGlass
-	} from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
-	import Description from '$lib/Poll/Description.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
+	import ThreadThumbnail from './Thread.svelte';
+	import type { Thread } from '$lib/Group/interface';
 
 	export let isAdmin = true;
 
@@ -113,10 +99,7 @@
 		<TextInput
 			Class="w-4/5"
 			onInput={() => (searched = false)}
-			label=''
-			max={null}
-			search={true}
-			placeholder={$_('Search threads')}
+			label={$_('Search')}
 			bind:value={searchQuery}
 		/>
 
@@ -138,75 +121,9 @@
 		</div>
 	{/if}
 	{#each threads as thread}
-	{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
-			<div class="flex justify-between items-center">
-				<button
-					class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
-					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-					>{thread.title}</button
-				>
-				{#if workGroup}
-					<span class="text-sm text-gray-500 dark:text-darkmodeText">{workGroup}</span>
-				{/if}
+		{@const workGroup = workGroups.find((group) => group.id === thread.work_group)?.name}
 
-				<div class="flex gap-3">
-					<NotificationOptions
-						type="group_thread"
-						api={`group/thread/${thread.id}`}
-						categories={['comment']}
-						id={thread.id}
-						labels={['comment']}
-					/>
-					{#if isAdmin || thread.pinned}
-						<button class:cursor-pointer={isAdmin} on:click={() => pinThread(thread)}>
-							<Fa
-								size="1.2x"
-								icon={faThumbTack}
-								color={thread.pinned ? '#999' : '#CCC'}
-								rotate={thread.pinned ? '0' : '45'}
-							/>
-						</button>
-					{/if}
-				</div>
-			</div>
-			{#if thread.description}
-				<Description limit={500} description={thread.description} />
-			{/if}
-
-			<hr class="my-3" />
-
-			<div class="flex justify-between align-middle">
-				<div
-					class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
-				>
-					<a
-						class="text-black dark:text-darkmodeText flex justify-center gap-1"
-						href={`${$page.params.groupId}/thread/${thread.id}`}
-					>
-						<img class="w-5" src={ChatIcon} alt="open chat" />
-						<span class="inline">{thread.total_comments} {'comments'}</span>
-					</a>
-				</div>
-				<div>
-					<div class="flex items-center gap-2">
-						<button
-							class:text-primary={thread.user_vote === true}
-							on:click={() => threadVote(thread, 'up')}
-							>
-							<Fa icon={faThumbsUp} />
-						</button>
-						{thread.score}
-						<button
-							class:text-primary={thread.user_vote === false}
-							on:click={() => threadVote(thread, 'down')}
-						>
-							<Fa class="pl-0.5" icon={faThumbsDown} />
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<ThreadThumbnail {thread} {isAdmin} {workGroup} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

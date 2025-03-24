@@ -118,11 +118,11 @@
 				text="Flow"
 				isSelected={selectedPage === 'flow'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('threads')}
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
-			/>
+			/> -->
 			<!-- <GroupSidebarButton
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
@@ -174,7 +174,7 @@
 				target="_blank"
 				href={`https://meet.flowback.org/${group.jitsi_room}`}
 			>
-			<!-- TODO: Bad UX should have icon for external link -->
+				<!-- TODO: Bad UX should have icon for external link -->
 				<GroupSidebarButton
 					Class="w-full"
 					text="Video Conference"

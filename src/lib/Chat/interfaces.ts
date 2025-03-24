@@ -68,7 +68,7 @@ export interface invite {
 	id: number;
 	message_channel_id: number;
 	message_channel_name: string;
-	rejected: null;
+	rejected: boolean | null;
 }
 
 export interface GroupMembers {

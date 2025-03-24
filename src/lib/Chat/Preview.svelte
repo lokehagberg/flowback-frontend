@@ -11,7 +11,7 @@
 	import { chatPartner } from './ChatStore.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
-	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import { workGroupsStore, type WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 
 	let groups: Group[] = [],
@@ -36,7 +36,8 @@
 		await UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
-		await getWorkGroups();
+		// await getWorkGroups();
+		workGroupsStore.subscribe((_workGroups) => (workGroupList = _workGroups));
 	});
 
 	const setUpPreview = async () => {
@@ -83,12 +84,12 @@
 		return chatters;
 	};
 
-	const clickedChatter = async (chatter: any) => {
+	const clickedChatter = async (chatterId: any) => {
 		//Update when user last saw message after clicking on channel
 
 		if (selectedPage === 'direct') {
 			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
-			let message = previewDirect.find((message) => message.channel_id === chatter.channel_id);
+			let message = previewDirect.find((message) => message.channel_id === chatterId);
 
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
@@ -97,11 +98,11 @@
 
 				previewDirect = previewDirect;
 			}
-			selectedChat = chatter.channel_id;
-			chatPartner.set(chatter.channel_id);
-			selectedChatChannelId = chatter.channel_id;
+			selectedChat = chatterId;
+			chatPartner.set(chatterId);
+			selectedChatChannelId = chatterId;
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.channel_id === chatter.chat_id);
+			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
@@ -110,11 +111,11 @@
 				previewGroup = previewGroup;
 			}
 
-			const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
+			// const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
 
-			selectedChat = id;
-			chatPartner.set(id);
-			selectedChatChannelId = id;
+			selectedChat = chatterId;
+			chatPartner.set(chatterId);
+			selectedChatChannelId = chatterId;
 		}
 	};
 
@@ -150,6 +151,11 @@
 			accept
 		});
 		if (!res.ok) return;
+
+		inviteList.map((invitee) => {
+			if (invitee.id === invite_id) invitee.rejected = !accept;
+		});
+		inviteList = inviteList;
 	};
 
 	// Only for one-group flowback
@@ -184,16 +190,41 @@
 		/>
 	</div>
 
-	{#each inviteList as invitee}
-		{#if invitee.rejected === null}
-			<div>
-				<span>{$_("You've been invite to this chat:")}</span>
-				<div>{invitee.message_channel_name}</div>
-				<Button onClick={() => UserChatInvite(true, invitee.id)}>{$_('Accept')}</Button>
-				<Button onClick={() => UserChatInvite(false, invitee.id)}>{$_('Deny')}</Button>
-			</div>
-		{/if}
-	{/each}
+	{#if selectedPage === 'group'}
+		{#each inviteList as groupChat}
+			{#if !groupChat.rejected}
+				{#if groupChat.rejected === null}
+					<span>{$_("You've been invite to this chat:")}</span>
+
+					<Button onClick={() => UserChatInvite(true, groupChat.id)}>{$_('Accept')}</Button>
+					<Button onClick={() => UserChatInvite(false, groupChat.id)}>{$_('Deny')}</Button>
+				{/if}
+				<button
+					class="w-full transition transition-color p-3 flex items-center gap-3 cursor-pointer dark:bg-darkobject"
+					class:bg-gray-200={selectedChat === groupChat.message_channel_id ||
+						selectedChat === groupChat.message_channel_id}
+					class:dark:bg-gray-700={selectedChat === groupChat.message_channel_id ||
+						selectedChat === groupChat.message_channel_id}
+					class:dark:hover:bg-darkbackground={groupChat.rejected === false}
+					class:hover:bg-gray-200={groupChat.rejected === false}
+					class:active:bg-gray-500={groupChat.rejected === false}
+					on:click={() => {
+						if (groupChat.rejected === false) clickedChatter(groupChat.message_channel_id);
+						else selectedChat = null;
+					}}
+					disabled={groupChat.rejected === null}
+				>
+					<ProfilePicture username={groupChat.message_channel_name} profilePicture={null} />
+					<div class="flex flex-col max-w-[40%]">
+						<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
+							>{groupChat.message_channel_name}</span
+						>
+						<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]" />
+					</div>
+				</button>
+			{/if}
+		{/each}
+	{/if}
 
 	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
 		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}
@@ -207,10 +238,11 @@
 					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 					: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
-				class:bg-gray-200={selectedChat === chatter.id}
-				class:dark:bg-gray-700={selectedChat === chatter.id}
+				class:bg-gray-200={selectedChat === chatter.channel_id || selectedChat === chatter.chat_id}
+				class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
+					selectedChat === chatter.chat_id}
 				on:click={() => {
-					clickedChatter(chatter);
+					clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id);
 				}}
 			>
 				<!-- Notification Symbol -->
@@ -240,11 +272,12 @@
 				</div>
 			</button>
 			{#if selectedPage === 'direct' && creatingGroup}
+				<!-- For creating group chat, see CreateChatGroup.svelte -->
 				<Button
 					onClick={() => {
+						if (groupMembers.find((member) => member.id === chatter.id)) return;
 						groupMembers.push(chatter);
 						groupMembers = groupMembers;
-						console.log('CLIKCKIn');
 					}}>ADD USER</Button
 				>
 			{/if}
@@ -253,6 +286,7 @@
 
 	{#if selectedPage === 'group'}
 		<Button
+			Class="mt-4"
 			onClick={() => {
 				creatingGroup = true;
 				selectedPage = 'direct';

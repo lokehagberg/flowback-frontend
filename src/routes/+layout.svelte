@@ -17,6 +17,7 @@
 	import { _ } from 'svelte-i18n';
 	import { env } from '$env/dynamic/public';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import { workGroupsStore } from '$lib/Group/WorkingGroups/interface';
 
 	export const prerender = true;
 
@@ -107,11 +108,22 @@
 			}
 	};
 
+	const getWorkingGroupList = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/list?limit=100&order_by=name_asc`
+		);
+
+		workGroupsStore.set(json.results);
+	};
+
 	beforeNavigate(() => {
 		scrolledY = $page.params.pollId;
 	});
 
 	onNavigate(() => {
+		getWorkingGroupList();
+
 		showUI = shouldShowUI();
 		redirect();
 		if (showUI) updateUserInfo();

@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.10',
+		version = '0.1.15',
 		serverConfig: any = {};
 
 	const userUpdate = async () => {
@@ -57,7 +57,6 @@
 
 	const getServerConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'server/config');
-		console.log(res, json, 'JSON FOR NOW');
 
 		if (!res.ok) return;
 

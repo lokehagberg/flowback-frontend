@@ -37,14 +37,14 @@ export async function fetchRequest(
 	if (method !== 'GET') toSend.body = data;
 
 	const res = await fetch(
-		`${env.PUBLIC_API_URL || ''}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${api}`,
-		toSend
-		// api.includes(env.PUBLIC_API_URL)
-		// ? `${api}`
-		// : `${env.PUBLIC_API_URL}${
-		// 	env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
-		// }${api}`,
+		// `${env.PUBLIC_API_URL || ''}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${api}`,
 		// toSend
+		api.includes(env.PUBLIC_API_URL)
+		? `${api}`
+		: `${env.PUBLIC_API_URL}/${
+			env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
+		}${api}`,
+		toSend
 	);
 
 	const relativePath = new URL(location.href).pathname;

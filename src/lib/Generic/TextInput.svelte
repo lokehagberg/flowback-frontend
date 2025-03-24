@@ -64,6 +64,7 @@
 				maxlength={max}
 				on:blur={onBlur}
 				on:input={onInput}
+				autocomplete="off"
 				{required}
 				{name}
 			/>
@@ -87,6 +88,7 @@
 			bind:value
 			on:blur={onBlur}
 			on:input={onInput}
+			autocomplete="off"
 			{required}
 			{name}
 		/>
@@ -100,6 +102,7 @@
 			bind:value
 			on:blur={onBlur}
 			on:input={onInput}
+			autocomplete="off"
 			{required}
 			{name}
 		/>

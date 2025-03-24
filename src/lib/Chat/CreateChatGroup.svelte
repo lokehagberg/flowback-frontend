@@ -4,21 +4,36 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { GroupMembers } from './interfaces';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
 
 	export let creatingGroup: boolean,
 		groupMembers: GroupMembers[] = [];
 
-	let name = '';
+	let name = '',
+		poppup: poppup;
 
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/chat?target_user_ids=${groupMembers.map((member) => member.id)}`
+			`user/chat?${groupMembers.map((member) => `target_user_ids=${member.id}`).join('&')}`
 		);
 
-		if (!res.ok) return;
+		if (!res.ok) {
+			poppup = { message: 'Failed to created group chat', success: false, show: true };
+			return;
+		}
 
+		//Poppup doesn't work because this goes to false
+		//TODO: Redo the poppup system to have a poppup queue that's always rendered and which is accessed via svelte store
 		creatingGroup = false;
+		groupMembers = [];
+		poppup = { message: 'Successfully created group chat', success: true, show: true };
+	};
+
+	const cancelGroupChatCreate = () => {
+		creatingGroup = false;
+		groupMembers = [];
 	};
 </script>
 
@@ -33,5 +48,6 @@
 	</div>
 
 	<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-	<Button buttonStyle="warning-light">{$_('Cancel')}</Button>
+	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}>{$_('Cancel')}</Button>
+	<Poppup bind:poppup Class="z-50" />
 </form>

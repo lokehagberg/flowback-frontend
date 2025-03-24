@@ -110,7 +110,11 @@
 			toSendDelegates
 		);
 
-		if (res.ok) poppup = { message: 'Successfully saved new delegation', success: true };
+		if (!res.ok) {
+			poppup = { message: 'Failed to save new delegation', success: false };
+			return;
+		}
+		poppup = { message: 'Successfully saved delegation', success: true };
 	};
 
 	const initialSetup = async () => {
@@ -167,6 +171,7 @@
 							<span>
 								<!-- {delegate.percentage}% -->
 								<input
+									disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
 									on:input={() => changeDelegation(delegate, tag)}
 									type="radio"
 									name={tag.name}

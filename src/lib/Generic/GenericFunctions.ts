@@ -123,3 +123,7 @@ export const getUserIsGroupAdmin = async (groupId: number | string) => {
 		return true
 	else return false;
 };
+
+export const commaCleanup = (api: string) => {
+	return api?.replace('%2C', ',');
+};

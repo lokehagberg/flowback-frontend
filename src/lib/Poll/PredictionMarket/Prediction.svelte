@@ -9,7 +9,6 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -19,55 +18,13 @@
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
-		score: null | number = null,
 		phase: Phase,
 		poll: poll,
 		Class = '';
 
-	let showPoppup = false,
+	let score: null | number = null,
 		showDetails = false,
 		poppup: poppup;
-
-	const getPredictionBet = async () => {
-		// if (!score) return;
-		loading = true;
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
-		);
-
-		loading = false;
-		if (!res.ok) showPoppup = true;
-		else {
-			const previousBet = json.results.find(
-				(result: any) => result.created_by.user.id.toString() === localStorage.getItem('userId')
-			);
-
-			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
-			else score = null;
-		}
-	};
-
-	const predictionBetCreate = async (score: string | number) => {
-		// if (!score) return;
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/prediction/${prediction.id}/bet/create`,
-			{
-				score: `${score}`
-			}
-		);
-		loading = false;
-
-		if (!res.ok) {
-			poppup = { message: 'Betting failed', success: false };
-			return;
-		}
-
-		poppup = { message: 'Successfully placed bet', success: true, show: true };
-	};
 
 	const predictionBetUpdate = async (score: string | number) => {
 		if (score === null) return;
@@ -165,13 +122,12 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
-		console.log(newScore, "newScore");
-
-		predictionBetCreate(newScore);
+		// predictionBetCreate(newScore);
 		if (newScore === null) predictionBetDelete();
-		else if (score === null) {
-			predictionBetCreate(newScore);
-		} else predictionBetUpdate(newScore);
+		// else if (score === null) {
+		// predictionBetCreate(newScore);
+		// }
+		else predictionBetUpdate(newScore);
 
 		if (
 			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
@@ -185,26 +141,27 @@
 	};
 
 	onMount(() => {
-		getPredictionBet();
-	});
+
+		
+	})
 </script>
 
 <div class={Class}>
-	{#if prediction.description}
-		<!-- <span class="hover:underline cursor-pointer overflow-hidden">
-			{elipsis(prediction.description)}</span
-		> -->
-	{/if}
-	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
-
+	<!-- PHASE 4: PREDICTION BETTING -->
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		<VotingSlider
+			onSelection={handleChangeBetScore}
+			lineWidth={50}
+			score={prediction.user_prediction_bet}
+		/>
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button onClick={getAIPredictionBets}>
 				{$_('Get AI Prediction Bets')}
 			</Button>
 		{/if}
 	{/if}
+
+	<!-- PHASE 7: RESULTS AND EVALUATION -->
 
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">

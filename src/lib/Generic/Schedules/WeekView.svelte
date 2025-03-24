@@ -13,11 +13,12 @@
 	import type { proposal, timeProposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import Proposal from '$lib/Poll/Proposal.svelte';
+	import { log10 } from 'chart.js/helpers';
 
 	export let x = 10,
 		y = 10,
 		votes: number[],
-		proposals: timeProposal[] = [];
+		proposals: timeProposal[];
 	// w = 200,
 	// h = 300;
 
@@ -68,6 +69,7 @@
 	};
 
 	const saveSelection = async () => {
+		let savedDates: number[] = [];
 		const array = selectedDates.map(async (date) => {
 			const start_date = date;
 			const end_date = new Date(
@@ -78,12 +80,9 @@
 			);
 
 			const existingProposal = proposals.find(
-				(proposal) => new Date(proposal.end_date).getTime() === end_date.getTime()
+				(proposal) => new Date(proposal.start_date).getTime() === start_date.getTime()
 			);
 
-			console.log(existingProposal, 'EXi');
-
-			let resC, jsonC;
 			if (!existingProposal) {
 				const { res, json } = await fetchRequest(
 					'POST',
@@ -93,22 +92,20 @@
 						end_date
 					}
 				);
-				resC = res;
-				jsonC = json;
-			}
 
-			console.log('hiello?');
-
-			const { res, json } = await fetchRequest(
-				'POST',
-				`group/poll/${$page.params.pollId}/proposal/vote/update`,
-				{
-					proposals: [existingProposal ? existingProposal?.id : jsonC]
-				}
-			);
+				savedDates.push(json);
+			} else savedDates.push(existingProposal.id);
 		});
 
-		let output = await Promise.allSettled(array);
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/poll/${$page.params.pollId}/proposal/vote/update`,
+			{
+				proposals: savedDates
+			}
+		);
+
+		await Promise.allSettled(array);
 		loading = false;
 		noChanges = true;
 	};
@@ -204,7 +201,7 @@
 		const a = setTimeout(() => {
 			transformVotesIntoSelectedDates();
 			clearInterval(a);
-		}, 200);
+		}, 400);
 	});
 
 	$: if (votes && selectedDates) {

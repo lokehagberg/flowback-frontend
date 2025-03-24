@@ -95,20 +95,28 @@
 		//@ts-ignore
 
 		{
-			const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/poll/list?id=${pollIds.concat()}`);
+			console.log(pollIds, 'pollz');
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`
+			);
 		}
 
 		{
+			console.log(threadIds, 'Threads');
+
 			const { res, json } = await fetchRequest(
 				'GET',
-				`group/${$page.params.groupId}/thread/list?limit=1000&order_by=pinned,created_at_desc&id=${threadIds.concat()}`
+				`group/${
+					$page.params.groupId
+				}/thread/list?limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
 			);
 		}
 	};
 
 	onMount(async () => {
 		await getPolls();
-		// sharedThreadPollFixing();
+		sharedThreadPollFixing();
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});

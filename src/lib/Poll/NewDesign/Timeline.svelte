@@ -20,7 +20,8 @@
 		dates: Date[] = [],
 		poll: poll,
 		phase: Phase,
-		horizontal = false;
+		horizontal = false,
+		displayTimelinePhase = true;
 
 	let datesArray: string[] = [],
 		displayDetails = false,
@@ -93,6 +94,7 @@
 </script>
 
 <div class={`relative flex flex-col items-center ${Class}`}>
+	{#if displayTimelinePhase}
 	<div class="text-center">
 		<span class="font-semibold text-primary dark:text-secondary">
 			{$_('Current')}:
@@ -101,6 +103,7 @@
 		{currentPhaseIndex + 1}.
 		{$_(dateLabels[currentPhaseIndex + 1])}
 	</div>
+	{/if}
 
 	{#if displayTimeline}
 		<div

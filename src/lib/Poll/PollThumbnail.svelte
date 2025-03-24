@@ -8,7 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import { onMount } from 'svelte';
-	import { getPhase, getPhaseUserFriendlyName, nextPhase } from './functions';
+	import { getPhase, getPhaseUserFriendlyNameWithNumber, nextPhase } from './functions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { elipsis, onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
@@ -215,8 +215,8 @@
 
 			<!-- Phase -->
 			<div class="text-sm font-semibold text-primary dark:text-secondary">
-				{$_('Current phase:')}
-				{$_(getPhaseUserFriendlyName(phase))}
+				{$_('Current phase')}
+				{$_(getPhaseUserFriendlyNameWithNumber(phase))}
 			</div>
 		</div>
 
@@ -228,6 +228,7 @@
 			bind:phase
 			bind:poll
 			enableDetails
+			displayTimelinePhase={false}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 			horizontal
 		/>

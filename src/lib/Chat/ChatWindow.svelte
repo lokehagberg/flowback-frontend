@@ -18,7 +18,6 @@
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
-	import { chatPartner } from './ChatStore.svelte';
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -31,7 +30,8 @@
 		},
 		messages: Message[] = [],
 		socket: WebSocket,
-		chatWindow: any;
+		chatWindow: any,
+		errorState = false;
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -49,9 +49,17 @@
 			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
 
-		if (res.ok) messages = json.results.reverse();
+		if (!res.ok) {
+			selectedChat = null;
+			messages = [];
+			errorState = true;
+			return;
+		}
+
+		messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
+		//TODO: Fix it
 		olderMessages = json.next;
 		newerMessages = '';
 	};
@@ -89,8 +97,6 @@
 		let channelId = selectedChat;
 		if (selectedPage === 'direct') channelId = selectedChat;
 
-		console.log(channelId, 'channelId');
-
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
@@ -112,6 +118,7 @@
 	};
 
 	const showOlderMessages = async () => {
+		console.log(olderMessages, 'NEEEXY');
 		const { res, json } = await fetchRequest('GET', olderMessages);
 
 		if (!res.ok) return;
@@ -198,7 +205,7 @@
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
 
-	//Behavior is differnet when looking at older chat messages
+	//Behavior is different when looking at older chat messages
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
@@ -230,7 +237,11 @@
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
 			{#if messages.length === 0}
+				<!-- {#if !errorState} -->
 				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+				<!-- {:else} -->
+				<!-- <span class="self-center">{$_('Non-existent chat. Try messaging to start a request')}</span> -->
+				<!-- {/if} -->
 			{/if}
 			{#if olderMessages}
 				<li class="text-center mt-6 mb-6">

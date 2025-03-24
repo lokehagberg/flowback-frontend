@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { WorkGroup, WorkGroupUser } from './interface';
+	import { workGroupsStore, type WorkGroup, type WorkGroupUser } from './interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -10,6 +10,7 @@
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 	export let workGroup: WorkGroup,
+		workGroups: WorkGroup[],
 		handleRemoveGroup: (id: number) => void,
 		isAdmin = false;
 
@@ -39,6 +40,8 @@
 
 		workGroup.member_count++;
 		workGroup.joined = true;
+		workGroups = workGroups;
+		workGroupsStore.set(workGroups);
 	};
 
 	const askToJoin = async () => {

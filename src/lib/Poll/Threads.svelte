@@ -1,28 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { onMount } from 'svelte';
 	import Pagination from '$lib/Generic/Pagination.svelte';
-	import { goto } from '$app/navigation';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
-	import Fa from 'svelte-fa';
-	import {
-		faArrowDown,
-		faArrowUp,
-		faComment,
-		faThumbsDown,
-		faThumbsUp,
-		faThumbTack,
-		faMagnifyingGlass
-	} from '@fortawesome/free-solid-svg-icons';
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
-	import Description from '$lib/Poll/Description.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
 	import Thread from './Thread.svelte';
 
 	export let isAdmin = true;
@@ -135,9 +120,9 @@
 		</div>
 	{/if}
 	{#each threads as thread}
-	{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
+		{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
 
-	<Thread {thread} {isAdmin} {workGroup}  />
+		<Thread {thread} {isAdmin} {workGroup} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

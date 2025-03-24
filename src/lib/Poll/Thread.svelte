@@ -2,42 +2,22 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
-	import { onMount } from 'svelte';
-
-	import Pagination from '$lib/Generic/Pagination.svelte';
 	import { goto } from '$app/navigation';
-	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
-	import {
-		faArrowDown,
-		faArrowUp,
-		faComment,
-		faThumbsDown,
-		faThumbsUp,
-		faThumbTack,
-		faMagnifyingGlass
-	} from '@fortawesome/free-solid-svg-icons';
-	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
+	import { faArrowDown, faArrowUp, faThumbTack } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import Description from '$lib/Poll/Description.svelte';
-	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Button from '$lib/Generic/Button.svelte';
 	import Thread from './Thread.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 	export let isAdmin = true,
-    thread:Thread,
-    workGroup:WorkGroup;
+		thread: Thread,
+		workGroup: WorkGroup;
 
 	let threads: Thread[] = [],
-		prev = '',
-		next = '',
-		poppup: poppup,
-		searchQuery = '',
-		searched = true,
-		workGroups: any[] = [];
+		poppup: poppup;
 
 	//Launches whenever the user clicks upvote or downvote on a thread
 	const threadVote = async (thread: Thread, clicked: 'down' | 'up') => {

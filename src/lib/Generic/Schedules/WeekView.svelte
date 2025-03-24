@@ -232,11 +232,12 @@
 	);
 </script>
 
-<Loader bind:loading Class="flex flex-col">
+<Loader bind:loading>
 	<div class="flex items-center justify-between border-b border-gray-300 py-1 px-4">
 		<button on:click={prevWeek}><Fa icon={faChevronLeft} /></button>
 		{currentMonth}
 		{currentYear}
+		(CET)
 		<button on:click={nextWeek}><Fa icon={faChevronRight} /></button>
 	</div>
 
@@ -258,7 +259,7 @@
 
 			<!-- {@debug selectedDates} -->
 			{#each gridDates as row, j}
-				<div class="bg-primary text-white items-center flex justify-center px-0.5">{j}</div>
+				<div class="bg-primary text-white flex justify-center px-0.5">{j}:00</div>
 				{#each row as date, i}
 					<button class="border h-12 w-24" on:click={() => toggleDate(date)}>
 						{#if selectedDates.find((_date) => _date?.getTime() === date?.getTime())}

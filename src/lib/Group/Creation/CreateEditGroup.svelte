@@ -172,10 +172,10 @@
 			<div class="flex gap-4">
 				<Button type="submit" disabled={loading} buttonStyle="primary-light" Class="w-1/2"
 					><div class="flex justify-center gap-3 items-center">
-						{$_(groupToEdit ? 'Update' : 'Create Group')}
+						{$_(groupToEdit ? 'Update' : 'Create')}
 					</div>
 				</Button>
-				{#if groupToEdit !== null}
+				{#if groupToEdit}
 					<Button
 						onClick={resetEdits}
 						buttonStyle="primary-light"
@@ -189,13 +189,14 @@
 						</div>
 					</Button>
 				{/if}
-				{#if groupToEdit !== null && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				{#if groupToEdit && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 					<Modal bind:open={DeleteGroupModalShow}>
 						<div slot="header">{$_('Deleting group')}</div>
 						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
 						<div slot="footer">
-							<div class="flex justify-center gap-16">
-								<Button onClick={deleteGroup} buttonStyle="warning">{$_('Yes')}</Button><Button
+							<div class="flex justify-center gap-2">
+								<Button onClick={deleteGroup} Class="w-1/2" buttonStyle="warning">{$_('Yes')}</Button>
+								<Button
 									onClick={() => (DeleteGroupModalShow = false)}
 									Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 								>
@@ -206,6 +207,13 @@
 						buttonStyle="warning-light"
 						Class="w-1/2"
 						onClick={() => (DeleteGroupModalShow = true)}>{$_('Delete Group')}</Button
+					>
+				{/if}
+				{#if !groupToEdit && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+					<Button
+						buttonStyle="warning-light"
+						Class="w-1/2"
+						onClick={() => (goto(`/groups`))}>{$_('Cancel')}</Button
 					>
 				{/if}
 			</div>

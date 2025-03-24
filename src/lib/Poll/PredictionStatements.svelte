@@ -40,7 +40,7 @@
 <Loader bind:loading>
 	<div class="border-t-2">
 		<div class="text-gray-500 text-sm pt-3 font-semibold">
-			{$_('Predictions')}({predictions.length})
+			{$_('Predictions')} ({predictions.length}) 
 		</div>
 		{#key selectedProposal}
 			{#each predictions as prediction}

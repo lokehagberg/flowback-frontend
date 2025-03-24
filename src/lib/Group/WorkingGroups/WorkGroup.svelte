@@ -65,7 +65,7 @@
 		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/leave`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to Leave Group', success: false };
+			poppup = { message: 'Failed to leave Group', success: false };
 			return;
 		}
 		workGroupUserList = workGroupUserList.filter(
@@ -125,7 +125,7 @@
 	{/if}
 
 	{#if isAdmin}
-		<Button buttonStyle="warning-light" onClick={() => (showDeleteModal = true)}
+		<Button buttonStyle="warning-light" Class="!border-0" onClick={() => (showDeleteModal = true)}
 			><Fa icon={faTrash} /></Button
 		>
 	{/if}

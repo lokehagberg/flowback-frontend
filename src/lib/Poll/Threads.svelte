@@ -8,7 +8,8 @@
 	import { threads as threadsLimit } from '$lib/Generic/APILimits.json';
 	import { _ } from 'svelte-i18n';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import Thread from './Thread.svelte';
+	import ThreadThumbnail from './Thread.svelte';
+	import type { Thread } from '$lib/Group/interface';
 
 	export let isAdmin = true;
 
@@ -120,9 +121,9 @@
 		</div>
 	{/if}
 	{#each threads as thread}
-		{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
+		{@const workGroup = workGroups.find((group) => group.id === thread.work_group)?.name}
 
-		<Thread {thread} {isAdmin} {workGroup} />
+		<ThreadThumbnail {thread} {isAdmin} {workGroup} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

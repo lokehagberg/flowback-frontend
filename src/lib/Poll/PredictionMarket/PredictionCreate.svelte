@@ -207,7 +207,7 @@
 
 		<div class="flex gap-2 absolute bottom-0 w-full">
 			<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
-			<Button type="submit" buttonStyle="warning-light" Class="w-full mt-5">{$_('Cancel')}</Button>
+			<Button type="button" buttonStyle="warning-light" Class="w-full mt-5" onClick={() => proposalsToPredictionMarket = []}>{$_('Cancel')}</Button>
 			{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 				<Button Class="w-full mt-5" onClick={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 			{/if}

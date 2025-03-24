@@ -210,9 +210,9 @@
 				id="comment"
 			/>
 		</div>
-		<div class="flex ml-2">
-			<FileUploads bind:files minimalist disableCropping />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100" type="submit" label=""
+		<div class="flex ml-2 gap-2">
+			<FileUploads bind:files minimalist disableCropping Class="p-2 hover:bg-gray-200" />
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-200" type="submit" label=""
 				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} /></Button
 			>
 		</div>

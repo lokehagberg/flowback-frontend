@@ -107,7 +107,7 @@
 	<span class="text-primary dark:text-secondary w-[40%] font-semibold break-words"
 		>{workGroup.name}</span
 	>
-	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
+	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count || 0} </span>
 
 	{#if workGroup.joined}
 		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" onClick={leaveGroup}

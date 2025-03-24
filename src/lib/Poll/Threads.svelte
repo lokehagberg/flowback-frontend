@@ -3,7 +3,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { onMount } from 'svelte';
-	import type { Thread } from './interface';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import { goto } from '$app/navigation';
 	import Poppup from '$lib/Generic/Poppup.svelte';
@@ -24,6 +23,7 @@
 	import Description from '$lib/Poll/Description.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import Thread from './Thread.svelte';
 
 	export let isAdmin = true;
 
@@ -136,74 +136,8 @@
 	{/if}
 	{#each threads as thread}
 	{@const workGroup = workGroups.find((group) => group.id === thread.work_group_id)?.name}
-		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
-			<div class="flex justify-between items-center">
-				<button
-					class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
-					on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}
-					>{thread.title}</button
-				>
-				{#if workGroup}
-					<span class="text-sm text-gray-500 dark:text-darkmodeText">{workGroup}</span>
-				{/if}
 
-				<div class="flex gap-3">
-					<NotificationOptions
-						type="group_thread"
-						api={`group/thread/${thread.id}`}
-						categories={['comment']}
-						id={thread.id}
-						labels={['comment']}
-					/>
-					{#if isAdmin || thread.pinned}
-						<button class:cursor-pointer={isAdmin} on:click={() => pinThread(thread)}>
-							<Fa
-								size="1.2x"
-								icon={faThumbTack}
-								color={thread.pinned ? '#999' : '#CCC'}
-								rotate={thread.pinned ? '0' : '45'}
-							/>
-						</button>
-					{/if}
-				</div>
-			</div>
-			{#if thread.description}
-				<Description limit={500} description={thread.description} />
-			{/if}
-
-			<hr class="my-3" />
-
-			<div class="flex justify-between align-middle">
-				<div
-					class="hover:bg-gray-100 dark:hover:bg-slate-500 cursor-pointer text-sm text-gray-600 dark:text-darkmodeText"
-				>
-					<a
-						class="text-black dark:text-darkmodeText flex justify-center gap-1"
-						href={`${$page.params.groupId}/thread/${thread.id}`}
-					>
-						<img class="w-5" src={ChatIcon} alt="open chat" />
-						<span class="inline">{thread.total_comments} {'comments'}</span>
-					</a>
-				</div>
-				<div>
-					<div class="flex gap-1">
-						{thread.score}
-						<button
-							class:text-primary={thread.user_vote === true}
-							on:click={() => threadVote(thread, 'up')}
-						>
-							<Fa icon={faArrowUp} />
-						</button>
-						<button
-							class:text-primary={thread.user_vote === false}
-							on:click={() => threadVote(thread, 'down')}
-						>
-							<Fa icon={faArrowDown} />
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+	<Thread {thread} {isAdmin} {workGroup}  />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>

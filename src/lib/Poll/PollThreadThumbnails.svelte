@@ -159,17 +159,16 @@
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
 				{#key posts}
-					{@debug threads}
 					{#if posts && posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
 						{#each posts as post}
 							{#if post.related_model === 'group_thread'}
-								<!-- <ThreadThumbnail
+								<ThreadThumbnail
 									{isAdmin}
 									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
 									workGroup={workgroups.find((workgroup) =>
 										threads.find((thread) => thread.work_group === workgroup.id)
 									) || null}
-								/> -->
+								/>
 							{:else if post.related_model === 'poll'}
 								<PollThumbnail
 									poll={polls.find((poll) => poll.id === post.id) || polls[0]}

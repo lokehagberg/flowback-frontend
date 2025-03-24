@@ -25,12 +25,12 @@
 	const threadVote = async (thread: Thread, clicked: 'down' | 'up') => {
 		let vote: null | false | true = null;
 
-		if (thread.user_vote === false && clicked === 'down') vote = null;
+		if (thread?.user_vote === false && clicked === 'down') vote = null;
 		else if (clicked === 'down') vote = false;
-		else if (thread.user_vote === true && clicked === 'up') vote = null;
+		else if (thread?.user_vote === true && clicked === 'up') vote = null;
 		else if (clicked === 'up') vote = true;
 
-		const { res, json } = await fetchRequest('POST', `group/thread/${thread.id}/vote`, { vote });
+		const { res, json } = await fetchRequest('POST', `group/thread/${thread?.id}/vote`, { vote });
 
 		if (!res.ok) {
 			poppup = { message: 'Could not vote on thread', success: false };
@@ -43,27 +43,25 @@
 
 	//When adminn presses the pin tack symbol, pin the thread
 	const pinThread = async (thread: Thread) => {
-		const { json, res } = await fetchRequest('POST', `group/thread/${thread.id}/update`, {
-			pinned: !thread.pinned
+		const { json, res } = await fetchRequest('POST', `group/thread/${thread?.id}/update`, {
+			pinned: !thread?.pinned
 		});
 		if (!res.ok) return;
 
-		thread.pinned = !thread.pinned;
+		thread.pinned = !thread?.pinned;
 		threads = threads;
 	};
 
-    onMount(() => {
-        console.log("THREEAAAADD", thread);
-        
-    })
+	onMount(() => {
+		console.log('THREEAAAADD', thread);
+	});
 </script>
-
 
 <div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
 	<div class="flex justify-between items-center">
 		<button
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
-			on:click={() => goto(`${$page.params.groupId}/thread/${thread.id}`)}>{thread.title}</button
+			on:click={() => goto(`${$page.params.groupId}/thread/${thread?.id}`)}>{thread?.title}</button
 		>
 		{#if workGroup}
 			<span class="text-sm text-gray-500 dark:text-darkmodeText">{workGroup}</span>
@@ -72,25 +70,25 @@
 		<div class="flex gap-3">
 			<NotificationOptions
 				type="group_thread"
-				api={`group/thread/${thread.id}`}
+				api={`group/thread/${thread?.id}`}
 				categories={['comment']}
-				id={thread.id}
+				id={thread?.id}
 				labels={['comment']}
 			/>
-			{#if isAdmin || thread.pinned}
+			{#if isAdmin || thread?.pinned}
 				<button class:cursor-pointer={isAdmin} on:click={() => pinThread(thread)}>
 					<Fa
 						size="1.2x"
 						icon={faThumbTack}
-						color={thread.pinned ? '#999' : '#CCC'}
-						rotate={thread.pinned ? '0' : '45'}
+						color={thread?.pinned ? '#999' : '#CCC'}
+						rotate={thread?.pinned ? '0' : '45'}
 					/>
 				</button>
 			{/if}
 		</div>
 	</div>
-	{#if thread.description}
-		<Description limit={500} description={thread.description} />
+	{#if thread?.description}
+		<Description limit={500} description={thread?.description} />
 	{/if}
 
 	<hr class="my-3" />
@@ -101,23 +99,23 @@
 		>
 			<a
 				class="text-black dark:text-darkmodeText flex justify-center gap-1"
-				href={`${$page.params.groupId}/thread/${thread.id}`}
+				href={`${$page.params.groupId}/thread/${thread?.id}`}
 			>
 				<img class="w-5" src={ChatIcon} alt="open chat" />
-				<span class="inline">{thread.total_comments} {'comments'}</span>
+				<span class="inline">{thread?.total_comments} {'comments'}</span>
 			</a>
 		</div>
 		<div>
 			<div class="flex gap-1">
-				{thread.score}
+				{thread?.score}
 				<button
-					class:text-primary={thread.user_vote === true}
+					class:text-primary={thread?.user_vote === true}
 					on:click={() => threadVote(thread, 'up')}
 				>
 					<Fa icon={faArrowUp} />
 				</button>
 				<button
-					class:text-primary={thread.user_vote === false}
+					class:text-primary={thread?.user_vote === false}
 					on:click={() => threadVote(thread, 'down')}
 				>
 					<Fa icon={faArrowDown} />

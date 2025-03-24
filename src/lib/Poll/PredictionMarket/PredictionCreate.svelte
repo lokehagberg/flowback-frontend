@@ -59,9 +59,6 @@
 			await pushToBlockchain();
 
 		newPredictionStatement.segments.map(async (segment) => {
-			console.log(segment, 'SEGMENT');
-			console.log(newPredictionStatement, 'SEGMENT');
-
 			const statement = {
 				end_date: newPredictionStatement.end_date,
 				segments: [segment],

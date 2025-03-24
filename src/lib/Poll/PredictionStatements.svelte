@@ -58,8 +58,10 @@
 							>{$_('Bet')}:
 							{#if prediction.combined_bet}
 								{prediction.combined_bet}
+							{:else if poll.status_prediction === '2'}
+								{$_('Calculating')}
 							{:else}
-								{$_('none')}
+								{$_('None')}
 							{/if}
 						</span>
 					{:else if phase === 'prediction_bet' || phase === 'result' || phase === 'prediction_vote'}

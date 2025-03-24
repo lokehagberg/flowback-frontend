@@ -57,6 +57,7 @@ export interface poll {
 	total_proposals: number;
 	total_predictions: number;
 	pinned: boolean;
+	status_prediction: "0" | "1" | "2";
 	status: number;
 }
 

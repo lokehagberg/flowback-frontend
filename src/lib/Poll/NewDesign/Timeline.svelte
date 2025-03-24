@@ -127,7 +127,7 @@
 				<HeaderIcon
 					Class="cursor-default"
 					size="1x"
-					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
+					text={`${i}. ${$_(dateLabels[i])}: ${datesArray[i]}`}
 					{icon}
 				/>
 				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->

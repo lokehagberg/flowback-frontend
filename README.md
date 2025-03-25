@@ -1,5 +1,8 @@
 # Setting up the project
 
+This project requires [node and npm](https://nodejs.org) and
+currently supports node version v22.9.0.
+
 ```bash
 # Downloading the files
 git clone https://github.com/lokehagberg/flowback-frontend.git

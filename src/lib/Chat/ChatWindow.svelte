@@ -293,43 +293,45 @@
 		</ul>
 		<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-		<div class="border-t-2 border-t-gray-200 w-full">
-			<!-- Here the user writes a message to be sent -->
-			<form
-				class="flex gap-1 justify-center items-center w-full mt-2"
-				on:submit|preventDefault={postMessage}
-			>
-				<TextArea
-					autofocus
-					label=""
-					onKeyPress={(e) => {
-						if (e.key === 'Enter' && !e.shiftKey) {
-							postMessage();
-							e.preventDefault();
-						}
-					}}
-					max={3000}
-					rows={1}
-					bind:value={message}
-					placeholder={$_('Write a message...')}
-					Class="justify-center w-full h-2rem"
-					inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
-				/>
-
-				{#if env.PUBLIC_MODE === 'DEV'}
-					<Button
-						onClick={() => (showEmoji = !showEmoji)}
-						Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
-					>
-				{/if}
-
-				<Button
-					type="submit"
-					Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
-					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+		{#if selectedChat !== 0 && selectedChat !== undefined && selectedChat !== null}
+			<div class="border-t-2 border-t-gray-200 w-full">
+				<!-- Here the user writes a message to be sent -->
+				<form
+					class="flex gap-1 justify-center items-center w-full mt-2"
+					on:submit|preventDefault={postMessage}
 				>
-			</form>
-		</div>
+					<TextArea
+						autofocus
+						label=""
+						onKeyPress={(e) => {
+							if (e.key === 'Enter' && !e.shiftKey) {
+								postMessage();
+								e.preventDefault();
+							}
+						}}
+						max={3000}
+						rows={1}
+						bind:value={message}
+						placeholder={$_('Write a message...')}
+						Class="justify-center w-full h-2rem"
+						inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
+					/>
+
+					{#if env.PUBLIC_MODE === 'DEV'}
+						<Button
+							onClick={() => (showEmoji = !showEmoji)}
+							Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
+						>
+					{/if}
+
+					<Button
+						type="submit"
+						Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
+						><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+					>
+				</form>
+			</div>
+		{/if}
 	</div>
 {:else}
 	<div>{'No chat selected'}</div>

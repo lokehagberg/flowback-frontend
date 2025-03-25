@@ -114,6 +114,8 @@
 			`group/${$page.params.groupId}/list?limit=100&order_by=name_asc`
 		);
 
+		if (!res.ok) return;
+
 		workGroupsStore.set(json.results);
 	};
 

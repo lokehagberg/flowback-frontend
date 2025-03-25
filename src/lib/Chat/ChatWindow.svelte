@@ -106,9 +106,19 @@
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
 			messages.push({
+				id: Date.now(),
 				message,
 				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-				created_at: new Date().toString()
+				created_at: new Date().toString(),
+				active: true,
+				channel_id: selectedChatChannelId || selectedChat,
+				channel_origin_name: selectedPage === 'direct' ? 'user' : 'group',
+				type: 'message',
+				updated_at: new Date().toString(),
+				attachments: [],
+				channel_title: '',
+				parent: 0,
+				topic_id: 0
 			});
 
 		messages = messages;
@@ -178,6 +188,7 @@
 				preview = preview;
 			}
 		} else if (message.channel_id === selectedChat) {
+			//@ts-ignore
 			messages.push({
 				message: message.message,
 				user: {
@@ -248,21 +259,28 @@
 			{/if}
 
 			{#each messages as message}
-				{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
-				<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
-					<span>{message.user?.username || message.username}</span>
-					<p
-						class="p-2 rounded-xl"
-						class:bg-primary={sentByUser}
-						class:dark:bg-gray-600={sentByUser}
-						class:text-white={sentByUser}
-						class:bg-gray-300={!sentByUser}
-						class:dark:bg-gray-500={!sentByUser}
-					>
-						{message.message}
-					</p>
-					<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+				{#if message.type === 'info'}
+				<li class="px-4 py-2 max-w-[80%] text-center" >
+					{message.message}
 				</li>
+				{:else}
+					{@const sentByUser =
+						message.user.id.toString() === localStorage.getItem('userId') || false}
+					<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
+						<span>{message.user?.username}</span>
+						<p
+							class="p-2 rounded-xl"
+							class:bg-primary={sentByUser}
+							class:dark:bg-gray-600={sentByUser}
+							class:text-white={sentByUser}
+							class:bg-gray-300={!sentByUser}
+							class:dark:bg-gray-500={!sentByUser}
+						>
+							{message.message}
+						</p>
+						<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+					</li>
+				{/if}
 			{/each}
 			{#if newerMessages}
 				<li class="text-center mt-6 mb-6">

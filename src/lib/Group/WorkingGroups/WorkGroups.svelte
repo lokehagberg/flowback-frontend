@@ -15,6 +15,10 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
+	import {
+		faPlus
+	} from '@fortawesome/free-solid-svg-icons';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 
@@ -67,6 +71,21 @@
 		}
 
 		await getWorkingGroupList();
+
+		workGroupEdit = {
+			direct_join: false,
+			members: null,
+			name: '',
+			id: 0,
+			work_group_id: 0,
+			member_count: 0,
+			next: '',
+			previous: '',
+			total_page: 0,
+			joined: false,
+			chat: 1
+		};
+
 		open = false;
 	};
 
@@ -106,20 +125,24 @@
 	};
 </script>
 
-<div class="bg-white dark:bg-darkobject p-4 shadow rounded mb-4">
-	<TextInput
-		label=''
-		max={null}
-		search={true}
-		placeholder={$_('Search work groups')}
-		bind:value={search}
-		onInput={getWorkingGroupList}
-	/>
-</div>
+<div class="flex items-center gap-3 mb-4">
+	<div class="bg-white dark:bg-darkobject p-4 shadow rounded flex-1">
+		<TextInput
+			label=''
+			max={null}
+			search={true}
+			placeholder={$_('Search work groups')}
+			bind:value={search}
+			onInput={getWorkingGroupList}
+		/>
+	</div>
 
-{#if isAdmin}
-	<Button onClick={() => (open = true)} Class="p-2">{$_('Create work group')}</Button>
-{/if}
+	{#if isAdmin}
+		<Button onClick={() => (open = true)} Class="w-10 h-10 flex items-center justify-center">
+			<Fa icon={faPlus} class="text-lg" />
+		</Button>
+	{/if}
+</div>
 
 <Loader bind:loading>
 	{#if isAdmin && invites?.length > 0}

@@ -15,7 +15,8 @@
 		faBars,
 		faX,
 		faCog,
-		faList
+		faListCheck,
+		faPeopleCarryBox
 	} from '@fortawesome/free-solid-svg-icons';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
@@ -133,7 +134,7 @@
 				action={() => action('working-groups')}
 				text={env.PUBLIC_LOGO === 'REFORUM' ? 'Work- and local Groups' : 'Work Groups'}
 				isSelected={selectedPage === 'working-groups'}
-				faIcon={faUserGroup}
+				faIcon={faPeopleCarryBox}
 			/>
 			<!-- svgIcon={workgroupsymbol} -->
 
@@ -148,7 +149,7 @@
 					action={() => action('kanban')}
 					isSelected={selectedPage === 'kanban'}
 					text="Group Kanban"
-					faIcon={faList}
+					faIcon={faListCheck}
 				/>
 				<GroupSidebarButton
 					action={() => action('schedule')}
@@ -160,7 +161,7 @@
 			<GroupSidebarButton
 				action={() => action('members')}
 				text="Members"
-				faIcon={faPeopleGroup}
+				faIcon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
 			<!-- <GroupSidebarButton

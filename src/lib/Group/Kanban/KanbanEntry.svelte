@@ -300,7 +300,7 @@
 	</button>
 
 	{#if kanban.work_group && kanban.work_group.name}
-		<div>
+		<div class="text-sm">
 			{$_('Work Group')}: {elipsis(kanban.work_group.name || '', 20)}
 		</div>
 	{/if}

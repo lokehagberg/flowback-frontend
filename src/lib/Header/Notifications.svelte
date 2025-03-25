@@ -88,7 +88,7 @@
 	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 >
-	<Fa icon={faBell} size={'1.4x'} />
+	<Fa icon={faBell} size={'1.3x'} />
 	<div
 		class:hidden={notifications?.length === 0 || notifications?.length === undefined}
 		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white bg-secondary"

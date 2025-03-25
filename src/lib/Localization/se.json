@@ -345,7 +345,7 @@
     "Deleting group": "Tar bort grupp",
     "Are you sure you want to delete this group?": "Är du säker på att du vill ta bort gruppen?",
     "Delete Group": "Ta bort grupp",
-    "Reset Filter": "Ta bort filtrering",
+    "Reset Filter": "Rensa filter",
     "Create a post": "Skapa ett inlägg",
     "Threads": "Trådar",
     "Delegation": "Delegering",
@@ -621,6 +621,7 @@
     "Search polls": "Sök omröstning",
     "Failed to leave Group": "Det gick inte att lämna gruppen",
     "Your session is about to expire, log back in?": "Din session håller på att löpa ut, logga in igen?",
+    "Tag": "Ämnesområde",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

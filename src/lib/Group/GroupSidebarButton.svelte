@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import { faBarsProgress, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 
 	export let text: string,
 		action = () => {},
-		faIcon: IconDefinition = faPoll,
+		faIcon: IconDefinition = faBarsProgress,
 		svgIcon: string = '',
 		isSelected = true,
 		Class = '',

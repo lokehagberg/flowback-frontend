@@ -16,9 +16,7 @@
 	import RadioButtons2 from '$lib/Generic/RadioButtons2.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
-	import {
-		faPlus
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 
@@ -90,6 +88,7 @@
 	};
 
 	const getWorkGroupInvite = async () => {
+		invites = [];
 		workGroups.forEach(async (workGroup) => {
 			const { res, json } = await fetchRequest(
 				'GET',
@@ -108,6 +107,14 @@
 			is_moderator: false,
 			target_group_user_id: groupUserId
 		});
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to add user to group', success: false };
+			return;
+		}
+
+		invites.filter((invite) => invite.id === workGroupId);
+		invites = invites;
 	};
 
 	onMount(async () => {
@@ -128,7 +135,7 @@
 <div class="flex items-center gap-3 mb-4">
 	<div class="bg-white dark:bg-darkobject p-4 shadow rounded flex-1">
 		<TextInput
-			label=''
+			label=""
 			max={null}
 			search={true}
 			placeholder={$_('Search work groups')}
@@ -170,7 +177,13 @@
 	{/if}
 	<div class="flex flex-col gap-4 mt-4">
 		{#each workGroups as workingGroup}
-			<WorkingGroup bind:workGroup={workingGroup} {workGroups} {handleRemoveGroup} bind:isAdmin />
+			<WorkingGroup
+				{getWorkGroupInvite}
+				bind:workGroup={workingGroup}
+				{workGroups}
+				{handleRemoveGroup}
+				bind:isAdmin
+			/>
 		{/each}
 	</div>
 </Loader>

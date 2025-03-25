@@ -146,6 +146,8 @@
 		inviteList.map((invitee) => {
 			if (invitee.id === invite_id) invitee.rejected = !accept;
 		});
+
+		
 		inviteList = inviteList;
 	};
 
@@ -168,8 +170,8 @@
 		await setUpPreview();
 		// await getWorkGroups();
 		workGroupsStore.subscribe((_workGroups) => {
-			workGroupList = _workGroups
-			selectedChat = null
+			workGroupList = _workGroups;
+			selectedChat = null;
 		});
 	});
 

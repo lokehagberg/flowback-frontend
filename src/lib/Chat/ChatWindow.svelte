@@ -236,9 +236,9 @@
 {#if selectedChat !== null || true}
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
-			{#if messages.length === 0 && selectedChat !== undefined && selectedChat !== 0}
+			{#if messages.length === 0 && selectedChat !== undefined && selectedChat !== 0 && selectedChat !== null}
 				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-			{:else if selectedChat === undefined}
+			{:else if selectedChat === undefined || selectedChat === null}
 				<span class="self-center">{$_('')}</span>
 			{/if}
 			{#if olderMessages}

@@ -260,9 +260,9 @@
 
 			{#each messages as message}
 				{#if message.type === 'info'}
-				<li class="px-4 py-2 max-w-[80%] text-center" >
-					{message.message}
-				</li>
+					<li class="px-4 py-2 max-w-[80%] text-center">
+						{message.message}
+					</li>
 				{:else}
 					{@const sentByUser =
 						message.user.id.toString() === localStorage.getItem('userId') || false}

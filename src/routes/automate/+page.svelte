@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -105,10 +106,14 @@
 
 <Layout centered>
 	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-full text-left">
-		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">{$_('Automate')}</h1>
+		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">
+			{$_(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? 'Automate' : 'Manage Delegations')}
+		</h1>
 		<p>
 			{$_(
-				`Sometimes we have limited time and cannot participate fully, but still want to contribute. Reformum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
+				env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
+					? `Sometimes we have limited time and cannot participate fully, but still want to contribute. Reforum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
+					: `On this page you can become a delegate (someone who votes publicly that others can delegate their vote to), or delegate your vote temporarily to delegates in subject areas (automatically copying what they vote for in polls in the subject areas you delegate to them in, with the possibility to override their vote and vote yourself).`
 			)}
 		</p>
 	</div>
@@ -128,6 +133,7 @@
 					<div class="flex justify-between">
 						{$_('Turn on auto-vote')}
 					</div>
+				</li>
 				<li class="flex flex-col gap-2">
 					<div class="flex flex-row gap-4 items-center">
 						<Toggle

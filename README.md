@@ -1,4 +1,4 @@
-## Setting up the project
+# Setting up the project
 
 ```bash
 # Downloading the files
@@ -7,6 +7,25 @@ git clone https://github.com/lokehagberg/flowback-frontend.git
 #Then you install the dependencies
 npm install
 ```
+
+## Environment variables
+To get started, copy the `.env.dev.example` file and rename it to `.env` and adjust the values as needed.
+
+| Variable | Description |
+|----------|-------------|
+| `PUBLIC_API_URL` | URL of the backend API (e.g., `http://127.0.0.1:8000`) |
+| `VITE_WEBSOCKET_API` | WebSocket API URL (e.g., `http://127.0.0.1:8000`) |
+| `PUBLIC_MODE` | Set to `DEV` or `PROD` to determine environment mode |
+| `PUBLIC_DISABLE_GROUP_CREATION` | Set to `TRUE` to disable group creation button display (must also be disabled in backend) |
+| `PUBLIC_LOGO` | Logo to use, either `DEFAULT` or `REFORUM` |
+| `PUBLIC_HAS_API` | Set to `TRUE` if API requests should have `/api/` at the start |
+| `PUBLIC_IMAGE_HAS_API` | Set to `TRUE` if image URLs should include `/api/` (try enabling if images aren't displaying) |
+| `PUBLIC_ONE_GROUP_FLOWBACK` | Set to `TRUE` if the Flowback instance will only have one group |
+| `PUBLIC_SUPPORT_MAIL` | Email address for technical support |
+| `PUBLIC_SUPPORT_PHONE` | Phone number for technical support |
+| `PUBLIC_FLOWBACK_AI_MODULE` | Set to `TRUE` to enable the optional AI module |
+| `PUBLIC_FLOWBACK_LEDGER_MODULE` | Set to `TRUE` to enable the optional ledger module |
+| `PUBLIC_WEBSOCKET_API` | WebSocket API URL (e.g., `ws://127.0.0.1:8000`) |
 
 Then the .env.example file will give you the information needed to connect it to a backend instance of flowback. Once that is done you can run it
 
@@ -178,7 +197,7 @@ const thingtoDo2Good = (thing) => {
 # Docker
 To easily run the frontend everywhere we use docker to containerize the application. To run the container, you must have docker installed. Docker setup inspired from [self-hosted-sveltekit-demo](https://github.com/khromov/self-hosted-sveltekit-demo/tree/main)
 
-### Install docker
+## Install docker
 It is recommended to install docker desktop.
 
 [Install on Mac](https://docs.docker.com/desktop/install/mac-install/)
@@ -187,31 +206,15 @@ It is recommended to install docker desktop.
 
 [Install on Linux](https://docs.docker.com/desktop/install/linux-install/)
 
-### Environment variables
+## Set up .env
 Make sure you have updated your `.env` file to include the necessary variables.
 Currently only variables that are imported dynamically work. [See more.](https://joyofcode.xyz/sveltekit-environment-variables#dynamic-for-variables-during-runtime)
 
-To get started, copy the `.env.dev.example` file and reneame it to `.env` and adjust the values as needed.
-
-| Variable | Description |
-|----------|-------------|
-| `PUBLIC_API_URL` | URL of the backend API (e.g., `http://127.0.0.1:8000`) |
-| `VITE_WEBSOCKET_API` | WebSocket API URL (e.g., `http://127.0.0.1:8000`) |
-| `PUBLIC_MODE` | Set to `DEV` or `PROD` to determine environment mode |
-| `PUBLIC_DISABLE_GROUP_CREATION` | Set to `TRUE` to disable group creation button display (must also be disabled in backend) |
-| `PUBLIC_LOGO` | Logo to use, either `DEFAULT` or `REFORUM` |
-| `PUBLIC_HAS_API` | Set to `TRUE` if API requests should have `/api/` at the start |
-| `PUBLIC_IMAGE_HAS_API` | Set to `TRUE` if image URLs should include `/api/` (try enabling if images aren't displaying) |
-| `PUBLIC_ONE_GROUP_FLOWBACK` | Set to `TRUE` if the Flowback instance will only have one group |
-| `PUBLIC_SUPPORT_MAIL` | Email address for technical support |
-| `PUBLIC_SUPPORT_PHONE` | Phone number for technical support |
-| `PUBLIC_FLOWBACK_AI_MODULE` | Set to `TRUE` to enable the optional AI module |
-| `PUBLIC_FLOWBACK_LEDGER_MODULE` | Set to `TRUE` to enable the optional ledger module |
-| `PUBLIC_WEBSOCKET_API` | WebSocket API URL (e.g., `ws://127.0.0.1:8000`) |
+To get started, copy the `.env.dev.example` file and rename it to `.env` and adjust the values as needed. For more info about the `.env` values, [see the environment variable section.](#environment-variables)
 
 
-### How to build the docker container:
-Go to root.
+## How to build the docker container:
+Go to the root of the project.
 
 1. Build the container:
 ```bash
@@ -225,14 +228,14 @@ Only build the container if changes have been made in the application code or Do
 docker compose up -d
 ```
 
-### How to manually build the docker image (not required)
-Go to root
+## How to manually build the docker image (not required)
+Make sure you're at the root of the project.
 ```bash
 docker build -t flowback-frontend .
 ```
 
-### Want to update the docker compose file?
-You can find `docker-compose.yaml` in the root.
+## Want to update the docker compose file?
+You can find `docker-compose.yaml` in the root of the project.
 
 ### Further reading
 https://www.youtube.com/watch?v=NLjolI9FwCU

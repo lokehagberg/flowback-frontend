@@ -121,44 +121,46 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 				<Select
-					labels={groups?.map((group) => group.name)}
-					values={groups}
-					bind:value={group}
 					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
+					labels={groups?.map((group) => group.name)}
+					bind:value={group}
+					values={groups}
 				/>
 			{/if}
-			<ul class="flex flex-col gap-4 my-4">
-				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
-				<li class="mt-3">
-					<div class="flex justify-between">
-						{$_('Turn on auto-vote')}
-					</div>
-				</li>
-				<li class="flex flex-col gap-2">
-					<div class="flex flex-row gap-4 items-center">
-						<Toggle
-							onInput={(checked) => {
-								selectedPage = checked ? 'delegate' : 'none';
-								if (!checked) removeAllDelegations(group);
-							}}
-							checked={autovote}
-						/>
-						{$_('Auto-vote')}
-					</div>
-					<p class="mt-2">
-						{$_(
-							'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
-						)}
-					</p>
 
-					<Button
-						Class="w-full mt-3"
-						onClick={() => (selectedPage = 'become-delegate')}
-						buttonStyle="primary-light">{$_('Become delegate')}</Button
-					>
-				</li>
+			<div class="flex flex-col gap-4 my-4">
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+					<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
+					<div class="mt-3">
+						<div class="flex justify-between">
+							{$_('Turn on auto-vote')}
+						</div>
+					</div>
+					<div class="flex flex-col gap-2">
+						<div class="flex flex-row gap-4 items-center">
+							<Toggle
+								onInput={(checked) => {
+									selectedPage = checked ? 'delegate' : 'none';
+									if (!checked) removeAllDelegations(group);
+								}}
+								checked={autovote}
+							/>
+							{$_('Auto-vote')}
+						</div>
+						<p class="mt-2">
+							{$_(
+								'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
+							)}
+						</p>
+					</div>
+				{/if}
+				<Button
+					Class="w-full mt-3"
+					onClick={() => (selectedPage = 'become-delegate')}
+					buttonStyle="primary-light">{$_('Become delegate')}</Button
+				>
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
-			</ul>
+			</div>
 		</div>
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if selectedPage === 'become-delegate'}

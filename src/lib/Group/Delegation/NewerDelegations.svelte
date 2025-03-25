@@ -9,6 +9,8 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Fa from 'svelte-fa';
 	import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+	import { _ } from 'svelte-i18n';
+	import { delegate } from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
@@ -117,6 +119,24 @@
 		poppup = { message: 'Successfully saved delegation', success: true };
 	};
 
+	const clearChoice = async (tag: Tag) => {
+		delegationTagsStructure.forEach((delegate) => {
+			delegate.tags = delegate.tags?.filter((_tag) => {
+				return _tag !== tag.id;
+			});
+		});
+
+		delegateRelations.forEach((delegate) => {
+			delegate.tags = delegate.tags?.filter((_tag) => {
+				return _tag.id !== tag.id;
+			});
+		});
+
+		delegationTagsStructure = delegationTagsStructure;
+		delegateRelations = delegateRelations;
+		saveDelegation();
+	};
+
 	const initialSetup = async () => {
 		getGroupTags();
 		getDelegatePools();
@@ -171,6 +191,7 @@
 								<!-- <span>{delegate.delegates[0]}</span> -->
 								<span>
 									<!-- {delegate.percentage}% -->
+
 									<input
 										disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
 										on:input={() => changeDelegation(delegate, tag)}
@@ -184,6 +205,7 @@
 							</div>
 						{/each}
 					</div>
+					<button on:click={() => clearChoice(tag)}>{$_('Clear Choice')}</button>
 				{:else}
 					<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
 				{/if}
@@ -191,7 +213,7 @@
 			</div>
 		{/each}
 	{:else}
-		<span>There are currently no delegates for this group</span>
+		<span>{$_('There are currently no delegates for this group')}</span>
 	{/if}
 </div>
 

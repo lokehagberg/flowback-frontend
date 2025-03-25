@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -9,7 +8,7 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
-	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegations.svelte';
+	import Delegations from '$lib/Group/Delegation/NewerDelegations.svelte';
 	import StopBeingDelegate from '$lib/Group/Delegation/StopBeingDelegate.svelte';
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
@@ -100,7 +99,7 @@
 	$: if (group) {
 		getUserInfo();
 		getDelegatePools();
-		selectedPage = autovote ? 'delegate' : 'none';
+		selectedPage = 'delegate';
 	}
 </script>
 
@@ -183,7 +182,7 @@
 				{/if}
 			{:else if selectedPage === 'delegate'}
 				{#if group?.id}
-					<NewerDelegaions bind:group bind:delegates />
+					<Delegations bind:group bind:delegates />
 				{/if}
 			{/if}
 		</div>

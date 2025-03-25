@@ -11,13 +11,16 @@
 	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
 	import {
-		faCalendarWeek,
+		faCalendarDays,
 		faCoins,
-		faHome,
-		faList,
+		faHouse,
 		faMoon,
 		faUserFriends,
-		faCog
+		faPeopleGroup,
+		faArrowsSpin,
+		faCog,
+		faPeopleArrows,
+		faListCheck
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
@@ -119,18 +122,16 @@
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<HeaderIcon
 					disableTextOnHover
-					icon={HomeIcon}
+					icon={faHouse}
 					text="Home"
 					href="home"
-					Class="w-[32px] "
 					bind:selectedHref
 				/>
 				<!-- <HeaderIcon disableTextOnHover icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
 					disableTextOnHover
-					icon={faUserFriends}
+					icon={faPeopleGroup}
 					text="Groups"
-					Class="w-[32px] "
 					href="groups"
 					bind:selectedHref
 				/>
@@ -138,8 +139,7 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
 					disableTextOnHover
-					icon={HomeIcon}
-					Class="w-[35px] "
+					icon={faHouse}
 					text="Home"
 					href="groups/1"
 					bind:selectedHref
@@ -148,17 +148,15 @@
 
 			<HeaderIcon
 				disableTextOnHover
-				icon={KanbanIcon}
+				icon={faListCheck}
 				text="Kanban"
 				href="kanban"
-				Class="w-[30px] "
 				bind:selectedHref
 			/>
 
 			<HeaderIcon
 				disableTextOnHover
-				icon={CalendarIcon}
-				Class="w-[32px] "
+				icon={faCalendarDays}
 				text="Schedule"
 				href="schedule"
 				bind:selectedHref
@@ -167,7 +165,6 @@
 			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 				<HeaderIcon
 					disableTextOnHover
-					Class="w-[30px] "
 					icon={faCoins}
 					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
@@ -178,8 +175,7 @@
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
 					disableTextOnHover
-					icon={AutomationIcon}
-					Class="w-[30px] "
+					icon={faArrowsSpin}
 					text={'Automate'}
 					href="automate"
 					bind:selectedHref
@@ -187,8 +183,7 @@
 			{:else}
 				<HeaderIcon
 					disableTextOnHover
-					icon={AutomationIcon}
-					Class="w-[30px] "
+					icon={faPeopleArrows}
 					text={'Delegations'}
 					href="automate"
 					bind:selectedHref
@@ -210,7 +205,7 @@
 					{#if darkMode}
 						<Sun />
 					{:else}
-						<Fa icon={faMoon} size={'25'} />
+						<Fa icon={faMoon} size={'1.3x'} />
 					{/if}
 				</button>
 				<Notifications />

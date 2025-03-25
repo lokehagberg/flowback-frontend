@@ -39,7 +39,7 @@ If you're experienced with React, Vue e.t.c and new to svelte you can check out 
 https://svelte.dev/tutorial/basics
 
 
-Remember to check the “Generic” folder before doing something that’s very common.
+Remember to check the "Generic" folder before doing something that's very common.
 
 
 Check out the backend documentation here: https://digitaldemocracy.flowback.org/api/schema/redoc/
@@ -163,7 +163,7 @@ const thingtoDo2Good = (thing) => {
 };
 
 
-// Avoid Global variables as much as possible except for one’s that are used all over the place such as for example the translation function
+// Avoid Global variables as much as possible except for one's that are used all over the place such as for example the translation function
 
 
 //Good
@@ -190,6 +190,26 @@ It is recommended to install docker desktop.
 ### Environment variables
 Make sure you have updated your `.env` file to include the necessary variables.
 Currently only variables that are imported dynamically work. [See more.](https://joyofcode.xyz/sveltekit-environment-variables#dynamic-for-variables-during-runtime)
+
+Here's an explanation of the available environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `PUBLIC_API_URL` | URL of the backend API (e.g., `http://127.0.0.1:8000`) |
+| `VITE_WEBSOCKET_API` | WebSocket API URL (e.g., `http://127.0.0.1:8000`) |
+| `PUBLIC_MODE` | Set to `DEV` or `PROD` to determine environment mode |
+| `PUBLIC_DISABLE_GROUP_CREATION` | Set to `TRUE` to disable group creation button display (must also be disabled in backend) |
+| `PUBLIC_LOGO` | Logo to use, either `DEFAULT` or `REFORUM` |
+| `PUBLIC_HAS_API` | Set to `TRUE` if API requests should have `/api/` at the start |
+| `PUBLIC_IMAGE_HAS_API` | Set to `TRUE` if image URLs should include `/api/` (try enabling if images aren't displaying) |
+| `PUBLIC_ONE_GROUP_FLOWBACK` | Set to `TRUE` if the Flowback instance will only have one group |
+| `PUBLIC_SUPPORT_MAIL` | Email address for technical support |
+| `PUBLIC_SUPPORT_PHONE` | Phone number for technical support |
+| `PUBLIC_FLOWBACK_AI_MODULE` | Set to `TRUE` to enable the optional AI module |
+| `PUBLIC_FLOWBACK_LEDGER_MODULE` | Set to `TRUE` to enable the optional ledger module |
+| `PUBLIC_WEBSOCKET_API` | WebSocket API URL (e.g., `ws://127.0.0.1:8000`) |
+
+To get started, copy the `.env.dev.example` file to `.env` and adjust the values as needed.
 
 ### How to build the docker container:
 Go to root.

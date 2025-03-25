@@ -621,6 +621,7 @@
     "Search polls": "Sök omröstning",
     "Failed to leave Group": "Det gick inte att lämna gruppen",
     "Your session is about to expire, log back in?": "Din session håller på att löpa ut, logga in igen?",
+    "Tag": "Ämnesområde",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

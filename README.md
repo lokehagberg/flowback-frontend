@@ -58,8 +58,7 @@ You can preview the production build with `npm run preview`.
 ## Set up the backend
 To set up the backend you will need to download the backend repository and follow the installation example for docker compose listed in the readme. The backend can be found at [https://github.com/lokehagberg/flowback-backend](https://github.com/lokehagberg/flowback-backend).
 
-To create an admin account you will need to navigate to the terminal in the docker container called "flowback-backend-1" and execute the following command.
-
+To create an admin account you will need to navigate to the terminal in the docker container called "flowback-backend-1" and execute the following command:
 ```python
 python manage.py createsuperuser
 ```

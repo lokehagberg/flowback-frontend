@@ -6,7 +6,6 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { formatDate } from '$lib/Generic/DateFormatter';
 	import type { scheduledEvent } from './interface';
 
 	export let showEvent = false,

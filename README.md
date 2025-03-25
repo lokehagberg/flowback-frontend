@@ -191,7 +191,7 @@ It is recommended to install docker desktop.
 Make sure you have updated your `.env` file to include the necessary variables.
 Currently only variables that are imported dynamically work. [See more.](https://joyofcode.xyz/sveltekit-environment-variables#dynamic-for-variables-during-runtime)
 
-Here's an explanation of the available environment variables:
+To get started, copy the `.env.dev.example` file and reneame it to `.env` and adjust the values as needed.
 
 | Variable | Description |
 |----------|-------------|
@@ -209,7 +209,6 @@ Here's an explanation of the available environment variables:
 | `PUBLIC_FLOWBACK_LEDGER_MODULE` | Set to `TRUE` to enable the optional ledger module |
 | `PUBLIC_WEBSOCKET_API` | WebSocket API URL (e.g., `ws://127.0.0.1:8000`) |
 
-To get started, copy the `.env.dev.example` file to `.env` and adjust the values as needed.
 
 ### How to build the docker container:
 Go to root.

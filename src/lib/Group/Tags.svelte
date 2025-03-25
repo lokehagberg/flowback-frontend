@@ -78,13 +78,13 @@
 <!-- TODO: Nicer design -->
 <!-- <div class="bg-white rounded shadow p-6 dark:bg-darkobject"> -->
 <Loader bind:loading>
-	<form on:submit|preventDefault={addTag} class="pb-4">
-		<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1" />
-		<TextArea label="Add Tag Description" bind:value={tagDescription} />
+	<form on:submit|preventDefault={addTag} class="pb-4 flex flex-col gap-2">
+		<TextInput label="Tag" max={50} bind:value={tagToAdd} required Class="flex-1" />
+		<TextArea label="Description" max={500} bind:value={tagDescription} inputClass="max-h-[15rem]" />
 		<Button
 			disabled={loading}
 			type="submit"
-			Class="w-1/5 mt-[1.65rem] h-8 flex items-center justify-center"
+			Class="w-1/5 h-8 flex items-center justify-center"
 			buttonStyle="primary-light"
 			label="Add"
 		/>

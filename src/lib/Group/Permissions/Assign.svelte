@@ -56,7 +56,7 @@
 					<ProfilePicture username={user.user.username} profilePicture={user.user.profile_image} displayName />
 				</div>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
-					<Tag tag={{active:true, id:1, name:user.permission_name}} />
+					<Tag tag={{active:true, id:1, name:user.permission_name}} imac={false} />
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
@@ -65,7 +65,7 @@
 					on:click={() => (selected === user.user.id ? (selected = -1) : (selected = user.user.id))}
 					on:keydown
 				>
-					<Fa icon={faPlus} size="2x" />
+					<Fa icon={faPlus} size="lg" />
 				</div>
 			</div>
 			<div

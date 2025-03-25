@@ -214,11 +214,16 @@
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
 			<TextArea label="Description" bind:value={description} />
 			<FileUploads bind:files={images} disableCropping />
-			<Select
-				labels={workGroups.map((workGroup) => workGroup.name)}
-				values={workGroups.map((workGroup) => workGroup.id)}
-				bind:value={workGroup}
-			/>
+
+			{#if selectedPage === 'thread'}
+				<Select
+					classInner="border border-gray-300"
+					label={$_('Work Group')}
+					labels={workGroups.map((workGroup) => workGroup.name)}
+					values={workGroups.map((workGroup) => workGroup.id)}
+					bind:value={workGroup}
+				/>
+			{/if}
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}

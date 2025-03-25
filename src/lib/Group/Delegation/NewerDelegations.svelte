@@ -134,61 +134,65 @@
 </script>
 
 <div>
-	{#each tags as tag, index}
-		<div class="section">
-			<button
-				class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
-				on:click={() => toggleSection(index)}
-			>
-				<span class="break-all text-left">{tag.name}</span>
+	{#if delegates.length > 0}
+		{#each tags as tag, index}
+			<div class="section">
+				<button
+					class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
+					on:click={() => toggleSection(index)}
+				>
+					<span class="break-all text-left">{tag.name}</span>
 
-				<!-- Always use chevron-down and rotate when expanded -->
-				<div class="chevron {expandedSection === index ? 'expanded' : ''}">
-					<Fa icon={faChevronDown} />
-				</div>
-			</button>
+					<!-- Always use chevron-down and rotate when expanded -->
+					<div class="chevron {expandedSection === index ? 'expanded' : ''}">
+						<Fa icon={faChevronDown} />
+					</div>
+				</button>
 
-			<!-- {#if expandedSection === index}
+				<!-- {#if expandedSection === index}
 				 flip={expandedSection !== index}
 					<Fa icon={faChevronUp} />
 				{:else}
 					<Fa icon={faChevronDown} />
 				{/if} -->
-			{#if expandedSection === index}
-				<!-- {#if section.voters.length > 0} -->
-				<div class="voter-list">
-					{#each delegates as delegate}
-						<div class="voter-item">
-							<ProfilePicture
-								displayName
-								username={delegate.user.username}
-								userId={delegate.user.id}
-								profilePicture={delegate.user.profile_image}
-							/>
-							<!-- {delegate.user.username} -->
-							<!-- {delegate.delegates[0]} -->
-							<!-- <span>{delegate.delegates[0]}</span> -->
-							<span>
-								<!-- {delegate.percentage}% -->
-								<input
-									disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
-									on:input={() => changeDelegation(delegate, tag)}
-									type="radio"
-									name={tag.name}
-									checked={delegationTagsStructure
-										.find((relation) => relation.delegate_pool_id === delegate.pool_id)
-										?.tags.find((_tag) => _tag === tag.id) !== undefined}
+				{#if expandedSection === index}
+					<!-- {#if section.voters.length > 0} -->
+					<div class="voter-list">
+						{#each delegates as delegate}
+							<div class="voter-item">
+								<ProfilePicture
+									displayName
+									username={delegate.user.username}
+									userId={delegate.user.id}
+									profilePicture={delegate.user.profile_image}
 								/>
-							</span>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
-			{/if}
-			<!-- {/if} -->
-		</div>
-	{/each}
+								<!-- {delegate.user.username} -->
+								<!-- {delegate.delegates[0]} -->
+								<!-- <span>{delegate.delegates[0]}</span> -->
+								<span>
+									<!-- {delegate.percentage}% -->
+									<input
+										disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
+										on:input={() => changeDelegation(delegate, tag)}
+										type="radio"
+										name={tag.name}
+										checked={delegationTagsStructure
+											.find((relation) => relation.delegate_pool_id === delegate.pool_id)
+											?.tags.find((_tag) => _tag === tag.id) !== undefined}
+									/>
+								</span>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
+				{/if}
+				<!-- {/if} -->
+			</div>
+		{/each}
+	{:else}
+		<span>There are currently no delegates for this group</span>
+	{/if}
 </div>
 
 <Poppup bind:poppup />

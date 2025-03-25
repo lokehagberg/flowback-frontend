@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { workGroupsStore, type WorkGroup, type WorkGroupUser } from './interface';
+	import {
+		workGroupsStore,
+		type WorkGroup,
+		type WorkGroupInvite,
+		type WorkGroupUser
+	} from './interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -12,7 +17,8 @@
 	export let workGroup: WorkGroup,
 		workGroups: WorkGroup[],
 		handleRemoveGroup: (id: number) => void,
-		isAdmin = false;
+		isAdmin = false,
+		getWorkGroupInvite: () => {};
 
 	let poppup: poppup,
 		workGroupUserList: WorkGroupUser[] = [],
@@ -58,14 +64,17 @@
 			return;
 		}
 
+		if (!res.ok) return;
+
 		poppup = { message: 'Invite Sent', success: true };
+		getWorkGroupInvite();
 	};
 
 	const leaveGroup = async () => {
 		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/leave`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to Leave Group', success: false };
+			poppup = { message: 'Failed to leave Group', success: false };
 			return;
 		}
 		workGroupUserList = workGroupUserList.filter(
@@ -125,7 +134,7 @@
 	{/if}
 
 	{#if isAdmin}
-		<Button buttonStyle="warning-light" onClick={() => (showDeleteModal = true)}
+		<Button buttonStyle="warning-light" Class="!border-0" onClick={() => (showDeleteModal = true)}
 			><Fa icon={faTrash} /></Button
 		>
 	{/if}

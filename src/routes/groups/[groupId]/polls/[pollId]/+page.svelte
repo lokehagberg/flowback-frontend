@@ -98,11 +98,22 @@
 		if (display === null || display === undefined || display === '0') displayForm = false;
 		if (display === '1') displayForm = true;
 	};
+
+	$: if (phase === 'proposal') {
+		const a = setTimeout(() => {
+			getPollData();
+			clearTimeout(a);
+		}, 2000);
+	}
 </script>
 
 <Layout centered>
 	{#if poll}
-		<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== "pre_start"} />
+		{#if pollType === 4}
+			<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== 'pre_start'} />
+		{:else}
+			<PollHeader {poll} bind:phase displayTag={false} />
+		{/if}
 
 		{#if pollType === 4}
 			<!-- PHASE 0: PRE-START -->
@@ -170,7 +181,7 @@
 								</div>
 							{/if}
 						{:else if displayForm}
-							<ProposalSubmition  {poll} bind:proposals bind:displayForm />
+							<ProposalSubmition {poll} bind:proposals bind:displayForm />
 						{/if}
 					</div>
 					<div slot="bottom">
@@ -342,7 +353,13 @@
 			{#if !finished}
 				<DatePoll />
 			{:else}
-				<Results {pollType} />
+				<Structure poll={null}>
+					<div slot="left" class="w-[600px]">
+						<Results {pollType} />
+					</div>
+
+					<div slot="right"><Comments api="poll" /></div>
+				</Structure>
 			{/if}
 		{/if}
 	{/if}

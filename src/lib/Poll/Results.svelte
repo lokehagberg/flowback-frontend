@@ -38,6 +38,25 @@
 		labels = proposals.map((proposal) => proposal.title) || [];
 	};
 
+	const formatDateTime = (dateString: string) => {
+		const date = new Date(dateString);
+		
+		return {
+			date: new Intl.DateTimeFormat('sv-SE', {
+				weekday: 'long',
+				day: '2-digit',
+				month: 'long',
+				year: 'numeric'
+			}).format(date).replace(/\b\w/g, (char) => char.toUpperCase()),
+
+			time: new Intl.DateTimeFormat('sv-SE', {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false
+			}).format(date)
+		};
+	};
+
 	onMount(() => {
 		getProposals();
 	});
@@ -65,6 +84,20 @@
 			</div>
 		{/each}
 	{:else if pollType === 3}
-		<div>{$_('Results in Group Schedule')}</div>
+		<div class="flex flex-col items-center justify-center h-full gap-4 mt-10">
+			<Fa icon={faStar} color="orange" class="text-5xl" />
+			<div class="text-primary dark:text-secondary font-semibold text-lg text-center block">{$_('Results have also been added to Group Schedule')}!</div>
+		
+			{#if proposals.length > 0}
+				{#if proposals[0].title && proposals[0].description}
+					<div class="mt-2 text-center">
+						<span>{formatDateTime(proposals[0].title).date}</span>
+						<div class="mt-1 text-md text-gray-500">
+							{formatDateTime(proposals[0].title).time} - {formatDateTime(proposals[0].description).time}
+						</div>
+					</div>
+				{/if}
+			{/if}
+		</div>
 	{/if}
 </div>

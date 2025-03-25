@@ -4,9 +4,12 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faChevronRight, faComment, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+	import { faChevronRight, faComment, faSquareCheck, faMagnifyingGlassChart} from '@fortawesome/free-solid-svg-icons';
+	import {faSquare} from '@fortawesome/free-regular-svg-icons'
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
+	import { fetchRequest } from '$lib/FetchRequest';
+	import { page } from '$app/stores';
 
 	export let proposal: proposal,
 		Class = '',
@@ -16,7 +19,8 @@
 		selectedProposal: proposal | null = null,
 		proposalsToPredictionMarket: proposal[] = [],
 		phase: Phase,
-		comments: Comment[] = [];
+		comments: Comment[] = [],
+		predictionCount = 0;
 
 	export const id: number = 0;
 
@@ -27,8 +31,17 @@
 		);
 	};
 
+	const getPredictionCount = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/poll/prediction/statement/list?poll_id=${$page.params.pollId}&proposals=${proposal.id}`
+		);
+		predictionCount = json.results.length;
+	};
+
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
+		getPredictionCount();
 	});
 </script>
 
@@ -39,7 +52,7 @@
 	class:border-l-2={selectedProposal === proposal}
 	class:border-primary={selectedProposal === proposal}
 >
-	<div class="flex gap-2 items-baseline">
+	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
 			{@const proposalInList = proposalsToPredictionMarket.findIndex(
 				(prop) => prop.id === proposal.id
@@ -51,7 +64,7 @@
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
-					<Fa icon={faSquareCheck} color={'black'} class="cursor-pointer" />
+					<Fa icon={faSquareCheck} class="text-primary cursor-pointer" />
 				</button>
 			{:else}
 				<button
@@ -60,7 +73,7 @@
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
 				>
-					<Fa icon={faSquareCheck} color={'white'} class="border border-black cursor-pointer" />
+					<Fa icon={faSquare} class="text-primary cursor-pointer" />
 				</button>
 			{/if}
 		{/if}
@@ -79,10 +92,17 @@
 	<slot />
 
 	<div class="flex justify-between w-full">
-		<button class="flex" on:click={filterComments}>
-			<img src={commentSymbol} alt="Comment" class="w-6 h-6 mr-2" />
-			{comments.filter((comment) => comment?.message?.includes(proposal.title)).length}
-		</button>
+		<div class="flex justify-between gap-10">
+			<button class="flex" on:click={filterComments}>
+				<img src={commentSymbol} alt="Comment" class="w-6 h-6 mr-2" />
+				{comments.filter((comment) => comment?.message?.includes(proposal.title)).length}
+			</button>
+
+			<button class="flex items-center">
+				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md"/>
+				{predictionCount}
+			</button>
+		</div>
 
 		<button
 			on:click={() => {

@@ -72,34 +72,42 @@
 		<TextInput
 			Class="w-4/5"
 			onInput={() => (searched = false)}
-			label={$_('Search')}
+			label=''
+			max={null}
+			search={true}
+			placeholder={$_('Search polls')}
 			bind:value={filter.search}
 		/>
 	</div>
-	<div class="flex">
+	<div class="flex gap-4">
 		<Select
-			Class="rounded-md p-1"
-			onInput={handleFinishedSelection}
-			values={['all', 'unfinished', 'finished']}
-			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
-			bind:value={filter.finishedSelection}
-		/>
-
-		<Select
-			Class="rounded-md p-1"
+			Class="rounded p-1 flex flex-row items-center gap-1"
+			classInner="font-semibold border border-0"
 			onInput={handleSort}
 			values={['start_date_desc', 'start_date_asc']}
 			labels={[$_('Newest first'), $_('Oldest first')]}
+			label={$_('Sort')}: 
 			bind:value={filter.order_by}
 		/>
 
+		<Select
+			Class="rounded p-1 flex flex-row items-center gap-1"
+			classInner="font-semibold border-0"
+			onInput={handleFinishedSelection}
+			values={['all', 'unfinished', 'finished']}
+			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
+			label={$_('Status')}: 
+			bind:value={filter.finishedSelection}
+		/>
+
 		{#if tagFiltering}
-			<div class="rounded-md p-1">
+			<div class="rounded p-1 flex flex-row items-center gap-1">
+				<span>{$_('Work Group')}: </span>
 				<select
 					on:input={handleTags}
-					class="rounded-sm p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+					class="rounded p-1 border-0 font-semibold dark:border-gray-600 dark:bg-darkobject"
 				>
-					<option value={null}>{$_('Any')}</option>
+					<option value={null}>{$_('All')}</option>
 					{#each tags as tag}
 						<option value={tag.id}>{elipsis(tag.name, 15)}</option>
 					{/each}
@@ -107,8 +115,8 @@
 			</div>
 		{/if}
 
-		<div class="rounded-md p-1">
-			<Button Class="!p-1 ml-1" buttonStyle="primary-light" onClick={resetFilter}
+		<div class="rounded p-1">
+			<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
 				>{$_('Reset Filter')}</Button
 			>
 		</div>

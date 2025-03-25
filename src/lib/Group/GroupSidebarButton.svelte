@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import { faBarsProgress, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { faPoll } from '@fortawesome/free-solid-svg-icons/faPoll';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 
 	export let text: string,
 		action = () => {},
-		faIcon: IconDefinition = faPoll,
+		faIcon: IconDefinition = faBarsProgress,
 		svgIcon: string = '',
 		isSelected = true,
 		Class = '',
@@ -31,8 +31,10 @@
 	`}
 		aria-disabled={disabled}
 	>
-		<Fa icon={faIcon} class="max-w-[24px]" />
-		<div class="ml-4 text-left">
+		<div class="w-6 flex items-center justify-center">
+			<Fa icon={faIcon} class="w-6 h-6" />
+		</div>
+		<div class="ml-3 text-left">
 			{$_(text)}
 		</div>
 	</button>

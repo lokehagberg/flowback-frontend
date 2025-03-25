@@ -188,13 +188,6 @@
 
 		{#if comment.active}
 			<div class="flex gap-6 text-xs pl-14">
-				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => (comment.being_replied = true)}
-				>
-					<!-- <Fa icon={faReply} /> -->
-					{$_('Reply')}
-				</button>
 				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
 				<div class="flex items-center gap-2">
 					<button
@@ -214,6 +207,14 @@
 					</button>
 				</div>
 				<!-- {/if} -->
+				 
+				<button
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => (comment.being_replied = true)}
+				>
+					<!-- <Fa icon={faReply} /> -->
+					{$_('Reply')}
+				</button>
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button

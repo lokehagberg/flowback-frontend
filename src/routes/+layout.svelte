@@ -18,11 +18,14 @@
 	import { env } from '$env/dynamic/public';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { workGroupsStore } from '$lib/Group/WorkingGroups/interface';
+	import LogBackInModal from '$lib/Generic/LogBackInModal.svelte';
+	import { addDateOffset } from '$lib/Generic/Dates';
 
 	export const prerender = true;
 
 	let showUI = false,
-		scrolledY = '';
+		scrolledY = '',
+		openLoginModal = false;
 
 	const updateUserInfo = async () => {
 		let userNeedsUpdate = false;
@@ -114,6 +117,8 @@
 			`group/${$page.params.groupId}/list?limit=100&order_by=name_asc`
 		);
 
+		if (!res.ok) return;
+
 		workGroupsStore.set(json.results);
 	};
 
@@ -131,6 +136,12 @@
 			const html = document.getElementById(`poll-thumbnail-${scrolledY}`);
 			html?.scrollIntoView();
 		}, 200);
+
+		// //Pop-up for when user is 1 hour before their login expires.
+		// const sessionExpirationDate = new Date(Number(localStorage.getItem('sessionExpirationTime')));
+		// if (addDateOffset(sessionExpirationDate, -1, 'hour') < new Date()) openLoginModal = true;
+
+		// console.log(addDateOffset(sessionExpirationDate, -30, 'minute').getTime());
 	});
 
 	//Initialize Translation, which should happen before any lifecycle hooks.
@@ -159,6 +170,8 @@
 <div id="mobile-support">
 	{$_('No support for mobile devices yet, try Flowback on a non-mobile device')}
 </div>
+
+<LogBackInModal bind:open={openLoginModal} />
 
 <style>
 	#mobile-support {

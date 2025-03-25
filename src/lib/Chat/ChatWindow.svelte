@@ -106,9 +106,19 @@
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
 			messages.push({
+				id: Date.now(),
 				message,
 				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-				created_at: new Date().toString()
+				created_at: new Date().toString(),
+				active: true,
+				channel_id: selectedChatChannelId || selectedChat,
+				channel_origin_name: selectedPage === 'direct' ? 'user' : 'group',
+				type: 'message',
+				updated_at: new Date().toString(),
+				attachments: [],
+				channel_title: '',
+				parent: 0,
+				topic_id: 0
 			});
 
 		messages = messages;
@@ -178,6 +188,7 @@
 				preview = preview;
 			}
 		} else if (message.channel_id === selectedChat) {
+			//@ts-ignore
 			messages.push({
 				message: message.message,
 				user: {
@@ -236,9 +247,9 @@
 {#if selectedChat !== null || true}
 	<div class="flex flex-col h-full">
 		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
-			{#if messages.length === 0 && selectedChat !== undefined && selectedChat !== 0}
+			{#if messages.length === 0 && selectedChat !== undefined && selectedChat !== 0 && selectedChat !== null}
 				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-			{:else if selectedChat === undefined}
+			{:else if selectedChat === undefined || selectedChat === null}
 				<span class="self-center">{$_('')}</span>
 			{/if}
 			{#if olderMessages}
@@ -248,21 +259,28 @@
 			{/if}
 
 			{#each messages as message}
-				{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
-				<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
-					<span>{message.user?.username || message.username}</span>
-					<p
-						class="p-2 rounded-xl"
-						class:bg-primary={sentByUser}
-						class:dark:bg-gray-600={sentByUser}
-						class:text-white={sentByUser}
-						class:bg-gray-300={!sentByUser}
-						class:dark:bg-gray-500={!sentByUser}
-					>
+				{#if message.type === 'info'}
+					<li class="px-4 py-2 max-w-[80%] text-center">
 						{message.message}
-					</p>
-					<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
-				</li>
+					</li>
+				{:else}
+					{@const sentByUser =
+						message.user.id.toString() === localStorage.getItem('userId') || false}
+					<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
+						<span>{message.user?.username}</span>
+						<p
+							class="p-2 rounded-xl"
+							class:bg-primary={sentByUser}
+							class:dark:bg-gray-600={sentByUser}
+							class:text-white={sentByUser}
+							class:bg-gray-300={!sentByUser}
+							class:dark:bg-gray-500={!sentByUser}
+						>
+							{message.message}
+						</p>
+						<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+					</li>
+				{/if}
 			{/each}
 			{#if newerMessages}
 				<li class="text-center mt-6 mb-6">
@@ -275,43 +293,45 @@
 		</ul>
 		<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-		<div class="border-t-2 border-t-gray-200 w-full">
-			<!-- Here the user writes a message to be sent -->
-			<form
-				class="flex gap-1 justify-center items-center w-full mt-2"
-				on:submit|preventDefault={postMessage}
-			>
-				<TextArea
-					autofocus
-					label=""
-					onKeyPress={(e) => {
-						if (e.key === 'Enter' && !e.shiftKey) {
-							postMessage();
-							e.preventDefault();
-						}
-					}}
-					max={3000}
-					rows={1}
-					bind:value={message}
-					placeholder={$_('Write a message...')}
-					Class="justify-center w-full h-2rem"
-					inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
-				/>
-
-				{#if env.PUBLIC_MODE === 'DEV'}
-					<Button
-						onClick={() => (showEmoji = !showEmoji)}
-						Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
-					>
-				{/if}
-
-				<Button
-					type="submit"
-					Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
-					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+		{#if selectedChat !== 0 && selectedChat !== undefined && selectedChat !== null}
+			<div class="border-t-2 border-t-gray-200 w-full">
+				<!-- Here the user writes a message to be sent -->
+				<form
+					class="flex gap-1 justify-center items-center w-full mt-2"
+					on:submit|preventDefault={postMessage}
 				>
-			</form>
-		</div>
+					<TextArea
+						autofocus
+						label=""
+						onKeyPress={(e) => {
+							if (e.key === 'Enter' && !e.shiftKey) {
+								postMessage();
+								e.preventDefault();
+							}
+						}}
+						max={3000}
+						rows={1}
+						bind:value={message}
+						placeholder={$_('Write a message...')}
+						Class="justify-center w-full h-2rem"
+						inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
+					/>
+
+					{#if env.PUBLIC_MODE === 'DEV'}
+						<Button
+							onClick={() => (showEmoji = !showEmoji)}
+							Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
+						>
+					{/if}
+
+					<Button
+						type="submit"
+						Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
+						><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+					>
+				</form>
+			</div>
+		{/if}
 	</div>
 {:else}
 	<div>{'No chat selected'}</div>

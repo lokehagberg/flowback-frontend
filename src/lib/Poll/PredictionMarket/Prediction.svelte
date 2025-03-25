@@ -122,8 +122,10 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
+		console.log(newScore, "SCORE");
+		
 		// predictionBetCreate(newScore);
-		if (newScore === null) predictionBetDelete();
+		if (newScore === null || newScore === 2.5) predictionBetDelete();
 		// else if (score === null) {
 		// predictionBetCreate(newScore);
 		// }

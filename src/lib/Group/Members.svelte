@@ -231,18 +231,21 @@
 			<TextInput
 				Class="w-4/5"
 				onInput={() => (searched = false)}
-				label={$_('Search')}
+				label=''
+				max={null}
+				search={true}
+				placeholder={$_('Search members')}
 				bind:value={searchUserQuery}
 			/>
 
-			<Button
+			<!-- <Button
 				Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
 					searched ? 'bg-blue-300' : 'bg-blue-600'
 				}`}
 				type="submit"
 			>
 				<Fa icon={faMagnifyingGlass} />
-			</Button>
+			</Button> -->
 		</form>
 
 		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
@@ -283,9 +286,9 @@
 							{user.permission_name}
 						</div>
 						<div class="flex gap-2 right-6 absolute">
-							<Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
+							<!-- <Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
 								><Fa icon={faRunning} /></Button
-							>
+							> -->
 							<button
 								on:click={() => {
 									isChatOpen.set(true);
@@ -304,7 +307,7 @@
 </Loader>
 
 <Modal bind:open={removeUserModalShow}>
-	<div slot="header">Sure you want to delet?</div>
+	<div slot="header">{$_('Sure you want to delete?')}</div>
 	<div slot="body">
 		<Button buttonStyle="warning-light" onClick={userRemove} />
 	</div>

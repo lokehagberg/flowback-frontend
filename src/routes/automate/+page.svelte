@@ -8,7 +8,7 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import type { Delegate } from '$lib/Group/Delegation/interfaces';
-	import NewerDelegaions from '$lib/Group/Delegation/NewerDelegations.svelte';
+	import Delegations from '$lib/Group/Delegation/NewerDelegations.svelte';
 	import StopBeingDelegate from '$lib/Group/Delegation/StopBeingDelegate.svelte';
 	import type { Group } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
@@ -99,16 +99,20 @@
 	$: if (group) {
 		getUserInfo();
 		getDelegatePools();
-		selectedPage = autovote ? 'delegate' : 'none';
+		selectedPage = 'delegate';
 	}
 </script>
 
 <Layout centered>
 	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-full text-left">
-		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">{$_('Automate')}</h1>
+		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">
+			{$_(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? 'Automate' : 'Manage Delegations')}
+		</h1>
 		<p>
 			{$_(
-				`Sometimes we have limited time and cannot participate fully, but still want to contribute. Reformum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
+				env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
+					? `Sometimes we have limited time and cannot participate fully, but still want to contribute. Reforum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
+					: `On this page you can become a delegate (someone who votes publicly that others can delegate their vote to), or delegate your vote temporarily to delegates in subject areas (automatically copying what they vote for in polls in the subject areas you delegate to them in, with the possibility to override their vote and vote yourself).`
 			)}
 		</p>
 	</div>
@@ -116,43 +120,46 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 				<Select
-					labels={groups?.map((group) => group.name)}
-					values={groups}
-					bind:value={group}
 					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
+					labels={groups?.map((group) => group.name)}
+					bind:value={group}
+					values={groups}
 				/>
 			{/if}
-			<ul class="flex flex-col gap-4 my-4">
-				<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
-				<li class="mt-3">
-					<div class="flex justify-between">
-						{$_('Turn on auto-vote')}
-					</div>
-				<li class="flex flex-col gap-2">
-					<div class="flex flex-row gap-4 items-center">
-						<Toggle
-							onInput={(checked) => {
-								selectedPage = checked ? 'delegate' : 'none';
-								if (!checked) removeAllDelegations(group);
-							}}
-							checked={autovote}
-						/>
-						{$_('Auto-vote')}
-					</div>
-					<p class="mt-2">
-						{$_(
-							'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
-						)}
-					</p>
 
-					<Button
-						Class="w-full mt-3"
-						onClick={() => (selectedPage = 'become-delegate')}
-						buttonStyle="primary-light">{$_('Become delegate')}</Button
-					>
-				</li>
+			<div class="flex flex-col gap-4 my-4">
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+					<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
+					<div class="mt-3">
+						<div class="flex justify-between">
+							{$_('Turn on auto-vote')}
+						</div>
+					</div>
+					<div class="flex flex-col gap-2">
+						<div class="flex flex-row gap-4 items-center">
+							<Toggle
+								onInput={(checked) => {
+									selectedPage = checked ? 'delegate' : 'none';
+									if (!checked) removeAllDelegations(group);
+								}}
+								checked={autovote}
+							/>
+							{$_('Auto-vote')}
+						</div>
+						<p class="mt-2">
+							{$_(
+								'Auto-voting means that you automatically vote the same as someone you trust. You can auto-vote according to how public voters have voted in specific topics. You can always change your vote afterwards if you have time and want to.'
+							)}
+						</p>
+					</div>
+				{/if}
+				<Button
+					Class="w-full mt-3"
+					onClick={() => (selectedPage = 'become-delegate')}
+					buttonStyle="primary-light">{$_('Become delegate')}</Button
+				>
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
-			</ul>
+			</div>
 		</div>
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if selectedPage === 'become-delegate'}
@@ -175,7 +182,7 @@
 				{/if}
 			{:else if selectedPage === 'delegate'}
 				{#if group?.id}
-					<NewerDelegaions bind:group bind:delegates />
+					<Delegations bind:group bind:delegates />
 				{/if}
 			{/if}
 		</div>

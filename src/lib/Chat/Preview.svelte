@@ -30,17 +30,6 @@
 		inviteList: invite[] = [],
 		groupMembers: GroupMembers[] = [];
 
-	onMount(async () => {
-		//TODO: Get this from the userinfo sveltestore
-		const { json, res } = await fetchRequest('GET', 'user');
-		user = json;
-		await UserChatInviteList();
-		await getChattable();
-		await setUpPreview();
-		// await getWorkGroups();
-		workGroupsStore.subscribe((_workGroups) => (workGroupList = _workGroups));
-	});
-
 	const setUpPreview = async () => {
 		previewDirect = await getPreview('user');
 		previewGroup = await getPreview('group');
@@ -169,8 +158,19 @@
 		workGroupList = json.results;
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		getWorkGroups();
+		//TODO: Get this from the userinfo sveltestore
+		const { json, res } = await fetchRequest('GET', 'user');
+		user = json;
+		await UserChatInviteList();
+		await getChattable();
+		await setUpPreview();
+		// await getWorkGroups();
+		workGroupsStore.subscribe((_workGroups) => {
+			workGroupList = _workGroups
+			selectedChat = null
+		});
 	});
 
 	$: groups = sort(groups, previewGroup);
@@ -197,7 +197,6 @@
 	</div>
 
 	{#if selectedPage === 'group' && inviteList}
-
 		{#each inviteList as groupChat}
 			{#if !groupChat.rejected}
 				{#if groupChat.rejected === null}

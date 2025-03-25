@@ -608,9 +608,9 @@
     "Failed to revert edits": "Misslyckades att ångra redigeringar",
     "Reset": "Återställ",
     "Allows user to delete any proposal": "Tillåter användaren att ta bort valfritt förslag",
-    "Add Tag Description":"Lägg till ämnesområdesbeskrivning",
-    "Vote cancelled":"Röstningen avbröts",
-    "You've been invite to this chat:":"Du har blivit inbjuden till följande chatt:",
+    "Add Tag Description": "Lägg till ämnesområdesbeskrivning",
+    "Vote cancelled": "Röstningen avbröts",
+    "You've been invite to this chat:": "Du har blivit inbjuden till följande chatt:",
     "+ New Group": "+ Ny Grupp",
     "Successfully created group chat": "Gruppchatt skapades framgångsrikt",
     "Failed to created group chat": "Misslyckades att skapa gruppchatt",
@@ -620,7 +620,7 @@
     "Search threads": "Sök tråd",
     "Search polls": "Sök omröstning",
     "Failed to leave Group": "Det gick inte att lämna gruppen",
-
+    "Your session is about to expire, log back in?": "Din session håller på att löpa ut, logga in igen?",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

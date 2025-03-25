@@ -4,7 +4,8 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faChevronRight, faComment, faSquareCheck, faMagnifyingGlassChart, faSquare} from '@fortawesome/free-solid-svg-icons';
+	import { faChevronRight, faComment, faSquareCheck, faMagnifyingGlassChart} from '@fortawesome/free-solid-svg-icons';
+	import {faSquare} from '@fortawesome/free-regular-svg-icons'
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';

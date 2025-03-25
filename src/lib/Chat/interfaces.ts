@@ -1,14 +1,23 @@
 import { fetchRequest } from '$lib/FetchRequest';
 
 export interface Message {
-	message: string;
 	user: {
 		id: number;
 		username: string;
 		profile_image: string | null;
 	};
-	username?: string;
-	created_at?: string;
+	active: boolean;
+	attachments: null | File[];
+	channel_id: number;
+	channel_origin_name: 'workgroup' | string;
+	channel_title: string;
+	created_at: string;
+	id: number;
+	message: string;
+	parent: number | null;
+	topic_id: number | null;
+	type: 'message' | 'info';
+	updated_at: string;
 }
 
 export interface Message1 {
@@ -21,7 +30,7 @@ export interface Message1 {
 	message: string;
 	parent: number;
 	topic_id: number;
-	type: 'message';
+	type: 'message' | 'info';
 	updated_at: String;
 	user: { id: number; username: string; profile_image: string; banner_image: string };
 }

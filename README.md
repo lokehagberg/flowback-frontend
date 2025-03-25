@@ -3,6 +3,10 @@
 This project requires [node and npm](https://nodejs.org) and
 currently supports node version v22.9.0.
 
+To run the frontend you will need to set up both the [frontend](#set-up-the-frontend) and the [backend](#set-up-the-backend).
+
+
+## Set up the frontend
 ```bash
 # Downloading the files
 git clone https://github.com/lokehagberg/flowback-frontend.git
@@ -11,7 +15,7 @@ git clone https://github.com/lokehagberg/flowback-frontend.git
 npm install
 ```
 
-## Environment variables
+### Environment variables
 To get started, copy the `.env.dev.example` file and rename it to `.env` and adjust the values as needed.
 
 | Variable | Description |
@@ -32,26 +36,35 @@ To get started, copy the `.env.dev.example` file and rename it to `.env` and adj
 
 Then the .env.example file will give you the information needed to connect it to a backend instance of flowback. Once that is done you can run it
 
-## Running the project
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev --open
-```
-
-## Building
-
-To create a production version of your app:
-
+### Building
 ```bash
 npm run build
 ```
 
+### Running the project
+```bash
+npm run dev
+```
+Or start the server and open the app in a new browser tab
+```bash
+npm run dev --open
+```
+
+### Preview production
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
+## Set up the backend
+To set up the backend you will need to download the backend repository and follow the installation example for docker compose listed in the readme. The backend can be found at [https://github.com/lokehagberg/flowback-backend](https://github.com/lokehagberg/flowback-backend).
+
+To create an admin account you will need to navigate to the terminal in the docker container called "flowback-backend-1" and execute the following command.
+
+```python
+python manage.py createsuperuser
+```
+
+Now you are ready to login, navigate to `localhost:4000/login` and login with the created admin user.
 
 # Documentation for developers:
 

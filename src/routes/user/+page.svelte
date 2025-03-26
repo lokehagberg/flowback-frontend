@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import DefaultBanner from '$lib/assets/default_banner_user.png';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
@@ -16,7 +16,7 @@
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faPen, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faPen, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
@@ -276,21 +276,21 @@
 			<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
 				<label for="file-ip-1" class="inline">
 					<!-- Profile Picture -->
-					<img
-						src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-						class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
-						alt="avatar"
-						id="avatar"
-					/>
-					<input
-						class="hidden"
-						type="file"
-						name="file-ip-1"
-						id="file-ip-1"
-						accept="image/*"
-						on:change={handleCropProfileImage}
-					/></label
-				>
+				<img
+					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
+					class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+					alt="avatar"
+					id="avatar"
+				/>
+				<input
+					class="hidden"
+					type="file"
+					name="file-ip-1"
+					id="file-ip-1"
+					accept="image/*"
+					on:change={handleCropProfileImage}
+				/></label
+			>
 
 				<div class="flex flex-col gap-1 w-[40%]">
 					<TextInput

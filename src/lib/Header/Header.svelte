@@ -2,7 +2,7 @@
 	import HeaderIcon from './HeaderIcon.svelte';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/ReforumTransparent.png';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';

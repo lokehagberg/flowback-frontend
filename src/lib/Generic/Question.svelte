@@ -25,19 +25,19 @@
 		icon={faQuestion}
 	/>
 </div>
-{#if show}
+<!-- {#if show}
 	<div
 		class="absolute w-full top-5 break-words bg-white dark:bg-darkobject text-sm p-4 shadow-md rounded"
 	>
 		{$_(message)}
 	</div>
-{/if}
+{/if} -->
 
 <div class="inline relative w-full">
 	<!-- <div class="inline rounded-full border border-opacity-40 border-gray-400 px-[3px] hover:bg-gray-200 bg-white cursor-pointer" on:mouseover={() => (show = true)} on:mouseleave={() => (show = false)} on:focus>
 	</div> -->
 	{#if show}
-		<div class="absolute top-4 bg-white text-sm p-3">
+		<div class="absolute top-4 bg-white text-sm p-3 z-50">
 			{$_(message)}
 		</div>
 	{/if}

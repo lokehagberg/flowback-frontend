@@ -113,7 +113,7 @@
 			return;
 		}
 
-		invites.filter((invite) => invite.id === workGroupId);
+		invites = invites.filter((invite) => invite.id === workGroupId);
 		invites = invites;
 	};
 

@@ -9,14 +9,12 @@
 	import { faThumbTack, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import Description from '$lib/Poll/Description.svelte';
-
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import type { Thread } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 
 	export let isAdmin = true,
-		thread: Thread,
-		workGroup: WorkGroup | null;
+		thread: Thread;
 
 	let threads: Thread[] = [],
 		poppup: poppup;
@@ -74,10 +72,6 @@
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
 			on:click={() => goto(`${$page.params.groupId}/thread/${thread?.id}`)}>{thread?.title}</button
 		>
-		{#if workGroup}
-			<span class="text-sm text-gray-500 dark:text-darkmodeText">{workGroup}</span>
-		{/if}
-
 		<div class="flex gap-3">
 			<NotificationOptions
 				type="group_thread"
@@ -98,6 +92,15 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if thread?.work_group}
+		<span class="text-sm text-gray-500 dark:text-darkmodeText">#{thread.work_group.name}, </span>
+	{/if}
+	{#if thread?.created_at}
+		<span class="text-sm text-gray-500 dark:text-darkmodeText">
+			{new Date(thread.created_at).toISOString().split('T')[0].replace(/-/g, '.')}
+		</span>
+	{/if}
 	{#if thread?.description}
 		<Description limit={500} description={thread?.description} />
 	{/if}

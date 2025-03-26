@@ -142,8 +142,12 @@ export interface Thread {
 	pinned: boolean;
 	attachments: string[];
 	user_vote: null | boolean
-	score: number;
-	work_group?: number;
+	score: number,
+	created_at: string;
+	work_group?: { 
+		id: number;
+		name: string;
+	};
 }
 
 export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }

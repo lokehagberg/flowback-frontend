@@ -114,6 +114,7 @@
 				'GET',
 				`group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`
 			);
+			console.log(json.results);
 			polls = json.results;
 		}
 
@@ -166,9 +167,6 @@
 								<ThreadThumbnail
 									{isAdmin}
 									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
-									workGroup={workgroups.find((workgroup) =>
-										threads.find((thread) => thread.work_group === workgroup.id)
-									) || null}
 								/>
 							{:else if post.related_model === 'poll'}
 								<PollThumbnail

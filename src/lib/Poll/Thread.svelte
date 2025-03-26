@@ -11,6 +11,7 @@
 	import Description from '$lib/Poll/Description.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import type { Thread } from '$lib/Group/interface';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import { onMount } from 'svelte';
 
 	export let isAdmin = true,
@@ -72,7 +73,7 @@
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
 			on:click={() => goto(`${$page.params.groupId}/thread/${thread?.id}`)}>{thread?.title}</button
 		>
-		<div class="flex gap-3">
+		<div class="flex inline-flex gap-4 items-baseline">
 			<NotificationOptions
 				type="group_thread"
 				api={`group/thread/${thread?.id}`}
@@ -90,6 +91,12 @@
 					/>
 				</button>
 			{/if}
+
+			<MultipleChoices
+				labels={[$_('Delete Thread')]}
+				functions={[]}
+				Class="text-black justify-self-center"
+			/>
 		</div>
 	</div>
 

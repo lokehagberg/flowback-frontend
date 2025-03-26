@@ -6,7 +6,12 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import {
+		getPermissions,
+		getPermissionsFast,
+		getUserIsGroupAdmin,
+		type StatusMessageInfo
+	} from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -45,14 +50,16 @@
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
 		images: File[],
-		isFF = true,
+		isFF = false,
 		pushToBlockchain = true,
 		selected_poll: pollType = 'Text Poll',
 		selectedPage: 'poll' | 'thread' =
 			$page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
 		tags: { id: number }[] = [],
 		workGroups: WorkGroup[] = [],
-		workGroup: number;
+		workGroup: number,
+		permissions: any,
+		userIsOwner = false;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -176,9 +183,11 @@
 		workGroups = workGroups.filter((workGroup) => workGroup.joined);
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		getGroupTags();
 		getWorkGroupList();
+		permissions = await getPermissionsFast(Number(groupId));
+		userIsOwner = await getUserIsGroupAdmin(Number(groupId));
 	});
 
 	$: if (selectedPage) status = undefined;
@@ -283,7 +292,7 @@
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 			{/if}
 
-			{#if selectedPage === 'poll'}
+			{#if selectedPage === 'poll' && (permissions?.allow_fast_forward || userIsOwner)}
 				<RadioButtons bind:Yes={isFF} label="Fast Forward?" />
 			{/if}
 

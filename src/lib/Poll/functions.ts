@@ -50,7 +50,8 @@ export const dateLabels = [
 	'Results and evaluation'
 ];
 
-export const dateLabelsDatePoll = ['Schedule', 'Results'];
+export const dateLabelsDatePoll = ['Hasn\'t started yet',
+	'Schedule', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
 	switch (phase) {

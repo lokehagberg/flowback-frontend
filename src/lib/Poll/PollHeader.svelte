@@ -94,10 +94,12 @@
 				<span class="inline break-all">{poll.group_name}</span>
 			</a>
 			<!-- Current Phase -->
-			<div>
-				{$_('Current phase:')}
-				{$_(getPhaseUserFriendlyName(phase))}
-			</div>
+			{#if pollType === 4}
+				<div>
+					{$_('Current phase:')}
+					{$_(getPhaseUserFriendlyName(phase))}
+				</div>
+			{/if}
 		{/if}
 	</div>
 

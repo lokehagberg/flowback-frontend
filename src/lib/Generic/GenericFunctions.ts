@@ -18,7 +18,7 @@ export type StatusMessageInfo = {
 
 // Makes links clickable. For comments and descriptions
 export const checkForLinks = (text: string | null, id: string) => {
-	if (text === null) return '';
+	if (text === null || typeof text !== "string") return '';
 
 	const linkPattern = /https?:\/\/[^\s]+/g;
 	const linkified = text.replace(linkPattern, (match) => {

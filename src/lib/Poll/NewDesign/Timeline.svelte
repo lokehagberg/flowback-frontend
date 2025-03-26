@@ -25,7 +25,7 @@
 
 	let datesArray: string[] = [],
 		displayDetails = false,
-		dateLabels = poll.poll_type === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
+		dateLabels = poll?.poll_type === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
@@ -34,15 +34,15 @@
 		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
 		dates = [];
 
-		if (poll.poll_type === 4) {
+		if (poll?.poll_type === 4) {
 			dates = [
-				new Date(poll.start_date),
-				new Date(poll.area_vote_end_date),
-				new Date(poll.proposal_end_date),
-				new Date(poll.prediction_statement_end_date),
-				new Date(poll.prediction_bet_end_date),
-				new Date(poll.delegate_vote_end_date),
-				new Date(poll.end_date)
+				new Date(poll?.start_date),
+				new Date(poll?.area_vote_end_date),
+				new Date(poll?.proposal_end_date),
+				new Date(poll?.prediction_statement_end_date),
+				new Date(poll?.prediction_bet_end_date),
+				new Date(poll?.delegate_vote_end_date),
+				new Date(poll?.end_date)
 			];
 
 			//TODO: Refactor so this works by making it easy for varying number of phases.
@@ -61,8 +61,8 @@
 			} else if (phase === 'result' || phase === 'prediction_vote') {
 				currentPhaseIndex = 6;
 			}
-		} else if (poll.poll_type === 3) {
-			dates = [new Date(poll.start_date), new Date(poll.end_date)];
+		} else if (poll?.poll_type === 3) {
+			dates = [new Date(poll?.start_date), new Date(poll?.end_date)];
 
 			//TODO: Refactor so this works by making it easy for varying number of phases.
 			if (dates[1] > new Date()) {
@@ -84,25 +84,21 @@
 		});
 	};
 
-	$: if (phase) {
-		setupDates();
-	}
-
-	$: if (poll) {
+	$: if (phase || poll) {
 		setupDates();
 	}
 </script>
 
 <div class={`relative flex flex-col items-center ${Class}`}>
 	{#if displayTimelinePhase}
-	<div class="text-center">
-		<span class="font-semibold text-primary dark:text-secondary">
-			{$_('Current')}:
-		</span>
-		{$_('Phase')}
-		{currentPhaseIndex + 1}.
-		{$_(dateLabels[currentPhaseIndex + 1])}
-	</div>
+		<div class="text-center">
+			<span class="font-semibold text-primary dark:text-secondary">
+				{$_('Current')}:
+			</span>
+			{$_('Phase')}
+			{currentPhaseIndex + 1}.
+			{$_(dateLabels[currentPhaseIndex + 1])}
+		</div>
 	{/if}
 
 	{#if displayTimeline}
@@ -127,7 +123,7 @@
 				<HeaderIcon
 					Class="cursor-default"
 					size="1x"
-					text={`${i}. ${$_(dateLabels[i])}: ${datesArray[i]}`}
+					text={`${i + 1}. ${$_(dateLabels[i + 1])}: ${datesArray[i]}`}
 					{icon}
 				/>
 				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->

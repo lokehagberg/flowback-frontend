@@ -234,105 +234,107 @@
 		/>
 
 		<div class="!mt-4">
-			<!-- PHASE 1: AREA VOTE -->
-			{#if phase === 'area_vote'}
-				<form
-					on:submit|preventDefault={() => submitTagVote(selectedTag)}
-					class="flex justify-between"
-				>
-					<!-- <Select
-						label={''}
-						labels={tags.map((tag) => tag.name)}
-						bind:value={selectedTag}
-						values={tags.map((tag) => tag.id)}
-						Class="w-[47%] "
-						classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
-						onInput={() => (voting = true)}
-					/> -->
-					{#if voting}
-						<!-- <Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
-							>{$_('Save Vote')}</Button
-						> -->
-					{:else}
-						<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
-					{/if}
-				</form>
+			{#if poll.poll_type === 4}
+				<!-- PHASE 1: AREA VOTE -->
+				{#if phase === 'area_vote'}
+					<form
+						on:submit|preventDefault={() => submitTagVote(selectedTag)}
+						class="flex justify-between"
+					>
+						<Select
+							label={''}
+							labels={tags.map((tag) => tag.name)}
+							bind:value={selectedTag}
+							values={tags.map((tag) => tag.id)}
+							Class="w-[47%] "
+							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
+							onInput={() => (voting = true)}
+						/>
+						{#if voting}
+							<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
+								>{$_('Save Vote')}</Button
+							>
+						{:else}
+							<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
+						{/if}
+					</form>
 
-				<!-- PHASE 2: PROPOSAL CREATION -->
-			{:else if phase === 'proposal'}
-				<div class="flex justify-between">
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
-						>{$_('See Proposals')} ({poll.total_proposals})</Button
-					>
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
-						>{$_('Create a Proposal')}</Button
-					>
-				</div>
+					<!-- PHASE 2: PROPOSAL CREATION -->
+				{:else if phase === 'proposal'}
+					<div class="flex justify-between">
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
+							>{$_('See Proposals')} ({poll.total_proposals})</Button
+						>
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
+							>{$_('Create a Proposal')}</Button
+						>
+					</div>
 
-				<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
-			{:else if phase === 'prediction_statement'}
-				<div class="flex justify-between">
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
-						>{$_('See Predictions')} ({poll.total_predictions})</Button
-					>
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
-						>{$_('Create a Prediction')}</Button
-					>
-				</div>
+					<!-- PHASE 3: PREDICTION STATEMENT CREATION -->
+				{:else if phase === 'prediction_statement'}
+					<div class="flex justify-between">
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=0`)}
+							>{$_('See Predictions')} ({poll.total_predictions})</Button
+						>
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}?display=1`)}
+							>{$_('Create a Prediction')}</Button
+						>
+					</div>
 
-				<!-- PHASE 4: PREDICTION BETTING -->
-			{:else if phase === 'prediction_bet'}
-				<div class="flex justify-between">
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-						>{$_('Manage bets')}</Button
-					>
-					<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
-				</div>
+					<!-- PHASE 4: PREDICTION BETTING -->
+				{:else if phase === 'prediction_bet'}
+					<div class="flex justify-between">
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+							>{$_('Manage bets')}</Button
+						>
+						<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
+					</div>
 
-				<!-- PHASE 5 & 6: VOTING -->
-			{:else if phase === 'delegate_vote' || phase === 'vote'}
-				<div class="flex justify-between">
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-						>{$_('Manage votes')}</Button
-					>
-					<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
-				</div>
+					<!-- PHASE 5 & 6: VOTING -->
+				{:else if phase === 'delegate_vote' || phase === 'vote'}
+					<div class="flex justify-between">
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+							>{$_('Manage votes')}</Button
+						>
+						<!-- <p class="w-[47%]">{$_('You have not voted yet!')}</p> -->
+					</div>
 
-				<!-- PHASE 7: RESULTS AND EVALUATION -->
-			{:else if phase === 'prediction_vote' || phase === 'result'}
-				<div class="flex justify-between">
-					<Button
-						Class="w-[47%]"
-						buttonStyle="primary-light"
-						onClick={() =>
-							goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
-						>{$_('View results & evaluate predictions')}</Button
-					>
-				</div>
+					<!-- PHASE 7: RESULTS AND EVALUATION -->
+				{:else if phase === 'prediction_vote' || phase === 'result'}
+					<div class="flex justify-between">
+						<Button
+							Class="w-[47%]"
+							buttonStyle="primary-light"
+							onClick={() =>
+								goto(`/groups/${poll.group_id || $page.params.groupId}/polls/${poll.id}`)}
+							>{$_('View results & evaluate predictions')}</Button
+						>
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>

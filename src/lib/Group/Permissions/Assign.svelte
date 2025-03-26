@@ -2,13 +2,14 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import type { Permission } from './interface';
-	import type { groupUser } from '../interface';
+	import type { groupUser, User } from '../interface';
 	import Tag from '../Tag.svelte';
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
+	import Button from '$lib/Generic/Button.svelte';
 
 	let roles: Permission[] = [];
 	let users: groupUser[] = [];
@@ -29,16 +30,27 @@
 		users = json.results;
 	};
 
-	const updateUserRoles = async (roleId: number, userId:number) => {
+	const updateUserRoles = async (roleId: number, userId: number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
 			user: userId,
 			permission: roleId
 		});
 		
 		//@ts-ignore
-		users.find(user => user.user.id === userId)!.permission_name = roles.find(role => role.id === roleId)?.role_name
-		users = users
+		users.find((user) => user.user.id === userId)!.permission_name = roles.find(
+			(role) => role.id === roleId
+		)?.role_name;
+		users = users;
 	};
+	
+	const makeAdmin = async (user:User) => {
+		
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
+			user: user.user_id,
+			is_admin:1
+		});
+
+	}
 
 	onMount(() => {
 		getUsers();
@@ -53,10 +65,14 @@
 		<li class=" p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
 				<div class="flex">
-					<ProfilePicture username={user.user.username} profilePicture={user.user.profile_image} displayName />
+					<ProfilePicture
+						username={user.user.username}
+						profilePicture={user.user.profile_image}
+						displayName
+					/>
 				</div>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
-					<Tag tag={{active:true, id:1, name:user.permission_name}} imac={false} />
+					<Tag tag={{ active: true, id: 1, name: user.permission_name }} imac={false} />
 				</div>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
@@ -67,6 +83,7 @@
 				>
 					<Fa icon={faPlus} size="lg" />
 				</div>
+				<Button onClick={() => makeAdmin(user)}>Make admin</Button>
 			</div>
 			<div
 				class="p-6 mt-6 shadow rounded border border-gray-200 z-50 right-5"
@@ -83,7 +100,7 @@
 							on:keydown
 						>
 							<Tag
-								tag={{active:true, id:1, name:role.role_name}}
+								tag={{ active: true, id: 1, name: role.role_name }}
 								Class={`cursor-pointer ${user.user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
 							/>
 						</li>

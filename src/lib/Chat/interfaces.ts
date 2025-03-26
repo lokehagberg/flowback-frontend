@@ -48,6 +48,7 @@ export interface PreviewMessage {
 	//For group/preview
 	group_id?: number;
 	channel_id?: number;
+	channel_title?: string;
 	//For direct/preview
 	user: {
 		id: number;

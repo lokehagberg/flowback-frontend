@@ -8,15 +8,13 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Fa from 'svelte-fa';
-	import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
-	import { delegate } from '$lib/Blockchain_v1_Ethereum/javascript/delegationsBlockchain';
 
 	export let group: Group,
 		delegates: Delegate[] = [];
 
 	let tags: Tag[] = [],
-		userIsDelegate = false,
 		expandedSection: any = null,
 		delegateRelations: DelegateRelation[] = [],
 		poppup: poppup,

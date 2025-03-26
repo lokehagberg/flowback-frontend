@@ -62,8 +62,8 @@
 		userIsOwner = await getUserIsGroupAdmin($page.params.groupId);
 
 		const permission: Permissions = await getPermissionsFast($page.params.groupId);
-		userIsPermittedToCreatePost =
-			(permission !== undefined && permission !== null && permission.create_poll) || userIsOwner;
+		userIsPermittedToCreatePost = true
+			// (permission !== undefined && permission !== null && permission.create_poll) || userIsOwner;
 	});
 
 	//@ts-ignore

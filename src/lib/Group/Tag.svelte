@@ -34,9 +34,9 @@
 	</button>
 
 	{#if imac}
-		<div class="border-accent-tertiary px-1 border-2 w-[20%] text-center text-black text-xs dark:text-darkmodeText rounded-r">
+		<div class="border-accent-tertiary px-1 border-2 w-auto min-w-[20%] content-center text-center text-black text-xs dark:text-darkmodeText rounded-r">
 			{#if tag?.imac}
-				({tag?.imac})
+				{(tag.imac * 100).toFixed(0)}%
 			{:else}
 				?
 			{/if}

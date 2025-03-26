@@ -16,7 +16,7 @@
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faPen, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
@@ -25,6 +25,7 @@
 	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -205,14 +206,14 @@
 				</div>
 			</Button>
 		</div>
-		<div class="flex justify-around w-full max-w-[800px]">
+		<div class="flex justify-around w-full max-w-[850px]">
 			<img
 				src={profileImagePreview}
-				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
+				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile border border-gray-300"
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6">
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6 px-4">
 				<div class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words">
 					{user.username}
 				</div>
@@ -220,12 +221,29 @@
 					{user.bio || $_('This user has no bio')}
 				</p>
 			</div>
-			<div class="dark:text-darkmodeText py-6">
-				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
-				<a class={``} href={user.website || $_('None provided')}>
+			<div class="dark:text-darkmodeText py-6 w-[30%]">
+				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}
+					<button
+						on:click={() => {
+							isChatOpen.set(true);
+							chatPartner.set(user.id);
+						}}
+						class="pl-4"
+					>
+						<Fa icon={faPaperPlane} rotate="60" />
+					</button>
+
+				</div>
+				
+				<a 
+					class={``}
+					
+					href={user.website ? (user.website.startsWith('http://') || user.website.startsWith('https://') ? user.website : 'https://' + user.website) : '#'}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					{$_('Website')}: {user.website || ''}
 				</a>
-				<!-- <div>Phone number</div> -->
 				<p class="">
 					{$_('Phone number')}: {user.contact_phone || $_('None provided')}
 				</p>
@@ -252,14 +270,15 @@
 			/>
 		</label>
 		<form
-			class="w-full bg-white shadow rounded p-8 dark:bg-darkobject dark:text-darkmodeText"
+			class="bg-white w-full p-8 flex flex-col items-center justify-center dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
-			<label for="file-ip-1" class="inline">
-				<!-- Profile Picture -->
+			<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
+				<label for="file-ip-1" class="inline">
+					<!-- Profile Picture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+					class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 					alt="avatar"
 					id="avatar"
 				/>
@@ -273,131 +292,84 @@
 				/></label
 			>
 
-			{#if currentlyEditing === 'name'}
-				<TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Name'}
-					bind:value={userEdit.username}
-					Class="mt-6 pt-8 pb-8 inline"
-				/>
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'name')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
-				>
-					{$_(userEdit.username || 'Add Username')}
-				</button>
-			{/if}
+				<div class="flex flex-col gap-1 w-[40%]">
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Name'}
+						bind:value={userEdit.username}
+						Class="p-2 text-left"
+					/>
 
-			{#if currentlyEditing === 'phone'}
-				<div class="wrapper">
-					<select
-						class="country-select {!valid ? 'invalid' : ''}"
-						aria-label="Default select example"
-						name="Country"
-						bind:value={selectedCountry}
-					>
-						<option value={null} hidden={selectedCountry !== null}>Please select</option>
-						{#each normalizedCountries as currentCountry (currentCountry.id)}
-							<option
-								value={currentCountry.iso2}
-								selected={currentCountry.iso2 === selectedCountry}
-								aria-selected={currentCountry.iso2 === selectedCountry}
-							>
-								{currentCountry.iso2} (+{currentCountry.dialCode})
-							</option>
-						{/each}
-					</select>
-					<TelInput
-						bind:country={selectedCountry}
-						bind:value={userEdit.contact_phone}
-						bind:valid
-						bind:detailedValue
-						class="basic-tel-input {!valid ? 'invalid' : ''}"
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Website'}
+						bind:value={userEdit.website}
+						Class="p-2 text-left"
+					/>
+
+					<div class="wrapper">
+						<select
+							class="country-select {!valid ? 'invalid' : ''}"
+							aria-label="Default select example"
+							name="Country"
+							bind:value={selectedCountry}
+						>
+							<option value={null} hidden={selectedCountry !== null}>Please select</option>
+							{#each normalizedCountries as currentCountry (currentCountry.id)}
+								<option
+									value={currentCountry.iso2}
+									selected={currentCountry.iso2 === selectedCountry}
+									aria-selected={currentCountry.iso2 === selectedCountry}
+								>
+									{currentCountry.iso2} (+{currentCountry.dialCode})
+								</option>
+							{/each}
+						</select>
+						<TelInput
+							bind:country={selectedCountry}
+							bind:value={userEdit.contact_phone}
+							bind:valid
+							bind:detailedValue
+							class="basic-tel-input {!valid ? 'invalid' : ''}"
+						/>
+					</div>
+
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Mail'}
+						type="email"
+						bind:value={userEdit.contact_email}
+						Class="p-2 text-left"
+					/>
+
+					<TextArea
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Bio'}
+						bind:value={userEdit.bio}
+						Class="p-2 text-left"
+						inputClass="whitespace-pre-wrap"
 					/>
 				</div>
+			</div>
 
-				<!-- <TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Phone Number'}
-					bind:value={userEdit.contact_phone}
-					Class="mt-6 pt-8 pb-8 inline"
-				/> -->
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'phone')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
-				>
-					{$_(userEdit.contact_phone || 'Add phone number')}
-				</button>
-			{/if}
-
-			{#if currentlyEditing === 'web'}
-				<TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Website'}
-					bind:value={userEdit.website}
-					Class="pt-8 pb-8"
-				/>
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'web')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
-				>
-					{userEdit.website || $_('Add Website')}
-				</button>
-			{/if}
-
-			{#if currentlyEditing === 'email'}
-				<TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Mail'}
-					type="email"
-					bind:value={userEdit.contact_email}
-					Class="pt-8 pb-8"
-				/>
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'email')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
-				>
-					{userEdit.contact_email || $_('Add display email')}
-				</button>
-			{/if}
-
-			{#if currentlyEditing === 'bio'}
-				<TextArea
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Bio'}
-					bind:value={userEdit.bio}
-					Class="pt-8 pb-8 whitespace-pre-wrap"
-				/>
-			{:else}
-				<div
-					on:click={() => (currentlyEditing = 'bio')}
-					on:keydown
-					role="button"
-					tabindex="0"
-					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl whitespace-pre-wrap"
-				>
-					{userEdit.bio || $_('Add Bio')}
-				</div>
-			{/if}
-
-			<div class="flex justify-end gap-2">
+			<div class="flex gap-2 w-[50%]">
 				<Button
-					Class=""
+					Class="flex-1"
+					buttonStyle="warning-light"
 					onClick={() => {
 						isEditing = false;
 						profileImagePreview = oldProfileImagePreview;
 					}}>{$_('Cancel')}</Button
 				>
-				<Button Class="" onClick={updateProfile}>{$_('Save changes')}</Button>
+				<Button
+				Class="flex-1"
+				buttonStyle="primary-light"
+				onClick={updateProfile}>
+				{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}

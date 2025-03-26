@@ -122,10 +122,20 @@
 	</div>
 
 	<div class="mt-auto pt-4 flex gap-2">
-		<Button type="button" buttonStyle="primary-light" Class="flex-1" onClick={submitVote}>
+		<Button 
+			type="button" 
+			buttonStyle="primary-light" 
+			Class="flex-1" 
+			onClick={submitVote}
+			disabled={selectedTag === null}>
 			{$_('Submit')}
 		</Button>
-		<Button type="button" buttonStyle="warning-light" Class="flex-1" onClick={cancelVote} disabled={selectedTag === null}>
+		<Button 
+			type="button"
+			buttonStyle="warning-light"
+			Class="flex-1 disabled:!text-gray-300"
+			onClick={cancelVote}
+			disabled={selectedTag === null}>
 			{$_('Cancel')}
 		</Button>
 	</div>

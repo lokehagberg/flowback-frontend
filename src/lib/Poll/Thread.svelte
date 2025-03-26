@@ -6,7 +6,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
 	import Fa from 'svelte-fa';
-	import { faArrowDown, faArrowUp, faThumbTack } from '@fortawesome/free-solid-svg-icons';
+	import { faThumbTack, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 	import Description from '$lib/Poll/Description.svelte';
 
@@ -68,7 +68,7 @@
 	});
 </script>
 
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6">
+<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-[0_0_5px_rgb(203,203,203)] rounded-md">
 	<div class="flex justify-between items-center">
 		<button
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
@@ -117,19 +117,19 @@
 			</a>
 		</div>
 		<div>
-			<div class="flex gap-1">
-				{thread?.score}
+			<div class="flex items-center gap-2">
 				<button
 					class:text-primary={thread?.user_vote === true}
 					on:click={() => threadVote(thread, 'up')}
-				>
-					<Fa icon={faArrowUp} />
+					>
+					<Fa icon={faThumbsUp} />
 				</button>
+				{thread?.score}
 				<button
 					class:text-primary={thread?.user_vote === false}
 					on:click={() => threadVote(thread, 'down')}
 				>
-					<Fa icon={faArrowDown} />
+					<Fa class="pl-0.5" icon={faThumbsDown} />
 				</button>
 			</div>
 		</div>

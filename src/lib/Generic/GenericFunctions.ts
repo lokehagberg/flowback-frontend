@@ -95,6 +95,8 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 export const getPermissionsFast = async (groupId: number | string) => {
 
 	const userInfo = await getGroupUserInfo(groupId);
+	console.log(groupId, "INFO");
+	
 	if (userInfo === undefined) return;
 
 	if (userInfo?.permission_id) {

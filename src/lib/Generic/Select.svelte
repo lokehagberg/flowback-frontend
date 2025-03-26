@@ -17,7 +17,7 @@
 		charlimit = 30;
 </script>
 
-<div class={`${Class}`}>
+<div class={`${Class} border-2`}>
 	{#if label}
 		<label for={label}>{label}</label> <br />
 	{/if}

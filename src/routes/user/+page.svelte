@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import DefaultBanner from '$lib/assets/default_banner_user.png';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
@@ -16,7 +16,7 @@
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
@@ -256,7 +256,7 @@
 			on:submit|preventDefault={() => {}}
 		>
 			<label for="file-ip-1" class="inline">
-				<!-- Profile PIcture -->
+				<!-- Profile Picture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
 					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"

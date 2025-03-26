@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import { env } from '$env/dynamic/public';
 
 	export let username = '',

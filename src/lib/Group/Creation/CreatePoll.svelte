@@ -173,6 +173,7 @@
 
 		if (!res.ok) return;
 		workGroups = json.results;
+		workGroups = workGroups.filter((workGroup) => workGroup.joined);
 	};
 
 	onMount(() => {

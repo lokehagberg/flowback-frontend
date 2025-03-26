@@ -114,7 +114,11 @@
 		}
 
 		invites = invites.filter((invite) => invite.work_group_id !== workGroupId);
-		// invites = invites;
+		workGroups.forEach((workGroup) => {
+			if (workGroup.id === workGroupId && groupUserId === Number(localStorage.getItem('userId')))
+				workGroup.joined = true;
+		});
+		workGroups = workGroups;
 	};
 
 	onMount(async () => {

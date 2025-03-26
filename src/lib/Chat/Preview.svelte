@@ -147,7 +147,6 @@
 			if (invitee.id === invite_id) invitee.rejected = !accept;
 		});
 
-		
 		inviteList = inviteList;
 	};
 
@@ -198,9 +197,9 @@
 		/>
 	</div>
 
-	{#if selectedPage === 'group' && inviteList}
+	{#if selectedPage === 'direct' && inviteList}
 		{#each inviteList as groupChat}
-			{#if !groupChat.rejected}
+			{#if !groupChat.rejected && groupChat.title?.split(',')?.length > 2}
 				{#if groupChat.rejected === null}
 					<span>{$_("You've been invite to this chat:")}</span>
 
@@ -233,6 +232,39 @@
 			{/if}
 		{/each}
 	{/if}
+
+	{#each previewDirect as previewObject}
+		{#if selectedPage === 'direct' && previewObject.channel_title?.split(',')?.length > 2}
+			<button
+				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+				class:bg-gray-200={selectedChat === previewObject.channel_id}
+				class:dark:bg-gray-700={selectedChat === previewObject.channel_id}
+				on:click={() => {
+					clickedChatter(previewObject.channel_id);
+				}}
+			>
+				{#if //@ts-ignore
+				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
+					<div class="p-1 rounded-full" class:bg-purple-300={selectedPage === 'direct'} />
+				{/if}
+				<ProfilePicture
+					username={previewObject.channel_title}
+					profilePicture={previewObject.profile_image}
+				/>
+				<div class="flex flex-col max-w-[40%]">
+					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
+						>{previewObject.channel_title}</span
+					>
+					<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
+						{#if previewObject}
+							{previewObject.user.username}:
+							{previewObject.message}
+						{/if}
+					</span>
+				</div>
+			</button>
+		{/if}
+	{/each}
 
 	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
 		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}

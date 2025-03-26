@@ -140,6 +140,7 @@
 	});
 </script>
 
+
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>

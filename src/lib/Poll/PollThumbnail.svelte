@@ -240,7 +240,7 @@
 					on:submit|preventDefault={() => submitTagVote(selectedTag)}
 					class="flex justify-between"
 				>
-					<Select
+					<!-- <Select
 						label={''}
 						labels={tags.map((tag) => tag.name)}
 						bind:value={selectedTag}
@@ -248,11 +248,11 @@
 						Class="w-[47%] "
 						classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
 						onInput={() => (voting = true)}
-					/>
+					/> -->
 					{#if voting}
-						<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
+						<!-- <Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
 							>{$_('Save Vote')}</Button
-						>
+						> -->
 					{:else}
 						<p class="w-[47%] text-center">{$_('Successfully saved voting!')}</p>
 					{/if}

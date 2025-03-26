@@ -133,7 +133,7 @@
 		<Button 
 			type="button"
 			buttonStyle="warning-light"
-			Class="flex-1"
+			Class="flex-1 disabled:!text-gray-300"
 			onClick={cancelVote}
 			disabled={selectedTag === null}>
 			{$_('Cancel')}

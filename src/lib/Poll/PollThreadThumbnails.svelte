@@ -154,7 +154,7 @@
 			/>
 			{#if posts.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
-					{$_('No polls currently here')}
+					{$_('No posts currently here')}
 				</div>
 			{:else}
 				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
@@ -178,7 +178,7 @@
 						{/each}
 					{:else if !loading}
 						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-							{$_('No polls currently here')}
+							{$_('No posts currently here')}
 						</div>
 					{/if}
 				{/key}

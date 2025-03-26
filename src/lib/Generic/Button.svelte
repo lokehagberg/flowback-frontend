@@ -45,7 +45,7 @@
 	${buttonStyle === 'primary-light' && ' bg-white dark:bg-darkobject primary-light-inner-shadow'}
 	${
 		buttonStyle === 'warning-light' &&
-		' bg-white dark:bg-darkobject dark:text-darkmodeText text-red-400 border-[1px] border-red-400'
+		' bg-white dark:bg-darkobject dark:text-darkmodeText !text-red-400 border-[1px] border-red-400'
 	}`}
 	class:hover:brightness-[90%]={hoverEffect}
 	class:active:brightness-[92%]={hoverEffect}

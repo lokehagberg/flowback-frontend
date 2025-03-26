@@ -27,23 +27,21 @@
 		if (_thread?.user_vote === null && clicked === 'up') {
 			vote = true;
 			thread.score++;
-		}
-		if (_thread?.user_vote === null && clicked === 'down') {
+		} else if (_thread?.user_vote === null && clicked === 'down') {
 			vote = false;
 			thread.score--;
-		}
-		if (_thread?.user_vote === false && clicked === 'down') {
-			vote = null;
-			thread.score++;
 		} else if (_thread?.user_vote === false && clicked === 'up') {
 			vote = true;
 			thread.score += 2;
-		} else if (_thread?.user_vote === true && clicked === 'down') {
-			vote = false;
-			thread.score -= 2;
+		} else if (_thread?.user_vote === false && clicked === 'down') {
+			vote = null;
+			thread.score++;
 		} else if (_thread?.user_vote === true && clicked === 'up') {
 			vote = null;
 			thread.score--;
+		} else if (_thread?.user_vote === true && clicked === 'down') {
+			vote = false;
+			thread.score -= 2;
 		}
 
 		const { res, json } = await fetchRequest('POST', `group/thread/${_thread?.id}/vote`, { vote });

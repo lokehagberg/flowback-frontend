@@ -13,7 +13,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { faMagnifyingGlass, faPaperPlane, faRunning } from '@fortawesome/free-solid-svg-icons';
+	import { faMagnifyingGlass, faPaperPlane, faRunning, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -223,34 +223,28 @@
 		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
 		<!-- Search in Members list -->
-
-		<form
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4"
-			on:input|preventDefault={() => searchUsers(searchUserQuery)}
-		>
-			<TextInput
-				Class="w-4/5"
-				onInput={() => (searched = false)}
-				label=''
-				max={null}
-				search={true}
-				placeholder={$_('Search members')}
-				bind:value={searchUserQuery}
-			/>
-
-			<!-- <Button
-				Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
-					searched ? 'bg-blue-300' : 'bg-blue-600'
-				}`}
-				type="submit"
+		<div class="flex items-center gap-3 mb-4 w-full">
+			<form
+				class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-1 items-end gap-4"
+				on:input|preventDefault={() => searchUsers(searchUserQuery)}
 			>
-				<Fa icon={faMagnifyingGlass} />
-			</Button> -->
-		</form>
+				<TextInput
+					Class="w-full"
+					onInput={() => (searched = false)}
+					label=''
+					max={null}
+					search={true}
+					placeholder={$_('Search members')}
+					bind:value={searchUserQuery}
+				/>
+			</form>
 
-		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<Button Class="flex " onClick={() => (showInvite = true)}>{$_('Show invitations')}</Button>
-		{/if}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<Button Class="w-10 h-10 flex items-center justify-center" onClick={() => (showInvite = true)}>
+					<Fa size="lg" icon={faUserPlus} />
+				</Button>
+			{/if}
+		</div>
 
 		<!-- Members List -->
 

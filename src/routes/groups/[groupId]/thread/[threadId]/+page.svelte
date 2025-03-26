@@ -43,7 +43,7 @@
 		>
 			<div
 				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
-				on:click={() => goto(`/groups/${$page.params.groupId}?page=threads`)}
+				on:click={() => goto(`/groups/${$page.params.groupId}?page=flow`)}
 				on:keydown
 				role="button"
 				tabindex="0"

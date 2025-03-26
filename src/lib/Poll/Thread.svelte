@@ -23,18 +23,27 @@
 	const threadVote = async (_thread: Thread, clicked: 'down' | 'up') => {
 		let vote: null | false | true = null;
 
+		// TODO: There's gotta be a more elegant way to do this
+		if (_thread?.user_vote === null && clicked === 'up') {
+			vote = true;
+			thread.score++;
+		}
+		if (_thread?.user_vote === null && clicked === 'down') {
+			vote = false;
+			thread.score--;
+		}
 		if (_thread?.user_vote === false && clicked === 'down') {
 			vote = null;
 			thread.score++;
-		} else if (clicked === 'down') {
+		} else if (_thread?.user_vote === false && clicked === 'up') {
+			vote = true;
+			thread.score += 2;
+		} else if (_thread?.user_vote === true && clicked === 'down') {
 			vote = false;
-			thread.score--;
+			thread.score -= 2;
 		} else if (_thread?.user_vote === true && clicked === 'up') {
 			vote = null;
 			thread.score--;
-		} else if (clicked === 'up') {
-			vote = true;
-			thread.score++;
 		}
 
 		const { res, json } = await fetchRequest('POST', `group/thread/${_thread?.id}/vote`, { vote });
@@ -60,13 +69,11 @@
 		thread.pinned = !thread?.pinned;
 		threads = threads;
 	};
-
-	onMount(() => {
-		console.log('THREEAAAADD', thread);
-	});
 </script>
 
-<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-[0_0_5px_rgb(203,203,203)] rounded-md">
+<div
+	class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-[0_0_5px_rgb(203,203,203)] rounded-md"
+>
 	<div class="flex justify-between items-center">
 		<button
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
@@ -124,7 +131,7 @@
 				<button
 					class:text-primary={thread?.user_vote === true}
 					on:click={() => threadVote(thread, 'up')}
-					>
+				>
 					<Fa icon={faThumbsUp} />
 				</button>
 				{thread?.score}

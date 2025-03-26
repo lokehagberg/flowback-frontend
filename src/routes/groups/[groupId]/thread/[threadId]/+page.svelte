@@ -53,10 +53,6 @@
 
 			<h1 class="text-left text-2xl text-primary dark:text-secondary font-bold">{thread.title}</h1>
 
-			{#if thread.work_group}
-				<div class="grid-area-workgroup">{thread.work_group?.name}</div>
-			{/if}
-
 			<NotificationOptions
 				type="group_thread"
 				id={thread.id}
@@ -64,6 +60,17 @@
 				categories={['thread']}
 				labels={['thread']}
 			/>
+
+			<div class="grid-area-workgroup">
+				{#if thread.work_group}
+					<span class="text-sm text-gray-500 dark:text-darkmodeText">#{thread.work_group?.name}, </span>
+				{/if}
+				{#if thread.created_at}
+					<span class="text-sm text-gray-500 dark:text-darkmodeText">
+						{new Date(thread.created_at).toISOString().split('T')[0].replace(/-/g, '.')}
+					</span>
+				{/if}
+			</div>
 
 			{#if thread.description.length > 0}
 				<div class="grid-area-description py-2">

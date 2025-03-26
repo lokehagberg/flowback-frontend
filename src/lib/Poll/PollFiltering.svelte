@@ -90,7 +90,7 @@
 			bind:value={filter.order_by}
 		/>
 
-		<Select
+		<!-- <Select
 			Class="rounded p-1 flex flex-row items-center gap-1"
 			classInner="font-semibold border-0"
 			onInput={handleFinishedSelection}
@@ -113,7 +113,7 @@
 					{/each}
 				</select>
 			</div>
-		{/if}
+		{/if} -->
 
 		<div class="rounded p-1">
 			<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}

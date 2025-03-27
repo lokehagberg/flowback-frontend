@@ -22,7 +22,7 @@
 		workGroups: any[] = [];
 
 	const getThreads = async () => {
-		let url = `group/${$page.params.groupId}/thread/list?limit=${threadsLimit}&order_by=pinned,created_at_desc`;
+		let url = `group/thread/list?group_ids=${$page.params.groupId}&limit=${threadsLimit}&order_by=pinned,created_at_desc`;
 		if (searchQuery) {
 			url += `&title__icontains=${searchQuery}`;
 		}

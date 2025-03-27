@@ -23,7 +23,7 @@
 	const getThread = async () => {
 		const { json, res } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/thread/list?id=${$page.params.threadId}`
+			`group/thread/list?group_ids=${$page.params.groupId}&id=${$page.params.threadId}`
 		);
 
 		if (!res.ok) {

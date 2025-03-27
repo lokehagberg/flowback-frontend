@@ -172,7 +172,6 @@
 									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
 								/>
 							{:else if post.related_model === 'poll'}
-								{@debug post}
 								<PollThumbnail
 									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
 									{isAdmin}

@@ -32,7 +32,7 @@
 	const setUpDraggable = async () => {
 		const { Swappable } = await import('@shopify/draggable');
 		const draggable = new Swappable(document.getElementById('monthView'), {
-			draggable: '.draggable-item'
+			draggable: 'swappable'
 		});
 
 		draggable.on('drag:stop', (e: any) => {

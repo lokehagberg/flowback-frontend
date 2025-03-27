@@ -34,7 +34,10 @@
 				proposal_id: number;
 				is_true: boolean;
 			}[];
-		} = { segments: [] },
+		} = { 
+			segments: [],
+			end_date: new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)
+		},
 		bets: PredictionBet[] = [],
 		poppup: poppup,
 		pushingToBlockchain = true;
@@ -209,7 +212,7 @@
 			{$_('Deadline for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
-				min={new Date(new Date(poll.end_date).getTime())}
+				min={new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)}
 				max={maxDatePickerYear}
 			/>
 		</div>

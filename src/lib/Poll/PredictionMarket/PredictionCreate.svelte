@@ -209,7 +209,7 @@
 			{$_('Deadline for prediction')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
-				min={new Date()}
+				min={new Date(new Date(poll.end_date).getTime())}
 				max={maxDatePickerYear}
 			/>
 		</div>

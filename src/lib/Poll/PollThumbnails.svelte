@@ -107,9 +107,9 @@
 
 			const { res, json } = await fetchRequest(
 				'GET',
-				`group/${
+				`group/thread/list?group_id=${
 					$page.params.groupId
-				}/thread/list?limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
+				}limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
 			);
 		}
 	};

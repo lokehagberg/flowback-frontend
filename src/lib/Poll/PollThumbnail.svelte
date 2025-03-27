@@ -213,7 +213,7 @@
 				<Tag tag={{ name: poll?.tag_name, id: poll?.tag_id, active: true, imac: 0 }} />
 			{/if}
 
-			{#if poll.poll_type === 4}
+			{#if poll?.poll_type === 4}
 			<!-- Phase -->
 			<div class="text-sm font-semibold text-primary dark:text-secondary">
 				{$_('Current phase')}

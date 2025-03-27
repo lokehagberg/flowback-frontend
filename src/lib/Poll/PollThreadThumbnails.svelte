@@ -15,6 +15,7 @@
 	import type { DelegateMinimal, Thread } from '$lib/Group/interface';
 	import ThreadThumbnail from './Thread.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import { env } from '$env/dynamic/public';
 
 	export let Class = '',
 		infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user',
@@ -53,7 +54,8 @@
 		if (infoToGet === 'home') API += `home/polls?`;
 		// else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
-		else if (infoToGet === 'user' || infoToGet === 'group') API += `user/home?group_ids=${$page.params.groupId}`;
+		else if (infoToGet === 'user' || infoToGet === 'group')
+			API += `user/home?group_ids=${$page.params.groupId}`;
 		// else if (infoToGet === 'user') API += `home/polls?`;
 		//TODO remove public
 		else if (infoToGet === 'public') API += `home/polls?public=true`;
@@ -123,9 +125,9 @@
 
 			const { res, json } = await fetchRequest(
 				'GET',
-				`group/${
+				`group/thread/list?group_ids=${
 					$page.params.groupId
-				}/thread/list?limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
+				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
 			);
 
 			threads = json.results;
@@ -134,13 +136,14 @@
 
 	onMount(async () => {
 		await getPolls();
-		sharedThreadPollFixing();
+
+		if (!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')) sharedThreadPollFixing();
+
 		getWorkGroups();
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
 </script>
-
 
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
@@ -169,6 +172,7 @@
 									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
 								/>
 							{:else if post.related_model === 'poll'}
+								{@debug post}
 								<PollThumbnail
 									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
 									{isAdmin}

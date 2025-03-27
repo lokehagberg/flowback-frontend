@@ -206,10 +206,12 @@
 						{#if isSelected}
 							<svg width="50" height="100" viewBox="0 0 50 100" xmlns="http://www.w3.org/2000/svg">
 								<!-- Vertical line -->
-								<line x1="25" y1="10" x2="25" y2="90" stroke="#0D47A1" stroke-width="4" />
+								<line x1="25" y1="20" x2="25" y2="90" stroke="#0D47A1" stroke-width="4" />
 
 								<!-- Top circle anchor point -->
-								<circle cx="25" cy="10" r="5" fill="#0D47A1" />
+								<circle cx="25" cy="20" r="12" fill="#0D47A1" />
+
+								<text x="25" y="25" font-size="14" fill="white" text-anchor="middle">{index + 1}</text>
 							</svg>
 						{/if}
 					</swappable>

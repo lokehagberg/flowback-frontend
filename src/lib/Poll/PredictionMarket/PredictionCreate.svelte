@@ -174,7 +174,7 @@
 	<span class="flex-1 font-semibold text-primary dark:text-secondary">{$_('New Prediction')}</span>
 	<div class="flex-1">
 		<Question 
-		 	message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
+		 	message={`Predict on what will happen if a proposal is implemented in reality.`}
 		/><br />
 	</div>
 </div>

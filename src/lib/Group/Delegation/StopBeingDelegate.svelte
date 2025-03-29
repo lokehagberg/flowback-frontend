@@ -54,5 +54,6 @@
 	};
 </script>
 
-<Button Class={`bg-red-500 ${Class}`} onClick={deleteDelegation}>{$_('Stop being delegate')}</Button>
+<Button Class={`bg-red-500 ${Class}`} onClick={deleteDelegation}>{$_('Stop being delegate')}</Button
+>
 <Poppup bind:poppup />

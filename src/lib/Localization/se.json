@@ -626,7 +626,10 @@
     "Failed to add user to group": "Misslyckades att lägga till användare i gruppen",
     "On this page you can become a delegate (someone who votes publicly that others can delegate their vote to), or delegate your vote temporarily to delegates in subject areas (automatically copying what they vote for in polls in the subject areas you delegate to them in, with the possibility to override their vote and vote yourself).": "På den här sidan kan du bli delegat (en person som röstar offentligt så att andra kan delegera sin röst till dig), eller delegera din röst tillfälligt till delegater inom specifika ämnesområden (genom att automatiskt kopiera hur de röstar i omröstningar inom de ämnesområden du delegerar till dem, med möjlighet att åsidosätta deras röst och rösta själv).",
     "There are currently no delegates for this group": "Det finns för närvarande inga delegater för denna grupp",
-    "Clear Choice":"Ta bort val",
+    "Clear Choice": "Ta bort val",
+    "Allows user to fast forward polls": "Tillåter användare att snabbspola omröstningar",
+    "Allows user to create posts": "Tillåter användare att skapa inlägg",
+    "Create post": "Skapa inlägg",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

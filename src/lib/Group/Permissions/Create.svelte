@@ -18,7 +18,7 @@
 			title: 'Invite',
 			description: 'Allows user to invite other people in the invitation tab'
 		},
-		{ title: 'Create poll', description: 'Allows user to create polls' },
+		{ title: 'Create post', description: 'Allows user to create posts' },
 		{
 			title: 'Voting rights',
 			description: 'Allows user to vote on proposals in polls'
@@ -30,7 +30,7 @@
 		{ title: 'Ban users', description: 'Allows user to ban users from the group' },
 		{
 			title: 'Fast Forward Poll',
-			description: 'Allows user to change timeline phase on a poll'
+			description: 'Allows user to fast forward polls'
 		},
 		{
 			title: 'Create Proposal',

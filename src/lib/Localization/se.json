@@ -630,6 +630,9 @@
     "Tasks": "Uppgifter",
     "Template deleted successfully": "Tidsmallen har raderats",
     "Could not delete template": "Tidsmallen kunde inte raderas",
+    "Being a part of a work group means that you will join that work group's chat, have access to viewing and creating tasks, events, and posts assigned to that work group. Work groups have no individual pages.": "Att vara en del av en arbetsgrupp innebär att du går med i den arbetsgruppens chatt, har tillgång till att visa och skapa uppgifter, händelser och inlägg som tilldelats den arbetsgruppen. Arbetsgrupper har inga enskilda sidor.",
+    "We have sent a verification code to the provided email.": "Vi har skickat en verifieringskod till den angivna e-postadressen.",
+    "No Fast Forward": "Ingen Snabbspolning",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

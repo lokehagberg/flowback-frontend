@@ -13,6 +13,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Description from '$lib/Poll/Description.svelte';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	let thread: Thread, poppup: poppup;
 
@@ -39,7 +40,7 @@
 <Layout centered>
 	{#if thread}
 		<div
-			class="pt-4 max-w-[1000px] bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center"
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText rounded shadow w-full poll-header-grid items-center py-4"
 		>
 			<div
 				class="cursor-pointer bg-white dark:bg-darkobject dark:text-darkmodeText justify-center m-auto"
@@ -51,15 +52,22 @@
 				<Fa icon={faArrowLeft} />
 			</div>
 
-			<h1 class="text-left text-2xl text-primary dark:text-secondary font-bold">{thread.title}</h1>
+			<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold">{thread.title}</h1>
 
-			<NotificationOptions
-				type="group_thread"
-				id={thread.id}
-				api={`group/thread/${thread.id}`}
-				categories={['thread']}
-				labels={['thread']}
-			/>
+			<div class="flex inline-flex gap-4 items-baseline">
+				<NotificationOptions
+					type="group_thread"
+					id={thread.id}
+					api={`group/thread/${thread.id}`}
+					categories={['thread']}
+					labels={['thread']}
+				/>
+				<MultipleChoices
+					labels={[$_('Delete Thread')]}
+					functions={[]}
+					Class="text-black justify-self-center"
+				/>
+			</div>
 
 			<div class="grid-area-workgroup">
 				{#if thread.work_group}

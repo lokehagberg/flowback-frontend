@@ -138,8 +138,7 @@
 		await getPolls();
 
 		if (!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')) sharedThreadPollFixing();
-
-		getWorkGroups();
+		else getWorkGroups();
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});

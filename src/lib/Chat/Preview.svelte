@@ -160,14 +160,13 @@
 	};
 
 	onMount(async () => {
-		getWorkGroups();
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getWorkGroups();
 		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
 		await UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
-		// await getWorkGroups();
 		workGroupsStore.subscribe((_workGroups) => {
 			workGroupList = _workGroups;
 			selectedChat = null;

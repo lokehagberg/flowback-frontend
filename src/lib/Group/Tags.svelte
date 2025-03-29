@@ -75,12 +75,16 @@
 	};
 </script>
 
-<!-- TODO: Nicer design -->
 <!-- <div class="bg-white rounded shadow p-6 dark:bg-darkobject"> -->
 <Loader bind:loading>
 	<form on:submit|preventDefault={addTag} class="pb-4 flex flex-col gap-2">
 		<TextInput label="Tag" max={50} bind:value={tagToAdd} required Class="flex-1" />
-		<TextArea label="Description" max={500} bind:value={tagDescription} inputClass="max-h-[15rem]" />
+		<TextArea
+			label="Description"
+			max={500}
+			bind:value={tagDescription}
+			inputClass="max-h-[15rem]"
+		/>
 		<Button
 			disabled={loading}
 			type="submit"
@@ -139,8 +143,12 @@
 		<span>{$_('You are removing')}: {selectedTag?.name}</span>
 	</div>
 	<div slot="footer" class="flex gap-2">
-		<Button onClick={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2">{$_('Yes')}</Button>
-		<Button onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+		<Button disabled={loading} onClick={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2"
+			>{$_('Yes')}</Button
+		>
+		<Button disabled={loading} onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+			>{$_('No')}</Button
+		>
 	</div>
 </Modal>
 

@@ -114,15 +114,11 @@
 		{
 			let API = '';
 
-			console.log(infoToGet, 'WINFO');
-
 			if (infoToGet === 'home') API = 'home/polls';
 			else if (infoToGet === 'group' || infoToGet === 'user')
 				API = `group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`;
 
 			const { res, json } = await fetchRequest('GET', API);
-			// console.log(json.results);
-			console.log(json, API, infoToGet, 'JASON');
 
 			polls = json.results;
 		}
@@ -135,14 +131,10 @@
 					$page.params.groupId
 				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`;
 
-			console.log(threadIds, 'Threads');
-
 			const { res, json } = await fetchRequest('GET', API);
 
 			threads = json.results;
 		}
-
-		console.log(posts, 'HIIII');
 	};
 
 	onMount(async () => {

@@ -137,21 +137,22 @@
 </script>
 
 <div class="flex items-center gap-3 mb-4">
-	<div class="bg-white dark:bg-darkobject p-4 shadow rounded flex-1">
+	<div class="bg-white dark:bg-darkobject p-4 shadow rounded flex-1 flex flex-col gap-2">
+		<span class="text-sm">{$_(`Being a part of a work group means that you will join that work group's chat, have access to viewing and creating tasks, events, and posts assigned to that work group. Work groups have no individual pages.`)}</span>
 		<TextInput
-			label=""
-			max={null}
-			search={true}
-			placeholder={$_('Search work groups')}
-			bind:value={search}
-			onInput={getWorkingGroupList}
+		label=""
+		max={null}
+		search={true}
+		placeholder={$_('Search work groups')}
+		bind:value={search}
+		onInput={getWorkingGroupList}
 		/>
 	</div>
-
+	
 	{#if isAdmin}
-		<Button onClick={() => (open = true)} Class="w-10 h-10 flex items-center justify-center">
-			<Fa icon={faPlus} class="text-lg" />
-		</Button>
+	<Button onClick={() => (open = true)} Class="w-10 h-10 flex items-center justify-center">
+		<Fa icon={faPlus} class="text-lg" />
+	</Button>
 	{/if}
 </div>
 

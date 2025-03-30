@@ -211,8 +211,8 @@
 			/>
 		</div>
 		<div class="flex ml-2 gap-2 items-start">
-			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 m-0 h-10" />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 m-0 h-10" type="submit" label=""
+			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 h-10" />
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 h-10 m-auto" type="submit" label=""
 				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg"/></Button
 			>
 		</div>

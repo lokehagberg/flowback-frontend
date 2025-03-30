@@ -288,7 +288,7 @@
 									isChatOpen.set(true);
 									chatPartner.set(user.user.id);
 								}}
-								Class=""
+								Class="text-primary"
 							>
 								<Fa icon={faPaperPlane} rotate="60" />
 							</button>

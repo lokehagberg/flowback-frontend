@@ -94,7 +94,6 @@
 		}
 
 		console.log(await getAPI());
-		
 
 		posts = json.results;
 		next = json.next;
@@ -118,12 +117,12 @@
 			console.log(infoToGet, 'WINFO');
 
 			if (infoToGet === 'home') API = 'home/polls';
-			else if (infoToGet === 'group')
+			else if (infoToGet === 'group' || infoToGet === 'user')
 				API = `group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`;
 
 			const { res, json } = await fetchRequest('GET', API);
 			// console.log(json.results);
-			console.log(json, 'JASON');
+			console.log(json, API, infoToGet, 'JASON');
 
 			polls = json.results;
 		}
@@ -131,7 +130,7 @@
 		{
 			let API = '';
 			if (infoToGet === 'home') API = 'group/thread/list?group_ids=1,2,3,4';
-			else if (infoToGet === 'group')
+			else if (infoToGet === 'group' || infoToGet === 'user')
 				API = `group/thread/list?group_ids=${
 					$page.params.groupId
 				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`;
@@ -143,9 +142,7 @@
 			threads = json.results;
 		}
 
-
-		console.log(posts, "HIIII");
-		
+		console.log(posts, 'HIIII');
 	};
 
 	onMount(async () => {
@@ -154,6 +151,7 @@
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getWorkGroups();
 		// else
 		sharedThreadPollFixing();
+
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});

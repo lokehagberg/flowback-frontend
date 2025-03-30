@@ -51,7 +51,7 @@
 		let API = '';
 		// console.log(delegate, {}, delegate === {});
 
-		if (infoToGet === 'home') API += `home/polls?`;
+		if (infoToGet === 'home') API += `user/home?`;
 		// else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
 		else if (infoToGet === 'user' || infoToGet === 'group')
@@ -93,6 +93,8 @@
 			return;
 		}
 
+		console.log(await getAPI());
+
 		posts = json.results;
 		next = json.next;
 		prev = json.previous;
@@ -103,42 +105,53 @@
 			//@ts-ignore
 			.map((poll) => (poll.related_model === 'poll' ? poll.id : undefined))
 			.filter((id) => id !== undefined);
-		//@ts-ignore
+
 		const threadIds = posts
 			//@ts-ignore
 			.map((poll) => (poll.related_model === 'group_thread' ? poll.id : undefined))
 			.filter((id) => id !== undefined);
-		//@ts-ignore
 
 		{
-			console.log(pollIds, 'pollz');
-			const { res, json } = await fetchRequest(
-				'GET',
-				`group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`
-			);
-			console.log(json.results);
+			let API = '';
+
+			console.log(infoToGet, 'WINFO');
+
+			if (infoToGet === 'home') API = 'home/polls';
+			else if (infoToGet === 'group' || infoToGet === 'user')
+				API = `group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`;
+
+			const { res, json } = await fetchRequest('GET', API);
+			// console.log(json.results);
+			console.log(json, API, infoToGet, 'JASON');
+
 			polls = json.results;
 		}
 
 		{
+			let API = '';
+			if (infoToGet === 'home') API = 'group/thread/list?group_ids=1,2,3,4';
+			else if (infoToGet === 'group' || infoToGet === 'user')
+				API = `group/thread/list?group_ids=${
+					$page.params.groupId
+				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`;
+
 			console.log(threadIds, 'Threads');
 
-			const { res, json } = await fetchRequest(
-				'GET',
-				`group/thread/list?group_ids=${
-					$page.params.groupId
-				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
-			);
+			const { res, json } = await fetchRequest('GET', API);
 
 			threads = json.results;
 		}
+
+		console.log(posts, 'HIIII');
 	};
 
 	onMount(async () => {
 		await getPolls();
 
-		if (!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')) sharedThreadPollFixing();
-		else getWorkGroups();
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getWorkGroups();
+		// else
+		sharedThreadPollFixing();
+
 		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});

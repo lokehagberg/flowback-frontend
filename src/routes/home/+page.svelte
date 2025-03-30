@@ -12,6 +12,7 @@
 	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
 	import { goto } from '$app/navigation';
+	import PollThreadThumbnails from '$lib/Poll/PollThreadThumbnails.svelte';
 
 	interface Invitation {
 		external: boolean;
@@ -82,5 +83,5 @@
 			{/each}
 		</ul>
 	{/if}
-	<PollThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
+	<PollThreadThumbnails infoToGet="home" Class="w-[95%] md:w-[70%] max-w-[770px] justify-center mt-6" />
 </Layout>

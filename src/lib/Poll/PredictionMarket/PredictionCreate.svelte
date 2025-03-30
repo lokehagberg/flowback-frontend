@@ -89,7 +89,7 @@
 			blockchain_id: 0,
 			title: ''
 		};
-		poppup = { message: 'Successfully created prediction statement', success: true };
+		poppup = { message: 'Successfully created consequence', success: true };
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.
@@ -174,7 +174,7 @@
 </script>
 
 <div class="flex flex-row mb-4">
-	<span class="flex-1 font-semibold text-primary dark:text-secondary">{$_('New Prediction')}</span>
+	<span class="flex-1 font-semibold text-primary dark:text-secondary">{$_('New Consequence')}</span>
 	<div class="flex-1">
 		<Question 
 		 	message={`Predict on what will happen if a proposal is implemented in reality.`}
@@ -209,7 +209,7 @@
 			<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
 		{/if}
 		<div class="mt-2">
-			{$_('Deadline for prediction')}
+			{$_('Deadline for consequence')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
 				min={new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)}

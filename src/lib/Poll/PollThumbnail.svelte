@@ -297,14 +297,14 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`)}
-							>{$_('See Predictions')} ({poll?.total_predictions})</Button
+							>{$_('See Consequences')} ({poll?.total_predictions})</Button
 						>
 						<Button
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`)}
-							>{$_('Create a Prediction')}</Button
+							>{$_('Create a Consequence')}</Button
 						>
 					</div>
 
@@ -316,7 +316,7 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`)}
-							>{$_('Manage bets')}</Button
+							>{$_('Manage Probabilities')}</Button
 						>
 						<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
 					</div>
@@ -342,7 +342,7 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`)}
-							>{$_('View results & evaluate predictions')}</Button
+							>{$_('View results & evaluate consequences')}</Button
 						>
 					</div>
 				{/if}

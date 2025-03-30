@@ -98,10 +98,15 @@
 				{comments.filter((comment) => comment?.message?.includes(proposal.title)).length}
 			</button>
 
-			<button class="flex items-center">
-				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md"/>
-				{predictionCount}
-			</button>
+			{#if phase !== 'proposal'}
+				<button class="flex items-center"
+				on:click={() => {
+					selectedProposal = proposal;
+				}}>
+					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md"/>
+					{predictionCount}
+				</button>
+			{/if}
 		</div>
 
 		<button

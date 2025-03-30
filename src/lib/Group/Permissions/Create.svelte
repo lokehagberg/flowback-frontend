@@ -48,24 +48,24 @@
 		{ title: 'Force Delete Proposal', description: 'Allows user to delete any proposal' },
 		{ title: 'Delete Comment', description: 'Allows user to delete any comment' },
 		{
-			title: 'Create Prediction Statement',
-			description: 'Allows user to create prediction statements in polls'
+			title: 'Create Consequence',
+			description: 'Allows user to create consequences in polls'
 		},
 		{
-			title: 'Delete Prediction Statement',
-			description: 'Allows user to delete prediction statements in polls'
+			title: 'Delete Consequence',
+			description: 'Allows user to delete consequences in polls'
 		},
 		{
-			title: 'Create Prediction Bet',
-			description: 'Allows user to create prediction bets in polls'
+			title: 'Create Consequence Probability',
+			description: 'Allows user to create consequence probabilities in polls'
 		},
 		{
-			title: 'Update Prediction Bet',
-			description: 'Allows user to modify prediction bets in polls'
+			title: 'Update Consequence Probability',
+			description: 'Allows user to modify consequence probabilities in polls'
 		},
 		{
-			title: 'Delete Prediction Bet',
-			description: 'Allows user to delete prediction bets in polls'
+			title: 'Delete Consequence Probability',
+			description: 'Allows user to delete consequence probabilities in polls'
 		}
 	];
 

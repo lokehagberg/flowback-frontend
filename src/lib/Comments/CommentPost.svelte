@@ -179,22 +179,30 @@
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
+		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full top-full border-gray-300 rounded"
 		class:!block={recentlyTappedButton === '#'}
 	>
-		{#if proposals}
-			{#each proposals as proposal}
-				<button
-					type="button"
-					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
-					on:click={() => {
-						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
-						recentlyTappedButton = '';
-					}}
-				>
-					{proposal.title}
-				</button>
-			{/each}
+
+
+		{#if proposals.length > 0}
+			<div class="max-h-48 overflow-y-auto">
+				<div class="px-4 py-2 font-semibold text-sm text-gray-600 border-b border-gray-200">
+					{$_('All proposals')}
+				</div>
+				<ul class="divide-y divide-gray-200">
+					{#each proposals as proposal}
+						<li
+							class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-4 py-2"
+							on:click={() => {
+								message = `${message}${proposal.title.replaceAll(' ', '-')} `;
+								recentlyTappedButton = '';
+							}}
+						>
+							{proposal.title}
+						</li>
+					{/each}
+				</ul>
+			</div>
 		{/if}
 	</div>
 	<div class="flex">

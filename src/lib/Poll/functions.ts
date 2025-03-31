@@ -44,7 +44,7 @@ export const dateLabels = [
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
-	'Prediction betting',
+	'Consequence probabilities',
 	'Delegate voting',
 	'Voting for non-delegates',
 	'Results and evaluation'

@@ -213,7 +213,7 @@
 							onClick={() => {
 								selectedProposal = null;
 								displayForm = true;
-							}}>{$_('Create Prediction')}</Button
+							}}>{$_('Create Consequence')}</Button
 						>
 					</div>
 					<div slot="right" class="relative h-full overflow-hidden">
@@ -227,7 +227,7 @@
 							</div>
 						{:else if proposalsToPredictionMarket.length === 0}
 							<span class="text-center block text-primary dark:text-secondary font-semibold pt-4">
-								{$_('To make a prediction, please select atleast one proposal')}
+								{$_('To make a consequence, please select at least one proposal')}
 							</span>
 						{:else if displayForm}
 							<Predictions bind:proposals bind:poll bind:proposalsToPredictionMarket />

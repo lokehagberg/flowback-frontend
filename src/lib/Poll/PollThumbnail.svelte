@@ -46,7 +46,8 @@
 		darkMode: boolean,
 		voting = true,
 		poppup: poppup,
-		deletePollModalShow = false;
+		deletePollModalShow = false,
+		hovering = false;
 
 	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
@@ -190,10 +191,18 @@
 			{#if poll?.allow_fast_forward}
 				<HeaderIcon Class="!p-0 !cursor-default" icon={faAnglesRight} text={'Fast Forward'} />
 			{:else}
-				<div class="relative w-4 h-4">
+				<div 
+					on:mouseover={() => (hovering = true)}
+					on:mouseleave={() => (hovering = false)}
+					class="relative w-4 h-4">					
 					<Fa style="position:absolute" icon={faAnglesRight} />
-
 					<Fa style="position:absolute" icon={faSlash} rotate="90" />
+					<div
+						class="absolute text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm z-50 w-[100px] left-[calc(50%-50px)] text-center filter opacity-80"
+						class:invisible={!hovering}
+					>
+						{$_('No Fast Forward')}
+					</div>
 				</div>
 			{/if}
 
@@ -288,14 +297,14 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`)}
-							>{$_('See Predictions')} ({poll?.total_predictions})</Button
+							>{$_('See Consequences')} ({poll?.total_predictions})</Button
 						>
 						<Button
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`)}
-							>{$_('Create a Prediction')}</Button
+							>{$_('Create a Consequence')}</Button
 						>
 					</div>
 
@@ -307,7 +316,7 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`)}
-							>{$_('Manage bets')}</Button
+							>{$_('Manage Probabilities')}</Button
 						>
 						<!-- <p class="w-[47%]">{$_('You have not betted yet!')}</p> -->
 					</div>
@@ -333,7 +342,7 @@
 							buttonStyle="primary-light"
 							onClick={() =>
 								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`)}
-							>{$_('View results & evaluate predictions')}</Button
+							>{$_('View results & evaluate consequences')}</Button
 						>
 					</div>
 				{/if}

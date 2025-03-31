@@ -149,7 +149,7 @@
 			<HeaderIcon
 				disableTextOnHover
 				icon={faListCheck}
-				text="Kanban"
+				text="Tasks"
 				href="kanban"
 				bind:selectedHref
 			/>

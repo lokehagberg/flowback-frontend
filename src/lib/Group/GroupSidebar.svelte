@@ -148,7 +148,7 @@
 				<GroupSidebarButton
 					action={() => action('kanban')}
 					isSelected={selectedPage === 'kanban'}
-					text="Group Kanban"
+					text="Group Tasks"
 					faIcon={faListCheck}
 				/>
 				<GroupSidebarButton

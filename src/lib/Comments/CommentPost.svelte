@@ -179,22 +179,30 @@
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
-		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full bottom-full"
+		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full top-full border-gray-300 rounded"
 		class:!block={recentlyTappedButton === '#'}
 	>
-		{#if proposals}
-			{#each proposals as proposal}
-				<button
-					type="button"
-					class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-2 py-1"
-					on:click={() => {
-						message = `${message}${proposal.title.replaceAll(' ', '-')} `;
-						recentlyTappedButton = '';
-					}}
-				>
-					{proposal.title}
-				</button>
-			{/each}
+
+
+		{#if proposals.length > 0}
+			<div class="max-h-48 overflow-y-auto">
+				<div class="px-4 py-2 font-semibold text-sm text-gray-600 border-b border-gray-200">
+					{$_('All proposals')}
+				</div>
+				<ul class="divide-y divide-gray-200">
+					{#each proposals as proposal}
+						<li
+							class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-4 py-2"
+							on:click={() => {
+								message = `${message}${proposal.title.replaceAll(' ', '-')} `;
+								recentlyTappedButton = '';
+							}}
+						>
+							{proposal.title}
+						</li>
+					{/each}
+				</ul>
+			</div>
 		{/if}
 	</div>
 	<div class="flex">
@@ -211,8 +219,8 @@
 			/>
 		</div>
 		<div class="flex ml-2 gap-2 items-start">
-			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 m-0 h-10" />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 m-0 h-10" type="submit" label=""
+			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 h-10" />
+			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 h-10 m-auto" type="submit" label=""
 				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg"/></Button
 			>
 		</div>

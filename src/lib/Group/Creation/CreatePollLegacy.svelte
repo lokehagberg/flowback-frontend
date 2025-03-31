@@ -281,7 +281,7 @@
 								</div>
 
 								<div>
-									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+									<h2 class="mt-4">{$_('Consequences creation end')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
@@ -291,7 +291,7 @@
 									/>
 								</div>
 								<div>
-									<h2 class="mt-4">{$_('Prediction bet end')}</h2>
+									<h2 class="mt-4">{$_('Consequence bet end')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection

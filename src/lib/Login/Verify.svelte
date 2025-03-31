@@ -77,10 +77,11 @@
 
 <Loader bind:loading>
 	<form class="gap-6 p-6 flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
+		<span>{$_('We have sent a verification code to the provided email.')}</span>
 		<TextInput label={'Verification Code'} bind:value={verification_code} required />
-		<TextInput label={'Password'} bind:value={password} type={'password'} required />
+		<TextInput label={'Choose a Password'} bind:value={password} type={'password'} required />
 		<RadioButtons
-			label="Do you want Email Notifications?"
+			label="Do you want to receive Email Notifications?"
 			centering={true}
 			bind:Yes={acceptedEmailNotifications}
 		/>

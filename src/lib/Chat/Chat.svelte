@@ -83,7 +83,7 @@
 			isChatOpen.set(false);
 			goto('/user/settings');
 		}}
-		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faCog} />
@@ -95,7 +95,7 @@
 			chatOpen = false;
 			isChatOpen.set(false);
 		}}
-		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
 		<div class="text-gray-800 dark:text-gray-200">
 			<Fa icon={faX} />
@@ -135,19 +135,19 @@
 <!-- Button which launches the chat, visible in bottom left corner when not in chat -->
 <button
 	on:click={() => {
-		chatOpen = true;
-		isChatOpen.set(true);
+		chatOpen = !chatOpen;
+		isChatOpen.set(chatOpen);
 	}}
 	class:small-notification={previewDirect.find((preview) => preview.notified)}
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
-	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
+	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	{#key darkMode}
 		<img
 			src={ChatIcon}
 			class="text-white"
 			style="filter: {getIconFilter(true, 'white')}"
-			alt="open chat"
+			alt="{chatOpen ? 'close chat' : 'open chat'}"
 		/>
 	{/key}
 </button>

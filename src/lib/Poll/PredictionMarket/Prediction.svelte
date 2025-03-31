@@ -40,11 +40,11 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Betting failed', success: false };
+			poppup = { message: 'Failed to send probability', success: false };
 			return;
 		}
 
-		poppup = { message: 'Successfully placed bet', success: true, show: true };
+		poppup = { message: 'Probability successfully sent', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -58,10 +58,10 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Betting failed to be deleted', success: false };
+			poppup = { message: 'Failed to delete probability', success: false };
 			return;
 		}
-		poppup = { message: 'Successfully placed bet', success: true };
+		poppup = { message: 'Probability successfully sent', success: true };
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -76,7 +76,7 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true };
+		poppup = { message: 'Successfully evaluated consequence', success: true };
 		prediction.user_prediction_statement_vote = vote;
 	};
 
@@ -108,7 +108,7 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true };
+		poppup = { message: 'Successfully evaluated consequence', success: true };
 
 		prediction.user_prediction_statement_vote = vote;
 	};
@@ -158,7 +158,7 @@
 		/>
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
 			<Button onClick={getAIPredictionBets}>
-				{$_('Get AI Prediction Bets')}
+				{$_('Get AI Consequence Probabilities')}
 			</Button>
 		{/if}
 	{/if}

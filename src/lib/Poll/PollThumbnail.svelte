@@ -79,7 +79,7 @@
 		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
 
 		if (selectedTagName) {
-			selectedTag = tags.find((tag) => tag.name === selectedTagName)?.id || 0;
+			selectedTag = tags?.find((tag) => tag.name === selectedTagName)?.id || 0;
 		}
 	};
 
@@ -254,9 +254,9 @@
 					>
 						<Select
 							label={''}
-							labels={tags.map((tag) => tag.name)}
+							labels={tags?.map((tag) => tag.name)}
 							bind:value={selectedTag}
-							values={tags.map((tag) => tag.id)}
+							values={tags?.map((tag) => tag.id)}
 							Class="w-[47%] "
 							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
 							onInput={() => (voting = true)}

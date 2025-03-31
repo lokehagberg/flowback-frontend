@@ -13,7 +13,7 @@
 	const request = async (api: string) => {
 		api = commaCleanup(api);
 		api = api.replace(`${env.PUBLIC_API_URL}/`, '');
-		// api = api.replace(`api/api`, 'api');
+		api = api.replace(`api/api`, 'api');
 
 		const { res, json } = await fetchRequest('GET', api);
 

@@ -159,11 +159,11 @@
 	};
 
 	const removeProposal = (proposal: proposal) => {
-		const i = proposalsToPredictionMarket.findIndex((_proposal) => {
-			_proposal === proposal;
-		});
-		proposalsToPredictionMarket.splice(i, 1);
-		proposalsToPredictionMarket = proposalsToPredictionMarket;
+		const i = proposalsToPredictionMarket.findIndex((_proposal) => _proposal.id === proposal.id);
+		if (i !== -1) {
+			proposalsToPredictionMarket.splice(i, 1);
+			proposalsToPredictionMarket = [...proposalsToPredictionMarket];
+		}
 	};
 
 	onMount(() => {

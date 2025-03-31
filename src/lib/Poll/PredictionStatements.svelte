@@ -55,9 +55,9 @@
 					{/if}
 					{#if phase === 'delegate_vote' || phase === 'vote'}
 						<span class="text-sm text-right"
-							>{$_('Bet')}:
+							>{$_('Probability')}:
 							{#if prediction.combined_bet}
-								{prediction.combined_bet}
+								{(prediction.combined_bet * 100).toFixed(0)}%
 							{:else if poll.status_prediction === '2'}
 								{$_('Calculating')}
 							{:else}

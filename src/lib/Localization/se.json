@@ -533,6 +533,7 @@
     "You do not have permission to create a post": "Du har inte behörighet att skapa ett inlägg",
     "Users requesting invite": "Användare som begär inbjudan",
     "Probability successfully sent": "Sannolikhet har skickats",
+    "Probability":"Sannolikhet",
     "Failed to send probability": "Det gick inte att skicka sannolikhet",
     "Failed to delete probability": "Det gick inte att ta bort sannolikhet",
     "Successfully updated probability": "Lyckades uppdatera sannolikhet",

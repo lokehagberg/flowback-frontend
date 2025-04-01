@@ -74,11 +74,11 @@
 	class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-[0_0_5px_rgb(203,203,203)] rounded-md"
 >
 	<div class="flex justify-between items-center">
-		<button
+		<a
 			class="break-all cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
-			on:click={() => goto(`${$page.params.groupId}/thread/${thread?.id}`)}>{thread?.title}</button
+			href={`groups/${thread?.created_by?.group_id}/thread/${thread?.id}`}>{thread?.title}</a
 		>
-		<div class="flex inline-flex gap-4 items-baseline">
+		<div class=" inline-flex gap-4 items-baseline">
 			<NotificationOptions
 				type="group_thread"
 				api={`group/thread/${thread?.id}`}
@@ -125,7 +125,7 @@
 		>
 			<a
 				class="text-black dark:text-darkmodeText flex justify-center gap-1"
-				href={`${$page.params.groupId}/thread/${thread?.id}`}
+				href={`${thread?.created_by?.group_id}/thread/${thread?.id}`}
 			>
 				<img class="w-5" src={ChatIcon} alt="open chat" />
 				<span class="inline">{thread?.total_comments} {'comments'}</span>

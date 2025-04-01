@@ -134,6 +134,10 @@ export interface Thread {
 		username: string;
 		profile_image: null | string;
 		banner_image: null | string;
+		is_admin: boolean;
+		permission_id: number;
+		permission_name: string;
+		group_id: number;
 	};
 	title: string;
 	id: number;
@@ -144,7 +148,7 @@ export interface Thread {
 	user_vote: null | boolean
 	score: number,
 	created_at: string;
-	work_group?: { 
+	work_group?: {
 		id: number;
 		name: string;
 	};

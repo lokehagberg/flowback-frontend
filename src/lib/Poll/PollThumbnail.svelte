@@ -124,7 +124,7 @@
 					? '/groups/1'
 					: `/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
 			>
-				{elipsis(poll?.title || "")}
+				{elipsis(poll?.title || '')}
 			</a>
 
 			<div class="inline-flex gap-4 items-baseline">
@@ -191,10 +191,11 @@
 			{#if poll?.allow_fast_forward}
 				<HeaderIcon Class="!p-0 !cursor-default" icon={faAnglesRight} text={'Fast Forward'} />
 			{:else}
-				<div 
+				<div
 					on:mouseover={() => (hovering = true)}
 					on:mouseleave={() => (hovering = false)}
-					class="relative w-4 h-4">					
+					class="relative w-4 h-4"
+				>
 					<Fa style="position:absolute" icon={faAnglesRight} />
 					<Fa style="position:absolute" icon={faSlash} rotate="90" />
 					<div
@@ -223,11 +224,11 @@
 			{/if}
 
 			{#if poll?.poll_type === 4}
-			<!-- Phase -->
-			<div class="text-sm font-semibold text-primary dark:text-secondary">
-				{$_('Current phase')}
-				{$_(getPhaseUserFriendlyNameWithNumber(phase))}
-			</div>
+				<!-- Phase -->
+				<div class="text-sm font-semibold text-primary dark:text-secondary">
+					{$_('Current phase')}
+					{$_(getPhaseUserFriendlyNameWithNumber(phase))}
+				</div>
 			{/if}
 		</div>
 
@@ -277,15 +278,17 @@
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
-								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`)}
-							>{$_('See Proposals')} ({poll?.total_proposals})</Button
+								goto(
+									`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`
+								)}>{$_('See Proposals')} ({poll?.total_proposals})</Button
 						>
 						<Button
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
-								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`)}
-							>{$_('Create a Proposal')}</Button
+								goto(
+									`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`
+								)}>{$_('Create a Proposal')}</Button
 						>
 					</div>
 
@@ -296,15 +299,17 @@
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
-								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`)}
-							>{$_('See Consequences')} ({poll?.total_predictions})</Button
+								goto(
+									`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=0`
+								)}>{$_('See Consequences')} ({poll?.total_predictions})</Button
 						>
 						<Button
 							Class="w-[47%]"
 							buttonStyle="primary-light"
 							onClick={() =>
-								goto(`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`)}
-							>{$_('Create a Consequence')}</Button
+								goto(
+									`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?display=1`
+								)}>{$_('Create a Consequence')}</Button
 						>
 					</div>
 

@@ -4,8 +4,13 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faChevronRight, faComment, faSquareCheck, faMagnifyingGlassChart} from '@fortawesome/free-solid-svg-icons';
-	import {faSquare} from '@fortawesome/free-regular-svg-icons'
+	import {
+		faChevronRight,
+		faComment,
+		faSquareCheck,
+		faMagnifyingGlassChart
+	} from '@fortawesome/free-solid-svg-icons';
+	import { faSquare } from '@fortawesome/free-regular-svg-icons';
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -27,7 +32,7 @@
 	const filterComments = () => {
 		comments = comments.filter(
 			//@ts-ignore
-			(comment) => !comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
+			(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
 		);
 	};
 
@@ -99,11 +104,13 @@
 			</button>
 
 			{#if phase !== 'proposal'}
-				<button class="flex items-center"
-				on:click={() => {
-					selectedProposal = proposal;
-				}}>
-					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md"/>
+				<button
+					class="flex items-center"
+					on:click={() => {
+						selectedProposal = proposal;
+					}}
+				>
+					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
 					{predictionCount}
 				</button>
 			{/if}

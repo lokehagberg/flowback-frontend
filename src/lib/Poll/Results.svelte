@@ -88,7 +88,7 @@
 			<Fa icon={faStar} color="orange" class="text-5xl" />
 			<div class="text-primary dark:text-secondary font-semibold text-lg text-center block">{$_('Results have also been added to Group Schedule')}!</div>
 		
-			{#if proposals.length > 0}
+			{#if proposals?.length > 0}
 				{#if proposals[0].title && proposals[0].description}
 					<div class="mt-2 text-center">
 						<span>{formatDateTime(proposals[0].title).date}</span>

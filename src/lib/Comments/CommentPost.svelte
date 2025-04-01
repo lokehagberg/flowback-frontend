@@ -69,7 +69,7 @@
 			score: 1,
 			edited: false,
 			attachments: files.map((file) => {
-				return { file: URL.createObjectURL(file)};
+				return { file: URL.createObjectURL(file) };
 			}),
 			message,
 			id: json,
@@ -182,9 +182,7 @@
 		class="hidden absolute z-50 bg-white dark:bg-darkbackground shadow w-full top-full border-gray-300 rounded"
 		class:!block={recentlyTappedButton === '#'}
 	>
-
-
-		{#if proposals.length > 0}
+		{#if proposals?.length > 0}
 			<div class="max-h-48 overflow-y-auto">
 				<div class="px-4 py-2 font-semibold text-sm text-gray-600 border-b border-gray-200">
 					{$_('All proposals')}
@@ -219,9 +217,17 @@
 			/>
 		</div>
 		<div class="flex ml-2 gap-2 items-start">
-			<FileUploads bind:files minimalist disableCropping Class="content-center p-2 rounded hover:bg-gray-100 h-10" />
-			<Button Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 h-10 m-auto" type="submit" label=""
-				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg"/></Button
+			<FileUploads
+				bind:files
+				minimalist
+				disableCropping
+				Class="content-center p-2 rounded hover:bg-gray-100 h-10"
+			/>
+			<Button
+				Class="bg-white dark:bg-darkbackground hover:!brightness-100 hover:bg-gray-100 p-2 h-10 m-auto"
+				type="submit"
+				label=""
+				><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg" /></Button
 			>
 		</div>
 	</div>

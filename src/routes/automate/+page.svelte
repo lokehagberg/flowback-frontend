@@ -88,6 +88,8 @@
 	const getDelegatePools = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
 
+		console.log(json.results, 'REULTA');
+
 		autovote = res.ok && json.results.length > 0;
 	};
 
@@ -128,7 +130,7 @@
 			{/if}
 
 			<div class="flex flex-col gap-4 my-4">
-				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && !userIsDelegate}
 					<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 					<div class="mt-3">
 						<div class="flex justify-between">

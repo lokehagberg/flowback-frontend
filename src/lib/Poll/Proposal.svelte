@@ -116,7 +116,8 @@
 					src={commentSymbol}
 					alt="Comment"
 					class="w-6 h-6 mr-2"
-					class:saturate-0={commentFilterProposalId !== proposal.id && commentFilterProposalId !== null}
+					class:saturate-0={commentFilterProposalId !== proposal.id &&
+						commentFilterProposalId !== null}
 				/>
 				{allComments.filter((comment) => comment?.message?.includes(proposal.title)).length}
 			</button>

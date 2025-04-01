@@ -8,11 +8,13 @@
 		Class = ""
 </script>
 
-<fieldset>
-	<h1 class="text-left text-sm">{$_(label)}</h1>
-	<div class={`mt-2 ${Class}`}>
+<fieldset class={Class}>
+	{#if label}
+		<h1 class="text-left text-sm">{$_(label)}</h1>
+	{/if}
+	<div class="flex items-center">
 		{#each labels as label}
-			<label class="mr-5 cursor-pointer" >
+			<label class="mr-5 cursor-pointer flex items-center gap-1" >
 				<input
 					type="checkbox"
 					name={label.label}

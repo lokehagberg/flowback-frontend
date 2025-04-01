@@ -9,13 +9,34 @@
 	import type { Tag } from '$lib/Group/interface';
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import Select from '$lib/Generic/Select.svelte';
+	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 
 	export let filter: Filter,
 		handleSearch: () => {},
 		tagFiltering = false;
+	
+	// Add new export for content type filtering
+	export let showThreads = true;
+	export let showPolls = true;
+
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
 		tags: Tag[] = [];
+
+	const contentTypeLabels = [
+		{ label: 'Threads', checked: true, id: 1 },
+		{ label: 'Polls', checked: true, id: 2 }
+	];
+
+	const handleContentTypeChange = (id: number) => {
+		if (id === 1) {
+			showThreads = !showThreads;
+			contentTypeLabels[0].checked = showThreads;
+		} else if (id === 2) {
+			showPolls = !showPolls;
+			contentTypeLabels[1].checked = showPolls;
+		}
+	};
 
 	const handleFinishedSelection = (e: any) => {
 		filter.finishedSelection = e.target.value;
@@ -76,7 +97,7 @@
 			bind:value={filter.search}
 		/>
 	</div>
-	<div class="flex gap-4">
+	<div class="flex gap-4 flex-wrap items-center">
 		<Select
 			Class="rounded p-1 flex flex-row items-center gap-1"
 			classInner="font-semibold border border-0"
@@ -87,45 +108,20 @@
 			bind:value={filter.order_by}
 		/>
 
-		<!-- <Select
-			Class="rounded p-1 flex flex-row items-center gap-1"
-			classInner="font-semibold border-0"
-			onInput={handleFinishedSelection}
-			values={['all', 'unfinished', 'finished']}
-			labels={[$_('All'), $_('Ongoing'), $_('Done')]}
-			label={$_('Status')}: 
-			bind:value={filter.finishedSelection}
+		<CheckboxButtons
+			label=""
+			labels={contentTypeLabels}
+			onChange={handleContentTypeChange}
 		/>
-
-		{#if tagFiltering}
-			<div class="rounded p-1 flex flex-row items-center gap-1">
-				<span>{$_('Work Group')}: </span>
-				<select
-					on:input={handleTags}
-					class="rounded p-1 border-0 font-semibold dark:border-gray-600 dark:bg-darkobject"
-				>
-					<option value={null}>{$_('All')}</option>
-					{#each tags as tag}
-						<option value={tag.id}>{elipsis(tag.name, 15)}</option>
-					{/each}
-				</select>
-			</div>
-		{/if} -->
 
 		<div class="rounded p-1">
-			<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
-				>{$_('Reset Filter')}</Button
+			<Button 
+				Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" 
+				buttonStyle="warning-light" 
+				onClick={resetFilter}
 			>
+				{$_('Reset Filter')}
+			</Button>
 		</div>
-
-		<!-- <CheckboxButtons
-			label={''}
-			labels={[
-				{ label: 'Finished', checked: false },
-				{ label: 'Not Finished', checked: false }
-			]}
-		/>
-	</div> -->
-		<!--<CheckboxButtons label={''} labels={[{label:'Public', checked:true}, {label:'Private', checked:true}]} /> -->
 	</div>
 </form>

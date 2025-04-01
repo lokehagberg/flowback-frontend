@@ -47,6 +47,9 @@
 		tag: null
 	};
 
+	let showThreads = true;
+	let showPolls = true;
+
 	// API Helpers
 	const buildApiUrl = async () => {
 		const params = new URLSearchParams();
@@ -158,6 +161,8 @@
 				tagFiltering={infoToGet === 'group'}
 				handleSearch={fetchPolls}
 				bind:filter
+				bind:showThreads
+				bind:showPolls
 			/>
 			
 			{#if posts.length === 0 && !loading}
@@ -168,12 +173,12 @@
 				{#key posts}
 					{#if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
 						{#each posts as post}
-							{#if post.related_model === 'group_thread'}
+							{#if post.related_model === 'group_thread' && showThreads}
 								<ThreadThumbnail
 									{isAdmin}
 									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
 								/>
-							{:else if post.related_model === 'poll'}
+							{:else if post.related_model === 'poll' && showPolls}
 								<PollThumbnail
 									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
 									{isAdmin}

@@ -16,7 +16,7 @@
 				<input
 					type="checkbox"
 					name={label.label}
-					value={label.checked}
+					checked={label.checked}
 					on:click={() => onChange(label.id)}
 					id={`input-${label.id}`}
 					class="cursor-pointer"

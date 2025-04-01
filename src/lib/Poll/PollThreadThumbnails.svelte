@@ -119,6 +119,7 @@
 			
 			const { json } = await fetchRequest('GET', pollsUrl);
 			polls = json.results;
+			console.log('Fetched polls:', polls);
 		}
 
 		// Fetch threads
@@ -129,6 +130,7 @@
 			
 			const { json } = await fetchRequest('GET', threadsUrl);
 			threads = json.results;
+			console.log('Fetched threads:', threads);
 		}
 	};
 

@@ -93,6 +93,19 @@
 			order_by: 'start_date_desc',
 			tag: null
 		};
+		// Reset content type checkboxes
+		showThreads = true;
+		showPolls = true;
+		contentTypeLabels[0].checked = true;
+		contentTypeLabels[1].checked = true;
+		
+		// Update localStorage
+		if (browser) {
+			localStorage.setItem('contentTypeState', JSON.stringify({
+				threads: true,
+				polls: true
+			}));
+		}
 	};
 
 	onMount(() => {

@@ -266,7 +266,7 @@
 								displayName
 							/>
 						</button>
-						{#if user.is_delegate}
+						{#if user.delegate_pool_id === null}
 							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
 								{$_('Delegate')}
 							</div>

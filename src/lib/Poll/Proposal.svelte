@@ -4,12 +4,18 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
-	import { faChevronRight, faComment, faSquareCheck, faMagnifyingGlassChart} from '@fortawesome/free-solid-svg-icons';
-	import {faSquare} from '@fortawesome/free-regular-svg-icons'
+	import {
+		faChevronRight,
+		faComment,
+		faSquareCheck,
+		faMagnifyingGlassChart
+	} from '@fortawesome/free-solid-svg-icons';
+	import { faSquare } from '@fortawesome/free-regular-svg-icons';
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import { commentsStore } from '$lib/Comments/commentStore';
 
 	export let proposal: proposal,
 		Class = '',
@@ -20,15 +26,26 @@
 		proposalsToPredictionMarket: proposal[] = [],
 		phase: Phase,
 		comments: Comment[] = [],
-		predictionCount = 0;
+		allComments: Comment[] = [],
+		predictionCount = 0,
+		commentFilterProposalId: number | null = null,
+		selectedForCommentFiltering = false;
 
 	export const id: number = 0;
 
 	const filterComments = () => {
-		comments = comments.filter(
-			//@ts-ignore
-			(comment) => !comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
-		);
+		if (commentFilterProposalId === proposal.id) {
+			comments = allComments;
+			commentFilterProposalId = null;
+		} else {
+			comments = allComments;
+			comments = comments.filter(
+				//@ts-ignore
+				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
+			);
+
+			commentFilterProposalId = proposal.id;
+		}
 	};
 
 	const getPredictionCount = async () => {
@@ -42,6 +59,7 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
+		allComments = comments;
 	});
 </script>
 
@@ -94,16 +112,24 @@
 	<div class="flex justify-between w-full">
 		<div class="flex justify-between gap-10">
 			<button class="flex" on:click={filterComments}>
-				<img src={commentSymbol} alt="Comment" class="w-6 h-6 mr-2" />
-				{comments.filter((comment) => comment?.message?.includes(proposal.title)).length}
+				<img
+					src={commentSymbol}
+					alt="Comment"
+					class="w-6 h-6 mr-2"
+					class:saturate-0={commentFilterProposalId !== proposal.id &&
+						commentFilterProposalId !== null}
+				/>
+				{allComments.filter((comment) => comment?.message?.includes(proposal.title)).length}
 			</button>
 
 			{#if phase !== 'proposal'}
-				<button class="flex items-center"
-				on:click={() => {
-					selectedProposal = proposal;
-				}}>
-					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md"/>
+				<button
+					class="flex items-center"
+					on:click={() => {
+						selectedProposal = proposal;
+					}}
+				>
+					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
 					{predictionCount}
 				</button>
 			{/if}

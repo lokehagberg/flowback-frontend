@@ -104,6 +104,7 @@
 
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-8 ml-6 dark:bg-darkobject p-2">
+			{#key creatingGroup}
 			<Preview
 				bind:selectedChat
 				bind:selectedPage
@@ -113,6 +114,7 @@
 				bind:creatingGroup
 				bind:groupMembers
 			/>
+			{/key}
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
 			{#if creatingGroup}

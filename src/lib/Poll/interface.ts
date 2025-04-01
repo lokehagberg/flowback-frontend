@@ -27,6 +27,7 @@ export interface poll {
 	attachments: { file: string }[];
 	allow_fast_forward: boolean;
 	created_by: number;
+	created_at: number;
 	description: string;
 	dynamic: boolean;
 	end_date: string;

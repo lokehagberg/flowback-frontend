@@ -10,6 +10,7 @@
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import Select from '$lib/Generic/Select.svelte';
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
+	import { browser } from '$app/environment';
 
 	export let filter: Filter,
 		handleSearch: () => {},
@@ -23,6 +24,20 @@
 	let searched = true,
 		tags: Tag[] = [];
 
+	// Initialize content type state from localStorage
+	const initializeContentTypeState = () => {
+		if (browser) {
+			const savedState = localStorage.getItem('contentTypeState');
+			if (savedState) {
+				const { threads, polls } = JSON.parse(savedState);
+				showThreads = threads;
+				showPolls = polls;
+				contentTypeLabels[0].checked = threads;
+				contentTypeLabels[1].checked = polls;
+			}
+		}
+	};
+
 	const contentTypeLabels = [
 		{ label: 'Threads', checked: true, id: 1 },
 		{ label: 'Polls', checked: true, id: 2 }
@@ -35,6 +50,14 @@
 		} else if (id === 2) {
 			showPolls = !showPolls;
 			contentTypeLabels[1].checked = showPolls;
+		}
+
+		// Save to localStorage
+		if (browser) {
+			localStorage.setItem('contentTypeState', JSON.stringify({
+				threads: showThreads,
+				polls: showPolls
+			}));
 		}
 	};
 
@@ -74,6 +97,7 @@
 
 	onMount(() => {
 		getTags();
+		initializeContentTypeState();
 	});
 
 	$: if (filter) handleSearch();
@@ -112,6 +136,7 @@
 			label=""
 			labels={contentTypeLabels}
 			onChange={handleContentTypeChange}
+			Class="flex items-center"
 		/>
 
 		<div class="rounded p-1">

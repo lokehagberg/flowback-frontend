@@ -2,8 +2,6 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { Filter } from './interface';
 	import { _ } from 'svelte-i18n';
-	import Fa from 'svelte-fa';
-	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
@@ -11,7 +9,6 @@
 	import type { Tag } from '$lib/Group/interface';
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import Select from '$lib/Generic/Select.svelte';
-	import { elipsis } from '$lib/Generic/GenericFunctions';
 
 	export let filter: Filter,
 		handleSearch: () => {},

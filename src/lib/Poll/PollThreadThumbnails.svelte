@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import PollFiltering from './PollFiltering.svelte';
-	import type { Filter, poll, poll as Poll, Post } from './interface';
+	import type { Filter, poll, Post } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
@@ -17,135 +17,137 @@
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 
-	export let Class = '',
-		infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user',
-		delegate: DelegateMinimal = { id: 0, pool_id: 0, profile_image: '', tags: [], username: '' };
-
-	let posts: Post[] = [],
-		filter: Filter = {
-			search: '',
-			finishedSelection: 'all',
-			public: false,
-			order_by: 'start_date_desc',
-			tag: null
-		},
-		polls: poll[] = [],
-		threads: Thread[] = [],
-		loading = false,
-		isAdmin = false,
-		next = '',
-		prev = '',
-		poppup: poppup,
-		workgroups: WorkGroup[] = [];
-
-	// Only for one-group flowback
-	const getWorkGroups = async () => {
-		const { res, json } = await fetchRequest('GET', 'group/1/list');
-
-		if (!res.ok) return;
-
-		workgroups = json.results;
+	// Props
+	export let Class = '';
+	export let infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user';
+	export let delegate: DelegateMinimal = { 
+		id: 0, 
+		pool_id: 0, 
+		profile_image: '', 
+		tags: [], 
+		username: '' 
 	};
 
-	const getAPI = async () => {
-		let API = '';
-		// console.log(delegate, {}, delegate === {});
-
-		if (infoToGet === 'home') API += `user/home?`;
-		// else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
-		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
-		else if (infoToGet === 'user' || infoToGet === 'group')
-			API += `user/home?group_ids=${$page.params.groupId}`;
-		// else if (infoToGet === 'user') API += `home/polls?`;
-		//TODO remove public
-		else if (infoToGet === 'public') API += `home/polls?public=true`;
-
-		if (filter.order_by) API += `&order_by=pinned,${filter.order_by}`;
-		else API += `&order_by=pinned`;
-
-		// API += `&limit=${pollThumbnailsLimit}`
-		API += `&limit=${pollThumbnailsLimit}`;
-
-		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
-
-		if (filter.finishedSelection !== 'all')
-			API += `&end_date${
-				filter.finishedSelection === 'finished' ? '__lt' : '__gt'
-			}=${new Date().toISOString()}`;
-
-		// API += '&pinned=false';
-
-		if (filter.tag) API += `&tag_id=${filter.tag}`;
-
-		return API;
+	// State
+	let posts: Post[] = [];
+	let polls: poll[] = [];
+	let threads: Thread[] = [];
+	let workgroups: WorkGroup[] = [];
+	let loading = false;
+	let isAdmin = false;
+	let next = '';
+	let prev = '';
+	let poppup: poppup;
+	
+	let filter: Filter = {
+		search: '',
+		finishedSelection: 'all',
+		public: false,
+		order_by: 'start_date_desc',
+		tag: null
 	};
 
-	const getPolls = async () => {
+	// API Helpers
+	const buildApiUrl = async () => {
+		const params = new URLSearchParams();
+		
+		// Base URL
+		let baseUrl = '';
+		if (infoToGet === 'home') {
+			baseUrl = 'user/home';
+		} else if (infoToGet === 'delegate') {
+			baseUrl = `group/poll/pool/${delegate.pool_id}/votes`;
+		} else if (infoToGet === 'user' || infoToGet === 'group') {
+			baseUrl = `user/home`;
+			params.append('group_ids', $page.params.groupId);
+		} else if (infoToGet === 'public') {
+			baseUrl = 'home/polls';
+			params.append('public', 'true');
+		}
+
+		// Add common params
+		params.append('order_by', filter.order_by ? `pinned,${filter.order_by}` : 'pinned');
+		params.append('limit', pollThumbnailsLimit.toString());
+
+		// Add conditional params
+		if (filter.search) params.append('title__icontains', filter.search);
+		if (filter.finishedSelection !== 'all') {
+			const comparison = filter.finishedSelection === 'finished' ? '__lt' : '__gt';
+			params.append(`end_date${comparison}`, new Date().toISOString());
+		}
+		if (filter.tag) params.append('tag_id', filter.tag.toString());
+
+		return `${baseUrl}?${params.toString()}`;
+	};
+
+	const fetchPolls = async () => {
 		loading = true;
 		posts = [];
 
-		const { json, res } = await fetchRequest('GET', await getAPI());
-
-		loading = false;
+		const apiUrl = await buildApiUrl();
+		const { json, res } = await fetchRequest('GET', apiUrl);
 
 		if (!res.ok) {
 			poppup = { message: 'Could not get polls', success: false };
+			loading = false;
 			return;
 		}
-
-		console.log(await getAPI());
 
 		posts = json.results;
 		next = json.next;
 		prev = json.previous;
+		loading = false;
 	};
 
-	const sharedThreadPollFixing = async () => {
+	const fetchRelatedContent = async () => {
 		const pollIds = posts
-			//@ts-ignore
-			.map((poll) => (poll.related_model === 'poll' ? poll.id : undefined))
-			.filter((id) => id !== undefined);
+			.filter(post => post.related_model === 'poll')
+			.map(post => post.id);
 
 		const threadIds = posts
-			//@ts-ignore
-			.map((poll) => (poll.related_model === 'group_thread' ? poll.id : undefined))
-			.filter((id) => id !== undefined);
+			.filter(post => post.related_model === 'group_thread')
+			.map(post => post.id);
 
-		{
-			let API = '';
-
-			if (infoToGet === 'home') API = 'home/polls';
-			else if (infoToGet === 'group' || infoToGet === 'user')
-				API = `group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`;
-
-			const { res, json } = await fetchRequest('GET', API);
-
+		// Fetch polls
+		if (pollIds.length) {
+			const pollsUrl = infoToGet === 'home' 
+				? 'home/polls'
+				: `group/${$page.params.groupId}/poll/list?id_list=${pollIds.join(',')}`;
+			
+			const { json } = await fetchRequest('GET', pollsUrl);
 			polls = json.results;
 		}
 
-		{
-			let API = '';
-			if (infoToGet === 'home') API = 'group/thread/list?group_ids=1,2,3,4';
-			else if (infoToGet === 'group' || infoToGet === 'user')
-				API = `group/thread/list?group_ids=${
-					$page.params.groupId
-				}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`;
-
-			const { res, json } = await fetchRequest('GET', API);
-
+		// Fetch threads
+		if (threadIds.length) {
+			const threadsUrl = infoToGet === 'home'
+				? 'group/thread/list?group_ids=1,2,3,4'
+				: `group/thread/list?group_ids=${$page.params.groupId}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.join(',')}`;
+			
+			const { json } = await fetchRequest('GET', threadsUrl);
 			threads = json.results;
 		}
 	};
 
+ 	// Only for one-group flowback
+	const fetchWorkGroups = async () => {
+		const { res, json } = await fetchRequest('GET', 'group/1/list');
+		if (res.ok) workgroups = json.results;
+	};
+
+	// Lifecycle
 	onMount(async () => {
-		await getPolls();
+		await fetchPolls();
 
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getWorkGroups();
-		// else
-		sharedThreadPollFixing();
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') {
+			await fetchWorkGroups();
+		} else {
+			await fetchRelatedContent();
+		}
 
-		//TODO: Part of refactoring with svelte stores includes this
-		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
+		if ($page.params.groupId) {
+			isAdmin = await getUserIsOwner($page.params.groupId) || false;
+		}
 	});
 </script>
 
@@ -154,21 +156,17 @@
 		<div class={`flex flex-col gap-6 w-full`}>
 			<PollFiltering
 				tagFiltering={infoToGet === 'group'}
-				handleSearch={async () => {
-					await getPolls();
-					// amendWithPinnedPolls();
-					return {};
-				}}
+				handleSearch={fetchPolls}
 				bind:filter
 			/>
+			
 			{#if posts.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No posts currently here')}
 				</div>
 			{:else}
-				<!-- <h1 class="text-3xl text-left">Flow</h1> -->
 				{#key posts}
-					{#if posts && posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
+					{#if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
 						{#each posts as post}
 							{#if post.related_model === 'group_thread'}
 								<ThreadThumbnail

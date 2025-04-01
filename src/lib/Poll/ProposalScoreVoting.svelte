@@ -9,6 +9,9 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import VotingSlider from './VotingSlider.svelte';
+	import { getGroupUserInfo } from '$lib/Generic/GenericFunctions';
+
+	import type { groupUser } from '$lib/Group/interface';
 
 	export let proposals: proposal[],
 		isVoting: boolean = false,
@@ -20,10 +23,10 @@
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
-		poppup: poppup;
+		poppup: poppup,
+		commentFilterProposalId: number | null = null;
 
 	onMount(async () => {
-		console.log('HERE PROPOSAL SCORE');
 		await getProposals();
 
 		voting = proposals.map((proposal) => ({
@@ -31,7 +34,11 @@
 			proposal: proposal.id
 		}));
 
-		if (proposals.length === 0) await getVotes();
+		console.log(proposals, 'PROP');
+		console.log('WHAT THA HELLL');
+
+		await getDelegateVotes();
+		await getVotes();
 		needsReload++;
 	});
 
@@ -50,6 +57,8 @@
 	};
 
 	const getVotes = async () => {
+		console.log('WHAT THA HELLL');
+
 		const { json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
@@ -67,21 +76,42 @@
 	};
 
 	const getDelegateVotes = async () => {
+		const a: groupUser = await getGroupUserInfo($page.params.groupId);
+
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/pool${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
+			`group/poll/pool/${a.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
 		);
 
 		if (!json.results || json.results.length === 0) return;
 
-		voting = voting.map((vote) => ({
-			score: (vote.score = json.results.find(
-				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
-			).raw_score),
-			proposal: vote.proposal
-		}));
+		console.log(voting, json.results[0].vote, 'VÖTE');
+
+		const votes = json.results[0].vote;
+
+		voting.forEach((proposal) => {
+			votes.forEach((vote: any) => {
+				if (proposal.proposal === vote.proposal_id) {
+					proposal.score = vote.raw_score;
+					console.log(proposal, vote, 'proposal.score = vote.raw_score');
+				}
+			});
+		});
 
 		voting = voting;
+
+		console.log(voting, 'VOTING????');
+
+		// voting = voting.map((vote) => ({
+		// 	score: (vote.score = json.results.find((v:any) => {
+		// 		console.log(vote, v, 'VOTINGÖÖ');
+		// 		//@ts-ignore
+		// 		(score: { score: number; proposal: number }) => score.proposal_id === vote.proposal_id;
+		// 	})?.raw_score),
+		// 	proposal: vote.proposal
+		// }));
+
+		// voting = voting;
 	};
 
 	const delegateVote = async () => {
@@ -154,6 +184,7 @@
 					<div class="border-b-2 border-gray-300 select-none">
 						<Proposal
 							bind:proposalsToPredictionMarket
+							bind:commentFilterProposalId
 							bind:selectedProposal
 							bind:comments
 							bind:phase

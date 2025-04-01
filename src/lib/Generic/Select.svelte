@@ -35,8 +35,10 @@
 		name={label}
 	>
 		<option value="" selected>{$_(innerLabel)}</option>
-		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
-		{/each}
+		{#if labels}
+			{#each labels as label, i}
+				<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
+			{/each}
+		{/if}
 	</select>
 </div>

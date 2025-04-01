@@ -20,7 +20,8 @@
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
-		poppup: poppup;
+		poppup: poppup,
+		commentFilterProposalId: number | null = null;
 
 	onMount(async () => {
 		console.log('HERE PROPOSAL SCORE');
@@ -154,6 +155,7 @@
 					<div class="border-b-2 border-gray-300 select-none">
 						<Proposal
 							bind:proposalsToPredictionMarket
+							bind:commentFilterProposalId
 							bind:selectedProposal
 							bind:comments
 							bind:phase

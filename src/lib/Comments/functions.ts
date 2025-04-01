@@ -39,8 +39,6 @@ export const getComments = async (
 ) => {
 	let _api = '';
 
-	console.log(api, "id, api, offset, sortBy, searchString");
-	
 	if (api === 'poll') _api += `group/poll/${id}`;
 	else if (api === 'thread') _api += `group/thread/${id}`;
 	else if (api === 'delegate-history') _api += `group/delegate/pool/${id}`;

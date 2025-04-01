@@ -114,23 +114,21 @@
 		// Fetch polls
 		if (pollIds.length) {
 			const pollsUrl = infoToGet === 'home' 
-				? 'home/polls'
-				: `group/${$page.params.groupId}/poll/list?id_list=${pollIds.join(',')}`;
+				? `home/polls?order_by=${filter.order_by}`
+				: `group/${$page.params.groupId}/poll/list?id_list=${pollIds.join(',')}&order_by=${filter.order_by}`;
 			
 			const { json } = await fetchRequest('GET', pollsUrl);
 			polls = json.results;
-			console.log('Fetched polls:', polls);
 		}
 
 		// Fetch threads
 		if (threadIds.length) {
 			const threadsUrl = infoToGet === 'home'
-				? 'group/thread/list?group_ids=1,2,3,4'
-				: `group/thread/list?group_ids=${$page.params.groupId}&limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.join(',')}`;
+				? `group/thread/list?group_ids=1,2,3,4&order_by=${filter.order_by}`
+				: `group/thread/list?group_ids=${$page.params.groupId}&limit=1000&order_by=pinned,${filter.order_by}&id_list=${threadIds.join(',')}`;
 			
 			const { json } = await fetchRequest('GET', threadsUrl);
 			threads = json.results;
-			console.log('Fetched threads:', threads);
 		}
 	};
 
@@ -154,6 +152,12 @@
 			isAdmin = await getUserIsOwner($page.params.groupId) || false;
 		}
 	});
+
+	// Fetch related content on filter changes
+	$: if (filter) {
+		fetchPolls();
+		fetchRelatedContent();
+	}
 </script>
 
 <div class={`${Class} dark:text-darkmodeText`}>

@@ -633,11 +633,12 @@
     "Template deleted successfully": "Tidsmallen har raderats",
     "Could not delete template": "Tidsmallen kunde inte raderas",
     "Being a part of a work group means that you will join that work group's chat, have access to viewing and creating tasks, events, and posts assigned to that work group. Work groups have no individual pages.": "Att vara en del av en arbetsgrupp innebär att du går med i den arbetsgruppens chatt, har tillgång till att visa och skapa uppgifter, händelser och inlägg som tilldelats den arbetsgruppen. Arbetsgrupper har inga enskilda sidor.",
-    "We have sent a verification code to the provided email.": "Vi har skickat en verifieringskod till den angivna e-postadressen.",
+    "We have sent a verification code to the provided email. Don't forget to check your junk mail!": "Vi har skickat en verifieringskod till den angivna e-postadressen. Glöm inte att kolla din skräppost!",
     "No Fast Forward": "Ingen Snabbspolning",
     "Allows user to fast forward polls": "Tillåter användare att snabbspola omröstningar",
     "Allows user to create posts": "Tillåter användare att skapa inlägg",
     "Create post": "Skapa inlägg",
+    "Username may only contain letters, numbers, and @/./+/-/_ characters. No spaces are allowed.": "Användarnamnet får endast innehålla bokstäver, siffror och @/./+/-/_ tecken. Mellanslag är inte heller tillåtna.",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

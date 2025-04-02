@@ -171,6 +171,14 @@
 			workGroupList = _workGroups;
 			selectedChat = null;
 		});
+		// chatPartner.subscribe((partner) => {
+		// 	console.log(previewDirect);
+
+		// 	const selected = previewDirect.find((user) => user.user.id === partner);
+
+		// 	selectedChat = selected?.channel_id || null;
+		// 	console.log(selectedChat, 'WHAA');
+		// });
 	});
 
 	$: groups = sort(groups, previewGroup);
@@ -266,6 +274,8 @@
 	{/each}
 
 	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
+		<!-- {chatter.id} -->
+
 		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}
 			{@const previewObject =
 				selectedPage === 'direct'

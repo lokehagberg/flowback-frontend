@@ -58,7 +58,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to delete probability', success: false };
+			poppup = { message: 'Failed to change probability', success: false };
 			return;
 		}
 		poppup = { message: 'Probability successfully sent', success: true };
@@ -83,7 +83,7 @@
 	const deleteEvaluation = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/bet/delete`
+			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
 
 		if (!res.ok) {
@@ -122,8 +122,8 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
-		console.log(newScore, "SCORE");
-		
+		console.log(newScore, 'SCORE');
+
 		// predictionBetCreate(newScore);
 		if (newScore === null || newScore === 2.5) predictionBetDelete();
 		// else if (score === null) {
@@ -142,10 +142,7 @@
 		score = Number(newScore);
 	};
 
-	onMount(() => {
-
-		
-	})
+	onMount(() => {});
 </script>
 
 <div class={Class}>

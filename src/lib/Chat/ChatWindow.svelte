@@ -19,6 +19,14 @@
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
 
+	export let selectedChat: number | null,
+		selectedChatChannelId: number | null,
+		user: User,
+		selectedPage: 'direct' | 'group',
+		previewDirect: PreviewMessage[] = [],
+		previewGroup: PreviewMessage[] = [],
+		isLookingAtOlderMessages: boolean;
+
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
 		olderMessages: string,
@@ -32,14 +40,6 @@
 		socket: WebSocket,
 		chatWindow: any,
 		errorState = false;
-
-	export let selectedChat: number | null,
-		selectedChatChannelId: number | null,
-		user: User,
-		selectedPage: 'direct' | 'group',
-		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [],
-		isLookingAtOlderMessages: boolean;
 
 	const getRecentMesseges = async () => {
 		if (!selectedChatChannelId) return;
@@ -271,9 +271,9 @@
 						<p
 							class="p-2 rounded-xl"
 							class:bg-primary={sentByUser}
-							class:dark:bg-gray-600={sentByUser}
 							class:text-white={sentByUser}
 							class:bg-gray-300={!sentByUser}
+							class:dark:bg-gray-600={sentByUser}
 							class:dark:bg-gray-500={!sentByUser}
 						>
 							{message.message}

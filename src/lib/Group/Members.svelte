@@ -285,6 +285,8 @@
 							> -->
 							<button
 								on:click={() => {
+									console.log(user, "USSR");
+									
 									isChatOpen.set(true);
 									chatPartner.set(user.user.id);
 								}}

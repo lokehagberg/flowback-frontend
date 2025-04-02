@@ -5,6 +5,9 @@ import type { Thread } from '$lib/Group/interface';
 import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 export class PollsApi {
+  /**
+   * Fetches posts based on the view context (home, group, delegate etc)
+   */
   static async getPosts(infoToGet: string, params: PollsParams, delegatePoolId?: number): Promise<ApiResponse<Post>> {
     const baseUrl = this.getBaseUrl(infoToGet, delegatePoolId);
     const queryParams = new URLSearchParams();
@@ -15,43 +18,48 @@ export class PollsApi {
       }
     });
 
-    return apiClient<ApiResponse<Post>>(`${baseUrl}?${queryParams.toString()}`, {
-      method: 'GET',
-      requiresAuth: true,
-      jsonResponse: true,
-    });
+    return apiClient<ApiResponse<Post>>(`${baseUrl}?${queryParams.toString()}`);
   }
 
-  static async getPolls(groupId: string | null, pollIds: number[], orderBy: string): Promise<ApiResponse<poll>> {
-    const url = groupId
-      ? `group/${groupId}/poll/list?id_list=${pollIds.join(',')}&order_by=${orderBy}`
-      : `home/polls?order_by=${orderBy}`;
-    
-    return apiClient<ApiResponse<poll>>(url, {
-      method: 'GET',
-      requiresAuth: true,
-      jsonResponse: true,
-    });
+  /**
+   * Fetches polls for a specific group
+   */
+  static async getGroupPolls(groupId: string, pollIds: number[], orderBy: string): Promise<ApiResponse<poll>> {
+    return apiClient<ApiResponse<poll>>(
+      `group/${groupId}/poll/list?id_list=${pollIds.join(',')}&order_by=${orderBy}`
+    );
   }
 
-  static async getThreads(groupId: string | null, threadIds: number[], orderBy: string): Promise<ApiResponse<Thread>> {
-    const url = groupId
-      ? `group/thread/list?group_ids=${groupId}&limit=1000&order_by=pinned,${orderBy}&id_list=${threadIds.join(',')}`
-      : `group/thread/list?group_ids=1,2,3,4&order_by=${orderBy}`;
-    
-    return apiClient<ApiResponse<Thread>>(url, {
-      method: 'GET',
-      requiresAuth: true,
-      jsonResponse: true,
-    });
+  /**
+   * Fetches polls for the home feed (across all groups)
+   */
+  static async getHomePolls(orderBy: string): Promise<ApiResponse<poll>> {
+    return apiClient<ApiResponse<poll>>(`home/polls?order_by=${orderBy}`);
   }
 
+  /**
+   * Fetches threads for a specific group
+   */
+  static async getGroupThreads(groupId: string, threadIds: number[], orderBy: string): Promise<ApiResponse<Thread>> {
+    return apiClient<ApiResponse<Thread>>(
+      `group/thread/list?group_ids=${groupId}&limit=1000&order_by=pinned,${orderBy}&id_list=${threadIds.join(',')}`
+    );
+  }
+
+  /**
+   * Fetches threads across all groups (for home feed)
+   */
+  static async getHomeThreads(orderBy: string): Promise<ApiResponse<Thread>> {
+    return apiClient<ApiResponse<Thread>>(
+      `group/thread/list?group_ids=1,2,3,4&order_by=${orderBy}`
+    );
+  }
+
+  /**
+   * Fetches all available workgroups (Used only for "one group" flowback)
+   */
   static async getWorkGroups(): Promise<ApiResponse<WorkGroup>> {
-    return apiClient<ApiResponse<WorkGroup>>('group/1/list', {
-      method: 'GET',
-      requiresAuth: true,
-      jsonResponse: true,
-    });
+    return apiClient<ApiResponse<WorkGroup>>('group/1/list');
   }
 
   private static getBaseUrl(infoToGet: string, delegatePoolId?: number): string {

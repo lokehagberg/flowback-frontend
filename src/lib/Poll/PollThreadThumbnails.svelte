@@ -112,20 +112,16 @@
 			.map(post => post.id);
 
 		if (pollIds.length) {
-			const response = await PollsApi.getPolls(
-				infoToGet === 'home' ? null : $page.params.groupId,
-				pollIds,
-				filter.order_by
-			);
+			const response = infoToGet === 'home' 
+				? await PollsApi.getHomePolls(filter.order_by)
+				: await PollsApi.getGroupPolls($page.params.groupId, pollIds, filter.order_by);
 			polls = response.results;
 		}
 
 		if (threadIds.length) {
-			const response = await PollsApi.getThreads(
-				infoToGet === 'home' ? null : $page.params.groupId,
-				threadIds,
-				filter.order_by
-			);
+			const response = infoToGet === 'home'
+				? await PollsApi.getHomeThreads(filter.order_by)
+				: await PollsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
 			threads = response.results;
 		}
 	}

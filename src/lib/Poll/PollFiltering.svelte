@@ -13,7 +13,7 @@
 	import { browser } from '$app/environment';
 
 	export let filter: Filter,
-		handleSearch: () => {},
+		handleSearch: () => void,
 		tagFiltering = false;
 	
 	// Add new export for content type filtering

@@ -208,6 +208,10 @@
 			workGroups.find((group) => group.id === Number(e.target.value)) || null;
 	};
 
+	const cancelUpdateKanban = () => {
+		openModal = false;
+	};
+
 	onMount(async () => {
 		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
 		if (kanban.end_date !== null) formatEndDate();
@@ -493,7 +497,7 @@
 				<Button
 					Class="w-full bg-red-500  py-1"
 					buttonStyle="warning-light"
-					onClick={() => (openModal = false)}>{$_('Cancel')}</Button
+					onClick={cancelUpdateKanban}>{$_('Cancel')}</Button
 				>
 			{:else}
 				<Button Class="w-full py-1" buttonStyle="primary-light" onClick={() => (isEditing = true)}

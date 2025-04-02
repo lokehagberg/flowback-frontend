@@ -17,6 +17,7 @@
 	import type { Filter } from './Kanban.ts';
 	import KanbanFiltering from './KanbanFiltering.svelte';
 	import { env } from '$env/dynamic/public';
+	import { page } from '$app/stores';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -107,7 +108,7 @@
 			if (numberOfOpen === 0) getKanbanEntries();
 		}, 20000);
 
-		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : '$page.params.groupId';
+		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId;
 	});
 
 	onDestroy(() => {

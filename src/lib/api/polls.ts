@@ -1,7 +1,6 @@
 import { apiClient } from './client';
 import type { ApiResponse, PollsParams } from './types';
 import type { poll, Post } from '$lib/Poll/interface';
-import type { Thread } from '$lib/Group/interface';
 import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 export class PollsApi {
@@ -35,24 +34,6 @@ export class PollsApi {
    */
   static async getHomePolls(orderBy: string): Promise<ApiResponse<poll>> {
     return apiClient<ApiResponse<poll>>(`home/polls?order_by=${orderBy}`);
-  }
-
-  /**
-   * Fetches threads for a specific group
-   */
-  static async getGroupThreads(groupId: string, threadIds: number[], orderBy: string): Promise<ApiResponse<Thread>> {
-    return apiClient<ApiResponse<Thread>>(
-      `group/thread/list?group_ids=${groupId}&limit=1000&order_by=pinned,${orderBy}&id_list=${threadIds.join(',')}`
-    );
-  }
-
-  /**
-   * Fetches threads across all groups (for home feed)
-   */
-  static async getHomeThreads(orderBy: string): Promise<ApiResponse<Thread>> {
-    return apiClient<ApiResponse<Thread>>(
-      `group/thread/list?group_ids=1,2,3,4&order_by=${orderBy}`
-    );
   }
 
   /**

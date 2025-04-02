@@ -10,6 +10,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { env } from '$env/dynamic/public';
+	import { ThreadsApi } from '$lib/api/threads';
 	
 	import PollThumbnail from './PollThumbnail.svelte';
 	import PollFiltering from './PollFiltering.svelte';
@@ -120,8 +121,8 @@
 
 		if (threadIds.length) {
 			const response = infoToGet === 'home'
-				? await PollsApi.getHomeThreads(filter.order_by)
-				: await PollsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
+				? await ThreadsApi.getHomeThreads(filter.order_by)
+				: await ThreadsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
 			threads = response.results;
 		}
 	}

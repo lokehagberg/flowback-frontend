@@ -52,13 +52,7 @@
 	let showThreads = true;
 	let showPolls = true;
 
-	// Fetch related content on filter changes
-	$: if (filter) {
-		fetchPolls();
-		fetchRelatedContent();
-	}
-
-	// Add sorting reactive statement here
+	// Filters posts by updated_at date and filter.order_by.
 	$: {
 		if (posts.length) {
 			const sortedPosts = [...posts].sort((a, b) => {
@@ -151,7 +145,10 @@
 		<div class={`flex flex-col gap-6 w-full`}>
 			<PollFiltering
 				tagFiltering={infoToGet === 'group'}
-				handleSearch={fetchPolls}
+				handleSearch={() => {
+					fetchPolls();
+					fetchRelatedContent();
+				}}
 				bind:filter
 				bind:showThreads
 				bind:showPolls

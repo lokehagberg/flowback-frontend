@@ -83,7 +83,7 @@
 	const deleteEvaluation = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/bet/delete`
+			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
 
 		if (!res.ok) {

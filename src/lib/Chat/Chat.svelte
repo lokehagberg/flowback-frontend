@@ -42,7 +42,6 @@
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 		darkModeStore.subscribe((dm) => (darkMode = dm));
 		isChatOpen.subscribe((open) => (chatOpen = open));
-		chatPartner.subscribe((partner) => (selectedChat = partner));
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -105,15 +104,15 @@
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-8 ml-6 dark:bg-darkobject p-2">
 			{#key creatingGroup}
-			<Preview
-				bind:selectedChat
-				bind:selectedPage
-				bind:previewDirect
-				bind:previewGroup
-				bind:selectedChatChannelId
-				bind:creatingGroup
-				bind:groupMembers
-			/>
+				<Preview
+					bind:selectedChat
+					bind:selectedPage
+					bind:previewDirect
+					bind:previewGroup
+					bind:selectedChatChannelId
+					bind:creatingGroup
+					bind:groupMembers
+				/>
 			{/key}
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
@@ -149,7 +148,7 @@
 			src={ChatIcon}
 			class="text-white"
 			style="filter: {getIconFilter(true, 'white')}"
-			alt="{chatOpen ? 'close chat' : 'open chat'}"
+			alt={chatOpen ? 'close chat' : 'open chat'}
 		/>
 	{/key}
 </button>

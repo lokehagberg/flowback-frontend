@@ -58,7 +58,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to delete probability', success: false };
+			poppup = { message: 'Failed to change probability', success: false };
 			return;
 		}
 		poppup = { message: 'Probability successfully sent', success: true };
@@ -83,7 +83,7 @@
 	const deleteEvaluation = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/bet/delete`
+			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
 
 		if (!res.ok) {

@@ -195,13 +195,14 @@
 						>
 							{#if phase === 'delegate_vote' || phase === 'vote'}
 								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
+
 								<VotingSlider
 									onSelection={(pos) => {
 										changingVote(pos, proposal.id);
 										if (phase === 'delegate_vote') delegateVote();
 										else if (phase === 'vote') vote();
 									}}
-									lineWidth={score ? score * 20 : 0}
+									{score}
 								/>
 							{/if}
 						</Proposal>

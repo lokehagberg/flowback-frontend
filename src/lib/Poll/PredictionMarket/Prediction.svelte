@@ -122,8 +122,8 @@
 	};
 
 	const handleChangeBetScore = async (newScore: number) => {
-		console.log(newScore, "SCORE");
-		
+		console.log(newScore, 'SCORE');
+
 		// predictionBetCreate(newScore);
 		if (newScore === null || newScore === 2.5) predictionBetDelete();
 		// else if (score === null) {
@@ -142,10 +142,7 @@
 		score = Number(newScore);
 	};
 
-	onMount(() => {
-
-		
-	})
+	onMount(() => {});
 </script>
 
 <div class={Class}>

@@ -57,14 +57,14 @@
 	};
 
 	const getVotes = async () => {
-		console.log('WHAT THA HELLL');
-
 		const { json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
 		);
 
 		if (!json.results || json.results.length === 0) return;
+
+		console.log('WHAT THA HELLL');
 
 		voting = voting.map((vote) => ({
 			score: (vote.score = json.results.find(

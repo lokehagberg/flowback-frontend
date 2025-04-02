@@ -13,6 +13,14 @@
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
 
+	export let type: 'home' | 'group',
+		open: boolean = false,
+		users: GroupUser[] = [],
+		kanbanEntries: kanban[],
+		workGroups: WorkGroup[] = [],
+		lane: number = 1,
+		groupId;
+
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
 		title = '',
@@ -31,14 +39,6 @@
 		poppup: poppup,
 		images: File[],
 		workGroup: WorkGroup | null = null;
-
-	export let type: 'home' | 'group',
-		open: boolean = false,
-		users: GroupUser[] = [],
-		kanbanEntries: kanban[],
-		workGroups: WorkGroup[] = [],
-		lane: number = 1,
-		groupId;
 
 	const createKanbanEntry = async () => {
 		loading = true;

@@ -52,7 +52,7 @@
 	let showThreads = true;
 	let showPolls = true;
 
-	// Filters posts by updated_at date and filter.order_by.
+	// Local sorting as fallback since server sorting isn't working correctly
 	$: {
 		if (posts.length) {
 			const sortedPosts = [...posts].sort((a, b) => {

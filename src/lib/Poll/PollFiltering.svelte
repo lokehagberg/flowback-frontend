@@ -67,6 +67,7 @@
 
 	const handleSort = (e: any) => {
 		filter.order_by = e.target.value;
+		handleSearch();
 	};
 
 	const handleTags = (e: any) => {
@@ -112,8 +113,6 @@
 		getTags();
 		initializeContentTypeState();
 	});
-
-	$: if (filter) handleSearch();
 </script>
 
 <form

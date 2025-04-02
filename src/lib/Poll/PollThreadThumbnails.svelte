@@ -10,7 +10,6 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { env } from '$env/dynamic/public';
-	import { apiClient } from '$lib/api/client';
 	
 	import PollThumbnail from './PollThumbnail.svelte';
 	import PollFiltering from './PollFiltering.svelte';

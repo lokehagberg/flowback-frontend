@@ -17,8 +17,8 @@ export class PollsApi {
 
     return apiClient<ApiResponse<Post>>(`${baseUrl}?${queryParams.toString()}`, {
       method: 'GET',
-      needs_authorization: true,
-      needs_json: true
+      requiresAuth: true,
+      jsonResponse: true,
     });
   }
 
@@ -29,8 +29,8 @@ export class PollsApi {
     
     return apiClient<ApiResponse<poll>>(url, {
       method: 'GET',
-      needs_authorization: true,
-      needs_json: true
+      requiresAuth: true,
+      jsonResponse: true,
     });
   }
 
@@ -41,16 +41,16 @@ export class PollsApi {
     
     return apiClient<ApiResponse<Thread>>(url, {
       method: 'GET',
-      needs_authorization: true,
-      needs_json: true
+      requiresAuth: true,
+      jsonResponse: true,
     });
   }
 
   static async getWorkGroups(): Promise<ApiResponse<WorkGroup>> {
     return apiClient<ApiResponse<WorkGroup>>('group/1/list', {
       method: 'GET',
-      needs_authorization: true,
-      needs_json: true
+      requiresAuth: true,
+      jsonResponse: true,
     });
   }
 

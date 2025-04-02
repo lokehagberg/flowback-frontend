@@ -2,91 +2,113 @@ import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { env } from '$env/dynamic/public';
 
-type FetchOptions = {
-  method: string;
-  headers?: Record<string, string>;
-  body?: string | null;
-  needs_authorization?: boolean;
-  needs_json?: boolean;
-};
+interface RequestOptions {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  requiresAuth?: boolean;
+  jsonResponse?: boolean;
+  body?: unknown;
+}
 
-export async function apiClient<T>(
-  endpoint: string, 
-  options: Partial<FetchOptions> = {}
-): Promise<T> {
+/**
+ * Makes an authenticated API request to the backend
+ * @throws {Error} If called during SSR or if authentication fails
+ */
+export async function apiClient<ResponseType>(
+  endpoint: string,
+  options: Partial<RequestOptions> = {}
+): Promise<ResponseType> {
   const {
     method = 'GET',
     body = null,
-    needs_authorization = true,
-    needs_json = true,
+    requiresAuth = true,
+    jsonResponse = true,
   } = options;
 
-  if (method === 'GET' && body !== null) {
-    console.warn("Method 'GET' does not take any body, use query parameters instead. For example: /api?id=5");
-  }
+  ensureClientSideExecution();
+  warnIfGetRequestHasBody(method, body);
 
+  const headers = buildHeaders({ requiresAuth, jsonResponse });
+  const url = buildApiUrl(endpoint);
+  
+  const response = await fetch(url, {
+    method,
+    headers,
+    ...(shouldIncludeBody(method, body) && {
+      body: jsonResponse ? JSON.stringify(body) : (body as string)
+    })
+  });
+
+  return handleResponse<ResponseType>(response, jsonResponse);
+}
+
+// Helper functions
+function ensureClientSideExecution() {
   if (!browser) {
-    throw new Error('Cannot make API calls during SSR');
+    throw new Error('API calls can only be made in the browser, not during SSR');
   }
+}
 
-  let headers: Record<string, string> = {};
+function warnIfGetRequestHasBody(method: string, body: unknown) {
+  if (method === 'GET' && body !== null) {
+    console.warn('GET requests should not include a body. Use query parameters instead (e.g., /api?id=5)');
+  }
+}
 
-  // Handle authorization
-  if (needs_authorization) {
+function buildHeaders({ requiresAuth, jsonResponse }: Pick<RequestOptions, 'requiresAuth' | 'jsonResponse'>) {
+  const headers: Record<string, string> = {};
+
+  if (requiresAuth) {
     const token = localStorage.getItem('token');
-    const relativePath = new URL(location.href).pathname;
-
-    if (token) {
-      headers.Authorization = `Token ${token}`;
-    } else if (relativePath !== '/login') {
-      goto('/login');
-      throw new Error('Not authenticated');
+    if (!token) {
+      redirectToLogin();
+      throw new Error('Authentication required');
     }
+    headers.Authorization = `Token ${token}`;
   }
 
-  // Handle JSON headers
-  if (needs_json) {
+  if (jsonResponse) {
     headers.Accept = 'application/json';
     headers['Content-Type'] = 'application/json';
   }
 
-  // Construct URL
-  const url = endpoint.includes(env.PUBLIC_API_URL)
-    ? endpoint
-    : `${env.PUBLIC_API_URL}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${endpoint}`;
+  return headers;
+}
 
-  // Prepare request options
-  const fetchOptions: RequestInit = {
-    method,
-    headers,
-  };
-
-  if (method !== 'GET' && body !== null) {
-    fetchOptions.body = needs_json ? JSON.stringify(body) : body;
+function buildApiUrl(endpoint: string): string {
+  if (endpoint.includes(env.PUBLIC_API_URL)) {
+    return endpoint;
   }
 
-  const response = await fetch(url, fetchOptions);
+  const apiPrefix = env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : '';
+  return `${env.PUBLIC_API_URL}/${apiPrefix}${endpoint}`;
+}
 
-  // Handle 401 unauthorized
+function shouldIncludeBody(method: string, body: unknown): boolean {
+  return method !== 'GET' && body !== null;
+}
+
+function redirectToLogin() {
+  const currentPath = new URL(location.href).pathname;
+  if (currentPath !== '/login') {
+    goto('/login');
+  }
+}
+
+async function handleResponse<T>(response: Response, jsonResponse: boolean): Promise<T> {
   if (response.status === 401) {
-    const relativePath = new URL(location.href).pathname;
-    if (relativePath !== '/login') {
-      goto('/login');
-      throw new Error('Not authenticated');
-    }
+    redirectToLogin();
+    throw new Error('Authentication expired or invalid');
   }
 
-  // Handle response
-  try {
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.detail || 'API call failed');
-    }
-    return data as T;
-  } catch (error) {
-    if (!response.ok) {
-      throw new Error('API call failed');
-    }
+  if (!jsonResponse) {
     return {} as T;
   }
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.detail || 'API request failed');
+  }
+
+  return data as T;
 } 

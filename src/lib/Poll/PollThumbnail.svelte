@@ -84,7 +84,6 @@
 	};
 
 	onMount(async () => {
-		console.log('Poll object:', poll);
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {
 			tags = await getTags(poll?.group_id);

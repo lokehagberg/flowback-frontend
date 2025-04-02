@@ -1,21 +1,23 @@
 <script lang="ts">
-	import { fetchRequest } from '$lib/FetchRequest';
-	import PollThumbnail from './PollThumbnail.svelte';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
-	import PollFiltering from './PollFiltering.svelte';
-	import type { Filter, poll, Post } from './interface';
-	import Loader from '$lib/Generic/Loader.svelte';
-	import { getUserIsOwner } from '$lib/Group/functions';
+	import { PollsApi } from '$lib/api/polls';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
+	import type { Filter, poll, Post } from './interface';
+	import type { DelegateMinimal, Thread } from '$lib/Group/interface';
+	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import { getUserIsOwner } from '$lib/Group/functions';
+	import { env } from '$env/dynamic/public';
+	import { apiClient } from '$lib/api/client';
+	
+	import PollThumbnail from './PollThumbnail.svelte';
+	import PollFiltering from './PollFiltering.svelte';
+	import ThreadThumbnail from './Thread.svelte';
+	import Loader from '$lib/Generic/Loader.svelte';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
-	import type { poppup } from '$lib/Generic/Poppup';
-	import type { DelegateMinimal, Thread } from '$lib/Group/interface';
-	import ThreadThumbnail from './Thread.svelte';
-	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
-	import { env } from '$env/dynamic/public';
 
 	// Props
 	export let Class = '';
@@ -50,59 +52,35 @@
 	let showThreads = true;
 	let showPolls = true;
 
-	// API Helpers
-	const buildApiUrl = async () => {
-		const params = new URLSearchParams();
-		
-		// Base URL
-		let baseUrl = '';
-		if (infoToGet === 'home') {
-			baseUrl = 'user/home';
-		} else if (infoToGet === 'delegate') {
-			baseUrl = `group/poll/pool/${delegate.pool_id}/votes`;
-		} else if (infoToGet === 'user' || infoToGet === 'group') {
-			baseUrl = `user/home`;
-			params.append('group_ids', $page.params.groupId);
-		} else if (infoToGet === 'public') {
-			baseUrl = 'home/polls';
-			params.append('public', 'true');
-		}
+	async function fetchPolls() {
+		try {
+			loading = true;
+			posts = [];
 
-		// Add common params
-		params.append('order_by', filter.order_by ? `pinned,${filter.order_by}` : 'pinned');
-		params.append('limit', pollThumbnailsLimit.toString());
+			const params = {
+				order_by: filter.order_by ? `pinned,${filter.order_by}` : 'pinned',
+				limit: pollThumbnailsLimit,
+				title__icontains: filter.search || undefined,
+				tag_id: filter.tag || undefined,
+				group_ids: infoToGet === 'group' ? $page.params.groupId : undefined,
+				public: infoToGet === 'public' ? true : undefined,
+				...(filter.finishedSelection !== 'all' && {
+					[`end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}`]: new Date().toISOString()
+				})
+			};
 
-		// Add conditional params
-		if (filter.search) params.append('title__icontains', filter.search);
-		if (filter.finishedSelection !== 'all') {
-			const comparison = filter.finishedSelection === 'finished' ? '__lt' : '__gt';
-			params.append(`end_date${comparison}`, new Date().toISOString());
-		}
-		if (filter.tag) params.append('tag_id', filter.tag.toString());
-
-		return `${baseUrl}?${params.toString()}`;
-	};
-
-	const fetchPolls = async () => {
-		loading = true;
-		posts = [];
-
-		const apiUrl = await buildApiUrl();
-		const { json, res } = await fetchRequest('GET', apiUrl);
-
-		if (!res.ok) {
+			const response = await PollsApi.getPosts(infoToGet, params);
+			posts = response.results;
+			next = response.next ?? '';
+			prev = response.previous ?? '';
+		} catch (error) {
 			poppup = { message: 'Could not get polls', success: false };
+		} finally {
 			loading = false;
-			return;
 		}
+	}
 
-		posts = json.results;
-		next = json.next;
-		prev = json.previous;
-		loading = false;
-	};
-
-	const fetchRelatedContent = async () => {
+	async function fetchRelatedContent() {
 		const pollIds = posts
 			.filter(post => post.related_model === 'poll')
 			.map(post => post.id);
@@ -111,34 +89,30 @@
 			.filter(post => post.related_model === 'group_thread')
 			.map(post => post.id);
 
-		// Fetch polls
 		if (pollIds.length) {
-			const pollsUrl = infoToGet === 'home' 
-				? `home/polls?order_by=${filter.order_by}`
-				: `group/${$page.params.groupId}/poll/list?id_list=${pollIds.join(',')}&order_by=${filter.order_by}`;
-			
-			const { json } = await fetchRequest('GET', pollsUrl);
-			polls = json.results;
+			const response = await PollsApi.getPolls(
+				infoToGet === 'home' ? null : $page.params.groupId,
+				pollIds,
+				filter.order_by
+			);
+			polls = response.results;
 		}
 
-		// Fetch threads
 		if (threadIds.length) {
-			const threadsUrl = infoToGet === 'home'
-				? `group/thread/list?group_ids=1,2,3,4&order_by=${filter.order_by}`
-				: `group/thread/list?group_ids=${$page.params.groupId}&limit=1000&order_by=pinned,${filter.order_by}&id_list=${threadIds.join(',')}`;
-			
-			const { json } = await fetchRequest('GET', threadsUrl);
-			threads = json.results;
+			const response = await PollsApi.getThreads(
+				infoToGet === 'home' ? null : $page.params.groupId,
+				threadIds,
+				filter.order_by
+			);
+			threads = response.results;
 		}
-	};
+	}
 
- 	// Only for one-group flowback
-	const fetchWorkGroups = async () => {
-		const { res, json } = await fetchRequest('GET', 'group/1/list');
-		if (res.ok) workgroups = json.results;
-	};
+	async function fetchWorkGroups() {
+		const { results } = await PollsApi.getWorkGroups();
+		workgroups = results;
+	}
 
-	// Lifecycle
 	onMount(async () => {
 		await fetchPolls();
 
@@ -159,7 +133,7 @@
 		fetchRelatedContent();
 	}
 </script>
-
+bbbbb
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>
@@ -207,5 +181,6 @@
 		/>
 	</Loader>
 </div>
+aaaaaaa
 
 <Poppup bind:poppup />

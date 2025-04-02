@@ -69,7 +69,7 @@
 				})
 			};
 
-			const response = await PollsApi.getPosts(infoToGet, params);
+			const response = await PollsApi.getPosts(infoToGet, params, delegate.pool_id);
 			posts = response.results;
 			next = response.next ?? '';
 			prev = response.previous ?? '';

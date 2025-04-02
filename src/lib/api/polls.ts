@@ -5,8 +5,8 @@ import type { Thread } from '$lib/Group/interface';
 import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 
 export class PollsApi {
-  static async getPosts(infoToGet: string, params: PollsParams): Promise<ApiResponse<Post>> {
-    const baseUrl = this.getBaseUrl(infoToGet);
+  static async getPosts(infoToGet: string, params: PollsParams, delegatePoolId?: number): Promise<ApiResponse<Post>> {
+    const baseUrl = this.getBaseUrl(infoToGet, delegatePoolId);
     const queryParams = new URLSearchParams();
     
     Object.entries(params).forEach(([key, value]) => {
@@ -54,12 +54,13 @@ export class PollsApi {
     });
   }
 
-  private static getBaseUrl(infoToGet: string): string {
+  private static getBaseUrl(infoToGet: string, delegatePoolId?: number): string {
     switch (infoToGet) {
       case 'home':
         return 'user/home';
       case 'delegate':
-        return 'group/poll/pool';
+        if (!delegatePoolId) throw new Error('delegatePoolId is required for delegate view');
+        return `group/poll/pool/${delegatePoolId}/votes`;
       case 'public':
         return 'home/polls';
       case 'user':

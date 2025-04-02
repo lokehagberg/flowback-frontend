@@ -76,11 +76,11 @@
 	};
 
 	const getDelegateVotes = async () => {
-		const a: groupUser = await getGroupUserInfo($page.params.groupId);
+		const user: groupUser = await getGroupUserInfo($page.params.groupId);
 
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/pool/${a.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
+			`group/poll/pool/${user.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
 		);
 
 		if (!json.results || json.results.length === 0) return;

@@ -4,7 +4,7 @@
 		lineWidth = 0,
 		score: number | null = null;
 
-	let snapPoints = [0, 20, 40, 50, 60, 80, 100],
+	let snapPoints = [0, 20, 40, 60, 80, 100],
 		dragLinePosition: any = null,
 		currentSnapPosition: any;
 
@@ -14,6 +14,8 @@
 		);
 
 		lineWidth = nearestSnap;
+		console.log(currentSnapPosition,nearestSnap, score,  'SNAPPY');
+
 		currentSnapPosition = nearestSnap;
 		return nearestSnap;
 	};
@@ -51,8 +53,6 @@
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
 	// $: if (score !== null) console.log(score, 'score');
-	$: if (score === null) score = 2.5
-	
 
 	// $: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
 </script>
@@ -82,15 +82,13 @@
 		class={`absolute -top-[20%] ${
 			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
 			currentSnapPosition === null
-				? 'left-[50%]'
+				? 'invisible'
 				: currentSnapPosition === 0
 				? 'left-0'
 				: currentSnapPosition === 20
 				? 'left-[20%]'
 				: currentSnapPosition === 40
 				? 'left-[40%]'
-				: currentSnapPosition === 50
-				? 'left-[50%]'
 				: currentSnapPosition === 60
 				? 'left-[60%]'
 				: currentSnapPosition === 80

@@ -51,6 +51,29 @@
 	let showThreads = true;
 	let showPolls = true;
 
+	// Fetch related content on filter changes
+	$: if (filter) {
+		fetchPolls();
+		fetchRelatedContent();
+	}
+
+	// Add sorting reactive statement here
+	$: {
+		if (posts.length) {
+			const sortedPosts = [...posts].sort((a, b) => {
+				switch (filter.order_by) {
+					case 'start_date_desc':
+						return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+					case 'start_date_asc':
+						return new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+					default:
+						return 0;
+				}
+			});
+			posts = sortedPosts;
+		}
+	}
+
 	async function fetchPolls() {
 		try {
 			loading = true;
@@ -125,12 +148,6 @@
 			isAdmin = await getUserIsOwner($page.params.groupId) || false;
 		}
 	});
-
-	// Fetch related content on filter changes
-	$: if (filter) {
-		fetchPolls();
-		fetchRelatedContent();
-	}
 </script>
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>

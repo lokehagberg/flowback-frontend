@@ -119,12 +119,12 @@
 	<div class="mx-2">
 		<div class="flex items-center justify-between text-primary dark:text-secondary">
 			<a
-				class="cursor-pointer text-primary dark:text-secondary hover:underline text-2xl break-all"
+				class="cursor-pointer text-primary dark:text-secondary hover:underline text-2xl break-words"
 				href={onHoverGroup
 					? '/groups/1'
 					: `/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
 			>
-				{elipsis(poll?.title || '')}
+				{poll?.title}
 			</a>
 
 			<div class="inline-flex gap-4 items-baseline">

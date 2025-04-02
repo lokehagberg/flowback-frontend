@@ -97,13 +97,13 @@
 		{/if}
 		<!-- Proposal Title -->
 		<span
-			class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-all"
+			class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-words"
 			>{proposal.title}</span
 		>
 	</div>
 
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1 break-all" id={`proposal-${proposal.id}-description`}>
+	<p class="elipsis text-sm text-left my-1 break-words" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 

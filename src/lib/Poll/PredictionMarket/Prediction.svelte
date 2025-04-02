@@ -213,7 +213,7 @@
 
 <Modal bind:open={showDetails}>
 	<div slot="body">
-		<div class="break-all">{prediction.description}</div>
+		<div class="break-words">{prediction.description}</div>
 		<ul>
 			{#each prediction.segments as proposal}
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>

@@ -639,6 +639,7 @@
     "Allows user to create posts": "Tillåter användare att skapa inlägg",
     "Create post": "Skapa inlägg",
     "Username may only contain letters, numbers, and @/./+/-/_ characters. No spaces are allowed.": "Användarnamnet får endast innehålla bokstäver, siffror och @/./+/-/_ tecken. Mellanslag är inte heller tillåtna.",
+    "No description provided for this tag.": "Ingen beskrivning har angetts för denna tagg.",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

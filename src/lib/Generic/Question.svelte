@@ -37,7 +37,7 @@
 	<!-- <div class="inline rounded-full border border-opacity-40 border-gray-400 px-[3px] hover:bg-gray-200 bg-white cursor-pointer" on:mouseover={() => (show = true)} on:mouseleave={() => (show = false)} on:focus>
 	</div> -->
 	{#if show}
-		<div class="absolute top-4 bg-white text-sm p-3 z-50">
+		<div class="absolute top-4 bg-white text-sm p-3 z-50 rounded border">
 			{$_(message)}
 		</div>
 	{/if}

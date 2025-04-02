@@ -53,14 +53,14 @@
 	/>
 
 	<button on:click={goToGroup}>
-		<h1 class="text-2xl p-4 mt-10 text-center break-all">
+		<h1 class="text-2xl p-4 mt-10 text-center break-words">
 			{group.name}
 		</h1>
 		<!-- <p class="pl-6 pr-6 pb-6 break-words">
 			{group.description}
 		</p> -->
 		{#if group.description.length > 0}
-			<div class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-all">
+			<div class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-words">
 				<p class="line-clamp-2">{group.description} </p>
 			</div>
 		{/if}

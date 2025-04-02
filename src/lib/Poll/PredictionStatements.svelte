@@ -45,7 +45,7 @@
 		{#key selectedProposal}
 			{#each predictions as prediction}
 				<div
-					class="border-b-2 flex flex-col break-all py-2 gap-1"
+					class="border-b-2 flex flex-col break-words py-2 gap-1"
 					class:select-none={phase === 'prediction_bet'}
 				>
 					<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>

@@ -58,7 +58,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to delete probability', success: false };
+			poppup = { message: 'Failed to change probability', success: false };
 			return;
 		}
 		poppup = { message: 'Probability successfully sent', success: true };

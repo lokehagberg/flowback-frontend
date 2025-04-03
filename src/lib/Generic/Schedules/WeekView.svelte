@@ -78,81 +78,55 @@
 				date instanceof Date
 			);
 
-			// Map each date to either an existing proposal ID or create a new one
-			const proposalPromises = validSelectedDates.map(async (date) => {
-				// Find existing proposal by matching the start_date
+			// This will hold ALL our vote IDs - both existing and new
+			let voteIds = [...votes]; // Start with existing votes
+
+			// For each selected date
+			for (const date of validSelectedDates) {
+				// Check if we already have a proposal for this date
 				const existingProposal = proposals.find(proposal => {
 					const proposalDate = new Date(proposal.start_date);
 					return proposalDate.getTime() === date.getTime();
 				});
 
-				// If we found an existing proposal, use its ID
 				if (existingProposal) {
-					return existingProposal.id;
-				}
-
-				// Otherwise create a new proposal
-				const end_date = new Date(date.getTime() + 60 * 60 * 1000); // Add 1 hour
-				const { res, json } = await fetchRequest(
-					'POST',
-					`group/poll/${$page.params.pollId}/proposal/create`,
-					{
-						start_date: date,
-						end_date
+					// Make sure this vote is included
+					if (!voteIds.includes(existingProposal.id)) {
+						voteIds.push(existingProposal.id);
 					}
-				);
+				} else {
+					// Create new proposal and add its ID to our votes
+					const end_date = new Date(date.getTime() + 60 * 60 * 1000);
+					const { res, json } = await fetchRequest(
+						'POST',
+						`group/poll/${$page.params.pollId}/proposal/create`,
+						{
+							start_date: date,
+							end_date
+						}
+					);
 
-				// Only return the ID if creation was successful
-				if (!res.ok) {
-					console.error('Failed to create proposal:', json);
-					return null;
+					if (res.ok && json) {
+						voteIds.push(json); // Add the new proposal ID to our votes
+					}
 				}
-
-				return json.id;
-			});
-
-			// Wait for all proposals and filter out any nulls
-			const newProposalIds = (await Promise.all(proposalPromises))
-				.filter((id): id is number => 
-					id !== null && typeof id === 'number'
-				);
-
-			// Only proceed if we have valid proposals
-			if (newProposalIds.length === 0) {
-				console.error('No valid proposals to save');
-				return;
 			}
 
-			// Get all existing votes that we want to keep
-			const existingVotes = votes.filter(voteId => {
-				const proposalDate = proposals.find(p => p.id === voteId)?.start_date;
-				if (!proposalDate) return false;
-				
-				// Keep vote if its date is still selected
-				return validSelectedDates.some(selectedDate => 
-					new Date(proposalDate).getTime() === selectedDate.getTime()
-				);
-			});
-
-			// Combine existing votes we want to keep with new proposal votes
-			const allVoteIds = [...new Set([...existingVotes, ...newProposalIds])];
-
-			// Update votes with all valid proposal IDs
+			// Update all votes
+			console.log('voteIds before update',voteIds);
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,
 				{
-					proposals: allVoteIds
+					proposals: voteIds
 				}
 			);
 
 			if (res.ok) {
-				votes = allVoteIds;
-				await getProposals(); // Refresh proposals list
-				selectedDates = validSelectedDates; // Keep our selections
+				votes = voteIds;
+				await getProposals();
+				selectedDates = validSelectedDates;
 				noChanges = true;
-			} else {
-				console.error('Failed to update votes:', json);
 			}
 		} catch (error) {
 			console.error('Error saving selection:', error);

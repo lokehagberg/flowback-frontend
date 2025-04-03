@@ -6,14 +6,12 @@
 	import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
-	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
 	import Loader from '../Loader.svelte';
-	import type { proposal, timeProposal } from '$lib/Poll/interface';
+	import type {  timeProposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
-	import Proposal from '$lib/Poll/Proposal.svelte';
-	import { log10 } from 'chart.js/helpers';
+
 
 	export let x = 10,
 		y = 10,
@@ -185,27 +183,19 @@
 	};
 
 	const transformVotesIntoSelectedDates = () => {
-		if (votes.length === 0) return;
-		const prop = proposals;
-		const propFiltered = prop.filter((proposal) => votes.find((vote) => vote === proposal?.id));
-		selectedDates = propFiltered.map((proposal) => new Date(proposal.end_date));
+		if (!votes?.length || !proposals?.length) return;
+		
+		const votedProposals = proposals.filter(proposal => 
+			votes.includes(proposal.id)
+		);
+		
+		selectedDates = votedProposals.map(proposal => 
+			new Date(proposal.start_date)
+		);
 	};
 
-	onMount(() => {
-		// getProposals();
-		// getProposalVote();
-		initialMonday = getRecentMonday(new Date());
+	$: if (votes && proposals) {
 		transformVotesIntoSelectedDates();
-
-		//TODO: Fix this reactivity mess
-		const a = setTimeout(() => {
-			transformVotesIntoSelectedDates();
-			clearInterval(a);
-		}, 400);
-	});
-
-	$: if (votes && selectedDates) {
-		// transformVotesIntoSelectedDates();
 	}
 
 	$: {
@@ -230,6 +220,10 @@
 			(_, i) => new Date(monday?.getFullYear(), monday?.getMonth(), monday?.getDate() + i, j)
 		)
 	);
+
+	$: if (!initialMonday) {
+		initialMonday = getRecentMonday(new Date());
+	}
 </script>
 
 <Loader bind:loading>

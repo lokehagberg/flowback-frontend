@@ -14,7 +14,6 @@
 		);
 
 		lineWidth = nearestSnap;
-		console.log(currentSnapPosition,nearestSnap, score,  'SNAPPY');
 
 		currentSnapPosition = nearestSnap;
 		return nearestSnap;
@@ -29,7 +28,8 @@
 			const width = (offsetX / rect.width) * 100;
 
 			dragLinePosition = offsetX;
-			snapToSnapPoint(width);
+			score = snapToSnapPoint(width) / 20;
+			console.log(score, 'score');
 		};
 
 		const onMouseUp = () => {
@@ -52,9 +52,7 @@
 	});
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
-	// $: if (score !== null) console.log(score, 'score');
-
-	// $: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
+	else snapToSnapPoint(0);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -81,7 +79,7 @@
 	<div
 		class={`absolute -top-[20%] ${
 			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
-			currentSnapPosition === null
+			currentSnapPosition === null || score === null
 				? 'invisible'
 				: currentSnapPosition === 0
 				? 'left-0'

@@ -52,8 +52,12 @@
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=10000`
 		);
-
-		proposals = json.results;
+		
+		if (res.ok) {
+			proposals = json.results;
+			return json.results;
+		}
+		return [];
 	};
 
 	const getProposalVote = async () => {
@@ -67,45 +71,57 @@
 	};
 
 	const saveSelection = async () => {
-		let savedDates: number[] = [];
-		const array = selectedDates.map(async (date) => {
-			const start_date = date;
-			const end_date = new Date(
-				date.getFullYear(),
-				date.getMonth(),
-				date.getDate(),
-				date.getHours() + 1
-			);
+		loading = true;
+		try {
+			// First create any new proposals that don't exist yet
+			const proposalPromises = selectedDates.map(async (date) => {
+				const start_date = date;
+				const end_date = new Date(date.getTime() + 60 * 60 * 1000); // Add 1 hour
 
-			const existingProposal = proposals.find(
-				(proposal) => new Date(proposal.start_date).getTime() === start_date.getTime()
-			);
-
-			if (!existingProposal) {
-				const { res, json } = await fetchRequest(
-					'POST',
-					`group/poll/${$page.params.pollId}/proposal/create`,
-					{
-						start_date,
-						end_date
-					}
+				const existingProposal = proposals.find(
+					(proposal) => new Date(proposal.start_date).getTime() === start_date.getTime()
 				);
 
-				savedDates.push(json);
-			} else savedDates.push(existingProposal.id);
-		});
+				if (!existingProposal) {
+					const { res, json } = await fetchRequest(
+						'POST',
+						`group/poll/${$page.params.pollId}/proposal/create`,
+						{
+							start_date,
+							end_date
+						}
+					);
+					return json.id; // Return the new proposal ID
+				}
+				return existingProposal.id;
+			});
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/proposal/vote/update`,
-			{
-				proposals: savedDates
+			// Wait for all proposals to be created
+			const savedProposalIds = await Promise.all(proposalPromises);
+
+			// Update the votes with the final list of proposal IDs
+			const { res, json } = await fetchRequest(
+				'POST',
+				`group/poll/${$page.params.pollId}/proposal/vote/update`,
+				{
+					proposals: savedProposalIds
+				}
+			);
+
+			if (res.ok) {
+				// Update local state to match server
+				votes = savedProposalIds;
+				proposals = await getProposals(); // Refresh proposals list
+				transformVotesIntoSelectedDates(); // Update UI
+				noChanges = true;
+			} else {
+				console.error('Failed to update votes:', json); // TODO: Temporary solution
 			}
-		);
-
-		await Promise.allSettled(array);
-		loading = false;
-		noChanges = true;
+		} catch (error) {
+			console.error('Error saving selection:', error); // TODO: Temporary solution
+		} finally {
+			loading = false;
+		}
 	};
 
 	const dateOffset = (offset: number) => {

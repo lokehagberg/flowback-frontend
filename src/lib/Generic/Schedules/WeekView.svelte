@@ -79,7 +79,7 @@
 			);
 
 			// This will hold ALL our vote IDs - both existing and new
-			let voteIds = [...votes]; // Start with existing votes
+			let voteIds: number[] = []; // Start with empty array since we only want currently selected dates
 
 			// For each selected date
 			for (const date of validSelectedDates) {
@@ -90,10 +90,8 @@
 				});
 
 				if (existingProposal) {
-					// Make sure this vote is included
-					if (!voteIds.includes(existingProposal.id)) {
-						voteIds.push(existingProposal.id);
-					}
+					// Add this proposal's ID to our votes
+					voteIds.push(existingProposal.id);
 				} else {
 					// Create new proposal and add its ID to our votes
 					const end_date = new Date(date.getTime() + 60 * 60 * 1000);
@@ -106,14 +104,13 @@
 						}
 					);
 
-					if (res.ok && json) {
+					if (res.ok) {
 						voteIds.push(json); // Add the new proposal ID to our votes
 					}
 				}
 			}
 
-			// Update all votes
-			console.log('voteIds before update',voteIds);
+			// Update votes - only including IDs for currently selected dates
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,

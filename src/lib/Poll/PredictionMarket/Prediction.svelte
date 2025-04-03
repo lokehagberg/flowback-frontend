@@ -121,7 +121,7 @@
 		});
 	};
 
-	const handleChangeBetScore = async (newScore: number) => {
+	const handleChangeBetScore = async (newScore: number | null) => {
 		console.log(newScore, 'SCORE');
 
 		// predictionBetCreate(newScore);

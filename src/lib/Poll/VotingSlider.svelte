@@ -1,6 +1,9 @@
 <script lang="ts">
+	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
-	export let onSelection = (pos: number) => {},
+	import { _ } from 'svelte-i18n';
+
+	export let onSelection = (pos: number | null) => {},
 		lineWidth = 0,
 		score: number | null = null;
 
@@ -97,6 +100,15 @@
 		|
 	</div>
 </div>
+
+<Button
+	onClick={() => {
+		lineWidth = 0;
+		score = null;
+		currentSnapPosition = null;
+		onSelection(null);
+	}}>{$_('Reset Betting')}</Button
+>
 
 <style>
 	.draggable {

@@ -13,7 +13,12 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { faMagnifyingGlass, faPaperPlane, faRunning, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faMagnifyingGlass,
+		faPaperPlane,
+		faRunning,
+		faUserPlus
+	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -143,6 +148,15 @@
 		// const {res, json} = await fetchRequest('POST', {
 		// } )
 	};
+
+	const getUserChannelId = async (userId: number) => {
+		const { json, res } = await fetchRequest('GET', `user/chat?target_user_ids=${userId}`);
+
+		if (!res.ok || json.length === 0) {
+			return;
+		}
+		return json.id;
+	};
 </script>
 
 <Modal bind:open={showInvite}>
@@ -231,7 +245,7 @@
 				<TextInput
 					Class="w-full"
 					onInput={() => (searched = false)}
-					label=''
+					label=""
 					max={null}
 					search={true}
 					placeholder={$_('Search members')}
@@ -240,7 +254,10 @@
 			</form>
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<Button Class="w-10 h-10 flex items-center justify-center" onClick={() => (showInvite = true)}>
+				<Button
+					Class="w-10 h-10 flex items-center justify-center"
+					onClick={() => (showInvite = true)}
+				>
 					<Fa size="lg" icon={faUserPlus} />
 				</Button>
 			{/if}
@@ -265,6 +282,7 @@
 								displayName
 							/>
 						</button>
+
 						{#if user.delegate_pool_id === null}
 							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
 								{$_('Delegate')}
@@ -279,20 +297,19 @@
 							{user.permission_name}
 						</div>
 						<div class="flex gap-2 right-6 absolute">
-							<!-- <Button buttonStyle="warning-light" onClick={() => (removeUserModalShow = true)}
-								><Fa icon={faRunning} /></Button
-							> -->
-							<button
-								on:click={() => {
-									console.log(user, "USSR");
-									
-									isChatOpen.set(true);
-									chatPartner.set(user.user.id);
-								}}
-								Class="text-primary"
-							>
-								<Fa icon={faPaperPlane} rotate="60" />
-							</button>
+							{#await getUserChannelId(user.user.id) then channelId}
+								{#if channelId}
+									<button
+										on:click={() => {
+											isChatOpen.set(true);
+											chatPartner.set(channelId);
+										}}
+										Class="text-primary"
+									>
+										<Fa icon={faPaperPlane} rotate="60" />
+									</button>
+								{/if}
+							{/await}
 						</div>
 					</div>
 				{/each}

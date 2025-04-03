@@ -167,18 +167,16 @@
 		await UserChatInviteList();
 		await getChattable();
 		await setUpPreview();
+
 		workGroupsStore.subscribe((_workGroups) => {
 			workGroupList = _workGroups;
 			selectedChat = null;
 		});
-		// chatPartner.subscribe((partner) => {
-		// 	console.log(previewDirect);
 
-		// 	const selected = previewDirect.find((user) => user.user.id === partner);
-
-		// 	selectedChat = selected?.channel_id || null;
-		// 	console.log(selectedChat, 'WHAA');
-		// });
+		chatPartner.subscribe((partner) => {
+			if (partner === null) return;
+			selectedChat = partner;
+		});
 	});
 
 	$: groups = sort(groups, previewGroup);

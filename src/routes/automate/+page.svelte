@@ -88,8 +88,6 @@
 	const getDelegatePools = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
 
-		console.log(json.results, 'REULTA');
-
 		autovote = res.ok && json.results.length > 0;
 	};
 

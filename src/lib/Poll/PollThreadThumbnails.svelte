@@ -11,7 +11,7 @@
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { env } from '$env/dynamic/public';
 	import { ThreadsApi } from '$lib/api/threads';
-	
+
 	import PollThumbnail from './PollThumbnail.svelte';
 	import PollFiltering from './PollFiltering.svelte';
 	import ThreadThumbnail from './Thread.svelte';
@@ -22,12 +22,12 @@
 	// Props
 	export let Class = '';
 	export let infoToGet: 'group' | 'home' | 'public' | 'delegate' | 'user';
-	export let delegate: DelegateMinimal = { 
-		id: 0, 
-		pool_id: 0, 
-		profile_image: '', 
-		tags: [], 
-		username: '' 
+	export let delegate: DelegateMinimal = {
+		id: 0,
+		pool_id: 0,
+		profile_image: '',
+		tags: [],
+		username: ''
 	};
 
 	// State
@@ -40,7 +40,7 @@
 	let next = '';
 	let prev = '';
 	let poppup: poppup;
-	
+
 	let filter: Filter = {
 		search: '',
 		finishedSelection: 'all',
@@ -82,7 +82,8 @@
 				group_ids: infoToGet === 'group' ? $page.params.groupId : undefined,
 				public: infoToGet === 'public' ? true : undefined,
 				...(filter.finishedSelection !== 'all' && {
-					[`end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}`]: new Date().toISOString()
+					[`end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}`]:
+						new Date().toISOString()
 				})
 			};
 
@@ -98,25 +99,25 @@
 	}
 
 	async function fetchRelatedContent() {
-		const pollIds = posts
-			.filter(post => post.related_model === 'poll')
-			.map(post => post.id);
+		const pollIds = posts.filter((post) => post.related_model === 'poll').map((post) => post.id);
 
 		const threadIds = posts
-			.filter(post => post.related_model === 'group_thread')
-			.map(post => post.id);
+			.filter((post) => post.related_model === 'group_thread')
+			.map((post) => post.id);
 
 		if (pollIds.length) {
-			const response = infoToGet === 'home' 
-				? await PollsApi.getHomePolls(filter.order_by)
-				: await PollsApi.getGroupPolls($page.params.groupId, pollIds, filter.order_by);
+			const response =
+				infoToGet === 'home'
+					? await PollsApi.getHomePolls(filter.order_by)
+					: await PollsApi.getGroupPolls($page.params.groupId, pollIds, filter.order_by);
 			polls = response.results;
 		}
 
 		if (threadIds.length) {
-			const response = infoToGet === 'home'
-				? await ThreadsApi.getHomeThreads(filter.order_by)
-				: await ThreadsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
+			const response =
+				infoToGet === 'home'
+					? await ThreadsApi.getHomeThreads(filter.order_by)
+					: await ThreadsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
 			threads = response.results;
 		}
 	}
@@ -136,10 +137,11 @@
 		}
 
 		if ($page.params.groupId) {
-			isAdmin = await getUserIsOwner($page.params.groupId) || false;
+			isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 		}
 	});
 </script>
+
 <div class={`${Class} dark:text-darkmodeText`}>
 	<Loader bind:loading>
 		<div class={`flex flex-col gap-6 w-full`}>
@@ -153,7 +155,7 @@
 				bind:showThreads
 				bind:showPolls
 			/>
-			
+
 			{#if posts.length === 0 && !loading}
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No posts currently here')}

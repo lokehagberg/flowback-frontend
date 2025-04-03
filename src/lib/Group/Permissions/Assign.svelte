@@ -32,25 +32,25 @@
 
 	const updateUserRoles = async (roleId: number, userId: number) => {
 		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
-			user: userId,
+			target_user_id: userId,
 			permission: roleId
 		});
-		
+
 		//@ts-ignore
 		users.find((user) => user.user.id === userId)!.permission_name = roles.find(
 			(role) => role.id === roleId
 		)?.role_name;
 		users = users;
 	};
-	
-	const makeAdmin = async (user:User) => {
-		
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
-			user: user.user_id,
-			is_admin:1
-		});
 
-	}
+	const makeAdmin = async (user: User) => {
+		console.log(user.user_id, 'user.user_id');
+
+		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
+			target_user_id: user.id,
+			is_admin: true
+		});
+	};
 
 	onMount(() => {
 		getUsers();
@@ -83,6 +83,7 @@
 				>
 					<Fa icon={faPlus} size="lg" />
 				</div>
+				{@debug user}
 				<Button onClick={() => makeAdmin(user)}>Make admin</Button>
 			</div>
 			<div

@@ -99,6 +99,8 @@
 	};
 
 	const saveDelegation = async () => {
+		console.log("SAFEEEEEEEEE", tags, tags.map(({ id }) => id));
+		
 		const toSendDelegates = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)

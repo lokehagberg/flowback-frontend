@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchRequest } from '$lib/FetchRequest';
+	import { ProposalsApi } from '$lib/api/proposals';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { DateInput } from 'date-picker-svelte';
@@ -9,68 +9,53 @@
 	import WeekView from '$lib/Generic/Schedules/WeekView.svelte';
 	import Structure from './NewDesign/Structure.svelte';
 	import Comments from '$lib/Comments/Comments.svelte';
-	import type { proposal, timeProposal } from './interface';
+	import type { timeProposal } from './interface';
 
-	let open = false,
-		date: Date,
-		proposals: timeProposal[] = [],
-		daysFormatting = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-		votes: number[] = [];
+	let open = false;
+	let date: Date;
+	let proposals: timeProposal[] = [];
+	let votes: number[] = [];
+	
+	const pollId = $page.params.pollId;
 
-	let postProposal = async () => {
-		let end_date = new Date(date);
+	async function createProposal(date: Date) {
+		const end_date = new Date(date);
 		end_date.setHours(date.getHours() + 1);
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/proposal/create`,
-			{
-				start_date: date,
-				end_date
-			}
-		);
-	};
+		
+		await ProposalsApi.createProposal(pollId, {
+			start_date: date,
+			end_date
+		});
+	}
 
-	let getProposals = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/poll/${$page.params.pollId}/proposals?limit=10000`
-		);
+	async function fetchProposals() {
+		const response = await ProposalsApi.getProposals(pollId);
+		proposals = response.results;
+	}
 
-		proposals = json.results;
-	};
+	async function fetchProposalVotes() {
+		const response = await ProposalsApi.getVotes(pollId);
+		votes = response.results.map(vote => vote.proposal);
+	}
 
-	let getProposalVote = async () => {
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/poll/${$page.params.pollId}/proposal/votes`
-		);
+	async function updateVotes(id: number, adding: boolean) {
+		const newVotes = adding && !votes.includes(id)
+			? [...votes, id]
+			: votes.filter(vote => vote !== id);
+			
+		votes = newVotes;
+		await ProposalsApi.updateVotes(pollId, newVotes);
+	}
 
-		votes = json.results.map((vote: any) => vote.proposal);
-	};
-
-	let updateProposalVote = async (id: number, adding: boolean) => {
-		if (adding && !votes.find((vote) => vote === id)) votes.push(id);
-		else votes = votes.filter((vote) => vote !== id);
-		votes = votes;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/proposal/vote/update`,
-			{ proposals: votes }
-		);
-	};
-
-	let handlePostProposal = async () => {
-		await postProposal();
-		getProposals();
-	};
+	async function handleProposalSubmit() {
+		await createProposal(date);
+		await fetchProposals();
+		open = false;
+	}
 
 	onMount(async () => {
-		getProposals();
-		getProposalVote();
+		await Promise.all([fetchProposals(), fetchProposalVotes()]);
 	});
-
-	$: console.log(votes, proposals, 'PROPOSALVA');
 </script>
 
 <!-- 
@@ -124,7 +109,7 @@
 	<div slot="right"><Comments api="poll" /></div>
 </Structure>
 
-<Modal bind:open onSubmit={handlePostProposal}>
+<Modal bind:open onSubmit={handleProposalSubmit}>
 	<div slot="body" class="min-w-[400px] min-h-[300px]">
 		<DateInput bind:value={date} />
 	</div>

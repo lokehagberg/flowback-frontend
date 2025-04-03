@@ -100,15 +100,20 @@ async function handleResponse<T>(response: Response, jsonResponse: boolean): Pro
     throw new Error('Authentication expired or invalid');
   }
 
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.detail || 'API request failed');
+  }
+
+  // Return undefined for void responses or empty responses
+  if (response.status === 204 || response.headers.get('content-length') === '0') {
+    return undefined as T;
+  }
+
   if (!jsonResponse) {
     return {} as T;
   }
 
   const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.detail || 'API request failed');
-  }
-
   return data as T;
 } 

@@ -28,8 +28,9 @@ export class ProposalsApi {
     return response;
   }
 
+  // Returns no data
   static async updateVotes(pollId: string, proposals: number[]): Promise<void> {
-    await apiClient(`group/poll/${pollId}/proposal/vote/update`, {
+    await apiClient<void>(`group/poll/${pollId}/proposal/vote/update`, {
       method: 'POST',
       body: { proposals }
     });

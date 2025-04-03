@@ -10,7 +10,7 @@
 	import Loader from '../Loader.svelte';
 	import type { timeProposal } from '$lib/Poll/interface';
 	import Button from '$lib/Generic/Button.svelte';
-	import { SchedulesApi } from '$lib/api/schedules';
+	import { ProposalsApi } from '$lib/api/proposals';
 
 	export let x = 10,
 		y = 10,
@@ -61,14 +61,14 @@
 					voteIds.push(existingProposal.id);
 				} else {
 					const end_date = new Date(date.getTime() + 60 * 60 * 1000);
-					const newProposalId = await SchedulesApi.createProposal(pollId, { start_date: date, end_date });
+					const newProposalId = await ProposalsApi.createProposal(pollId, { start_date: date, end_date });
 					voteIds.push(newProposalId);
 				}
 			}
 
-			await SchedulesApi.updateVotes(pollId, voteIds);
+			await ProposalsApi.updateVotes(pollId, voteIds);
 			votes = voteIds;
-			const response = await SchedulesApi.getProposals(pollId);
+			const response = await ProposalsApi.getProposals(pollId);
 			proposals = response.results;
 			selectedDates = validSelectedDates;
 			noChanges = true;

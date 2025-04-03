@@ -82,7 +82,7 @@
 	// UI interaction handlers
 	const clearSelection = () => {
 		selectedDates = [];
-		noChanges = true;
+		noChanges = false;
 	};
 
 	const toggleDate = (date: Date) => {
@@ -200,8 +200,11 @@
 				buttonStyle="primary-light"
 				Class="flex-1">{$_('Submit')}</Button
 			>
-			<Button onClick={clearSelection} buttonStyle="warning-light" Class="flex-1"
-				>{$_('Cancel')}</Button
+			<Button 
+				onClick={clearSelection} 
+				buttonStyle="warning-light" 
+				disabled={selectedDates.length === 0}
+				Class="flex-1">{$_('Clear')}</Button
 			>
 		</div>
 	</div></Loader

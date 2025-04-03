@@ -45,7 +45,7 @@
 		{#key selectedProposal}
 			{#each predictions as prediction}
 				<div
-					class="border-b-2 flex flex-col break-all py-2 gap-1"
+					class="border-b-2 flex flex-col break-words py-2 gap-1"
 					class:select-none={phase === 'prediction_bet'}
 				>
 					<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
@@ -55,9 +55,9 @@
 					{/if}
 					{#if phase === 'delegate_vote' || phase === 'vote'}
 						<span class="text-sm text-right"
-							>{$_('Bet')}:
+							>{$_('Probability')}:
 							{#if prediction.combined_bet}
-								{prediction.combined_bet}
+								{(prediction.combined_bet * 100).toFixed(0)}%
 							{:else if poll.status_prediction === '2'}
 								{$_('Calculating')}
 							{:else}

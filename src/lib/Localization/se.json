@@ -533,6 +533,7 @@
     "You do not have permission to create a post": "Du har inte behörighet att skapa ett inlägg",
     "Users requesting invite": "Användare som begär inbjudan",
     "Probability successfully sent": "Sannolikhet har skickats",
+    "Probability":"Sannolikhet",
     "Failed to send probability": "Det gick inte att skicka sannolikhet",
     "Failed to delete probability": "Det gick inte att ta bort sannolikhet",
     "Successfully updated probability": "Lyckades uppdatera sannolikhet",
@@ -632,11 +633,14 @@
     "Template deleted successfully": "Tidsmallen har raderats",
     "Could not delete template": "Tidsmallen kunde inte raderas",
     "Being a part of a work group means that you will join that work group's chat, have access to viewing and creating tasks, events, and posts assigned to that work group. Work groups have no individual pages.": "Att vara en del av en arbetsgrupp innebär att du går med i den arbetsgruppens chatt, har tillgång till att visa och skapa uppgifter, händelser och inlägg som tilldelats den arbetsgruppen. Arbetsgrupper har inga enskilda sidor.",
-    "We have sent a verification code to the provided email.": "Vi har skickat en verifieringskod till den angivna e-postadressen.",
+    "We have sent a verification code to the provided email. Don't forget to check your junk mail!": "Vi har skickat en verifieringskod till den angivna e-postadressen. Glöm inte att kolla din skräppost!",
     "No Fast Forward": "Ingen Snabbspolning",
     "Allows user to fast forward polls": "Tillåter användare att snabbspola omröstningar",
     "Allows user to create posts": "Tillåter användare att skapa inlägg",
     "Create post": "Skapa inlägg",
+    "Username may only contain letters, numbers, and @/./+/-/_ characters. No spaces are allowed.": "Användarnamnet får endast innehålla bokstäver, siffror och @/./+/-/_ tecken. Mellanslag är inte heller tillåtna.",
+    "No description provided for this tag.": "Ingen beskrivning har angetts för denna tagg.",
+    "Predict on what will happen if a proposal is implemented in reality.": "Förutse vad som kommer att hända om ett förslag genomförs i verkligheten.",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

@@ -104,7 +104,7 @@
 			</div>
 		</div>
 		{#if group.description.length > 0}
-			<div class="text-xs mt-2 pb-1 grid-area-description break-all">
+			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
 				<Description limit={400} description={group.description} />
 			</div>
 		{/if}

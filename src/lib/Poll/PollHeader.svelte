@@ -39,7 +39,7 @@
 		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 		<Fa icon={faArrowLeft} />
 	</button>
-	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-all">
+	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-words">
 		{poll?.title}
 	</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
@@ -104,7 +104,7 @@
 	</div>
 
 	{#if poll?.description.length > 0}
-		<div class="grid-area-description break-all">
+		<div class="grid-area-description break-words">
 			<Description limit={400} description={poll?.description} />
 		</div>
 	{/if}

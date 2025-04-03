@@ -72,7 +72,7 @@
 		{/if}
 		{#each proposals as proposal, i}
 			<div class="border-gray-300 border-b-2 mt-3 pb-1">
-				<span class="text-primary dark:text-secondary font-semibold flex items-center gap-1 break-all"
+				<span class="text-primary dark:text-secondary font-semibold flex items-center gap-1 break-words"
 					>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 					{proposal.title}</span
 				>

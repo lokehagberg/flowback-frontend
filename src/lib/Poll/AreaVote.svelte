@@ -106,7 +106,7 @@
 	<div class="flex-grow flex flex-col gap-3 overflow-auto">
 		{#each tags as tag}
 			{#if tag.active}
-				<div class="flex items-center space-x-3">
+				<div class="flex items-center space-x-3 flex-wrap">
 					<input
 						type="radio"
 						name="area"
@@ -114,8 +114,10 @@
 						checked={selectedTag === tag.id}
 						class="cursor-pointer"
 					/>
-					<span>{elipsis(tag.name, 40)}</span>
-					<Question message={tag.description || 'No description provided for this tag'} />
+					<span class="whitespace-nowrap flex-1">
+						{elipsis(tag.name, 40)}
+					</span>
+						<Question message={tag.description || 'No description provided for this tag.'} />
 				</div>
 			{/if}
 		{/each}

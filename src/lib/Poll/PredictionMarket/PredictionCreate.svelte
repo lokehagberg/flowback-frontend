@@ -56,7 +56,7 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
-		if (newPredictionStatement.description === '') newPredictionStatement.description = undefined;
+		if (newPredictionStatement.description === '') newPredictionStatement.description = "No description provided";
 
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
@@ -65,7 +65,8 @@
 			const statement = {
 				end_date: newPredictionStatement.end_date,
 				segments: [segment],
-				title: newPredictionStatement.title
+				title: newPredictionStatement.title,
+				description: newPredictionStatement.description
 			};
 
 			const { res, json } = await fetchRequest(

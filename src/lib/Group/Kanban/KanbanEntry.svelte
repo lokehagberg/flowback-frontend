@@ -382,6 +382,7 @@
 							Class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
+							value={kanbanEdited.work_group?.id || null}
 							onInput={handleChangeWorkGroup}
 						/>
 					</div>

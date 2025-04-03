@@ -107,7 +107,7 @@
 		score = null;
 		currentSnapPosition = null;
 		onSelection(null);
-	}}>{$_('Reset Betting')}</Button
+	}}>{$_('Reset')}</Button
 >
 
 <style>

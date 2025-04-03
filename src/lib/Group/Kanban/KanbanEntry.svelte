@@ -209,7 +209,19 @@
 	};
 
 	const cancelUpdateKanban = () => {
-		openModal = false;
+		(kanbanEdited = {
+			entry_id: kanban.id,
+			description: kanban.description,
+			title: kanban.title,
+			assignee_id: kanban.assignee?.id,
+			priority: kanban.priority,
+			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			work_group: kanban.work_group || null,
+			//@ts-ignore
+			images: kanban.attachments || []
+		}),
+			(openModal = false);
+		isEditing = false;
 	};
 
 	onMount(async () => {

@@ -84,8 +84,6 @@
 	};
 
 	onMount(async () => {
-		// console.log(poll, phase, 'POLL AND PHASE');
-
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {
 			tags = await getTags(poll?.group_id);
@@ -167,7 +165,7 @@
 				{/if}
 
 				<MultipleChoices
-					labels={phase === 'result' || phase === 'prediction_vote'
+					labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
 						? [$_('Delete Poll')]
 						: [$_('Delete Poll'), $_('Fast Forward')]}
 					functions={[

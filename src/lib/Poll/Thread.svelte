@@ -125,7 +125,7 @@
 		>
 			<a
 				class="text-black dark:text-darkmodeText flex justify-center gap-1"
-				href={`${thread?.created_by?.group_id}/thread/${thread?.id}`}
+				href={`groups/${thread?.created_by?.group_id}/thread/${thread?.id}`}
 			>
 				<img class="w-5" src={ChatIcon} alt="open chat" />
 				<span class="inline">{thread?.total_comments} {'comments'}</span>

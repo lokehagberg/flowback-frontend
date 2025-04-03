@@ -25,10 +25,6 @@
 		bind:value
 		on:input={(e) => {
 			onInput(e);
-			//@ts-ignore
-			// if (e?.target?.value)
-			// 	//@ts-ignore
-			// 	value = e?.target?.value;
 		}}
 		class={`rounded p-1 dark:bg-darkobject ${classInner}`}
 		style="width:100%"

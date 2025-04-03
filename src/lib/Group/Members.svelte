@@ -247,7 +247,6 @@
 		</div>
 
 		<!-- Members List -->
-
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each searchedUsers as user}

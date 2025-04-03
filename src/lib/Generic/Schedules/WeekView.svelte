@@ -73,52 +73,89 @@
 	const saveSelection = async () => {
 		loading = true;
 		try {
-			// First create any new proposals that don't exist yet
-			const proposalPromises = selectedDates.map(async (date) => {
-				const start_date = date;
-				const end_date = new Date(date.getTime() + 60 * 60 * 1000); // Add 1 hour
+			// First, ensure all selected dates are valid
+			const validSelectedDates = selectedDates.filter((date): date is Date => 
+				date instanceof Date
+			);
 
-				const existingProposal = proposals.find(
-					(proposal) => new Date(proposal.start_date).getTime() === start_date.getTime()
+			// Map each date to either an existing proposal ID or create a new one
+			const proposalPromises = validSelectedDates.map(async (date) => {
+				// Find existing proposal by matching the start_date
+				const existingProposal = proposals.find(proposal => {
+					const proposalDate = new Date(proposal.start_date);
+					return proposalDate.getTime() === date.getTime();
+				});
+
+				// If we found an existing proposal, use its ID
+				if (existingProposal) {
+					return existingProposal.id;
+				}
+
+				// Otherwise create a new proposal
+				const end_date = new Date(date.getTime() + 60 * 60 * 1000); // Add 1 hour
+				const { res, json } = await fetchRequest(
+					'POST',
+					`group/poll/${$page.params.pollId}/proposal/create`,
+					{
+						start_date: date,
+						end_date
+					}
 				);
 
-				if (!existingProposal) {
-					const { res, json } = await fetchRequest(
-						'POST',
-						`group/poll/${$page.params.pollId}/proposal/create`,
-						{
-							start_date,
-							end_date
-						}
-					);
-					return json.id; // Return the new proposal ID
+				// Only return the ID if creation was successful
+				if (!res.ok) {
+					console.error('Failed to create proposal:', json);
+					return null;
 				}
-				return existingProposal.id;
+
+				return json.id;
 			});
 
-			// Wait for all proposals to be created
-			const savedProposalIds = await Promise.all(proposalPromises);
+			// Wait for all proposals and filter out any nulls
+			const newProposalIds = (await Promise.all(proposalPromises))
+				.filter((id): id is number => 
+					id !== null && typeof id === 'number'
+				);
 
-			// Update the votes with the final list of proposal IDs
+			// Only proceed if we have valid proposals
+			if (newProposalIds.length === 0) {
+				console.error('No valid proposals to save');
+				return;
+			}
+
+			// Get all existing votes that we want to keep
+			const existingVotes = votes.filter(voteId => {
+				const proposalDate = proposals.find(p => p.id === voteId)?.start_date;
+				if (!proposalDate) return false;
+				
+				// Keep vote if its date is still selected
+				return validSelectedDates.some(selectedDate => 
+					new Date(proposalDate).getTime() === selectedDate.getTime()
+				);
+			});
+
+			// Combine existing votes we want to keep with new proposal votes
+			const allVoteIds = [...new Set([...existingVotes, ...newProposalIds])];
+
+			// Update votes with all valid proposal IDs
 			const { res, json } = await fetchRequest(
 				'POST',
 				`group/poll/${$page.params.pollId}/proposal/vote/update`,
 				{
-					proposals: savedProposalIds
+					proposals: allVoteIds
 				}
 			);
 
 			if (res.ok) {
-				// Update local state to match server
-				votes = savedProposalIds;
-				proposals = await getProposals(); // Refresh proposals list
-				transformVotesIntoSelectedDates(); // Update UI
+				votes = allVoteIds;
+				await getProposals(); // Refresh proposals list
+				selectedDates = validSelectedDates; // Keep our selections
 				noChanges = true;
 			} else {
-				console.error('Failed to update votes:', json); // TODO: Temporary solution
+				console.error('Failed to update votes:', json);
 			}
 		} catch (error) {
-			console.error('Error saving selection:', error); // TODO: Temporary solution
+			console.error('Error saving selection:', error);
 		} finally {
 			loading = false;
 		}
@@ -190,6 +227,8 @@
 	};
 
 	const toggleDate = (date: Date) => {
+		if (!(date instanceof Date)) return;
+		
 		if (isSelected(date)) {
 			selectedDates = selectedDates.filter((d) => d.getTime() !== date.getTime());
 		} else {
@@ -199,15 +238,15 @@
 	};
 
 	const transformVotesIntoSelectedDates = () => {
-		if (!votes?.length || !proposals?.length) return;
+		if (!Array.isArray(votes) || !Array.isArray(proposals)) return;
 		
 		const votedProposals = proposals.filter(proposal => 
-			votes.includes(proposal.id)
+			proposal?.id && votes.includes(proposal.id)
 		);
 		
-		selectedDates = votedProposals.map(proposal => 
-			new Date(proposal.start_date)
-		);
+		selectedDates = votedProposals
+			.map(proposal => proposal?.start_date ? new Date(proposal.start_date) : null)
+			.filter((date): date is Date => date instanceof Date);
 	};
 
 	$: if (votes && proposals) {

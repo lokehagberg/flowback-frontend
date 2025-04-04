@@ -231,9 +231,6 @@
 
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
-		selectedEvent.start_date = selectedDate.toString();
-		if (selectedDate)
-			selectedEvent.end_date = new Date(selectedDate.getTime() + 60 * 60 * 1000).toString();
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;

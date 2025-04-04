@@ -66,11 +66,11 @@
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Meeting link')}</p>
-			<p class="w-full}">{selectedEvent.meeting_link}</p>
+			<p class="w-full">{selectedEvent.meeting_link}</p>
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Description')}</p>
-			<p class="max-h-[25vh] overflow-scroll break-words w-full}">{selectedEvent.description}</p>
+			<p class="max-h-[25vh] overflow-scroll break-words w-full">{selectedEvent.description}</p>
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Attachments')}</p>
@@ -116,8 +116,6 @@
 						/>
 					</div>
 				{/if}
-				<!-- <input bind:value={start_date} type="datetime-local" />
-				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="w-full md:flex md:gap-4">
 					<div class="text-left flex-1">
 						<label class="block text-md pt-2" for="create-start-date">

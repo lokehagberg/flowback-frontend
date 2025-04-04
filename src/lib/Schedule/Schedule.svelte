@@ -104,7 +104,8 @@
 		let payload: any = selectedEvent;
 
 		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
-		if (selectedEvent.meeting_link === '') delete payload.meeting_link;
+		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === undefined)
+			delete payload.meeting_link;
 
 		if (selectedEvent.description === '') delete payload.description;
 

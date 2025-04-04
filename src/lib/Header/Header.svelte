@@ -78,13 +78,9 @@
 	const getProfileImage = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 
-		if (res.ok && json.profile_image)
-			profileImage = `${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${json.profile_image}`;
+		if (res.ok && json.profile_image) profileImage = json.profile_image;
 
-		localStorage.setItem(
-			'pfp-link',
-			`${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${json.profile_image}`
-		);
+		localStorage.setItem('pfp-link', json.profile_image);
 
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getIsAdmin(json?.id);
 	};
@@ -120,13 +116,7 @@
 	<div class="!flex justify-between md:w-[80%]">
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-				<HeaderIcon
-					disableTextOnHover
-					icon={faHouse}
-					text="Home"
-					href="home"
-					bind:selectedHref
-				/>
+				<HeaderIcon disableTextOnHover icon={faHouse} text="Home" href="home" bind:selectedHref />
 				<!-- <HeaderIcon disableTextOnHover icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
 					disableTextOnHover

@@ -32,11 +32,7 @@
 		<div class="relative">
 			<img
 				class="cover w-full"
-				src={group.cover_image
-					? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-							group.cover_image
-					  }`
-					: DefaultBanner}
+				src={group.cover_image ? `${env.PUBLIC_API_URL}${group.cover_image}` : DefaultBanner}
 				alt="cover"
 			/>
 
@@ -71,7 +67,7 @@
 		<img
 			class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
 			src={group.image
-				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
+				? `${env.PUBLIC_API_URL}${group.image}`
 				: DefaultBanner}
 			alt="profile"
 		/>

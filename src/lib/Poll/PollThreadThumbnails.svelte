@@ -110,6 +110,7 @@
 					? await PollsApi.getHomePolls(filter.order_by)
 					: await PollsApi.getGroupPolls($page.params.groupId, pollIds, filter.order_by);
 			polls = response.results;
+			console.log(response, 'RESPONSE');
 		}
 
 		if (threadIds.length) {

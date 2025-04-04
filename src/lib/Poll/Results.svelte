@@ -7,7 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faStar } from '@fortawesome/free-solid-svg-icons';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import type { poll } from './interface';
 
 	let votes: number[] = [],
@@ -88,7 +88,7 @@
 						>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
 						{proposal.title}</span
 					>
-					<Description description={proposal.description} limit={60} />
+					<NewDescription description={proposal.description} limit={2} lengthLimit={100} />
 					<span class="block text-right"
 						><span class="text-primary dark:text-secondary font-semibold">{$_('Points')}:</span>
 						{proposal.score || '0'}</span

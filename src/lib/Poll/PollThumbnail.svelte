@@ -16,7 +16,7 @@
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import Button from '$lib/Generic/Button.svelte';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
@@ -231,7 +231,7 @@
 		</div>
 
 		{#if poll?.description?.length > 0}
-			<Description limit={500} description={poll?.description} Class="mt-2" />
+			<NewDescription limit={2} lengthLimit={700} description={poll?.description} Class="mt-2" />
 		{/if}
 
 		<Timeline

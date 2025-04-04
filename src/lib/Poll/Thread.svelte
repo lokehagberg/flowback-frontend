@@ -8,7 +8,7 @@
 	import Fa from 'svelte-fa';
 	import { faThumbTack, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
 	import type { Thread } from '$lib/Group/interface';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
@@ -114,7 +114,7 @@
 		</span>
 	{/if}
 	{#if thread?.description}
-		<Description limit={500} description={thread?.description} />
+		<NewDescription limit={2} lengthLimit={700} description={thread?.description} />
 	{/if}
 
 	<hr class="my-3" />

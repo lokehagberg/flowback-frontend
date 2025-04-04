@@ -6,7 +6,7 @@
 	import Prediction from './PredictionMarket/Prediction.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
 
@@ -51,7 +51,7 @@
 					<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
 					<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 					{#if prediction.description}
-						<Description description={prediction.description} limit={130} />
+						<NewDescription description={prediction.description} limit={2} lengthLimit={110} />
 					{/if}
 					{#if phase === 'delegate_vote' || phase === 'vote'}
 						<span class="text-sm text-right"

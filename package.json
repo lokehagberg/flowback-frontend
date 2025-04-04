@@ -55,6 +55,7 @@
         "crypto-js": "^4.2.0",
         "date-picker-svelte": "^2.2.0",
         "dotenv": "^16.3.1",
+        "ESLint": "npm:eslint@^8.57.1",
         "ethers": "^5.7.2",
         "javascript-time-ago": "^2.5.9",
         "svelte-chartjs": "^3.1.0",

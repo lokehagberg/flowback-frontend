@@ -195,7 +195,7 @@
 
 		<div class="pt-4 px-4 border-t flex gap-4 bg-white">
 			<Button
-				bind:disabled={noChanges}
+				disabled={noChanges || selectedDates.length === 0}
 				onClick={saveSelection}
 				buttonStyle="primary-light"
 				Class="flex-1">{$_('Submit')}</Button
@@ -204,7 +204,7 @@
 				onClick={clearSelection} 
 				buttonStyle="warning-light" 
 				disabled={selectedDates.length === 0}
-				Class="flex-1">{$_('Clear')}</Button
+				Class="flex-1 disabled:!text-gray-300">{$_('Clear')}</Button
 			>
 		</div>
 	</div></Loader

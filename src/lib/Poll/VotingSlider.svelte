@@ -7,108 +7,109 @@
 		lineWidth = 0,
 		score: number | null = null;
 
-	let snapPoints = [0, 20, 40, 60, 80, 100],
-		dragLinePosition: any = null,
-		currentSnapPosition: any;
+	const maxScore = 5;
+	const snapPoints = Array.from({ length: maxScore + 1 }, (_, i) => i); // [0,1,2,3,4,5]
 
-	const snapToSnapPoint = (width: number) => {
+	let dragLinePosition: number | null = null;
+	let currentSnapPosition: number | null = null;
+
+	const snapToSnapPoint = (value: number) => {
 		const nearestSnap = snapPoints.reduce((prev, curr) =>
-			Math.abs(curr - width) < Math.abs(prev - width) ? curr : prev
+			Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
 		);
 
-		lineWidth = nearestSnap;
-
+		lineWidth = (nearestSnap / maxScore) * 100;
 		currentSnapPosition = nearestSnap;
 		return nearestSnap;
 	};
 
-	const onMouseDown = (event: any) => {
-		const container = event.target.parentElement;
+	const onMouseDown = (event: MouseEvent) => {
+		const container = (event.target as HTMLElement).closest('#track-container') as HTMLElement;
+		if (!container) return;
 
-		const onMouseMove = (e: any) => {
+		const onMouseMove = (e: MouseEvent) => {
 			const rect = container.getBoundingClientRect();
 			const offsetX = e.clientX - rect.left;
 			const width = (offsetX / rect.width) * 100;
+			const value = (width / 100) * maxScore;
 
 			dragLinePosition = offsetX;
-			score = snapToSnapPoint(width) / 20;
-			console.log(score, 'score');
+			score = snapToSnapPoint(value);
 		};
 
 		const onMouseUp = () => {
-			onSelection(currentSnapPosition / 20);
+			onSelection(currentSnapPosition!);
 			document.removeEventListener('mousemove', onMouseMove);
 			document.removeEventListener('mouseup', onMouseUp);
-			dragLinePosition = null; // Hide the vertical line after mouse up
+			dragLinePosition = null;
 		};
 
 		document.addEventListener('mousemove', onMouseMove);
 		document.addEventListener('mouseup', onMouseUp);
 	};
 
-	// To ensure the snapping points align visually
-	let snapPointsInPixels: any[] = [];
-	onMount(() => {
-		const container = document.getElementById('track-container');
-		const rect = container?.getBoundingClientRect();
-		if (rect) snapPointsInPixels = snapPoints.map((point) => (rect.width * point) / 100);
-	});
-
-	$: if (score !== null) snapToSnapPoint(score * 20);
-	else snapToSnapPoint(0);
+	$: score !== null ? snapToSnapPoint(score) : snapToSnapPoint(0);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject pt-1 pb-3 p-1 rounded-lg draggable relative"
+	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg draggable relative"
 	on:mousedown={onMouseDown}
 >
-	<div id="track-container" class="relative w-full h-2 bg-purple-200 rounded-full">
-		{#if dragLinePosition !== null}
-			<div
-				class="absolute top-0 left-0 h-[40px<] border-l-2 border-gray-600 w-[40px]"
-				style="left: {dragLinePosition}px;"
-			/>
-		{/if}
+	<div id="track-container" class="p-1 relative w-full h-3 bg-purple-200 rounded-full">
+		<!-- Active bar -->
 		<div
 			class="absolute top-0 left-0 h-full bg-purple-500 rounded-full"
 			style="width: {lineWidth}%;"
 		/>
 
-		<!-- {#each snapPointsInPixels as point (point)}
-			<div class="absolute top-0 h-full w-1 bg-gray-400 opacity-50" style="left: {point}px;" />
-		{/each} -->
-	</div>
-	<div
-		class={`absolute -top-[20%] ${
-			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
-			currentSnapPosition === null || score === null
-				? 'invisible'
-				: currentSnapPosition === 0
-				? 'left-0'
-				: currentSnapPosition === 20
-				? 'left-[20%]'
-				: currentSnapPosition === 40
-				? 'left-[40%]'
-				: currentSnapPosition === 60
-				? 'left-[60%]'
-				: currentSnapPosition === 80
-				? 'left-[80%]'
-				: 'left-[100%]'
-		} z-30 bg-white px-0.5 text-sm`}
-	>
-		|
+		{#each snapPoints as point, index}
+			<div
+				class="absolute top-1/2 w-2 h-2 bg-white rounded-full border border-gray-400 -translate-y-1/2"
+				style="left: {index === 0 ? '2px' : index === snapPoints.length - 1 ? 'calc(100% - 2px)' : (point / maxScore) * 100 + '%'}; transform: {index === 0 ? 'translateY(-50%)' : index === snapPoints.length - 1 ? 'translate(-100%, -50%)' : 'translate(-50%, -50%)'}"
+			/>
+		{/each}
+
+		<!-- Snap indicator line -->
+		{#if currentSnapPosition !== null}
+			<!-- White rounded background for the line -->
+			<div
+				class="absolute z-20 w-4 h-8 bg-white rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2"
+				style="left: {(currentSnapPosition / maxScore) * 100}%"
+			/>
+			<!-- Vertical line on top of the background -->
+			<div
+				class="absolute z-30 w-[1.5px] h-7 bg-gray-900 -translate-x-1/2 top-1/2 -translate-y-1/2"
+				style="left: {(currentSnapPosition / maxScore) * 100}%"
+			/>
+
+			<!-- Floating value shown only while dragging -->
+			{#if dragLinePosition !== null}
+				<div
+					class="absolute -top-6 z-30 text-sm bg-white px-1 py-0.5 rounded shadow -translate-x-1/2"
+					style="left: {(currentSnapPosition / maxScore) * 100}%"
+				>
+					{currentSnapPosition}
+				</div>
+			{/if}
+		{/if}
 	</div>
 </div>
 
-<Button
-	onClick={() => {
-		lineWidth = 0;
-		score = null;
-		currentSnapPosition = null;
-		onSelection(null);
-	}}>{$_('Reset')}</Button
->
+<div class="flex justify-center w-full">
+	<Button
+		Class="!p-0 border-none text-sm text-red-600 !bg-transparent cursor-pointer hover:underline hover:bg-transparent"
+		buttonStyle="warning-light"
+		onClick={() => {
+			lineWidth = 0;
+			score = null;
+			currentSnapPosition = null;
+			onSelection(null);
+		}}
+	>
+		{$_('Clear vote')}
+	</Button>
+</div>
 
 <style>
 	.draggable {

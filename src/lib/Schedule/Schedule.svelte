@@ -259,7 +259,7 @@
 					icon={faPlus}
 				/>
 			</button>
-			{#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
+			<!-- {#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
 				<div class="mt-2">
 					<a
 						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
@@ -294,7 +294,7 @@
 						>
 					</a>
 				</div>
-			{/each}
+			{/each} -->
 		</div>
 
 		<div class="flex flex-col">

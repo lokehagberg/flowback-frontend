@@ -144,7 +144,7 @@
 			{/if}
 
 			<TextInput label="Title" bind:value={name} required />
-			<TextArea label="Description" bind:value={description} />
+			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap"/>
 
 			<FIleUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
 			<FIleUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />

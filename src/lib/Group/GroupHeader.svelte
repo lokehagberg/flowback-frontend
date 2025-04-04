@@ -8,9 +8,10 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import Description from '$lib/Poll/Description.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -101,7 +102,7 @@
 		</div>
 		{#if group.description.length > 0}
 			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
-				<Description limit={400} description={group.description} />
+				<NewDescription limit={2} lengthLimit={250} description={group.description} />
 			</div>
 		{/if}
 	</div>

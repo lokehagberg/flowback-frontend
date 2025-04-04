@@ -223,7 +223,7 @@
 			{/if}
 
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
-			<TextArea label="Description" bind:value={description} />
+			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap" />
 			<FileUploads bind:files={images} disableCropping />
 
 			{#if selectedPage === 'thread' || selected_poll === 'Date Poll'}

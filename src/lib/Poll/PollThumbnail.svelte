@@ -135,7 +135,7 @@
 						<span class="inline break-all">{poll?.group_name}</span>
 						<img
 							class="h-8 w-8 inline rounded-full break-all"
-							src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+							src={`${env.PUBLIC_API_URL}${
 								poll?.group_image
 							}`}
 							on:error={(e) => onThumbnailError(e, DefaultBanner)}

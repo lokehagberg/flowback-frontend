@@ -23,9 +23,7 @@
 			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
 		{:else}
 			<img
-				src={`${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-				}${profilePicture}`}
+				src={`${env.PUBLIC_API_URL}${profilePicture}`}
 				alt="avatar"
 				class={`w-[${size}px] h-[${size}px] rounded-full`}
 			/>
@@ -42,9 +40,7 @@
 			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
 		{:else}
 			<img
-				src={`${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-				}${profilePicture}`}
+				src={`${env.PUBLIC_API_URL}${profilePicture}`}
 				alt="avatar"
 				class={`w-[${size}px] h-[${size}px] rounded-full`}
 			/>

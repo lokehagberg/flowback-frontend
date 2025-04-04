@@ -38,8 +38,8 @@
 </script>
 
 <Loader bind:loading>
-	<div class="border-t-2">
-		<div class="text-gray-500 text-sm pt-3 font-semibold">
+	<div class={phase === 'prediction_vote' ? '' : 'border-t-2'}>
+		<div class={`font-semibold ${phase === 'prediction_vote' ? ' text-xl mb-4 text-primary' : ' text-gray-500 text-sm pt-3'}`}>
 			{$_('Consequences')} ({predictions.length}) 
 		</div>
 		{#key selectedProposal}
@@ -58,7 +58,7 @@
 							>{$_('Probability')}:
 							{#if prediction.combined_bet}
 								{(prediction.combined_bet * 100).toFixed(0)}%
-							{:else if poll.status_prediction === '2'}
+							{:else if poll.status_prediction === 2}
 								{$_('Calculating')}
 							{:else}
 								{$_('None')}

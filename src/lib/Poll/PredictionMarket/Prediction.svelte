@@ -26,6 +26,12 @@
 		showDetails = false,
 		poppup: poppup;
 
+	function hasEndDatePassed(): boolean {
+		const currentDateTime = new Date();
+		const endDateTime = new Date(prediction.end_date);
+		return currentDateTime >= endDateTime;
+	}
+
 	const predictionBetUpdate = async (score: string | number) => {
 		if (score === null) return;
 		loading = true;
@@ -142,7 +148,17 @@
 		score = Number(newScore);
 	};
 
-	onMount(() => {});
+	$: buttonsEnabled = hasEndDatePassed();
+
+	onMount(() => {
+		buttonsEnabled = hasEndDatePassed();
+
+		const interval = setInterval(() => {
+			buttonsEnabled = hasEndDatePassed();
+		}, 60000);
+		
+		return () => clearInterval(interval);
+	});
 </script>
 
 <div class={Class}>
@@ -171,17 +187,20 @@
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`w-12 px-4 py-1 border-2 ${
+				Class={`w-12 px-4 py-1 border-2 
+				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
+				${
 					prediction.user_prediction_statement_vote === true
 						? 'bg-green-600 text-white border-green-600'
 						: 'hover:bg-green-100 border-green-600 text-green-800'
 				}`}
+				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faCheck}
 					class={`${
 						prediction.user_prediction_statement_vote === true ? 'text-white' : 'text-green-700'
-					}`}
+					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
 			<Button
@@ -191,17 +210,20 @@
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`w-12 px-4 py-1 ml-2 border-2 ${
+				Class={`w-12 px-4 py-1 ml-2 border-2 
+				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
+				${
 					prediction.user_prediction_statement_vote === false
 						? 'bg-red-700 text-white border-red-700'
 						: 'hover:bg-red-100 border-red-500 text-red-600'
 				}`}
+				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faX}
 					class={`${
 						prediction.user_prediction_statement_vote === false ? 'text-white' : 'text-red-600'
-					}`}
+					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
 		</div>

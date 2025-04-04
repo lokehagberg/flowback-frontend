@@ -246,7 +246,13 @@
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">
-			<button on:click={() => (showCreateScheduleEvent = true)}>
+			<button
+				on:click={() => {
+					showCreateScheduleEvent = true;
+					selectedEvent.start_date = selectedDate.toISOString().slice(0, 16);
+					selectedEvent.end_date = selectedDate.toISOString().slice(0, 16);
+				}}
+			>
 				<Fa
 					class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
 					size="3x"

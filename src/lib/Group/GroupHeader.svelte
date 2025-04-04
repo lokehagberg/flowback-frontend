@@ -8,9 +8,10 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import Description from '$lib/Poll/Description.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -31,11 +32,7 @@
 		<div class="relative">
 			<img
 				class="cover w-full"
-				src={group.cover_image
-					? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-							group.cover_image
-					  }`
-					: DefaultBanner}
+				src={group.cover_image ? `${env.PUBLIC_API_URL}${group.cover_image}` : DefaultBanner}
 				alt="cover"
 			/>
 
@@ -70,7 +67,7 @@
 		<img
 			class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
 			src={group.image
-				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
+				? `${env.PUBLIC_API_URL}${group.image}`
 				: DefaultBanner}
 			alt="profile"
 		/>
@@ -105,7 +102,7 @@
 		</div>
 		{#if group.description.length > 0}
 			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
-				<Description limit={400} description={group.description} />
+				<NewDescription limit={2} lengthLimit={250} description={group.description} />
 			</div>
 		{/if}
 	</div>

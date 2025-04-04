@@ -204,7 +204,7 @@
 	<form on:submit|preventDefault={createPredictionStatement} class="h-full">
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
-			<TextArea label="Description" bind:value={newPredictionStatement.description} />
+			<TextArea label="Description" inputClass="whitespace-pre-wrap" bind:value={newPredictionStatement.description} />
 		</div>
 		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />

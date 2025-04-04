@@ -22,7 +22,7 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 
 	let poll: poll,
@@ -222,7 +222,7 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<Description description={selectedProposal.description} limit={130} />
+								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{:else if proposalsToPredictionMarket.length === 0}
@@ -261,7 +261,7 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<Description description={selectedProposal.description} limit={130} />
+								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -294,7 +294,7 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<Description description={selectedProposal.description} limit={130} />
+								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -326,7 +326,7 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<Description description={selectedProposal.description} limit={130} />
+								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}

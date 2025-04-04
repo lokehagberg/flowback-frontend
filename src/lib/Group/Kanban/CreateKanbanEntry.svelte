@@ -142,7 +142,7 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
-				<TextArea Class="text-md" label="Description" bind:value={description} />
+				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={description} />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">

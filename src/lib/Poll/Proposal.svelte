@@ -103,13 +103,13 @@
 	</div>
 
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1 break-words" id={`proposal-${proposal.id}-description`}>
+	<p class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 
 	<slot />
 
-	<div class="flex justify-between w-full">
+	<div class="flex justify-between w-full items-center">
 		<div class="flex justify-between gap-10">
 			<button class="flex" on:click={filterComments}>
 				<img
@@ -139,7 +139,7 @@
 			on:click={() => {
 				selectedProposal = proposal;
 			}}
-			class="hover:underline cursor-pointer flex gap-4 items-baseline"
+			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"
 		>
 			{$_('See More')}
 			<Fa icon={faChevronRight} size="xs" />

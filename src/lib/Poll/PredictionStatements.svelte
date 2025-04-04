@@ -6,7 +6,7 @@
 	import Prediction from './PredictionMarket/Prediction.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { _ } from 'svelte-i18n';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
 
@@ -38,8 +38,8 @@
 </script>
 
 <Loader bind:loading>
-	<div class="border-t-2">
-		<div class="text-gray-500 text-sm pt-3 font-semibold">
+	<div class={phase === 'prediction_vote' ? '' : 'border-t-2'}>
+		<div class={`font-semibold ${phase === 'prediction_vote' ? ' text-xl mb-4 text-primary' : ' text-gray-500 text-sm pt-3'}`}>
 			{$_('Consequences')} ({predictions.length}) 
 		</div>
 		{#key selectedProposal}
@@ -51,14 +51,14 @@
 					<span class="text-primary dark:text-secondary font-semibold">{prediction.title}</span>
 					<span class="text-sm text-gray-500">{formatDate(prediction.end_date)}</span>
 					{#if prediction.description}
-						<Description description={prediction.description} limit={130} />
+						<NewDescription description={prediction.description} limit={2} lengthLimit={110} />
 					{/if}
 					{#if phase === 'delegate_vote' || phase === 'vote'}
 						<span class="text-sm text-right"
 							>{$_('Probability')}:
 							{#if prediction.combined_bet}
 								{(prediction.combined_bet * 100).toFixed(0)}%
-							{:else if poll.status_prediction === '2'}
+							{:else if poll.status_prediction === 2}
 								{$_('Calculating')}
 							{:else}
 								{$_('None')}

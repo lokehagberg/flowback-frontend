@@ -117,7 +117,9 @@
 					<span class="whitespace-nowrap flex-1">
 						{elipsis(tag.name, 40)}
 					</span>
-						<Question message={tag.description || 'No description provided for this tag.'} />
+					{#if tag.description}
+						<Question message={tag.description} />
+					{/if}
 				</div>
 			{/if}
 		{/each}

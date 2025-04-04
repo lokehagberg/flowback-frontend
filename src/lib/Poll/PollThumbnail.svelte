@@ -16,7 +16,7 @@
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import Button from '$lib/Generic/Button.svelte';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
@@ -47,7 +47,8 @@
 		voting = true,
 		poppup: poppup,
 		deletePollModalShow = false,
-		hovering = false;
+		hovering = false,
+		showGroupInfo = !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId;
 
 	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
@@ -115,67 +116,103 @@
 	id={`poll-thumbnail-${poll?.id.toString()}`}
 >
 	<div class="mx-2">
-		<div class="flex items-center justify-between text-primary dark:text-secondary">
+		{#if showGroupInfo}
+			<div class="flex gap-4 items-center pb-2 w-full justify-between dark:text-secondary">
+				<a
+					href={poll?.group_joined ? `groups/${poll?.group_id}` : ''}
+					class:hover:underline={poll?.group_joined}
+					class="text-black dark:text-darkmodeText flex items-center"
+				>
+					<img
+						class="h-6 w-6 mr-1 rounded-full break-all"
+						src={`${env.PUBLIC_API_URL}${poll?.group_image}`}
+						on:error={(e) => onThumbnailError(e, DefaultBanner)}
+						alt={'Poll Thumbnail'}
+					/>
+					<span class="break-all text-sm text-gray-700">{poll?.group_name}</span>
+				</a>
+
+				<div class="flex gap-4 items-baseline">
+					<NotificationOptions
+						type="poll"
+						id={poll?.id}
+						api={`group/poll/${poll?.id}`}
+						categories={['poll', 'timeline', 'comment_all']}
+						labels={['Poll', 'Timeline', 'Comments']}
+						Class="text-black dark:text-darkmodeText"
+						ClassOpen="right-0"
+					/>
+					{#if isAdmin || poll?.pinned}
+						<button class:cursor-pointer={isAdmin} on:click={pinPoll}>
+							<Fa
+								size="1.2x"
+								icon={faThumbtack}
+								color={poll?.pinned ? '#999' : '#CCC'}
+								rotate={poll?.pinned ? '0' : '45'}
+							/>
+						</button>
+					{/if}
+					<MultipleChoices
+						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
+							? [$_('Delete Poll')]
+							: [$_('Delete Poll'), $_('Fast Forward')]}
+						functions={[
+							() => (deletePollModalShow = true),
+							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
+						]}
+						Class="text-black justify-self-center mt-2"
+					/>
+				</div>
+			</div>
+
 			<a
-				class="cursor-pointer text-primary dark:text-secondary hover:underline text-2xl break-words"
-				href={onHoverGroup
-					? '/groups/1'
-					: `/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
+				class="cursor-pointer text-primary dark:text-secondary hover:underline text-xl break-words"
+				href={`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
 			>
 				{poll?.title}
 			</a>
+		{:else}
+			<div class="flex justify-between items-start gap-4 pb-2">
+				<a
+					class="cursor-pointer text-primary dark:text-secondary hover:underline text-xl break-words"
+					href={`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
+				>
+					{poll?.title}
+				</a>
 
-			<div class="inline-flex gap-4 items-baseline">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId}
-					<a
-						href={poll?.group_joined ? `groups/${poll?.group_id}` : ''}
-						class:hover:underline={poll?.group_joined}
-						class="text-black dark:text-darkmodeText"
-					>
-						<span class="inline break-all">{poll?.group_name}</span>
-						<img
-							class="h-8 w-8 inline rounded-full break-all"
-							src={`${env.PUBLIC_API_URL}${
-								poll?.group_image
-							}`}
-							on:error={(e) => onThumbnailError(e, DefaultBanner)}
-							alt={'Poll Thumbnail'}
-						/>
-					</a>
-				{/if}
-				<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
-				<NotificationOptions
-					type="poll"
-					id={poll?.id}
-					api={`group/poll/${poll?.id}`}
-					categories={['poll', 'timeline', 'comment_all']}
-					labels={['Poll', 'Timeline', 'Comments']}
-					Class="text-black dark:text-darkmodeText"
-					ClassOpen="right-0"
-				/>
-				{#if isAdmin || poll?.pinned}
-					<button class="" class:cursor-pointer={isAdmin} on:click={pinPoll}>
-						<Fa
-							size="1.2x"
-							icon={faThumbtack}
-							color={poll?.pinned ? '#999' : '#CCC'}
-							rotate={poll?.pinned ? '0' : '45'}
-						/>
-					</button>
-				{/if}
-
-				<MultipleChoices
-					labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
-						? [$_('Delete Poll')]
-						: [$_('Delete Poll'), $_('Fast Forward')]}
-					functions={[
-						() => (deletePollModalShow = true),
-						async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
-					]}
-					Class="text-black justify-self-center mt-2"
-				/>
+				<div class="flex gap-4 items-baseline">
+					<NotificationOptions
+						type="poll"
+						id={poll?.id}
+						api={`group/poll/${poll?.id}`}
+						categories={['poll', 'timeline', 'comment_all']}
+						labels={['Poll', 'Timeline', 'Comments']}
+						Class="text-black dark:text-darkmodeText"
+						ClassOpen="right-0"
+					/>
+					{#if isAdmin || poll?.pinned}
+						<button class:cursor-pointer={isAdmin} on:click={pinPoll}>
+							<Fa
+								size="1.2x"
+								icon={faThumbtack}
+								color={poll?.pinned ? '#999' : '#CCC'}
+								rotate={poll?.pinned ? '0' : '45'}
+							/>
+						</button>
+					{/if}
+					<MultipleChoices
+						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
+							? [$_('Delete Poll')]
+							: [$_('Delete Poll'), $_('Fast Forward')]}
+						functions={[
+							() => (deletePollModalShow = true),
+							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
+						]}
+						Class="text-black justify-self-center mt-2"
+					/>
+				</div>
 			</div>
-		</div>
+		{/if}
 
 		<div class="flex gap-4 my-2 items-center">
 			<!-- Poll Type Icons -->
@@ -231,7 +268,7 @@
 		</div>
 
 		{#if poll?.description?.length > 0}
-			<Description limit={500} description={poll?.description} Class="mt-2" />
+			<NewDescription limit={2} lengthLimit={700} description={poll?.description} Class="mt-2" />
 		{/if}
 
 		<Timeline

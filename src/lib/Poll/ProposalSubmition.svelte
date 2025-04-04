@@ -107,6 +107,7 @@
 			<TextInput required label="Title" bind:value={title} />
 			<TextArea
 				Class="mt-4"
+				inputClass="whitespace-pre-wrap"
 				areaClass="max-h-[12rem] resize-y"
 				label="Description"
 				bind:value={description}

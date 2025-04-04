@@ -69,7 +69,12 @@
 
 <!-- The line for poll creation -->
 <button
-	on:dblclick={() => (showCreateScheduleEvent = true)}
+	on:dblclick={() => {
+		showCreateScheduleEvent = true;
+		const clickedDate = new Date(year, month, getDay(x, y));
+		selectedEvent.start_date = clickedDate.toISOString().slice(0, 16);
+		selectedEvent.end_date = clickedDate.toISOString().slice(0, 16);
+	}}
 	class={`${Class} dark:text-darkmodeText dark:hover:brightness-125 dark:bg-darkobject relative calendar-day border-l border-t border-gray-400 select-none cursor-pointer text-gray-600 transition-all duration-20`}
 	id={`${x}-${y}`}
 	on:click={() => {

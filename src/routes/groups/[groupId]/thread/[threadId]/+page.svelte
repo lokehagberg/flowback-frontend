@@ -12,7 +12,7 @@
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	let thread: Thread, poppup: poppup;
@@ -82,7 +82,7 @@
 
 			{#if thread.description.length > 0}
 				<div class="grid-area-description py-2">
-					<Description readMore bind:description={thread.description} limit={500} Class="" />
+					<NewDescription bind:description={thread.description} limit={3} lengthLimit={300} />
 				</div>
 			{/if}
 		</div>

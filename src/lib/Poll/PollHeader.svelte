@@ -14,7 +14,7 @@
 	import { goto } from '$app/navigation';
 	import { getPhaseUserFriendlyName, nextPhase } from './functions';
 	import { _ } from 'svelte-i18n';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -105,7 +105,7 @@
 
 	{#if poll?.description.length > 0}
 		<div class="grid-area-description break-words">
-			<Description limit={400} description={poll?.description} />
+			<NewDescription limit={3} lengthLimit={300} description={poll?.description} />
 		</div>
 	{/if}
 </div>

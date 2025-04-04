@@ -145,7 +145,7 @@
 		</div>
 		{#key comment.message}
 			{#if comment.message}
-				<div class="text-md mt-1 mb-3 pl-14 break-words" id={`comment-${comment.id}`}>
+				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
 					{comment.message}
 				</div>
 			{/if}

@@ -72,7 +72,7 @@
 		{/if}
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Description')}</p>
-			<p class="max-h-[25vh] overflow-scroll break-words w-full}">{selectedEvent.description}</p>
+			<p class="max-h-[25vh] overflow-scroll break-words w-full whitespace-pre-wrap">{selectedEvent.description}</p>
 		</div>
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Attachments')}</p>
@@ -104,7 +104,7 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" label="Title" bind:value={selectedEvent.title} required />
 				</div>
-				<TextArea Class="text-md" label="Description" bind:value={selectedEvent.description} />
+				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={selectedEvent.description} />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md">
@@ -118,8 +118,6 @@
 						/>
 					</div>
 				{/if}
-				<!-- <input bind:value={start_date} type="datetime-local" />
-				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="w-full md:flex md:gap-4">
 					<div class="text-left flex-1">
 						<label class="block text-md pt-2" for="create-start-date">
@@ -185,6 +183,7 @@
 					bind:value={selectedEvent.description}
 					rows={3}
 					Class="overflow-scroll"
+					inputClass="whitespace-pre-wrap"
 				/>
 				{#if type === 'group'}
 					<div class="text-left">

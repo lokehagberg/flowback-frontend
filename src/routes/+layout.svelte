@@ -104,11 +104,14 @@
 		else if (pathname === '/') goto('/home');
 
 		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime');
-		if (sessionExpiration && relativePath !== '/login')
-			if (sessionExpiration && sessionExpiration < new Date().getTime().toString()) {
-				localStorage.removeItem('token');
-				goto('/login');
-			}
+		if (
+			sessionExpiration &&
+			relativePath !== '/login' &&
+			sessionExpiration < new Date().getTime().toString()
+		) {
+			localStorage.removeItem('token');
+			goto('/login');
+		}
 	};
 
 	const getWorkingGroupList = async () => {

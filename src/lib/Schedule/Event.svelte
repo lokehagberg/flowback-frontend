@@ -64,10 +64,12 @@
 				</p>
 			</div>
 		</div>
-		<div class="text-left mt-1 w-full">
-			<p class="font-bold">{$_('Meeting link')}</p>
-			<p class="w-full">{selectedEvent.meeting_link}</p>
-		</div>
+		{#if selectedEvent?.meeting_link && selectedEvent.meeting_link !== ''}
+			<div class="text-left mt-1 w-full">
+				<p class="font-bold">{$_('Meeting link')}</p>
+				<p class="w-full}">{selectedEvent.meeting_link}</p>
+			</div>
+		{/if}
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Description')}</p>
 			<p class="max-h-[25vh] overflow-scroll break-words w-full">{selectedEvent.description}</p>

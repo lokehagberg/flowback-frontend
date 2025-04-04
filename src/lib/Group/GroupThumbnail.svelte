@@ -37,7 +37,7 @@
 >
 	<button on:click={goToGroup} class="w-full">
 		<img
-			src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
+			src={`${env.PUBLIC_API_URL}${
 				group.cover_image
 			}`}
 			class="cover rounded-t-2xl w-full"
@@ -46,7 +46,7 @@
 		/>
 	</button>
 	<img
-		src={`${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`}
+		src={`${env.PUBLIC_API_URL}${group.image}`}
 		class="bg-white rounded-full w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
 		on:error={(e) => onThumbnailError(e, DefaultBanner)}
 		alt="profile"

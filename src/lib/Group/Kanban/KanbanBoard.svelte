@@ -90,7 +90,7 @@
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
-		workGroups = json.results;
+		workGroups = json.results.filter((group: WorkGroup) => group.joined === true);
 	};
 
 	const removeKanbanEntry = (id: number) => {

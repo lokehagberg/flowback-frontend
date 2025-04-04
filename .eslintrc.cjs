@@ -16,5 +16,8 @@ module.exports = {
 		browser: true,
 		es2017: true,
 		node: true
+	},
+	rules: {
+		"complexity": ["warn", { "max": 1 }]
 	}
 };

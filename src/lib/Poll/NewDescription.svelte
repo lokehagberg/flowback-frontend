@@ -10,7 +10,7 @@
 
 <div class={`dark:text-darkmodeText ${Class}`}>
 	<p
-		class="text-black dark:text-darkmodeText break-words overflow-hidden"
+		class="text-black dark:text-darkmodeText break-words overflow-hidden whitespace-pre-wrap"
 		class:line-clamp={!readMore}
 		style={!readMore ? `-webkit-line-clamp: ${limit}; -webkit-box-orient: vertical; display: -webkit-box;` : ''}
 	>

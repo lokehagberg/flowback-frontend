@@ -103,7 +103,7 @@
 	</div>
 
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1 break-words" id={`proposal-${proposal.id}-description`}>
+	<p class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap" id={`proposal-${proposal.id}-description`}>
 		{proposal.description}
 	</p>
 

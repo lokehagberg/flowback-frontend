@@ -11,7 +11,6 @@
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { env } from '$env/dynamic/public';
 	import { ThreadsApi } from '$lib/api/threads';
-
 	import PollThumbnail from './PollThumbnail.svelte';
 	import PollFiltering from './PollFiltering.svelte';
 	import ThreadThumbnail from './Thread.svelte';

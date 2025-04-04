@@ -93,7 +93,7 @@ export const getPoll = async (id: number) => {
 	}
 };
 
-export const createProposal = async (pollId: number, title: string) => {
+export const proposalCreate = async (pollId: number, title: string) => {
 	const contract = await getContract();
 	try {
 		const tx = await contract.addProposal(pollId, title);

@@ -291,7 +291,7 @@
 					<!-- <div class="flex"> -->
 					{#if !Object.values(filter).every((x) => x === null)}
 						<Button
-							action={() => {
+							onClick={() => {
 								//@ts-ignore
 								for (const filt in filter) {
 									//@ts-ignore
@@ -313,14 +313,14 @@
 				</div>
 				<div class="bg-white dark:bg-darkobject p-6 mt-6">
 					<Button
-						action={() => {
+						onClick={() => {
 							openNewTransaction = true;
 							newTransaction = true;
 						}}>Add Transaction</Button
 					>
-					<Button action={() => (show_account = true)}>{$_("Create Account")}</Button>
-					<Button action={() => (showDeleteAccount = true)}>{$_("Delete An Account")}</Button>
-					<Button action={() => generateAndDownloadHTML(generateHTMLContent)}
+					<Button onClick={() => (show_account = true)}>{$_("Create Account")}</Button>
+					<Button onClick={() => (showDeleteAccount = true)}>{$_("Delete An Account")}</Button>
+					<Button onClick={() => generateAndDownloadHTML(generateHTMLContent)}
 						>{$_("Generate Printable HTML file")} {filter.date_before !== null || filter.date_after !== null
 							? 'between selected dates'
 							: ''}</Button
@@ -442,7 +442,7 @@
 		</form>
 	</div>
 	<div slot="footer">
-		<Button action={createTransaction}>Create Transaction</Button>
+		<Button onClick={createTransaction}>Create Transaction</Button>
 	</div>
 </Modal>
 
@@ -468,7 +468,7 @@
 		</form>
 	</div>
 	<div slot="footer">
-		<Button action={createAccount}>Create Account</Button>
+		<Button onClick={createAccount}>Create Account</Button>
 	</div>
 </Modal>
 
@@ -493,6 +493,6 @@
 		</div>
 	</div>
 	<div slot="footer">
-		<Button action={deleteAccount} buttonStyle="warning">{$_("Delete Account")}</Button>
+		<Button onClick={deleteAccount} buttonStyle="warning">{$_("Delete Account")}</Button>
 	</div>
 </Modal>

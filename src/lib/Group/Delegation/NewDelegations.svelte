@@ -160,9 +160,7 @@
 		await getDelegatePools();
 		setDelegators();
 
-
-		
-		delegationTagsStructure =  delegates.map((delegate) => {
+		delegationTagsStructure = delegates.map((delegate) => {
 			return {
 				delegate_id: delegate.pool_id,
 				tags: delegate.tags.map((tag) => tag.id)
@@ -172,8 +170,6 @@
 	});
 
 	$: if (selectedTag) handleTagChange();
-
-
 </script>
 
 <Loader bind:loading>

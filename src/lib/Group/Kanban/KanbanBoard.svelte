@@ -4,8 +4,6 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import { _ } from 'svelte-i18n';
 	import type { GroupUser } from '../interface';
-	import { page } from '$app/stores';
-	import Button from '$lib/Generic/Button.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { kanban as kanbanLimit } from '../../Generic/APILimits.json';
@@ -19,6 +17,7 @@
 	import type { Filter } from './Kanban.ts';
 	import KanbanFiltering from './KanbanFiltering.svelte';
 	import { env } from '$env/dynamic/public';
+	import { page } from '$app/stores';
 
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
@@ -87,7 +86,7 @@
 		if (!assignee) assignee = users[0]?.user.id;
 	};
 
-	const getWorkGroups = async () => {
+	const getWorkGroupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
@@ -103,13 +102,13 @@
 	onMount(() => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
-		getWorkGroups();
+		getWorkGroupList();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();
 		}, 20000);
 
-		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : '$page.params.groupId';
+		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId;
 	});
 
 	onDestroy(() => {

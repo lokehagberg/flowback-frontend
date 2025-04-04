@@ -4,12 +4,11 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/User/interfaces';
 	import Layout from '$lib/Generic/Layout.svelte';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import DefaultBanner from '$lib/assets/default_banner_user.png';
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -17,13 +16,16 @@
 	import { pfpStore } from '$lib/Login/stores';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faPen, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons';
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
 	import { delegation as delegationLimit } from '$lib/Generic/APILimits.json';
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
 	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -54,7 +56,7 @@
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
 		currentlyEditing: null | 'bio' | 'web' | 'name' | 'phone' | 'email' = null,
-		status: StatusMessageInfo | undefined,
+		poppup: poppup | null = null,
 		currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
@@ -86,6 +88,10 @@
 		else isUser = userId === localStorage.getItem('userId');
 
 		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
+		if (!res.ok) {
+			poppup = { message: 'Could not fetch user', success: false };
+			return;
+		}
 		user = isUser ? json : json.results[0];
 		userEdit = user;
 
@@ -94,6 +100,9 @@
 
 		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
 		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
+
+		if (!user.contact_email) userEdit.contact_email = '';
+		if (!user.contact_phone) userEdit.contact_phone = '';
 
 		document.title = `${user.username}'s profile`;
 	};
@@ -113,13 +122,18 @@
 		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
-		if (res.ok) {
-			user = userEdit;
-			isEditing = false;
-			pfpStore.set(`${imageToSend.name}${Math.floor(Math.random() * 1000000)}`);
+
+		if (!res.ok) {
+			const message = json.detail[Object.keys(json.detail)[0]][0] || 'Could not update profile';
+
+			poppup = { message, success: false };
+			return;
 		}
 
-		status = statusMessageFormatter(res, json);
+		user = userEdit;
+		isEditing = false;
+		pfpStore.set(`${imageToSend.name}${Math.floor(Math.random() * 1000000)}`);
+		poppup = { message: 'Profile successfully updated', success: true };
 	};
 
 	const handleCropProfileImage = async (e: any) => {
@@ -175,7 +189,7 @@
 
 			{#if isUser}
 				<Button
-					action={() => (isEditing = true)}
+					onClick={() => (isEditing = true)}
 					Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 				>
 					<div class="text-gray-800 dark:text-gray-200">
@@ -184,7 +198,7 @@
 				</Button>
 			{/if}
 			<Button
-				action={() => goto($nav?.from?.url.pathname || '/')}
+				onClick={() => goto($nav?.from?.url.pathname || '/')}
 				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
 				<div class="text-gray-800 dark:text-gray-200">
@@ -192,28 +206,44 @@
 				</div>
 			</Button>
 		</div>
-		<div class="flex justify-around w-full max-w-[800px]">
+		<div class="flex justify-around w-full max-w-[850px]">
 			<img
 				src={profileImagePreview}
-				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile"
+				class="-translate-y-10 h-36 w-36 z-10 rounded-full profile border border-gray-300"
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6">
+			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6 px-4">
 				<div class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words">
 					{user.username}
 				</div>
 				<p class=" whitespace-pre-wrap">
 					{user.bio || $_('This user has no bio')}
 				</p>
-				<StatusMessage Class="" bind:status />
 			</div>
-			<div class="dark:text-darkmodeText py-6">
-				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}</div>
-				<a class={``} href={user.website || $_('None provided')}>
+			<div class="dark:text-darkmodeText py-6 w-[30%]">
+				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}
+					<button
+						on:click={() => {
+							isChatOpen.set(true);
+							chatPartner.set(user.id);
+						}}
+						class="pl-4"
+					>
+						<Fa icon={faPaperPlane} rotate="60" />
+					</button>
+
+				</div>
+				
+				<a 
+					class={``}
+					
+					href={user.website ? (user.website.startsWith('http://') || user.website.startsWith('https://') ? user.website : 'https://' + user.website) : '#'}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					{$_('Website')}: {user.website || ''}
 				</a>
-				<!-- <div>Phone number</div> -->
 				<p class="">
 					{$_('Phone number')}: {user.contact_phone || $_('None provided')}
 				</p>
@@ -240,14 +270,15 @@
 			/>
 		</label>
 		<form
-			class="w-full bg-white shadow rounded p-8 dark:bg-darkobject dark:text-darkmodeText"
+			class="bg-white w-full p-8 flex flex-col items-center justify-center dark:bg-darkobject dark:text-darkmodeText"
 			on:submit|preventDefault={() => {}}
 		>
-			<label for="file-ip-1" class="inline">
-				<!-- Profile PIcture -->
+			<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
+				<label for="file-ip-1" class="inline">
+					<!-- Profile Picture -->
 				<img
 					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+					class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 					alt="avatar"
 					id="avatar"
 				/>
@@ -261,114 +292,84 @@
 				/></label
 			>
 
-			{#if currentlyEditing === 'name'}
-				<TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Name'}
-					bind:value={userEdit.username}
-					Class="mt-6 pt-8 pb-8 inline"
-				/>
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'name')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
-				>
-					{$_(userEdit.username || 'Add Username')}
-				</button>
-			{/if}
+				<div class="flex flex-col gap-1 w-[40%]">
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Name'}
+						bind:value={userEdit.username}
+						Class="p-2 text-left"
+					/>
 
-			{#if currentlyEditing === 'phone'}
-				<div class="wrapper">
-					<select
-						class="country-select {!valid ? 'invalid' : ''}"
-						aria-label="Default select example"
-						name="Country"
-						bind:value={selectedCountry}
-					>
-						<option value={null} hidden={selectedCountry !== null}>Please select</option>
-						{#each normalizedCountries as currentCountry (currentCountry.id)}
-							<option
-								value={currentCountry.iso2}
-								selected={currentCountry.iso2 === selectedCountry}
-								aria-selected={currentCountry.iso2 === selectedCountry}
-							>
-								{currentCountry.iso2} (+{currentCountry.dialCode})
-							</option>
-						{/each}
-					</select>
-					<TelInput
-						bind:country={selectedCountry}
-						bind:value
-						bind:valid
-						bind:detailedValue
-						class="basic-tel-input {!valid ? 'invalid' : ''}"
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Website'}
+						bind:value={userEdit.website}
+						Class="p-2 text-left"
+					/>
+
+					<div class="wrapper">
+						<select
+							class="country-select {!valid ? 'invalid' : ''}"
+							aria-label="Default select example"
+							name="Country"
+							bind:value={selectedCountry}
+						>
+							<option value={null} hidden={selectedCountry !== null}>Please select</option>
+							{#each normalizedCountries as currentCountry (currentCountry.id)}
+								<option
+									value={currentCountry.iso2}
+									selected={currentCountry.iso2 === selectedCountry}
+									aria-selected={currentCountry.iso2 === selectedCountry}
+								>
+									{currentCountry.iso2} (+{currentCountry.dialCode})
+								</option>
+							{/each}
+						</select>
+						<TelInput
+							bind:country={selectedCountry}
+							bind:value={userEdit.contact_phone}
+							bind:valid
+							bind:detailedValue
+							class="basic-tel-input {!valid ? 'invalid' : ''}"
+						/>
+					</div>
+
+					<TextInput
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Mail'}
+						type="email"
+						bind:value={userEdit.contact_email}
+						Class="p-2 text-left"
+					/>
+
+					<TextArea
+						autofocus
+						onBlur={() => (currentlyEditing = null)}
+						label={'Bio'}
+						bind:value={userEdit.bio}
+						Class="p-2 text-left"
+						inputClass="whitespace-pre-wrap"
 					/>
 				</div>
+			</div>
 
-				<!-- <TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Phone Number'}
-					bind:value={userEdit.contact_phone}
-					Class="mt-6 pt-8 pb-8 inline"
-				/> -->
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'phone')}
-					class="mt-6 pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl inline"
-				>
-					{$_(userEdit.contact_phone || 'Add phone number')}
-				</button>
-			{/if}
-
-			{#if currentlyEditing === 'web'}
-				<TextInput
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Website'}
-					bind:value={userEdit.website}
-					Class="pt-8 pb-8"
-				/>
-			{:else}
-				<button
-					on:click={() => (currentlyEditing = 'web')}
-					class="pt-4 pb-4 pl-4 pr-4 text-center transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl"
-				>
-					{userEdit.website || $_('Add Website')}
-				</button>
-			{/if}
-
-			{#if currentlyEditing === 'bio'}
-				<TextArea
-					autofocus
-					onBlur={() => (currentlyEditing = null)}
-					label={'Bio'}
-					bind:value={userEdit.bio}
-					Class="pt-8 pb-8 whitespace-pre-wrap"
-				/>
-			{:else}
-				<div
-					on:click={() => (currentlyEditing = 'bio')}
-					on:keydown
-					role="button"
-					tabindex="0"
-					class="pt-8 pb-8 pl-4 pr-4 transition transition-color cursor-pointer hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] rounded-xl whitespace-pre-wrap"
-				>
-					{userEdit.bio || $_('Add Bio')}
-				</div>
-			{/if}
-
-			<StatusMessage Class="mt-4" bind:status />
-			<div class="flex justify-end gap-2">
+			<div class="flex gap-2 w-[50%]">
 				<Button
-					Class=""
-					action={() => {
+					Class="flex-1"
+					buttonStyle="warning-light"
+					onClick={() => {
 						isEditing = false;
 						profileImagePreview = oldProfileImagePreview;
 					}}>{$_('Cancel')}</Button
 				>
-				<Button Class="" action={updateProfile}>{$_('Save changes')}</Button>
+				<Button
+				Class="flex-1"
+				buttonStyle="primary-light"
+				onClick={updateProfile}>
+				{$_('Save changes')}</Button>
 			</div>
 		</form>
 	{/if}
@@ -377,6 +378,8 @@
 		<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
 	{/if}
 </Layout>
+
+<Poppup bind:poppup />
 
 <style>
 	img.cover {

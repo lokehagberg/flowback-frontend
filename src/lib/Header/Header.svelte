@@ -2,7 +2,7 @@
 	import HeaderIcon from './HeaderIcon.svelte';
 	import Logo from '$lib/assets/Logo.png';
 	import Reforum from '$lib/assets/ReforumTransparent.png';
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import SideHeader from './SideHeader.svelte';
 	import { onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -11,13 +11,16 @@
 	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
 	import {
-		faCalendarWeek,
+		faCalendarDays,
 		faCoins,
-		faHome,
-		faList,
+		faHouse,
 		faMoon,
 		faUserFriends,
-		faCog
+		faPeopleGroup,
+		faArrowsSpin,
+		faCog,
+		faPeopleArrows,
+		faListCheck
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
@@ -118,25 +121,25 @@
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<HeaderIcon
-					icon={HomeIcon}
+					disableTextOnHover
+					icon={faHouse}
 					text="Home"
 					href="home"
-					Class="w-[32px] "
 					bind:selectedHref
 				/>
-				<!-- <HeaderIcon icon={faGlobeEurope} text="Public" href="public" /> -->
+				<!-- <HeaderIcon disableTextOnHover icon={faGlobeEurope} text="Public" href="public" /> -->
 				<HeaderIcon
-					icon={faUserFriends}
+					disableTextOnHover
+					icon={faPeopleGroup}
 					text="Groups"
-					Class="w-[32px] "
 					href="groups"
 					bind:selectedHref
 				/>
 			{/if}
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
-					icon={HomeIcon}
-					Class="w-[35px] "
+					disableTextOnHover
+					icon={faHouse}
 					text="Home"
 					href="groups/1"
 					bind:selectedHref
@@ -144,16 +147,16 @@
 			{/if}
 
 			<HeaderIcon
-				icon={KanbanIcon}
-				text="Kanban"
+				disableTextOnHover
+				icon={faListCheck}
+				text="Tasks"
 				href="kanban"
-				Class="w-[30px] "
 				bind:selectedHref
 			/>
 
 			<HeaderIcon
-				icon={CalendarIcon}
-				Class="w-[32px] "
+				disableTextOnHover
+				icon={faCalendarDays}
 				text="Schedule"
 				href="schedule"
 				bind:selectedHref
@@ -161,7 +164,7 @@
 
 			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 				<HeaderIcon
-					Class="w-[30px] "
+					disableTextOnHover
 					icon={faCoins}
 					text={!(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') ? 'My Ledger' : 'Group Ledger'}
 					href="ledger"
@@ -171,16 +174,16 @@
 
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'}
 				<HeaderIcon
-					icon={AutomationIcon}
-					Class="w-[30px] "
+					disableTextOnHover
+					icon={faArrowsSpin}
 					text={'Automate'}
 					href="automate"
 					bind:selectedHref
 				/>
 			{:else}
 				<HeaderIcon
-					icon={AutomationIcon}
-					Class="w-[30px] "
+					disableTextOnHover
+					icon={faPeopleArrows}
 					text={'Delegations'}
 					href="automate"
 					bind:selectedHref
@@ -202,7 +205,7 @@
 					{#if darkMode}
 						<Sun />
 					{:else}
-						<Fa icon={faMoon} size={'25'} />
+						<Fa icon={faMoon} size={'1.3x'} />
 					{/if}
 				</button>
 				<Notifications />
@@ -220,7 +223,6 @@
 	</div>
 	<SideHeader bind:sideHeaderOpen />
 </header>
-
 
 <!-- Kind of an ugly fix for mobile phones. TODO: More elegant solution  -->
 <style>

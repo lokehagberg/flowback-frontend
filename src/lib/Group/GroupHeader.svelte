@@ -41,7 +41,7 @@
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<Button
-					action={() => history.back()}
+					onClick={() => history.back()}
 					Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 				>
 					<div class="text-gray-800 dark:text-gray-200">
@@ -104,7 +104,7 @@
 			</div>
 		</div>
 		{#if group.description.length > 0}
-			<div class="text-xs mt-2 pb-1 grid-area-description break-all">
+			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
 				<Description limit={400} description={group.description} />
 			</div>
 		{/if}

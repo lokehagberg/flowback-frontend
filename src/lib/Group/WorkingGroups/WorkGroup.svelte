@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import type { WorkGroup, WorkGroupUser } from './interface';
+	import {
+		workGroupsStore,
+		type WorkGroup,
+		type WorkGroupInvite,
+		type WorkGroupUser
+	} from './interface';
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -9,14 +13,16 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	export let workGroup: WorkGroup,
+		workGroups: WorkGroup[],
 		handleRemoveGroup: (id: number) => void,
-		isAdmin = false;
+		isAdmin = false,
+		getWorkGroupInvite: () => {};
 
 	let poppup: poppup,
-		workGroupUserList: WorkGroupUser[] = [];
+		workGroupUserList: WorkGroupUser[] = [],
+		showDeleteModal = false;
 
 	const getUserList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/workgroup/${workGroup.id}/list`);
@@ -38,7 +44,10 @@
 			return;
 		}
 
-		// await getUserList();
+		workGroup.member_count++;
+		workGroup.joined = true;
+		workGroups = workGroups;
+		workGroupsStore.set(workGroups);
 	};
 
 	const askToJoin = async () => {
@@ -55,20 +64,26 @@
 			return;
 		}
 
+		if (!res.ok) return;
+
 		poppup = { message: 'Invite Sent', success: true };
+		getWorkGroupInvite();
 	};
 
 	const leaveGroup = async () => {
 		const { res, json } = await fetchRequest('POST', `group/workgroup/${workGroup.id}/leave`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to Leave Group', success: false };
+			poppup = { message: 'Failed to leave Group', success: false };
 			return;
 		}
 		workGroupUserList = workGroupUserList.filter(
 			(user) => user.id === Number(localStorage.getItem('userId'))
 		);
-		// getUserList();
+
+		workGroup.member_count--;
+		workGroup.joined = false;
+		workGroupsStore.set(workGroups);
 	};
 
 	const isMember = () => {
@@ -88,6 +103,7 @@
 		}
 
 		handleRemoveGroup(workGroup.id);
+		showDeleteModal = false;
 	};
 
 	onMount(async () => {
@@ -101,25 +117,50 @@
 	<span class="text-primary dark:text-secondary w-[40%] font-semibold break-words"
 		>{workGroup.name}</span
 	>
-	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count} </span>
+	<span class="text-gray-500 text-sm w-[30%]">{$_('Members')}: {workGroup.member_count || 0} </span>
 
 	{#if workGroup.joined}
-		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" action={leaveGroup}
+		<Button buttonStyle="warning-light" Class="px-3 py-1 w-[20%]" onClick={leaveGroup}
 			>{$_('Leave')}</Button
 		>
 	{:else if workGroup.direct_join}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={joinGroup}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" onClick={joinGroup}
 			>{$_('Join')}</Button
 		>
 	{:else}
-		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" action={askToJoin}
+		<Button buttonStyle="primary-light" Class="px-3 py-1 w-[20%]" onClick={askToJoin}
 			>{$_('Ask to join')}</Button
 		>
 	{/if}
 
 	{#if isAdmin}
-		<Button buttonStyle="warning-light" action={deleteWorkGroup}><Fa icon={faTrash} /></Button>
+		<Button buttonStyle="warning-light" Class="!border-0" onClick={() => (showDeleteModal = true)}
+			><Fa icon={faTrash} /></Button
+		>
 	{/if}
 </div>
+
+{#if showDeleteModal}
+	<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+		<div class="bg-white dark:bg-darkobject p-6 rounded shadow-lg w-96">
+			<h2 class="text-xl font-semibold mb-4">{$_('Confirm Deletion')}</h2>
+			<p class="mb-6">{$_('Are you sure you want to delete this workgroup?')}</p>
+			<div class="flex justify-end space-x-2">
+				<Button buttonStyle="primary-light" onClick={() => (showDeleteModal = false)}>
+					{$_('Cancel')}
+				</Button>
+				<Button
+					buttonStyle="warning-light"
+					onClick={() => {
+						deleteWorkGroup();
+						showDeleteModal = false;
+					}}
+				>
+					{$_('Delete')}
+				</Button>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <Poppup bind:poppup />

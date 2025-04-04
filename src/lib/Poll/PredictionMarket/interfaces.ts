@@ -18,7 +18,7 @@ export interface PredictionStatement {
 	];
 	user_prediction: null | number;
 	user_prediction_statement_vote: null | boolean;
-
+	user_prediction_bet:number;
 	created_by: {
 		group_image: string;
 

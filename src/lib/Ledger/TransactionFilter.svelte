@@ -60,7 +60,7 @@
 				<div>Last Date<DateInput bind:value={filter.date_before} /></div>
 			</div>
 			<div class="mt-8">
-				<Button action={() => (openFilterAccounts = true)}>Filter Accounts</Button>
+				<Button onClick={() => (openFilterAccounts = true)}>Filter Accounts</Button>
 			</div>
 		</div>
 	{:else}

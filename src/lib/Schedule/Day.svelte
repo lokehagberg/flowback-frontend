@@ -12,10 +12,19 @@
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		showCreateScheduleEvent = false,
+		showEvent = false,
 		selectedDate = new Date(),
 		month,
 		year,
-		events: scheduledEvent[] = [];
+		events: scheduledEvent[] = [],
+		selectedEvent: scheduledEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		};
 
 	const currentDate = new Date();
 
@@ -82,7 +91,10 @@
 			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
 				{#if (1000 * i) / window.innerHeight < 3}
 					<button
-						on:click={() => console.log(event)}
+						on:click={() => {
+							selectedEvent = event;
+							showEvent = true;
+						}}
 						class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
 					>
 						{elipsis(event.title, 15)}

@@ -2,7 +2,7 @@
 	import ChatWindow from './ChatWindow.svelte';
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
-	import type { Message, PreviewMessage } from './interfaces';
+	import type { GroupMembers, Message, PreviewMessage } from './interfaces';
 	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
@@ -15,6 +15,8 @@
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
+	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
+	import { updateUserData } from './functions';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
@@ -30,7 +32,9 @@
 		isLookingAtOlderMessages = false,
 		chatDiv: HTMLDivElement,
 		selectedChatChannelId: number | null,
-		darkMode = false;
+		darkMode = false,
+		creatingGroup = false,
+		groupMembers: GroupMembers[] = [];
 
 	onMount(async () => {
 		await getUser();
@@ -38,7 +42,6 @@
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 		darkModeStore.subscribe((dm) => (darkMode = dm));
 		isChatOpen.subscribe((open) => (chatOpen = open));
-		chatPartner.subscribe((partner) => (selectedChat = partner));
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -53,11 +56,11 @@
 		user = json;
 	};
 
-	// $: if (!chatOpen) {
-	// 	if (selectedChat) updateUserData(selectedChat, null, new Date());
-	// 	selectedChat = null;
-	// 	// selectedPage === 'direct';
-	// }
+	$: if (!chatOpen) {
+		// if (selectedChat) updateUserData(selectedChat, null, new Date());
+		// selectedChat = null;
+		// selectedPage === 'direct';
+	}
 </script>
 
 <svelte:head>
@@ -71,22 +74,10 @@
 	class:invisible={!chatOpen}
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
-	<Button
-		action={() => {
-			chatOpen = false;
-			isChatOpen.set(false);
-		}}
-		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
-	>
-		<div class="text-gray-800 dark:text-gray-200">
-			<Fa icon={faX} />
-		</div>
-	</Button>
-
 	<!-- TODO: This will link to Chat settings once that has been implemented -->
 
 	<Button
-		action={() => {
+		onClick={() => {
 			chatOpen = false;
 			isChatOpen.set(false);
 			goto('/user/settings');
@@ -98,26 +89,46 @@
 		</div>
 	</Button>
 
+	<Button
+		onClick={() => {
+			chatOpen = false;
+			isChatOpen.set(false);
+		}}
+		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faX} />
+		</div>
+	</Button>
+
 	<div class="flex w-full gap-6 max-w-[1200px] h-[85vh]">
 		<div class="bg-white w-[40%] flex-grow my-8 ml-6 dark:bg-darkobject p-2">
-			<Preview
-				bind:selectedChat
-				bind:selectedPage
-				bind:previewDirect
-				bind:previewGroup
-				bind:selectedChatChannelId
-			/>
+			{#key creatingGroup}
+				<Preview
+					bind:selectedChat
+					bind:selectedPage
+					bind:previewDirect
+					bind:previewGroup
+					bind:selectedChatChannelId
+					bind:creatingGroup
+					bind:groupMembers
+				/>
+			{/key}
 		</div>
 		<div class="bg-white w-[60%] flex-grow my-8 mr-6 dark:bg-darkobject p-2">
-			<ChatWindow
-				bind:selectedChat
-				bind:selectedChatChannelId
-				bind:selectedPage
-				bind:previewDirect
-				bind:previewGroup
-				bind:isLookingAtOlderMessages
-				{user}
-			/>
+			{#if creatingGroup}
+				<CreateChatGroup bind:creatingGroup bind:groupMembers />
+			{:else}
+				<ChatWindow
+					bind:selectedChat
+					bind:selectedChatChannelId
+					bind:selectedPage
+					bind:previewDirect
+					bind:previewGroup
+					bind:isLookingAtOlderMessages
+					{user}
+				/>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -125,19 +136,19 @@
 <!-- Button which launches the chat, visible in bottom left corner when not in chat -->
 <button
 	on:click={() => {
-		chatOpen = true;
-		isChatOpen.set(true);
+		chatOpen = !chatOpen;
+		isChatOpen.set(chatOpen);
 	}}
 	class:small-notification={previewDirect.find((preview) => preview.notified)}
 	class:small-notification-group={previewGroup.find((preview) => preview.notified)}
-	class="dark:text-white transition-all fixed z-30 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
+	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	{#key darkMode}
 		<img
 			src={ChatIcon}
 			class="text-white"
 			style="filter: {getIconFilter(true, 'white')}"
-			alt="open chat"
+			alt={chatOpen ? 'close chat' : 'open chat'}
 		/>
 	{/key}
 </button>

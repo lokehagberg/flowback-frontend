@@ -28,7 +28,7 @@ export interface GroupUser {
 	group_name: string;
 	id: number;
 	is_admin: boolean;
-	is_delegate:boolean;
+	delegate_pool_id: boolean;
 	permission_id: number | null;
 	permission_name: string;
 	user: { banner_image: string; id: number; profile_image: string; username: string };
@@ -96,7 +96,7 @@ export interface Tag {
 
 export interface groupUser extends User {
 	user_id: number;
-	is_delegate: boolean;
+	delegate_pool_id: boolean;
 	is_admin: boolean;
 	permission_id: number;
 	permission_name: string;
@@ -134,16 +134,24 @@ export interface Thread {
 		username: string;
 		profile_image: null | string;
 		banner_image: null | string;
+		is_admin: boolean;
+		permission_id: number;
+		permission_name: string;
+		group_id: number;
 	};
 	title: string;
 	id: number;
-	total_comments:number;
-	description:string;
-	pinned:boolean;
-	attachments:string[];
-	user_vote:null|boolean
-	score:number;
-
+	total_comments: number;
+	description: string;
+	pinned: boolean;
+	attachments: string[];
+	user_vote: null | boolean
+	score: number,
+	created_at: string;
+	work_group?: {
+		id: number;
+		name: string;
+	};
 }
 
 export interface GroupFilter { joined: 'all' | 'member' | 'not-member', search: string }

@@ -22,6 +22,7 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let kanban: kanban,
 		type: 'group' | 'home',
@@ -73,8 +74,6 @@
 			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
 		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 
-		console.log(kanbanEdited.work_group, 'Workgroup');
-
 		if (kanbanEdited.work_group?.id)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
@@ -88,16 +87,12 @@
 			if (_endDate) formData.append('end_date', dateString);
 		}
 
-		// if (description !== '') formData.append('description', description);
-		// if (kanban.attachments)
-		// 	images.forEach((image) => {
-		// 		formData.append('attachments', image);
-		// 	});
-
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/update`
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			formData,
 			true,
@@ -111,29 +106,6 @@
 			// poppup = { message: 'Failed to create kanban task', success: false };
 			return;
 		}
-
-		// poppup = { message: 'Successfully created kanban task', success: true };
-
-		// if (kanbanEdited.kanbanEdited.end_date === null) delete kanbanEdited.end_date;
-		// else if (kanbanEdited.end_date instanceof Date)
-		// 	kanbanEdited.end_date = new Date(kanbanEdited.end_date.toISOString());
-
-		// if (kanbanEdited.work_group === null) delete kanbanEdited.work_group;
-		// //@ts-ignore
-		// else kanbanEdited.work_group = kanbanEdited.work_group.id;
-
-		// if (kanbanEdited.assignee_id === null) delete kanbanEdited.assignee_id;
-		// else kanbanEdited.assignee_id = kanbanEdited.assignee_id;
-
-		// const { res, json } = await fetchRequest(
-		// 	'POST',
-		// 	kanban.origin_type === 'group'
-		// 		? `group/${$page.params.groupId}/kanban/entry/update`
-		// 		: 'user/kanban/entry/update',
-		// 	kanbanEdited
-		// );
-		// status = statusMessageFormatter(res, json);
-		// if (!res.ok) return;
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
@@ -173,7 +145,9 @@
 		const { res, json } = await fetchRequest(
 			'POST',
 			kanban.origin_type === 'group'
-				? `group/${$page.params.groupId}/kanban/entry/update`
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
 				: 'user/kanban/entry/update',
 			{
 				lane,
@@ -232,6 +206,22 @@
 	const handleChangeWorkGroup = (e: any) => {
 		kanbanEdited.work_group =
 			workGroups.find((group) => group.id === Number(e.target.value)) || null;
+	};
+
+	const cancelUpdateKanban = () => {
+		(kanbanEdited = {
+			entry_id: kanban.id,
+			description: kanban.description,
+			title: kanban.title,
+			assignee_id: kanban.assignee?.id,
+			priority: kanban.priority,
+			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			work_group: kanban.work_group || null,
+			//@ts-ignore
+			images: kanban.attachments || []
+		}),
+			(openModal = false);
+		isEditing = false;
 	};
 
 	onMount(async () => {
@@ -326,7 +316,7 @@
 	</button>
 
 	{#if kanban.work_group && kanban.work_group.name}
-		<div>
+		<div class="text-sm">
 			{$_('Work Group')}: {elipsis(kanban.work_group.name || '', 20)}
 		</div>
 	{/if}
@@ -387,17 +377,14 @@
 						<div class="block text-md">
 							{$_('Work Group')}
 						</div>
-						<select
-							style="width:100%"
-							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							on:input={handleChangeWorkGroup}
-						>
-							{#each workGroups as group}
-								<option class="w-5 text-black" value={group.id}>
-									{elipsis(group.name)}
-								</option>
-							{/each}
-						</select>
+
+						<Select
+							Class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							labels={workGroups.map((group) => elipsis(group.name))}
+							values={workGroups.map((group) => group.id)}
+							value={kanbanEdited.work_group?.id || null}
+							onInput={handleChangeWorkGroup}
+						/>
 					</div>
 				{/if}
 				<div class="text-left w-[300px]">
@@ -517,24 +504,22 @@
 		</div>
 		<div slot="footer" class="w-full flex gap-4">
 			{#if isEditing}
-				<Button Class="w-full py-1" buttonStyle="primary-light" action={updateKanbanContent}
+				<Button Class="w-full py-1" buttonStyle="primary-light" onClick={updateKanbanContent}
 					>{$_('Update')}</Button
 				>
 				<Button
 					Class="w-full bg-red-500  py-1"
 					buttonStyle="warning-light"
-					action={() => (openModal = false)}>{$_('Cancel')}</Button
+					onClick={cancelUpdateKanban}>{$_('Cancel')}</Button
 				>
 			{:else}
-				<Button
-					Class="w-full py-1"
-					buttonStyle="primary-light"
-					action={() => (isEditing = true)}>{$_('Edit')}</Button
+				<Button Class="w-full py-1" buttonStyle="primary-light" onClick={() => (isEditing = true)}
+					>{$_('Edit')}</Button
 				>
 				<Button
 					Class="bg-red-500 w-full  py-1"
 					buttonStyle="warning-light"
-					action={deleteKanbanEntry}>{$_('Delete')}</Button
+					onClick={deleteKanbanEntry}>{$_('Delete')}</Button
 				>
 			{/if}
 		</div>

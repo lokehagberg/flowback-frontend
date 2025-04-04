@@ -1,16 +1,20 @@
 import type { GroupUser } from "../interface";
+import { writable } from "svelte/store";
+
+export const workGroupsStore = writable<WorkGroup[]>([]);
 
 export interface WorkGroup {
 	name: string;
 	members: number | null;
 	direct_join: boolean;
 	id: number;
-	work_group_id:number;
-	member_count:number;
-	total_page:number;
-	joined:boolean
-	next:string;
-	previous:string
+	work_group_id: number;
+	member_count: number;
+	total_page: number;
+	joined: boolean
+	next: string;
+	previous: string
+	chat: 1
 }
 
 export interface WorkGroupUser {
@@ -37,8 +41,8 @@ export interface WorkGroupUser {
 }
 
 export interface WorkGroupInvite {
-	id:number,
-	work_group_id:number,
-	work_group_name:string,
-	group_user:GroupUser
+	id: number,
+	work_group_id: number,
+	work_group_name: string,
+	group_user: GroupUser
 }

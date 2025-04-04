@@ -34,7 +34,10 @@
 				proposal_id: number;
 				is_true: boolean;
 			}[];
-		} = { segments: [] },
+		} = { 
+			segments: [],
+			end_date: new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)
+		},
 		bets: PredictionBet[] = [],
 		poppup: poppup,
 		pushingToBlockchain = true;
@@ -53,22 +56,32 @@
 
 	const createPredictionStatement = async () => {
 		loading = true;
-		if (newPredictionStatement.description === '') newPredictionStatement.description = undefined;
+		if (newPredictionStatement.description === '') newPredictionStatement.description = "No description provided";
 
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && pushingToBlockchain)
 			await pushToBlockchain();
 
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/${$page.params.pollId}/prediction/statement/create`,
-			newPredictionStatement
-		);
+		newPredictionStatement.segments.map(async (segment) => {
+			const statement = {
+				end_date: newPredictionStatement.end_date,
+				segments: [segment],
+				title: newPredictionStatement.title,
+				description: newPredictionStatement.description
+			};
+
+			const { res, json } = await fetchRequest(
+				'POST',
+				`group/poll/${$page.params.pollId}/prediction/statement/create`,
+				statement
+			);
+		});
+
 		loading = false;
 
-		if (!res.ok) {
-			poppup = { message: 'Could not create prediction statement', success: false };
-			return;
-		}
+		// if (!res.ok) {
+		// 	poppup = { message: 'Could not create prediction statement', success: false };
+		// 	return;
+		// }
 
 		newPredictionStatement = {
 			segments: newPredictionStatement.segments,
@@ -77,7 +90,7 @@
 			blockchain_id: 0,
 			title: ''
 		};
-		poppup = { message: 'Successfully created prediction statement', success: true };
+		poppup = { message: 'Successfully created consequence', success: true };
 	};
 
 	//Go through every proposal that the prediction statement is predicting on.
@@ -147,11 +160,11 @@
 	};
 
 	const removeProposal = (proposal: proposal) => {
-		const i = proposalsToPredictionMarket.findIndex((_proposal) => {
-			_proposal === proposal;
-		});
-		proposalsToPredictionMarket.splice(i, 1);
-		proposalsToPredictionMarket = proposalsToPredictionMarket;
+		const i = proposalsToPredictionMarket.findIndex((_proposal) => _proposal.id === proposal.id);
+		if (i !== -1) {
+			proposalsToPredictionMarket.splice(i, 1);
+			proposalsToPredictionMarket = [...proposalsToPredictionMarket];
+		}
 	};
 
 	onMount(() => {
@@ -161,11 +174,13 @@
 	$: if (proposalsToPredictionMarket) handleChangeProposalSelection();
 </script>
 
-<div class="flex">
-	<span class="font-semibold text-primary dark:text-secondary">{$_('New Prediction')}</span>
-	<Question
-		message={`Predict on what will happen if a proposal is implemented in reality. Predicting on multiple proposals ammounts to saying "if proposal x and proposal y is implemented in reality, this will be the outcome"`}
-	/><br />
+<div class="flex flex-row mb-4">
+	<span class="flex-1 font-semibold text-primary dark:text-secondary">{$_('New Consequence')}</span>
+	<div class="flex-1">
+		<Question 
+		 	message={`Predict on what will happen if a proposal is implemented in reality.`}
+		/><br />
+	</div>
 </div>
 
 {#key proposalsToPredictionMarket}
@@ -185,7 +200,7 @@
 	{/if}
 {/key}
 
-<Loader bind:loading Class="!static h-full">
+<Loader bind:loading Class="!static h-full pt-3">
 	<form on:submit|preventDefault={createPredictionStatement} class="h-full">
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
@@ -194,20 +209,20 @@
 		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons Class="mt-3" bind:Yes={pushingToBlockchain} label="Push to Blockchain" />
 		{/if}
-		<div class="mt-3">
-			{$_('Deadline for prediction')}
+		<div class="mt-2">
+			{$_('Deadline for consequence')}
 			<DateInput
 				bind:value={newPredictionStatement.end_date}
-				min={new Date()}
+				min={new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)}
 				max={maxDatePickerYear}
 			/>
 		</div>
 
 		<div class="flex gap-2 absolute bottom-0 w-full">
 			<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
-			<Button type="submit" buttonStyle="warning-light" Class="w-full mt-5">{$_('Cancel')}</Button>
+			<Button type="button" buttonStyle="warning-light" Class="w-full mt-5" onClick={() => proposalsToPredictionMarket = []}>{$_('Cancel')}</Button>
 			{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
-				<Button Class="w-full mt-5" action={getAIpredictionStatement}>{$_('Let AI help')}</Button>
+				<Button Class="w-full mt-5" onClick={getAIpredictionStatement}>{$_('Let AI help')}</Button>
 			{/if}
 		</div>
 	</form>

@@ -9,18 +9,22 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import VotingSlider from './VotingSlider.svelte';
+	import { getGroupUserInfo } from '$lib/Generic/GenericFunctions';
 
-	export let proposals: proposal[] = [],
+	import type { groupUser } from '$lib/Group/interface';
+
+	export let proposals: proposal[],
 		isVoting: boolean = false,
 		selectedProposal: proposal | null = null,
 		phase: Phase,
 		proposalsToPredictionMarket: proposal[] = [],
 		Class = '',
-		comments: Comment[] = [];
+		comments: Comment[];
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
-		poppup: poppup;
+		poppup: poppup,
+		commentFilterProposalId: number | null = null;
 
 	onMount(async () => {
 		await getProposals();
@@ -30,19 +34,24 @@
 			proposal: proposal.id
 		}));
 
+		console.log(proposals, 'PROP');
+		console.log('WHAT THA HELLL');
+
+		await getDelegateVotes();
 		await getVotes();
 		needsReload++;
 	});
 
 	const getProposals = async () => {
-		console.log("Hiiiiiii");
-		
-		const { json } = await fetchRequest(
+		console.log('HERE PROPOSAL SCORE GET PROPOSALS LAUNCHED!!!!');
+		const { res, json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
-		console.log(json.results, 'JSON', "I'MMM HEEERERERE");
-		
+
+		console.log(json, 'JSON');
+
+		if (!res.ok) return;
 
 		proposals = json.results;
 	};
@@ -55,6 +64,8 @@
 
 		if (!json.results || json.results.length === 0) return;
 
+		console.log('WHAT THA HELLL');
+
 		voting = voting.map((vote) => ({
 			score: (vote.score = json.results.find(
 				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
@@ -65,20 +76,42 @@
 	};
 
 	const getDelegateVotes = async () => {
+		const user: groupUser = await getGroupUserInfo($page.params.groupId);
+
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/pool${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
+			`group/poll/pool/${user.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
 		);
 
 		if (!json.results || json.results.length === 0) return;
 
-		voting = voting.map((vote) => ({
-			score: (vote.score = json.results.find(
-				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
-			).raw_score),
-			proposal: vote.proposal
-		}));
+		console.log(voting, json.results[0].vote, 'VÖTE');
+
+		const votes = json.results[0].vote;
+
+		voting.forEach((proposal) => {
+			votes.forEach((vote: any) => {
+				if (proposal.proposal === vote.proposal_id) {
+					proposal.score = vote.raw_score;
+					console.log(proposal, vote, 'proposal.score = vote.raw_score');
+				}
+			});
+		});
+
 		voting = voting;
+
+		console.log(voting, 'VOTING????');
+
+		// voting = voting.map((vote) => ({
+		// 	score: (vote.score = json.results.find((v:any) => {
+		// 		console.log(vote, v, 'VOTINGÖÖ');
+		// 		//@ts-ignore
+		// 		(score: { score: number; proposal: number }) => score.proposal_id === vote.proposal_id;
+		// 	})?.raw_score),
+		// 	proposal: vote.proposal
+		// }));
+
+		// voting = voting;
 	};
 
 	const delegateVote = async () => {
@@ -120,7 +153,6 @@
 			}
 		);
 
-		console.log(json, 'JSON');
 		if (!res.ok) {
 			poppup = {
 				message: 'Vote Failed',
@@ -142,42 +174,41 @@
 		voting[i].score = Number(score);
 		voting = voting;
 	};
-
-	$:console.log(proposals, needsReload, 'Proposals');
-	
 </script>
 
 <div class={`box-border ${Class}`}>
 	<div class="mt-4 h-[100%]">
 		{#if proposals}
-			<!-- {#key needsReload} -->
+			{#key needsReload}
 				{#each proposals as proposal}
 					<div class="border-b-2 border-gray-300 select-none">
 						<Proposal
+							bind:proposalsToPredictionMarket
+							bind:commentFilterProposalId
+							bind:selectedProposal
+							bind:comments
+							bind:phase
+							onChange={() => {}}
 							{proposal}
 							{isVoting}
 							{voting}
-							onChange={() => {}}
-							bind:proposalsToPredictionMarket
-							bind:selectedProposal
-							bind:phase
-							bind:comments
 						>
 							{#if phase === 'delegate_vote' || phase === 'vote'}
 								{@const score = voting.find((vote) => vote.proposal === proposal.id)?.score}
+
 								<VotingSlider
 									onSelection={(pos) => {
 										changingVote(pos, proposal.id);
 										if (phase === 'delegate_vote') delegateVote();
 										else if (phase === 'vote') vote();
 									}}
-									lineWidth={score ? score * 20 : 0}
+									{score}
 								/>
 							{/if}
 						</Proposal>
 					</div>
 				{/each}
-			<!-- {/key} -->
+			{/key}
 		{/if}
 	</div>
 </div>

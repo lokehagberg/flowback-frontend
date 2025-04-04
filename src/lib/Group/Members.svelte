@@ -13,7 +13,12 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { faMagnifyingGlass, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faMagnifyingGlass,
+		faPaperPlane,
+		faRunning,
+		faUserPlus
+	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
@@ -31,7 +36,8 @@
 		poppup: poppup,
 		showInvite = false,
 		searched = false,
-		delegates: Delegate[] = [];
+		delegates: Delegate[] = [],
+		removeUserModalShow = false;
 
 	onMount(async () => {
 		getUsers();
@@ -137,6 +143,20 @@
 			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
 		});
 	};
+
+	const userRemove = async () => {
+		// const {res, json} = await fetchRequest('POST', {
+		// } )
+	};
+
+	const getUserChannelId = async (userId: number) => {
+		const { json, res } = await fetchRequest('GET', `user/chat?target_user_ids=${userId}`);
+
+		if (!res.ok || json.length === 0) {
+			return;
+		}
+		return json.id;
+	};
 </script>
 
 <Modal bind:open={showInvite}>
@@ -197,12 +217,12 @@
 							<Button
 								Class="py-1 mr-4 px-2"
 								buttonStyle="primary-light"
-								action={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
+								onClick={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
 							>
 							<Button
 								Class="py-2  px-2"
 								buttonStyle="warning"
-								action={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
+								onClick={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
 							>
 						</div>
 					{/if}
@@ -217,38 +237,39 @@
 		class="flex flex-col items-center gap-2 mb-24 relative dark:bg-darkobject dark:text-darkmodeText pb-2"
 	>
 		<!-- Search in Members list -->
-
-		<form
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4"
-			on:input|preventDefault={() => searchUsers(searchUserQuery)}
-		>
-			<TextInput
-				Class="w-4/5"
-				onInput={() => (searched = false)}
-				label={$_('Search')}
-				bind:value={searchUserQuery}
-			/>
-
-			<Button
-				Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
-					searched ? 'bg-blue-300' : 'bg-blue-600'
-				}`}
-				type="submit"
+		<div class="flex items-center gap-3 mb-4 w-full">
+			<form
+				class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-1 items-end gap-4"
+				on:input|preventDefault={() => searchUsers(searchUserQuery)}
 			>
-				<Fa icon={faMagnifyingGlass} />
-			</Button>
-		</form>
+				<TextInput
+					Class="w-full"
+					onInput={() => (searched = false)}
+					label=""
+					max={null}
+					search={true}
+					placeholder={$_('Search members')}
+					bind:value={searchUserQuery}
+				/>
+			</form>
 
-		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<Button Class="flex " action={() => (showInvite = true)}>{$_('Show invitations')}</Button>
-		{/if}
+			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+				<Button
+					Class="w-10 h-10 flex items-center justify-center"
+					onClick={() => (showInvite = true)}
+				>
+					<Fa size="lg" icon={faUserPlus} />
+				</Button>
+			{/if}
+		</div>
 
 		<!-- Members List -->
-
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
 				{#each searchedUsers as user}
-				{@const delegationId = delegates.find((delegate) => delegate.user.id === user.user.id)?.pool_id}
+					{@const delegationId = delegates.find(
+						(delegate) => delegate.user.id === user.user.id
+					)?.pool_id}
 					<div class="flex items-center">
 						<button
 							on:click={() => goto(`/user?id=${user.user.id}&delegate_id=${delegationId || ''}`)}
@@ -261,7 +282,8 @@
 								displayName
 							/>
 						</button>
-						{#if user.is_delegate}
+
+						{#if user.delegate_pool_id === null}
 							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
 								{$_('Delegate')}
 							</div>
@@ -274,20 +296,33 @@
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
 							{user.permission_name}
 						</div>
-						<button
-							on:click={() => {
-								isChatOpen.set(true);
-								chatPartner.set(user.user.id);
-							}}
-							Class="right-6 absolute"
-						>
-							<Fa icon={faPaperPlane} rotate="60" />
-						</button>
+						<div class="flex gap-2 right-6 absolute">
+							{#await getUserChannelId(user.user.id) then channelId}
+								{#if channelId}
+									<button
+										on:click={() => {
+											isChatOpen.set(true);
+											chatPartner.set(channelId);
+										}}
+										Class="text-primary"
+									>
+										<Fa icon={faPaperPlane} rotate="60" />
+									</button>
+								{/if}
+							{/await}
+						</div>
 					</div>
 				{/each}
 			</div>
 		{/if}
 	</div>
 </Loader>
+
+<Modal bind:open={removeUserModalShow}>
+	<div slot="header">{$_('Sure you want to delete?')}</div>
+	<div slot="body">
+		<Button buttonStyle="warning-light" onClick={userRemove} />
+	</div>
+</Modal>
 
 <Poppup bind:poppup />

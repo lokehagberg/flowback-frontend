@@ -31,5 +31,5 @@
 	<span
 		>{$_('We use cookies to improve the experience of Flowback')}
 	</span>
-	<Button action={acceptCookies} Class="ml-2">{$_('Ok')}</Button>
+	<Button onClick={acceptCookies} Class="ml-2">{$_('Ok')}</Button>
 </div>

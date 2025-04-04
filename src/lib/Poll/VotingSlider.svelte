@@ -1,6 +1,9 @@
 <script lang="ts">
+	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
-	export let onSelection = (pos: number) => {},
+	import { _ } from 'svelte-i18n';
+
+	export let onSelection = (pos: number | null) => {},
 		lineWidth = 0,
 		score: number | null = null;
 
@@ -14,6 +17,7 @@
 		);
 
 		lineWidth = nearestSnap;
+
 		currentSnapPosition = nearestSnap;
 		return nearestSnap;
 	};
@@ -27,7 +31,8 @@
 			const width = (offsetX / rect.width) * 100;
 
 			dragLinePosition = offsetX;
-			snapToSnapPoint(width);
+			score = snapToSnapPoint(width) / 20;
+			console.log(score, 'score');
 		};
 
 		const onMouseUp = () => {
@@ -50,9 +55,7 @@
 	});
 
 	$: if (score !== null) snapToSnapPoint(score * 20);
-	$: if (score !== null) console.log(score, 'score');
-
-	// $: console.log(score, dragLinePosition, currentSnapPosition, lineWidth);
+	else snapToSnapPoint(0);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -79,26 +82,33 @@
 	<div
 		class={`absolute -top-[20%] ${
 			// This is stupid, but Tailwind failed to autogenerate classes when attempting to do left-[${currentSnapPosition}%]
-			currentSnapPosition === null
-				? 'left-[50%]'
+			currentSnapPosition === null || score === null
+				? 'invisible'
 				: currentSnapPosition === 0
 				? 'left-0'
 				: currentSnapPosition === 20
 				? 'left-[20%]'
 				: currentSnapPosition === 40
 				? 'left-[40%]'
-				: currentSnapPosition === 50
-				? 'left-[50%]'
 				: currentSnapPosition === 60
 				? 'left-[60%]'
 				: currentSnapPosition === 80
 				? 'left-[80%]'
 				: 'left-[100%]'
-		} z-40 bg-white px-0.5 text-sm`}
+		} z-30 bg-white px-0.5 text-sm`}
 	>
 		|
 	</div>
 </div>
+
+<Button
+	onClick={() => {
+		lineWidth = 0;
+		score = null;
+		currentSnapPosition = null;
+		onSelection(null);
+	}}>{$_('Reset')}</Button
+>
 
 <style>
 	.draggable {

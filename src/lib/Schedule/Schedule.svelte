@@ -17,6 +17,8 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Event from './Event.svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 
 	export let Class = '',
 		type: 'user' | 'group';
@@ -49,14 +51,14 @@
 		showEvent = false,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
-		//Variables for creating new scheduled events
-		start_date: Date | null,
-		end_date: Date | null,
-		title: string,
-		meeting_link: string,
-		description: string,
-		workGroup: { name: string; id: number } | null = null,
-		event_id: number | undefined,
+		selectedEvent: scheduledEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		},
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
 		notActivated = true,
@@ -98,25 +100,19 @@
 	};
 
 	const scheduleEventCreate = async () => {
-		console.log('hiiiiii');
-
 		let API = '';
-		let payload: any = {
-			start_date,
-			end_date,
-			title,
-			description
-		};
+		let payload: any = selectedEvent;
 
-		if (meeting_link !== '') payload['meeting_link'] = meeting_link;
+		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
+		if (selectedEvent.meeting_link === '') delete payload.meeting_link;
 
-		if (description === '') delete payload.description;
+		if (selectedEvent.description === '') delete payload.description;
 
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
 			API += `group/${$page.params.groupId || 1}/schedule/create`;
-			if (workGroup) payload['work_group_id'] = workGroup;
+			if (selectedEvent.work_group) payload['work_group_id'] = selectedEvent.work_group;
 		}
 
 		loading = true;
@@ -131,37 +127,30 @@
 
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
-		events.push({
-			created_by: Number(localStorage.getItem('userId')),
-			description: '',
-			end_date: end_date?.toString() || '',
-			start_date: start_date?.toString() || '',
-			event_id: json.id,
-			score: 0,
-			title,
-			meeting_link: '',
-			schedule_origin_name: 'user'
-		});
+		events.push(selectedEvent);
 		events = events;
-
-		start_date = selectedDate;
-		end_date = null;
-		title = '';
-		description = '';
-		meeting_link = '';
-		event_id = undefined;
 	};
 
-	const scheduleEventEdit = async () => {
+	const scheduleEventUpdate = async () => {
+		let payload: any = selectedEvent;
+
+		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
+
+		if (selectedEvent.description === '' || selectedEvent.description === null)
+			delete payload.description;
+		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === null)
+			delete payload.meeting_link;
+
+		if (type === 'group' && selectedEvent.work_group)
+			payload['work_group_id'] = selectedEvent.work_group;
+
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `user/schedule/update`, {
-			event_id,
-			start_date,
-			end_date,
-			title,
-			description,
-			meeting_link
-		});
+
+		const { res, json } = await fetchRequest(
+			'POST',
+			groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			payload
+		);
 
 		loading = false;
 
@@ -172,33 +161,19 @@
 
 		showEditScheduleEvent = false;
 		events = events.map((event) => {
-			if (event.event_id === event_id)
-				return {
-					created_by: Number(localStorage.getItem('userId')),
-					description,
-					end_date: end_date?.toString() || '',
-					start_date: start_date?.toString() || '',
-					event_id: json.id,
-					score: 0,
-					title,
-					schedule_origin_name: 'user',
-					meeting_link
-				};
+			if (event.event_id === selectedEvent.event_id) return selectedEvent;
 			else return event;
 		});
-
-		start_date = selectedDate;
-		end_date = null;
-		title = '';
-		description = '';
-		meeting_link = '';
-		event_id = undefined;
 	};
 
 	const scheduleEventDelete = async () => {
-		const { res, json } = await fetchRequest('POST', `user/schedule/delete`, {
-			event_id
-		});
+		const { res, json } = await fetchRequest(
+			'POST',
+			groupId ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			{
+				event_id: selectedEvent.event_id
+			}
+		);
 
 		loading = false;
 
@@ -208,29 +183,18 @@
 		}
 
 		poppup = { message: 'Event deleted', success: true };
-		events = events.filter((event) => event.event_id !== event_id);
+		events = events.filter((event) => event.event_id !== selectedEvent.event_id);
 		events = events;
 
-		showEditScheduleEvent = false;
-
-		start_date = selectedDate;
-		end_date = null;
-		title = '';
-		description = '';
-		event_id = undefined;
+		showEvent = false;
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {
-		start_date = new Date(event.start_date);
-		end_date = new Date(event.end_date);
-		title = event.title;
-		description = event.description;
-		event_id = event.event_id;
-		if (event.work_group) workGroup = event.work_group;
+		selectedEvent = event;
 		showEvent = true;
 	};
 
-	const getWorkGroups = async () => {
+	const getWorkGroupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
 
 		if (!res.ok) return;
@@ -258,7 +222,7 @@
 		};
 
 		setUpScheduledPolls();
-		getWorkGroups();
+		getWorkGroupList();
 	});
 
 	$: month && year && deleteSelection();
@@ -267,11 +231,14 @@
 
 	$: if (showCreateScheduleEvent && notActivated) {
 		notActivated = false;
-		start_date = selectedDate;
-		if (selectedDate) end_date = new Date(selectedDate.getTime() + 60 * 60 * 1000);
+		selectedEvent.start_date = selectedDate.toString();
+		if (selectedDate)
+			selectedEvent.end_date = new Date(selectedDate.getTime() + 60 * 60 * 1000).toString();
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
+
+	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -327,16 +294,17 @@
 		</div>
 
 		<div class="flex flex-col">
-			{#each workGroups as group}
-				<Button
-					buttonStyle={workGroupFilter.find((_group) => _group === group.id)
-						? 'primary'
-						: 'secondary'}
-					action={() => onFilterWorkGroup(group)}
-					Class="mt-2 break-all"
-				>
-					{group.name}
-				</Button>
+			{#each workGroups as workGroup}
+				<div class="flex items-center gap-2">
+					<input
+						type="checkbox"
+						id={workGroup.id.toString()}
+						value={workGroupFilter.find((_workGroup) => _workGroup === workGroup.id)}
+						on:input={() => onFilterWorkGroup(workGroup)}
+					/>
+
+					<span>{workGroup.name}</span>
+				</div>
 			{/each}
 		</div>
 	</div>
@@ -382,12 +350,14 @@
 				{#each [1, 2, 3, 4, 5, 6, 7] as x}
 					<Day
 						bind:showCreateScheduleEvent
-						bind:selectedDatePosition
-						bind:selectedDate
-						bind:year
-						bind:month
 						bind:advancedTimeSettingsDates
+						bind:selectedDatePosition
+						bind:selectedEvent
+						bind:selectedDate
+						bind:showEvent
 						bind:events
+						bind:month
+						bind:year
 						{x}
 						{y}
 					/>
@@ -398,20 +368,15 @@
 </div>
 
 <Event
-	bind:showEvent
 	bind:showCreateScheduleEvent
 	bind:showEditScheduleEvent
-	bind:title
-	bind:description
-	bind:start_date
-	bind:end_date
-	bind:meeting_link
-	bind:workGroup
+	bind:selectedEvent
 	bind:workGroups
-	bind:type
+	bind:showEvent
 	bind:loading
+	bind:type
 	{scheduleEventCreate}
-	{scheduleEventEdit}
+	scheduleEventEdit={scheduleEventUpdate}
 	{scheduleEventDelete}
 />
 

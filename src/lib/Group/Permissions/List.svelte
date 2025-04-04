@@ -11,7 +11,8 @@
 
 	export let selectedPage: 'assign' | 'create' | 'list', selectedRole: any;
 
-	let roles: Permission[] = [];
+	let roles: Permission[] = [],
+		showDeleteModal = false;
 
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
@@ -49,9 +50,32 @@
 					selectedPage = 'create';
 				}}>{role.role_name}</button
 			>
-			<Button action={() => deletePermission(role.id)} Class="p-2 text-lg cursor-pointer bg-white">
+			<Button onClick={() => (showDeleteModal = true)} Class="p-2 text-lg cursor-pointer bg-white">
 				<Fa class="text-red-500" icon={faTrash} />
 			</Button>
 		</li>
+
+		{#if showDeleteModal}
+			<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+				<div class="bg-white dark:bg-darkobject p-6 rounded shadow-lg w-96">
+					<h2 class="text-xl font-semibold mb-4">{$_('Confirm Deletion')}</h2>
+					<p class="mb-6">{$_('Are you sure you want to delete this workgroup?')}</p>
+					<div class="flex justify-end space-x-2">
+						<Button buttonStyle="primary-light" onClick={() => (showDeleteModal = false)}>
+							{$_('Cancel')}
+						</Button>
+						<Button
+							buttonStyle="warning-light"
+							onClick={() => {
+								deletePermission(role.id);
+								showDeleteModal = false;
+							}}
+						>
+							{$_('Delete')}
+						</Button>
+					</div>
+				</div>
+			</div>
+		{/if}
 	{/each}
 </ul>

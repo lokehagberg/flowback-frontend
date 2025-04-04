@@ -118,8 +118,6 @@
 						/>
 					</div>
 				{/if}
-				<!-- <input bind:value={start_date} type="datetime-local" />
-				<input bind:value={end_date} type="datetime-local" /> -->
 				<div class="w-full md:flex md:gap-4">
 					<div class="text-left flex-1">
 						<label class="block text-md pt-2" for="create-start-date">

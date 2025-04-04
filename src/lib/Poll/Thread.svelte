@@ -75,7 +75,7 @@
 >
 	<div class="flex justify-between items-center">
 		<a
-			class="break-words cursor-pointer hover:underline text-primary dark:text-secondary text-2xl text-left"
+			class="break-words cursor-pointer hover:underline text-primary dark:text-secondary text-xl text-left"
 			href={`/groups/${thread?.created_by?.group_id}/thread/${thread?.id}`}>{thread?.title}</a
 		>
 		<div class=" inline-flex gap-4 items-baseline">

@@ -17,9 +17,8 @@
 </script>
 
 <Modal bind:open>
-	<div slot="body">{$_('Your session is about to expire, log back in?')}</div>
-
-	<div slot="footer" class="flex gap-2">
+	<div slot="body" class="py-4 px-2 text-lg">{$_('Your session is about to expire, log back in?')}</div>
+	<div slot="footer" class="flex justify-end gap-2">
 		<Button onClick={logBackIn}>{$_('Yes, log me back in')}</Button>
 		<Button onClick={() => open = false} buttonStyle="secondary">{$_('No, log me out')}</Button>
 	</div>

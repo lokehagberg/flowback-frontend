@@ -2,6 +2,7 @@
 	import Button from './Button.svelte';
 	import Modal from './Modal.svelte';
 	import { _ } from 'svelte-i18n';
+	import { goto } from '$app/navigation';
 
 	export let open = false;
 
@@ -14,12 +15,21 @@
 
 		open = false;
 	};
+
+	const logOut = () => {
+		open = false;
+		localStorage.removeItem('token');
+		localStorage.removeItem('sessionExpirationTime');
+		goto('/login');
+	};
 </script>
 
 <Modal bind:open>
-	<div slot="body" class="py-4 px-2 text-lg">{$_('Your session is about to expire, log back in?')}</div>
+	<div slot="body" class="py-4 px-2 text-lg">
+		{$_('Your session is about to expire, log back in?')}
+	</div>
 	<div slot="footer" class="flex justify-end gap-2">
 		<Button onClick={logBackIn}>{$_('Yes, log me back in')}</Button>
-		<Button onClick={() => open = false} buttonStyle="secondary">{$_('No, log me out')}</Button>
+		<Button onClick={logOut} buttonStyle="secondary">{$_('No, log me out')}</Button>
 	</div>
 </Modal>

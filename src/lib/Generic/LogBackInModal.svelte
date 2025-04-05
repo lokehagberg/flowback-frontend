@@ -26,7 +26,7 @@
 
 <Modal bind:open>
 	<div slot="body" class="py-4 px-2 text-lg">
-		{$_('Your session is about to expire, log back in?')}
+		{$_('Your session is about to expire, stay logged in?')}
 	</div>
 	<div slot="footer" class="flex justify-end gap-4">
 		<Button onClick={logOut} buttonStyle="warning-light">{$_('Log Out')}</Button>

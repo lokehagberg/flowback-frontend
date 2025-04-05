@@ -8,9 +8,13 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import { env } from '$env/dynamic/public';
+	import type { poppup } from '$lib/Generic/Poppup';
+	import Poppup from '$lib/Generic/Poppup.svelte';
 
 	export let group: Group;
-	let pending: boolean = false;
+
+	let pending: boolean = false,
+		poppup: poppup = { message: '', success: false };
 
 	const goToGroup = () => {
 		if (group.joined) goto(`/groups/${group.id}`);
@@ -20,12 +24,13 @@
 		const { res, json } = await fetchRequest('POST', 'notification/group');
 	};
 
-	const joinGroup = async () => {
+	const joinGroup = async (directJoin: boolean) => {
 		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
-		if (res.ok) {
-			group.joined = !group.joined;
-			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(group.blockchain_id);
-		}
+		if (!res.ok) return;
+
+		if (directJoin) group.joined = !group.joined;
+		else poppup = { message: 'Pending invite', success: true };
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(group.blockchain_id);
 	};
 </script>
 
@@ -37,9 +42,7 @@
 >
 	<button on:click={goToGroup} class="w-full">
 		<img
-			src={`${env.PUBLIC_API_URL}${
-				group.cover_image
-			}`}
+			src={`${env.PUBLIC_API_URL}${group.cover_image}`}
 			class="cover rounded-t-2xl w-full"
 			alt="cover"
 			on:error={(e) => onThumbnailError(e, DefaultBanner)}
@@ -61,14 +64,14 @@
 		</p> -->
 		{#if group.description.length > 0}
 			<div class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-words">
-				<p class="line-clamp-2">{group.description} </p>
+				<p class="line-clamp-2">{group.description}</p>
 			</div>
 		{/if}
 	</button>
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<Button onClick={joinGroup} Class="hover:bg-blue-800 bg-blue-600"
+			<Button onClick={() => joinGroup(group.direct_join)} Class="hover:bg-blue-800 bg-blue-600"
 				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
 			>
 		{:else if pending}
@@ -76,6 +79,7 @@
 		{/if}
 	</div>
 </button>
+<Poppup bind:poppup />
 
 <style>
 	.vote-thumbnail:hover {

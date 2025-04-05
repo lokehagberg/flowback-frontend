@@ -17,7 +17,7 @@ export class ThreadsApi {
    */
   static async getHomeThreads(orderBy: string): Promise<ApiResponse<Thread>> {
     return apiClient<ApiResponse<Thread>>(
-      `group/thread/list?order_by=${orderBy}`
+      `group/thread/list?order_by=${orderBy}&limit=1000`
     );
   }
 } 

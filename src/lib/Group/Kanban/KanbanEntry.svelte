@@ -300,7 +300,7 @@
 				username={kanban?.assignee?.username}
 				profilePicture={kanban?.assignee?.profile_image}
 				Class=""
-				size={20}
+				size={1}
 			/>
 
 			<div class="break-all text-xs">

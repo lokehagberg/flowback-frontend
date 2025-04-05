@@ -623,6 +623,8 @@
     "Search polls": "Sök omröstning",
     "Failed to leave Group": "Det gick inte att lämna gruppen",
     "Your session is about to expire, log back in?": "Din session håller på att löpa ut, logga in igen?",
+    "Yes, log me back in": "Ja, logga in igen",
+    "No, log me out": "Nej, logga ut",
     "Tag": "Ämnesområde",
     "Add Email": "Lägg till e-mail",
     "Failed to add user to group": "Misslyckades att lägga till användare i gruppen",

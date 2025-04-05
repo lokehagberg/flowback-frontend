@@ -8,7 +8,7 @@
 	const logBackIn = () => {
 		localStorage.setItem(
 			'sessionExpirationTime',
-			//A session is set to 24 hours with "1000 * 3600 * 24"
+			// A session is set to 24 hours with "1000 * 3600 * 24"
 			(new Date().getTime() + 1000 * 3600 * 24).toString()
 		);
 
@@ -19,5 +19,8 @@
 <Modal bind:open>
 	<div slot="body">{$_('Your session is about to expire, log back in?')}</div>
 
-	<div slot="footer"><Button onClick={logBackIn}>Yes</Button></div>
+	<div slot="footer" class="flex gap-2">
+		<Button onClick={logBackIn}>{$_('Yes, log me back in')}</Button>
+		<Button onClick={() => open = false} buttonStyle="secondary">{$_('No, log me out')}</Button>
+	</div>
 </Modal>

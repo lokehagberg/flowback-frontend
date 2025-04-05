@@ -12,11 +12,16 @@
 		userId: null | string | number = null;
 
 	// Change this to pixel size once we upgrade to tailwind 4
-	const sizeClass = size === 1 ? 'w-5 h-5' : // 20px
-					 size === 2 ? 'w-10 h-10' : // 40px
-					 size === 3 ? 'w-16 h-16' : // 64px
-					 size === 4 ? 'w-20 h-20' : // 80px
-					 'w-10 h-10'; // fallback to default 40px
+	const sizeClass =
+		size === 1
+			? 'w-5 h-5' // 20px
+			: size === 2
+			? 'w-10 h-10' // 40px
+			: size === 3
+			? 'w-16 h-16' // 64px
+			: size === 4
+			? 'w-20 h-20' // 80px
+			: 'w-10 h-10'; // fallback to default 40px
 
 	// TODO: Fix this bad hardcoded solution and general solution for decreasing reliance on hardcoded solutions to API in urls
 	$: if (profilePicture?.includes('api/api')) {

@@ -125,6 +125,19 @@
 		workGroupsStore.set(json.results);
 	};
 
+	const checkSessionExpiration = () => {
+		const sessionExpiration = window.localStorage.getItem('sessionExpirationTime');
+		if (!sessionExpiration) return;
+
+		const expirationTime = Number(sessionExpiration);
+		const currentTime = new Date().getTime();
+
+		// Check if it will expire within next hour
+		if (expirationTime > currentTime && expirationTime - currentTime < 3600000) {
+			openLoginModal = true;
+		}
+	};
+
 	beforeNavigate(() => {
 		scrolledY = $page.params.pollId;
 	});
@@ -140,11 +153,7 @@
 			html?.scrollIntoView();
 		}, 200);
 
-		// //Pop-up for when user is 1 hour before their login expires.
-		// const sessionExpirationDate = new Date(Number(localStorage.getItem('sessionExpirationTime')));
-		// if (addDateOffset(sessionExpirationDate, -1, 'hour') < new Date()) openLoginModal = true;
-
-		// console.log(addDateOffset(sessionExpirationDate, -30, 'minute').getTime());
+		checkSessionExpiration();
 	});
 
 	//Initialize Translation, which should happen before any lifecycle hooks.
@@ -159,6 +168,8 @@
 			const html = document.getElementById(`poll-thumbnail-${scrolledY}`);
 			html?.scrollIntoView();
 		}, 200);
+
+		checkSessionExpiration();
 	});
 </script>
 

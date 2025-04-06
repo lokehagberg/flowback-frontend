@@ -362,7 +362,8 @@
 					buttonStyle="warning-light"
 					onClick={() => {
 						isEditing = false;
-						profileImagePreview = oldProfileImagePreview;
+						// profileImagePreview = oldProfileImagePreview;
+						getUser();
 					}}>{$_('Cancel')}</Button
 				>
 				<Button

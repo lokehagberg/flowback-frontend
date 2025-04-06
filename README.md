@@ -12,6 +12,7 @@ To run the frontend you will need to set up both the [frontend](#set-up-the-fron
 git clone https://github.com/lokehagberg/flowback-frontend.git
 
 #Then you install the dependencies
+cd flowback-frontend
 npm install
 ```
 

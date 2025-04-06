@@ -31,8 +31,9 @@
 </script>
 
 <div class={`image-upload ${Class}`}>
-	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
-
+	{#if label}
+		<h1 class="text-left text-sm w-full">{$_(label)}</h1>
+	{/if}
 	{#if imageString && !disableImagePreview}
 		<img
 			id="image"
@@ -62,7 +63,7 @@
 	<input
 		style="display:none"
 		type="file"
-		accept=".jpg, .jpeg, .png"
+		accept=".jpg, .jpeg, .png, .pdf, .txt"
 		on:change={(e) => onFileSelected(e)}
 		bind:this={fileinput}
 	/>

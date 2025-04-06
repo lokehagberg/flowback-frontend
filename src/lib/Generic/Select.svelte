@@ -17,26 +17,24 @@
 		charlimit = 30;
 </script>
 
-<div class={`${Class}`}>
+<div class={`${Class} border-2`}>
 	{#if label}
 		<label for={label}>{label}</label> <br />
 	{/if}
 	<select
-		name={label}
+		bind:value
 		on:input={(e) => {
 			onInput(e);
-			//@ts-ignore
-			// if (e?.target?.value)
-			// 	//@ts-ignore
-			// 	value = e?.target?.value;
 		}}
-		style="width:100%"
 		class={`rounded p-1 dark:bg-darkobject ${classInner}`}
-		bind:value
+		style="width:100%"
+		name={label}
 	>
-		<option value="" disabled selected>{innerLabel}</option>
-		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
-		{/each}
+		<option value="" selected>{$_(innerLabel)}</option>
+		{#if labels}
+			{#each labels as label, i}
+				<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
+			{/each}
+		{/if}
 	</select>
 </div>

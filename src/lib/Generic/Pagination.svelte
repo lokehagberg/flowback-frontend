@@ -3,6 +3,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from './Button.svelte';
 	import { _ } from 'svelte-i18n';
+	import { commaCleanup } from './GenericFunctions';
 
 	export let prev: string,
 		next: string,
@@ -10,19 +11,17 @@
 		Class = '';
 
 	const request = async (api: string) => {
-		api = commaCleanUp(api);
+		api = commaCleanup(api);
 		api = api.replace(`${env.PUBLIC_API_URL}/`, '');
+		api = api.replace(`api/api`, 'api');
+
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) return;
 
-		next = commaCleanUp(json.next);
-		prev = commaCleanUp(json.previous);
+		next = commaCleanup(json.next);
+		prev = commaCleanup(json.previous);
 		iterable = json.results;
-	};
-
-	const commaCleanUp = (api: string) => {
-		return api.replace('%2C', ',');
 	};
 </script>
 

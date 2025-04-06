@@ -1,6 +1,5 @@
 <script>
 	import { env } from '$env/dynamic/public';
-	import { PUBLIC_ONE_GROUP_FLOWBACK } from '$env/static/public';
 	import Layout from '$lib/Generic/Layout.svelte';
 	import Kanban from '$lib/Group/Kanban/KanbanBoard.svelte';
 	import { _ } from 'svelte-i18n';

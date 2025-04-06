@@ -26,12 +26,16 @@
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
-		isVoting = false; // Add loading state
+		isVoting = false,
+		images: File[] = [];
 
-	const deleteComment = async (id: number) => {
-		let _api = `group/${api}/`;
-		if (api === 'poll') _api += `${$page.params.pollId}/`;
-		else if (api === 'thread') _api += `${$page.params.threadId}/`;
+	const commentDelete = async (id: number) => {
+		let _api = `group/`;
+
+		if (api === 'poll') _api += `poll/${$page.params.pollId}/`;
+		else if (api === 'thread') _api += `thread/${$page.params.threadId}/`;
+		else if (api === 'delegate-history') _api += `delegate/pool/${delegate_pool_id}/`;
+
 		_api += `comment/${id}/delete`;
 
 		const { res, json } = await fetchRequest('POST', _api);
@@ -41,11 +45,12 @@
 			return;
 		}
 
-		comments = comments.map((comment) => {
+		comments.map((comment) => {
 			if (comment.id !== id) return comment;
 
 			comment.message = '[Deleted]';
 			comment.active = false;
+			console.log(comment, 'COMMNEt');
 			return comment;
 		});
 		comments = comments;
@@ -67,6 +72,8 @@
 		if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
 		else if (api === 'thread')
 			_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
+		else if (api === 'delegate-history')
+			_api = `group/delegate/pool/${delegate_pool_id}/comment/${comment.id}/vote`;
 
 		const { res, json } = await fetchRequest('POST', _api, vote);
 
@@ -100,6 +107,11 @@
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
 	});
+
+	$: if (images) {
+		console.log(images, 'IMAGES');
+		console.log(comment.attachments, 'comment.attachments');
+	}
 </script>
 
 {#if comment.being_edited}
@@ -107,6 +119,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
+		bind:images
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -130,40 +143,51 @@
 				Class="font-semibold"
 			/>
 		</div>
-		{#if comment.message}
-			<div class="text-md mt-1 mb-3 pl-14 break-words" id={`comment-${comment.id}`}>
-				{comment.message}
-			</div>
-		{/if}
+		{#key comment.message}
+			{#if comment.message}
+				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
+					{comment.message}
+				</div>
+			{/if}
+		{/key}
 		<div class="pl-14 text-xs text-gray-400 dark:text-darkmodeText">
-			{comment.edited && comment.active ? '(edited)' : ''}
+			{comment.edited && comment.active ? $_('(edited)') : ''}
 		</div>
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-					<img
-						src={(() => {
-							if (typeof attachment.file === 'string')
-								return attachment.file.substring(0, 4) === 'blob'
-									? attachment.file
-									: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
-							else return URL.createObjectURL(attachment.file);
-						})()}
-						alt="Attachment to the comment"
-					/>
+				<!-- {@debug attachment} -->
+					{#if typeof attachment.file === 'string' && (attachment.file
+							.slice(-3)
+							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
+						<a
+							href={attachment.file.substring(0, 4) === 'blob'
+								? attachment.file
+								: `${env.PUBLIC_API_URL}/media/${attachment.file}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-primary dark:text-secondary hover:underline"
+						>
+							{$_('View File')}
+						</a>
+					{:else}
+						<img
+							src={(() => {
+								if (typeof attachment.file === 'string')
+									return attachment.file.substring(0, 4) === 'blob'
+										? attachment.file
+										: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
+								else return URL.createObjectURL(attachment.file);
+							})()}
+							alt="Attachment to the comment"
+						/>
+					{/if}
 				{/each}
 			</div>
 		{/if}
 
 		{#if comment.active}
 			<div class="flex gap-6 text-xs pl-14">
-				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => (comment.being_replied = true)}
-				>
-					<!-- <Fa icon={faReply} /> -->
-					{$_('Reply')}
-				</button>
 				<!-- {#if comment.author_id !== Number(localStorage.getItem('userId'))} -->
 				<div class="flex items-center gap-2">
 					<button
@@ -183,11 +207,19 @@
 					</button>
 				</div>
 				<!-- {/if} -->
+				 
+				<button
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => (comment.being_replied = true)}
+				>
+					<!-- <Fa icon={faReply} /> -->
+					{$_('Reply')}
+				</button>
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors hover:underline"
-						on:click={() => deleteComment(comment.id)}
+						on:click={() => commentDelete(comment.id)}
 					>
 						{$_('Delete')}
 					</button>
@@ -208,6 +240,8 @@
 
 {#if comment.being_replied}
 	<CommentPost
+		{delegate_pool_id}
+		bind:images
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}

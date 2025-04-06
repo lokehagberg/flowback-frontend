@@ -3,9 +3,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { GroupUser } from '../interface';
@@ -14,6 +12,14 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
+
+	export let type: 'home' | 'group',
+		open: boolean = false,
+		users: GroupUser[] = [],
+		kanbanEntries: kanban[],
+		workGroups: WorkGroup[] = [],
+		lane: number = 1,
+		groupId;
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -33,14 +39,6 @@
 		poppup: poppup,
 		images: File[],
 		workGroup: WorkGroup | null = null;
-
-	export let type: 'home' | 'group',
-		open: boolean = false,
-		users: GroupUser[] = [],
-		kanbanEntries: kanban[],
-		workGroups: WorkGroup[] = [],
-		lane: number = 1,
-		groupId;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -144,7 +142,7 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
-				<TextArea Class="text-md" label="Description" bind:value={description} />
+				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={description} />
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
@@ -156,7 +154,7 @@
 							on:input={handleChangeWorkGroup}
 							id="work-group"
 						>
-							<option class="w-5" value={null}> {$_('Unassigned')} </option>
+							<option class="w-5" value={null}> {$_('Select')} </option>
 
 							{#each workGroups as group}
 								<option class="w-5 text-black" value={group.id}>
@@ -216,16 +214,16 @@
 						<label class="block text-md">
 							{$_('Attachments')}
 						</label>
-						<FileUploads bind:images />
+						<FileUploads bind:files={images} />
 					</div>
 				</div>
 			</div>
 		</Loader>
 	</div>
-	''
+
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-2">
 		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (open = false)}
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (open = false)}
 			>{$_('kanbanEntry.Cancel', { default: 'Cancel' })}</Button
 		>
 	</div>

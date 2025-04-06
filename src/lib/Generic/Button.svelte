@@ -2,20 +2,19 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	export let action = () => {},
-		onClick = () => {},
+	export let onClick = () => {},
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
 		type: buttontypes = 'button',
 		disabled = false,
 		label: string = '',
 		href = '',
-		hoverEffect = true
+		hoverEffect = true;
 
 	//If all you send in is ref without noClick, the button will automatically send one to that link if pressed.
 	onMount(() => {
 		if (href !== '')
-			action = () => {
+			onClick = () => {
 				goto(href);
 			};
 	});
@@ -38,7 +37,6 @@
 	{type}
 	on:click={() => {
 		//The button used to only have action, but onClick is standard for svelte. TODO: Refactor so we only have onClick on all buttons in the code.
-		action();
 		onClick();
 	}}
 	class={`text-center ${

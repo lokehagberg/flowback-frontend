@@ -15,7 +15,7 @@
 </script>
 
 <Button
-	action={toggled
+	onClick={toggled
 		? () => {
 				toggled = false;
 				clearInterval(interval);

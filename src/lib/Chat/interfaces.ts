@@ -1,14 +1,23 @@
 import { fetchRequest } from '$lib/FetchRequest';
 
 export interface Message {
-	message: string;
 	user: {
 		id: number;
 		username: string;
 		profile_image: string | null;
 	};
-	username?: string;
-	created_at?: string;
+	active: boolean;
+	attachments: null | File[];
+	channel_id: number;
+	channel_origin_name: 'workgroup' | string;
+	channel_title: string;
+	created_at: string;
+	id: number;
+	message: string;
+	parent: number | null;
+	topic_id: number | null;
+	type: 'message' | 'info';
+	updated_at: string;
 }
 
 export interface Message1 {
@@ -21,7 +30,7 @@ export interface Message1 {
 	message: string;
 	parent: number;
 	topic_id: number;
-	type: 'message';
+	type: 'message' | 'info';
 	updated_at: String;
 	user: { id: number; username: string; profile_image: string; banner_image: string };
 }
@@ -33,12 +42,13 @@ export interface PreviewMessage {
 	profile_image: string;
 	timestamp: string;
 	user_id: number;
-	updated_at?:string;
+	updated_at?: string;
 	id: number;
 	notified: boolean;
 	//For group/preview
 	group_id?: number;
 	channel_id?: number;
+	channel_title?: string;
 	//For direct/preview
 	user: {
 		id: number;
@@ -62,3 +72,21 @@ export const setTimeStamp = async (chatterId: number, selectedPage: 'direct' | '
 		timestamp: new Date()
 	});
 };
+
+
+export interface invite {
+	id: number;
+	message_channel_id: number;
+	message_channel_name: string;
+	rejected: boolean | null;
+}
+
+export interface GroupMembers {
+	banner_image: string | null;
+	channel_id: number;
+	chat_status: string;
+	id: number;
+	profile_image: string | null;
+	public_status: string;
+	username: string;
+}

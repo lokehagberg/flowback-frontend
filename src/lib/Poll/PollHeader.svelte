@@ -14,7 +14,7 @@
 	import { goto } from '$app/navigation';
 	import { getPhaseUserFriendlyName, nextPhase } from './functions';
 	import { _ } from 'svelte-i18n';
-	import Description from './Description.svelte';
+	import NewDescription from './NewDescription.svelte';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -39,14 +39,16 @@
 		<!-- NOTE: In +layout, rote folder, there are URL related behaviours which are affected by this. -->
 		<Fa icon={faArrowLeft} />
 	</button>
-	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-all">{poll.title}</h1>
+	<h1 class="text-left text-2xl text-primary dark:text-secondary font-semibold break-words">
+		{poll?.title}
+	</h1>
 	<!-- <HeaderIcon Class="p-2 cursor-default" icon={faHourglass} text={'End date'} /> -->
 
 	<div class="flex gap-3 justify-center m-auto">
 		<NotificationOptions
-		type="poll"
-			id={poll.id}
-			api={`group/poll/${poll.id}`}
+			type="poll"
+			id={poll?.id}
+			api={`group/poll/${poll?.id}`}
 			categories={['poll', 'timeline', 'comment_all']}
 			labels={['Poll', 'Timeline', 'Comments']}
 			Class="justify-self-center mt-2"
@@ -59,7 +61,7 @@
 				: [$_('Delete Poll'), $_('Fast Forward')]}
 			functions={[
 				() => (deletePollModalShow = true),
-				async () => (phase = await nextPhase(poll.poll_type, $page.params.pollId, phase))
+				async () => (phase = await nextPhase(poll?.poll_type, $page.params.pollId, phase))
 			]}
 			Class="justify-self-center mt-2"
 		/>
@@ -67,52 +69,66 @@
 	</div>
 
 	<div class="flex gap-4 items-baseline grid-area-items my-1">
-		{#if poll.poll_type === 4}
+		{#if poll?.poll_type === 4}
 			<!-- TODO make it easy to change poll types e.t.c -->
 			<HeaderIcon Class="cursor-default" icon={faAlignLeft} text={'Text Poll'} />
-		{:else if poll.poll_type === 3}
+		{:else if poll?.poll_type === 3}
 			<HeaderIcon Class="cursor-default" icon={faCalendarAlt} text={'Date Poll'} />
 		{/if}
 		<!-- Group Profile -->
 		{#if displayTag}
-			<Tag tag={{ name: poll.tag_name, id: poll.tag_id, active: true, imac: 0 }} />
+			<Tag tag={{ name: poll?.tag_name, id: poll?.tag_id, active: true, imac: 0 }} />
 		{/if}
 		{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 			<a
 				href={`/groups/${$page.params.groupId}`}
-				class:hover:underline={poll.group_joined}
+				class:hover:underline={poll?.group_joined}
 				class="text-black dark:text-darkmodeText"
 			>
 				<img
 					class="h-8 w-8 inline rounded-full break-all"
-					src={`${env.PUBLIC_API_URL}${poll.group_image}`}
+					src={`${env.PUBLIC_API_URL}${poll?.group_image}`}
 					alt="group thumbnail"
 					on:error={(e) => onThumbnailError(e, DefaultBanner)}
 				/>
-				<span class="inline break-all">{poll.group_name}</span>
+				<span class="inline break-all">{poll?.group_name}</span>
 			</a>
 			<!-- Current Phase -->
-			<div>
-				{$_('Current phase:')}
-				{$_(getPhaseUserFriendlyName(phase))}
-			</div>
+			{#if pollType === 4}
+				<div>
+					{$_('Current phase:')}
+					{$_(getPhaseUserFriendlyName(phase))}
+				</div>
+			{/if}
 		{/if}
 	</div>
 
-	{#if poll.description.length > 0}
-		<div class="grid-area-description break-all">
-			<Description limit={400} description={poll.description} />
+	{#if poll?.description.length > 0}
+		<div class="grid-area-description break-words">
+			<NewDescription limit={3} lengthLimit={300} description={poll?.description} />
 		</div>
 	{/if}
-
-	<!-- TODO: fix attachments in poll -->
-	<!-- {#if poll.attachments && poll.attachments.length > 0}
-		<img
-			src={`${env.PUBLIC_API_URL}/api/media/${poll.attachments[0].file}` || ''}
-			alt="attachment to the poll"
-		/>
-	{/if} -->
 </div>
+
+{#if poll?.attachments && poll?.attachments.length > 0}
+	<div>
+		<div class="grid-area-attachments">
+			{#each poll?.attachments as attachment}
+				<div class="attachment-item">
+					<a
+						href={`${env.PUBLIC_API_URL}/media/${attachment.file}`}
+						download
+						target="_blank"
+						rel="noopener noreferrer"
+						class="download-link text-blue-600 hover:underline"
+					>
+						{`${env.PUBLIC_API_URL}/media/${attachment.file}`}
+					</a>
+				</div>
+			{/each}
+		</div>
+	</div>
+{/if}
 
 <DeletePollModal bind:deletePollModalShow pollId={$page.params.pollId} />
 

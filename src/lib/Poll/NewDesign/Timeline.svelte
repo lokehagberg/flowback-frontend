@@ -18,32 +18,34 @@
 		displayTimeline = true,
 		Class = '',
 		dates: Date[] = [],
-		pollType: number,
 		poll: poll,
 		phase: Phase,
-		horizontal = false;
+		horizontal = false,
+		displayTimelinePhase = true;
 
 	let datesArray: string[] = [],
 		displayDetails = false,
-		dateLabels = pollType === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
+		dateLabels = poll?.poll_type === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
 		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
 
 	const setupDates = () => {
 		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
-		dates = [
-			new Date(poll.start_date),
-			new Date(poll.area_vote_end_date),
-			new Date(poll.proposal_end_date),
-			new Date(poll.prediction_statement_end_date),
-			new Date(poll.prediction_bet_end_date),
-			new Date(poll.delegate_vote_end_date),
-			new Date(poll.end_date)
-		];
+		dates = [];
 
-		//TODO: Refactor so this works by making it easy for varying number of phases.
-		if (pollType === 4) {
+		if (poll?.poll_type === 4) {
+			dates = [
+				new Date(poll?.start_date),
+				new Date(poll?.area_vote_end_date),
+				new Date(poll?.proposal_end_date),
+				new Date(poll?.prediction_statement_end_date),
+				new Date(poll?.prediction_bet_end_date),
+				new Date(poll?.delegate_vote_end_date),
+				new Date(poll?.end_date)
+			];
+
+			//TODO: Refactor so this works by making it easy for varying number of phases.
 			if (phase === 'area_vote' || phase === 'pre_start') {
 				currentPhaseIndex = 0;
 			} else if (phase === 'proposal') {
@@ -59,6 +61,15 @@
 			} else if (phase === 'result' || phase === 'prediction_vote') {
 				currentPhaseIndex = 6;
 			}
+		} else if (poll?.poll_type === 3) {
+			dates = [new Date(poll?.start_date), new Date(poll?.end_date)];
+
+			//TODO: Refactor so this works by making it easy for varying number of phases.
+			if (dates[1] > new Date()) {
+				currentPhaseIndex = 0;
+			} else {
+				currentPhaseIndex = 1;
+			}
 		}
 
 		fraction = (currentPhaseIndex + 1) / dates.length;
@@ -73,24 +84,22 @@
 		});
 	};
 
-	onMount(() => {
-		setupDates();
-	});
-
-	$: if (phase) {
+	$: if (phase || poll) {
 		setupDates();
 	}
 </script>
 
 <div class={`relative flex flex-col items-center ${Class}`}>
-	<div class="text-center">
-		<span class="font-semibold text-primary dark:text-secondary">
-			{$_('Current')}:
-		</span>
-		{$_('Phase')}
-		{currentPhaseIndex + 1}.
-		{$_(dateLabels[currentPhaseIndex + 1])}
-	</div>
+	{#if displayTimelinePhase}
+		<div class="text-center">
+			<span class="font-semibold text-primary dark:text-secondary">
+				{$_('Current')}:
+			</span>
+			{$_('Phase')}
+			{currentPhaseIndex + 1}.
+			{$_(dateLabels[currentPhaseIndex + 1])}
+		</div>
+	{/if}
 
 	{#if displayTimeline}
 		<div
@@ -114,7 +123,7 @@
 				<HeaderIcon
 					Class="cursor-default"
 					size="1x"
-					text={`${$_(dateLabels[i])}: ${datesArray[i]}`}
+					text={`${i + 1}. ${$_(dateLabels[i + 1])}: ${datesArray[i]}`}
 					{icon}
 				/>
 				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
@@ -131,10 +140,12 @@
 				{$_('Time details')}
 			</button>
 			{#each dateLabels as label, i}
-				<li class="flex justify-between flex-col md:flex-row text-center">
-					<div class="mb-4 md:mb-0">{$_(label)}:</div>
-					<div class="mb-4 md:mb-0">{datesArray[i]} CET</div>
-				</li>
+				{#if i !== 0}
+					<li class="flex justify-between flex-col md:flex-row text-center">
+						<div class="mb-4 md:mb-0">{$_(label)}:</div>
+						<div class="mb-4 md:mb-0">{datesArray[i - 1]} CET</div>
+					</li>
+				{/if}
 			{/each}
 		</ul>
 	{:else if enableDetails}

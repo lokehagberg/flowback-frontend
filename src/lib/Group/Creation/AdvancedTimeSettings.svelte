@@ -153,7 +153,7 @@
 					</div>
 
 					<div>
-						<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+						<h2 class="mt-4">{$_('Consequences creation end')}</h2>
 						<DateInput
 							format="yyyy-MM-dd HH:mm"
 							closeOnSelection
@@ -163,7 +163,7 @@
 						/>
 					</div>
 					<div>
-						<h2 class="mt-4">{$_('Prediction bet end')}</h2>
+						<h2 class="mt-4">{$_('Consequence bet end')}</h2>
 						<DateInput
 							format="yyyy-MM-dd HH:mm"
 							closeOnSelection
@@ -206,17 +206,20 @@
 			</div>
 		{/if}
 	</div>
-	<TimelineTemplate
-		area_vote_time_delta={area_vote_end_date.getTime() - start_date.getTime()}
-		proposal_time_delta={proposal_end_date.getTime() - area_vote_end_date.getTime()}
-		prediction_statement_time_delta={prediction_statement_end_date.getTime() -
-			proposal_end_date.getTime()}
-		prediction_bet_time_delta={prediction_bet_end_date.getTime() -
-			prediction_statement_end_date.getTime()}
-		delegate_vote_time_delta={delegate_vote_end_date.getTime() - prediction_bet_end_date.getTime()}
-		vote_time_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
-		end_time_delta={end_date.getTime() - vote_end_date.getTime()}
-		poll_type={selected_poll === 'Text Poll' ? 4 : 3}
-		{handleSelectTemplate}
-	/>
+	{#if selected_poll === 'Text Poll'}
+		<TimelineTemplate
+			area_vote_time_delta={area_vote_end_date.getTime() - start_date.getTime()}
+			proposal_time_delta={proposal_end_date.getTime() - area_vote_end_date.getTime()}
+			prediction_statement_time_delta={prediction_statement_end_date.getTime() -
+				proposal_end_date.getTime()}
+			prediction_bet_time_delta={prediction_bet_end_date.getTime() -
+				prediction_statement_end_date.getTime()}
+			delegate_vote_time_delta={delegate_vote_end_date.getTime() -
+				prediction_bet_end_date.getTime()}
+			vote_time_delta={vote_end_date.getTime() - delegate_vote_end_date.getTime()}
+			end_time_delta={end_date.getTime() - vote_end_date.getTime()}
+			poll_type={selected_poll === 'Text Poll' ? 4 : 3}
+			{handleSelectTemplate}
+		/>
+	{/if}
 {/if}

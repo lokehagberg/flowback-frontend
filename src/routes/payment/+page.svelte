@@ -13,5 +13,5 @@
 </script>
 
 <Layout>
-	<Button action={generatePayment}>PAY UP</Button>
+	<Button onClick={generatePayment}>PAY UP</Button>
 </Layout>

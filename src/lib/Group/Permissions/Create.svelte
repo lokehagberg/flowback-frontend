@@ -11,14 +11,14 @@
 	import { onMount } from 'svelte';
 	import type { Permissions } from './interface';
 
-	export let selectedRole: any;
+	export let selectedRole: any, selectedPage: 'assign' | 'create' | 'list';
 
 	const perms = [
 		{
 			title: 'Invite',
 			description: 'Allows user to invite other people in the invitation tab'
 		},
-		{ title: 'Create poll', description: 'Allows user to create polls' },
+		{ title: 'Create post', description: 'Allows user to create posts' },
 		{
 			title: 'Voting rights',
 			description: 'Allows user to vote on proposals in polls'
@@ -30,7 +30,7 @@
 		{ title: 'Ban users', description: 'Allows user to ban users from the group' },
 		{
 			title: 'Fast Forward Poll',
-			description: 'Allows user to change timeline phase on a poll'
+			description: 'Allows user to fast forward polls'
 		},
 		{
 			title: 'Create Proposal',
@@ -48,24 +48,24 @@
 		{ title: 'Force Delete Proposal', description: 'Allows user to delete any proposal' },
 		{ title: 'Delete Comment', description: 'Allows user to delete any comment' },
 		{
-			title: 'Create Prediction Statement',
-			description: 'Allows user to create prediction statements in polls'
+			title: 'Create Consequence',
+			description: 'Allows user to create consequences in polls'
 		},
 		{
-			title: 'Delete Prediction Statement',
-			description: 'Allows user to delete prediction statements in polls'
+			title: 'Delete Consequence',
+			description: 'Allows user to delete consequences in polls'
 		},
 		{
-			title: 'Create Prediction Bet',
-			description: 'Allows user to create prediction bets in polls'
+			title: 'Create Consequence Probability',
+			description: 'Allows user to create consequence probabilities in polls'
 		},
 		{
-			title: 'Update Prediction Bet',
-			description: 'Allows user to modify prediction bets in polls'
+			title: 'Update Consequence Probability',
+			description: 'Allows user to modify consequence probabilities in polls'
 		},
 		{
-			title: 'Delete Prediction Bet',
-			description: 'Allows user to delete prediction bets in polls'
+			title: 'Delete Consequence Probability',
+			description: 'Allows user to delete consequence probabilities in polls'
 		}
 	];
 
@@ -74,7 +74,7 @@
 		roleName = '',
 		rolePerms = new Array(perms.length).fill(false);
 
-	const createRole = async () => {
+	const permissionCreate = async () => {
 		loading = true;
 		const { json, res } = await fetchRequest(
 			'POST',
@@ -110,6 +110,45 @@
 		poppup = { message: 'Successfully created role', success: true };
 	};
 
+	const permissionUpdate = async () => {
+		loading = true;
+		const { json, res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/permission/update`,
+			{
+				permission_id: selectedRole.id,
+				role_name: roleName,
+				invite_user: rolePerms[0],
+				create_poll: rolePerms[1],
+				allow_vote: rolePerms[2],
+				kick_members: rolePerms[3],
+				ban_members: rolePerms[4],
+				poll_fast_forward: rolePerms[5],
+				create_proposal: rolePerms[6],
+				update_proposal: rolePerms[7],
+				delete_proposal: rolePerms[8],
+				force_delete_poll: rolePerms[9],
+				force_delete_proposal: rolePerms[10],
+				force_delete_comment: rolePerms[11],
+				prediction_statement_create: rolePerms[12],
+				prediction_statement_delete: rolePerms[13],
+				prediction_bet_create: rolePerms[14],
+				prediction_bet_update: rolePerms[15],
+				prediction_bet_delete: rolePerms[16]
+			}
+		);
+
+		loading = false;
+
+		if (!res.ok) {
+			poppup = { message: 'Could not update role', success: false };
+			return;
+		}
+		poppup = { message: 'Successfully updated role', success: true };
+		selectedRole = undefined;
+		selectedPage = 'list';
+	};
+
 	const transformIntoRolePermType = (permissions: Permissions) => {
 		roleName = permissions.role_name;
 		rolePerms[0] = permissions.invite_user;
@@ -138,7 +177,10 @@
 
 <Loader bind:loading>
 	<div class="p-6 rounded">
-		<form class="flex flex-col gap-4" on:submit|preventDefault={createRole}>
+		<form
+			class="flex flex-col gap-4"
+			on:submit|preventDefault={() => (selectedRole ? permissionUpdate() : permissionCreate())}
+		>
 			<TextInput label={$_('Role name')} bind:value={roleName} required />
 			<h1 class="text-xl">{$_('Permissions')}</h1>
 			{#each perms as perm, i}
@@ -150,7 +192,11 @@
 					<Toggle bind:checked={rolePerms[i]} />
 				</div>
 			{/each}
-			<Button type="submit">{$_('Create Role')}</Button>
+			{#if selectedRole}
+				<Button type="submit">{$_('Edit Role')}</Button>
+			{:else}
+				<Button type="submit">{$_('Create Role')}</Button>
+			{/if}
 		</form>
 	</div>
 </Loader>

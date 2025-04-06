@@ -23,7 +23,6 @@
 			bind:phase
 			bind:poll
 			enableDetails={false}
-			pollType={4}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 		/>
 	{/if}

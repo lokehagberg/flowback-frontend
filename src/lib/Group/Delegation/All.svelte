@@ -206,7 +206,7 @@
 				>
 
 				{#if delegate.isInRelation && !userIsDelegate}
-					<Button Class={'bg-red-500'} action={() => deleteDelegateRelation(delegate.pool_id)}
+					<Button Class={'bg-red-500'} onClick={() => deleteDelegateRelation(delegate.pool_id)}
 						>{$_('Remove as delegate')}</Button
 					>
 
@@ -214,7 +214,7 @@
 				{:else if !userIsDelegate}
 					<Button
 						buttonStyle="primary-light"
-						action={() => createDelegateRelation(delegate.pool_id)}>{$_('Add as delegate')}</Button
+						onClick={() => createDelegateRelation(delegate.pool_id)}>{$_('Add as delegate')}</Button
 					>
 				{/if}
 			</li>
@@ -227,9 +227,9 @@
 {/if}
 
 {#if userIsDelegate}
-	<Button Class="mt-3 bg-red-500" action={deleteDelegation}>{$_('Stop being delegate')}</Button>
+	<Button Class="mt-3 bg-red-500" onClick={deleteDelegation}>{$_('Stop being delegate')}</Button>
 {:else}
-	<Button Class="mt-3" buttonStyle="primary-light" action={createDelegation}
+	<Button Class="mt-3" buttonStyle="primary-light" onClick={createDelegation}
 		>{$_('Become delegate')}</Button
 	>
 {/if}

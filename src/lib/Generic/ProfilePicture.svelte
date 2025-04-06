@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DefaultPFP from '$lib/assets/Default_pfp.png';
+	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import { env } from '$env/dynamic/public';
 
 	export let username = '',
@@ -8,21 +8,36 @@
 		displayName = false,
 		Class = '',
 		//TODO: Fix so one can use size
-		size: number = 40,
+		size: number = 2, // Change this to pixel size once we upgrade to tailwind 4
 		userId: null | string | number = null;
+
+	// Change this to pixel size once we upgrade to tailwind 4
+	const sizeClass =
+		size === 1
+			? 'w-5 h-5' // 20px
+			: size === 2
+			? 'w-10 h-10' // 40px
+			: size === 3
+			? 'w-16 h-16' // 64px
+			: size === 4
+			? 'w-20 h-20' // 80px
+			: 'w-10 h-10'; // fallback to default 40px
+
+	// TODO: Fix this bad hardcoded solution and general solution for decreasing reliance on hardcoded solutions to API in urls
+	$: if (profilePicture?.includes('api/api')) {
+		profilePicture = profilePicture.replace('api/api', 'api');
+	}
 </script>
 
 {#if userId}
 	<a href={`/user?id=${userId}`} class={`flex gap-4 items-center ${Class}`}>
-		{#if !profilePicture}
-			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
+		{#if !profilePicture || profilePicture === '' || profilePicture === 'null'}
+			<img src={DefaultPFP} alt="avatar" class={`${sizeClass} rounded-full`} />
 		{:else}
 			<img
-				src={`${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-				}${profilePicture}`}
+				src={`${env.PUBLIC_API_URL}${profilePicture}`}
 				alt="avatar"
-				class={`w-[${size}px] h-[${size}px] rounded-full`}
+				class={`${sizeClass} rounded-full`}
 			/>
 		{/if}
 		{#if displayName}
@@ -33,15 +48,13 @@
 	</a>
 {:else}
 	<div class={`flex gap-2 items-center ${Class}`}>
-		{#if !profilePicture}
-			<img src={DefaultPFP} alt="avatar" class={`w-[${size}px] h-[${size}px] rounded-full`} />
+		{#if !profilePicture || profilePicture === '' || profilePicture === 'null'}
+			<img src={DefaultPFP} alt="avatar" class={`${sizeClass} rounded-full`} />
 		{:else}
 			<img
-				src={`${env.PUBLIC_API_URL}${
-					env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''
-				}${profilePicture}`}
+				src={`${env.PUBLIC_API_URL}${profilePicture}`}
 				alt="avatar"
-				class={`w-[${size}px] h-[${size}px] rounded-full`}
+				class={`${sizeClass} rounded-full`}
 			/>
 		{/if}
 		{#if displayName}

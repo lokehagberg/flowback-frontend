@@ -11,14 +11,16 @@
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import type { poll, proposal } from './interface';
 	import { getProposals } from '$lib/Generic/AI';
-	import { createProposal } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
+	import { proposalCreate as proposalCreateBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/pollsBlockchain';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { env } from '$env/dynamic/public';
 
-	export let proposals: proposal[], poll: poll, displayForm: boolean;
+	export let proposals: proposal[] = [],
+		poll: poll,
+		displayForm: boolean;
 
 	let title: string,
 		description: string,
@@ -28,12 +30,13 @@
 		blockchain = true,
 		images: File[];
 
-	const addProposal = async () => {
+	const proposalCreate = async () => {
+		if (loading === true) return;
 		loading = true;
 
 		let blockchain_id;
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
-			blockchain_id = await createProposal(poll.blockchain_id, title);
+			blockchain_id = await proposalCreateBlockchain(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
 		if (blockchain_id) proposal.blockchain_id = blockchain_id;
@@ -95,22 +98,26 @@
 	};
 </script>
 
-<form on:submit|preventDefault={addProposal} class="h-full dark:border-gray-500 rounded">
+<form on:submit|preventDefault={proposalCreate} class="h-full dark:border-gray-500 rounded p-2">
 	<Loader bind:loading>
-		<span class="block text-left text-md text-primary dark:text-secondary font-semibold">{$_('Create a Proposal')}</span
-		>
-		<TextInput required label="Title" bind:value={title} />
-		<TextArea
-			Class="mt-4"
-			areaClass="max-h-[12rem] resize-y"
-			label="Description"
-			bind:value={description}
-		/>
+		<div class="flex flex-col space-y-2">
+			<span class="block text-left text-md text-primary dark:text-secondary font-semibold"
+				>{$_('Create a Proposal')}</span
+			>
+			<TextInput required label="Title" bind:value={title} />
+			<TextArea
+				Class="mt-4"
+				inputClass="whitespace-pre-wrap"
+				areaClass="max-h-[12rem] resize-y"
+				label="Description"
+				bind:value={description}
+			/>
+		</div>
 		{#if env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE'}
 			<RadioButtons bind:Yes={blockchain} label="Push to Blockchain" />
 		{/if}
 
-		<FileUploads bind:images />
+		<FileUploads bind:files={images} />
 		<StatusMessage bind:status />
 
 		<Button
@@ -121,15 +128,19 @@
 		/>
 
 		<Button
+			bind:disabled={loading}
 			buttonStyle="warning-light"
 			Class="absolute bottom-0 right-0 w-[49%]"
 			type="button"
 			label="Cancel"
-			action={cancelSubmission}
+			onClick={cancelSubmission}
 		/>
 
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button Class="pr-3 pl-3" action={async () => (title = await getProposals(poll.title))}
+			<Button
+				bind:disabled={loading}
+				Class="pr-3 pl-3"
+				onClick={async () => (title = await getProposals(poll.title))}
 				>{$_('Generate with the help of AI')}</Button
 			>
 		{/if}

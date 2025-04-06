@@ -9,7 +9,6 @@
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { formatDate } from '$lib/Generic/DateFormatter';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
@@ -19,55 +18,19 @@
 
 	export let prediction: PredictionStatement,
 		loading: boolean = false,
-		score: null | number = null,
 		phase: Phase,
 		poll: poll,
 		Class = '';
 
-	let showPoppup = false,
+	let score: null | number = null,
 		showDetails = false,
 		poppup: poppup;
 
-	const getPredictionBet = async () => {
-		// if (!score) return;
-		loading = true;
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/poll/prediction/bet/list?prediction_statement_id=${prediction.id}`
-		);
-
-		loading = false;
-		if (!res.ok) showPoppup = true;
-		else {
-			const previousBet = json.results.find(
-				(result: any) => result.created_by.user.id.toString() === localStorage.getItem('userId')
-			);
-
-			if (previousBet !== null && previousBet !== undefined) score = previousBet.score;
-			else score = null;
-		}
-	};
-
-	const predictionBetCreate = async (score: string | number) => {
-		// if (!score) return;
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			`group/poll/prediction/${prediction.id}/bet/create`,
-			{
-				score: `${score}`
-			}
-		);
-		loading = false;
-
-		if (!res.ok) {
-			poppup = { message: 'Betting failed', success: false };
-			return;
-		}
-
-		poppup = { message: 'Successfully placed bet', success: true, show: true };
-	};
+	function hasEndDatePassed(): boolean {
+		const currentDateTime = new Date();
+		const endDateTime = new Date(prediction.end_date);
+		return currentDateTime >= endDateTime;
+	}
 
 	const predictionBetUpdate = async (score: string | number) => {
 		if (score === null) return;
@@ -83,11 +46,11 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Betting failed', success: false };
+			poppup = { message: 'Failed to send probability', success: false };
 			return;
 		}
 
-		poppup = { message: 'Successfully placed bet', success: true, show: true };
+		poppup = { message: 'Probability successfully sent', success: true, show: true };
 	};
 
 	const predictionBetDelete = async () => {
@@ -101,10 +64,10 @@
 		loading = false;
 
 		if (!res.ok) {
-			poppup = { message: 'Betting failed to be deleted', success: false };
+			poppup = { message: 'Failed to change probability', success: false };
 			return;
 		}
-		poppup = { message: 'Successfully placed bet', success: true };
+		poppup = { message: 'Probability successfully sent', success: true };
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -119,14 +82,14 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true };
+		poppup = { message: 'Successfully evaluated consequence', success: true };
 		prediction.user_prediction_statement_vote = vote;
 	};
 
 	const deleteEvaluation = async () => {
 		const { res, json } = await fetchRequest(
 			'POST',
-			`group/poll/prediction/${prediction.id}/bet/delete`
+			`group/poll/prediction/${prediction.id}/statement/vote/delete`
 		);
 
 		if (!res.ok) {
@@ -151,7 +114,7 @@
 			return;
 		}
 
-		poppup = { message: 'Successfully evaluated prediction', success: true };
+		poppup = { message: 'Successfully evaluated consequence', success: true };
 
 		prediction.user_prediction_statement_vote = vote;
 	};
@@ -164,11 +127,15 @@
 		});
 	};
 
-	const handleChangeBetScore = async (newScore: number) => {
-		if (newScore === null) predictionBetDelete();
-		else if (score === null) {
-			predictionBetCreate(newScore);
-		} else predictionBetUpdate(newScore);
+	const handleChangeBetScore = async (newScore: number | null) => {
+		console.log(newScore, 'SCORE');
+
+		// predictionBetCreate(newScore);
+		if (newScore === null || newScore === 2.5) predictionBetDelete();
+		// else if (score === null) {
+		// predictionBetCreate(newScore);
+		// }
+		else predictionBetUpdate(newScore);
 
 		if (
 			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
@@ -181,68 +148,82 @@
 		score = Number(newScore);
 	};
 
+	$: buttonsEnabled = hasEndDatePassed();
+
 	onMount(() => {
-		getPredictionBet();
+		buttonsEnabled = hasEndDatePassed();
+
+		const interval = setInterval(() => {
+			buttonsEnabled = hasEndDatePassed();
+		}, 60000);
+		
+		return () => clearInterval(interval);
 	});
 </script>
 
 <div class={Class}>
-	{#if prediction.description}
-		<!-- <span class="hover:underline cursor-pointer overflow-hidden">
-			{elipsis(prediction.description)}</span
-		> -->
-	{/if}
-	<!-- <span>{$_('Due Date')}: {formatDate(prediction.end_date)}</span> -->
-
+	<!-- PHASE 4: PREDICTION BETTING -->
 	{#if phase === 'prediction_bet'}
-		<VotingSlider onSelection={handleChangeBetScore} lineWidth={50} bind:score />
+		<VotingSlider
+			onSelection={handleChangeBetScore}
+			lineWidth={50}
+			score={prediction.user_prediction_bet}
+		/>
 		{#if env.PUBLIC_FLOWBACK_AI_MODULE === 'TRUE'}
-			<Button action={getAIPredictionBets}>
-				{$_('Get AI Prediction Bets')}
+			<Button onClick={getAIPredictionBets}>
+				{$_('Get AI Consequence Probabilities')}
 			</Button>
 		{/if}
 	{/if}
 
+	<!-- PHASE 7: RESULTS AND EVALUATION -->
+
 	{#if phase === 'result' || phase === 'prediction_vote'}
 		<div class="flex justify-end mb-3">
 			<Button
-				action={() =>
+				onClick={() =>
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(true)
 						: prediction.user_prediction_statement_vote === true
 						? deleteEvaluation()
 						: changeEvaluation(true)}
-				Class={`w-12 px-4 py-1 border-2 ${
+				Class={`w-12 px-4 py-1 border-2 
+				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
+				${
 					prediction.user_prediction_statement_vote === true
 						? 'bg-green-600 text-white border-green-600'
 						: 'hover:bg-green-100 border-green-600 text-green-800'
 				}`}
+				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faCheck}
 					class={`${
 						prediction.user_prediction_statement_vote === true ? 'text-white' : 'text-green-700'
-					}`}
+					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
 			<Button
-				action={() =>
+				onClick={() =>
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(false)
 						: prediction.user_prediction_statement_vote === false
 						? deleteEvaluation()
 						: changeEvaluation(false)}
-				Class={`w-12 px-4 py-1 ml-2 border-2 ${
+				Class={`w-12 px-4 py-1 ml-2 border-2 
+				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
+				${
 					prediction.user_prediction_statement_vote === false
 						? 'bg-red-700 text-white border-red-700'
 						: 'hover:bg-red-100 border-red-500 text-red-600'
 				}`}
+				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faX}
 					class={`${
 						prediction.user_prediction_statement_vote === false ? 'text-white' : 'text-red-600'
-					}`}
+					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
 		</div>
@@ -251,7 +232,7 @@
 
 <Modal bind:open={showDetails}>
 	<div slot="body">
-		<div class="break-all">{prediction.description}</div>
+		<div class="break-words whitespace-pre-wrap">{prediction.description}</div>
 		<ul>
 			{#each prediction.segments as proposal}
 				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>

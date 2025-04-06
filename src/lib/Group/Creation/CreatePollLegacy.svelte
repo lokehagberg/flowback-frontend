@@ -226,7 +226,7 @@
 				<h1 class="text-2xl">{$_('Create a poll')}</h1>
 				<TextInput required label="Title" bind:value={title} />
 				<TextArea label="Description" bind:value={description} />
-				<FileUploads bind:images />
+				<FileUploads bind:files={images} />
 				<!-- Time setup -->
 				<div class="border border-gray-200 dark:border-gray-500 p-6">
 					<div>
@@ -241,7 +241,7 @@
 					</div>
 					<Button
 						Class={`!bg-blue-600 mt-4 !block`}
-						action={() => (advancedTimeSettings = !advancedTimeSettings)}
+						onClick={() => (advancedTimeSettings = !advancedTimeSettings)}
 						buttonStyle="secondary">{$_('Advanced time settings')}</Button
 					>
 
@@ -281,7 +281,7 @@
 								</div>
 
 								<div>
-									<h2 class="mt-4">{$_('Prediction statement end')}</h2>
+									<h2 class="mt-4">{$_('Consequences creation end')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
@@ -291,7 +291,7 @@
 									/>
 								</div>
 								<div>
-									<h2 class="mt-4">{$_('Prediction bet end')}</h2>
+									<h2 class="mt-4">{$_('Consequence bet end')}</h2>
 									<DateInput
 										format="yyyy-MM-dd HH:mm"
 										closeOnSelection
@@ -383,7 +383,7 @@
 				{#each polls as poll}
 					<Button
 						disabled={loading}
-						action={() => (selected_poll = poll)}
+						onClick={() => (selected_poll = poll)}
 						buttonStyle={(() => {
 							if (selected_poll === poll) return poll === 'Text Poll' ? 'primary' : 'accent';
 							else return poll === 'Text Poll' ? 'secondary' : 'accent-secondary';
@@ -413,7 +413,7 @@
 						Class={`${
 							disabled.includes(time) && (selected_time === time ? '!bg-gray-400' : '!bg-gray-200')
 						} ${selected_time === time ? 'bg-purple-600' : 'bg-purple-300'}`}
-						action={() => (selected_time = time)}
+						onClick={() => (selected_time = time)}
 					>
 						<div class="flex items-center text-center">
 							{#each timeIcons[time] as icon}

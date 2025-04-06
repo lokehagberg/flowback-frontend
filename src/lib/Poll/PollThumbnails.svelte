@@ -7,7 +7,6 @@
 	import PollFiltering from './PollFiltering.svelte';
 	import type { Filter, poll as Poll } from './interface';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import { getUserIsOwner } from '$lib/Group/functions';
 	import { pollThumbnails as pollThumbnailsLimit } from '../Generic/APILimits.json';
 	import Pagination from '$lib/Generic/Pagination.svelte';
@@ -37,10 +36,9 @@
 		let API = '';
 		// console.log(delegate, {}, delegate === {});
 
-		if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
-		//@ts-ignore
+		if (infoToGet === 'home') API += `home/polls?`;
+		else if (infoToGet === 'group') API += `group/${$page.params.groupId}/poll/list?`;
 		else if (infoToGet === 'delegate') API += `group/poll/pool/${delegate.pool_id}/votes`;
-		else if (infoToGet === 'home') API += `home/polls?`;
 		// else if (infoToGet === 'user') API += `user/home?`;
 		else if (infoToGet === 'user') API += `home/polls?`;
 		//TODO remove public
@@ -55,7 +53,9 @@
 		if (filter.search.length > 0) API += `&title__icontains=${filter.search}`;
 
 		if (filter.finishedSelection !== 'all')
-			API += `&status=${filter.finishedSelection === 'finished' ? '1' : '0'}`;
+			API += `&end_date${
+				filter.finishedSelection === 'finished' ? '__lt' : '__gt'
+			}=${new Date().toISOString()}`;
 
 		// API += '&pinned=false';
 
@@ -82,11 +82,42 @@
 		prev = json.previous;
 	};
 
-	let status: StatusMessageInfo;
+	const sharedThreadPollFixing = async () => {
+		const pollIds = polls
+			//@ts-ignore
+			.map((poll) => (poll.related_model === 'poll' ? poll.id : undefined))
+			.filter((id) => id !== undefined);
+		//@ts-ignore
+		const threadIds = polls
+			//@ts-ignore
+			.map((poll) => (poll.related_model === 'group_thread' ? poll.id : undefined))
+			.filter((id) => id !== undefined);
+		//@ts-ignore
+
+		{
+			console.log(pollIds, 'pollz');
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/${$page.params.groupId}/poll/list?id_list=${pollIds.concat()}`
+			);
+		}
+
+		{
+			console.log(threadIds, 'Threads');
+
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/thread/list?group_id=${
+					$page.params.groupId
+				}limit=1000&order_by=pinned,created_at_desc&id_list=${threadIds.concat()}`
+			);
+		}
+	};
 
 	onMount(async () => {
 		await getPolls();
-		//TODO: Part of refactoring with svelte stores includes thsi
+		sharedThreadPollFixing();
+		//TODO: Part of refactoring with svelte stores includes this
 		if ($page.params.groupId) isAdmin = (await getUserIsOwner($page.params.groupId)) || false;
 	});
 </script>

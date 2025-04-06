@@ -123,6 +123,16 @@
 
 		if (!res.ok) {
 			poppup = { message: 'Failed to create event', success: false };
+
+			selectedEvent = {
+				start_date: '',
+				end_date: '',
+				title: '',
+				event_id: 0,
+				schedule_origin_name: 'group',
+				created_by: 0
+			};
+
 			return;
 		}
 
@@ -130,6 +140,15 @@
 		showCreateScheduleEvent = false;
 		events.push(selectedEvent);
 		events = events;
+
+		selectedEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		};
 	};
 
 	const scheduleEventUpdate = async () => {
@@ -157,10 +176,29 @@
 
 		if (!res.ok) {
 			poppup = { message: 'Failed to edit event', success: false };
+
+			selectedEvent = {
+				start_date: '',
+				end_date: '',
+				title: '',
+				event_id: 0,
+				schedule_origin_name: 'group',
+				created_by: 0
+			};
+
 			return;
 		}
 
 		showEditScheduleEvent = false;
+		selectedEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		};
+		
 		events = events.map((event) => {
 			if (event.event_id === selectedEvent.event_id) return selectedEvent;
 			else return event;

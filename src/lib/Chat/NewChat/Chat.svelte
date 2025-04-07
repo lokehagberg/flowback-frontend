@@ -7,13 +7,14 @@
   import { websocketService, connectionStatusStore, loadingMessagesStore } from '$lib/api/websocketService';
   import { isChatOpen } from '../ChatStore.svelte';
   import { chat } from '$lib/api/chat';
-  import type { MessageChannelPreview, User } from '$lib/api/chat';
+  import type { MessageChannelPreview, User, UserChatInvite } from '$lib/api/chat';
   import CreateGroupChat from './CreateGroupChat.svelte';
   import Button from '$lib/Generic/Button.svelte';
 
   interface ExtendedMessageChannelPreview extends MessageChannelPreview {
     type: 'direct' | 'group';
     otherUser: User | null;
+    isActive: boolean;
   }
 
   let userId: number | undefined;
@@ -21,6 +22,8 @@
   let mounted = false;
   let visible = false;
   let availableChats: ExtendedMessageChannelPreview[] = [];
+  let inactiveChats: ExtendedMessageChannelPreview[] = [];
+  let pendingInvites: UserChatInvite[] = [];
   let loading = false;
   let connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   let loadingMessages = false;
@@ -48,6 +51,26 @@
     loadingMessages = isLoading;
   });
 
+  async function loadInvites() {
+    try {
+      const response = await chat.listChatInvites({ rejected__isnull: true });
+      pendingInvites = response.results;
+    } catch (error) {
+      console.error('Error loading invites:', error);
+    }
+  }
+
+  async function handleInviteResponse(inviteId: number, accept: boolean) {
+    try {
+      await chat.respondToChatInvite(inviteId, accept);
+      // Refresh invites and chats
+      await loadInvites();
+      await loadAvailableChats();
+    } catch (error) {
+      console.error('Error responding to invite:', error);
+    }
+  }
+
   async function loadAvailableChats() {
     if (!userId) return;
     loading = true;
@@ -72,18 +95,23 @@
                 const participants = participantsResponse.results || [];
                 // Find the other user in DMs
                 const otherUser = participants.find(p => p.user && p.user.id !== userId)?.user || null;
+                // Check if current user is active in this chat
+                const currentUserParticipant = participants.find(p => p.user.id === userId);
+                const isActive = currentUserParticipant?.active ?? false;
                 
                 return {
                   ...chatPreview,
                   type: participants.length <= 2 ? ('direct' as const) : ('group' as const),
-                  otherUser
+                  otherUser,
+                  isActive
                 };
               } catch (error) {
                 console.error('Error getting participants for chat:', error);
                 return {
                   ...chatPreview,
                   type: chatPreview.participants <= 2 ? ('direct' as const) : ('group' as const),
-                  otherUser: null
+                  otherUser: null,
+                  isActive: false
                 };
               }
             })
@@ -102,15 +130,22 @@
       };
 
       const allChats = await loadAllChats();
-      availableChats = allChats.sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
+      
+      // Split chats into active and inactive
+      availableChats = allChats
+        .filter(chat => chat.isActive)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      
+      inactiveChats = allChats
+        .filter(chat => !chat.isActive)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-      console.log('Loaded chats:', availableChats);
+      console.log('Loaded chats:', { active: availableChats, inactive: inactiveChats });
     } catch (error) {
       console.error('Error loading chats:', error);
+    } finally {
+      loading = false;
     }
-    loading = false;
   }
 
   async function startNewChat(targetUserId: number) {
@@ -123,6 +158,15 @@
     }
   }
 
+  async function rejoinChat(channelId: number) {
+    try {
+      websocketService.joinChannel(channelId);
+      await loadAvailableChats();
+    } catch (error) {
+      console.error('Error rejoining chat:', error);
+    }
+  }
+
   onMount(() => {
     mounted = true;
     if (browser) {
@@ -130,6 +174,7 @@
       if (token) {
         websocketService.connect(token);
         loadAvailableChats();
+        loadInvites();
       }
     }
   });
@@ -141,7 +186,7 @@
   });
 
   function formatChatTitle(chat: ExtendedMessageChannelPreview | null) {
-    if (!chat) return '';
+    if (!chat) return 'Unknown Chat';
     
     if (chat.type === 'direct') {
       // For DMs, use the other user's name
@@ -155,6 +200,12 @@
   function getLastMessagePreview(chat: ExtendedMessageChannelPreview) {
     if (!chat.message) return 'No messages yet';
     if (!chat.user) return chat.message;
+    
+    // For DMs, don't show the username in preview if it's the other user
+    if (chat.type === 'direct' && chat.user.id === chat.otherUser?.id) {
+      return chat.message;
+    }
+    
     return `${chat.user.username}: ${chat.message}`;
   }
 </script>
@@ -197,45 +248,68 @@
           </Button>
         </div>
         {#if loading}
-          <div class="loading">Loading chats...</div>
-        {:else if availableChats.length === 0}
-          <div class="no-chats">No active chats</div>
+          <div class="loading-indicator">Loading chats...</div>
         {:else}
-          <div class="chat-sections">
-            <div class="chat-section">
-              <h4 class="chat-section-header">Direct Messages</h4>
-              {#each availableChats.filter(c => c.type === 'direct') as chat (chat.id)}
-                <button
-                  class="chat-item"
-                  on:click={() => selectedChannelId = chat.channel_id}
-                >
-                  <div class="chat-item-title">
-                    {formatChatTitle(chat)}
+          {#if pendingInvites.length > 0}
+            <div class="invites-section">
+              <h3 class="section-title">Pending Invites</h3>
+              {#each pendingInvites as invite}
+                <div class="invite-item">
+                  <span>{invite.message_channel_name}</span>
+                  <div class="invite-actions">
+                    <Button 
+                      onClick={() => handleInviteResponse(invite.id, true)}
+                      Class="accept-btn"
+                    >
+                      Accept
+                    </Button>
+                    <Button 
+                      onClick={() => handleInviteResponse(invite.id, false)}
+                      Class="reject-btn"
+                    >
+                      Reject
+                    </Button>
                   </div>
-                  <div class="chat-item-preview">
-                    {getLastMessagePreview(chat)}
-                  </div>
-                </button>
+                </div>
               {/each}
             </div>
-            
-            <div class="chat-section">
-              <h4 class="chat-section-header">Group Chats</h4>
-              {#each availableChats.filter(c => c.type === 'group') as chat (chat.id)}
-                <button
-                  class="chat-item"
-                  on:click={() => selectedChannelId = chat.channel_id}
-                >
-                  <div class="chat-item-title">
-                    {formatChatTitle(chat)}
-                  </div>
-                  <div class="chat-item-preview">
-                    {getLastMessagePreview(chat)}
-                  </div>
-                </button>
-              {/each}
-            </div>
+          {/if}
+
+          <div class="active-chats">
+            <h3 class="section-title">Active Chats</h3>
+            {#each availableChats as chat}
+              <div 
+                class="chat-item"
+                class:selected={selectedChannelId === chat.channel_id}
+                on:click={() => selectedChannelId = chat.channel_id}
+              >
+                <div class="chat-item-content">
+                  <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                  <div class="chat-item-preview">{getLastMessagePreview(chat)}</div>
+                </div>
+              </div>
+            {/each}
           </div>
+
+          {#if inactiveChats.length > 0}
+            <div class="inactive-chats">
+              <h3 class="section-title">Inactive Chats</h3>
+              {#each inactiveChats as chat}
+                <div class="chat-item inactive">
+                  <div class="chat-item-content">
+                    <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                    <div class="chat-item-preview">{getLastMessagePreview(chat)}</div>
+                  </div>
+                  <Button 
+                    onClick={() => rejoinChat(chat.channel_id)}
+                    Class="rejoin-btn"
+                  >
+                    Rejoin
+                  </Button>
+                </div>
+              {/each}
+            </div>
+          {/if}
         {/if}
       </div>
     {/if}
@@ -344,28 +418,43 @@
   }
 
   .chat-item {
-    width: 100%;
-    padding: 12px;
-    background: none;
-    border: none;
-    border-radius: 6px;
-    text-align: left;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     transition: background-color 0.2s;
   }
 
   .chat-item:hover {
-    background: #f9fafb;
+    background: #f3f4f6;
+  }
+
+  .chat-item.selected {
+    background: #e5e7eb;
+  }
+
+  .chat-item.inactive {
+    opacity: 0.7;
+  }
+
+  .chat-item-content {
+    flex: 1;
+    min-width: 0; /* Enables text truncation */
   }
 
   .chat-item-title {
     font-weight: 500;
     color: #111827;
     margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .chat-item-preview {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #6b7280;
     white-space: nowrap;
     overflow: hidden;
@@ -496,5 +585,49 @@
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .loading-indicator {
+    text-align: center;
+    color: #6b7280;
+    padding: 1rem;
+  }
+
+  .invites-section {
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  .invite-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .invite-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  :global(.accept-btn) {
+    background-color: #10b981;
+    color: white;
+  }
+
+  :global(.reject-btn) {
+    background-color: #ef4444;
+    color: white;
+  }
+
+  :global(.rejoin-btn) {
+    background-color: #6b7280;
+    color: white;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
   }
 </style> 

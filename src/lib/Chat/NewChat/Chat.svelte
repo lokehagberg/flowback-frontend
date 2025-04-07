@@ -7,10 +7,11 @@
   import { websocketService, connectionStatusStore, loadingMessagesStore } from '$lib/api/websocketService';
   import { isChatOpen } from '../ChatStore.svelte';
   import { chat } from '$lib/api/chat';
-  import type { MessageChannelPreview } from '$lib/api/chat';
+  import type { MessageChannelPreview, User } from '$lib/api/chat';
 
   interface ExtendedMessageChannelPreview extends MessageChannelPreview {
     type: 'direct' | 'group';
+    otherUser: User | null;
   }
 
   let userId: number | undefined;
@@ -57,7 +58,32 @@
             offset
           });
           
-          allResults.push(...response.results);
+          // For each chat, get the participants to determine type and other user
+          const chatsWithParticipants = await Promise.all(
+            response.results.map(async (chatPreview) => {
+              try {
+                const participantsResponse = await chat.getParticipants(chatPreview.channel_id);
+                const participants = participantsResponse.results || [];
+                // Find the other user in DMs
+                const otherUser = participants.find(p => p.user && p.user.id !== userId)?.user || null;
+                
+                return {
+                  ...chatPreview,
+                  type: participants.length <= 2 ? ('direct' as const) : ('group' as const),
+                  otherUser
+                };
+              } catch (error) {
+                console.error('Error getting participants for chat:', error);
+                return {
+                  ...chatPreview,
+                  type: chatPreview.participants <= 2 ? ('direct' as const) : ('group' as const),
+                  otherUser: null
+                };
+              }
+            })
+          );
+          
+          allResults.push(...chatsWithParticipants);
           
           if (!response.next || response.results.length < limit) {
             break;
@@ -70,12 +96,9 @@
       };
 
       const allChats = await loadAllChats();
-      
-      // Determine chat type based on channel_origin_name and participants
-      availableChats = allChats.map(chat => ({
-        ...chat,
-        type: chat.channel_origin_name === 'group' ? ('group' as const) : ('direct' as const)
-      })).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      availableChats = allChats.sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
 
       console.log('Loaded chats:', availableChats);
     } catch (error) {
@@ -111,16 +134,21 @@
     websocketService.disconnect();
   });
 
-  function formatChatTitle(chat: ExtendedMessageChannelPreview) {
+  function formatChatTitle(chat: ExtendedMessageChannelPreview | null) {
+    if (!chat) return '';
+    
     if (chat.type === 'direct') {
-      return `Chat with ${chat.user.username}`;
-    } else {
-      return chat.channel_title || 'Group Chat';
+      // For DMs, use the other user's name
+      return `DM with ${chat.otherUser?.username || 'Unknown User'}`;
     }
+    
+    // For group chats, use channel title or default
+    return chat.channel_title || 'Group Chat';
   }
 
   function getLastMessagePreview(chat: ExtendedMessageChannelPreview) {
     if (!chat.message) return 'No messages yet';
+    if (!chat.user) return chat.message;
     return `${chat.user.username}: ${chat.message}`;
   }
 </script>

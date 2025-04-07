@@ -32,6 +32,9 @@
 
   const unsubscribeChat = isChatOpen.subscribe(isOpen => {
     visible = isOpen;
+    if (browser) {
+      websocketService.setVisibility(isOpen);
+    }
   });
 
   connectionStatusStore.subscribe(status => {

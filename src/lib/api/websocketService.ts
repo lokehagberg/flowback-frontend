@@ -21,6 +21,7 @@ export interface WebSocketMessage {
   active?: boolean;
   parent_id?: number;
   parent?: APIMessage;
+  status?: string;
 }
 
 export interface ChatParticipant {
@@ -52,6 +53,9 @@ class WebSocketService {
   private reconnectTimeout: number = 1000;
   private currentChannelId: number | null = null;
   private monitoringInterval: ReturnType<typeof setInterval> | null = null;
+  private isVisible = false;
+  private currentToken: string | null = null;
+  private isReconnecting = false;
 
   constructor() {
     if (browser) {
@@ -59,29 +63,44 @@ class WebSocketService {
     }
   }
 
-  connect(token: string) {
-    if (!browser) return;
-    if (this.socket?.readyState === WebSocket.OPEN) return;
+  setVisibility(visible: boolean) {
+    this.isVisible = visible;
+    if (!visible) {
+      this.cleanupConnection();
+    } else if (this.currentToken) {
+      this.connect(this.currentToken);
+    }
+  }
 
+  connect(token: string) {
+    if (!browser || !this.isVisible || this.isReconnecting) return;
+    if (this.socket?.readyState === WebSocket.OPEN && this.currentToken === token) return;
+
+    // Clean up existing connection if any
+    this.cleanupConnection();
+
+    this.currentToken = token;
     connectionStatusStore.set('connecting');
     const wsUrl = `${env.PUBLIC_WEBSOCKET_API}/chat/ws?token=${token}`;
-    this.socket = new WebSocket(wsUrl);
-
-    this.socket.onopen = this.handleOpen.bind(this);
-    this.socket.onmessage = this.handleMessage.bind(this);
-    this.socket.onclose = this.handleClose.bind(this);
-    this.socket.onerror = this.handleError.bind(this);
+    
+    try {
+      this.socket = new WebSocket(wsUrl);
+      this.socket.onopen = this.handleOpen.bind(this);
+      this.socket.onmessage = this.handleMessage.bind(this);
+      this.socket.onclose = this.handleClose.bind(this);
+      this.socket.onerror = this.handleError.bind(this);
+    } catch (error) {
+      console.error('Error creating WebSocket:', error);
+      this.handleConnectionFailure();
+    }
   }
 
   private handleOpen() {
     console.log('WebSocket connected');
     connectionStatusStore.set('connected');
     this.reconnectAttempts = 0;
-    
-    // Rejoin channel if there was one
-    if (this.currentChannelId) {
-      this.joinChannel(this.currentChannelId);
-    }
+    this.reconnectTimeout = 1000;
+    this.isReconnecting = false;
   }
 
   private async loadChannelHistory(channelId: number) {
@@ -104,8 +123,9 @@ class WebSocketService {
     try {
       const data: WebSocketMessage = JSON.parse(event.data);
       
-      if (data.type === 'error') {
-        console.error('WebSocket error:', data.message);
+      // Handle server error messages
+      if (data.type === 'error' || data.status === 'error') {
+        console.error('Server error:', data.message);
         return;
       }
 
@@ -132,17 +152,6 @@ class WebSocketService {
           active: data.active ?? true
         };
 
-        // Update participants
-        chatParticipantsStore.update(participants => {
-          const updated = new Map(participants);
-          updated.set(message.user.id, {
-            id: message.user.id,
-            username: message.user.username,
-            isTyping: false
-          });
-          return updated;
-        });
-
         // Update messages
         messagesStore.update(messages => {
           const messageExists = messages.some(m => m.id === message.id);
@@ -158,25 +167,50 @@ class WebSocketService {
   }
 
   private handleClose(event: CloseEvent) {
-    connectionStatusStore.set('disconnected');
-    if (!event.wasClean && this.reconnectAttempts < this.maxReconnectAttempts) {
-      setTimeout(() => this.reconnect(), this.reconnectTimeout);
+    console.log('WebSocket closed:', event.code, event.reason);
+    
+    // Don't attempt to reconnect if the closure was clean or intentional
+    if (event.wasClean || !this.isVisible || !this.currentToken) {
+      connectionStatusStore.set('disconnected');
+      return;
     }
+
+    this.handleConnectionFailure();
   }
 
   private handleError(error: Event) {
     console.error('WebSocket error:', error);
-    connectionStatusStore.set('error');
+    // Don't set error status or attempt reconnect if we're already trying to reconnect
+    if (!this.isReconnecting) {
+      this.handleConnectionFailure();
+    }
+  }
+
+  private handleConnectionFailure() {
+    // Only update status if not already reconnecting
+    if (!this.isReconnecting) {
+      connectionStatusStore.set('error');
+    }
+    
+    if (this.isVisible && this.reconnectAttempts < this.maxReconnectAttempts && !this.isReconnecting) {
+      this.isReconnecting = true;
+      setTimeout(() => this.reconnect(), this.reconnectTimeout);
+    } else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      connectionStatusStore.set('disconnected');
+      this.cleanupConnection();
+    }
   }
 
   private reconnect() {
-    if (!browser) return;
-    this.reconnectAttempts++;
-    this.reconnectTimeout *= 2; // Exponential backoff
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.connect(token);
+    if (!browser || !this.isVisible || !this.currentToken) {
+      this.isReconnecting = false;
+      return;
     }
+    
+    this.reconnectAttempts++;
+    this.reconnectTimeout = Math.min(this.reconnectTimeout * 2, 30000);
+    
+    this.connect(this.currentToken);
   }
 
   private handleTypingIndicator(userId: number, username: string) {
@@ -215,7 +249,31 @@ class WebSocketService {
     });
   }
 
-  sendMessage(channelId: number, message: string, topicId?: number, attachmentsId?: number, parentId?: number) {
+  async joinChannel(channelId: number) {
+    if (!browser) return;
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+      console.error('Cannot join channel - socket not connected');
+      return;
+    }
+    
+    this.currentChannelId = channelId;
+    
+    try {
+      // Load message history
+      await this.loadChannelHistory(channelId);
+      
+      // Join the websocket channel
+      this.socket.send(JSON.stringify({
+        method: 'connect_channel',
+        channel_id: channelId
+      }));
+    } catch (error) {
+      console.error('Error joining channel:', error);
+      connectionStatusStore.set('error');
+    }
+  }
+
+  async sendMessage(channelId: number, message: string, topicId?: number, attachmentsId?: number, parentId?: number) {
     if (!browser || !message.trim()) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
       throw new Error('WebSocket is not connected');
@@ -230,7 +288,12 @@ class WebSocketService {
       ...(parentId && { parent_id: parentId })
     };
 
-    this.socket.send(JSON.stringify(payload));
+    try {
+      this.socket.send(JSON.stringify(payload));
+    } catch (error) {
+      console.error('Error sending message:', error);
+      throw new Error('Failed to send message');
+    }
   }
 
   updateMessage(messageId: number, message: string) {
@@ -265,21 +328,6 @@ class WebSocketService {
     }));
   }
 
-  async joinChannel(channelId: number) {
-    if (!browser) return;
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
-    
-    this.currentChannelId = channelId;
-    
-    // Load message history first
-    await this.loadChannelHistory(channelId);
-    
-    this.socket.send(JSON.stringify({
-      method: 'connect_channel',
-      channel_id: channelId
-    }));
-  }
-
   leaveChannel(channelId: number) {
     if (!browser) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
@@ -289,7 +337,7 @@ class WebSocketService {
       channel_id: channelId
     }));
     
-    // Clear messages and current channel when leaving
+    // Clear messages when explicitly leaving
     messagesStore.set([]);
     this.currentChannelId = null;
   }
@@ -297,31 +345,66 @@ class WebSocketService {
   private setupConnectionMonitoring() {
     if (!browser) return;
     
+    // Clear any existing interval
+    if (this.monitoringInterval) {
+      clearInterval(this.monitoringInterval);
+    }
+    
     this.monitoringInterval = setInterval(() => {
+      if (!this.isVisible || this.isReconnecting) return;
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        this.cleanupConnection();
+        return;
+      }
+
+      // Check if token changed
+      if (token !== this.currentToken) {
+        this.cleanupConnection();
+        this.connect(token);
+        return;
+      }
+
+      // Check if connection dropped unexpectedly
       if (this.socket?.readyState === WebSocket.CLOSED) {
-        const token = localStorage.getItem('token');
-        if (token) this.connect(token);
+        this.connect(token);
       }
     }, 5000);
   }
 
-  disconnect() {
-    if (!browser) return;
-    if (this.currentChannelId) {
-      this.leaveChannel(this.currentChannelId);
-    }
+  private cleanupConnection() {
     if (this.socket) {
-      this.socket.close();
+      // Remove all listeners before closing
+      this.socket.onopen = null;
+      this.socket.onmessage = null;
+      this.socket.onclose = null;
+      this.socket.onerror = null;
+
+      if (this.socket.readyState === WebSocket.OPEN) {
+        // Only try to send close frame if the connection is open
+        this.socket.close(1000, 'Client disconnecting');
+      }
       this.socket = null;
     }
+
+    this.currentChannelId = null;
+    this.isReconnecting = false;
+    connectionStatusStore.set('disconnected');
+  }
+
+  disconnect() {
+    this.isVisible = false;
+    this.cleanupConnection();
+    
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
     }
+    
     messagesStore.set([]);
     typingUsersStore.set(new Set());
     chatParticipantsStore.set(new Map());
-    connectionStatusStore.set('disconnected');
   }
 }
 

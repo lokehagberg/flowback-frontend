@@ -19,8 +19,10 @@
   let connectionStatus: ConnectionStatusType;
   let participants: Map<number, { id: number; username: string; isTyping: boolean }>;
   let channelTitle = '';
-  let channelType: 'direct' | 'group' = 'direct';
+  type ChannelType = 'direct' | 'group';
+  let channelType: ChannelType = 'direct';
   let currentUsername = '';
+  let participantsList = '';
 
   const unsubscribeMessages = messagesStore.subscribe((value) => {
     messages = value;
@@ -39,44 +41,40 @@
   });
 
   async function loadChannelInfo() {
+    if (!channelId) return;
+    
     try {
-      // Get channel preview to determine type and title
+      // Get current user ID
+      const userId = Number(localStorage.getItem('userId'));
+      if (!userId) return;
+
+      // Get channel participants
+      const participantsResponse = await chat.getParticipants(channelId);
+      const participants = participantsResponse.results || [];
+      
+      // Determine chat type and title
       const preview = await chat.getChannelPreviews({ channel_id: channelId });
       if (preview.results.length > 0) {
         const channel = preview.results[0];
         channelTitle = channel.channel_title || '';
-        channelType = channel.channel_origin_name === 'group' ? 'group' : 'direct';
+        channelType = channel.participants <= 2 ? 'direct' : 'group';
+        
+        if (channelType === 'direct') {
+          // For DMs, show the other user's name
+          const otherParticipant = participants.find(p => p.user.id !== userId);
+          participantsList = otherParticipant ? otherParticipant.user.username : 'Unknown User';
+        } else {
+          // For groups, show all participants
+          participantsList = participants
+            .filter(p => p.active)
+            .map(p => p.user.username)
+            .join(', ');
+        }
       }
 
-      // Get channel participants
-      const participantsResponse = await chat.getParticipants(channelId);
-      if (participantsResponse.results) {
-        chatParticipantsStore.update(current => {
-          const updated = new Map(current);
-          participantsResponse.results.forEach((participant: MessageChannelParticipant) => {
-            if (!updated.has(participant.user.id)) {
-              updated.set(participant.user.id, {
-                id: participant.user.id,
-                username: participant.user.username,
-                isTyping: false
-              });
-              if (participant.user.id === userId) {
-                currentUsername = participant.user.username;
-              }
-            }
-          });
-          return updated;
-        });
-      }
-
-      // Get channel messages
-      const messagesResponse = await chat.getMessages(channelId, {
-        limit: 50,
-        order_by: 'created_at_desc'
-      });
-      if (messagesResponse.results) {
-        messagesStore.set(messagesResponse.results.reverse());
-      }
+      // Get messages
+      const messagesResponse = await chat.getMessages(channelId);
+      messages = messagesResponse.results || [];
     } catch (error) {
       console.error('Error loading channel info:', error);
     }
@@ -84,12 +82,10 @@
 
   onMount(async () => {
     await loadChannelInfo();
-    websocketService.joinChannel(channelId);
   });
 
   onDestroy(() => {
     if (typingTimeout) clearTimeout(typingTimeout);
-    websocketService.leaveChannel(channelId);
     unsubscribeMessages();
     unsubscribeTyping();
     unsubscribeConnection();
@@ -114,18 +110,9 @@
     }, 3000);
   }
 
-  $: participantsList = channelType === 'group' ? 
-    Array.from(participants?.values() || [])
-      .map(p => p.username)
-      .join(', ') :
-    Array.from(participants?.values() || [])
-      .filter(p => p.id !== userId)
-      .map(p => p.username)
-      .join(', ');
-
   $: chatTitle = channelType === 'group' ? 
-    channelTitle || 'Group Chat' : 
-    participantsList ? `Chat with ${participantsList}` : 'Direct Message';
+    (channelTitle || 'Group Chat') : 
+    (participantsList ? `Chat with ${participantsList}` : 'Loading...');
 </script>
 
 <div class="chat-container">

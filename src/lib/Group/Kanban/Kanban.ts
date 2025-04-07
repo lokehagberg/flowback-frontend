@@ -39,7 +39,7 @@ export interface kanbanEdited {
 	title: string;
 	assignee_id?: number | null;
 	priority?: number | undefined | null;
-	end_date?: Date | null
+	end_date?: string | Date | null
 	images?: { file: string; file_name: string }[],
 	work_group?: { name: string; id: number } | null
 }

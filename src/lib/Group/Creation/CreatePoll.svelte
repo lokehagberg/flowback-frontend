@@ -235,6 +235,7 @@
 					bind:value={workGroup}
 					innerLabelOn={true}
 					innerLabel={$_("No workgroup assigned")}
+					defaultValue=""
 				/>
 			{/if}
 

@@ -154,6 +154,7 @@
 									{type}
 									{removeKanbanEntry}
 									{changeNumberOfOpen}
+									{getKanbanEntries}
 								/>
 							{/if}
 						{/each}

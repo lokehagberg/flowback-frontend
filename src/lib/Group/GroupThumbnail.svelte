@@ -71,8 +71,8 @@
 
 	<div class="flex justify-center mb-6">
 		{#if !group.joined && pending === false}
-			<Button onClick={() => joinGroup(group.direct_join)} Class="hover:bg-blue-800 bg-blue-600"
-				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}</Button
+			<Button disabled={group.pending_join} onClick={() => joinGroup(group.direct_join)} Class="hover:bg-blue-800 bg-blue-600"
+				>{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : group.pending_join ? "Pending invite" :'Ask to join')}</Button
 			>
 		{:else if pending}
 			<div>{$_('Pending invite')}</div>

@@ -3,7 +3,6 @@
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
 	import type { GroupMembers, Message, PreviewMessage } from './interfaces';
-	import { faComment } from '@fortawesome/free-solid-svg-icons/faComment';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { User } from '$lib/User/interfaces';
 	import { _ } from 'svelte-i18n';
@@ -13,10 +12,9 @@
 	import { faCog, faX } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
-	import { chatPartner, isChatOpen } from './ChatStore.svelte';
+	import { isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
-	import { updateUserData } from './functions';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,

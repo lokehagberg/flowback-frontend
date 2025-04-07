@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { elipsis } from './GenericFunctions';
+	import { onMount } from 'svelte';
 
 	export let onInput: (
 			e: Event & {
@@ -11,11 +12,16 @@
 		labels: string[] = [],
 		values: any[] = labels,
 		value = values[0],
+		defaultValue = values[0],
 		Class = '',
 		classInner = '',
 		innerLabel: string | null = 'Select',
 		innerLabelOn: boolean = false,
 		charlimit = 30;
+
+		onMount(() => {
+			value = defaultValue;
+		})
 </script>
 
 <div class={`${Class} `}>

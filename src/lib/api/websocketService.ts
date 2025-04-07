@@ -1,10 +1,26 @@
 import { writable } from 'svelte/store';
 import { env } from '$env/dynamic/public';
 import { browser } from '$app/environment';
-import type { Message as APIMessage } from './chat';
+import type { Message as APIMessage, User } from './chat';
 
 // Types
-export type { Message } from './chat';
+export interface WebSocketMessage {
+  type: string;
+  method?: string;
+  action?: string;
+  message?: string;
+  user?: User;
+  channel_id?: number;
+  channel_title?: string;
+  channel_origin_name?: string;
+  id?: number;
+  created_at?: string;
+  updated_at?: string;
+  attachments?: any[];
+  active?: boolean;
+  parent_id?: number;
+  parent?: APIMessage;
+}
 
 export interface ChatParticipant {
   id: number;
@@ -60,46 +76,54 @@ class WebSocketService {
 
   private handleMessage(event: MessageEvent) {
     try {
-      const data = JSON.parse(event.data);
+      const data: WebSocketMessage = JSON.parse(event.data);
       
       if (data.type === 'error') {
         console.error('WebSocket error:', data.message);
         return;
       }
 
-      if (data.method === 'message_notify' && data.action === 'is_typing') {
+      if (data.method === 'message_notify' && data.action === 'is_typing' && data.user) {
         this.handleTypingIndicator(data.user.id, data.user.username);
         return;
       }
 
       // Handle regular messages
-      if (data.type === 'message' || (!data.type && data.message)) {
+      if ((data.type === 'message' || (!data.type && data.message)) && data.user) {
         const message: APIMessage = {
-          ...data,
+          id: data.id || 0,
+          user: data.user,
+          created_at: data.created_at || new Date().toISOString(),
+          updated_at: data.updated_at || new Date().toISOString(),
+          channel_id: data.channel_id || this.currentChannelId || 0,
+          channel_origin_name: data.channel_origin_name || '',
+          channel_title: data.channel_title || '',
           type: data.type || 'message',
-          active: data.active ?? true,
-          attachments: data.attachments || null
+          message: data.message || '',
+          attachments: data.attachments || null,
+          parent_id: data.parent_id,
+          parent: data.parent,
+          active: data.active ?? true
         };
 
         // Update participants
-        if (message.user) {
-          chatParticipantsStore.update(participants => {
-            const updated = new Map(participants);
-            updated.set(message.user.id, {
-              id: message.user.id,
-              username: message.user.username,
-              isTyping: false
-            });
-            return updated;
+        chatParticipantsStore.update(participants => {
+          const updated = new Map(participants);
+          updated.set(message.user.id, {
+            id: message.user.id,
+            username: message.user.username,
+            isTyping: false
           });
-        }
+          return updated;
+        });
 
+        // Update messages
         messagesStore.update(messages => {
           const messageExists = messages.some(m => m.id === message.id);
           if (!messageExists) {
             return [...messages, message];
           }
-          return messages;
+          return messages.map(m => m.id === message.id ? message : m);
         });
       }
     } catch (error) {
@@ -166,7 +190,7 @@ class WebSocketService {
   }
 
   sendMessage(channelId: number, message: string, topicId?: number, attachmentsId?: number, parentId?: number) {
-    if (!browser) return;
+    if (!browser || !message.trim()) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
       throw new Error('WebSocket is not connected');
     }
@@ -174,7 +198,7 @@ class WebSocketService {
     const payload = {
       method: 'message_create',
       channel_id: channelId,
-      message,
+      message: message.trim(),
       ...(topicId && { topic_id: topicId }),
       ...(attachmentsId && { attachments_id: attachmentsId }),
       ...(parentId && { parent_id: parentId })
@@ -184,13 +208,13 @@ class WebSocketService {
   }
 
   updateMessage(messageId: number, message: string) {
-    if (!browser) return;
+    if (!browser || !message.trim()) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
 
     this.socket.send(JSON.stringify({
       method: 'message_update',
       message_id: messageId,
-      message
+      message: message.trim()
     }));
   }
 
@@ -219,7 +243,10 @@ class WebSocketService {
     if (!browser) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
     
+    // Clear previous messages when joining a new channel
+    messagesStore.set([]);
     this.currentChannelId = channelId;
+    
     this.socket.send(JSON.stringify({
       method: 'connect_channel',
       channel_id: channelId
@@ -234,6 +261,9 @@ class WebSocketService {
       method: 'disconnect_channel',
       channel_id: channelId
     }));
+    
+    // Clear messages and current channel when leaving
+    messagesStore.set([]);
     this.currentChannelId = null;
   }
 
@@ -250,6 +280,9 @@ class WebSocketService {
 
   disconnect() {
     if (!browser) return;
+    if (this.currentChannelId) {
+      this.leaveChannel(this.currentChannelId);
+    }
     if (this.socket) {
       this.socket.close();
       this.socket = null;
@@ -258,6 +291,10 @@ class WebSocketService {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
     }
+    messagesStore.set([]);
+    typingUsersStore.set(new Set());
+    chatParticipantsStore.set(new Map());
+    connectionStatusStore.set('disconnected');
   }
 }
 

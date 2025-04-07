@@ -171,18 +171,17 @@
     mounted = true;
     if (browser) {
       const token = localStorage.getItem('token');
-      if (token) {
+      if (token && !websocketService.isConnected()) {
         websocketService.connect(token);
-        loadAvailableChats();
-        loadInvites();
       }
+      loadAvailableChats();
+      loadInvites();
     }
   });
 
   onDestroy(() => {
     unsubscribeUser();
     unsubscribeChat();
-    websocketService.disconnect();
   });
 
   function formatChatTitle(chat: ExtendedMessageChannelPreview | null) {

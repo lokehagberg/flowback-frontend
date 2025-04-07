@@ -102,7 +102,7 @@
 
   async function handleJoinChat() {
     try {
-      //await chat.getChatChannel([userId]);
+      await chat.getChatChannel([userId]);
       websocketService.joinChannel(channelId);
       await loadChannelInfo(); // Reload to update participant status
     } catch (error) {

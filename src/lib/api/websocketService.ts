@@ -63,18 +63,26 @@ class WebSocketService {
     }
   }
 
+  isConnected(): boolean {
+    return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+  }
+
   setVisibility(visible: boolean) {
     this.isVisible = visible;
     if (!visible) {
-      this.cleanupConnection();
-    } else if (this.currentToken) {
+      // Instead of cleaning up the connection, just leave the current channel
+      if (this.currentChannelId) {
+        this.leaveChannel(this.currentChannelId);
+      }
+    } else if (this.currentToken && !this.isConnected()) {
+      // Only reconnect if we have a token and aren't already connected
       this.connect(this.currentToken);
     }
   }
 
   connect(token: string) {
     if (!browser || !this.isVisible || this.isReconnecting) return;
-    if (this.socket?.readyState === WebSocket.OPEN && this.currentToken === token) return;
+    if (this.isConnected() && this.currentToken === token) return;
 
     // Clean up existing connection if any
     this.cleanupConnection();

@@ -1,6 +1,6 @@
 <!-- MessageItem.svelte -->
 <script lang="ts">
-  import type { Message } from '../../../api/websocketService';
+  import type { Message } from '$lib/api/websocketService';
   import { formatDistanceToNow } from 'date-fns';
 
   export let message: Message;

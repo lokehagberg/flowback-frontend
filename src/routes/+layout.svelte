@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 	import type { GroupUser } from '$lib/Group/interface';
 	import type { Permission } from '$lib/Group/Permissions/interface';
-	import Chat from '$lib/Chat/Chat.svelte';
+	import Chat from '$lib/Chat/NewChat/Chat.svelte';
 	import { _ } from 'svelte-i18n';
 	import { env } from '$env/dynamic/public';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -71,8 +71,8 @@
 		if (pathname === '/login') return false;
 		else if (pathname === '/') return false;
 		else if (
-			window.localStorage.getItem('token') === undefined ||
-			window.localStorage.getItem('userId') === undefined
+			!window.localStorage.getItem('token') ||
+			!window.localStorage.getItem('userId')
 		)
 			return false;
 

@@ -1,7 +1,7 @@
 <!-- MessageList.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Message } from '../../../api/websocketService';
+  import type { Message } from '$lib/api/websocketService';
   import MessageItem from './MessageItem.svelte';
 
   export let messages: Message[] = [];

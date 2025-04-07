@@ -3,6 +3,7 @@
 	import Modal from './Modal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
+	import { UsersApi } from '$lib/api/users';
 
 	export let open = false;
 
@@ -16,8 +17,9 @@
 		open = false;
 	};
 
-	const logOut = () => {
+	const logOut = async () => {
 		open = false;
+		await UsersApi.logout();
 		localStorage.removeItem('token');
 		localStorage.removeItem('sessionExpirationTime');
 		goto('/login');

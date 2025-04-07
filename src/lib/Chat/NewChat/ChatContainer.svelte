@@ -20,6 +20,7 @@
   let participants: Map<number, { id: number; username: string; isTyping: boolean }>;
   let channelTitle = '';
   let channelType: 'direct' | 'group' = 'direct';
+  let currentUsername = '';
 
   const unsubscribeMessages = messagesStore.subscribe((value) => {
     messages = value;
@@ -59,6 +60,9 @@
                 username: participant.user.username,
                 isTyping: false
               });
+              if (participant.user.id === userId) {
+                currentUsername = participant.user.username;
+              }
             }
           });
           return updated;
@@ -110,10 +114,14 @@
     }, 3000);
   }
 
-  $: participantsList = Array.from(participants?.values() || [])
-    .filter(p => p.id !== userId)
-    .map(p => p.username)
-    .join(', ');
+  $: participantsList = channelType === 'group' ? 
+    Array.from(participants?.values() || [])
+      .map(p => p.username)
+      .join(', ') :
+    Array.from(participants?.values() || [])
+      .filter(p => p.id !== userId)
+      .map(p => p.username)
+      .join(', ');
 
   $: chatTitle = channelType === 'group' ? 
     channelTitle || 'Group Chat' : 

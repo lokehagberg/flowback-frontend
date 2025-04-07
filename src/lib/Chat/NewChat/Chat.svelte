@@ -46,14 +46,13 @@
     loading = true;
     try {
       // Load all chats with pagination
-      const loadAllChats = async (origin: string) => {
+      const loadAllChats = async () => {
         let allResults = [];
         let offset = 0;
         const limit = 50;
         
         while (true) {
           const response = await chat.getChannelPreviews({ 
-            origin_names: origin,
             limit,
             offset
           });
@@ -70,15 +69,15 @@
         return allResults;
       };
 
-      const [directChats, groupChats] = await Promise.all([
-        loadAllChats('direct'),
-        loadAllChats('group')
-      ]);
+      const allChats = await loadAllChats();
       
-      availableChats = [
-        ...directChats.map(chat => ({ ...chat, type: 'direct' as const })),
-        ...groupChats.map(chat => ({ ...chat, type: 'group' as const }))
-      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      // Determine chat type based on channel_origin_name and participants
+      availableChats = allChats.map(chat => ({
+        ...chat,
+        type: chat.channel_origin_name === 'group' ? ('group' as const) : ('direct' as const)
+      })).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      console.log('Loaded chats:', availableChats);
     } catch (error) {
       console.error('Error loading chats:', error);
     }

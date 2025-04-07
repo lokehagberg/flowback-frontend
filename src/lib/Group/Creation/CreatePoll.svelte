@@ -227,13 +227,14 @@
 			<FileUploads bind:files={images} disableCropping />
 
 			{#if selectedPage === 'thread' || selected_poll === 'Date Poll'}
-			{@debug workGroup}
 				<Select
 					classInner="border border-gray-300"
 					label={$_('Work Group')}
 					labels={workGroups.map((workGroup) => workGroup.name)}
 					values={workGroups.map((workGroup) => workGroup.id)}
 					bind:value={workGroup}
+					defaultValue=""
+
 				/>
 			{/if}
 

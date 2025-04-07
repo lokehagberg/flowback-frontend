@@ -29,7 +29,8 @@
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
 		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {},
-		workGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [],
+		getKanbanEntries: () => Promise<void>;
 
 	const lanes = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 
@@ -138,6 +139,7 @@
 			};
 
 		// isEditing = false;
+		await getKanbanEntries();
 	};
 
 	// Moves the kanban entry between the lanes

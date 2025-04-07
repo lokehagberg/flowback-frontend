@@ -21,6 +21,8 @@
 		delegationTagsStructure: { delegate_pool_id: number; tags: number[] }[] = [];
 
 	const setupDelegationTagStructure = () => {
+		console.log(delegateRelations, 'DELEGATE RELATIONS');
+
 		delegationTagsStructure = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)
@@ -75,6 +77,8 @@
 			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag.id);
 		});
 
+		console.log(delegationTagsStructure, 'DELEGATION TAGS STRUCTURE');
+
 		delegateRelations.forEach((relation, i) => {
 			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
 
@@ -99,8 +103,8 @@
 	};
 
 	const saveDelegation = async () => {
-		console.log("SAFEEEEEEEEE", tags, tags.map(({ id }) => id));
-		
+		console.log(delegateRelations, 'DELEGATE RELATIONS');
+
 		const toSendDelegates = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)

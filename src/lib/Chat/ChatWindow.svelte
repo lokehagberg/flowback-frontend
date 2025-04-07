@@ -278,7 +278,7 @@
 						>
 							{message.message}
 						</p>
-						<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+						<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at || new Date())}</span>
 					</li>
 				{/if}
 			{/each}

@@ -4,17 +4,23 @@
   import ChatContainer from './ChatContainer.svelte';
   import { browser } from '$app/environment';
   import { userInfo } from '$lib/Generic/GenericFunctions';
-  import { websocketService } from '$lib/api/websocketService';
+  import { websocketService, connectionStatusStore, loadingMessagesStore } from '$lib/api/websocketService';
   import { isChatOpen } from '../ChatStore.svelte';
   import { chat } from '$lib/api/chat';
   import type { MessageChannelPreview } from '$lib/api/chat';
+
+  interface ExtendedMessageChannelPreview extends MessageChannelPreview {
+    type: 'direct' | 'group';
+  }
 
   let userId: number | undefined;
   let selectedChannelId: number | undefined;
   let mounted = false;
   let visible = false;
-  let availableChats: MessageChannelPreview[] = [];
+  let availableChats: ExtendedMessageChannelPreview[] = [];
   let loading = false;
+  let connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
+  let loadingMessages = false;
 
   const unsubscribeUser = userInfo.subscribe(info => {
     if (info?.user?.id) {
@@ -27,12 +33,52 @@
     visible = isOpen;
   });
 
+  connectionStatusStore.subscribe(status => {
+    connectionStatus = status;
+  });
+
+  loadingMessagesStore.subscribe(isLoading => {
+    loadingMessages = isLoading;
+  });
+
   async function loadAvailableChats() {
     if (!userId) return;
     loading = true;
     try {
-      const response = await chat.getChannelPreviews();
-      availableChats = response.results;
+      // Load all chats with pagination
+      const loadAllChats = async (origin: string) => {
+        let allResults = [];
+        let offset = 0;
+        const limit = 50;
+        
+        while (true) {
+          const response = await chat.getChannelPreviews({ 
+            origin_names: origin,
+            limit,
+            offset
+          });
+          
+          allResults.push(...response.results);
+          
+          if (!response.next || response.results.length < limit) {
+            break;
+          }
+          
+          offset += limit;
+        }
+        
+        return allResults;
+      };
+
+      const [directChats, groupChats] = await Promise.all([
+        loadAllChats('direct'),
+        loadAllChats('group')
+      ]);
+      
+      availableChats = [
+        ...directChats.map(chat => ({ ...chat, type: 'direct' as const })),
+        ...groupChats.map(chat => ({ ...chat, type: 'group' as const }))
+      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     } catch (error) {
       console.error('Error loading chats:', error);
     }
@@ -43,7 +89,7 @@
     try {
       const response = await chat.getChatChannel([targetUserId]);
       selectedChannelId = response.id;
-      await loadAvailableChats(); // Refresh the list
+      await loadAvailableChats();
     } catch (error) {
       console.error('Error starting chat:', error);
     }
@@ -65,6 +111,19 @@
     unsubscribeChat();
     websocketService.disconnect();
   });
+
+  function formatChatTitle(chat: ExtendedMessageChannelPreview) {
+    if (chat.type === 'direct') {
+      return `Chat with ${chat.user.username}`;
+    } else {
+      return chat.channel_title || 'Group Chat';
+    }
+  }
+
+  function getLastMessagePreview(chat: ExtendedMessageChannelPreview) {
+    if (!chat.message) return 'No messages yet';
+    return `${chat.user.username}: ${chat.message}`;
+  }
 </script>
 
 {#if mounted && browser && userId && visible}
@@ -78,6 +137,20 @@
           ← Back to chats
         </button>
       </div>
+      {#if connectionStatus === 'connecting' || loadingMessages}
+        <div class="loading-overlay">
+          <div class="loading-spinner"></div>
+          <p>Loading messages...</p>
+        </div>
+      {:else if connectionStatus === 'error'}
+        <div class="error-message">
+          Connection error. Trying to reconnect...
+        </div>
+      {:else if connectionStatus === 'disconnected'}
+        <div class="error-message">
+          Disconnected. Reconnecting...
+        </div>
+      {/if}
       <ChatContainer userId={userId} channelId={selectedChannelId} />
     {:else}
       <div class="chat-list">
@@ -87,19 +160,41 @@
         {:else if availableChats.length === 0}
           <div class="no-chats">No active chats</div>
         {:else}
-          {#each availableChats as chat}
-            <button
-              class="chat-item"
-              on:click={() => selectedChannelId = chat.channel_id}
-            >
-              <div class="chat-item-title">
-                {chat.channel_title || 'Chat'}
-              </div>
-              <div class="chat-item-preview">
-                {chat.message || 'No messages yet'}
-              </div>
-            </button>
-          {/each}
+          <div class="chat-sections">
+            <div class="chat-section">
+              <h4 class="chat-section-header">Direct Messages</h4>
+              {#each availableChats.filter(c => c.type === 'direct') as chat (chat.id)}
+                <button
+                  class="chat-item"
+                  on:click={() => selectedChannelId = chat.channel_id}
+                >
+                  <div class="chat-item-title">
+                    {formatChatTitle(chat)}
+                  </div>
+                  <div class="chat-item-preview">
+                    {getLastMessagePreview(chat)}
+                  </div>
+                </button>
+              {/each}
+            </div>
+            
+            <div class="chat-section">
+              <h4 class="chat-section-header">Group Chats</h4>
+              {#each availableChats.filter(c => c.type === 'group') as chat (chat.id)}
+                <button
+                  class="chat-item"
+                  on:click={() => selectedChannelId = chat.channel_id}
+                >
+                  <div class="chat-item-title">
+                    {formatChatTitle(chat)}
+                  </div>
+                  <div class="chat-item-preview">
+                    {getLastMessagePreview(chat)}
+                  </div>
+                </button>
+              {/each}
+            </div>
+          </div>
         {/if}
       </div>
     {/if}
@@ -170,12 +265,33 @@
     color: #111827;
   }
 
+  .chat-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .chat-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chat-section-header {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
   .chat-item {
     width: 100%;
     padding: 12px;
     background: none;
     border: none;
-    border-bottom: 1px solid #e5e7eb;
+    border-radius: 6px;
     text-align: left;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -203,6 +319,44 @@
     text-align: center;
     color: #6b7280;
     padding: 24px;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .error-message {
+    text-align: center;
+    color: #ef4444;
+    padding: 12px;
+    background: #fee2e2;
+    margin: 8px;
+    border-radius: 4px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   .chat-toggle {

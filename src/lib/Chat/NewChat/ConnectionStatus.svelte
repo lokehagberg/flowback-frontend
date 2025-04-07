@@ -1,58 +1,61 @@
 <!-- ConnectionStatus.svelte -->
 <script lang="ts">
-  export let status: 'connected' | 'disconnected' | 'error';
-
-  $: statusText = {
-    connected: 'Connected',
-    disconnected: 'Disconnected',
-    error: 'Connection Error'
-  }[status];
-
-  $: statusClass = {
-    connected: 'success',
-    disconnected: 'warning',
-    error: 'error'
-  }[status];
+  import type { ConnectionStatus } from '$lib/api/websocketService';
+  export let status: ConnectionStatus;
 </script>
 
-{#if status !== 'connected'}
-  <div class="status-bar {status === 'disconnected' ? 'warning' : ''} {status === 'error' ? 'error' : ''}">
-    <div class="status-indicator {statusClass}" />
-    <span>{statusText}</span>
-  </div>
-{/if}
+<div class="status-indicator" class:connected={status === 'connected'} class:error={status === 'error'} class:connecting={status === 'connecting'}>
+  <div class="dot"></div>
+  <span class="status-text">
+    {#if status === 'connected'}
+      Connected
+    {:else if status === 'connecting'}
+      Connecting...
+    {:else if status === 'disconnected'}
+      Disconnected
+    {:else if status === 'error'}
+      Connection Error
+    {/if}
+  </span>
+</div>
 
 <style>
-  .status-bar {
+  .status-indicator {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: #fff3cd;
-    color: #856404;
+    padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
+    color: #6c757d;
   }
 
-  .status-bar.error {
-    background-color: #f8d7da;
-    color: #721c24;
-  }
-
-  .status-indicator {
+  .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-  }
-
-  .status-indicator.warning {
-    background-color: #ffc107;
-  }
-
-  .status-indicator.error {
     background-color: #dc3545;
   }
 
-  .status-indicator.success {
+  .connected .dot {
     background-color: #28a745;
+  }
+
+  .connecting .dot {
+    background-color: #ffc107;
+    animation: pulse 1s infinite;
+  }
+
+  .error .dot {
+    background-color: #dc3545;
+  }
+
+  .status-text {
+    font-size: 0.75rem;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
   }
 </style> 

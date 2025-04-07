@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { env } from '$env/dynamic/public';
 import { browser } from '$app/environment';
 import type { Message as APIMessage, User } from './chat';
+import { chat } from './chat';
 
 // Types
 export interface WebSocketMessage {
@@ -35,11 +36,14 @@ export interface WebSocketError {
   status: 'error';
 }
 
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
+
 // Stores
 export const messagesStore = writable<APIMessage[]>([]);
 export const typingUsersStore = writable<Set<number>>(new Set());
-export const connectionStatusStore = writable<'connected' | 'disconnected' | 'error'>('disconnected');
+export const connectionStatusStore = writable<ConnectionStatus>('disconnected');
 export const chatParticipantsStore = writable<Map<number, ChatParticipant>>(new Map());
+export const loadingMessagesStore = writable<boolean>(false);
 
 class WebSocketService {
   private socket: WebSocket | null = null;
@@ -47,7 +51,7 @@ class WebSocketService {
   private maxReconnectAttempts = 5;
   private reconnectTimeout: number = 1000;
   private currentChannelId: number | null = null;
-  private monitoringInterval: NodeJS.Timer | null = null;
+  private monitoringInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
     if (browser) {
@@ -59,6 +63,7 @@ class WebSocketService {
     if (!browser) return;
     if (this.socket?.readyState === WebSocket.OPEN) return;
 
+    connectionStatusStore.set('connecting');
     const wsUrl = `${env.PUBLIC_WEBSOCKET_API}/chat/ws?token=${token}`;
     this.socket = new WebSocket(wsUrl);
 
@@ -72,6 +77,27 @@ class WebSocketService {
     console.log('WebSocket connected');
     connectionStatusStore.set('connected');
     this.reconnectAttempts = 0;
+    
+    // Rejoin channel if there was one
+    if (this.currentChannelId) {
+      this.joinChannel(this.currentChannelId);
+    }
+  }
+
+  private async loadChannelHistory(channelId: number) {
+    try {
+      loadingMessagesStore.set(true);
+      const response = await chat.getMessages(channelId, { limit: 50, order_by: 'created_at_desc' });
+      if (response.results) {
+        // Reverse to show oldest first
+        const messages = response.results.reverse();
+        messagesStore.set(messages);
+      }
+    } catch (error) {
+      console.error('Error loading channel history:', error);
+    } finally {
+      loadingMessagesStore.set(false);
+    }
   }
 
   private handleMessage(event: MessageEvent) {
@@ -239,13 +265,14 @@ class WebSocketService {
     }));
   }
 
-  joinChannel(channelId: number) {
+  async joinChannel(channelId: number) {
     if (!browser) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
     
-    // Clear previous messages when joining a new channel
-    messagesStore.set([]);
     this.currentChannelId = channelId;
+    
+    // Load message history first
+    await this.loadChannelHistory(channelId);
     
     this.socket.send(JSON.stringify({
       method: 'connect_channel',

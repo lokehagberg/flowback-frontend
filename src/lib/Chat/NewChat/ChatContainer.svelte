@@ -8,16 +8,18 @@
   import ConnectionStatus from './ConnectionStatus.svelte';
   import { chat } from '$lib/api/chat';
   import type { Message, MessageChannelParticipant } from '$lib/api/chat';
+  import type { ConnectionStatus as ConnectionStatusType } from '$lib/api/websocketService';
 
   export let channelId: number;
   export let userId: number;
 
-  let typingTimeout: NodeJS.Timeout;
+  let typingTimeout: ReturnType<typeof setTimeout>;
   let messages: Message[] = [];
   let typingUsers: Set<number>;
-  let connectionStatus: 'connected' | 'disconnected' | 'error';
+  let connectionStatus: ConnectionStatusType;
   let participants: Map<number, { id: number; username: string; isTyping: boolean }>;
   let channelTitle = '';
+  let channelType: 'direct' | 'group' = 'direct';
 
   const unsubscribeMessages = messagesStore.subscribe((value) => {
     messages = value;
@@ -37,6 +39,14 @@
 
   async function loadChannelInfo() {
     try {
+      // Get channel preview to determine type and title
+      const preview = await chat.getChannelPreviews({ channel_id: channelId });
+      if (preview.results.length > 0) {
+        const channel = preview.results[0];
+        channelTitle = channel.channel_title || '';
+        channelType = channel.channel_origin_name === 'group' ? 'group' : 'direct';
+      }
+
       // Get channel participants
       const participantsResponse = await chat.getParticipants(channelId);
       if (participantsResponse.results) {
@@ -104,16 +114,23 @@
     .filter(p => p.id !== userId)
     .map(p => p.username)
     .join(', ');
+
+  $: chatTitle = channelType === 'group' ? 
+    channelTitle || 'Group Chat' : 
+    participantsList ? `Chat with ${participantsList}` : 'Direct Message';
 </script>
 
 <div class="chat-container">
   <div class="chat-header">
     <ConnectionStatus status={connectionStatus} />
-    {#if participantsList}
-      <div class="participants">
-        Chatting with: {participantsList}
-      </div>
-    {/if}
+    <div class="chat-info">
+      <div class="chat-title">{chatTitle}</div>
+      {#if channelType === 'group' && participantsList}
+        <div class="participants">
+          Participants: {participantsList}
+        </div>
+      {/if}
+    </div>
   </div>
   
   <div class="messages-wrapper">
@@ -144,8 +161,17 @@
     background-color: white;
   }
 
-  .participants {
+  .chat-info {
     padding: 0.5rem;
+  }
+
+  .chat-title {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+
+  .participants {
     font-size: 0.875rem;
     color: #6c757d;
   }

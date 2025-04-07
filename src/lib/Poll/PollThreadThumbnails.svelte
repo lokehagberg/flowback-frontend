@@ -160,28 +160,21 @@
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No posts currently here')}
 				</div>
-			{:else}
-				{#key posts}
-					{#if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
-						{#each posts as post}
-							{#if post.related_model === 'group_thread' && showThreads}
-								<ThreadThumbnail
-									{isAdmin}
-									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
-								/>
-							{:else if post.related_model === 'poll' && showPolls}
-								<PollThumbnail
-									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
-									{isAdmin}
-								/>
-							{/if}
-						{/each}
-					{:else if !loading}
-						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-							{$_('No posts currently here')}
-						</div>
+			{:else if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
+				{#each posts as post}
+					{#if post.related_model === 'group_thread' && showThreads}
+						<ThreadThumbnail
+							{isAdmin}
+							thread={threads.find((thread) => thread.id === post.id) || threads[0]}
+						/>
+					{:else if post.related_model === 'poll' && showPolls}
+						<PollThumbnail poll={polls.find((poll) => poll.id === post.id) || polls[0]} {isAdmin} />
 					{/if}
-				{/key}
+				{/each}
+			{:else if !loading}
+				<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+					{$_('No posts currently here')}
+				</div>
 			{/if}
 		</div>
 		<Pagination

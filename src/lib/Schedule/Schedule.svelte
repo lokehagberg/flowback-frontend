@@ -121,8 +121,18 @@
 
 		loading = false;
 
+		selectedEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		};
+
 		if (!res.ok) {
 			poppup = { message: 'Failed to create event', success: false };
+
 			return;
 		}
 
@@ -154,13 +164,23 @@
 		);
 
 		loading = false;
+		selectedEvent = {
+			start_date: '',
+			end_date: '',
+			title: '',
+			event_id: 0,
+			schedule_origin_name: 'group',
+			created_by: 0
+		};
 
 		if (!res.ok) {
 			poppup = { message: 'Failed to edit event', success: false };
+
 			return;
 		}
 
 		showEditScheduleEvent = false;
+
 		events = events.map((event) => {
 			if (event.event_id === selectedEvent.event_id) return selectedEvent;
 			else return event;

@@ -33,7 +33,7 @@ export class PollsApi {
    * Fetches polls for the home feed (across all groups)
    */
   static async getHomePolls(orderBy: string): Promise<ApiResponse<poll>> {
-    return apiClient<ApiResponse<poll>>(`home/polls?order_by=${orderBy}`);
+    return apiClient<ApiResponse<poll>>(`home/polls?order_by=${orderBy}&limit=1000`);
   }
 
   /**

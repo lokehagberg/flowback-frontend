@@ -210,5 +210,19 @@ export const chat = {
         }
         const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
         return apiClient<PaginatedResponse<UserChatInvite>>(`user/chat/invite/list${query}`);
-    }
+    },
+
+    // Create a group chat
+    createGroupChat: async (name: string, memberIds: number[]) => {
+        // Ensure current user is included
+        const currentUserId = Number(localStorage.getItem('userId'));
+        const allUserIds = [...new Set([currentUserId, ...memberIds])];
+        
+        const queryParams = allUserIds.map(id => `target_user_ids=${id}`).join('&');
+        return apiClient<{ id: number; title: string; }>(`user/chat?${queryParams}`);
+    },
+
+    // Search users for group chat creation
+    searchUsers: (query: string) => 
+        apiClient<PaginatedResponse<User>>(`users?username__icontains=${encodeURIComponent(query)}&limit=10`),
 }; 

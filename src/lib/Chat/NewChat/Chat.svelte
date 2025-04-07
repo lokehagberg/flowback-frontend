@@ -8,6 +8,8 @@
   import { isChatOpen } from '../ChatStore.svelte';
   import { chat } from '$lib/api/chat';
   import type { MessageChannelPreview, User } from '$lib/api/chat';
+  import CreateGroupChat from './CreateGroupChat.svelte';
+  import Button from '$lib/Generic/Button.svelte';
 
   interface ExtendedMessageChannelPreview extends MessageChannelPreview {
     type: 'direct' | 'group';
@@ -22,6 +24,7 @@
   let loading = false;
   let connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   let loadingMessages = false;
+  let showCreateGroup = false;
 
   const unsubscribeUser = userInfo.subscribe(info => {
     if (info?.user?.id) {
@@ -184,7 +187,15 @@
       <ChatContainer userId={userId} channelId={selectedChannelId} />
     {:else}
       <div class="chat-list">
-        <h3 class="chat-list-header">Your Chats</h3>
+        <div class="chat-list-header">
+          <h2>Chats</h2>
+          <Button 
+            onClick={() => showCreateGroup = true} 
+            Class="create-group-btn"
+          >
+            Create Group
+          </Button>
+        </div>
         {#if loading}
           <div class="loading">Loading chats...</div>
         {:else if availableChats.length === 0}
@@ -228,6 +239,14 @@
         {/if}
       </div>
     {/if}
+  </div>
+{/if}
+
+{#if showCreateGroup}
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <CreateGroupChat onClose={() => showCreateGroup = false} />
+    </div>
   </div>
 {/if}
 
@@ -289,10 +308,18 @@
   }
 
   .chat-list-header {
-    margin: 0 0 16px;
-    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .chat-list-header h2 {
+    font-size: 1.25rem;
     font-weight: 600;
     color: #111827;
+    margin: 0;
   }
 
   .chat-sections {
@@ -439,5 +466,35 @@
       width: calc(100% - 40px);
       height: calc(100vh - 120px);
     }
+  }
+
+  :global(.create-group-btn) {
+    background-color: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 </style> 

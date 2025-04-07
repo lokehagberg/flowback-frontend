@@ -59,6 +59,7 @@
       
       // Determine chat type and title
       const preview = await chat.getChannelPreviews({ channel_id: channelId });
+      console.log(preview);
       if (preview.results.length > 0) {
         const channel = preview.results[0];
         channelTitle = channel.channel_title || '';
@@ -101,7 +102,7 @@
 
   async function handleJoinChat() {
     try {
-      await chat.getChatChannel([userId]);
+      //await chat.getChatChannel([userId]);
       websocketService.joinChannel(channelId);
       await loadChannelInfo(); // Reload to update participant status
     } catch (error) {
@@ -161,13 +162,15 @@
     <div class="chat-info">
       <div class="chat-title-row">
         <div class="chat-title">{chatTitle}</div>
-        {#if channelType === 'group'}
-          {#if isParticipant}
-            <Button onClick={handleLeaveChat} Class="leave-btn">Leave Chat</Button>
-          {:else}
-            <Button onClick={handleJoinChat} Class="join-btn">Join Chat</Button>
+        <div class="chat-actions">
+          {#if channelType === 'group'}
+            {#if isParticipant}
+              <Button onClick={handleLeaveChat} Class="leave-btn">Leave Chat</Button>
+            {:else}
+              <Button onClick={handleJoinChat} Class="join-btn">Join Chat</Button>
+            {/if}
           {/if}
-        {/if}
+        </div>
       </div>
       {#if channelType === 'group' && participantsList}
         <div class="participants">
@@ -251,6 +254,11 @@
     padding: 2rem;
   }
 
+  .chat-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   :global(.join-btn) {
     background-color: #4f46e5;
     color: white;
@@ -263,5 +271,24 @@
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
   }
 </style> 

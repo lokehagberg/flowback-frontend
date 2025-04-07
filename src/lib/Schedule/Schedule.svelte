@@ -121,26 +121,6 @@
 
 		loading = false;
 
-		if (!res.ok) {
-			poppup = { message: 'Failed to create event', success: false };
-
-			selectedEvent = {
-				start_date: '',
-				end_date: '',
-				title: '',
-				event_id: 0,
-				schedule_origin_name: 'group',
-				created_by: 0
-			};
-
-			return;
-		}
-
-		poppup = { message: 'Successfully created event', success: true };
-		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
-
 		selectedEvent = {
 			start_date: '',
 			end_date: '',
@@ -149,6 +129,17 @@
 			schedule_origin_name: 'group',
 			created_by: 0
 		};
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to create event', success: false };
+
+			return;
+		}
+
+		poppup = { message: 'Successfully created event', success: true };
+		showCreateScheduleEvent = false;
+		events.push(selectedEvent);
+		events = events;
 	};
 
 	const scheduleEventUpdate = async () => {
@@ -173,23 +164,6 @@
 		);
 
 		loading = false;
-
-		if (!res.ok) {
-			poppup = { message: 'Failed to edit event', success: false };
-
-			selectedEvent = {
-				start_date: '',
-				end_date: '',
-				title: '',
-				event_id: 0,
-				schedule_origin_name: 'group',
-				created_by: 0
-			};
-
-			return;
-		}
-
-		showEditScheduleEvent = false;
 		selectedEvent = {
 			start_date: '',
 			end_date: '',
@@ -198,7 +172,15 @@
 			schedule_origin_name: 'group',
 			created_by: 0
 		};
-		
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to edit event', success: false };
+
+			return;
+		}
+
+		showEditScheduleEvent = false;
+
 		events = events.map((event) => {
 			if (event.event_id === selectedEvent.event_id) return selectedEvent;
 			else return event;

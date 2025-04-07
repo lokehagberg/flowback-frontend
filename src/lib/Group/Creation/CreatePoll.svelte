@@ -233,6 +233,8 @@
 					labels={workGroups.map((workGroup) => workGroup.name)}
 					values={workGroups.map((workGroup) => workGroup.id)}
 					bind:value={workGroup}
+					innerLabelOn={true}
+					innerLabel={$_("No workgroup assigned")}
 				/>
 			{/if}
 

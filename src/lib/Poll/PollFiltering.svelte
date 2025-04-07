@@ -142,6 +142,7 @@
 			labels={[$_('Newest first'), $_('Oldest first')]}
 			label={$_('Sort')}: 
 			bind:value={filter.order_by}
+			innerLabel={null}
 		/>
 
 		<CheckboxButtons

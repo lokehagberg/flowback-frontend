@@ -29,7 +29,8 @@
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
 		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {},
-		workGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [],
+		getKanbanEntries: () => Promise<void>;
 
 	const lanes = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 
@@ -54,7 +55,7 @@
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
 			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
 			work_group: kanban.work_group || null,
 			//@ts-ignore
 			images: kanban.attachments || []
@@ -138,6 +139,7 @@
 			};
 
 		// isEditing = false;
+		await getKanbanEntries();
 	};
 
 	// Moves the kanban entry between the lanes
@@ -215,7 +217,7 @@
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
 			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
 			work_group: kanban.work_group || null,
 			//@ts-ignore
 			images: kanban.attachments || []
@@ -244,7 +246,7 @@
 				title: kanban.title,
 				assignee_id: kanban.assignee?.id,
 				priority: kanban.priority,
-				end_date: kanban.end_date ? new Date(kanban.end_date) : null
+				end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null
 			};
 		})();
 </script>

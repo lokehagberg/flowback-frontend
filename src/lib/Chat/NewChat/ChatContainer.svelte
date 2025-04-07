@@ -9,6 +9,7 @@
   import { chat } from '$lib/api/chat';
   import type { Message, MessageChannelParticipant } from '$lib/api/chat';
   import type { ConnectionStatus as ConnectionStatusType } from '$lib/api/websocketService';
+  import Button from '$lib/Generic/Button.svelte';
 
   export let channelId: number;
   export let userId: number;
@@ -23,6 +24,7 @@
   let channelType: ChannelType = 'direct';
   let currentUsername = '';
   let participantsList = '';
+  let isParticipant = false;
 
   const unsubscribeMessages = messagesStore.subscribe((value) => {
     messages = value;
@@ -52,12 +54,27 @@
       const participantsResponse = await chat.getParticipants(channelId);
       const participants = participantsResponse.results || [];
       
+      // Check if current user is a participant
+      isParticipant = participants.some(p => p.user.id === userId && p.active);
+      
       // Determine chat type and title
       const preview = await chat.getChannelPreviews({ channel_id: channelId });
       if (preview.results.length > 0) {
         const channel = preview.results[0];
         channelTitle = channel.channel_title || '';
         channelType = channel.participants <= 2 ? 'direct' : 'group';
+        
+        // Log detailed participant information
+        console.log(`\n=== Chat Info for Channel ${channelId} ===`);
+        console.log('Channel Title:', channelTitle);
+        console.log('Channel Type:', channelType);
+        console.log('Current User ID:', userId);
+        console.log('Is Current User Participant:', isParticipant);
+        console.log('\nParticipants:');
+        participants.forEach(p => {
+          console.log(`- ${p.user.username} (ID: ${p.user.id}, Active: ${p.active})`);
+        });
+        console.log('============================\n');
         
         if (channelType === 'direct') {
           // For DMs, show the other user's name
@@ -72,11 +89,34 @@
         }
       }
 
-      // Get messages
-      const messagesResponse = await chat.getMessages(channelId);
-      messages = messagesResponse.results || [];
+      // Only load messages if we're a participant
+      if (isParticipant) {
+        const messagesResponse = await chat.getMessages(channelId);
+        messages = messagesResponse.results || [];
+      }
     } catch (error) {
       console.error('Error loading channel info:', error);
+    }
+  }
+
+  async function handleJoinChat() {
+    try {
+      await chat.getChatChannel([userId]);
+      websocketService.joinChannel(channelId);
+      await loadChannelInfo(); // Reload to update participant status
+    } catch (error) {
+      console.error('Failed to join chat:', error);
+    }
+  }
+
+  async function handleLeaveChat() {
+    try {
+      websocketService.leaveChannel(channelId);
+      messages = []; // Clear messages
+      isParticipant = false;
+      await loadChannelInfo(); // Reload to update participant status
+    } catch (error) {
+      console.error('Failed to leave chat:', error);
     }
   }
 
@@ -119,7 +159,16 @@
   <div class="chat-header">
     <ConnectionStatus status={connectionStatus} />
     <div class="chat-info">
-      <div class="chat-title">{chatTitle}</div>
+      <div class="chat-title-row">
+        <div class="chat-title">{chatTitle}</div>
+        {#if channelType === 'group'}
+          {#if isParticipant}
+            <Button onClick={handleLeaveChat} Class="leave-btn">Leave Chat</Button>
+          {:else}
+            <Button onClick={handleJoinChat} Class="join-btn">Join Chat</Button>
+          {/if}
+        {/if}
+      </div>
       {#if channelType === 'group' && participantsList}
         <div class="participants">
           Participants: {participantsList}
@@ -129,14 +178,24 @@
   </div>
   
   <div class="messages-wrapper">
-    <MessageList {messages} {userId} />
-    <TypingIndicator users={typingUsers} {userId} />
+    {#if isParticipant}
+      <MessageList {messages} {userId} />
+      <TypingIndicator users={typingUsers} {userId} />
+    {:else}
+      <div class="not-participant-message">
+        {#if channelType === 'group'}
+          Join this chat to see messages and participate in the conversation.
+        {:else}
+          You cannot participate in this conversation.
+        {/if}
+      </div>
+    {/if}
   </div>
 
   <MessageInput 
     on:message={handleMessageSubmit}
     on:typing={handleTyping}
-    disabled={connectionStatus !== 'connected'} 
+    disabled={!isParticipant || connectionStatus !== 'connected'} 
   />
 </div>
 
@@ -160,10 +219,16 @@
     padding: 0.5rem;
   }
 
+  .chat-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
   .chat-title {
     font-weight: 600;
     color: #111827;
-    margin-bottom: 0.25rem;
   }
 
   .participants {
@@ -177,5 +242,26 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+  }
+
+  .not-participant-message {
+    text-align: center;
+    color: #6c757d;
+    margin: auto;
+    padding: 2rem;
+  }
+
+  :global(.join-btn) {
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+  }
+
+  :global(.leave-btn) {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
   }
 </style> 

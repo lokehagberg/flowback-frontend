@@ -354,15 +354,27 @@ class WebSocketService {
 
   leaveChannel(channelId: number) {
     if (!browser) return;
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
-    if (this.currentChannelId !== channelId) return; // Only leave if we're in this channel
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+      console.error('Cannot leave channel - socket not connected');
+      return;
+    }
 
-    this.socket.send(JSON.stringify({
-      method: 'disconnect_channel',
-      channel_id: channelId
-    }));
+    console.log('Leaving channel:', channelId);
     
-    this.currentChannelId = null;
+    try {
+      this.socket.send(JSON.stringify({
+        method: 'disconnect_channel',
+        channel_id: channelId
+      }));
+      
+      // Clear current channel ID only after successfully sending the message
+      this.currentChannelId = null;
+      
+      // Clear message store
+      messagesStore.set([]);
+    } catch (error) {
+      console.error('Error sending disconnect_channel message:', error);
+    }
   }
 
   private setupConnectionMonitoring() {

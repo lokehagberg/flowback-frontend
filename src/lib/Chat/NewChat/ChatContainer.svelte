@@ -124,9 +124,22 @@
 
   async function handleLeaveChat() {
     try {
+      if (!websocketService.isConnected()) {
+        console.error('Cannot leave chat - WebSocket not connected');
+        return;
+      }
+
+      // First send the disconnect message
       websocketService.leaveChannel(channelId);
+      console.log('Sent disconnect_channel message for channel:', channelId);
+
+      // Update local state
       isParticipant = false;
-      await loadChannelInfo(); // Reload to update participant status
+      messages = [];
+      messagesStore.set([]);
+
+      // Reload channel info to update UI
+      await loadChannelInfo();
     } catch (error) {
       console.error('Failed to leave chat:', error);
     }

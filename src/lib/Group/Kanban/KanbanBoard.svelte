@@ -145,6 +145,7 @@
 						>
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
+						{#if kanbanEntries?.length > 0}
 						{#each kanbanEntries as kanban}
 							{#if kanban.lane === i}
 								<KanbanEntry
@@ -158,6 +159,7 @@
 								/>
 							{/if}
 						{/each}
+						{/if}
 					</ul>
 					<div class="flex justify-between pt-4">
 						<button

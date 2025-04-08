@@ -49,7 +49,7 @@
 	};
 
 	const getEventsAtDate = (date: Date) => {
-		return events.filter((event) => {
+		return events?.filter((event) => {
 			let startDate = new Date(event.start_date);
 			startDate.setHours(0);
 			startDate.setMinutes(0);
@@ -93,19 +93,21 @@
 			>
 				<div>{new Date(year, month, getDay(x, y)).getDate()}</div>
 			</div>
-			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
-				{#if (1000 * i) / window.innerHeight < 3}
-					<button
-						on:click={() => {
-							selectedEvent = event;
-							showEvent = true;
-						}}
-						class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
-					>
-						{elipsis(event.title, 15)}
-					</button>
-				{/if}
-			{/each}
+			{#if getEventsAtDate(getDate(year, month, x, y))?.length > 0}
+				{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
+					{#if (1000 * i) / window.innerHeight < 3}
+						<button
+							on:click={() => {
+								selectedEvent = event;
+								showEvent = true;
+							}}
+							class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
+						>
+							{elipsis(event.title, 15)}
+						</button>
+					{/if}
+				{/each}
+			{/if}
 		{/key}
 	</div>
 </button>

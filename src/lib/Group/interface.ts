@@ -71,6 +71,8 @@ export interface Group {
 	joined: boolean;
 	name: string;
 	public: boolean;
+	pending_join:boolean;
+	pending_invite:boolean;
 }
 
 export interface GroupDetails {

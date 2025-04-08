@@ -643,6 +643,7 @@
     "Predict on what will happen if a proposal is implemented in reality.": "Förutse vad som kommer att hända om ett förslag genomförs i verkligheten.",
     "!Calculating results, try refreshing in a while.": "!Beräknar resultat, försök att uppdatera sidan om en stund.",
     "Vote calculation failed": "Röstberäkning misslyckades",
+    "Pending invite": "Väntande inbjudan",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

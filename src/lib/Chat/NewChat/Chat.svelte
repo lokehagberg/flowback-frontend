@@ -10,6 +10,8 @@
   import type { MessageChannelPreview, User, UserChatInvite } from '$lib/api/chat';
   import CreateGroupChat from './CreateGroupChat.svelte';
   import Button from '$lib/Generic/Button.svelte';
+  import { faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+  import Fa from 'svelte-fa';
 
   interface ExtendedMessageChannelPreview extends MessageChannelPreview {
     type: 'direct' | 'group';
@@ -280,10 +282,17 @@
               <div 
                 class="chat-item"
                 class:selected={selectedChannelId === chat.channel_id}
+                class:dm={chat.type === 'direct'}
+                class:group={chat.type === 'group'}
                 on:click={() => selectedChannelId = chat.channel_id}
               >
                 <div class="chat-item-content">
-                  <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                  <div class="chat-item-header">
+                    <div class="chat-type-icon">
+                      <Fa icon={chat.type === 'direct' ? faUserCircle : faUsers} />
+                    </div>
+                    <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                  </div>
                   <div class="chat-item-preview">{getLastMessagePreview(chat)}</div>
                 </div>
               </div>
@@ -294,9 +303,18 @@
             <div class="inactive-chats">
               <h3 class="section-title">Inactive Chats</h3>
               {#each inactiveChats as chat}
-                <div class="chat-item inactive">
+                <div 
+                  class="chat-item inactive"
+                  class:dm={chat.type === 'direct'}
+                  class:group={chat.type === 'group'}
+                >
                   <div class="chat-item-content">
-                    <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                    <div class="chat-item-header">
+                      <div class="chat-type-icon">
+                        <Fa icon={chat.type === 'direct' ? faUserCircle : faUsers} />
+                      </div>
+                      <div class="chat-item-title">{formatChatTitle(chat)}</div>
+                    </div>
                     <div class="chat-item-preview">{getLastMessagePreview(chat)}</div>
                   </div>
                   <Button 
@@ -423,7 +441,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+  }
+
+  .chat-item.dm {
+    border-left-color: #60a5fa; /* Blue for DMs */
+  }
+
+  .chat-item.group {
+    border-left-color: #10b981; /* Green for groups */
   }
 
   .chat-item:hover {
@@ -443,10 +470,33 @@
     min-width: 0; /* Enables text truncation */
   }
 
+  .chat-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 4px;
+  }
+
+  .chat-type-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
+  }
+
+  .chat-item.dm .chat-type-icon {
+    color: #60a5fa;
+  }
+
+  .chat-item.group .chat-type-icon {
+    color: #10b981;
+  }
+
   .chat-item-title {
     font-weight: 500;
     color: #111827;
-    margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -458,6 +508,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: calc(24px + 0.5rem); /* Align with title text */
   }
 
   .loading, .no-chats {

@@ -758,13 +758,14 @@
     right: 0;
     width: 10px;
     height: 10px;
-    background-color: #60a5fa;
+    background-color: #ef4444;
     border-radius: 50%;
     border: 2px solid #ffffff;
   }
 
   :global(.dark) .chat-toggle.has-notification::after {
     border-color: #1f2937;
+    background-color: #ef4444;
   }
 
   .chat-item-header {

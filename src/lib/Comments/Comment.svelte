@@ -63,6 +63,31 @@
 		comments = comments;
 	};
 
+	const commentReport = async (id: number, message: string) => {
+		let _api = 'report/create';
+
+		let data = {
+			title: 'Report Comment',
+			description: message || 'Report Comment'
+		};
+
+		const { res, json } = await fetchRequest('POST', _api, data);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to report comment', success: false };
+			return;
+		}
+
+		comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			comment.message = '[Reported]';
+			comment.active = false;
+			return comment;
+		});
+		comments = comments;
+	};
+
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
 		if (isVoting) return; // Prevent multiple clicks while processing
@@ -128,7 +153,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
-		bind:images
+		bind:files={images}
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -154,7 +179,10 @@
 		</div>
 		{#key comment.message}
 			{#if comment.message}
-				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
+				<div
+					class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap"
+					id={`comment-${comment.id}`}
+				>
 					{comment.message}
 				</div>
 			{/if}
@@ -165,7 +193,7 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-				<!-- {@debug attachment} -->
+					<!-- {@debug attachment} -->
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
 							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
@@ -216,7 +244,7 @@
 					</button>
 				</div>
 				<!-- {/if} -->
-				 
+
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
@@ -250,6 +278,13 @@
 						{$_('Edit')}
 					</button>
 				{/if}
+
+				<button
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => commentReport(comment.id, comment.message || '')}
+				>
+					{$_('Report')}
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -258,7 +293,7 @@
 {#if comment.being_replied}
 	<CommentPost
 		{delegate_pool_id}
-		bind:images
+		bind:files={images}
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}

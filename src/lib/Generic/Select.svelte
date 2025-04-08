@@ -15,7 +15,8 @@
 		defaultValue = values[0],
 		Class = '',
 		classInner = '',
-		innerLabel = 'Select',
+		innerLabel: string | null = 'Select',
+		innerLabelOn: boolean = false,
 		charlimit = 30;
 
 		onMount(() => {
@@ -23,7 +24,7 @@
 		})
 </script>
 
-<div class={`${Class} border-2`}>
+<div class={`${Class} `}>
 	{#if label}
 		<label for={label}>{label}</label> <br />
 	{/if}
@@ -36,7 +37,10 @@
 		style="width:100%"
 		name={label}
 	>
-		<option value="" selected>{$_(innerLabel)}</option>
+		{#if innerLabel}
+			<option value="" disabled={!innerLabelOn} selected >{$_(innerLabel)}</option>
+		{/if}
+
 		{#if labels}
 			{#each labels as label, i}
 				<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>

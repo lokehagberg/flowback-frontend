@@ -111,21 +111,16 @@
 							{$_('Work Group')}
 							<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group_id}
+							bind:value={selectedEvent.work_group}
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
+							value={selectedEvent.work_group?.id || ""}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}
 						/>
 						</label>
 						
-						<!-- <label class="block text-md py-3" for="repeat-frequency">
-							{$_('Repeat frequency')}
-							<Select
-							Class="width:100%"
-							bind:value={selectedEvent.repeat_frequency}
-							labels={['Daily', 'Weekly', 'Monthly', 'Yearly']}
-							values={[1, 2, 3, 4]}
-						/>
-						</label> -->
+						
 						
 					</div>
 				{/if}
@@ -203,9 +198,12 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group}
+							classInner="border-gray-300 rounded border"
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
+							value={selectedEvent.work_group?.id || ""}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}

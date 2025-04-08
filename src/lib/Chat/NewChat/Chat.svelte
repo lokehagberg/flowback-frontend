@@ -290,7 +290,7 @@
                 type="text"
                 bind:value={searchQuery}
                 on:input={searchUsers}
-                placeholder="Search users or type @ to start a DM..."
+                placeholder="Search for a user to start a DM..."
                 class="w-full p-2 pl-10 pr-8 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700"
               />
               <div class="search-icon left">

@@ -10,7 +10,7 @@
   import type { MessageChannelPreview, User, UserChatInvite } from '$lib/api/chat';
   import CreateGroupChat from './CreateGroupChat.svelte';
   import Button from '$lib/Generic/Button.svelte';
-  import { faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+  import { faUserCircle, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons';
   import Fa from 'svelte-fa';
 
   interface ExtendedMessageChannelPreview extends MessageChannelPreview {
@@ -30,6 +30,10 @@
   let connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   let loadingMessages = false;
   let showCreateGroup = false;
+  let searchQuery = '';
+  let searchResults: User[] = [];
+  let isSearching = false;
+  let searchError = '';
 
   const unsubscribeUser = userInfo.subscribe(info => {
     if (info?.user?.id) {
@@ -169,6 +173,38 @@
     }
   }
 
+  async function searchUsers() {
+    if (!searchQuery.trim()) {
+      searchResults = [];
+      return;
+    }
+
+    isSearching = true;
+    searchError = '';
+
+    try {
+      const response = await chat.searchUsers(searchQuery);
+      searchResults = response.results.filter(user => user.id !== userId);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      searchError = 'Failed to search users';
+    } finally {
+      isSearching = false;
+    }
+  }
+
+  async function startDirectChat(targetUser: User) {
+    try {
+      const response = await chat.getChatChannel([targetUser.id]);
+      selectedChannelId = response.id;
+      searchQuery = '';
+      searchResults = [];
+      await loadAvailableChats();
+    } catch (error) {
+      console.error('Error starting DM:', error);
+    }
+  }
+
   onMount(() => {
     mounted = true;
     if (browser) {
@@ -238,16 +274,56 @@
       {/if}
       <ChatContainer userId={userId} channelId={selectedChannelId} />
     {:else}
-      <div class="chat-list">
-        <div class="chat-list-header">
-          <h2>Chats</h2>
-          <Button 
-            onClick={() => showCreateGroup = true} 
-            Class="create-group-btn"
-          >
-            Create Group
-          </Button>
+      <div class="chat-header">
+        <div class="header-content">
+          <h2 class="text-xl font-semibold mb-4">Chats</h2>
+          <div class="flex gap-2">
+            <Button onClick={() => showCreateGroup = true} Class="create-group-btn">
+              <Fa icon={faUsers} /> Create Group
+            </Button>
+            <div class="relative flex-1">
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  bind:value={searchQuery}
+                  on:input={searchUsers}
+                  placeholder="Search users to start a DM..."
+                  class="w-full p-2 pr-8 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+                />
+                <div class="search-icon">
+                  {#if isSearching}
+                    <div class="loading-spinner" />
+                  {:else}
+                    <Fa icon={faSearch} />
+                  {/if}
+                </div>
+              </div>
+              {#if searchQuery && searchResults.length > 0}
+                <div class="search-results">
+                  {#each searchResults as user}
+                    <button
+                      class="search-result-item"
+                      on:click={() => startDirectChat(user)}
+                    >
+                      <div class="user-icon">
+                        <Fa icon={faUserCircle} />
+                      </div>
+                      <span>{user.username}</span>
+                    </button>
+                  {/each}
+                </div>
+              {:else if searchQuery && !isSearching}
+                <div class="search-results">
+                  <div class="no-results">
+                    {searchError || 'No users found'}
+                  </div>
+                </div>
+              {/if}
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="chat-list">
         {#if loading}
           <div class="loading-indicator">Loading chats...</div>
         {:else}
@@ -679,5 +755,105 @@
     color: white;
     font-size: 0.875rem;
     padding: 0.25rem 0.75rem;
+  }
+
+  .header-content {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .search-input-wrapper {
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+  }
+
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.2s;
+  }
+
+  .search-result-item:hover {
+    background-color: #f3f4f6;
+  }
+
+  .user-icon {
+    color: #6b7280;
+  }
+
+  .no-results {
+    padding: 0.75rem 1rem;
+    color: #6b7280;
+    text-align: center;
+  }
+
+  :global(.create-group-btn) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+  }
+
+  :global(.create-group-btn:hover) {
+    background-color: #4338ca;
+  }
+
+  .loading-spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #e5e7eb;
+    border-top-color: #6b7280;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Dark mode styles */
+  :global(.dark) .search-results {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  :global(.dark) .search-result-item:hover {
+    background-color: #374151;
+  }
+
+  :global(.dark) .no-results {
+    color: #9ca3af;
   }
 </style> 

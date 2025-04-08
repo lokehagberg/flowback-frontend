@@ -23,7 +23,7 @@
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: number | null = null,
-		files: File[];
+		files: File[] = [];
 
 	let show = false,
 		showMessage = '',

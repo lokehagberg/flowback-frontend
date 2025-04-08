@@ -1,6 +1,7 @@
 <!-- MessageInput.svelte -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { onDestroy } from 'svelte';
 
   export let disabled = false;
 
@@ -11,14 +12,26 @@
 
   let message = '';
   let inputElement: HTMLTextAreaElement;
+  let typingTimeout: ReturnType<typeof setTimeout>;
 
   function handleInput() {
+    if (typingTimeout) clearTimeout(typingTimeout);
+    
     dispatch('typing');
     
     // Auto-resize textarea
     inputElement.style.height = 'auto';
     inputElement.style.height = `${inputElement.scrollHeight}px`;
+    
+    // Set a new typing timeout
+    typingTimeout = setTimeout(() => {
+      dispatch('typing');
+    }, 2000);
   }
+
+  onDestroy(() => {
+    if (typingTimeout) clearTimeout(typingTimeout);
+  });
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {

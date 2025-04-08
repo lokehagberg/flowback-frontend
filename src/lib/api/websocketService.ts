@@ -11,6 +11,7 @@ export interface WebSocketMessage {
   action?: string;
   message?: string;
   user?: User;
+  user_id?: number;
   channel_id?: number;
   channel_title?: string;
   channel_origin_name?: string;
@@ -18,10 +19,10 @@ export interface WebSocketMessage {
   created_at?: string;
   updated_at?: string;
   attachments?: any[];
-  active?: boolean;
   parent_id?: number;
   parent?: APIMessage;
   status?: string;
+  active?: boolean;
 }
 
 export interface ChatParticipant {
@@ -131,6 +132,7 @@ class WebSocketService {
   private handleMessage(event: MessageEvent) {
     try {
       const data: WebSocketMessage = JSON.parse(event.data);
+      console.log('Received WebSocket message:', data);
       
       // Handle server error messages
       if (data.type === 'error' || data.status === 'error') {
@@ -138,13 +140,38 @@ class WebSocketService {
         return;
       }
 
-      if (data.method === 'message_notify' && data.action === 'is_typing' && data.user) {
-        this.handleTypingIndicator(data.user.id, data.user.username);
+      // Handle typing notifications - type is "message" and method is "message_notify"
+      if (data.type === 'message' && data.method === 'message_notify' && data.message === 'is_typing') {
+        console.log('Processing typing notification:', data);
+        const userId = data.user_id;
+        if (!userId) {
+          console.log('No user_id in typing notification');
+          return;
+        }
+        
+        console.log('Adding user to typing users:', userId);
+        // Update typing users
+        typingUsersStore.update(users => {
+          const newUsers = new Set(users);
+          newUsers.add(userId);
+          return newUsers;
+        });
+
+        // Clear typing indicator after timeout
+        setTimeout(() => {
+          console.log('Removing user from typing users:', userId);
+          typingUsersStore.update(users => {
+            const newUsers = new Set(users);
+            newUsers.delete(userId);
+            return newUsers;
+          });
+        }, 3000);
+        
         return;
       }
 
-      // Handle regular messages
-      if ((data.type === 'message' || (!data.type && data.message)) && data.user) {
+      // Handle regular messages - type is "message" but method is not "message_notify"
+      if (data.type === 'message' && data.method !== 'message_notify' && data.user) {
         const message: APIMessage = {
           id: data.id || 0,
           user: data.user,
@@ -158,20 +185,17 @@ class WebSocketService {
           attachments: data.attachments || null,
           parent_id: data.parent_id,
           parent: data.parent,
-          active: data.active ?? true
+          active: true
         };
 
         // Update messages while preserving history
         messagesStore.update(messages => {
-          // Check if message already exists
           const messageExists = messages.some(m => m.id === message.id);
           if (!messageExists) {
-            // Add new message while preserving history
             return [...messages, message].sort((a, b) => 
               new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
             );
           }
-          // Update existing message while preserving order
           return messages.map(m => m.id === message.id ? message : m);
         });
       }
@@ -228,6 +252,8 @@ class WebSocketService {
   }
 
   private handleTypingIndicator(userId: number, username: string) {
+    console.log('Received typing indicator from:', username, userId);
+    
     // Update typing users
     typingUsersStore.update(users => {
       const newUsers = new Set(users);
@@ -240,27 +266,26 @@ class WebSocketService {
       const updated = new Map(participants);
       const participant = updated.get(userId) || { id: userId, username, isTyping: false };
       updated.set(userId, { ...participant, isTyping: true });
-      
-      // Reset typing status after timeout
-      setTimeout(() => {
-        chatParticipantsStore.update(current => {
-          const map = new Map(current);
-          const user = map.get(userId);
-          if (user) {
-            map.set(userId, { ...user, isTyping: false });
-          }
-          return map;
-        });
-
-        typingUsersStore.update(current => {
-          const updated = new Set(current);
-          updated.delete(userId);
-          return updated;
-        });
-      }, 3000);
-
       return updated;
     });
+    
+    // Reset typing status after timeout
+    setTimeout(() => {
+      typingUsersStore.update(current => {
+        const updated = new Set(current);
+        updated.delete(userId);
+        return updated;
+      });
+
+      chatParticipantsStore.update(current => {
+        const map = new Map(current);
+        const user = map.get(userId);
+        if (user) {
+          map.set(userId, { ...user, isTyping: false });
+        }
+        return map;
+      });
+    }, 3000);
   }
 
   async joinChannel(channelId: number) {

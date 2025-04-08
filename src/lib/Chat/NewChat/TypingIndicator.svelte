@@ -1,12 +1,48 @@
 <!-- TypingIndicator.svelte -->
 <script lang="ts">
-  export let users: Set<number>;
+  import { typingUsersStore } from '$lib/api/websocketService';
+  import { onMount } from 'svelte';
+  import { chat } from '$lib/api/chat';
+  import type { User } from '$lib/api/chat';
+  
   export let userId: number;
+  
+  let typingUsers = new Set<number>();
+  let typingUserInfo = new Map<number, User>();
+  
+  // Subscribe to typing users store
+  typingUsersStore.subscribe(users => {
+    typingUsers = users;
+    // Fetch user info for any new typing users
+    Array.from(users).forEach(async (id) => {
+      if (!typingUserInfo.has(id)) {
+        try {
+          const response = await chat.searchUsers(`id=${id}`);
+          if (response.results && response.results.length > 0) {
+            typingUserInfo.set(id, response.results[0]);
+            typingUserInfo = typingUserInfo; // trigger reactivity
+          }
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+        }
+      }
+    });
+  });
 
-  $: typingUsers = Array.from(users).filter(id => id !== userId);
+  function formatTypingMessage(users: Set<number>) {
+    const typingUsernames = Array.from(users)
+      .filter(id => id !== userId)
+      .map(id => typingUserInfo.get(id)?.username || 'Someone')
+      .filter(username => username);
+
+    if (typingUsernames.length === 0) return '';
+    if (typingUsernames.length === 1) return `${typingUsernames[0]} is typing...`;
+    if (typingUsernames.length === 2) return `${typingUsernames[0]} and ${typingUsernames[1]} are typing...`;
+    return 'Several people are typing...';
+  }
 </script>
 
-{#if typingUsers.length > 0}
+{#if Array.from(typingUsers).filter(id => id !== userId).length > 0}
   <div class="typing-indicator">
     <div class="dots">
       <span class="dot" />
@@ -14,13 +50,7 @@
       <span class="dot" />
     </div>
     <span class="text">
-      {#if typingUsers.length === 1}
-        Someone is typing...
-      {:else if typingUsers.length === 2}
-        Multiple people are typing...
-      {:else}
-        Several people are typing...
-      {/if}
+      {formatTypingMessage(typingUsers)}
     </span>
   </div>
 {/if}

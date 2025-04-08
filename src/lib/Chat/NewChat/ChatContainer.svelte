@@ -1,13 +1,13 @@
 <!-- ChatContainer.svelte -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { websocketService, messagesStore, typingUsersStore, connectionStatusStore, chatParticipantsStore } from '$lib/api/websocketService';
+  import { websocketService, messagesStore, typingUsersStore, connectionStatusStore } from '$lib/api/websocketService';
   import MessageList from './MessageList.svelte';
   import MessageInput from './MessageInput.svelte';
   import TypingIndicator from './TypingIndicator.svelte';
   import ConnectionStatus from './ConnectionStatus.svelte';
   import { chat } from '$lib/api/chat';
-  import type { Message, MessageChannelParticipant } from '$lib/api/chat';
+  import type { Message } from '$lib/api/chat';
   import type { ConnectionStatus as ConnectionStatusType } from '$lib/api/websocketService';
   import Button from '$lib/Generic/Button.svelte';
 
@@ -16,13 +16,11 @@
 
   let typingTimeout: ReturnType<typeof setTimeout>;
   let messages: Message[] = [];
-  let typingUsers: Set<number>;
+  let typingUsers = new Set<number>();
   let connectionStatus: ConnectionStatusType;
-  let participants: Map<number, { id: number; username: string; isTyping: boolean }>;
   let channelTitle = '';
   type ChannelType = 'direct' | 'group';
   let channelType: ChannelType = 'direct';
-  let currentUsername = '';
   let participantsList = '';
   let isParticipant = false;
 
@@ -36,10 +34,6 @@
 
   const unsubscribeConnection = connectionStatusStore.subscribe((value) => {
     connectionStatus = value;
-  });
-
-  const unsubscribeParticipants = chatParticipantsStore.subscribe((value) => {
-    participants = value;
   });
 
   async function loadChannelInfo() {
@@ -72,23 +66,10 @@
       
       // Determine chat type and title
       const preview = await chat.getChannelPreviews({ channel_id: channelId });
-      console.log(preview);
       if (preview.results.length > 0) {
         const channel = preview.results[0];
         channelTitle = channel.channel_title || '';
         channelType = channel.participants <= 2 ? 'direct' : 'group';
-        
-        // Log detailed participant information
-        console.log(`\n=== Chat Info for Channel ${channelId} ===`);
-        console.log('Channel Title:', channelTitle);
-        console.log('Channel Type:', channelType);
-        console.log('Current User ID:', userId);
-        console.log('Is Current User Participant:', isParticipant);
-        console.log('\nParticipants:');
-        participants.forEach(p => {
-          console.log(`- ${p.user.username} (ID: ${p.user.id}, Active: ${p.active})`);
-        });
-        console.log('============================\n');
         
         if (channelType === 'direct') {
           // For DMs, show the other user's name
@@ -169,7 +150,6 @@
     unsubscribeMessages();
     unsubscribeTyping();
     unsubscribeConnection();
-    unsubscribeParticipants();
   });
 
   function handleMessageSubmit(event: CustomEvent<string>) {
@@ -182,22 +162,26 @@
   }
 
   function handleTyping() {
+    if (!isParticipant || connectionStatus !== 'connected') return;
+    
     if (typingTimeout) clearTimeout(typingTimeout);
+    
+    // Send typing indicator
     websocketService.sendTypingIndicator(channelId);
     
+    // Clear typing status after delay
     typingTimeout = setTimeout(() => {
-      // Typing timeout
+      typingUsersStore.update(users => {
+        const newUsers = new Set(users);
+        newUsers.delete(userId);
+        return newUsers;
+      });
     }, 3000);
   }
 
   $: chatTitle = channelType === 'group' ? 
     (channelTitle || 'Group Chat') : 
     (participantsList ? `Chat with ${participantsList}` : 'Loading...');
-
-  // Remove the WebSocket reconnection handler since we don't want to auto-join
-  connectionStatusStore.subscribe((status) => {
-    connectionStatus = status;
-  });
 </script>
 
 <div class="chat-container">
@@ -211,7 +195,6 @@
             {#if !isParticipant}
               <Button onClick={handleJoinChat} Class="join-btn">Join Chat</Button>
             {/if}
-            <!-- Leave chat functionality is temporarily hidden as it's not fully supported in the current version -->
           {/if}
         </div>
       </div>
@@ -226,7 +209,9 @@
   <div class="messages-wrapper">
     {#if isParticipant}
       <MessageList {messages} {userId} />
-      <TypingIndicator users={typingUsers} {userId} />
+      <div class="typing-indicator-wrapper">
+        <TypingIndicator {userId} />
+      </div>
     {:else}
       <div class="not-participant-message">
         {#if channelType === 'group'}
@@ -309,29 +294,8 @@
     border-radius: 0.375rem;
   }
 
-  :global(.leave-btn) {
-    background-color: #ef4444;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-  }
-
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-
-  .modal-content {
-    width: 100%;
-    max-width: 500px;
-    margin: 1rem;
+  .typing-indicator-wrapper {
+    padding: 0 1rem;
+    margin-top: 0.5rem;
   }
 </style> 

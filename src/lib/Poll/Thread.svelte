@@ -13,13 +13,19 @@
 	import type { Thread } from '$lib/Group/interface';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import { onMount } from 'svelte';
-
+	import { reportThread } from './functions';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Button from '$lib/Generic/Button.svelte';
+	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { faSpinner} from '@fortawesome/free-solid-svg-icons';
 	export let isAdmin = true,
+
 		thread: Thread;
-
 	let threads: Thread[] = [],
-		poppup: poppup;
-
+		poppup: poppup,
+		reportReason = '';
+	
 	//Launches whenever the user clicks upvote or downvote on a thread
 	const threadVote = async (_thread: Thread, clicked: 'down' | 'up') => {
 		let vote: null | false | true = null;
@@ -68,6 +74,8 @@
 		thread.pinned = !thread?.pinned;
 		threads = threads;
 	};
+	let threadIsBeingReported = false;
+	let reporting = false
 </script>
 
 <div
@@ -133,6 +141,11 @@
 		</div>
 		<div>
 			<div class="flex items-center gap-2">
+				{#if thread?.created_by.id !== Number(localStorage.getItem('userId'))}
+					<button class=' text-red-500 hover:textred-50 mr-3 ' on:click={()=> threadIsBeingReported = true}>
+						Report
+					</button>
+				{/if}
 				<button
 					class:text-primary={thread?.user_vote === true}
 					on:click={() => threadVote(thread, 'up')}
@@ -149,4 +162,46 @@
 			</div>
 		</div>
 	</div>
+	{#if threadIsBeingReported}
+    <Modal bind:open={threadIsBeingReported} Class="min-w-[500px] md:w-[700px]">
+        <div slot="header">{$_('Report Thread')}</div>
+        <div slot="body" class="px-6">
+            <form on:submit|preventDefault={async () => {
+				reporting = true;
+                const result = await reportThread(thread.id, reportReason);
+                poppup = { message: result?.message, success: result.success };
+                threadIsBeingReported = false;
+                reportReason = '';
+				reporting = false;
+            }}>
+                <p class="text-lg mb-4">{$_(`Are you sure you want to report this thread?`)}</p>
+                <TextArea 
+                    label={$_('Reason for reporting')} 
+                    bind:value={reportReason} 
+                    required 
+                    rows={4}
+                    Class="w-full"
+                />
+                <div class="flex justify-end gap-2 mt-4">
+                    <Button 
+                        buttonStyle="warning-light" 
+                        onClick={() => {
+                            threadIsBeingReported = false;
+                            reportReason = '';
+                        }}
+                    >
+                        {$_('Cancel')}
+                    </Button>
+                    <Button Class="flex items-center gap-2"  type="submit" disabled={reporting}>
+                        {$_(reporting ? 'Submitting...' : 'Report')}
+						{#if reporting}
+							<Fa icon={faSpinner} spin={reporting}/> 
+						{/if}
+                    </Button>
+                </div>
+            </form>
+        </div>
+    </Modal>
+{/if}
 </div>
+<Poppup bind:poppup />

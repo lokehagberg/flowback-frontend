@@ -2,7 +2,7 @@
 	import CommentPost from './CommentPost.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import type { Comment as CommentType } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
@@ -18,7 +18,7 @@
 		delegate_pool_id: null | number = null,
 		Class = '',
 		_comments: CommentType[] = [];
-
+	let interval:any;
 	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
@@ -53,8 +53,13 @@
 
 	onMount(async () => {
 		await setUpComments();
+		interval = setInterval(() => {
+			setUpComments();
+		}, 20000);
 	});
-
+	onDestroy(() => {
+		clearInterval(interval);
+	});
 	$: if (sortBy || !sortBy || searchString) setUpComments();
 	$: if (_comments) {
 		done = false;

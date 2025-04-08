@@ -6,12 +6,12 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { scheduledEvent } from './interface';
+	import type { scheduledEvent,WorkGropuSchdeuledEventCreate } from './interface';
 
 	export let showEvent = false,
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
-		selectedEvent: scheduledEvent,
+		selectedEvent: WorkGropuSchdeuledEventCreate,
 		workGroups: any[] = [],
 		type = '',
 		loading = false;
@@ -94,7 +94,7 @@
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
+<Modal Class="min-w-[400px] md:w-[700px] " bind:open={showCreateScheduleEvent}>
 	<div slot="body">
 		<Loader bind:loading>
 			<form>
@@ -107,15 +107,26 @@
 				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={selectedEvent.description} />
 				{#if type === 'group'}
 					<div class="text-left">
-						<label class="block text-md">
+						<label class="block text-md py-3" for="work-group">
 							{$_('Work Group')}
-						</label>
-						<Select
+							<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group}
+							bind:value={selectedEvent.work_group_id}
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
 						/>
+						</label>
+						
+						<!-- <label class="block text-md py-3" for="repeat-frequency">
+							{$_('Repeat frequency')}
+							<Select
+							Class="width:100%"
+							bind:value={selectedEvent.repeat_frequency}
+							labels={['Daily', 'Weekly', 'Monthly', 'Yearly']}
+							values={[1, 2, 3, 4]}
+						/>
+						</label> -->
+						
 					</div>
 				{/if}
 				<div class="w-full md:flex md:gap-4">

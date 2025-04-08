@@ -51,13 +51,16 @@
 		showEvent = false,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
-		selectedEvent: scheduledEvent = {
-			start_date: '',
-			end_date: '',
-			title: '',
-			event_id: 0,
-			schedule_origin_name: 'group',
-			created_by: 0
+		selectedEvent = {
+		title: '',                  
+		description: '',           
+		start_date: '',            
+		end_date: '',              
+		work_group_id: null,       
+		assignee_ids: [],          
+		meeting_link: '',          
+		event_id: 0,               
+		created_by: 0  
 		},
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
@@ -97,6 +100,7 @@
 
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
+		console.log(events,'events')
 	};
 
 	const scheduleEventCreate = async () => {
@@ -113,7 +117,6 @@
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
 			API += `group/${$page.params.groupId || 1}/schedule/create`;
-			if (selectedEvent.work_group) payload['work_group_id'] = selectedEvent.work_group;
 		}
 
 		loading = true;
@@ -122,15 +125,19 @@
 		loading = false;
 
 		selectedEvent = {
-			start_date: '',
-			end_date: '',
-			title: '',
-			event_id: 0,
-			schedule_origin_name: 'group',
-			created_by: 0
+		title: '',                  
+		description: '',           
+		start_date: '',            
+		end_date: '',              
+		work_group_id: null,       
+		assignee_ids: [],          
+		meeting_link: '',          
+		event_id: 0,               
+		created_by: 0    
 		};
-
+		console.log(payload,'payload')
 		if (!res.ok) {
+			console.log(res,json)
 			poppup = { message: 'Failed to create event', success: false };
 
 			return;

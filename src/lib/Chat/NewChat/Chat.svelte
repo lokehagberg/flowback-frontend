@@ -361,7 +361,7 @@
   .chat-wrapper {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 88px;
     width: 400px;
     height: 600px;
     background: white;

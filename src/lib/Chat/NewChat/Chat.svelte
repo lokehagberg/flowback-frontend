@@ -50,6 +50,11 @@
     visible = isOpen;
     if (browser) {
       websocketService.setVisibility(isOpen);
+      if (!isOpen && selectedChannelId) {
+        // When closing chat, disconnect from current channel
+        websocketService.leaveChannel(selectedChannelId);
+        selectedChannelId = undefined;
+      }
     }
   });
 
@@ -315,7 +320,13 @@
       <div class="chat-header">
         <button 
           class="back-button"
-          on:click={() => selectedChannelId = undefined}
+          on:click={() => {
+            // Disconnect from current channel before going back
+            if (selectedChannelId) {
+              websocketService.leaveChannel(selectedChannelId);
+            }
+            selectedChannelId = undefined;
+          }}
         >
           ← Back to chats
         </button>
@@ -488,7 +499,14 @@
 <button
   class="chat-toggle"
   class:has-notification={hasUnreadMessages}
-  on:click={() => isChatOpen.set(!visible)}
+  on:click={() => {
+    if (visible && selectedChannelId) {
+      // If we're closing the chat and have a selected channel, disconnect first
+      websocketService.leaveChannel(selectedChannelId);
+      selectedChannelId = undefined;
+    }
+    isChatOpen.set(!visible);
+  }}
   aria-label={visible ? 'Close chat' : 'Open chat'}
 >
   <img

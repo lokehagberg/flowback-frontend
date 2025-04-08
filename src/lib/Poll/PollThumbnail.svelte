@@ -154,8 +154,8 @@
 					{/if}
 					<MultipleChoices
 						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
-							? [$_('Delete Poll')]
-							: [$_('Delete Poll'), $_('Fast Forward')]}
+							? [$_('Delete Poll'), $_('Report Poll')]
+							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
 							() => (deletePollModalShow = true),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
@@ -202,8 +202,8 @@
 					{/if}
 					<MultipleChoices
 						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
-							? [$_('Delete Poll')]
-							: [$_('Delete Poll'), $_('Fast Forward')]}
+							? [$_('Delete Poll'), $_('Report Poll')]
+							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
 							() => (deletePollModalShow = true),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))

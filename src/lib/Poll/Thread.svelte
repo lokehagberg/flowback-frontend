@@ -98,7 +98,7 @@
 			{/if}
 
 			<MultipleChoices
-				labels={[$_('Delete Thread')]}
+				labels={[$_('Delete Thread'), $_('Report Thread')]}
 				functions={[]}
 				Class="text-black justify-self-center"
 			/>

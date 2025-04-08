@@ -57,8 +57,8 @@
 		<!-- {#if groupUser?.is_admin} -->
 		<MultipleChoices
 			labels={phase === 'result' || phase === 'prediction_vote'
-				? [$_('Delete Poll')]
-				: [$_('Delete Poll'), $_('Fast Forward')]}
+				? [$_('Delete Poll'), $_('Report Poll')]
+				: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 			functions={[
 				() => (deletePollModalShow = true),
 				async () => (phase = await nextPhase(poll?.poll_type, $page.params.pollId, phase))

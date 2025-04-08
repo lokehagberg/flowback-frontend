@@ -51,10 +51,6 @@
     if (browser) {
       websocketService.setVisibility(isOpen);
     }
-    // Clear notifications when opening chat
-    if (isOpen) {
-      hasUnreadMessages = false;
-    }
   });
 
   connectionStatusStore.subscribe(status => {

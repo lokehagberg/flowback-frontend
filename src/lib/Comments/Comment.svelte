@@ -57,19 +57,19 @@
 	};
 
 	const commentReport = async (id: number) => {
-		// let _api = '';
-		// if (api === 'poll') _api = `poll/${$page.params.pollId}/`;
-		// else if (api === 'thread')
-		// 	_api = `thread/${$page.params.threadId}/`;
+		let _api = 'report/create';
 
-		// _api += `comment/${id}/report`;
+		let data = {
+			title: 'Report Comment',
+			description: comments[id].message || 'Report Comment',
+		}
 
-		// const { res, json } = await fetchRequest('POST', _api);
+		const { res, json } = await fetchRequest('POST', _api, data);
 
-		// if (!res.ok) {
-		// 	poppup = { message: 'Failed to report comment', success: false };
-		// 	return;
-		// }
+		if (!res.ok) {
+			poppup = { message: 'Failed to report comment', success: false };
+			return;
+		}
 
 		comments.map((comment) => {
 			if (comment.id !== id) return comment;

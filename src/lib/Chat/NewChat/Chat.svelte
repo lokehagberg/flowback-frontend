@@ -586,6 +586,13 @@
     align-items: center;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
+    position: relative;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .chat-item:last-child {
+    border-bottom: none;
   }
 
   .chat-item.dm {
@@ -609,12 +616,66 @@
   }
 
   .chat-item.unread {
-    background-color: #f3f4f6;
+    background-color: #ffffff;
+  }
+
+  .chat-item.unread::before {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #3b82f6; /* Changed to blue */
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px #ffffff;
+  }
+
+  .chat-item.unread .chat-item-title {
+    font-weight: 600; /* Slightly less bold */
+    color: #1f2937; /* Darker gray instead of pure black */
+  }
+
+  .chat-item.unread .chat-item-preview {
+    font-weight: 500;
+    color: #4b5563;
   }
 
   .chat-item-content {
     flex: 1;
-    min-width: 0; /* Enables text truncation */
+    min-width: 0;
+    padding-right: 24px;
+  }
+
+  /* Add visual grouping for chat sections */
+  .active-chats, .inactive-chats {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 8px;
+    padding: 0 8px;
+  }
+
+  /* Update the chat toggle notification dot to match */
+  .chat-toggle.has-notification::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #3b82f6; /* Match the blue dot */
+    border-radius: 50%;
+    border: 2px solid white;
   }
 
   .chat-item-header {
@@ -655,7 +716,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-left: calc(24px + 0.5rem); /* Align with title text */
+    padding-left: calc(24px + 0.5rem);
   }
 
   .loading, .no-chats {

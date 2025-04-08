@@ -644,6 +644,7 @@
     "!Calculating results, try refreshing in a while.": "!Beräknar resultat, försök att uppdatera sidan om en stund.",
     "Vote calculation failed": "Röstberäkning misslyckades",
     "Pending invite": "Väntande inbjudan",
+    "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

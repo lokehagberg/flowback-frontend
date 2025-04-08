@@ -115,13 +115,19 @@
 	};
 
 	const acceptInviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
+		const {res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
 			to: userId
 		});
 
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
-		await getInvitesList();
-		getUsers();
+
+		if (res.ok) {
+			await getInvitesList();
+			await getUsers();
+			await searchUsers(searchUserQuery);
+		} else {
+			poppup = { message: "Couldn't accept user invite", success: false };
+		}
 	};
 
 	const denyInviteUser = async (userId: number) => {

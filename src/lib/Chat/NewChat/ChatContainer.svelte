@@ -90,10 +90,9 @@
         }
       }
 
-      // Only load messages if we're a participant
+      // Only join channel if we're a participant
       if (isParticipant) {
-        const messagesResponse = await chat.getMessages(channelId);
-        messages = messagesResponse.results || [];
+        websocketService.joinChannel(channelId);
       }
     } catch (error) {
       console.error('Error loading channel info:', error);
@@ -102,7 +101,6 @@
 
   async function handleJoinChat() {
     try {
-      await chat.getChatChannel([userId]);
       websocketService.joinChannel(channelId);
       await loadChannelInfo(); // Reload to update participant status
     } catch (error) {
@@ -113,7 +111,6 @@
   async function handleLeaveChat() {
     try {
       websocketService.leaveChannel(channelId);
-      messages = []; // Clear messages
       isParticipant = false;
       await loadChannelInfo(); // Reload to update participant status
     } catch (error) {

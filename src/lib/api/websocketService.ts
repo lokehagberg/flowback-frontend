@@ -114,11 +114,12 @@ class WebSocketService {
   private async loadChannelHistory(channelId: number) {
     try {
       loadingMessagesStore.set(true);
-      const response = await chat.getMessages(channelId, { limit: 50, order_by: 'created_at_desc' });
+      const response = await chat.getMessages(channelId, { 
+        limit: 50, 
+        order_by: 'created_at_asc'  // Load messages in ascending order
+      });
       if (response.results) {
-        // Reverse to show oldest first
-        const messages = response.results.reverse();
-        messagesStore.set(messages);
+        messagesStore.set(response.results);
       }
     } catch (error) {
       console.error('Error loading channel history:', error);
@@ -160,12 +161,17 @@ class WebSocketService {
           active: data.active ?? true
         };
 
-        // Update messages
+        // Update messages while preserving history
         messagesStore.update(messages => {
+          // Check if message already exists
           const messageExists = messages.some(m => m.id === message.id);
           if (!messageExists) {
-            return [...messages, message];
+            // Add new message while preserving history
+            return [...messages, message].sort((a, b) => 
+              new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            );
           }
+          // Update existing message while preserving order
           return messages.map(m => m.id === message.id ? message : m);
         });
       }
@@ -264,6 +270,16 @@ class WebSocketService {
       return;
     }
     
+    // If we're already in this channel, no need to rejoin
+    if (this.currentChannelId === channelId) {
+      return;
+    }
+    
+    // If we're in a different channel, leave it first
+    if (this.currentChannelId && this.currentChannelId !== channelId) {
+      this.leaveChannel(this.currentChannelId);
+    }
+    
     this.currentChannelId = channelId;
     
     try {
@@ -339,14 +355,13 @@ class WebSocketService {
   leaveChannel(channelId: number) {
     if (!browser) return;
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
+    if (this.currentChannelId !== channelId) return; // Only leave if we're in this channel
 
     this.socket.send(JSON.stringify({
       method: 'disconnect_channel',
       channel_id: channelId
     }));
     
-    // Clear messages when explicitly leaving
-    messagesStore.set([]);
     this.currentChannelId = null;
   }
 

@@ -7,7 +7,7 @@
   import { websocketService, connectionStatusStore, loadingMessagesStore } from '$lib/api/websocketService';
   import { isChatOpen } from '../ChatStore.svelte';
   import { chat } from '$lib/api/chat';
-  import type { MessageChannelPreview, User, UserChatInvite } from '$lib/api/chat';
+  import type { MessageChannelPreview, User, UserChatInvite, Message } from '$lib/api/chat';
   import CreateGroupChat from './CreateGroupChat.svelte';
   import Button from '$lib/Generic/Button.svelte';
   import { faUserCircle, faUsers, faSearch, faBell } from '@fortawesome/free-solid-svg-icons';
@@ -51,6 +51,10 @@
     if (browser) {
       websocketService.setVisibility(isOpen);
     }
+    // Clear notifications when opening chat
+    if (isOpen) {
+      hasUnreadMessages = false;
+    }
   });
 
   connectionStatusStore.subscribe(status => {
@@ -81,6 +85,27 @@
     }
   }
 
+  async function isUnread(preview: MessageChannelPreview): Promise<boolean> {
+    if (!preview.timestamp) return true; // If never read, it's unread
+    
+    try {
+      // Get the latest message for this channel
+      const latestMessages = await chat.getMessages(preview.channel_id, {
+        limit: 1,
+        order_by: 'created_at_desc'
+      });
+      
+      if (!latestMessages.results.length) return false; // No messages
+      
+      const latestMessage = latestMessages.results[0];
+      // Compare the latest message's created_at with the channel's timestamp
+      return new Date(latestMessage.created_at) > new Date(preview.timestamp);
+    } catch (error) {
+      console.error('Error checking unread status:', error);
+      return false;
+    }
+  }
+
   async function loadAvailableChats() {
     if (!userId) return;
     loading = true;
@@ -97,7 +122,7 @@
             offset
           });
           
-          // For each chat, get the participants to determine type and other user
+          // For each chat, get the participants and check unread status
           const chatsWithParticipants = await Promise.all(
             response.results.map(async (chatPreview) => {
               try {
@@ -106,7 +131,7 @@
                 const otherUser = participants.find(p => p.user && p.user.id !== userId)?.user || null;
                 const currentUserParticipant = participants.find(p => p.user.id === userId);
                 const isActive = currentUserParticipant?.active ?? false;
-                const hasUnread = isUnread(chatPreview);
+                const hasUnread = await isUnread(chatPreview); // Now properly checks latest message
                 
                 return {
                   ...chatPreview,
@@ -151,7 +176,7 @@
         .filter(chat => !chat.isActive)
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-      // Update global unread status
+      // Update global unread status based on chat previews and invites
       hasUnreadMessages = availableChats.some(chat => chat.hasUnread) || pendingInvites.length > 0;
 
     } catch (error) {
@@ -268,15 +293,23 @@
     }
   }
 
-  // Check for unread messages in a chat preview
-  function isUnread(preview: MessageChannelPreview): boolean {
-    return preview.timestamp === null || new Date(preview.timestamp) < new Date(preview.created_at);
-  }
-
   // Update the chat selection handler
-  function selectChat(channelId: number) {
+  async function selectChat(channelId: number) {
     selectedChannelId = channelId;
-    updateUserData(channelId);
+    const now = new Date().toISOString();
+    
+    try {
+      // Update the timestamp for this chat
+      await chat.updateUserChannelData({
+        channel_id: channelId,
+        timestamp: now
+      });
+      
+      // Reload chats to update unread status
+      await loadAvailableChats();
+    } catch (error) {
+      console.error('Error updating chat timestamp:', error);
+    }
   }
 </script>
 

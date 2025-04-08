@@ -276,50 +276,55 @@
     {:else}
       <div class="chat-header">
         <div class="header-content">
-          <h2 class="text-xl font-semibold mb-4">Chats</h2>
-          <div class="flex gap-2">
-            <Button onClick={() => showCreateGroup = true} Class="create-group-btn">
-              <Fa icon={faUsers} /> Create Group
-            </Button>
-            <div class="relative flex-1">
-              <div class="search-input-wrapper">
-                <input
-                  type="text"
-                  bind:value={searchQuery}
-                  on:input={searchUsers}
-                  placeholder="Search users to start a DM..."
-                  class="w-full p-2 pr-8 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-                />
-                <div class="search-icon">
-                  {#if isSearching}
-                    <div class="loading-spinner" />
-                  {:else}
-                    <Fa icon={faSearch} />
-                  {/if}
-                </div>
+          <div class="header-top">
+            <h2 class="text-xl font-semibold">Chats</h2>
+            <div class="header-actions">
+              <button class="icon-button" title="Create Group Chat" on:click={() => showCreateGroup = true}>
+                <Fa icon={faUsers} />
+              </button>
+            </div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <input
+                type="text"
+                bind:value={searchQuery}
+                on:input={searchUsers}
+                placeholder="Search users or type @ to start a DM..."
+                class="w-full p-2 pl-10 pr-8 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+              />
+              <div class="search-icon left">
+                <Fa icon={faSearch} />
               </div>
-              {#if searchQuery && searchResults.length > 0}
-                <div class="search-results">
-                  {#each searchResults as user}
-                    <button
-                      class="search-result-item"
-                      on:click={() => startDirectChat(user)}
-                    >
-                      <div class="user-icon">
-                        <Fa icon={faUserCircle} />
-                      </div>
-                      <span>{user.username}</span>
-                    </button>
-                  {/each}
-                </div>
-              {:else if searchQuery && !isSearching}
-                <div class="search-results">
-                  <div class="no-results">
-                    {searchError || 'No users found'}
-                  </div>
+              {#if isSearching}
+                <div class="search-icon right">
+                  <div class="loading-spinner" />
                 </div>
               {/if}
             </div>
+            {#if searchQuery && searchResults.length > 0}
+              <div class="search-results">
+                {#each searchResults as user}
+                  <button
+                    class="search-result-item"
+                    on:click={() => startDirectChat(user)}
+                  >
+                    <div class="user-icon">
+                      <Fa icon={faUserCircle} />
+                    </div>
+                    <div class="user-info">
+                      <span class="username">{user.username}</span>
+                    </div>
+                  </button>
+                {/each}
+              </div>
+            {:else if searchQuery && !isSearching}
+              <div class="search-results">
+                <div class="no-results">
+                  {searchError || 'No users found'}
+                </div>
+              </div>
+            {/if}
           </div>
         </div>
       </div>
@@ -758,31 +763,75 @@
   }
 
   .header-content {
-    padding: 1rem;
+    padding: 0.75rem;
     border-bottom: 1px solid #e5e7eb;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    transition: all 0.2s;
+  }
+
+  .icon-button:hover {
+    background-color: #e5e7eb;
+    color: #374151;
+  }
+
+  .search-bar {
+    position: relative;
   }
 
   .search-input-wrapper {
     position: relative;
   }
 
+  .search-input-wrapper input {
+    font-size: 0.875rem;
+  }
+
   .search-icon {
     position: absolute;
-    right: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
     color: #6b7280;
+    font-size: 0.875rem;
+  }
+
+  .search-icon.left {
+    left: 0.75rem;
+  }
+
+  .search-icon.right {
+    right: 0.75rem;
   }
 
   .search-results {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 4px);
     left: 0;
     right: 0;
     background: white;
     border: 1px solid #e5e7eb;
-    border-top: none;
-    border-radius: 0 0 0.375rem 0.375rem;
+    border-radius: 0.5rem;
     max-height: 200px;
     overflow-y: auto;
     z-index: 50;
@@ -793,7 +842,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     width: 100%;
     text-align: left;
     transition: background-color 0.2s;
@@ -805,45 +854,31 @@
 
   .user-icon {
     color: #6b7280;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .no-results {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem;
     color: #6b7280;
     text-align: center;
+    font-size: 0.875rem;
   }
 
-  :global(.create-group-btn) {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: #4f46e5;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background-color 0.2s;
+  /* Dark mode adjustments */
+  :global(.dark) .icon-button {
+    background-color: #374151;
+    color: #9ca3af;
   }
 
-  :global(.create-group-btn:hover) {
-    background-color: #4338ca;
+  :global(.dark) .icon-button:hover {
+    background-color: #4b5563;
+    color: #e5e7eb;
   }
 
-  .loading-spinner {
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #e5e7eb;
-    border-top-color: #6b7280;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  /* Dark mode styles */
   :global(.dark) .search-results {
     background: #1f2937;
     border-color: #374151;
@@ -853,7 +888,7 @@
     background-color: #374151;
   }
 
-  :global(.dark) .no-results {
-    color: #9ca3af;
+  :global(.dark) .username {
+    color: #e5e7eb;
   }
 </style> 

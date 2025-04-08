@@ -57,6 +57,19 @@
       // Check if current user is a participant
       isParticipant = participants.some(p => p.user.id === userId && p.active);
       
+      // Load message history regardless of WebSocket connection
+      try {
+        const messageHistory = await chat.getMessages(channelId, { 
+          limit: 50, 
+          order_by: 'created_at_asc'
+        });
+        if (messageHistory.results) {
+          messagesStore.set(messageHistory.results);
+        }
+      } catch (error) {
+        console.error('Error loading message history:', error);
+      }
+      
       // Determine chat type and title
       const preview = await chat.getChannelPreviews({ channel_id: channelId });
       console.log(preview);
@@ -90,8 +103,8 @@
         }
       }
 
-      // Only join channel if we're a participant
-      if (isParticipant) {
+      // Only attempt to join channel via WebSocket if we're a participant
+      if (isParticipant && websocketService.isConnected()) {
         websocketService.joinChannel(channelId);
       }
     } catch (error) {
@@ -151,6 +164,21 @@
   $: chatTitle = channelType === 'group' ? 
     (channelTitle || 'Group Chat') : 
     (participantsList ? `Chat with ${participantsList}` : 'Loading...');
+
+  // Add a function to handle WebSocket reconnection
+  function handleWebSocketReconnected() {
+    if (isParticipant && channelId) {
+      websocketService.joinChannel(channelId);
+    }
+  }
+
+  // Subscribe to connection status changes to handle reconnection
+  connectionStatusStore.subscribe((status) => {
+    connectionStatus = status;
+    if (status === 'connected') {
+      handleWebSocketReconnected();
+    }
+  });
 </script>
 
 <div class="chat-container">

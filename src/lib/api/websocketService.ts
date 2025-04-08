@@ -265,9 +265,18 @@ class WebSocketService {
 
   async joinChannel(channelId: number) {
     if (!browser) return;
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-      console.error('Cannot join channel - socket not connected');
-      return;
+
+    // If we're not connected, wait for connection
+    if (!this.isConnected()) {
+      console.log('Waiting for WebSocket connection...');
+      await new Promise<void>((resolve) => {
+        const unsubscribe = connectionStatusStore.subscribe((status) => {
+          if (status === 'connected') {
+            unsubscribe();
+            resolve();
+          }
+        });
+      });
     }
     
     // If we're already in this channel, no need to rejoin
@@ -287,10 +296,12 @@ class WebSocketService {
       await this.loadChannelHistory(channelId);
       
       // Join the websocket channel
-      this.socket.send(JSON.stringify({
+      this.socket?.send(JSON.stringify({
         method: 'connect_channel',
         channel_id: channelId
       }));
+
+      console.log('Sent connect_channel message for channel:', channelId);
     } catch (error) {
       console.error('Error joining channel:', error);
       connectionStatusStore.set('error');

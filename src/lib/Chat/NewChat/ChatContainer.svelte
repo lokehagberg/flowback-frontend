@@ -113,7 +113,7 @@
         console.error('Cannot join chat - WebSocket not connected');
         return;
       }
-      
+
       websocketService.joinChannel(channelId);
       isParticipant = true;
       await loadChannelInfo();
@@ -146,7 +146,22 @@
   }
 
   onMount(async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    // First ensure WebSocket is connected
+    websocketService.connect(token);
+
     await loadChannelInfo();
+
+    // If user is already a participant, join the channel
+    if (isParticipant) {
+      console.log('User is participant, joining channel:', channelId);
+      websocketService.joinChannel(channelId);
+    }
   });
 
   onDestroy(() => {

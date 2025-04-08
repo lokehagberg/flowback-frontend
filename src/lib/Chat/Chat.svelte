@@ -12,7 +12,7 @@
 	import { faCog, faX } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
-	import { isChatOpen } from './ChatStore.svelte';
+	import { isOldChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
 
@@ -39,7 +39,7 @@
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 		darkModeStore.subscribe((dm) => (darkMode = dm));
-		isChatOpen.subscribe((open) => (chatOpen = open));
+		isOldChatOpen.subscribe((open) => (chatOpen = open));
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -77,7 +77,7 @@
 	<Button
 		onClick={() => {
 			chatOpen = false;
-			isChatOpen.set(false);
+			isOldChatOpen.set(false);
 			goto('/user/settings');
 		}}
 		Class="absolute right-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
@@ -90,7 +90,7 @@
 	<Button
 		onClick={() => {
 			chatOpen = false;
-			isChatOpen.set(false);
+			isOldChatOpen.set(false);
 		}}
 		Class="absolute left-0 top-0 p-3 m-4 transition-all dark:bg-darkobject hover:brightness-95 active:brightness-90"
 	>
@@ -135,7 +135,7 @@
 <button
 	on:click={() => {
 		chatOpen = !chatOpen;
-		isChatOpen.set(chatOpen);
+		isOldChatOpen.set(chatOpen);
 	}}
 	class:small-notification={true}
 	class:small-notification-group={true}

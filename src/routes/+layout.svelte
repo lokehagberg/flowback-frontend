@@ -13,13 +13,17 @@
 	import { onMount } from 'svelte';
 	import type { GroupUser } from '$lib/Group/interface';
 	import type { Permission } from '$lib/Group/Permissions/interface';
-	import Chat from '$lib/Chat/Chat.svelte';
+	import NewChat from '$lib/Chat/NewChat/Chat.svelte';
+	import OldChat from '$lib/Chat/Chat.svelte';
 	import { _ } from 'svelte-i18n';
 	import { env } from '$env/dynamic/public';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { workGroupsStore } from '$lib/Group/WorkingGroups/interface';
 	import LogBackInModal from '$lib/Generic/LogBackInModal.svelte';
-	import { addDateOffset } from '$lib/Generic/Dates';
+
+	// Chat configuration flags
+	const ENABLE_OLD_CHAT = false;  // Set to false to disable old chat
+	const ENABLE_NEW_CHAT = true;  // Set to false to disable new chat
 
 	export const prerender = true;
 
@@ -71,8 +75,8 @@
 		if (pathname === '/login') return false;
 		else if (pathname === '/') return false;
 		else if (
-			window.localStorage.getItem('token') === undefined ||
-			window.localStorage.getItem('userId') === undefined
+			!window.localStorage.getItem('token') ||
+			!window.localStorage.getItem('userId')
 		)
 			return false;
 
@@ -175,12 +179,18 @@
 
 <main class="">
 	{#if showUI}
-		<Chat />
+		{#if ENABLE_NEW_CHAT}
+			<NewChat />
+		{/if}
+		{#if ENABLE_OLD_CHAT}
+			<OldChat />
+		{/if}
 		<Header />
 	{/if}
 
 	<slot />
 </main>
+
 <div id="mobile-support">
 	{$_('No support for mobile devices yet, try Flowback on a non-mobile device')}
 </div>
@@ -190,6 +200,23 @@
 <style>
 	#mobile-support {
 		display: none;
+	}
+
+	#chat-button {
+		background: white;
+		padding: 1rem;
+		border-radius: 50%;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		transition: all 0.2s;
+	}
+
+	#chat-button:hover {
+		transform: scale(1.05);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	#chat-button:active {
+		transform: scale(0.95);
 	}
 
 	@media (max-width: 716px) {

@@ -512,7 +512,6 @@
   <img
     src={ChatIcon}
     class="icon"
-    style="filter: {getIconFilter(false, 'white')}"
     alt={visible ? 'close chat' : 'open chat'}
   />
   <span class="sr-only">Toggle chat</span>
@@ -869,8 +868,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #007bff;
-    color: white;
+    background: #3b82f6;
     border: none;
     cursor: pointer;
     display: flex;
@@ -882,36 +880,25 @@
   }
 
   :global(.dark) .chat-toggle {
-    background: #1e40af;
+    background: #2563eb;
   }
 
   .chat-toggle:hover {
-    background: #0056b3;
+    background: #2563eb;
   }
 
   :global(.dark) .chat-toggle:hover {
-    background: #1e3a8a;
-  }
-
-  .chat-toggle:active {
-    transform: scale(0.95);
-  }
-
-  .chat-toggle.has-notification::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 12px;
-    height: 12px;
-    background-color: #ef4444;
-    border-radius: 50%;
-    border: 2px solid white;
+    background: #1d4ed8;
   }
 
   .icon {
     width: 24px;
     height: 24px;
+    filter: brightness(0) invert(1); /* Makes icon pure white */
+  }
+
+  :global(.dark) .chat-toggle img {
+    filter: brightness(0) invert(1) !important; /* Keep icon white in dark mode */
   }
 
   .sr-only {
@@ -1035,6 +1022,14 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.75rem;
+  }
+
+  .header-top h2 {
+    color: #111827;
+  }
+
+  :global(.dark) .header-top h2 {
+    color: #e5e7eb;
   }
 
   .header-actions {

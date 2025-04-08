@@ -102,11 +102,6 @@
             .join(', ');
         }
       }
-
-      // Only attempt to join channel via WebSocket if we're a participant
-      if (isParticipant && websocketService.isConnected()) {
-        websocketService.joinChannel(channelId);
-      }
     } catch (error) {
       console.error('Error loading channel info:', error);
     }
@@ -114,8 +109,14 @@
 
   async function handleJoinChat() {
     try {
+      if (!websocketService.isConnected()) {
+        console.error('Cannot join chat - WebSocket not connected');
+        return;
+      }
+      
       websocketService.joinChannel(channelId);
-      await loadChannelInfo(); // Reload to update participant status
+      isParticipant = true;
+      await loadChannelInfo();
     } catch (error) {
       console.error('Failed to join chat:', error);
     }
@@ -165,19 +166,9 @@
     (channelTitle || 'Group Chat') : 
     (participantsList ? `Chat with ${participantsList}` : 'Loading...');
 
-  // Add a function to handle WebSocket reconnection
-  function handleWebSocketReconnected() {
-    if (isParticipant && channelId) {
-      websocketService.joinChannel(channelId);
-    }
-  }
-
-  // Subscribe to connection status changes to handle reconnection
+  // Remove the WebSocket reconnection handler since we don't want to auto-join
   connectionStatusStore.subscribe((status) => {
     connectionStatus = status;
-    if (status === 'connected') {
-      handleWebSocketReconnected();
-    }
   });
 </script>
 

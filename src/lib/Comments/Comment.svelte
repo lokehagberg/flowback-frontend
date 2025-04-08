@@ -56,6 +56,31 @@
 		comments = comments;
 	};
 
+	const commentReport = async (id: number) => {
+		// let _api = '';
+		// if (api === 'poll') _api = `poll/${$page.params.pollId}/`;
+		// else if (api === 'thread')
+		// 	_api = `thread/${$page.params.threadId}/`;
+
+		// _api += `comment/${id}/report`;
+
+		// const { res, json } = await fetchRequest('POST', _api);
+
+		// if (!res.ok) {
+		// 	poppup = { message: 'Failed to report comment', success: false };
+		// 	return;
+		// }
+
+		comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			comment.message = '[Reported]';
+			comment.active = false;
+			return comment;
+		});
+		comments = comments;			
+	}
+
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
 		if (isVoting) return; // Prevent multiple clicks while processing
@@ -119,7 +144,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
-		bind:images
+		bind:files={images}
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -233,6 +258,13 @@
 						{$_('Edit')}
 					</button>
 				{/if}
+
+				<button
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => commentReport(comment.id)}
+				>
+					{$_('Report')}
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -241,7 +273,7 @@
 {#if comment.being_replied}
 	<CommentPost
 		{delegate_pool_id}
-		bind:images
+		bind:files={images}
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}

@@ -381,11 +381,13 @@
 						</div>
 
 						<Select
-							Class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							Class="rounded border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
-							value={kanbanEdited.work_group?.id || null}
+							value={kanbanEdited.work_group?.id || ""}
 							onInput={handleChangeWorkGroup}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
@@ -406,30 +408,31 @@
 					<div class="block text-md pt-2">
 						{$_('Priority')}
 					</div>
-					<select
-						class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						on:input={handleChangePriority}
+					<Select
+						Class="w-full"
+						classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						labels={priorities.map(i => priorityText[priorityText.length - i])}
+						values={priorities}
 						value={kanban?.priority}
-					>
-						{#each priorities as i}
-							<option value={i}>{priorityText[priorityText.length - i]} </option>
-						{/each}
-					</select>
+						onInput={handleChangePriority}
+						innerLabel=""
+					/>
 				</div>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						<div class="block text-md">
 							{$_('Assignee')}
 						</div>
-						<select
-							on:input={changeAssignee}
-							value={kanban?.assignee?.id}
-							class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						>
-							{#each users as user}
-								<option value={user.user.id}>{user.user.username}</option>
-							{/each}
-						</select>
+						<Select
+							Class="w-full"
+							classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							labels={users.map(user => user.user.username)}
+							values={users.map(user => user.user.id)}
+							value={kanban?.assignee?.id || ""}
+							onInput={changeAssignee}
+							innerLabel={$_("No assignee")}
+							innerLabelOn={true}
+						/>
 					</div>
 					<div class="text-left">
 						<div class="block text-md">

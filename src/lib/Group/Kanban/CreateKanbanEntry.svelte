@@ -12,6 +12,7 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
@@ -148,20 +149,16 @@
 						<label class="block text-md" for="work-group">
 							{$_('Work Group')}
 						</label>
-						<select
-							style="width:100%"
-							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
-							on:input={handleChangeWorkGroup}
-							id="work-group"
-						>
-							<option class="w-5" value={null}> {$_('Select')} </option>
-
-							{#each workGroups as group}
-								<option class="w-5 text-black" value={group.id}>
-									{elipsis(group.name)}
-								</option>
-							{/each}
-						</select>
+						<Select
+							Class="w-full"
+							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
+							labels={workGroups.map(group => elipsis(group.name))}
+							values={workGroups.map(group => group.id)}
+							value={workGroup?.id || ""}
+							onInput={handleChangeWorkGroup}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}	
+						/>
 					</div>
 				{/if}
 				<div class="text-left">
@@ -180,34 +177,31 @@
 					<label for="handleChangePriority" class="block text-md pt-2">
 						{$_('Priority')}
 					</label>
-					<select
-						class="w-full rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						on:input={handleChangePriority}
+					<Select
+						Class="w-full"
+						classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						labels={priorities.map(i => $_(priorityText[priorityText.length - i]))}
+						values={priorities}
 						value={priority}
-						id="handleChangePriority"
-					>
-						{#each priorities as i}
-							<option value={i}>
-								{$_(priorityText[priorityText.length - i])}
-							</option>
-						{/each}
-					</select>
+						onInput={handleChangePriority}
+						innerLabel=""
+					/>
 					<div class="flex gap-6 justify-between mt-2 flex-col" />
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">
 								{$_('Assignee')}
 							</label>
-							<select
-								on:input={handleChangeAssignee}
-								class="w-full rounded p-1 border border-gray-300 text-gray-500 dark:border-gray-600 dark:bg-darkobject"
-								id="handle-change-assignee"
-							>
-								<option value={null}>{$_('Select')}</option>
-								{#each users as user}
-									<option class="text-black" value={user.user.id}>{user.user.username}</option>
-								{/each}
-							</select>
+							<Select
+								Class="w-full"
+								classInner="rounded p-1 border border-gray-300 text-gray-500 dark:border-gray-600 dark:bg-darkobject"
+								labels={users.map(user => user.user.username)}
+								values={users.map(user => user.user.id)}
+								value={assignee || ""}
+								onInput={handleChangeAssignee}
+								innerLabel={$_("No assignee")}
+								innerLabelOn={true}
+							/>
 						</div>
 					{/if}
 					<div class="text-left">

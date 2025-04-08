@@ -120,10 +120,11 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 				<Select
-					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
+					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2 border-gray-300 rounded border"
 					labels={groups?.map((group) => group.name)}
-					bind:value={group}
+					value={group}
 					values={groups}
+					innerLabelOn={true}
 				/>
 			{/if}
 

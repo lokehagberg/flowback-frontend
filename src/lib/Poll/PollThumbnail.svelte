@@ -294,7 +294,7 @@
 							bind:value={selectedTag}
 							values={tags?.map((tag) => tag.id)}
 							Class="w-[47%] "
-							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
+							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border"
 							onInput={() => (voting = true)}
 						/>
 						{#if voting}

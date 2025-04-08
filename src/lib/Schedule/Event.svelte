@@ -112,9 +112,12 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group}
+							classInner="border-gray-300 rounded border"
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
+							value={selectedEvent.work_group?.id || ""}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
@@ -192,9 +195,12 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group}
+							classInner="border-gray-300 rounded border"
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
+							value={selectedEvent.work_group?.id || ""}
+							innerLabel={$_("No workgroup assigned")}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}

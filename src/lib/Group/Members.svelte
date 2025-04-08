@@ -24,6 +24,7 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import type { Delegate } from './Delegation/interfaces';
+	import Select from '$lib/Generic/Select.svelte';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -39,9 +40,10 @@
 		delegates: Delegate[] = [],
 		removeUserModalShow = false;
 
+	let sortOrder: 'a-z' | 'z-a' | null = null;
+
 	onMount(async () => {
 		getUsers();
-
 		getInvitesList();
 		searchUsers('');
 		getDelegatePools();
@@ -118,6 +120,8 @@
 		});
 
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+		await getInvitesList();
+		getUsers();
 	};
 
 	const denyInviteUser = async (userId: number) => {
@@ -125,6 +129,7 @@
 			to: userId
 		});
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+		await getInvitesList();
 	};
 
 	/*
@@ -157,6 +162,9 @@
 		}
 		return json.id;
 	};
+
+	const resetFilter = () => {};
+
 </script>
 
 <Modal bind:open={showInvite}>
@@ -197,38 +205,6 @@
 				{/each}
 			</ul>
 		</div>
-
-		<!-- Invites -->
-
-		{#if usersAskingForInvite.length > 0}
-			<div class="w-full shadow rounded bg-white p-2">
-				<span>{$_('Users requesting invite')}</span>
-				{#each usersAskingForInvite as user}
-					{#if user.external === true}
-						<div
-							class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
-						>
-							<ProfilePicture
-								Class="w-full"
-								displayName
-								username={user.username}
-								profilePicture={user.profile_image}
-							/>
-							<Button
-								Class="py-1 mr-4 px-2"
-								buttonStyle="primary-light"
-								onClick={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
-							>
-							<Button
-								Class="py-2  px-2"
-								buttonStyle="warning"
-								onClick={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
-							>
-						</div>
-					{/if}
-				{/each}
-			</div>
-		{/if}
 	</div>
 </Modal>
 
@@ -242,15 +218,49 @@
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-1 items-end gap-4"
 				on:input|preventDefault={() => searchUsers(searchUserQuery)}
 			>
-				<TextInput
-					Class="w-full"
-					onInput={() => (searched = false)}
-					label=""
-					max={null}
-					search={true}
-					placeholder={$_('Search members')}
-					bind:value={searchUserQuery}
-				/>
+				<div class="flex-col w-full">
+					<TextInput
+						Class="w-full"
+						onInput={() => (searched = false)}
+						label=""
+						max={null}
+						search={true}
+						placeholder={$_('Search members')}
+						bind:value={searchUserQuery}
+					/>
+
+					<!-- TODO: Fix functionality for sorting -->
+					<div class="flex flex-row items-center gap-1 pt-2">
+						<span>{$_('Sort')}: </span>
+						<Select
+							classInner="p-1 font-semibold"
+							labels={[$_('A - Z'), $_('Z - A')]}
+							values={['a-z', 'z-a']}
+							value={sortOrder || ""}
+							onInput={() => searchUsers(searchUserQuery)}
+							innerLabel="All"
+							innerLabelOn={true}
+						/>
+
+						<!-- TODO: Fix functionality for filtering -->
+						<span class="pl-4">{$_('Role')}: </span>
+						<Select
+							classInner="p-1 font-semibold"
+							labels={[$_('Admin'), $_('Member')]}
+							values={[$_('Admin'), $_('Member')]}
+							value={""}
+							onInput={() => searchUsers(searchUserQuery)}
+							innerLabel="All"
+							innerLabelOn={true}
+						/>
+				
+						<div class="rounded-md p-1">
+							<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
+								>{$_('Reset Filter')}</Button
+							>
+						</div>
+					</div>
+				</div>
 			</form>
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
@@ -263,9 +273,41 @@
 			{/if}
 		</div>
 
+		<!-- Invites -->
+		{#if usersAskingForInvite.length > 0}
+			<div class="w-full p-4 flex-col gap-6 shadow rounded bg-white p-2 mb-4 dark:bg-darkobject">
+				<span class="font-semibold text-sm text-gray-700">{$_('Users requesting invite')}</span>
+				{#each usersAskingForInvite as user}
+					{#if user.external === true}
+						<div
+							class="text-black pt-4 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						>
+							<ProfilePicture
+								Class="w-full"
+								displayName
+								username={user.username}
+								profilePicture={user.profile_image}
+							/>
+							<Button
+								Class="mr-4 px-2"
+								buttonStyle="primary-light"
+								onClick={() => acceptInviteUser(user.user)}>{$_('Accept')}</Button
+							>
+							<Button
+								Class="px-2"
+								buttonStyle="warning-light"
+								onClick={() => denyInviteUser(user.user)}>{$_('Decline')}</Button
+							>
+						</div>
+					{/if}
+				{/each}
+			</div>
+		{/if}
+
 		<!-- Members List -->
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
+				<span class="font-semibold text-sm text-gray-700">{$_('All members')}</span>
 				{#each searchedUsers as user}
 					{@const delegationId = delegates.find(
 						(delegate) => delegate.user.id === user.user.id

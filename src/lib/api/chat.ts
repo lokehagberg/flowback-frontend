@@ -175,7 +175,7 @@ export const chat = {
         closed_at?: string;
     }) =>
         apiClient<void>('chat/message/channel/userdata/update', {
-            method: 'PATCH',
+            method: 'POST',
             body: data
         }),
 

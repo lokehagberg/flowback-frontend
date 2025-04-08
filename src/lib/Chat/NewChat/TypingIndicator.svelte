@@ -59,26 +59,31 @@
   .typing-indicator {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
     color: #6b7280;
-    font-size: 0.75rem;
-    min-height: 24px;
+  }
+
+  :global(.dark) .typing-indicator {
+    color: #9ca3af;
   }
 
   .dots {
     display: flex;
-    gap: 0.125rem;
-    margin-right: 0.25rem;
+    gap: 0.25rem;
   }
 
   .dot {
-    width: 4px;
-    height: 4px;
-    background-color: #6b7280;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #9ca3af;
     border-radius: 50%;
     animation: bounce 1.4s infinite ease-in-out;
-    opacity: 0.7;
+  }
+
+  :global(.dark) .dot {
+    background-color: #6b7280;
   }
 
   .dot:nth-child(1) {

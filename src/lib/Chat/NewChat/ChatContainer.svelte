@@ -261,10 +261,19 @@
     overflow: hidden;
   }
 
+  :global(.dark) .chat-container {
+    background-color: #1f2937;
+  }
+
   .chat-header {
     padding: 0.5rem;
     border-bottom: 1px solid #dee2e6;
     background-color: white;
+  }
+
+  :global(.dark) .chat-header {
+    background-color: #111827;
+    border-color: #374151;
   }
 
   .chat-info {
@@ -283,9 +292,17 @@
     color: #111827;
   }
 
+  :global(.dark) .chat-title {
+    color: #e5e7eb;
+  }
+
   .participants {
     font-size: 0.875rem;
     color: #6c757d;
+  }
+
+  :global(.dark) .participants {
+    color: #9ca3af;
   }
 
   .messages-wrapper {
@@ -294,7 +311,12 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    scroll-behavior: smooth; /* Add smooth scrolling */
+    scroll-behavior: smooth;
+    background-color: #ffffff;
+  }
+
+  :global(.dark) .messages-wrapper {
+    background-color: #1f2937;
   }
 
   .messages-container {
@@ -316,15 +338,21 @@
     padding: 2rem;
   }
 
+  :global(.dark) .not-participant-message {
+    color: #9ca3af;
+  }
+
   .chat-actions {
     display: flex;
     gap: 0.5rem;
   }
 
-  :global(.join-btn) {
+  :global(.dark) .join-btn {
     background-color: #4f46e5;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
+    color: #e5e7eb;
+  }
+
+  :global(.dark) .join-btn:hover {
+    background-color: #4338ca;
   }
 </style> 

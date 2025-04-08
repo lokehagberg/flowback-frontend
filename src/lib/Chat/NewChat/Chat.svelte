@@ -512,7 +512,7 @@
   <img
     src={ChatIcon}
     class="icon"
-    style="filter: {getIconFilter(true, 'white')}"
+    style="filter: {getIconFilter(false, 'white')}"
     alt={visible ? 'close chat' : 'open chat'}
   />
   <span class="sr-only">Toggle chat</span>
@@ -534,9 +534,20 @@
     flex-direction: column;
   }
 
+  :global(.dark) .chat-wrapper {
+    background: #111827;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
   .chat-header {
     padding: 12px;
     border-bottom: 1px solid #e5e7eb;
+    background: white;
+  }
+
+  :global(.dark) .chat-header {
+    background: #1f2937;
+    border-bottom-color: #374151;
   }
 
   .back-button {
@@ -549,8 +560,16 @@
     border-radius: 4px;
   }
 
+  :global(.dark) .back-button {
+    color: #e5e7eb;
+  }
+
   .back-button:hover {
     background: #f3f4f6;
+  }
+
+  :global(.dark) .back-button:hover {
+    background: #374151;
   }
 
   .chat-list {
@@ -607,6 +626,12 @@
     position: relative;
     margin-bottom: 4px;
     border-bottom: 1px solid #e5e7eb;
+    background-color: #ffffff;
+  }
+
+  :global(.dark) .chat-item {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
   }
 
   .chat-item:last-child {
@@ -614,27 +639,31 @@
   }
 
   .chat-item.dm {
-    border-left-color: #60a5fa; /* Blue for DMs */
+    border-left-color: #60a5fa;
   }
 
   .chat-item.group {
-    border-left-color: #10b981; /* Green for groups */
+    border-left-color: #10b981;
   }
 
   .chat-item:hover {
     background: #f3f4f6;
   }
 
+  :global(.dark) .chat-item:hover {
+    background: #2d3748;
+  }
+
   .chat-item.selected {
     background: #e5e7eb;
   }
 
-  .chat-item.inactive {
-    opacity: 0.7;
+  :global(.dark) .chat-item.selected {
+    background: #374151;
   }
 
-  .chat-item.unread {
-    background-color: #ffffff;
+  .chat-item.inactive {
+    opacity: 0.7;
   }
 
   .chat-item.unread::before {
@@ -645,19 +674,32 @@
     transform: translateY(-50%);
     width: 6px;
     height: 6px;
-    background-color: #3b82f6; /* Changed to blue */
+    background-color: #60a5fa;
     border-radius: 50%;
     box-shadow: 0 0 0 2px #ffffff;
   }
 
+  :global(.dark) .chat-item.unread::before {
+    background-color: #60a5fa;
+    box-shadow: 0 0 0 2px #1f2937;
+  }
+
   .chat-item.unread .chat-item-title {
-    font-weight: 600; /* Slightly less bold */
-    color: #1f2937; /* Darker gray instead of pure black */
+    font-weight: 600;
+    color: #111827;
+  }
+
+  :global(.dark) .chat-item.unread .chat-item-title {
+    color: #f3f4f6;
   }
 
   .chat-item.unread .chat-item-preview {
     font-weight: 500;
     color: #4b5563;
+  }
+
+  :global(.dark) .chat-item.unread .chat-item-preview {
+    color: #9ca3af;
   }
 
   .chat-item-content {
@@ -666,13 +708,35 @@
     padding-right: 24px;
   }
 
-  /* Add visual grouping for chat sections */
+  .chat-item-title {
+    color: #111827;
+  }
+
+  :global(.dark) .chat-item-title {
+    color: #e5e7eb;
+  }
+
+  .chat-item-preview {
+    color: #6b7280;
+  }
+
+  :global(.dark) .chat-item-preview {
+    color: #9ca3af;
+  }
+
+  /* Update the chat sections styling */
   .active-chats, .inactive-chats {
     background: #ffffff;
     border-radius: 8px;
     padding: 8px;
     margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  :global(.dark) .active-chats,
+  :global(.dark) .inactive-chats {
+    background: #111827;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   .section-title {
@@ -683,7 +747,11 @@
     padding: 0 8px;
   }
 
-  /* Update the chat toggle notification dot to match */
+  :global(.dark) .section-title {
+    color: #9ca3af;
+  }
+
+  /* Update the chat toggle notification dot */
   .chat-toggle.has-notification::after {
     content: '';
     position: absolute;
@@ -691,9 +759,13 @@
     right: 0;
     width: 10px;
     height: 10px;
-    background-color: #3b82f6; /* Match the blue dot */
+    background-color: #60a5fa;
     border-radius: 50%;
-    border: 2px solid white;
+    border: 2px solid #ffffff;
+  }
+
+  :global(.dark) .chat-toggle.has-notification::after {
+    border-color: #1f2937;
   }
 
   .chat-item-header {
@@ -758,6 +830,10 @@
     z-index: 10;
   }
 
+  :global(.dark) .loading-overlay {
+    background: rgba(17, 24, 39, 0.9);
+  }
+
   .loading-spinner {
     width: 40px;
     height: 40px;
@@ -774,6 +850,11 @@
     background: #fee2e2;
     margin: 8px;
     border-radius: 4px;
+  }
+
+  :global(.dark) .error-message {
+    background: #7f1d1d;
+    color: #fca5a5;
   }
 
   @keyframes spin {
@@ -800,9 +881,16 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
+  :global(.dark) .chat-toggle {
+    background: #1e40af;
+  }
+
   .chat-toggle:hover {
     background: #0056b3;
-    transform: scale(1.05);
+  }
+
+  :global(.dark) .chat-toggle:hover {
+    background: #1e3a8a;
   }
 
   .chat-toggle:active {
@@ -875,16 +963,29 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
+  :global(.dark) .modal-content {
+    background: #1f2937;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
   .loading-indicator {
     text-align: center;
     color: #6b7280;
     padding: 1rem;
   }
 
+  :global(.dark) .loading-indicator {
+    color: #9ca3af;
+  }
+
   .invites-section {
     background: #f3f4f6;
     border-radius: 0.5rem;
     padding: 1rem;
+  }
+
+  :global(.dark) .invites-section {
+    background: #2d3748;
   }
 
   .invite-item {
@@ -895,6 +996,11 @@
     background: white;
     border-radius: 0.375rem;
     margin-bottom: 0.5rem;
+  }
+
+  :global(.dark) .invite-item {
+    background: #1f2937;
+    color: #e5e7eb;
   }
 
   .invite-actions {

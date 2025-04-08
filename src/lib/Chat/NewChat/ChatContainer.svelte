@@ -14,6 +14,7 @@
   export let channelId: number;
   export let userId: number;
 
+  let messagesContainer: HTMLDivElement;
   let typingTimeout: ReturnType<typeof setTimeout>;
   let messages: Message[] = [];
   let typingUsers = new Set<number>();
@@ -23,9 +24,23 @@
   let channelType: ChannelType = 'direct';
   let participantsList = '';
   let isParticipant = false;
+  let previousMessageCount = 0;
+
+  function scrollToBottom() {
+    if (messagesContainer) {
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 0);
+    }
+  }
 
   const unsubscribeMessages = messagesStore.subscribe((value) => {
     messages = value;
+    // If new messages were added, scroll to bottom
+    if (messages.length > previousMessageCount) {
+      scrollToBottom();
+    }
+    previousMessageCount = messages.length;
   });
 
   const unsubscribeTyping = typingUsersStore.subscribe((value) => {
@@ -59,6 +74,8 @@
         });
         if (messageHistory.results) {
           messagesStore.set(messageHistory.results);
+          // Scroll to bottom after loading messages
+          scrollToBottom();
         }
       } catch (error) {
         console.error('Error loading message history:', error);
@@ -156,6 +173,8 @@
     const message = event.detail;
     try {
       websocketService.sendMessage(channelId, message);
+      // Message will be added to the store when received from WebSocket,
+      // which will trigger the scroll via the subscription
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -206,7 +225,7 @@
     </div>
   </div>
   
-  <div class="messages-wrapper">
+  <div class="messages-wrapper" bind:this={messagesContainer}>
     {#if isParticipant}
       <div class="messages-container">
         <MessageList {messages} {userId} />
@@ -275,6 +294,7 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    scroll-behavior: smooth; /* Add smooth scrolling */
   }
 
   .messages-container {

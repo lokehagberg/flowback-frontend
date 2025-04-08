@@ -56,20 +56,20 @@
 		comments = comments;
 	};
 
-	const commentReport = async (id: number) => {
-		// let _api = '';
-		// if (api === 'poll') _api = `poll/${$page.params.pollId}/`;
-		// else if (api === 'thread')
-		// 	_api = `thread/${$page.params.threadId}/`;
+	const commentReport = async (id: number, message: string) => {
+		let _api = 'report/create';
 
-		// _api += `comment/${id}/report`;
+		let data = {
+			title: 'Report Comment',
+			description: message || 'Report Comment'
+		};
 
-		// const { res, json } = await fetchRequest('POST', _api);
+		const { res, json } = await fetchRequest('POST', _api, data);
 
-		// if (!res.ok) {
-		// 	poppup = { message: 'Failed to report comment', success: false };
-		// 	return;
-		// }
+		if (!res.ok) {
+			poppup = { message: 'Failed to report comment', success: false };
+			return;
+		}
 
 		comments.map((comment) => {
 			if (comment.id !== id) return comment;
@@ -78,8 +78,8 @@
 			comment.active = false;
 			return comment;
 		});
-		comments = comments;			
-	}
+		comments = comments;
+	};
 
 	// The entire upvote-downvote system in the front end is ugly brute-force, refactoring would be neat.
 	const commentVote = async (_vote: -1 | 1) => {
@@ -170,7 +170,10 @@
 		</div>
 		{#key comment.message}
 			{#if comment.message}
-				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
+				<div
+					class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap"
+					id={`comment-${comment.id}`}
+				>
 					{comment.message}
 				</div>
 			{/if}
@@ -181,7 +184,7 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-				<!-- {@debug attachment} -->
+					<!-- {@debug attachment} -->
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
 							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
@@ -232,7 +235,7 @@
 					</button>
 				</div>
 				<!-- {/if} -->
-				 
+
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
@@ -261,7 +264,7 @@
 
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => commentReport(comment.id)}
+					on:click={() => commentReport(comment.id, comment.message || '')}
 				>
 					{$_('Report')}
 				</button>

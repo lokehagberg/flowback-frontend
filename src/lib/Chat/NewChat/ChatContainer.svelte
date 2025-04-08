@@ -193,11 +193,10 @@
         <div class="chat-title">{chatTitle}</div>
         <div class="chat-actions">
           {#if channelType === 'group'}
-            {#if isParticipant}
-              <Button onClick={handleLeaveChat} Class="leave-btn">Leave Chat</Button>
-            {:else}
+            {#if !isParticipant}
               <Button onClick={handleJoinChat} Class="join-btn">Join Chat</Button>
             {/if}
+            <!-- Leave chat functionality is temporarily hidden as it's not fully supported in the current version -->
           {/if}
         </div>
       </div>

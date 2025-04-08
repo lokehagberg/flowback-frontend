@@ -151,10 +151,11 @@
 						</label>
 						<Select
 							Class="w-full"
-							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
+							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map(group => elipsis(group.name))}
 							values={workGroups.map(group => group.id)}
 							value={workGroup?.id || ""}
+							defaultValue=""
 							onInput={handleChangeWorkGroup}
 							innerLabel={$_("No workgroup assigned")}
 							innerLabelOn={true}	
@@ -194,10 +195,11 @@
 							</label>
 							<Select
 								Class="w-full"
-								classInner="rounded p-1 border border-gray-300 text-gray-500 dark:border-gray-600 dark:bg-darkobject"
+								classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 								labels={users.map(user => user.user.username)}
 								values={users.map(user => user.user.id)}
 								value={assignee || ""}
+								defaultValue=""
 								onInput={handleChangeAssignee}
 								innerLabel={$_("No assignee")}
 								innerLabelOn={true}

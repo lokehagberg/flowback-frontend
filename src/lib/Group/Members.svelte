@@ -112,6 +112,9 @@
 			success: true,
 			message: 'Successfully sent invite'
 		};
+
+		searchInvitationQuery = '';
+		searchedInvitationUsers = [];
 	};
 
 	const acceptInviteUser = async (userId: number) => {
@@ -176,7 +179,7 @@
 <Modal bind:open={showInvite}>
 	<div slot="body">
 		<!-- Inviting -->
-		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
+		<div class="w-full bg-white dark:bg-darkobject">
 			<TextInput
 				onInput={() => searchUser(searchInvitationQuery)}
 				bind:value={searchInvitationQuery}

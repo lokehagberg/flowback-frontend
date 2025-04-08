@@ -81,6 +81,7 @@
 
 		if (selectedTagName) {
 			selectedTag = tags?.find((tag) => tag.name === selectedTagName)?.id || 0;
+			voting = false;
 		}
 	};
 
@@ -88,7 +89,7 @@
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {
 			tags = await getTags(poll?.group_id);
-			getAreaVote();
+			await getAreaVote();
 		}
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
@@ -296,6 +297,7 @@
 							Class="w-[47%] "
 							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border"
 							onInput={() => (voting = true)}
+							defaultValue=""
 						/>
 						{#if voting}
 							<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"

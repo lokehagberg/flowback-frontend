@@ -36,9 +36,9 @@
       .filter(username => username);
 
     if (typingUsernames.length === 0) return '';
-    if (typingUsernames.length === 1) return `${typingUsernames[0]} is typing...`;
-    if (typingUsernames.length === 2) return `${typingUsernames[0]} and ${typingUsernames[1]} are typing...`;
-    return 'Several people are typing...';
+    if (typingUsernames.length === 1) return `${typingUsernames[0]} is typing`;
+    if (typingUsernames.length === 2) return `${typingUsernames[0]} and ${typingUsernames[1]} are typing`;
+    return 'Several people are typing';
   }
 </script>
 
@@ -59,23 +59,26 @@
   .typing-indicator {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    color: #666;
-    font-size: 0.875rem;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+    min-height: 24px;
   }
 
   .dots {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.125rem;
+    margin-right: 0.25rem;
   }
 
   .dot {
-    width: 6px;
-    height: 6px;
-    background-color: #666;
+    width: 4px;
+    height: 4px;
+    background-color: #6b7280;
     border-radius: 50%;
     animation: bounce 1.4s infinite ease-in-out;
+    opacity: 0.7;
   }
 
   .dot:nth-child(1) {
@@ -96,6 +99,8 @@
   }
 
   .text {
-    font-style: italic;
+    font-size: 0.75rem;
+    color: #6b7280;
+    opacity: 0.9;
   }
 </style> 

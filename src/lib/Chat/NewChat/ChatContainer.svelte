@@ -208,9 +208,11 @@
   
   <div class="messages-wrapper">
     {#if isParticipant}
-      <MessageList {messages} {userId} />
-      <div class="typing-indicator-wrapper">
-        <TypingIndicator {userId} />
+      <div class="messages-container">
+        <MessageList {messages} {userId} />
+        <div class="typing-indicator-container">
+          <TypingIndicator {userId} />
+        </div>
       </div>
     {:else}
       <div class="not-participant-message">
@@ -275,6 +277,18 @@
     flex-direction: column;
   }
 
+  .messages-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .typing-indicator-container {
+    margin-top: -0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
   .not-participant-message {
     text-align: center;
     color: #6c757d;
@@ -292,10 +306,5 @@
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
-  }
-
-  .typing-indicator-wrapper {
-    padding: 0 1rem;
-    margin-top: 0.5rem;
   }
 </style> 

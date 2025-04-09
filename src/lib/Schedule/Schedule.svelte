@@ -135,23 +135,27 @@
 		};
 
 		poppup = { message: 'Successfully created event', success: true };
+		showCreateScheduleEvent = false;
 		events.push(selectedEvent);
 		events = events;
-		showCreateScheduleEvent = false;
 	};
 
 	const scheduleEventUpdate = async () => {
-		let payload: any = selectedEvent;
+		// Clone the current event so we keep its values
+		const updatedEvent = { ...selectedEvent };
 
-		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
+		// Build payload from the cloned object
+		let payload: any = { ...updatedEvent };
 
-		if (selectedEvent.description === '' || selectedEvent.description === null)
+		if (updatedEvent.meeting_link !== '') payload['meeting_link'] = updatedEvent.meeting_link;
+
+		if (updatedEvent.description === '' || updatedEvent.description === null)
 			delete payload.description;
-		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === null)
+		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
 			delete payload.meeting_link;
 
-		if (type === 'group' && selectedEvent.work_group)
-			payload['work_group_id'] = selectedEvent.work_group;
+		if (type === 'group' && updatedEvent.work_group)
+			payload['work_group_id'] = updatedEvent.work_group;
 
 		loading = true;
 
@@ -162,6 +166,18 @@
 		);
 
 		loading = false;
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to edit event', success: false };
+			return;
+		}
+
+		// Update the events array using the temporary updatedEvent
+		events = events.map((event) =>
+			event.event_id === updatedEvent.event_id ? updatedEvent : event
+		);
+
+		// Now reset selectedEvent
 		selectedEvent = {
 			start_date: '',
 			end_date: '',
@@ -170,20 +186,9 @@
 			schedule_origin_name: 'group',
 			created_by: 0
 		};
-
-		if (!res.ok) {
-			poppup = { message: 'Failed to edit event', success: false };
-
-			return;
-		}
-
-		showEditScheduleEvent = false;
-
-		events = events.map((event) => {
-			if (event.event_id === selectedEvent.event_id) return selectedEvent;
-			else return event;
-		});
 	};
+
+	showEditScheduleEvent = false;
 
 	const scheduleEventDelete = async () => {
 		const { res, json } = await fetchRequest(
@@ -253,6 +258,8 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
+
+	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>

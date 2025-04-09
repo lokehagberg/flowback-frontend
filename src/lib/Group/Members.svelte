@@ -379,19 +379,19 @@
 							{/await}
 							{#if userIsAdmin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
 								<Button
-									Class="w-10 h-10 flex items-center justify-center"
+									Class="w-10 h-10 flex items-center justify-center pl-6 bg-transparent"
 									onClick={() => (removeUserModalShow = true)}
 								>
-									<Fa size="lg" icon={faRunning} />
+									<Fa size="lg" class="text-red-500" icon={faRunning} />
 								</Button>
-								<Modal bind:open={removeUserModalShow}>
-									<div slot="header">{$_('Sure you want to delete?')}</div>
-									<div slot="body">
-										<Button buttonStyle="warning-light" onClick={() => userRemove(user.user.id)}
-											>Yes</Button
+								<Modal bind:open={removeUserModalShow} Class="w-80">
+									<div slot="header">{$_('Kick ') + user.user.username + "?"}</div>
+									<div slot="body" class="flex gap-4">
+										<Button buttonStyle="warning-light" Class="w-[50%]" onClick={() => userRemove(user.user.id)}
+											>{$_('Yes')}</Button
 										>
-										<Button buttonStyle="primary" onClick={() => (removeUserModalShow = false)}
-											>No</Button
+										<Button buttonStyle="primary" Class="w-[50%]" onClick={() => (removeUserModalShow = false)}
+											>{$_('No')}</Button
 										>
 									</div>
 								</Modal>

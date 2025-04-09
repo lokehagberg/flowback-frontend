@@ -646,6 +646,7 @@
     "Pending invite": "Väntande inbjudan",
     "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
     "No assignee": "Ingen uppdragstagare",
+    "Kick ": "Sparka ",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

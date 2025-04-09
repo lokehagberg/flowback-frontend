@@ -368,7 +368,7 @@
 									</button>
 								{/if}
 							{/await}
-							{#if userIsAdmin}
+							{#if userIsAdmin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
 								<Button
 									Class="w-10 h-10 flex items-center justify-center"
 									onClick={() => (removeUserModalShow = true)}

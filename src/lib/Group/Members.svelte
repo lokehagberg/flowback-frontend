@@ -25,6 +25,7 @@
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import type { Delegate } from './Delegation/interfaces';
 	import Select from '$lib/Generic/Select.svelte';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -38,7 +39,8 @@
 		showInvite = false,
 		searched = false,
 		delegates: Delegate[] = [],
-		removeUserModalShow = false;
+		removeUserModalShow = false,
+		userIsAdmin = false;
 
 	let sortOrder: 'a-z' | 'z-a' | null = null;
 
@@ -47,7 +49,9 @@
 		getInvitesList();
 		searchUsers('');
 		getDelegatePools();
+		userIsAdmin = await getUserIsGroupAdmin($page.params.groupId);
 
+		//Does this one even do anything?
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
 
@@ -149,7 +153,7 @@
 		});
 	};
 
-	const userRemove = async (userToRemove:number) => {
+	const userRemove = async (userToRemove: number) => {
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/user/delete`, {
 			target_user_id: userToRemove
 		});
@@ -160,12 +164,10 @@
 		}
 
 		poppup = { message: $_('Successfully removed user'), success: true };
-		searchedUsers = searchedUsers.filter(user => user.user.id !== userToRemove);
+		searchedUsers = searchedUsers.filter((user) => user.user.id !== userToRemove);
 		removeUserModalShow = false;
 		await getUsers();
 	};
-
-
 
 	const getUserChannelId = async (userId: number) => {
 		const { json, res } = await fetchRequest('GET', `user/chat?target_user_ids=${userId}`);
@@ -175,8 +177,6 @@
 		}
 		return json.id;
 	};
-
-
 
 	const resetFilter = () => {};
 </script>
@@ -368,18 +368,25 @@
 									</button>
 								{/if}
 							{/await}
-							<Button
-								Class="w-10 h-10 flex items-center justify-center"
-								onClick={() => removeUserModalShow = true}
-							>
-								<Fa size="lg" icon={faRunning} />
-							</Button>
-							<Modal bind:open={removeUserModalShow}>
-								<div slot="header">{$_('Sure you want to delete?')}</div>
-								<div slot="body">
-									<Button buttonStyle="warning-light" onClick={() => userRemove(user.user.id)} />
-								</div>
-							</Modal>
+							{#if userIsAdmin}
+								<Button
+									Class="w-10 h-10 flex items-center justify-center"
+									onClick={() => (removeUserModalShow = true)}
+								>
+									<Fa size="lg" icon={faRunning} />
+								</Button>
+								<Modal bind:open={removeUserModalShow}>
+									<div slot="header">{$_('Sure you want to delete?')}</div>
+									<div slot="body">
+										<Button buttonStyle="warning-light" onClick={() => userRemove(user.user.id)}
+											>Yes</Button
+										>
+										<Button buttonStyle="primary" onClick={() => (removeUserModalShow = false)}
+											>No</Button
+										>
+									</div>
+								</Modal>
+							{/if}
 						</div>
 					</div>
 				{/each}
@@ -387,6 +394,5 @@
 		{/if}
 	</div>
 </Loader>
-
 
 <Poppup bind:poppup />

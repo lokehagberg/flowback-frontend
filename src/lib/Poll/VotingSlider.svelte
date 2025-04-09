@@ -5,7 +5,8 @@
 
 	export let onSelection = (pos: number | null) => {},
 		lineWidth = 0,
-		score: number | null = null;
+		score: number | null = null,
+		isVoting; // Add this new prop
 
 	const maxScore = 5;
 	const snapPoints = Array.from({ length: maxScore + 1 }, (_, i) => i); // [0,1,2,3,4,5]
@@ -66,7 +67,15 @@
 		{#each snapPoints as point, index}
 			<div
 				class="absolute top-1/2 w-2 h-2 bg-white rounded-full border border-gray-400 -translate-y-1/2"
-				style="left: {index === 0 ? '2px' : index === snapPoints.length - 1 ? 'calc(100% - 2px)' : (point / maxScore) * 100 + '%'}; transform: {index === 0 ? 'translateY(-50%)' : index === snapPoints.length - 1 ? 'translate(-100%, -50%)' : 'translate(-50%, -50%)'}"
+				style="left: {index === 0
+					? '2px'
+					: index === snapPoints.length - 1
+					? 'calc(100% - 2px)'
+					: (point / maxScore) * 100 + '%'}; transform: {index === 0
+					? 'translateY(-50%)'
+					: index === snapPoints.length - 1
+					? 'translate(-100%, -50%)'
+					: 'translate(-50%, -50%)'}"
 			/>
 		{/each}
 
@@ -107,7 +116,7 @@
 			onSelection(null);
 		}}
 	>
-		{$_('Clear vote')}
+		{$_(isVoting ? 'Clear vote' : 'Clear probability')}
 	</Button>
 </div>
 

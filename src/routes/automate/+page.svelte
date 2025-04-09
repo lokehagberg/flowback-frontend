@@ -168,6 +168,7 @@
 					'As a delegate, you choose to publicly show everyone how you vote. However, other users can delegate their vote to you, which means that you will vote for them. '
 				)}
 				<Button onClick={() => (selectedPage = 'delegate')}>{$_('Cancel')}</Button>
+
 				{#if userIsDelegate}
 					<StopBeingDelegate
 						Class="w-full mt-3"

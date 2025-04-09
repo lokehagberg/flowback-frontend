@@ -83,7 +83,7 @@
 				>
 					<Fa icon={faPlus} size="lg" />
 				</div>
-				{@debug user}
+				<!-- {@debug user} -->
 				<Button onClick={() => makeAdmin(user)}>Make admin</Button>
 			</div>
 			<div

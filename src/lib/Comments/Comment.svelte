@@ -17,6 +17,8 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -27,6 +29,7 @@
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
 		isVoting = false,
+		ReportCommentModalShow = false,
 		images: File[] = [];
 
 	const commentDelete = async (id: number) => {
@@ -74,7 +77,7 @@
 		comments.map((comment) => {
 			if (comment.id !== id) return comment;
 
-			comment.message = '[Reported]';
+			// comment.message = '[Reported]';
 			comment.active = false;
 			return comment;
 		});
@@ -262,9 +265,22 @@
 					</button>
 				{/if}
 
+				<Modal bind:open={ReportCommentModalShow}>
+					<div slot="header">{$_('Report Comment')}</div>
+					<div slot="body">{$_('Are you sure you want to report this comment?')}</div>
+					<div slot="footer">
+						<div class="flex justify-center gap-2">
+							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Yes')}</Button>
+							<Button
+								onClick={() => (ReportCommentModalShow = false)}
+								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+							>
+						</div>
+					</div>
+				</Modal>
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => commentReport(comment.id, comment.message || '')}
+					on:click={() => (ReportCommentModalShow = true)}
 				>
 					{$_('Report')}
 				</button>

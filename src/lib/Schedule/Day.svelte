@@ -71,7 +71,7 @@
 <button
 	on:dblclick={() => {
 		showCreateScheduleEvent = true;
-		const clickedDate = new Date(year, month, getDay(x, y));
+		const clickedDate = new Date(year, month, getDay(x + 1, y));
 		selectedEvent.start_date = clickedDate.toISOString().slice(0, 16);
 		selectedEvent.end_date = clickedDate.toISOString().slice(0, 16);
 	}}

@@ -80,7 +80,7 @@
 	const setUpScheduledPolls = async () => {
 		let _api = '';
 
-		if (groupId) {
+		if (type==="group") {
 			_api = `group/${groupId}/schedule?limit=1000&`;
 
 			if (workGroupFilter.length > 0) {
@@ -109,6 +109,8 @@
 
 		if (selectedEvent.description === '') delete payload.description;
 
+		console.log(type, 'TYp');
+
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
@@ -125,6 +127,11 @@
 			return;
 		}
 
+		poppup = { message: 'Successfully created event', success: true };
+		showCreateScheduleEvent = false;
+		events.push(selectedEvent);
+		events = events;
+
 		selectedEvent = {
 			start_date: '',
 			end_date: '',
@@ -133,11 +140,6 @@
 			schedule_origin_name: 'group',
 			created_by: 0
 		};
-
-		poppup = { message: 'Successfully created event', success: true };
-		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
 	};
 
 	const scheduleEventUpdate = async () => {

@@ -353,7 +353,7 @@
 </button>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="min-w-[400px] max-w-[500px] z-50">
+	<Modal bind:open={openModal} Class=" min-w-[400px] z-50">
 		<!-- <div slot="header">
 			{#if isEditing}
 				{$_('Edit Task')}
@@ -384,9 +384,9 @@
 							Class="rounded border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
-							value={kanbanEdited.work_group?.id || ""}
+							value={kanbanEdited.work_group?.id || ''}
 							onInput={handleChangeWorkGroup}
-							innerLabel={$_("No workgroup assigned")}
+							innerLabel={$_('No workgroup assigned')}
 							innerLabelOn={true}
 						/>
 					</div>
@@ -411,7 +411,7 @@
 					<Select
 						Class="w-full"
 						classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						labels={priorities.map(i => priorityText[priorityText.length - i])}
+						labels={priorities.map((i) => priorityText[priorityText.length - i])}
 						values={priorities}
 						value={kanban?.priority}
 						onInput={handleChangePriority}
@@ -426,11 +426,11 @@
 						<Select
 							Class="w-full"
 							classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							labels={users.map(user => user.user.username)}
-							values={users.map(user => user.user.id)}
-							value={kanban?.assignee?.id || ""}
+							labels={users.map((user) => user.user.username)}
+							values={users.map((user) => user.user.id)}
+							value={kanban?.assignee?.id || ''}
 							onInput={changeAssignee}
-							innerLabel={$_("No assignee")}
+							innerLabel={$_('No assignee')}
 							innerLabelOn={true}
 						/>
 					</div>

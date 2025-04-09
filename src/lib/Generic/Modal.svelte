@@ -51,13 +51,13 @@
 	<div
 		id="popup-modal"
 		tabindex="-1"
-		class={`max-h-[80vh] mt-10 dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
+		class={`max-w-[1400px] w-[80%] max-h-[80vh] mt-10 dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
 		border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 ${Class}`}
 		on:click={stopPropagation}
 		on:keydown
 		role="button"
 	>
-		<div class="dark:text-darkmodeText relative p-4 w-full max-w-full h-full">
+		<div class="dark:text-darkmodeText relative p-4 w-full h-full">
 			<!-- <div class="text-xl border-b-2 border-gray-300 border-solid  break-all"> -->
 			<div class="text-xl break-all">
 				<slot name="header" />

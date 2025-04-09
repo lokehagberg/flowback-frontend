@@ -62,7 +62,7 @@
 			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
 		);
 
-		if (!json.results || json.results.length === 0) return;
+		if (!json?.results || json?.results?.length === 0) return;
 
 		console.log('WHAT THA HELLL');
 
@@ -83,9 +83,7 @@
 			`group/poll/pool/${user.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
 		);
 
-		if (!json.results || json.results.length === 0) return;
-
-		console.log(voting, json.results[0].vote, 'VÖTE');
+		if (!json?.results || json?.results?.length === 0) return;
 
 		const votes = json.results[0].vote;
 
@@ -99,8 +97,6 @@
 		});
 
 		voting = voting;
-
-		console.log(voting, 'VOTING????');
 
 		// voting = voting.map((vote) => ({
 		// 	score: (vote.score = json.results.find((v:any) => {
@@ -198,11 +194,13 @@
 
 								<VotingSlider
 									onSelection={(pos) => {
+										//@ts-ignore
 										changingVote(pos, proposal.id);
 										if (phase === 'delegate_vote') delegateVote();
 										else if (phase === 'vote') vote();
 									}}
 									{score}
+									isVoting={true}
 								/>
 							{/if}
 						</Proposal>

@@ -25,6 +25,7 @@
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import type { Delegate } from './Delegation/interfaces';
 	import Select from '$lib/Generic/Select.svelte';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -38,7 +39,8 @@
 		showInvite = false,
 		searched = false,
 		delegates: Delegate[] = [],
-		removeUserModalShow = false;
+		removeUserModalShow = false,
+		userIsAdmin = false;
 
 	let sortOrder: 'a-z' | 'z-a' | null = null;
 
@@ -47,7 +49,9 @@
 		getInvitesList();
 		searchUsers('');
 		getDelegatePools();
+		userIsAdmin = await getUserIsGroupAdmin($page.params.groupId);
 
+		//Does this one even do anything?
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
 
@@ -158,9 +162,20 @@
 		});
 	};
 
-	const userRemove = async () => {
-		// const {res, json} = await fetchRequest('POST', {
-		// } )
+	const userRemove = async (userToRemove: number) => {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/user/delete`, {
+			target_user_id: userToRemove
+		});
+
+		if (!res.ok) {
+			poppup = { message: $_('Failed to remove user'), success: false };
+			return;
+		}
+
+		poppup = { message: $_('Successfully removed user'), success: true };
+		searchedUsers = searchedUsers.filter((user) => user.user.id !== userToRemove);
+		removeUserModalShow = false;
+		await getUsers();
 	};
 
 	const getUserChannelId = async (userId: number) => {
@@ -173,7 +188,6 @@
 	};
 
 	const resetFilter = () => {};
-
 </script>
 
 <Modal bind:open={showInvite}>
@@ -245,7 +259,7 @@
 							classInner="p-1 font-semibold"
 							labels={[$_('A - Z'), $_('Z - A')]}
 							values={['a-z', 'z-a']}
-							value={sortOrder || ""}
+							value={sortOrder || ''}
 							onInput={() => searchUsers(searchUserQuery)}
 							innerLabel="All"
 							innerLabelOn={true}
@@ -257,15 +271,17 @@
 							classInner="p-1 font-semibold"
 							labels={[$_('Admin'), $_('Member')]}
 							values={[$_('Admin'), $_('Member')]}
-							value={""}
+							value={''}
 							onInput={() => searchUsers(searchUserQuery)}
 							innerLabel="All"
 							innerLabelOn={true}
 						/>
-				
+
 						<div class="rounded-md p-1">
-							<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
-								>{$_('Reset Filter')}</Button
+							<Button
+								Class="!p-1 border-none text-red-600 cursor-pointer hover:underline"
+								buttonStyle="warning-light"
+								onClick={resetFilter}>{$_('Reset Filter')}</Button
 							>
 						</div>
 					</div>
@@ -361,6 +377,25 @@
 									</button>
 								{/if}
 							{/await}
+							{#if userIsAdmin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
+								<Button
+									Class="w-10 h-10 flex items-center justify-center"
+									onClick={() => (removeUserModalShow = true)}
+								>
+									<Fa size="lg" icon={faRunning} />
+								</Button>
+								<Modal bind:open={removeUserModalShow}>
+									<div slot="header">{$_('Sure you want to delete?')}</div>
+									<div slot="body">
+										<Button buttonStyle="warning-light" onClick={() => userRemove(user.user.id)}
+											>Yes</Button
+										>
+										<Button buttonStyle="primary" onClick={() => (removeUserModalShow = false)}
+											>No</Button
+										>
+									</div>
+								</Modal>
+							{/if}
 						</div>
 					</div>
 				{/each}
@@ -368,12 +403,5 @@
 		{/if}
 	</div>
 </Loader>
-
-<Modal bind:open={removeUserModalShow}>
-	<div slot="header">{$_('Sure you want to delete?')}</div>
-	<div slot="body">
-		<Button buttonStyle="warning-light" onClick={userRemove} />
-	</div>
-</Modal>
 
 <Poppup bind:poppup />

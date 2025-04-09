@@ -93,13 +93,13 @@
 			_api = `user/schedule?limit=1000`;
 		}
 
-		console.log('hei', _api);
-
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
 	};
 
 	const scheduleEventCreate = async () => {
+		loading = true;
+
 		let API = '';
 		let payload: any = selectedEvent;
 
@@ -116,10 +116,14 @@
 			if (selectedEvent.work_group) payload['work_group_id'] = selectedEvent.work_group;
 		}
 
-		loading = true;
 		const { res, json } = await fetchRequest('POST', API, payload);
 
 		loading = false;
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to create event', success: false };
+			return;
+		}
 
 		selectedEvent = {
 			start_date: '',
@@ -130,16 +134,10 @@
 			created_by: 0
 		};
 
-		if (!res.ok) {
-			poppup = { message: 'Failed to create event', success: false };
-
-			return;
-		}
-
 		poppup = { message: 'Successfully created event', success: true };
-		showCreateScheduleEvent = false;
 		events.push(selectedEvent);
 		events = events;
+		showCreateScheduleEvent = false;
 	};
 
 	const scheduleEventUpdate = async () => {
@@ -255,8 +253,6 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>

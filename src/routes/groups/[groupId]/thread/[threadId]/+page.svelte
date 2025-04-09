@@ -33,7 +33,7 @@
 		}
 
 		thread = json.results[0];
-		if (thread.description === null) thread.description = '';
+		if (thread.description === null) thread.description = '';		
 	};
 </script>
 
@@ -63,7 +63,7 @@
 					labels={['thread']}
 				/>
 				<MultipleChoices
-					labels={[$_('Delete Thread')]}
+					labels={[$_('Delete Thread,'), $_('Report Thread')]}
 					functions={[]}
 					Class="text-black justify-self-center"
 				/>

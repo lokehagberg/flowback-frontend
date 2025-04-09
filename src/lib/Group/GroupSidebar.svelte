@@ -192,17 +192,16 @@
 				/>
 			{/if}
 		</div>
-		{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
-			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<GroupSidebarButton
+		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+			<GroupSidebarButton
 						Class="w-full"
 						action={() => (areYouSureModal = true)}
 						text="Leave group"
 						faIcon={faPersonRunning}
 						isSelected={false}
 					/>
-				{:else}
+			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 					<a class="text-inherit w-full" href={`/ledger`}>
 						<GroupSidebarButton
 							Class="w-full"

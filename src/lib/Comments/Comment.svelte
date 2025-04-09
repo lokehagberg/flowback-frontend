@@ -6,7 +6,8 @@
 		faArrowUp,
 		faReply,
 		faThumbsUp,
-		faThumbsDown
+		faThumbsDown,
+		faSpinner
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
@@ -17,18 +18,24 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-
+	import { reportComment } from './functions';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[] = [], // Give it a default empty array
-		delegate_pool_id: number | null = null;
-
+		delegate_pool_id: number | null = null
+		
+		
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
 		isVoting = false,
-		images: File[] = [];
+		images: File[] = [],
+		reportReason = '';
 
+	let reporting = false;
 	const commentDelete = async (id: number) => {
 		let _api = `group/`;
 
@@ -51,6 +58,31 @@
 			comment.message = '[Deleted]';
 			comment.active = false;
 			console.log(comment, 'COMMNEt');
+			return comment;
+		});
+		comments = comments;
+	};
+
+	const commentReport = async (id: number, message: string) => {
+		let _api = 'report/create';
+
+		let data = {
+			title: 'Report Comment',
+			description: message || 'Report Comment'
+		};
+
+		const { res, json } = await fetchRequest('POST', _api, data);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to report comment', success: false };
+			return;
+		}
+
+		comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			comment.message = '[Reported]';
+			comment.active = false;
 			return comment;
 		});
 		comments = comments;
@@ -112,6 +144,8 @@
 		console.log(images, 'IMAGES');
 		console.log(comment.attachments, 'comment.attachments');
 	}
+
+	console.log(comment.author_id, Number(localStorage.getItem('userId')),Number(localStorage.getItem('userId')) !== comment.author_id );
 </script>
 
 {#if comment.being_edited}
@@ -119,7 +153,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
-		bind:images
+		bind:files={images}
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -145,7 +179,10 @@
 		</div>
 		{#key comment.message}
 			{#if comment.message}
-				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
+				<div
+					class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap"
+					id={`comment-${comment.id}`}
+				>
 					{comment.message}
 				</div>
 			{/if}
@@ -156,7 +193,7 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-				<!-- {@debug attachment} -->
+					<!-- {@debug attachment} -->
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
 							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
@@ -207,7 +244,7 @@
 					</button>
 				</div>
 				<!-- {/if} -->
-				 
+
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
@@ -215,6 +252,14 @@
 					<!-- <Fa icon={faReply} /> -->
 					{$_('Reply')}
 				</button>
+				{#if Number(localStorage.getItem('userId')) !== comment.author_id}
+				<button
+					class="flex items-center gap-1 hover:text-red-900 text-gray-600 dark:text-darkmodeText dark:hover:text-red-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => (comment.being_reported = true)}
+				>
+					{$_('Report')}
+				</button>
+				{/if}
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
@@ -233,6 +278,13 @@
 						{$_('Edit')}
 					</button>
 				{/if}
+
+				<button
+					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
+					on:click={() => commentReport(comment.id, comment.message || '')}
+				>
+					{$_('Report')}
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -241,13 +293,55 @@
 {#if comment.being_replied}
 	<CommentPost
 		{delegate_pool_id}
-		bind:images
+		bind:files={images}
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}
 		parent_id={comment.id}
 		{api}
 	/>
+{/if}
+
+{#if comment.being_reported}
+	<Modal bind:open={comment.being_reported} Class="min-w-[500px] md:w-[700px]">
+		<div slot="header">{$_('Report Comment')}</div>
+		<div slot="body">
+			<form on:submit|preventDefault={async () => {
+				reporting = true;
+				let result = await reportComment(comment.id, reportReason);
+				poppup = { message: result?.message, success: result.success };
+				comment.being_reported = false;
+				reportReason = '';
+				reporting = false;
+			}}>
+				<p class="text-lg mb-4">{$_(`Are you sure you want to report this comment by ${comment.author_name}?`)}</p>
+				<TextArea 
+					label={$_('Reason for reporting')} 
+					bind:value={reportReason} 
+					required 
+					rows={4}
+					Class="w-full"
+				/>
+				<div class="flex justify-end gap-2 mt-4">
+					<Button 
+						buttonStyle="warning-light" 
+						onClick={() => {
+							comment.being_reported = false;
+							reportReason = '';
+						}}
+					>
+						{$_('Cancel')}
+					</Button>
+					<Button type="submit" disabled={reporting}>
+						{$_(reporting ? 'Submitting...' : 'Report')}
+						{#if reporting}
+							<Fa icon={faSpinner} spin={reporting}/> 
+						{/if}
+					</Button>
+				</div>
+			</form>
+		</div>
+	</Modal>
 {/if}
 
 <Poppup bind:poppup />

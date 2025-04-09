@@ -465,7 +465,6 @@
     "Allows user to change any proposal in a poll": "Tillåter användaren att ändra förslag i en omröstning",
     "Delete Proposal": "Ta bort förslag",
     "Allows user to remove any proposal in a poll": "Tillåter användaren att ta bort förslag i en omröstning",
-    "Delete Poll": "Ta bort omröstning",
     "Allows user to delete any poll": "Tillåter användaren att ta bort valfri omröstning",
     "Delete Comment": "Ta bort kommentar",
     "Allows user to delete any comment": "Tillåter användaren att ta bort kommentarer",
@@ -644,6 +643,7 @@
     "Predict on what will happen if a proposal is implemented in reality.": "Förutse vad som kommer att hända om ett förslag genomförs i verkligheten.",
     "!Calculating results, try refreshing in a while.": "!Beräknar resultat, försök att uppdatera sidan om en stund.",
     "Vote calculation failed": "Röstberäkning misslyckades",
+    "Pending invite": "Väntande inbjudan",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

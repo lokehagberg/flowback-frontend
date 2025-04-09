@@ -79,7 +79,6 @@
 		updateUserData(chatterId, new Date(), new Date());
 
 		if (selectedPage === 'direct') {
-			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
 			let message = previewDirect.find((message) => message.channel_id === chatterId);
 
 			if (message) {
@@ -89,9 +88,10 @@
 
 				previewDirect = previewDirect;
 			}
+			
 			selectedChat = chatterId;
-			chatPartner.set(chatterId);
 			selectedChatChannelId = chatterId;
+			chatPartner.set(chatterId);
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
 			if (message) {
@@ -176,6 +176,7 @@
 		chatPartner.subscribe((partner) => {
 			if (partner === null) return;
 			selectedChat = partner;
+			clickedChatter(partner)
 		});
 	});
 

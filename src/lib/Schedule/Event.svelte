@@ -11,7 +11,7 @@
 	export let showEvent = false,
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
-		selectedEvent: WorkGropuSchdeuledEventCreate,
+		selectedEvent: scheduledEvent,
 		workGroups: any[] = [],
 		type = '',
 		loading = false;

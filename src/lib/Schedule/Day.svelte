@@ -82,7 +82,7 @@
 		document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		document.getElementById(`${x}-${y}`)?.classList.add('selected');
 		selectedDatePosition = `${x}-${y}`;
-		selectedDate = new Date(year, month, getDay(x, y));
+		selectedDate = new Date(year, month, getDay(x+1, y));
 	}}
 >
 	<div class="w-full flex flex-col items-center">

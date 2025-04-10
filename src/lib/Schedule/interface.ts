@@ -16,3 +16,15 @@ export interface scheduledEvent {
 	schedule_origin_name: 'user' | 'group';
 	meeting_link?: string;
 }
+
+
+export interface WorkGropuSchdeuledEventCreate{
+	title: string;              
+    description?: string;       
+    start_date: string;         
+    end_date?: string;         
+    group_id: number;          
+    work_group_id?: number;    
+    assignee_ids?: number[];   
+    meeting_link?: string;     
+}

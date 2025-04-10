@@ -139,3 +139,17 @@ export const nextPhase = async (pollType: number, pollId: string | number, phase
 
 	return _phase
 };
+
+export const reportThread = async (threadId: number, description: string) => {
+    const {res, json} = await fetchRequest('POST', `report/create`, {
+        title: threadId,
+        description
+    }, true);
+    
+    if(!res.ok) {
+        return  { message: 'Failed to report thread', success: false };
+        return;
+    }
+    
+    return { message: 'Thread has been reported', success: true };
+};

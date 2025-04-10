@@ -104,6 +104,7 @@ export interface Comment {
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
+	being_reported: boolean;
 	being_edited_message?: string;
 	id: number;
 	//False if comment has been deleted

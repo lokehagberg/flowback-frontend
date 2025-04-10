@@ -209,7 +209,7 @@
 							</div>
 						{/each}
 					</div>
-					<button on:click={() => clearChoice(tag)}>{$_('Clear Choice')}</button>
+					<button class="text-red-700 hover:underline" on:click={() => clearChoice(tag)}>{$_('Clear Choice')}</button>
 				{:else}
 					<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
 				{/if}

@@ -354,7 +354,7 @@
     "Permissions": "Behörigheter",
     "Assign": "Tilldela",
     "Any": "Ospecifierat",
-    "delegate history for": "Delegeringshistorik för",
+    "Delegate history for": "Delegeringshistorik för",
     "There are currently no threads in this group": "Det finns för nuvarande inga trådar i denna grupp",
     "Search work group": "Sök bland arbetsgrupper",
     "Create work group": "Skapa arbetsgrupp",
@@ -647,6 +647,8 @@
     "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
     "No assignee": "Ingen uppdragstagare",
     "Kick ": "Sparka ",
+    "Request sent": "Förfrågan har skickats",
+    "No polls match your search criteria": "Inga omröstningar matchar dina sökkriterier",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

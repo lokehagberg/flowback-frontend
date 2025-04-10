@@ -98,7 +98,11 @@
 					class="absolute -top-6 z-30 text-sm bg-white px-1 py-0.5 rounded shadow -translate-x-1/2"
 					style="left: {(currentSnapPosition / maxScore) * 100}%"
 				>
-					{currentSnapPosition}
+					{#if isVoting}
+						{currentSnapPosition}
+					{:else}
+						{currentSnapPosition * 20}%
+					{/if}
 				</div>
 			{/if}
 		{/if}

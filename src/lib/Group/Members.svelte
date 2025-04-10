@@ -128,13 +128,13 @@
 
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
 
-		if (res.ok) {
-			await getInvitesList();
-			await getUsers();
-			await searchUsers(searchUserQuery);
-		} else {
+		if (!res.ok) {
 			poppup = { message: "Couldn't accept user invite", success: false };
 		}
+		
+		await getInvitesList();
+		await getUsers();
+		await searchUsers(searchUserQuery);
 	};
 
 	const denyInviteUser = async (userId: number) => {

@@ -89,7 +89,7 @@
 		phase = getPhase(poll);
 		if (phase === 'area_vote') {
 			tags = await getTags(poll?.group_id);
-			await getAreaVote();
+			getAreaVote();
 		}
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));

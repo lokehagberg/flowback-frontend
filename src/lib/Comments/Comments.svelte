@@ -18,7 +18,7 @@
 		delegate_pool_id: null | number = null,
 		Class = '',
 		_comments: CommentType[] = [];
-	let interval:any;
+	let interval: any;
 	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
@@ -53,9 +53,7 @@
 
 	onMount(async () => {
 		await setUpComments();
-		interval = setInterval(() => {
-			setUpComments();
-		}, 20000);
+		setUpComments();
 	});
 	onDestroy(() => {
 		clearInterval(interval);

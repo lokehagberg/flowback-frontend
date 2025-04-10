@@ -162,7 +162,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			type === "group" ? `group/${groupId}/schedule/update` : `user/schedule/update`,
 			payload
 		);
 
@@ -192,9 +192,11 @@
 	showEditScheduleEvent = false;
 
 	const scheduleEventDelete = async () => {
+		console.log(groupId, "GRUPP");
+		
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			type === "group" ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
 				event_id: selectedEvent.event_id
 			}

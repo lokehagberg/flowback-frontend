@@ -268,7 +268,7 @@
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
+		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">

@@ -41,7 +41,7 @@
 			/>
 		{/if}
 		{#if displayName}
-			<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis"
+			<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-darkmodeText"
 				>{username}</span
 			>
 		{/if}
@@ -58,7 +58,7 @@
 			/>
 		{/if}
 		{#if displayName}
-			<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis"
+			<span class="max-w-[150px] overflow-hidden whitespace-nowrap overflow-ellipsis dark:text-darkmodeText"
 				>{username}</span
 			>
 		{/if}

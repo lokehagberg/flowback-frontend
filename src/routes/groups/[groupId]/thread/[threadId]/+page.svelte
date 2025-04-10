@@ -33,7 +33,7 @@
 		}
 
 		thread = json.results[0];
-		if (thread.description === null) thread.description = '';
+		if (thread.description === null) thread.description = '';		
 	};
 </script>
 

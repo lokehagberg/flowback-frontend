@@ -104,7 +104,7 @@
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('tag', tags[0]?.id?.toString() || '1');
-		if (workGroup && selected_poll === "Date Poll") formData.append('work_group_id', workGroup.toString());
+		if (workGroup && selected_poll === "Date Poll" && !isPublic) formData.append('work_group_id', workGroup.toString());
 
 		images.forEach((image) => {
 			formData.append('attachments', image);
@@ -226,7 +226,7 @@
 			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap" />
 			<FileUploads bind:files={images} disableCropping />
 
-			{#if selectedPage === 'thread' || selected_poll === 'Date Poll'}
+			{#if (selectedPage === 'thread' || selected_poll === 'Date Poll') && !isPublic}
 				<Select
 					classInner="border border-gray-300"
 					label={$_('Work Group')}

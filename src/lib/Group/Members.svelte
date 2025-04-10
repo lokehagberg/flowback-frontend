@@ -26,6 +26,7 @@
 	import type { Delegate } from './Delegation/interfaces';
 	import Select from '$lib/Generic/Select.svelte';
 	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import { getUserChannelId } from '$lib/Chat/functions';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -176,15 +177,6 @@
 		searchedUsers = searchedUsers.filter((user) => user.user.id !== userToRemove);
 		removeUserModalShow = false;
 		await getUsers();
-	};
-
-	const getUserChannelId = async (userId: number) => {
-		const { json, res } = await fetchRequest('GET', `user/chat?target_user_ids=${userId}`);
-
-		if (!res.ok || json.length === 0) {
-			return;
-		}
-		return json.id;
 	};
 
 	const resetFilter = () => {};

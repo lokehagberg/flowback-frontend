@@ -51,13 +51,16 @@
 		showEvent = false,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
-		selectedEvent: scheduledEvent = {
-			start_date: '',
-			end_date: '',
-			title: '',
-			event_id: 0,
-			schedule_origin_name: 'group',
-			created_by: 0
+		selectedEvent = {
+		title: '',                  
+		description: '',           
+		start_date: '',            
+		end_date: '',              
+		work_group_id: null,       
+		assignee_ids: [],          
+		meeting_link: '',          
+		event_id: 0,               
+		created_by: 0  
 		},
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
@@ -80,7 +83,7 @@
 	const setUpScheduledPolls = async () => {
 		let _api = '';
 
-		if (groupId) {
+		if (type==="group") {
 			_api = `group/${groupId}/schedule?limit=1000&`;
 
 			if (workGroupFilter.length > 0) {
@@ -95,6 +98,7 @@
 
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
+		console.log(events,'events')
 	};
 
 	const scheduleEventCreate = async () => {
@@ -109,11 +113,12 @@
 
 		if (selectedEvent.description === '') delete payload.description;
 
+		console.log(type, 'TYp');
+
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
 			API += `group/${$page.params.groupId || 1}/schedule/create`;
-			if (selectedEvent.work_group) payload['work_group_id'] = selectedEvent.work_group;
 		}
 
 		const { res, json } = await fetchRequest('POST', API, payload);
@@ -121,9 +126,15 @@
 		loading = false;
 
 		if (!res.ok) {
+			console.log(res,json)
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
+
+		poppup = { message: 'Successfully created event', success: true };
+		showCreateScheduleEvent = false;
+		events.push(selectedEvent);
+		events = events;
 
 		selectedEvent = {
 			start_date: '',
@@ -133,11 +144,6 @@
 			schedule_origin_name: 'group',
 			created_by: 0
 		};
-
-		poppup = { message: 'Successfully created event', success: true };
-		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
 	};
 
 	const scheduleEventUpdate = async () => {

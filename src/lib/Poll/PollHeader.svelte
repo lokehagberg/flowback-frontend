@@ -19,6 +19,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import DeletePollModal from './DeletePollModal.svelte';
+	import ReportPollModal from './ReportPollModal.svelte';
 
 	export let poll: poll,
 		displayTag = false,
@@ -26,6 +27,8 @@
 		pollType: 3 | 4 = 3;
 
 	let deletePollModalShow = false,
+		reportPollModalShow = false,
+		choicesOpen = false,
 		poppup: poppup;
 </script>
 
@@ -56,11 +59,13 @@
 		/>
 		<!-- {#if groupUser?.is_admin} -->
 		<MultipleChoices
+			bind:choicesOpen
 			labels={phase === 'result' || phase === 'prediction_vote'
 				? [$_('Delete Poll'), $_('Report Poll')]
 				: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 			functions={[
-				() => (deletePollModalShow = true),
+				() => (deletePollModalShow = true, choicesOpen = false),
+				() => (reportPollModalShow = true, choicesOpen = false),
 				async () => (phase = await nextPhase(poll?.poll_type, $page.params.pollId, phase))
 			]}
 			Class="justify-self-center mt-2"
@@ -131,6 +136,7 @@
 {/if}
 
 <DeletePollModal bind:deletePollModalShow pollId={$page.params.pollId} />
+<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
 <Poppup bind:poppup />
 

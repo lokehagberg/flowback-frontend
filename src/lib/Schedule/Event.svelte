@@ -94,7 +94,7 @@
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
+<Modal Class="min-w-[400px] md:w-[700px] " bind:open={showCreateScheduleEvent}>
 	<div slot="body">
 		<Loader bind:loading>
 			<form>
@@ -107,18 +107,20 @@
 				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={selectedEvent.description} />
 				{#if type === 'group'}
 					<div class="text-left">
-						<label class="block text-md">
+						<label class="block text-md py-3" for="work-group">
 							{$_('Work Group')}
+							<Select
+								Class="width:100%"
+								labels={workGroups.map((group) => group.name)}
+								values={workGroups.map((group) => group.id)}
+								value={selectedEvent.work_group?.id || ""}
+								innerLabel={$_("No workgroup assigned")}
+								innerLabelOn={true}
+							/>
 						</label>
-						<Select
-							Class="width:100%"
-							classInner="border-gray-300 rounded border"
-							labels={workGroups.map((group) => group.name)}
-							values={workGroups.map((group) => group.id)}
-							value={selectedEvent.work_group?.id || ""}
-							innerLabel={$_("No workgroup assigned")}
-							innerLabelOn={true}
-						/>
+						
+						
+						
 					</div>
 				{/if}
 				<div class="w-full md:flex md:gap-4">

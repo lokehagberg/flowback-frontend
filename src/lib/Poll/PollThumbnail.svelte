@@ -84,6 +84,7 @@
 
 		if (selectedTagName) {
 			selectedTag = tags?.find((tag) => tag.name === selectedTagName)?.id || 0;
+			voting = false;
 		}
 	};
 
@@ -303,6 +304,7 @@
 							Class="w-[47%] "
 							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border"
 							onInput={() => (voting = true)}
+							defaultValue=""
 						/>
 						{#if voting}
 							<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"

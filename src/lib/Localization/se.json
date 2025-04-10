@@ -377,7 +377,7 @@
     "My Ledger": "Mina Transaktioner",
     "Work Group": "Arbetsgrupp",
     "Save Vote": "Spara röst",
-    "Successfully saved voting!": "Lyckades spara röst",
+    "Successfully saved voting!": "Lyckades spara röst!",
     "See Proposals": "Se förslag",
     "See Consequences": "Se konsekvenser",
     "Create a Consequence": "Skapa en konsekvens",
@@ -644,6 +644,9 @@
     "!Calculating results, try refreshing in a while.": "!Beräknar resultat, försök att uppdatera sidan om en stund.",
     "Vote calculation failed": "Röstberäkning misslyckades",
     "Pending invite": "Väntande inbjudan",
+    "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
+    "No assignee": "Ingen uppdragstagare",
+    "Kick ": "Sparka ",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

@@ -232,6 +232,7 @@
 				</p>
 			</div>
 			<div class="dark:text-darkmodeText py-6 w-[30%]">
+
 				<div class="text-primary dark:text-secondary font-bold">
 					{$_('Contact Information')}
 					{#await getUserChannelId(user.id) then channelId}
@@ -242,11 +243,13 @@
 								chatPartner.set(channelId);
 							}}
 							Class="text-primary"
+
 						>
 							<Fa icon={faPaperPlane} rotate="60" />
 						</button>
 					{/if}
 				{/await}
+
 				</div>
 
 				<a

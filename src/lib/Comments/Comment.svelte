@@ -324,48 +324,4 @@
 	/>
 {/if}
 
-<Modal bind:open={comment.being_reported} Class="min-w-[500px] md:w-[700px]">
-	<div slot="header">{$_('Report Comment')}</div>
-	<div slot="body">
-		<form
-			on:submit|preventDefault={async () => {
-				reporting = true;
-				let result = await reportComment(comment.id, reportReason);
-				poppup = { message: result?.message, success: result.success };
-				comment.being_reported = false;
-				reportReason = '';
-				reporting = false;
-			}}
-		>
-			<p class="text-lg mb-4">
-				{$_(`Are you sure you want to report this comment by ${comment.author_name}?`)}
-			</p>
-			<TextArea
-				label={$_('Reason for reporting')}
-				bind:value={reportReason}
-				required
-				rows={4}
-				Class="w-full"
-			/>
-			<div class="flex justify-end gap-2 mt-4">
-				<Button
-					buttonStyle="warning-light"
-					onClick={() => {
-						comment.being_reported = false;
-						reportReason = '';
-					}}
-				>
-					{$_('Cancel')}
-				</Button>
-				<Button type="submit" disabled={reporting}>
-					{$_(reporting ? 'Submitting...' : 'Report')}
-					{#if reporting}
-						<Fa icon={faSpinner} spin={reporting} />
-					{/if}
-				</Button>
-			</div>
-		</form>
-	</div>
-</Modal>
-
 <Poppup bind:poppup />

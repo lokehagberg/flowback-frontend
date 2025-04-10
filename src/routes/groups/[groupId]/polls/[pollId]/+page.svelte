@@ -144,6 +144,7 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:selectedProposal
 								bind:proposals
 								bind:comments
@@ -198,6 +199,7 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -222,7 +224,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{:else if proposalsToPredictionMarket.length === 0}
@@ -247,6 +253,7 @@
 						>
 						<div class="max-h-full overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -261,7 +268,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -285,6 +296,7 @@
 								isVoting={false}
 								bind:phase
 								bind:selectedProposal
+								bind:poll
 							/>
 						</div>
 					</div>
@@ -294,7 +306,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -312,6 +328,7 @@
 						>
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -326,7 +343,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}

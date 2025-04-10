@@ -46,7 +46,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.24',
+		version = '0.1.26',
 		serverConfig: any = {};
 
 	const userUpdate = async () => {

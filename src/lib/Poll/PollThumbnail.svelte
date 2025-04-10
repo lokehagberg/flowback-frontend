@@ -33,6 +33,7 @@
 	import DeletePollModal from './DeletePollModal.svelte';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import Timeline from './NewDesign/Timeline.svelte';
+	import ReportPollModal from './ReportPollModal.svelte';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -46,7 +47,9 @@
 		darkMode: boolean,
 		voting = true,
 		poppup: poppup,
+		choicesOpen = false,
 		deletePollModalShow = false,
+		reportPollModalShow = false,
 		hovering = false,
 		showGroupInfo = !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId;
 
@@ -153,11 +156,13 @@
 						</button>
 					{/if}
 					<MultipleChoices
+						bind:choicesOpen
 						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
 							? [$_('Delete Poll'), $_('Report Poll')]
 							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
-							() => (deletePollModalShow = true),
+							() => (deletePollModalShow = true, choicesOpen = false),
+							() => (reportPollModalShow = true, choicesOpen = false),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
 						]}
 						Class="text-black justify-self-center mt-2"
@@ -201,11 +206,13 @@
 						</button>
 					{/if}
 					<MultipleChoices
+						bind:choicesOpen
 						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
 							? [$_('Delete Poll'), $_('Report Poll')]
 							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
-							() => (deletePollModalShow = true),
+							() => (deletePollModalShow = true, choicesOpen = false),
+							() => (reportPollModalShow = true, choicesOpen = false),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
 						]}
 						Class="text-black justify-self-center mt-2"
@@ -392,6 +399,7 @@
 </div>
 
 <DeletePollModal bind:deletePollModalShow pollId={poll?.id} />
+<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
 <Poppup bind:poppup />
 

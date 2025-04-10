@@ -18,10 +18,11 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
-	import { reportComment } from './functions';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
+
 	export let comment: Comment,
 		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -31,8 +32,10 @@
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
 		isVoting = false,
-		images: File[] = [],
-		reportReason = '';
+		ReportCommentModalShow = false,
+		reportTitle: string,
+		reportDescription: string,
+		images: File[] = [];
 
 	let reporting = false;
 	const commentDelete = async (id: number) => {
@@ -66,8 +69,8 @@
 		let _api = 'report/create';
 
 		let data = {
-			title: 'Report Comment',
-			description: message || 'Report Comment'
+			title: reportTitle,
+			description: reportDescription,
 		};
 
 		const { res, json } = await fetchRequest('POST', _api, data);
@@ -80,7 +83,7 @@
 		comments.map((comment) => {
 			if (comment.id !== id) return comment;
 
-			comment.message = '[Reported]';
+			// comment.message = '[Reported]';
 			comment.active = false;
 			return comment;
 		});
@@ -282,9 +285,25 @@
 					</button>
 				{/if}
 
+				<Modal bind:open={ReportCommentModalShow}>
+					<div slot="header">{$_('Report Comment')}</div>
+					<div class="flex flex-col gap-3" slot="body">
+						<TextInput inputClass="bg-white" required label="Title" bind:value={reportTitle} />
+						<TextArea label="Description" required bind:value={reportDescription} inputClass="whitespace-pre-wrap" />
+					</div>
+					<div slot="footer">
+						<div class="flex justify-center gap-2">
+							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Report')}</Button>
+							<Button
+								onClick={() => (ReportCommentModalShow = false)}
+								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+							>
+						</div>
+					</div>
+				</Modal>
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => commentReport(comment.id, comment.message || '')}
+					on:click={() => (ReportCommentModalShow = true)}
 				>
 					{$_('Report')}
 				</button>
@@ -304,49 +323,5 @@
 		{api}
 	/>
 {/if}
-
-<Modal bind:open={comment.being_reported} Class="min-w-[500px] md:w-[700px]">
-	<div slot="header">{$_('Report Comment')}</div>
-	<div slot="body">
-		<form
-			on:submit|preventDefault={async () => {
-				reporting = true;
-				let result = await reportComment(comment.id, reportReason);
-				poppup = { message: result?.message, success: result.success };
-				comment.being_reported = false;
-				reportReason = '';
-				reporting = false;
-			}}
-		>
-			<p class="text-lg mb-4">
-				{$_(`Are you sure you want to report this comment by ${comment.author_name}?`)}
-			</p>
-			<TextArea
-				label={$_('Reason for reporting')}
-				bind:value={reportReason}
-				required
-				rows={4}
-				Class="w-full"
-			/>
-			<div class="flex justify-end gap-2 mt-4">
-				<Button
-					buttonStyle="warning-light"
-					onClick={() => {
-						comment.being_reported = false;
-						reportReason = '';
-					}}
-				>
-					{$_('Cancel')}
-				</Button>
-				<Button type="submit" disabled={reporting}>
-					{$_(reporting ? 'Submitting...' : 'Report')}
-					{#if reporting}
-						<Fa icon={faSpinner} spin={reporting} />
-					{/if}
-				</Button>
-			</div>
-		</form>
-	</div>
-</Modal>
 
 <Poppup bind:poppup />

@@ -74,7 +74,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?limit=${delegationLimit}&delegate=true`
+			`group/${$page.params.groupId}/users?limit=${delegationLimit}&is_delegate=true`
 		);
 		loading = false;
 		return json.results;

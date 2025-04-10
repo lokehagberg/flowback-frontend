@@ -37,7 +37,7 @@
 	const getUserInfo = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
+			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&is_delegate=true`
 		);
 
 		if (!res.ok) {

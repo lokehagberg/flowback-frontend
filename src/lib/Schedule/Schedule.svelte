@@ -52,15 +52,13 @@
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
 		selectedEvent = {
-		title: '',                  
-		description: '',           
-		start_date: '',            
-		end_date: '',              
-		work_group_id: null,       
-		assignee_ids: [],          
-		meeting_link: '',          
-		event_id: 0,               
-		created_by: 0  
+			title: '',
+			description: '',
+			start_date: '',
+			end_date: '',
+			meeting_link: '',
+			event_id: 0,
+			created_by: 0
 		},
 		deleteSelection = () => {},
 		advancedTimeSettingsDates: Date[] = [],
@@ -83,7 +81,7 @@
 	const setUpScheduledPolls = async () => {
 		let _api = '';
 
-		if (type==="group") {
+		if (type === 'group') {
 			_api = `group/${groupId}/schedule?limit=1000&`;
 
 			if (workGroupFilter.length > 0) {
@@ -98,7 +96,7 @@
 
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
-		console.log(events,'events')
+		console.log(events, 'events');
 	};
 
 	const scheduleEventCreate = async () => {
@@ -126,7 +124,7 @@
 		loading = false;
 
 		if (!res.ok) {
-			console.log(res,json)
+			console.log(res, json);
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
@@ -160,14 +158,11 @@
 		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
 			delete payload.meeting_link;
 
-		if (type === 'group' && updatedEvent.work_group)
-			payload['work_group_id'] = updatedEvent.work_group;
-
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			type === "group" ? `group/${groupId}/schedule/update` : `user/schedule/update`,
 			payload
 		);
 
@@ -197,9 +192,11 @@
 	showEditScheduleEvent = false;
 
 	const scheduleEventDelete = async () => {
+		console.log(groupId, "GRUPP");
+		
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			type === "group" ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
 				event_id: selectedEvent.event_id
 			}

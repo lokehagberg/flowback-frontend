@@ -136,7 +136,7 @@
 {/if}
 
 <DeletePollModal bind:deletePollModalShow pollId={$page.params.pollId} />
-<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} message={poll?.title || ""} />
+<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
 <Poppup bind:poppup />
 

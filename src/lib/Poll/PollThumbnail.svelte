@@ -399,7 +399,7 @@
 </div>
 
 <DeletePollModal bind:deletePollModalShow pollId={poll?.id} />
-<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} message={poll?.title || ""} />
+<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
 <Poppup bind:poppup />
 

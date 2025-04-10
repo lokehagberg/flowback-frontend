@@ -5,17 +5,21 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let reportPollModalShow = false,
-		pollId: string|number,
-    message: string;
+		pollId: string|number;
+		
+	let title: string,
+		description: string;
 
 	const reportPoll = async () => {
 		let _api = 'report/create';
 
 		let data = {
-			title: 'Report Poll',
-			description: message || 'Report Poll'
+			title: title,
+			description: description
 		};
 
 		const { res, json } = await fetchRequest('POST', _api, data);
@@ -29,12 +33,13 @@
 
 <Modal bind:open={reportPollModalShow}>
 	<div slot="header">{$_('Report Poll')}</div>
-	<div slot="body">
-		{$_('Are you sure you want to report this poll?')}
+	<div class="flex flex-col gap-3" slot="body">
+		<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
+		<TextArea label="Description" required bind:value={description} inputClass="whitespace-pre-wrap" />
 	</div>
 	<div slot="footer">
 		<div class="flex justify-center gap-2">
-			<Button onClick={reportPoll} Class="bg-red-500 w-1/2">{$_('Yes')}</Button><Button
+			<Button onClick={reportPoll} Class="bg-red-500 w-1/2">{$_('Report')}</Button><Button
 				onClick={() => (reportPollModalShow = false)}
 				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 			>

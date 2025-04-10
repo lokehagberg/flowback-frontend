@@ -19,6 +19,8 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -30,6 +32,8 @@
 		poppup: poppup,
 		isVoting = false,
 		ReportCommentModalShow = false,
+		reportTitle: string,
+		reportDescription: string,
 		images: File[] = [];
 
 	const commentDelete = async (id: number) => {
@@ -63,8 +67,8 @@
 		let _api = 'report/create';
 
 		let data = {
-			title: 'Report Comment',
-			description: message || 'Report Comment'
+			title: reportTitle,
+			description: reportDescription,
 		};
 
 		const { res, json } = await fetchRequest('POST', _api, data);
@@ -267,10 +271,13 @@
 
 				<Modal bind:open={ReportCommentModalShow}>
 					<div slot="header">{$_('Report Comment')}</div>
-					<div slot="body">{$_('Are you sure you want to report this comment?')}</div>
+					<div class="flex flex-col gap-3" slot="body">
+						<TextInput inputClass="bg-white" required label="Title" bind:value={reportTitle} />
+						<TextArea label="Description" required bind:value={reportDescription} inputClass="whitespace-pre-wrap" />
+					</div>
 					<div slot="footer">
 						<div class="flex justify-center gap-2">
-							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Yes')}</Button>
+							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Report')}</Button>
 							<Button
 								onClick={() => (ReportCommentModalShow = false)}
 								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button

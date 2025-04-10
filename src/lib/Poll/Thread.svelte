@@ -157,4 +157,4 @@
 	</div>
 </div>
 
-<ReportThreadModal bind:reportThreadModalShow threadId={$page.params.pollId} message={thread?.title || ""} />
+<ReportThreadModal bind:reportThreadModalShow threadId={$page.params.pollId} />

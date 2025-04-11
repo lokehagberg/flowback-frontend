@@ -152,6 +152,7 @@
 	}
 </script>
 
+{#key group}
 <div>
 	{#if delegates.length > 0}
 		{#each tags as tag, index}
@@ -222,7 +223,7 @@
 		<span>{$_('There are currently no delegates for this group')}</span>
 	{/if}
 </div>
-
+{/key}
 <Poppup bind:poppup />
 
 <style>

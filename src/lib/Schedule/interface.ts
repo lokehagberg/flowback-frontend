@@ -20,11 +20,11 @@ export interface scheduledEvent {
 
 export interface WorkGropuSchdeuledEventCreate{
 	title: string;              
-    description?: string;       
-    start_date: string;         
-    end_date?: string;         
-    group_id: number;          
-    work_group_id?: number;    
-    assignee_ids?: number[];   
-    meeting_link?: string;     
+	description?: string;
+	start_date: string;
+	end_date?: string;
+	group_id: number;
+	work_group_id?: number;
+	assignee_ids?: number[];
+	meeting_link?: string;
 }

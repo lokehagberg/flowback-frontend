@@ -81,6 +81,7 @@ export interface Filter {
 	search: string;
 	order_by: 'start_date_asc' | 'start_date_desc';
 	tag: number | null;
+	workgroup: number | null;
 }
 
 export type Phase =

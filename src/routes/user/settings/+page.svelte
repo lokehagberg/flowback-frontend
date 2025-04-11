@@ -47,7 +47,8 @@
 			}
 		},
 		version = '0.1.29',
-		serverConfig: any = {};
+		serverConfig: any = {},
+		reports: any = [];
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -77,6 +78,14 @@
 		});
 	};
 
+	const getReportList = async () => {
+		const { res, json } = await fetchRequest('GET', 'server/reports');
+
+		if (!res.ok) return;
+
+		return json.results;
+	};
+
 	const a = (key1: string, key2: string = '') => {
 		if (key2 === '') {
 			//@ts-ignore
@@ -89,6 +98,7 @@
 	onMount(() => {
 		getUserConfig();
 		getServerConfig();
+		getReportList();
 	});
 </script>
 
@@ -240,6 +250,16 @@
 				{:else if selectedPage === 'info'}
 					<div>Version: {version}</div>
 					<!-- <div>Version Backend: {serverConfig.GIT_HASH}</div> -->
+					{#if reports.length === 0}
+						<!-- <div class="text-center text-gray-500">{$_('No reports')}</div> -->
+					{:else}
+						{#each reports as reports}
+							<div class="flex justify-between p-2 rounded hover:bg-gray-100">
+								<span>{reports?.title}</span>
+								<span>{reports?.created_at}</span>
+							</div>
+						{/each}
+					{/if}
 				{/if}
 			</ul>
 		</div>

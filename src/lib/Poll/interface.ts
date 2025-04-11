@@ -8,6 +8,7 @@ export interface proposal {
 	poll: number;
 	blockchain_id?: number;
 	attachments: { file: string; file_name: string }[];
+	score: number;
 }
 
 export interface timeProposal {

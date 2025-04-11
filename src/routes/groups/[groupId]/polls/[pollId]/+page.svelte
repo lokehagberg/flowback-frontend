@@ -361,7 +361,11 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full overflow-y-auto">
 						{#if proposals}
-							<PredictionStatements bind:phase bind:poll />
+							<PredictionStatements
+								bind:phase
+								bind:poll
+								selectedProposal={proposals.sort((_proposal) => _proposal.score)[0]}
+							/>
 						{/if}
 					</div>
 					<div slot="right"><Results bind:poll {pollType} /></div>

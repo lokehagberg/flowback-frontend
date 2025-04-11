@@ -187,7 +187,7 @@
 	const a = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/chat/update', {
 			channel_id: selectedChatChannelId,
-			title: 'HIII Carrots yummy'
+			title: 'chat example'
 		});
 	};
 

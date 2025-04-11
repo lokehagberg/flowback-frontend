@@ -16,11 +16,8 @@
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/chat?target_user_ids=${localStorage.getItem("userId")}&${groupMembers
-				.map(
-					(member) =>
-						`target_user_ids=${member.id}`
-				)
+			`user/chat?target_user_ids=${localStorage.getItem('userId')}&${groupMembers
+				.map((member) => `target_user_ids=${member.id}`)
 				.join('&')}`
 		);
 

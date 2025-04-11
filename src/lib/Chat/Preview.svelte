@@ -175,7 +175,7 @@
 
 		chatPartner.subscribe((partner) => {
 			console.log(partner, 'PARTNER');
-			
+
 			if (partner === null) return;
 			selectedPage = 'direct';
 			selectedChat = partner;
@@ -184,7 +184,18 @@
 		});
 	});
 
+	const a = async () => {
+		const { res, json } = await fetchRequest('POST', 'user/chat/update', {
+			channel_id: selectedChatChannelId,
+			title: 'HIII Carrots yummy'
+		});
+	};
+
 	$: groups = sort(groups, previewGroup);
+
+	$: if (selectedChatChannelId) {
+		a();
+	}
 </script>
 
 <div class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject`}>

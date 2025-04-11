@@ -13,6 +13,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import { configToReadable } from '$lib/utils/configToReadable';
+	import { env } from '$env/dynamic/public';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'profile',
 		optionsDesign =
@@ -83,7 +84,7 @@
 
 		if (!res.ok) return;
 
-		return json.results;
+		reports = json.results;
 	};
 
 	const a = (key1: string, key2: string = '') => {
@@ -99,6 +100,13 @@
 		getUserConfig();
 		getServerConfig();
 		getReportList();
+
+		console.log(
+			env.PUBLIC_API_URL,
+			env.PUBLIC_DISABLE_GROUP_CREATION,
+			env.PUBLIC_FLOWBACK_AI_MODULE,
+			env.PUBLIC_LOGO
+		);
 	});
 </script>
 
@@ -250,16 +258,13 @@
 				{:else if selectedPage === 'info'}
 					<div>Version: {version}</div>
 					<!-- <div>Version Backend: {serverConfig.GIT_HASH}</div> -->
-					{#if reports.length === 0}
-						<!-- <div class="text-center text-gray-500">{$_('No reports')}</div> -->
-					{:else}
-						{#each reports as reports}
-							<div class="flex justify-between p-2 rounded hover:bg-gray-100">
-								<span>{reports?.title}</span>
-								<span>{reports?.created_at}</span>
-							</div>
-						{/each}
-					{/if}
+
+					{#each reports as reports}
+						<div class="flex justify-between p-2 rounded hover:bg-gray-100">
+							<span>{reports?.title}</span>
+							<span>{reports?.description}</span>
+						</div>
+					{/each}
 				{/if}
 			</ul>
 		</div>

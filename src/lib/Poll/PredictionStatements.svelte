@@ -62,7 +62,7 @@
 							>{$_('Probability')}:
 							{#if prediction?.combined_bet !== null}
 								{(prediction.combined_bet * 100).toFixed(0)}%
-							{:else if poll.status_prediction === 2}
+							{:else if poll.status_prediction !== 1 }
 								{$_('Calculating')}
 							{:else}
 								{$_('None')}

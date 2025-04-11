@@ -70,12 +70,14 @@
 				<p class="w-full}">{selectedEvent.meeting_link}</p>
 			</div>
 		{/if}
-		<div class="text-left mt-1 w-full">
-			<p class="font-bold">{$_('Description')}</p>
-			<p class="max-h-[25vh] overflow-scroll break-words w-full whitespace-pre-wrap">
-				{selectedEvent.description}
-			</p>
-		</div>
+		{#if selectedEvent.description && selectedEvent.description !== ''}
+			<div class="text-left mt-1 w-full">
+				<p class="font-bold">{$_('Description')}</p>
+				<p class="max-h-[25vh] overflow-scroll break-words w-full whitespace-pre-wrap">
+					{selectedEvent.description}
+				</p>
+			</div>
+		{/if}
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Attachments')}</p>
 		</div>

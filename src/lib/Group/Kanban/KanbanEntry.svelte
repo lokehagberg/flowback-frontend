@@ -10,7 +10,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { checkForLinks, elipsis, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import { checkForLinks, elipsis, getUserInfo, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
 	import type { GroupUser } from '../interface';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
@@ -308,12 +308,20 @@
 			<div class="break-all text-xs">
 				{#if type === 'group'}
 					{kanban.assignee?.username}
-				{:else if kanban.origin_type === 'user'}
-					{$_('My own')}
 				{:else}
 					{kanban.group_name}
 				{/if}
 			</div>
+		{:else if kanban.origin_type === 'user'}
+		{#await getUserInfo() then user}
+			<ProfilePicture
+				username={user.username}
+				profilePicture={user.profile_image}
+				Class=""
+				size={1}
+			/>
+			{$_('My own')}
+			{/await}
 		{/if}
 	</button>
 

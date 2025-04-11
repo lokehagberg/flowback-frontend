@@ -50,25 +50,23 @@
 	};
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-		let users=	await getGroupUsers();
-		const user = users.find((user) => user.user.id === $userInfo.user.id);
-		console.log(user,'user')
-		if(user){
-			assignee = user.user.id;
-		}
-		let groupTasks = await	getKanbanEntriesGroup() as kanban[];
-		if(user.is_admin){
-			kanbanEntries = groupTasks;
-		}else{
-			kanbanEntries = groupTasks.filter((task) => {
-				console.log('isnotadmin')
-			if(user.work_groups.includes(task.work_group?.name)){
-
-				return task;
-
-			}	
-		});
-		}
+			let users = await getGroupUsers();
+			const user = users.find((user) => user.user.id === $userInfo.user.id);
+			console.log(user, 'user');
+			if (user) {
+				assignee = user.user.id;
+			}
+			let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
+			if (user.is_admin) {
+				kanbanEntries = groupTasks;
+			} else {
+				kanbanEntries = groupTasks.filter((task) => {
+					console.log('isnotadmin');
+					if (user.work_groups.includes(task.work_group?.name)) {
+						return task;
+					}
+				});
+			}
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
@@ -99,8 +97,6 @@
 		const { json, res } = await fetchRequest('GET', api);
 		if (!res.ok) return;
 		return json.results;
-		
-
 	};
 
 	const getWorkGroupList = async () => {
@@ -163,19 +159,19 @@
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
 						{#if kanbanEntries?.length > 0}
-						{#each kanbanEntries as kanban}
-							{#if kanban.lane === i}
-								<KanbanEntry
-									bind:workGroups
-									bind:kanban
-									{users}
-									{type}
-									{removeKanbanEntry}
-									{changeNumberOfOpen}
-									{getKanbanEntries}
-								/>
-							{/if}
-						{/each}
+							{#each kanbanEntries as kanban}
+								{#if kanban.lane === i}
+									<KanbanEntry
+										bind:workGroups
+										bind:kanban
+										{users}
+										{type}
+										{removeKanbanEntry}
+										{changeNumberOfOpen}
+										{getKanbanEntries}
+									/>
+								{/if}
+							{/each}
 						{/if}
 					</ul>
 					<div class="flex justify-between pt-4">

@@ -110,7 +110,8 @@
 		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === undefined)
 			delete payload.meeting_link;
 
-		if (selectedEvent.description === '') delete payload.description;
+		if (selectedEvent.description === '' || selectedEvent.description === null)
+			delete payload.description;
 
 		console.log(type, 'TYp');
 
@@ -158,6 +159,7 @@
 
 		if (updatedEvent.description === '' || updatedEvent.description === null)
 			delete payload.description;
+
 		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
 			delete payload.meeting_link;
 
@@ -165,7 +167,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			type === "group" ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			type === 'group' ? `group/${groupId}/schedule/update` : `user/schedule/update`,
 			payload
 		);
 
@@ -197,11 +199,11 @@
 	showEditScheduleEvent = false;
 
 	const scheduleEventDelete = async () => {
-		console.log(groupId, "GRUPP");
-		
+		console.log(groupId, 'GRUPP');
+
 		const { res, json } = await fetchRequest(
 			'POST',
-			type === "group" ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			type === 'group' ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
 				event_id: selectedEvent.event_id
 			}

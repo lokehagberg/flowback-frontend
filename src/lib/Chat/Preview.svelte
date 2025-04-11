@@ -174,6 +174,8 @@
 		});
 
 		chatPartner.subscribe((partner) => {
+			console.log(partner, 'PARTNER');
+			
 			if (partner === null) return;
 			selectedPage = 'direct';
 			selectedChat = partner;

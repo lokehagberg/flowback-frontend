@@ -312,7 +312,7 @@
 		</ul>
 		<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-		{#if selectedChat !== 0 && selectedChat !== undefined && selectedChat !== null}
+		{#if selectedChatChannelId !== 0 && selectedChatChannelId !== undefined && selectedChatChannelId !== null}
 			<div class="border-t-2 border-t-gray-200 w-full">
 				<!-- Here the user writes a message to be sent -->
 				<form

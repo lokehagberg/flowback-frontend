@@ -87,6 +87,12 @@
 			return;
 		}
 
+		console.log(
+			Number(localStorage.getItem('userId')),
+			localStorage.getItem('pfp-link') || '',
+			localStorage.getItem('userName') || ''
+		);
+
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
@@ -101,7 +107,11 @@
 			lane,
 			title,
 			id: json,
-			created_by: 1,
+			created_by: {
+				id: Number(localStorage.getItem('userId')),
+				profile_image: localStorage.getItem('pfp-link') || '',
+				username: localStorage.getItem('userName') || ''
+			},
 			origin_id: 1,
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
@@ -143,7 +153,12 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
-				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={description} />
+				<TextArea
+					Class="text-md"
+					inputClass="whitespace-pre-wrap"
+					label="Description"
+					bind:value={description}
+				/>
 				{#if type === 'group'}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
@@ -152,13 +167,13 @@
 						<Select
 							Class="w-full"
 							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							labels={workGroups.map(group => elipsis(group.name))}
-							values={workGroups.map(group => group.id)}
-							value={workGroup?.id || ""}
+							labels={workGroups.map((group) => elipsis(group.name))}
+							values={workGroups.map((group) => group.id)}
+							bind:value={workGroup.id}
 							defaultValue=""
 							onInput={handleChangeWorkGroup}
-							innerLabel={$_("No workgroup assigned")}
-							innerLabelOn={true}	
+							innerLabel={$_('No workgroup assigned')}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
@@ -181,9 +196,9 @@
 					<Select
 						Class="w-full"
 						classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						labels={priorities.map(i => $_(priorityText[priorityText.length - i]))}
+						labels={priorities.map((i) => $_(priorityText[priorityText.length - i]))}
 						values={priorities}
-						value={priority}
+						bind:value={priority}
 						onInput={handleChangePriority}
 						innerLabel=""
 					/>
@@ -196,20 +211,20 @@
 							<Select
 								Class="w-full"
 								classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-								labels={users.map(user => user.user.username)}
-								values={users.map(user => user.user.id)}
-								value={assignee || ""}
+								labels={users.map((user) => user.user.username)}
+								values={users.map((user) => user.user.id)}
+								bind:value={assignee}
 								defaultValue=""
 								onInput={handleChangeAssignee}
-								innerLabel={$_("No assignee")}
+								innerLabel={$_('No assignee')}
 								innerLabelOn={true}
 							/>
 						</div>
 					{/if}
 					<div class="text-left">
-						<label class="block text-md">
+						<span class="block text-md">
 							{$_('Attachments')}
-						</label>
+						</span>
 						<FileUploads bind:files={images} />
 					</div>
 				</div>

@@ -7,7 +7,11 @@ export interface kanban {
 		image: string;
 		name: string;
 	};
-	created_by: number;
+	created_by: {
+		id: number;
+		profile_image: string | null;
+		username: string;
+	};
 	description: string | null;
 	id: number;
 	lane: number;

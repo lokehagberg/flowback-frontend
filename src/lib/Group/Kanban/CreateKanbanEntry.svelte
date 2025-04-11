@@ -124,7 +124,7 @@
 			end_date: end_date?.toString() || null,
 			//@ts-ignore
 			work_group: {
-				id: workGroup?.id,
+				id: workGroup,
 				name: workGroups.find((group) => group.id === workGroup)?.name
 			},
 			attachments: []

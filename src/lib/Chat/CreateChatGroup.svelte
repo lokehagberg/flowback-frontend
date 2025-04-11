@@ -40,7 +40,7 @@
 </script>
 
 <form on:submit={groupChatCreate}>
-	<TextInput autofocus required bind:value={name} label="Chatgroup Name" />
+	<!-- <TextInput autofocus required bind:value={name} label="Chatgroup Name" /> -->
 
 	{$_('Members')}
 	<div>

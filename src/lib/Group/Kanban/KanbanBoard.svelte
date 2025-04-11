@@ -193,4 +193,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} {workGroups} bind:lane />
+<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} bind:workGroups bind:lane />

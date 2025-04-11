@@ -40,7 +40,7 @@
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: WorkGroup;
+		workGroup: number;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -63,7 +63,7 @@
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
-		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
+		if (workGroup) formData.append('work_group_id', workGroup.toString());
 
 		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
@@ -123,7 +123,10 @@
 			priority,
 			end_date: end_date?.toString() || null,
 			//@ts-ignore
-			work_group: { id: workGroup?.id, name: workGroup?.name } || null,
+			work_group: {
+				id: workGroup?.id,
+				name: workGroups.find((group) => group.id === workGroup)?.name
+			},
 			attachments: []
 		});
 
@@ -145,11 +148,12 @@
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || workGroups[0];
+		workGroup =
+			workGroups.find((group) => group.id === Number(e.target.value))?.id || workGroups[0]?.id;
 	};
 
 	onMount(() => {
-		workGroup = workGroups[0];
+		workGroup = 0;
 	});
 </script>
 
@@ -168,7 +172,8 @@
 					label="Description"
 					bind:value={description}
 				/>
-				{#if type === 'group' && workGroups?.length > 0 && workGroup}
+
+				{#if type === 'group' && workGroups?.length > 0}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
 							{$_('Work Group')}
@@ -178,7 +183,7 @@
 							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
-							bind:value={workGroup.id}
+							bind:value={workGroup}
 							defaultValue=""
 							onInput={handleChangeWorkGroup}
 							innerLabel={$_('No workgroup assigned')}
@@ -212,7 +217,7 @@
 						innerLabel=""
 					/>
 					<div class="flex gap-6 justify-between mt-2 flex-col" />
-				
+
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">

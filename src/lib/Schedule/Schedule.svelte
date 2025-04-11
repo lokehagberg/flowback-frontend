@@ -58,6 +58,7 @@
 			end_date: '',
 			meeting_link: '',
 			event_id: 0,
+			schedule_origin_name: type,
 			created_by: 0
 		},
 		deleteSelection = () => {},
@@ -109,9 +110,8 @@
 		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === undefined)
 			delete payload.meeting_link;
 
-		if (selectedEvent.description === '') delete payload.description;
-
-		console.log(type, 'TYp');
+		if (selectedEvent.description === '' || selectedEvent.description === null)
+			delete payload.description;
 
 		if (type === 'user') {
 			API += `user/schedule/create`;
@@ -135,11 +135,13 @@
 		events = events;
 
 		selectedEvent = {
+			title: '',
+			description: '',
 			start_date: '',
 			end_date: '',
-			title: '',
+			meeting_link: '',
 			event_id: 0,
-			schedule_origin_name: 'group',
+			schedule_origin_name: 'group' as const,
 			created_by: 0
 		};
 	};
@@ -155,6 +157,7 @@
 
 		if (updatedEvent.description === '' || updatedEvent.description === null)
 			delete payload.description;
+
 		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
 			delete payload.meeting_link;
 
@@ -162,7 +165,7 @@
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			type === "group" ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			type === 'group' ? `group/${groupId}/schedule/update` : `user/schedule/update`,
 			payload
 		);
 
@@ -180,11 +183,13 @@
 
 		// Now reset selectedEvent
 		selectedEvent = {
+			title: '',
+			description: '',
 			start_date: '',
 			end_date: '',
-			title: '',
+			meeting_link: '',
 			event_id: 0,
-			schedule_origin_name: 'group',
+			schedule_origin_name: 'group' as const,
 			created_by: 0
 		};
 	};
@@ -192,11 +197,11 @@
 	showEditScheduleEvent = false;
 
 	const scheduleEventDelete = async () => {
-		console.log(groupId, "GRUPP");
-		
+		console.log(groupId, 'GRUPP');
+
 		const { res, json } = await fetchRequest(
 			'POST',
-			type === "group" ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			type === 'group' ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
 				event_id: selectedEvent.event_id
 			}
@@ -217,7 +222,11 @@
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {
-		selectedEvent = event;
+		selectedEvent = {
+			...event,
+			description: event.description || '',
+			meeting_link: event.meeting_link || ''
+		};
 		showEvent = true;
 	};
 
@@ -261,14 +270,12 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
+		{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">

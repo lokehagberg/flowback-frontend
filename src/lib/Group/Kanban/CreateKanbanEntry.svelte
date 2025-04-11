@@ -36,7 +36,7 @@
 			'Very low priority'
 		],
 		priority: undefined | number = 3,
-		end_date: null | string = null,
+		end_date: null | string = new Date().toISOString().slice(0, 16),
 		loading = false,
 		poppup: poppup,
 		images: File[],
@@ -151,10 +151,6 @@
 		workGroup =
 			workGroups.find((group) => group.id === Number(e.target.value))?.id || workGroups[0]?.id;
 	};
-
-	onMount(() => {
-		workGroup = 0;
-	});
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->

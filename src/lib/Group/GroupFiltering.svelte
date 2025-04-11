@@ -56,18 +56,20 @@
 	</div>
 	<div class="flex flex-row items-center gap-1">
 		<span>{$_('Sort')}: </span>
-			<Select
-				classInner="p-1 font-semibold"
-				labels={[$_('All'), $_('Member'), $_('Not member')]}
-				values={['all', 'member', 'not-member']}
-				value={filter.joined}
-				onInput={handleChangeMember}
-				innerLabel=""
-			/>
+		<Select
+			classInner="p-1 font-semibold"
+			labels={[$_('All'), $_('Member'), $_('Not member')]}
+			values={['all', 'member', 'not-member']}
+			bind:value={filter.joined}
+			onInput={handleChangeMember}
+			innerLabel=""
+		/>
 
 		<div class="rounded-md p-1">
-			<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
-				>{$_('Reset Filter')}</Button
+			<Button
+				Class="!p-1 border-none text-red-600 cursor-pointer hover:underline"
+				buttonStyle="warning-light"
+				onClick={resetFilter}>{$_('Reset Filter')}</Button
 			>
 		</div>
 	</div>

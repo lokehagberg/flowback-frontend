@@ -16,11 +16,8 @@
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/chat?target_user_ids=${localStorage.getItem("userId")}&${groupMembers
-				.map(
-					(member) =>
-						`target_user_ids=${member.id}`
-				)
+			`user/chat?target_user_ids=${localStorage.getItem('userId')}&${groupMembers
+				.map((member) => `target_user_ids=${member.id}`)
 				.join('&')}`
 		);
 
@@ -43,7 +40,7 @@
 </script>
 
 <form on:submit={groupChatCreate}>
-	<TextInput autofocus required bind:value={name} label="Chatgroup Name" />
+	<!-- <TextInput autofocus required bind:value={name} label="Chatgroup Name" /> -->
 
 	{$_('Members')}
 	<div>

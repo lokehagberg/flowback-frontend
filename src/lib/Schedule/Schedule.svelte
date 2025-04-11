@@ -58,6 +58,7 @@
 			end_date: '',
 			meeting_link: '',
 			event_id: 0,
+			schedule_origin_name: type,
 			created_by: 0
 		},
 		deleteSelection = () => {},
@@ -135,11 +136,13 @@
 		events = events;
 
 		selectedEvent = {
+			title: '',
+			description: '',
 			start_date: '',
 			end_date: '',
-			title: '',
+			meeting_link: '',
 			event_id: 0,
-			schedule_origin_name: 'group',
+			schedule_origin_name: 'group' as const,
 			created_by: 0
 		};
 	};
@@ -180,11 +183,13 @@
 
 		// Now reset selectedEvent
 		selectedEvent = {
+			title: '',
+			description: '',
 			start_date: '',
 			end_date: '',
-			title: '',
+			meeting_link: '',
 			event_id: 0,
-			schedule_origin_name: 'group',
+			schedule_origin_name: 'group' as const,
 			created_by: 0
 		};
 	};
@@ -217,7 +222,11 @@
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {
-		selectedEvent = event;
+		selectedEvent = {
+			...event,
+			description: event.description || '',
+			meeting_link: event.meeting_link || ''
+		};
 		showEvent = true;
 	};
 
@@ -268,7 +277,7 @@
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
 	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
 		{$_('Scheduled events for')}
-		{selectedDate.getDate() - 1}/{selectedDate.getMonth() + 1}
+		{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
 		{selectedDate.getFullYear()}
 
 		<div class="pt-3 pb-3">

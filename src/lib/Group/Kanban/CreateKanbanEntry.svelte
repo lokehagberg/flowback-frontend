@@ -36,7 +36,7 @@
 			'Very low priority'
 		],
 		priority: undefined | number = 3,
-		end_date: null | string = null,
+		end_date: null | string = new Date().toISOString().slice(0, 16),
 		loading = false,
 		poppup: poppup,
 		images: File[],

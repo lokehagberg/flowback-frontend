@@ -33,13 +33,10 @@
 	};
 
 	const getProposals = async () => {
-		console.log('HERE PROPOSAL SCORE GET PROPOSALS LAUNCHED!!!!');
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
-
-		console.log(json, 'JSON');
 
 		if (!res.ok) return;
 
@@ -50,8 +47,11 @@
 
 	onMount(async () => {
 		getPredictionStatements(selectedProposal);
-		await getProposals();
-		selectedProposal = proposals.sort((proposal) => proposal.score)[0];
+
+		if (poll.status === 1) {
+			await getProposals();
+			selectedProposal = proposals.sort((proposal) => proposal.score)[0];
+		} else selectedProposal = null;
 	});
 </script>
 

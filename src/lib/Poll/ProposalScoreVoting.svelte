@@ -37,22 +37,16 @@
 			proposal: proposal.id
 		}));
 
-		console.log(proposals, 'PROP');
-		console.log('WHAT THA HELLL');
-
 		await getDelegateVotes();
 		await getVotes();
 		needsReload++;
 	});
 
 	const getProposals = async () => {
-		console.log('HERE PROPOSAL SCORE GET PROPOSALS LAUNCHED!!!!');
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
 		);
-
-		console.log(json, 'JSON');
 
 		if (!res.ok) return;
 

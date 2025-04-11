@@ -163,12 +163,12 @@
 						</button>
 					{/if}
 
-					<!-- <MultipleChoices
+					<MultipleChoices
 						bind:choicesOpen
 						labels={phase === 'result' ||
 						phase === 'prediction_vote' ||
 						!poll?.allow_fast_forward ||
-						!permissions?.poll_fast_forward
+						(!permissions?.poll_fast_forward && !userIsOwner)
 							? [$_('Delete Poll'), $_('Report Poll')]
 							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
@@ -177,7 +177,7 @@
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
 						]}
 						Class="text-black justify-self-center mt-2"
-					/> -->
+					/>
 				</div>
 			</div>
 

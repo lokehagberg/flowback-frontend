@@ -50,25 +50,23 @@
 	};
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-		let users=	await getGroupUsers();
-		const user = users.find((user) => user.user.id === $userInfo.user.id);
-		console.log(user,'user')
-		if(user){
-			assignee = user.user.id;
-		}
-		let groupTasks = await	getKanbanEntriesGroup() as kanban[];
-		if(user.is_admin){
-			kanbanEntries = groupTasks;
-		}else{
-			kanbanEntries = groupTasks.filter((task) => {
-				console.log('isnotadmin')
-			if(user.work_groups.includes(task.work_group?.name)){
+			// let users = await getGroupUsers();
+			// const user = users.find((user) => user.user.id === $userInfo.user.id);
 
-				return task;
-
-			}	
-		});
-		}
+			// if (user) {
+			// 	assignee = user.user.id;
+			// }
+			// let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
+			// if (user.is_admin) {
+			// 	kanbanEntries = groupTasks;
+			// } else {
+			// 	kanbanEntries = groupTasks.filter((task) => {
+			// 		if (user.work_groups.includes(task.work_group?.name)) {
+			// 			return task;
+			// 		}
+			// 	});
+			// }
+			kanbanEntries = await getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
@@ -99,8 +97,6 @@
 		const { json, res } = await fetchRequest('GET', api);
 		if (!res.ok) return;
 		return json.results;
-		
-
 	};
 
 	const getWorkGroupList = async () => {
@@ -116,10 +112,11 @@
 
 	// const handleSearch = (search: String) => {};
 
-	onMount(() => {
+	onMount(async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
 		getWorkGroupList();
+		users = await getGroupUsers();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();
@@ -163,19 +160,19 @@
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
 						{#if kanbanEntries?.length > 0}
-						{#each kanbanEntries as kanban}
-							{#if kanban.lane === i}
-								<KanbanEntry
-									bind:workGroups
-									bind:kanban
-									{users}
-									{type}
-									{removeKanbanEntry}
-									{changeNumberOfOpen}
-									{getKanbanEntries}
-								/>
-							{/if}
-						{/each}
+							{#each kanbanEntries as kanban}
+								{#if kanban.lane === i}
+									<KanbanEntry
+										bind:workGroups
+										bind:kanban
+										{users}
+										{type}
+										{removeKanbanEntry}
+										{changeNumberOfOpen}
+										{getKanbanEntries}
+									/>
+								{/if}
+							{/each}
 						{/if}
 					</ul>
 					<div class="flex justify-between pt-4">
@@ -196,4 +193,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} {workGroups} bind:lane />
+<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} bind:workGroups bind:lane />

@@ -13,6 +13,7 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import { configToReadable } from '$lib/utils/configToReadable';
+	import { env } from '$env/dynamic/public';
 
 	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'profile',
 		optionsDesign =
@@ -47,7 +48,8 @@
 			}
 		},
 		version = '0.1.29',
-		serverConfig: any = {};
+		serverConfig: any = {},
+		reports: any = [];
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -77,6 +79,14 @@
 		});
 	};
 
+	const getReportList = async () => {
+		const { res, json } = await fetchRequest('GET', 'server/reports');
+
+		if (!res.ok) return;
+
+		reports = json.results;
+	};
+
 	const a = (key1: string, key2: string = '') => {
 		if (key2 === '') {
 			//@ts-ignore
@@ -89,6 +99,14 @@
 	onMount(() => {
 		getUserConfig();
 		getServerConfig();
+		getReportList();
+
+		console.log(
+			env.PUBLIC_API_URL,
+			env.PUBLIC_DISABLE_GROUP_CREATION,
+			env.PUBLIC_FLOWBACK_AI_MODULE,
+			env.PUBLIC_LOGO
+		);
 	});
 </script>
 
@@ -240,6 +258,13 @@
 				{:else if selectedPage === 'info'}
 					<div>Version: {version}</div>
 					<!-- <div>Version Backend: {serverConfig.GIT_HASH}</div> -->
+
+					{#each reports as reports}
+						<div class="flex justify-between p-2 rounded hover:bg-gray-100">
+							<span>{reports?.title}</span>
+							<span>{reports?.description}</span>
+						</div>
+					{/each}
 				{/if}
 			</ul>
 		</div>

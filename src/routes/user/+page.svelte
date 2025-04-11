@@ -9,8 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { blobifyImages } from '$lib/Generic/GenericFunctions';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { pfpStore } from '$lib/Login/stores';
@@ -232,24 +231,21 @@
 				</p>
 			</div>
 			<div class="dark:text-darkmodeText py-6 w-[30%]">
-
 				<div class="text-primary dark:text-secondary font-bold">
 					{$_('Contact Information')}
 					{#await getUserChannelId(user.id) then channelId}
-					{#if channelId}
-						<button
-							on:click={() => {
-								isChatOpen.set(true);
-								chatPartner.set(channelId);
-							}}
-							Class="text-primary"
-
-						>
-							<Fa icon={faPaperPlane} rotate="60" />
-						</button>
-					{/if}
-				{/await}
-
+						{#if channelId}
+							<button
+								on:click={() => {
+									isChatOpen.set(true);
+									chatPartner.set(channelId);
+								}}
+								Class="text-primary"
+							>
+								<Fa icon={faPaperPlane} rotate="60" />
+							</button>
+						{/if}
+					{/await}
 				</div>
 
 				<a

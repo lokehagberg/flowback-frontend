@@ -9,10 +9,12 @@
 	import NewDescription from './NewDescription.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { onMount } from 'svelte';
+	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 
 	export let selectedProposal: proposal | null = null,
 		phase: Phase,
-		poll: poll;
+		poll: poll,
+		proposals: proposal[] = [];
 
 	let predictions: PredictionStatement[] = [],
 		loading = false;
@@ -30,10 +32,26 @@
 		predictions = json.results;
 	};
 
+	const getProposals = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/poll/${$page.params.pollId}/proposals?limit=${proposalsLimit}`
+		);
+
+		if (!res.ok) return;
+
+		proposals = json.results;
+	};
+
 	$: if (selectedProposal) getPredictionStatements(selectedProposal);
 
-	onMount(() => {
+	onMount(async () => {
 		getPredictionStatements(selectedProposal);
+
+		if (poll.status === 1) {
+			await getProposals();
+			selectedProposal = proposals.sort((proposal) => proposal.score)[0];
+		} else selectedProposal = null;
 	});
 </script>
 
@@ -62,7 +80,7 @@
 							>{$_('Probability')}:
 							{#if prediction?.combined_bet !== null}
 								{(prediction.combined_bet * 100).toFixed(0)}%
-							{:else if poll.status_prediction !== 1 }
+							{:else if poll.status_prediction !== 1}
 								{$_('Calculating')}
 							{:else}
 								{$_('None')}

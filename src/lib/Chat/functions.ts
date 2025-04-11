@@ -1,8 +1,6 @@
 import { fetchRequest } from "$lib/FetchRequest";
 
 export const updateUserData = async (selectedChat:number, timestamp?: Date | null, closed?: Date | null) => {
-    console.log(selectedChat, timestamp, closed, "HIIIIIIIII");
-    
     let data: any = {
         channel_id: selectedChat
     };

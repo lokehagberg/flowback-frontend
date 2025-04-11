@@ -10,7 +10,12 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { checkForLinks, elipsis, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import {
+		checkForLinks,
+		elipsis,
+		getUserInfo,
+		type StatusMessageInfo
+	} from '$lib/Generic/GenericFunctions';
 	import type { GroupUser } from '../interface';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
@@ -293,11 +298,19 @@
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
-			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+			if ($page.params.groupId) goto(`/user?id=${kanban?.assignee?.id}`);
 			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 	>
-		{#if kanban?.assignee}
+		{#if kanban.origin_type === 'user'}
+			<ProfilePicture
+				username={kanban.created_by.username}
+				profilePicture={kanban.created_by.profile_image}
+				Class=""
+				size={1}
+			/>
+			{$_('My own')}
+		{:else if kanban?.assignee}
 			<ProfilePicture
 				username={kanban?.assignee?.username}
 				profilePicture={kanban?.assignee?.profile_image}
@@ -308,8 +321,6 @@
 			<div class="break-all text-xs">
 				{#if type === 'group'}
 					{kanban.assignee?.username}
-				{:else if kanban.origin_type === 'user'}
-					{$_('My own')}
 				{:else}
 					{kanban.group_name}
 				{/if}
@@ -481,7 +492,7 @@
 									: $_('No priority')}
 							</p>
 						</div>
-						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
+						<!-- <p>{kanban?.assignee?.username || $_('Unassigned')}</p> -->
 						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 							{#each kanbanEdited.images as file}
 								<li>

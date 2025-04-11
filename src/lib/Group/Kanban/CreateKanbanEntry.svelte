@@ -13,6 +13,7 @@
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
 	import Select from '$lib/Generic/Select.svelte';
+	import { onMount } from 'svelte';
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
@@ -39,7 +40,7 @@
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: WorkGroup | null = null;
+		workGroup: number;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -62,7 +63,7 @@
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
-		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
+		if (workGroup) formData.append('work_group_id', workGroup.toString());
 
 		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
@@ -87,28 +88,45 @@
 			return;
 		}
 
+		console.log(
+			Number(localStorage.getItem('userId')),
+			localStorage.getItem('pfp-link') || '',
+			localStorage.getItem('userName') || ''
+		);
+
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
+		const _assignee = assignee
+			? {
+					id: assignee || 0,
+					profile_image: userAssigned?.user.profile_image || '',
+					username: userAssigned?.user.username || ''
+			  }
+			: null;
+
 		kanbanEntries.push({
-			assignee: {
-				id: assignee || 0,
-				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || $_('Unassigned')
-			},
+			assignee: _assignee,
 			group: { id: 0, image: '', name: '' },
 			description,
 			lane,
 			title,
 			id: json,
-			created_by: 1,
+			created_by: {
+				id: Number(localStorage.getItem('userId')),
+				profile_image: localStorage.getItem('pfp-link') || '',
+				username: localStorage.getItem('userName') || ''
+			},
 			origin_id: 1,
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
 			end_date: end_date?.toString() || null,
 			//@ts-ignore
-			work_group: { id: workGroup?.id, name: workGroup?.name } || null,
+			work_group: {
+				id: workGroup,
+				name: workGroups.find((group) => group.id === workGroup)?.name
+			},
 			attachments: []
 		});
 
@@ -130,8 +148,13 @@
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
+		workGroup =
+			workGroups.find((group) => group.id === Number(e.target.value))?.id || workGroups[0]?.id;
 	};
+
+	onMount(() => {
+		workGroup = 0;
+	});
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
@@ -143,8 +166,14 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
-				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={description} />
-				{#if type === 'group'}
+				<TextArea
+					Class="text-md"
+					inputClass="whitespace-pre-wrap"
+					label="Description"
+					bind:value={description}
+				/>
+
+				{#if type === 'group' && workGroups?.length > 0}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
 							{$_('Work Group')}
@@ -152,13 +181,13 @@
 						<Select
 							Class="w-full"
 							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-							labels={workGroups.map(group => elipsis(group.name))}
-							values={workGroups.map(group => group.id)}
-							value={workGroup?.id || ""}
+							labels={workGroups.map((group) => elipsis(group.name))}
+							values={workGroups.map((group) => group.id)}
+							bind:value={workGroup}
 							defaultValue=""
 							onInput={handleChangeWorkGroup}
-							innerLabel={$_("No workgroup assigned")}
-							innerLabelOn={true}	
+							innerLabel={$_('No workgroup assigned')}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
@@ -181,13 +210,14 @@
 					<Select
 						Class="w-full"
 						classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						labels={priorities.map(i => $_(priorityText[priorityText.length - i]))}
+						labels={priorities.map((i) => $_(priorityText[priorityText.length - i]))}
 						values={priorities}
-						value={priority}
+						bind:value={priority}
 						onInput={handleChangePriority}
 						innerLabel=""
 					/>
 					<div class="flex gap-6 justify-between mt-2 flex-col" />
+
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">
@@ -196,20 +226,20 @@
 							<Select
 								Class="w-full"
 								classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-								labels={users.map(user => user.user.username)}
-								values={users.map(user => user.user.id)}
-								value={assignee || ""}
+								labels={users.map((user) => user.user.username)}
+								values={users.map((user) => user.user.id)}
+								bind:value={assignee}
 								defaultValue=""
 								onInput={handleChangeAssignee}
-								innerLabel={$_("No assignee")}
+								innerLabel={$_('No assignee')}
 								innerLabelOn={true}
 							/>
 						</div>
 					{/if}
 					<div class="text-left">
-						<label class="block text-md">
+						<span class="block text-md">
 							{$_('Attachments')}
-						</label>
+						</span>
 						<FileUploads bind:files={images} />
 					</div>
 				</div>

@@ -43,7 +43,7 @@
 		removeUserModalShow = false,
 		userIsAdmin = false;
 
-	let sortOrder: 'a-z' | 'z-a' | null = null;
+	let sortOrder: 'a-z' | 'z-a' = 'a-z';  // Default to a-z sort
 
 	onMount(async () => {
 		getUsers();
@@ -93,6 +93,17 @@
 
 		searchedInvitationUsers = json.results;
 		searchedUsers = json.results;
+		
+		// Apply sorting based on sortOrder (always sort)
+		if (sortOrder === 'a-z') {
+			searchedUsers = searchedUsers.sort((a, b) => 
+				a.user.username.toLowerCase().localeCompare(b.user.username.toLowerCase())
+			);
+		} else if (sortOrder === 'z-a') {
+			searchedUsers = searchedUsers.sort((a, b) => 
+				b.user.username.toLowerCase().localeCompare(a.user.username.toLowerCase())
+			);
+		}
 	};
 
 	const getInvitesList = async () => {
@@ -179,7 +190,10 @@
 		await getUsers();
 	};
 
-	const resetFilter = () => {};
+	const resetFilter = () => {
+		sortOrder = 'a-z';  // Reset to default a-z sort instead of null
+		searchUsers(searchUserQuery);
+	};
 </script>
 
 <Modal bind:open={showInvite}>
@@ -244,17 +258,14 @@
 						bind:value={searchUserQuery}
 					/>
 
-					<!-- TODO: Fix functionality for sorting -->
 					<div class="flex flex-row items-center gap-1 pt-2">
 						<span>{$_('Sort')}: </span>
 						<Select
 							classInner="p-1 font-semibold"
 							labels={[$_('A - Z'), $_('Z - A')]}
 							values={['a-z', 'z-a']}
-							value={sortOrder || ''}
+							bind:value={sortOrder}
 							onInput={() => searchUsers(searchUserQuery)}
-							innerLabel="All"
-							innerLabelOn={true}
 						/>
 
 						<!-- TODO: Fix functionality for filtering -->

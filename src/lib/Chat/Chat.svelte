@@ -12,7 +12,7 @@
 	import { faCog, faX } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
-	import { isChatOpen } from './ChatStore.svelte';
+	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
 
@@ -55,6 +55,7 @@
 	};
 
 	$: if (!chatOpen) {
+		chatPartner.set(0)
 		// if (selectedChat) updateUserData(selectedChat, null, new Date());
 		// selectedChat = null;
 		// selectedPage === 'direct';

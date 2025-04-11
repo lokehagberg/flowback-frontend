@@ -1,13 +1,17 @@
 import type { WorkGroup } from "../WorkingGroups/interface";
 
 export interface kanban {
-	assignee: { id: number; profile_image: string; username: string };
+	assignee: { id: number; profile_image: string; username: string } | null;
 	group: {
 		id: number;
 		image: string;
 		name: string;
 	};
-	created_by: number;
+	created_by: {
+		id: number;
+		profile_image: string | null;
+		username: string;
+	};
 	description: string | null;
 	id: number;
 	lane: number;

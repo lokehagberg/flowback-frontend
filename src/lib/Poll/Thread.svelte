@@ -18,7 +18,6 @@
 	import ReportThreadModal from './ReportThreadModal.svelte';
 
 	export let isAdmin = true,
-
 		thread: Thread;
 	let threads: Thread[] = [],
 		reportThreadModalShow = false,
@@ -74,7 +73,7 @@
 		threads = threads;
 	};
 	let threadIsBeingReported = false;
-	let reporting = false
+	let reporting = false;
 </script>
 
 <div
@@ -107,7 +106,7 @@
 			<MultipleChoices
 				bind:choicesOpen
 				labels={[$_('Delete Thread'), $_('Report Thread')]}
-				functions={[_, () => (reportThreadModalShow = true, choicesOpen = false)]}
+				functions={[_, () => ((reportThreadModalShow = true), (choicesOpen = false))]}
 				Class="text-black justify-self-center"
 			/>
 		</div>
@@ -141,11 +140,6 @@
 		</div>
 		<div>
 			<div class="flex items-center gap-2">
-				{#if thread?.created_by.id !== Number(localStorage.getItem('userId'))}
-					<button class=' text-red-500 hover:textred-50 mr-3 ' on:click={()=> threadIsBeingReported = true}>
-						Report
-					</button>
-				{/if}
 				<button
 					class:text-primary={thread?.user_vote === true}
 					on:click={() => threadVote(thread, 'up')}

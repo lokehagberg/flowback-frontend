@@ -11,7 +11,7 @@
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
-		value = values[0],
+		value: any = values[0],
 		defaultValue = values[0],
 		Class = '',
 		classInner = '',
@@ -19,9 +19,9 @@
 		innerLabelOn: boolean = false,
 		charlimit = 30;
 
-		onMount(() => {
-			value = defaultValue;
-		})
+	onMount(() => {
+		value = defaultValue;
+	});
 </script>
 
 <div class={`${Class} `}>
@@ -38,7 +38,7 @@
 		name={label}
 	>
 		{#if innerLabel}
-			<option value="" disabled={!innerLabelOn} selected >{$_(innerLabel)}</option>
+			<option value="" disabled={!innerLabelOn} selected>{$_(innerLabel)}</option>
 		{/if}
 
 		{#if labels}

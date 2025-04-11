@@ -112,7 +112,7 @@
 			{$_(
 				env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
 					? `Sometimes we have limited time and cannot participate fully, but still want to contribute. Reforum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
-					: `On this page you can become a delegate (someone who votes publicly that others can delegate their vote to), or delegate your vote temporarily to delegates in subject areas (automatically copying what they vote for in polls in the subject areas you delegate to them in, with the possibility to override their vote and vote yourself).`
+					: `Delegation means to copy the votings of a member that votes publicly (note that the member is not required to have voting rights themselves necessarily, and that such a voter is called a "delegated") automatically unless one overrides it oneself (this automatic copying is called "delegation"). One can at any time switch delegate or choose to have no delegate. Metadelegation means that a delegate can delegate their vote to another delegate. Metadelegation is not allowed in this group.`
 			)}
 		</p>
 	</div>

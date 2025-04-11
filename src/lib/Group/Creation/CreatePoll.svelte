@@ -45,7 +45,7 @@
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
 		end_date = new Date(),
-		isPublic = true,
+		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
@@ -104,7 +104,8 @@
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('tag', tags[0]?.id?.toString() || '1');
-		if (workGroup && selected_poll === "Date Poll" && !isPublic) formData.append('work_group_id', workGroup.toString());
+		if (workGroup && selected_poll === 'Date Poll' && !isPublic)
+			formData.append('work_group_id', workGroup.toString());
 
 		images.forEach((image) => {
 			formData.append('attachments', image);
@@ -234,7 +235,7 @@
 					values={workGroups.map((workGroup) => workGroup.id)}
 					bind:value={workGroup}
 					innerLabelOn={true}
-					innerLabel={$_("No workgroup assigned")}
+					innerLabel={$_('No workgroup assigned')}
 					defaultValue=""
 				/>
 			{/if}

@@ -354,7 +354,7 @@
     "Permissions": "Behörigheter",
     "Assign": "Tilldela",
     "Any": "Ospecifierat",
-    "delegate history for": "Delegeringshistorik för",
+    "Delegate history for": "Delegeringshistorik för",
     "There are currently no threads in this group": "Det finns för nuvarande inga trådar i denna grupp",
     "Search work group": "Sök bland arbetsgrupper",
     "Create work group": "Skapa arbetsgrupp",
@@ -647,6 +647,9 @@
     "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
     "No assignee": "Ingen uppdragstagare",
     "Kick ": "Sparka ",
+    "Request sent": "Förfrågan har skickats",
+    "No polls match your search criteria": "Inga omröstningar matchar dina sökkriterier",
+    "Delegation means to copy the votings of a member that votes publicly (note that the member is not required to have voting rights themselves necessarily, and that such a voter is called a \"delegated\") automatically unless one overrides it oneself (this automatic copying is called \"delegation\"). One can at any time switch delegate or choose to have no delegate. Metadelegation means that a delegate can delegate their vote to another delegate. Metadelegation is not allowed in this group.": "Delegering innebär att kopiera rösterna för en medlem som röstar offentligt (observera att medlemmen inte nödvändigtvis måste ha rösträtt själv, och att en sådan väljare kallas \"delegerad\") automatiskt om man inte åsidosätter den själv (denna automatiska kopiering kallas \"delegering\"). Man kan när som helst byta delegat eller välja att inte ha någon delegat. Metadelegering innebär att en delegat kan delegera sin röst till en annan delegat. Metadelegering är inte tillåten i denna grupp.",
     "kanbanEntry": {
         "Cancel": "Avbryt"
     }

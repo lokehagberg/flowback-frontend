@@ -298,7 +298,7 @@
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
-			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+			if ($page.params.groupId) goto(`/user?id=${kanban?.assignee?.id}`);
 			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 	>
@@ -492,7 +492,7 @@
 									: $_('No priority')}
 							</p>
 						</div>
-						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
+						<!-- <p>{kanban?.assignee?.username || $_('Unassigned')}</p> -->
 						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 							{#each kanbanEdited.images as file}
 								<li>

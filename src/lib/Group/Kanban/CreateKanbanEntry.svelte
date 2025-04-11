@@ -97,12 +97,16 @@
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
+		const _assignee = assignee
+			? {
+					id: assignee || 0,
+					profile_image: userAssigned?.user.profile_image || '',
+					username: userAssigned?.user.username || ''
+			  }
+			: null;
+
 		kanbanEntries.push({
-			assignee: {
-				id: assignee || 0,
-				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || $_('Unassigned')
-			},
+			assignee: _assignee,
 			group: { id: 0, image: '', name: '' },
 			description,
 			lane,
@@ -208,6 +212,7 @@
 						innerLabel=""
 					/>
 					<div class="flex gap-6 justify-between mt-2 flex-col" />
+				
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">

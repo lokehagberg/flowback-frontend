@@ -112,10 +112,11 @@
 
 	// const handleSearch = (search: String) => {};
 
-	onMount(() => {
+	onMount(async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
 		getWorkGroupList();
+		users = await getGroupUsers();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();

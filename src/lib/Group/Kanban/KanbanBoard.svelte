@@ -50,23 +50,23 @@
 	};
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-			let users = await getGroupUsers();
-			const user = users.find((user) => user.user.id === $userInfo.user.id);
-			console.log(user, 'user');
-			if (user) {
-				assignee = user.user.id;
-			}
-			let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
-			if (user.is_admin) {
-				kanbanEntries = groupTasks;
-			} else {
-				kanbanEntries = groupTasks.filter((task) => {
-					console.log('isnotadmin');
-					if (user.work_groups.includes(task.work_group?.name)) {
-						return task;
-					}
-				});
-			}
+			// let users = await getGroupUsers();
+			// const user = users.find((user) => user.user.id === $userInfo.user.id);
+
+			// if (user) {
+			// 	assignee = user.user.id;
+			// }
+			// let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
+			// if (user.is_admin) {
+			// 	kanbanEntries = groupTasks;
+			// } else {
+			// 	kanbanEntries = groupTasks.filter((task) => {
+			// 		if (user.work_groups.includes(task.work_group?.name)) {
+			// 			return task;
+			// 		}
+			// 	});
+			// }
+			kanbanEntries = await getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 

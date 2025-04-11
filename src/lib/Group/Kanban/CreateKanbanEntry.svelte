@@ -13,6 +13,7 @@
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
 	import Select from '$lib/Generic/Select.svelte';
+	import { onMount } from 'svelte';
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
@@ -39,7 +40,7 @@
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: WorkGroup | null = null;
+		workGroup: WorkGroup;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -140,8 +141,12 @@
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
+		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || workGroups[0];
 	};
+
+	onMount(() => {
+		workGroup = workGroups[0];
+	});
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->
@@ -159,7 +164,7 @@
 					label="Description"
 					bind:value={description}
 				/>
-				{#if type === 'group'}
+				{#if type === 'group' && workGroups?.length > 0 && workGroup}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
 							{$_('Work Group')}

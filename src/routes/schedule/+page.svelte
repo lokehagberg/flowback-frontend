@@ -9,5 +9,5 @@ import Layout from '$lib/Generic/Layout.svelte';
 </svelte:head>
 
 <Layout>
-	<Schedule type={env.PUBLIC_ONE_GROUP_FLOWBACK ? "group" : "user"}/>
+	<Schedule type={env.PUBLIC_ONE_GROUP_FLOWBACK === "TRUE" ? "group" : "user"}/>
 </Layout>

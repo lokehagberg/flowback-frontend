@@ -45,7 +45,7 @@
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
 		end_date = new Date(),
-		isPublic = true,
+		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
@@ -104,7 +104,8 @@
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('tag', tags[0]?.id?.toString() || '1');
-		if (workGroup && selected_poll === "Date Poll") formData.append('work_group_id', workGroup.toString());
+		if (workGroup && selected_poll === 'Date Poll' && !isPublic)
+			formData.append('work_group_id', workGroup.toString());
 
 		images.forEach((image) => {
 			formData.append('attachments', image);
@@ -226,13 +227,16 @@
 			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap" />
 			<FileUploads bind:files={images} disableCropping />
 
-			{#if selectedPage === 'thread' || selected_poll === 'Date Poll'}
+			{#if (selectedPage === 'thread' || selected_poll === 'Date Poll') && !isPublic}
 				<Select
 					classInner="border border-gray-300"
 					label={$_('Work Group')}
 					labels={workGroups.map((workGroup) => workGroup.name)}
 					values={workGroups.map((workGroup) => workGroup.id)}
 					bind:value={workGroup}
+					innerLabelOn={true}
+					innerLabel={$_('No workgroup assigned')}
+					defaultValue=""
 				/>
 			{/if}
 

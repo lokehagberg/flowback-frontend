@@ -49,7 +49,7 @@
 	};
 
 	const getEventsAtDate = (date: Date) => {
-		return events.filter((event) => {
+		return events?.filter((event) => {
 			let startDate = new Date(event.start_date);
 			startDate.setHours(0);
 			startDate.setMinutes(0);
@@ -62,7 +62,7 @@
 	onMount(() => {
 		const today = new Date();
 		let tomorow = new Date();
-		tomorow.setDate(today.getDate() + 1);
+		tomorow.setDate(today.getDate());
 		advancedTimeSettingsDates = [today, tomorow];
 	});
 </script>
@@ -71,7 +71,7 @@
 <button
 	on:dblclick={() => {
 		showCreateScheduleEvent = true;
-		const clickedDate = new Date(year, month, getDay(x, y));
+		const clickedDate = new Date(year, month, getDay(x+1, y));
 		selectedEvent.start_date = clickedDate.toISOString().slice(0, 16);
 		selectedEvent.end_date = clickedDate.toISOString().slice(0, 16);
 	}}
@@ -82,7 +82,7 @@
 		document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		document.getElementById(`${x}-${y}`)?.classList.add('selected');
 		selectedDatePosition = `${x}-${y}`;
-		selectedDate = new Date(year, month, getDay(x, y));
+		selectedDate = new Date(year, month, getDay(x+1, y));
 	}}
 >
 	<div class="w-full flex flex-col items-center">
@@ -93,19 +93,21 @@
 			>
 				<div>{new Date(year, month, getDay(x, y)).getDate()}</div>
 			</div>
-			{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
-				{#if (1000 * i) / window.innerHeight < 3}
-					<button
-						on:click={() => {
-							selectedEvent = event;
-							showEvent = true;
-						}}
-						class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
-					>
-						{elipsis(event.title, 15)}
-					</button>
-				{/if}
-			{/each}
+			{#if getEventsAtDate(getDate(year, month, x, y))?.length > 0}
+				{#each getEventsAtDate(getDate(year, month, x, y)) as event, i}
+					{#if (1000 * i) / window.innerHeight < 3}
+						<button
+							on:click={() => {
+								selectedEvent = event;
+								showEvent = true;
+							}}
+							class="break-all bg-secondary w-full text-white text-sm mb-1 text-center"
+						>
+							{elipsis(event.title, 15)}
+						</button>
+					{/if}
+				{/each}
+			{/if}
 		{/key}
 	</div>
 </button>

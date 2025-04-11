@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
-	import type { Comment, Phase, proposal } from '$lib/Poll/interface';
+	import type { Comment, Phase, poll, proposal } from '$lib/Poll/interface';
 	import Proposal from './Proposal.svelte';
 	import { proposals as proposalsLimit } from '../Generic/APILimits.json';
 	import { onMount } from 'svelte';
@@ -19,12 +19,15 @@
 		phase: Phase,
 		proposalsToPredictionMarket: proposal[] = [],
 		Class = '',
-		comments: Comment[];
+		comments: Comment[],
+		poll: poll;
 
 	let voting: { score: number; proposal: number }[] = [],
 		needsReload = 0,
 		poppup: poppup,
-		commentFilterProposalId: number | null = null;
+		commentFilterProposalId: number | null = null,
+		delegateRelations: any[] = [],
+		delegates: any[] = [];
 
 	onMount(async () => {
 		await getProposals();
@@ -62,9 +65,7 @@
 			`group/poll/${$page.params.pollId}/proposal/votes?limit=${proposalsLimit}`
 		);
 
-		if (!json.results || json.results.length === 0) return;
-
-		console.log('WHAT THA HELLL');
+		if (!json?.results || json?.results?.length === 0) return;
 
 		voting = voting.map((vote) => ({
 			score: (vote.score = json.results.find(
@@ -75,17 +76,59 @@
 		voting = voting;
 	};
 
+	const getDelegatePools = async () => {
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegate/pools?limit=1000`
+		);
+
+		if (!res.ok) return;
+
+		delegates = json.results.map((delegatePool: any) => {
+			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+		});
+	};
+
+	const getDelegateRelations = async () => {
+		const { json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/delegates?limit=1000`
+		);
+
+		//Determines whether to show the "remove as delegate" or "add as delegate" buttons, depening on if user already has delegated or not earlier.
+		json.results.forEach((relation: any) => {
+			delegates.map((delegate) => {
+				if (delegate.pool_id === relation.delegate_pool_id) delegate.isInRelation = true;
+				return delegate;
+			});
+		});
+		// delegateRelations = json.results;
+		delegateRelations = json.results;
+	};
+
 	const getDelegateVotes = async () => {
 		const user: groupUser = await getGroupUserInfo($page.params.groupId);
 
+		await getDelegatePools();
+		await getDelegateRelations();
+		const delegate = delegateRelations.find((relation) =>
+			relation.tags.find((tag: any) => tag.id === poll.tag_id)
+		);
+		console.log(user, delegate, delegateRelations, 'USER');
+		// {
+		// 	await fetchRequest(
+		// 	'GET',
+		// 	`group/${$page.params.groupId}/delegate/pools`
+		// );
+
+		// }
+
 		const { json } = await fetchRequest(
 			'GET',
-			`group/poll/pool/${user.delegate_pool_id}/votes?limit=${proposalsLimit}&poll_id=${$page.params.pollId}`
+			`group/poll/pool/${delegate.delegate_pool_id}/votes?poll_id=${$page.params.pollId}`
 		);
 
-		if (!json.results || json.results.length === 0) return;
-
-		console.log(voting, json.results[0].vote, 'VÖTE');
+		if (!json?.results || json?.results?.length === 0) return;
 
 		const votes = json.results[0].vote;
 
@@ -99,8 +142,6 @@
 		});
 
 		voting = voting;
-
-		console.log(voting, 'VOTING????');
 
 		// voting = voting.map((vote) => ({
 		// 	score: (vote.score = json.results.find((v:any) => {
@@ -198,11 +239,13 @@
 
 								<VotingSlider
 									onSelection={(pos) => {
+										//@ts-ignore
 										changingVote(pos, proposal.id);
 										if (phase === 'delegate_vote') delegateVote();
 										else if (phase === 'vote') vote();
 									}}
 									{score}
+									isVoting={true}
 								/>
 							{/if}
 						</Proposal>

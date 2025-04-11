@@ -10,9 +10,9 @@
 	import { onMount } from 'svelte';
 	import { getPhase, getPhaseUserFriendlyNameWithNumber, nextPhase } from './functions';
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
-	import { elipsis, onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import { elipsis, getPermissionsFast, onThumbnailError } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
-	import { getTags } from '$lib/Group/functions';
+	import { getTags, getUserIsOwner } from '$lib/Group/functions';
 	import type { Tag as TagType } from '$lib/Group/interface';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import Button from '$lib/Generic/Button.svelte';
@@ -33,6 +33,8 @@
 	import DeletePollModal from './DeletePollModal.svelte';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import Timeline from './NewDesign/Timeline.svelte';
+	import ReportPollModal from './ReportPollModal.svelte';
+	import type { Permission, Permissions } from '$lib/Group/Permissions/interface';
 
 	export let poll: poll,
 		isAdmin = false;
@@ -46,9 +48,13 @@
 		darkMode: boolean,
 		voting = true,
 		poppup: poppup,
+		choicesOpen = false,
 		deletePollModalShow = false,
+		reportPollModalShow = false,
 		hovering = false,
-		showGroupInfo = !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId;
+		showGroupInfo = !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId,
+		permissions: Permissions,
+		userIsOwner: boolean;
 
 	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
@@ -81,6 +87,7 @@
 
 		if (selectedTagName) {
 			selectedTag = tags?.find((tag) => tag.name === selectedTagName)?.id || 0;
+			voting = false;
 		}
 	};
 
@@ -90,6 +97,9 @@
 			tags = await getTags(poll?.group_id);
 			getAreaVote();
 		}
+
+		permissions = await getPermissionsFast(Number(poll.group_id));
+		userIsOwner = await getUserIsOwner(poll?.group_id);
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
 	});
@@ -152,12 +162,18 @@
 							/>
 						</button>
 					{/if}
+
 					<MultipleChoices
-						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
-							? [$_('Delete Poll')]
-							: [$_('Delete Poll'), $_('Fast Forward')]}
+						bind:choicesOpen
+						labels={phase === 'result' ||
+						phase === 'prediction_vote' ||
+						!poll?.allow_fast_forward ||
+						(!permissions?.poll_fast_forward && !userIsOwner)
+							? [$_('Delete Poll'), $_('Report Poll')]
+							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
-							() => (deletePollModalShow = true),
+							() => ((deletePollModalShow = true), (choicesOpen = false)),
+							() => ((reportPollModalShow = true), (choicesOpen = false)),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
 						]}
 						Class="text-black justify-self-center mt-2"
@@ -200,12 +216,18 @@
 							/>
 						</button>
 					{/if}
+
 					<MultipleChoices
-						labels={phase === 'result' || phase === 'prediction_vote' || !poll?.allow_fast_forward
-							? [$_('Delete Poll')]
-							: [$_('Delete Poll'), $_('Fast Forward')]}
+						bind:choicesOpen
+						labels={phase === 'result' ||
+						phase === 'prediction_vote' ||
+						!poll?.allow_fast_forward ||
+						(!permissions?.poll_fast_forward && !userIsOwner)
+							? [$_('Delete Poll'), $_('Report Poll')]
+							: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
 						functions={[
-							() => (deletePollModalShow = true),
+							() => ((deletePollModalShow = true), (choicesOpen = false)),
+							() => ((reportPollModalShow = true), (choicesOpen = false)),
 							async () => (phase = await nextPhase(poll?.poll_type, poll?.id, phase))
 						]}
 						Class="text-black justify-self-center mt-2"
@@ -294,8 +316,9 @@
 							bind:value={selectedTag}
 							values={tags?.map((tag) => tag.id)}
 							Class="w-[47%] "
-							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border-2"
+							classInner="w-full !p-2 bg-white p-4 border-gray-400 rounded-md border"
 							onInput={() => (voting = true)}
+							defaultValue=""
 						/>
 						{#if voting}
 							<Button type="submit" Class="w-[47%]" buttonStyle="primary-light"
@@ -392,6 +415,7 @@
 </div>
 
 <DeletePollModal bind:deletePollModalShow pollId={poll?.id} />
+<ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
 <Poppup bind:poppup />
 

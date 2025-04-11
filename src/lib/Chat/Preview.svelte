@@ -79,7 +79,6 @@
 		updateUserData(chatterId, new Date(), new Date());
 
 		if (selectedPage === 'direct') {
-			// if (selectedChat) updateUserData(await getChannelId(selectedChat), null, new Date());
 			let message = previewDirect.find((message) => message.channel_id === chatterId);
 
 			if (message) {
@@ -89,9 +88,10 @@
 
 				previewDirect = previewDirect;
 			}
+
 			selectedChat = chatterId;
-			chatPartner.set(chatterId);
 			selectedChatChannelId = chatterId;
+			chatPartner.set(chatterId);
 		} else if (selectedPage === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
 			if (message) {
@@ -174,8 +174,13 @@
 		});
 
 		chatPartner.subscribe((partner) => {
+			console.log(partner, 'PARTNER');
+			
 			if (partner === null) return;
+			selectedPage = 'direct';
 			selectedChat = partner;
+			selectedChatChannelId = partner;
+			clickedChatter(partner);
 		});
 	});
 
@@ -204,7 +209,7 @@
 
 	{#if selectedPage === 'direct' && inviteList}
 		{#each inviteList as groupChat}
-			{#if !groupChat.rejected && groupChat.title?.split(',')?.length > 2}
+			{#if !groupChat.rejected && groupChat?.title?.split(',')?.length > 2}
 				{#if groupChat.rejected === null}
 					<span>{$_("You've been invite to this chat:")}</span>
 
@@ -239,7 +244,7 @@
 	{/if}
 
 	{#each previewDirect as previewObject}
-		{#if selectedPage === 'direct' && previewObject.channel_title?.split(',')?.length > 2}
+		{#if selectedPage === 'direct' && previewObject?.channel_title?.split(',')?.length > 2}
 			<button
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 				class:bg-gray-200={selectedChat === previewObject.channel_id}

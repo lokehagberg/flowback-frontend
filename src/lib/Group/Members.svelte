@@ -24,6 +24,9 @@
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import type { Delegate } from './Delegation/interfaces';
+	import Select from '$lib/Generic/Select.svelte';
+	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import { getUserChannelId } from '$lib/Chat/functions';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -37,15 +40,19 @@
 		showInvite = false,
 		searched = false,
 		delegates: Delegate[] = [],
-		removeUserModalShow = false;
+		removeUserModalShow = false,
+		userIsAdmin = false;
+
+	let sortOrder: 'a-z' | 'z-a' = 'a-z';  // Default to a-z sort
 
 	onMount(async () => {
 		getUsers();
-
 		getInvitesList();
 		searchUsers('');
 		getDelegatePools();
+		userIsAdmin = await getUserIsGroupAdmin($page.params.groupId);
 
+		//Does this one even do anything?
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
 
@@ -86,6 +93,17 @@
 
 		searchedInvitationUsers = json.results;
 		searchedUsers = json.results;
+		
+		// Apply sorting based on sortOrder (always sort)
+		if (sortOrder === 'a-z') {
+			searchedUsers = searchedUsers.sort((a, b) => 
+				a.user.username.toLowerCase().localeCompare(b.user.username.toLowerCase())
+			);
+		} else if (sortOrder === 'z-a') {
+			searchedUsers = searchedUsers.sort((a, b) => 
+				b.user.username.toLowerCase().localeCompare(a.user.username.toLowerCase())
+			);
+		}
 	};
 
 	const getInvitesList = async () => {
@@ -110,14 +128,25 @@
 			success: true,
 			message: 'Successfully sent invite'
 		};
+
+		searchInvitationQuery = '';
+		searchedInvitationUsers = [];
 	};
 
 	const acceptInviteUser = async (userId: number) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
+		const {res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite/accept`, {
 			to: userId
 		});
 
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+
+		if (!res.ok) {
+			poppup = { message: "Couldn't accept user invite", success: false };
+		}
+		
+		await getInvitesList();
+		await getUsers();
+		await searchUsers(searchUserQuery);
 	};
 
 	const denyInviteUser = async (userId: number) => {
@@ -125,6 +154,7 @@
 			to: userId
 		});
 		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+		await getInvitesList();
 	};
 
 	/*
@@ -144,25 +174,32 @@
 		});
 	};
 
-	const userRemove = async () => {
-		// const {res, json} = await fetchRequest('POST', {
-		// } )
-	};
+	const userRemove = async (userToRemove: number) => {
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/user/delete`, {
+			target_user_id: userToRemove
+		});
 
-	const getUserChannelId = async (userId: number) => {
-		const { json, res } = await fetchRequest('GET', `user/chat?target_user_ids=${userId}`);
-
-		if (!res.ok || json.length === 0) {
+		if (!res.ok) {
+			poppup = { message: $_('Failed to remove user'), success: false };
 			return;
 		}
-		return json.id;
+
+		poppup = { message: $_('Successfully removed user'), success: true };
+		searchedUsers = searchedUsers.filter((user) => user.user.id !== userToRemove);
+		removeUserModalShow = false;
+		await getUsers();
+	};
+
+	const resetFilter = () => {
+		sortOrder = 'a-z';  // Reset to default a-z sort instead of null
+		searchUsers(searchUserQuery);
 	};
 </script>
 
 <Modal bind:open={showInvite}>
 	<div slot="body">
 		<!-- Inviting -->
-		<div class="w-full p-4 bg-white dark:bg-darkobject rounded shadow">
+		<div class="w-full bg-white dark:bg-darkobject">
 			<TextInput
 				onInput={() => searchUser(searchInvitationQuery)}
 				bind:value={searchInvitationQuery}
@@ -197,38 +234,6 @@
 				{/each}
 			</ul>
 		</div>
-
-		<!-- Invites -->
-
-		{#if usersAskingForInvite.length > 0}
-			<div class="w-full shadow rounded bg-white p-2">
-				<span>{$_('Users requesting invite')}</span>
-				{#each usersAskingForInvite as user}
-					{#if user.external === true}
-						<div
-							class="text-black p-2 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
-						>
-							<ProfilePicture
-								Class="w-full"
-								displayName
-								username={user.username}
-								profilePicture={user.profile_image}
-							/>
-							<Button
-								Class="py-1 mr-4 px-2"
-								buttonStyle="primary-light"
-								onClick={() => acceptInviteUser(user.user)}>{$_('ACCEPT')}</Button
-							>
-							<Button
-								Class="py-2  px-2"
-								buttonStyle="warning"
-								onClick={() => denyInviteUser(user.user)}>{$_('DECLINE')}</Button
-							>
-						</div>
-					{/if}
-				{/each}
-			</div>
-		{/if}
 	</div>
 </Modal>
 
@@ -242,15 +247,48 @@
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-1 items-end gap-4"
 				on:input|preventDefault={() => searchUsers(searchUserQuery)}
 			>
-				<TextInput
-					Class="w-full"
-					onInput={() => (searched = false)}
-					label=""
-					max={null}
-					search={true}
-					placeholder={$_('Search members')}
-					bind:value={searchUserQuery}
-				/>
+				<div class="flex-col w-full">
+					<TextInput
+						Class="w-full"
+						onInput={() => (searched = false)}
+						label=""
+						max={null}
+						search={true}
+						placeholder={$_('Search members')}
+						bind:value={searchUserQuery}
+					/>
+
+					<div class="flex flex-row items-center gap-1 pt-2">
+						<span>{$_('Sort')}: </span>
+						<Select
+							classInner="p-1 font-semibold"
+							labels={[$_('A - Z'), $_('Z - A')]}
+							values={['a-z', 'z-a']}
+							bind:value={sortOrder}
+							onInput={() => searchUsers(searchUserQuery)}
+						/>
+
+						<!-- TODO: Fix functionality for filtering -->
+						<span class="pl-4">{$_('Role')}: </span>
+						<Select
+							classInner="p-1 font-semibold"
+							labels={[$_('Admin'), $_('Member')]}
+							values={[$_('Admin'), $_('Member')]}
+							value={''}
+							onInput={() => searchUsers(searchUserQuery)}
+							innerLabel="All"
+							innerLabelOn={true}
+						/>
+
+						<div class="rounded-md p-1">
+							<Button
+								Class="!p-1 border-none text-red-600 cursor-pointer hover:underline"
+								buttonStyle="warning-light"
+								onClick={resetFilter}>{$_('Reset Filter')}</Button
+							>
+						</div>
+					</div>
+				</div>
 			</form>
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
@@ -263,9 +301,41 @@
 			{/if}
 		</div>
 
+		<!-- Invites -->
+		{#if usersAskingForInvite.length > 0}
+			<div class="w-full p-4 flex-col gap-6 shadow rounded bg-white p-2 mb-4 dark:bg-darkobject">
+				<span class="font-semibold text-sm text-gray-700">{$_('Users requesting invite')}</span>
+				{#each usersAskingForInvite as user}
+					{#if user.external === true}
+						<div
+							class="text-black pt-4 flex align-middle outline-gray-200 w-full dark:text-darkmodeText dark:bg-darkobject"
+						>
+							<ProfilePicture
+								Class="w-full"
+								displayName
+								username={user.username}
+								profilePicture={user.profile_image}
+							/>
+							<Button
+								Class="mr-4 px-2"
+								buttonStyle="primary-light"
+								onClick={() => acceptInviteUser(user.user)}>{$_('Accept')}</Button
+							>
+							<Button
+								Class="px-2"
+								buttonStyle="warning-light"
+								onClick={() => denyInviteUser(user.user)}>{$_('Decline')}</Button
+							>
+						</div>
+					{/if}
+				{/each}
+			</div>
+		{/if}
+
 		<!-- Members List -->
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
+				<span class="font-semibold text-sm text-gray-700">{$_('All members')}</span>
 				{#each searchedUsers as user}
 					{@const delegationId = delegates.find(
 						(delegate) => delegate.user.id === user.user.id
@@ -310,6 +380,25 @@
 									</button>
 								{/if}
 							{/await}
+							{#if userIsAdmin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
+								<Button
+									Class="w-10 h-10 flex items-center justify-center pl-6 bg-transparent"
+									onClick={() => (removeUserModalShow = true)}
+								>
+									<Fa size="lg" class="text-red-500" icon={faRunning} />
+								</Button>
+								<Modal bind:open={removeUserModalShow} Class="w-80">
+									<div slot="header">{$_('Kick ') + user.user.username + "?"}</div>
+									<div slot="body" class="flex gap-4">
+										<Button buttonStyle="warning-light" Class="w-[50%]" onClick={() => userRemove(user.user.id)}
+											>{$_('Yes')}</Button
+										>
+										<Button buttonStyle="primary" Class="w-[50%]" onClick={() => (removeUserModalShow = false)}
+											>{$_('No')}</Button
+										>
+									</div>
+								</Modal>
+							{/if}
 						</div>
 					</div>
 				{/each}
@@ -317,12 +406,5 @@
 		{/if}
 	</div>
 </Loader>
-
-<Modal bind:open={removeUserModalShow}>
-	<div slot="header">{$_('Sure you want to delete?')}</div>
-	<div slot="body">
-		<Button buttonStyle="warning-light" onClick={userRemove} />
-	</div>
-</Modal>
 
 <Poppup bind:poppup />

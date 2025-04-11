@@ -39,8 +39,12 @@
 
 <Loader bind:loading>
 	<div class={phase === 'prediction_vote' ? '' : 'border-t-2'}>
-		<div class={`font-semibold ${phase === 'prediction_vote' ? ' text-xl mb-4 text-primary' : ' text-gray-500 text-sm pt-3'}`}>
-			{$_('Consequences')} ({predictions.length}) 
+		<div
+			class={`font-semibold ${
+				phase === 'prediction_vote' ? ' text-xl mb-4 text-primary' : ' text-gray-500 text-sm pt-3'
+			}`}
+		>
+			{$_('Consequences')} ({predictions.length})
 		</div>
 		{#key selectedProposal}
 			{#each predictions as prediction}
@@ -56,9 +60,9 @@
 					{#if phase === 'delegate_vote' || phase === 'vote'}
 						<span class="text-sm text-right"
 							>{$_('Probability')}:
-							{#if prediction.combined_bet}
+							{#if prediction?.combined_bet !== null}
 								{(prediction.combined_bet * 100).toFixed(0)}%
-							{:else if poll.status_prediction === 2}
+							{:else if poll.status_prediction !== 1 }
 								{$_('Calculating')}
 							{:else}
 								{$_('None')}

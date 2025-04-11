@@ -122,7 +122,7 @@
 				<Select
 					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2 border-gray-300 rounded border"
 					labels={groups?.map((group) => group.name)}
-					value={group}
+					bind:value={group}
 					values={groups}
 					innerLabelOn={true}
 				/>

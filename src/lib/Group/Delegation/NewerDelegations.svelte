@@ -81,8 +81,8 @@
 			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
 			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
 		});
-
 		await createDelegateRelation(delegate.pool_id);
+		saveDelegation();
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
@@ -152,7 +152,6 @@
 	}
 </script>
 
-{#key group}
 <div>
 	{#if delegates.length > 0}
 		{#each tags as tag, index}
@@ -197,8 +196,8 @@
 										on:input={() => {
 											changeDelegation(delegate, tag);
 											setTimeout(() => {
-												changeDelegation(delegate, tag);
-											}, 400);
+											
+											}, 1000);
 										}}
 										type="radio"
 										name={tag.name}
@@ -223,7 +222,7 @@
 		<span>{$_('There are currently no delegates for this group')}</span>
 	{/if}
 </div>
-{/key}
+
 <Poppup bind:poppup />
 
 <style>

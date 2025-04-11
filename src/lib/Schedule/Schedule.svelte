@@ -113,8 +113,6 @@
 		if (selectedEvent.description === '' || selectedEvent.description === null)
 			delete payload.description;
 
-		console.log(type, 'TYp');
-
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
@@ -272,8 +270,6 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>

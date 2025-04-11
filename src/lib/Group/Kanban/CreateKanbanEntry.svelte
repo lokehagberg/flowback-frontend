@@ -151,10 +151,6 @@
 		workGroup =
 			workGroups.find((group) => group.id === Number(e.target.value))?.id || workGroups[0]?.id;
 	};
-
-	onMount(() => {
-		workGroup = 0;
-	});
 </script>
 
 <!-- Creating a new Kanban or Editing a new Kanban -->

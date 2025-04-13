@@ -180,7 +180,6 @@
 					/>
 				</div>
 			</div>
-
 			<a
 				class="cursor-pointer text-primary dark:text-secondary hover:underline text-xl break-words"
 				href={`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}

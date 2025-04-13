@@ -6,7 +6,6 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import {
 		faChevronRight,
-		faComment,
 		faSquareCheck,
 		faMagnifyingGlassChart
 	} from '@fortawesome/free-solid-svg-icons';
@@ -15,7 +14,6 @@
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import { commentsStore } from '$lib/Comments/commentStore';
 
 	export let proposal: proposal,
 		Class = '',
@@ -103,7 +101,10 @@
 	</div>
 
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap" id={`proposal-${proposal.id}-description`}>
+	<p
+		class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap"
+		id={`proposal-${proposal.id}-description`}
+	>
 		{proposal.description}
 	</p>
 
@@ -126,17 +127,20 @@
 				<button
 					class="flex items-center"
 					on:click={() => {
+						console.log(proposal, "PROPOSAL1");
+						
 						selectedProposal = proposal;
 					}}
 				>
-					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
-					{predictionCount}
-				</button>
+				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
+				{predictionCount}
+			</button>
 			{/if}
 		</div>
-
+		
 		<button
-			on:click={() => {
+		on:click={() => {
+				console.log(proposal, "PROPOSAL1");
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"

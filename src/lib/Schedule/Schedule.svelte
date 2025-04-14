@@ -261,6 +261,8 @@
 		getWorkGroupList();
 	});
 
+	// Test push
+
 	$: month && year && deleteSelection();
 
 	$: month && updateMonth();
@@ -425,9 +427,9 @@
 		grid-template-columns: repeat(7, 1fr);
 		grid-template-rows: repeat(6, 1fr);
 		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and 
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved 
-	
+    on the header, 40px from the height of each symbol/the logo on the header, and
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved
+
 	TODO: Don't do this*/
 		height: calc(100vh - 2rem - 40px - 28px);
 	}

@@ -261,7 +261,17 @@
 		getWorkGroupList();
 	});
 
-	// Test push
+	// Convert time from UTC to local time
+	const formatDateToLocalTime = (date: Date): String => {
+		try {
+			const offset = date.setTime(date.getTime() - (date.getTimezoneOffset() * 60000));
+			const localTime = new Date(offset).toISOString();
+			return localTime;
+		} catch (error) {
+			console.error('Error converting date to string:', error);
+			return date.toString();
+		}
+	}
 
 	$: month && year && deleteSelection();
 
@@ -284,8 +294,8 @@
 			<button
 				on:click={() => {
 					showCreateScheduleEvent = true;
-					selectedEvent.start_date = selectedDate.toISOString().slice(0, 16);
-					selectedEvent.end_date = selectedDate.toISOString().slice(0, 16);
+					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
+					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
 				}}
 			>
 				<Fa

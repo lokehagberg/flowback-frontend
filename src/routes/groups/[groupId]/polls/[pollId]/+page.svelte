@@ -99,7 +99,7 @@
 		if (display === '1') displayForm = true;
 	};
 
-	// When fast forwarding from area phase to prposal phase, get tag info in real time
+	// When fast forwarding from area phase to proposal phase, get tag info in real time
 	$: if (phase === 'proposal') {
 		const a = setTimeout(() => {
 			getPollData();

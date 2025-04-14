@@ -207,7 +207,13 @@
 				</Button>
 			{/if}
 			<Button
-				onClick={() => goto($nav?.from?.url.pathname || '/')}
+				onClick={() => {
+					if (window.history.length > 1) {
+						window.history.back();
+					} else {
+						goto('/');
+					}
+				}}
 				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
 				<div class="text-gray-800 dark:text-gray-200">

@@ -59,6 +59,10 @@
 		getPredictionCount();
 		allComments = comments;
 	});
+
+	$: if(comments) {
+		allComments = comments;
+	}
 </script>
 
 <button
@@ -120,7 +124,7 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{allComments.filter((comment) => comment?.message?.includes(proposal.title)).length}
+				{allComments.filter((comment) => comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())).length}
 			</button>
 
 			{#if phase !== 'proposal'}
@@ -139,7 +143,7 @@
 		</div>
 		
 		<button
-		on:click={() => {
+			on:click={() => {
 				console.log(proposal, "PROPOSAL1");
 				selectedProposal = proposal;
 			}}

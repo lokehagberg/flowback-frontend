@@ -85,6 +85,7 @@
 
 			// comment.message = '[Reported]';
 			comment.active = false;
+			comment.being_reported = true;
 			return comment;
 		});
 		comments = comments;
@@ -261,7 +262,7 @@
 				{#if Number(localStorage.getItem('userId')) !== comment.author_id}
 					<button
 						class="flex items-center gap-1 hover:text-red-900 text-gray-600 dark:text-darkmodeText dark:hover:text-red-400 cursor-pointer transition-colors hover:underline"
-						on:click={() => (comment.being_reported = true)}
+						on:click={() => (ReportCommentModalShow = true)}
 					>
 						{$_('Report')}
 					</button>
@@ -301,12 +302,6 @@
 						</div>
 					</div>
 				</Modal>
-				<button
-					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
-					on:click={() => (ReportCommentModalShow = true)}
-				>
-					{$_('Report')}
-				</button>
 			</div>
 		{/if}
 	</div>

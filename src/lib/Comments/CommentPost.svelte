@@ -66,6 +66,7 @@
 			author_name: window.localStorage.getItem('userName') || '',
 			being_edited: false,
 			being_replied: false,
+			being_reported: false,
 			score: 1,
 			edited: false,
 			attachments: files.map((file) => {

@@ -20,11 +20,13 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import DeletePollModal from './DeletePollModal.svelte';
 	import ReportPollModal from './ReportPollModal.svelte';
+	import type { groupUser } from '$lib/Group/interface';
 
 	export let poll: poll,
 		displayTag = false,
 		phase: Phase,
-		pollType: 3 | 4 = 3;
+		pollType: 3 | 4 = 3,
+		groupUser: groupUser;
 
 	let deletePollModalShow = false,
 		reportPollModalShow = false,
@@ -62,11 +64,15 @@
 			bind:choicesOpen
 			labels={phase === 'result' || phase === 'prediction_vote'
 				? [$_('Delete Poll'), $_('Report Poll')]
-				: [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]}
+				: groupUser?.is_admin
+				? [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]
+				: [$_('Delete Poll'), $_('Report Poll')]}
 			functions={[
-				() => (deletePollModalShow = true, choicesOpen = false),
-				() => (reportPollModalShow = true, choicesOpen = false),
-				async () => (phase = await nextPhase(poll?.poll_type, $page.params.pollId, phase))
+				() => ((deletePollModalShow = true), (choicesOpen = false)),
+				() => ((reportPollModalShow = true), (choicesOpen = false)),
+				...(groupUser?.is_admin
+					? [async () => (phase = await nextPhase(poll?.poll_type, $page.params.pollId, phase))]
+					: [])
 			]}
 			Class="justify-self-center mt-2"
 		/>

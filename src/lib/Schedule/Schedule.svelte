@@ -128,11 +128,13 @@
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
-
+		// console.log(json);
+		const createdEvent = { ...selectedEvent, event_id: json.id };
+		events.push(createdEvent);
+		events = events;
+		console.log(events);
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
 
 		selectedEvent = {
 			title: '',
@@ -251,6 +253,18 @@
 		setUpScheduledPolls();
 	};
 
+	// Convert time from UTC to local time
+	const formatDateToLocalTime = (date: Date): String => {
+		try {
+			const offset = date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
+			const localTime = new Date(offset).toISOString();
+			return localTime;
+		} catch (error) {
+			console.error('Error converting date to string:', error);
+			return date.toString();
+		}
+	};
+
 	onMount(async () => {
 		//Prevents "document not found" error
 		deleteSelection = () => {
@@ -260,18 +274,6 @@
 		setUpScheduledPolls();
 		getWorkGroupList();
 	});
-
-	// Convert time from UTC to local time
-	const formatDateToLocalTime = (date: Date): String => {
-		try {
-			const offset = date.setTime(date.getTime() - (date.getTimezoneOffset() * 60000));
-			const localTime = new Date(offset).toISOString();
-			return localTime;
-		} catch (error) {
-			console.error('Error converting date to string:', error);
-			return date.toString();
-		}
-	}
 
 	$: month && year && deleteSelection();
 

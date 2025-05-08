@@ -111,9 +111,14 @@
 <Layout centered>
 	{#if poll}
 		{#if pollType === 4}
-			<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== 'pre_start'} />
+			<PollHeader
+				{poll}
+				bind:phase
+				displayTag={phase !== 'area_vote' && phase !== 'pre_start'}
+				{groupUser}
+			/>
 		{:else}
-			<PollHeader {poll} bind:phase displayTag={false} />
+			<PollHeader {poll} bind:phase displayTag={false} {groupUser} />
 		{/if}
 
 		{#if pollType === 4}

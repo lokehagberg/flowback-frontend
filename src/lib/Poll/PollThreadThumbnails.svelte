@@ -33,7 +33,7 @@
 	let posts: Post[] = [];
 	let polls: poll[] = [];
 	let threads: Thread[] = [];
-	let workgroups: WorkGroup[] = [];
+	let workGroups: WorkGroup[] = [];
 	let loading = false;
 	let isAdmin = false;
 	let next = '';
@@ -45,7 +45,8 @@
 		finishedSelection: 'all',
 		public: false,
 		order_by: 'start_date_desc',
-		tag: null
+		tag: null,
+		workgroup: null,
 	};
 
 	let showThreads = true;
@@ -79,6 +80,7 @@
 				title__icontains: filter.search || undefined,
 				tag_id: filter.tag || undefined,
 				group_ids: infoToGet === 'group' ? $page.params.groupId : undefined,
+				work_group_ids: filter.workgroup,
 				public: infoToGet === 'public' ? true : undefined,
 				...(filter.finishedSelection !== 'all' && {
 					[`end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}`]:
@@ -124,7 +126,7 @@
 
 	async function fetchWorkGroups() {
 		const { results } = await PollsApi.getWorkGroups();
-		workgroups = results;
+		workGroups = results;
 	}
 
 	onMount(async () => {

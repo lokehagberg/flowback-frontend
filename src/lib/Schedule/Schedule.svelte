@@ -128,11 +128,13 @@
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
-
+		// console.log(json);
+		const createdEvent = { ...selectedEvent, event_id: json.id };
+		events.push(createdEvent);
+		events = events;
+		console.log(events);
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
 
 		selectedEvent = {
 			title: '',
@@ -251,6 +253,18 @@
 		setUpScheduledPolls();
 	};
 
+	// Convert time from UTC to local time
+	const formatDateToLocalTime = (date: Date): String => {
+		try {
+			const offset = date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
+			const localTime = new Date(offset).toISOString();
+			return localTime;
+		} catch (error) {
+			console.error('Error converting date to string:', error);
+			return date.toString();
+		}
+	};
+
 	onMount(async () => {
 		//Prevents "document not found" error
 		deleteSelection = () => {
@@ -282,8 +296,8 @@
 			<button
 				on:click={() => {
 					showCreateScheduleEvent = true;
-					selectedEvent.start_date = selectedDate.toISOString().slice(0, 16);
-					selectedEvent.end_date = selectedDate.toISOString().slice(0, 16);
+					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
+					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
 				}}
 			>
 				<Fa
@@ -425,9 +439,9 @@
 		grid-template-columns: repeat(7, 1fr);
 		grid-template-rows: repeat(6, 1fr);
 		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and 
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved 
-	
+    on the header, 40px from the height of each symbol/the logo on the header, and
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved
+
 	TODO: Don't do this*/
 		height: calc(100vh - 2rem - 40px - 28px);
 	}

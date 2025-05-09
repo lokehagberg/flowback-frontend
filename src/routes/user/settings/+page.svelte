@@ -47,7 +47,7 @@
 				voting: false
 			}
 		},
-		version = '0.1.29',
+		version = '0.1.30',
 		serverConfig: any = {},
 		reports: any = [];
 

@@ -8,11 +8,12 @@
 	import type { proposal } from '../Poll/interface';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import Fa from 'svelte-fa';
-	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+	import { faPaperPlane, faHashtag } from '@fortawesome/free-solid-svg-icons';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { onMount } from 'svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { commentsStore } from './commentStore';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -25,6 +26,8 @@
 		delegate_pool_id: number | null = null,
 		files: File[] = [];
 
+	export let defaultProposalTag: string | undefined = undefined;
+
 	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '',
@@ -35,6 +38,11 @@
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
 		else if (api === 'delegate-history') return `delegate/pool/${delegate_pool_id}`;
+	};
+
+	// Format proposal title as a proper hashtag
+	const formatProposalHashtag = (title: string) => {
+		return `#${title.replaceAll(' ', '-')}`;
 	};
 
 	const commentCreate = async () => {
@@ -105,11 +113,15 @@
 
 		// Insert the new comment at the correct position
 		comments.splice(insertIndex, 0, newComment);
-		comments = comments;
+		comments = [...comments]; // Create a new array to trigger reactivity
+		
+		// Update the comment store for real-time updates across components
+		commentsStore.add(newComment);
 
 		showMessage = 'Successfully posted comment';
 		show = true;
 		message = '';
+		files = []; // Clear files after posting
 		replying = false;
 
 		subscribeToReplies();
@@ -151,12 +163,25 @@
 		let comment = comments.find((comment) => comment.id === id);
 		if (comment) {
 			comment.message = message;
-			comments.splice(index, 1, comment);
-			comments = comments;
 			comment.edited = true;
 			comment.attachments = files.map((image) => {
 				return { file: URL.createObjectURL(image) };
 			});
+			
+			// Update the comment in the array
+			comments.splice(index, 1, comment);
+			comments = [...comments]; // Create a new array to trigger reactivity
+			
+			// Update the comment store
+			commentsStore.edit(id, message);
+		}
+	};
+
+	// Add a proposal tag to the comment
+	const addProposalTag = (proposalTitle: string) => {
+		const tag = formatProposalHashtag(proposalTitle) + ' ';
+		if (!message.includes(tag)) {
+			message = message ? `${message} ${tag}` : tag;
 		}
 	};
 
@@ -171,6 +196,10 @@
 		darkModeStore.subscribe((value) => {
 			darkmode = value;
 		});
+
+		if (defaultProposalTag) {
+			addProposalTag(defaultProposalTag);
+		}
 	});
 </script>
 
@@ -193,7 +222,7 @@
 						<li
 							class="hover:bg-gray-100 dark:hover:bg-darkbackground dark:hover:brightness-125 cursor-pointer px-4 py-2"
 							on:click={() => {
-								message = `${message}${proposal.title.replaceAll(' ', '-')} `;
+								addProposalTag(proposal.title);
 								recentlyTappedButton = '';
 							}}
 						>
@@ -218,6 +247,16 @@
 			/>
 		</div>
 		<div class="flex ml-2 gap-2 items-start">
+			{#if proposals?.length > 0}
+				<button
+					type="button"
+					class="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 h-10"
+					title={$_('Add proposal tag')}
+					on:click={() => recentlyTappedButton = '#'}
+				>
+					<Fa icon={faHashtag} color={darkmode ? 'white' : 'black'} class="text-lg" />
+				</button>
+			{/if}
 			<FileUploads
 				bind:files
 				minimalist

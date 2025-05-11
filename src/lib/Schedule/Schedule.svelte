@@ -1,5 +1,3 @@
-<!-- TODO: Split up this file into two files, one about functionality and the other about visuals -->
-
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
@@ -49,8 +47,27 @@
 		showCreateScheduleEvent = false,
 		showEditScheduleEvent = false,
 		showEvent = false,
-		//A fix due to class struggle
+		// A fix due to class struggle
 		selectedDatePosition = '0-0',
+		selectedEvent: scheduledEvent = {
+			title: '',
+			description: '',
+			start_date: '',
+			end_date: '',
+			meeting_link: '',
+			event_id: 0,
+			schedule_origin_name: type,
+			created_by: 0,
+			work_group: undefined
+		},
+		deleteSelection = () => {},
+		advancedTimeSettingsDates: Date[] = [],
+		notActivated = true,
+		workGroups: WorkGroup[] = [],
+		workGroupFilter: number[] = [],
+		poppup: poppup;
+
+	const resetSelectedEvent = () => {
 		selectedEvent = {
 			title: '',
 			description: '',
@@ -59,14 +76,10 @@
 			meeting_link: '',
 			event_id: 0,
 			schedule_origin_name: type,
-			created_by: 0
-		},
-		deleteSelection = () => {},
-		advancedTimeSettingsDates: Date[] = [],
-		notActivated = true,
-		workGroups: WorkGroup[] = [],
-		workGroupFilter: number[] = [],
-		poppup: poppup;
+			created_by: 0,
+			work_group: undefined
+		};
+	};
 
 	const updateMonth = () => {
 		if (month === 12) {
@@ -96,22 +109,30 @@
 		}
 
 		const { json, res } = await fetchRequest('GET', _api);
-		events = json.results;
-		console.log(events, 'events');
+		events = json.results.sort((a: scheduledEvent, b: scheduledEvent) => {
+			// Sort by start_date, then event_id for stable ordering
+			const dateA = new Date(a.start_date).getTime();
+			const dateB = new Date(b.start_date).getTime();
+			return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
+		});
+		console.log('Fetched events:', events);
 	};
 
-	const scheduleEventCreate = async () => {
+	const scheduleEventCreate = async (newEvent: scheduledEvent) => {
 		loading = true;
 
 		let API = '';
-		let payload: any = selectedEvent;
+		let payload: any = {
+			title: newEvent.title,
+			start_date: newEvent.start_date,
+			end_date: newEvent.end_date
+		};
 
-		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
-		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === undefined)
-			delete payload.meeting_link;
-
-		if (selectedEvent.description === '' || selectedEvent.description === null)
-			delete payload.description;
+		if (newEvent.description) payload.description = newEvent.description;
+		if (newEvent.meeting_link) payload.meeting_link = newEvent.meeting_link;
+		if (type === 'group' && newEvent.work_group) {
+			payload.work_group = newEvent.work_group;
+		}
 
 		if (type === 'user') {
 			API += `user/schedule/create`;
@@ -124,7 +145,6 @@
 		loading = false;
 
 		if (!res.ok) {
-			console.log(res, json);
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
@@ -136,34 +156,43 @@
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
 
-		selectedEvent = {
-			title: '',
-			description: '',
-			start_date: '',
-			end_date: '',
-			meeting_link: '',
-			event_id: 0,
-			schedule_origin_name: 'group' as const,
-			created_by: 0
+		// Create new event object with all required properties
+		const createdEvent: scheduledEvent = {
+			...newEvent,
+			event_id: json.event_id,
+			schedule_origin_name: type,
+			created_by: newEvent.created_by || 0,
+			work_group: newEvent.work_group || undefined
 		};
+
+		// Update events array reactively
+		events = [...events, createdEvent].sort((a, b) => {
+			const dateA = new Date(a.start_date).getTime();
+			const dateB = new Date(b.start_date).getTime();
+			return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
+		});
+
+		// Refresh calendar data to ensure consistency
+		await setUpScheduledPolls();
+
+		resetSelectedEvent();
 	};
 
-	const scheduleEventUpdate = async () => {
-		// Clone the current event so we keep its values
-		const updatedEvent = { ...selectedEvent };
-
-		// Build payload from the cloned object
-		let payload: any = { ...updatedEvent };
-
-		if (updatedEvent.meeting_link !== '') payload['meeting_link'] = updatedEvent.meeting_link;
-
-		if (updatedEvent.description === '' || updatedEvent.description === null)
-			delete payload.description;
-
-		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
-			delete payload.meeting_link;
-
+	const scheduleEventUpdate = async (updatedEvent: scheduledEvent) => {
 		loading = true;
+
+		let payload: any = {
+			event_id: updatedEvent.event_id,
+			title: updatedEvent.title,
+			start_date: updatedEvent.start_date,
+			end_date: updatedEvent.end_date
+		};
+
+		if (updatedEvent.description) payload.description = updatedEvent.description;
+		if (updatedEvent.meeting_link) payload.meeting_link = updatedEvent.meeting_link;
+		if (type === 'group' && updatedEvent.work_group) {
+			payload.work_group = updatedEvent.work_group;
+		}
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -178,34 +207,28 @@
 			return;
 		}
 
-		// Update the events array using the temporary updatedEvent
-		events = events.map((event) =>
-			event.event_id === updatedEvent.event_id ? updatedEvent : event
-		);
+		events = events
+			.map((event) => (event.event_id === updatedEvent.event_id ? { ...updatedEvent } : event))
+			.sort((a, b) => {
+				const dateA = new Date(a.start_date).getTime();
+				const dateB = new Date(b.start_date).getTime();
+				return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
+			});
+		resetSelectedEvent();
+		showEditScheduleEvent = false;
 
-		// Now reset selectedEvent
-		selectedEvent = {
-			title: '',
-			description: '',
-			start_date: '',
-			end_date: '',
-			meeting_link: '',
-			event_id: 0,
-			schedule_origin_name: 'group' as const,
-			created_by: 0
-		};
+		// Refresh calendar data
+		await setUpScheduledPolls();
 	};
 
-	showEditScheduleEvent = false;
-
-	const scheduleEventDelete = async () => {
-		console.log(groupId, 'GRUPP');
+	const scheduleEventDelete = async (eventId: number) => {
+		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
 			type === 'group' ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
-				event_id: selectedEvent.event_id
+				event_id: eventId
 			}
 		);
 
@@ -217,17 +240,25 @@
 		}
 
 		poppup = { message: 'Event deleted', success: true };
-		events = events.filter((event) => event.event_id !== selectedEvent.event_id);
+		events = events.filter((event) => event.event_id !== eventId);
 		events = events;
-
 		showEvent = false;
+		resetSelectedEvent();
+
+		// Refresh calendar data
+		await setUpScheduledPolls();
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {
+		const formattedStart = new Date(event.start_date).toISOString().slice(0, 16);
+		const formattedEnd = new Date(event.end_date).toISOString().slice(0, 16);
 		selectedEvent = {
 			...event,
+			start_date: formattedStart,
+			end_date: formattedEnd,
 			description: event.description || '',
-			meeting_link: event.meeting_link || ''
+			meeting_link: event.meeting_link || '',
+			work_group: event.work_group || undefined
 		};
 		showEvent = true;
 	};
@@ -240,16 +271,11 @@
 	};
 
 	const onFilterWorkGroup = (workGroup: WorkGroup) => {
-		//Once backend is fixed, use the commented out version
-
 		if (workGroupFilter.find((groupId) => groupId === workGroup.id))
 			workGroupFilter = workGroupFilter.filter((groupId) => groupId !== workGroup.id);
 		else workGroupFilter.push(workGroup.id);
 
-		// workGroupFilter = [workGroup.id];
-
 		workGroupFilter = workGroupFilter;
-
 		setUpScheduledPolls();
 	};
 
@@ -266,7 +292,6 @@
 	};
 
 	onMount(async () => {
-		//Prevents "document not found" error
 		deleteSelection = () => {
 			document.getElementById(selectedDatePosition)?.classList.remove('selected');
 		};
@@ -295,9 +320,25 @@
 		<div class="pt-3 pb-3">
 			<button
 				on:click={() => {
+					const dateStr = selectedDate.toISOString().slice(0, 16);
+					console.log('Sidebar create clicked - selectedDate:', selectedDate, 'Formatted:', dateStr);
+					selectedEvent = {
+						start_date: dateStr,
+						end_date: dateStr,
+						title: '',
+						description: '',
+						meeting_link: '',
+						event_id: 0,
+						schedule_origin_name: type,
+						created_by: 0,
+						work_group: undefined
+					};
 					showCreateScheduleEvent = true;
+<<<<<<< HEAD
 					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
 					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
+=======
+>>>>>>> 3862c34c (fixed the Events (at least those with the same start and end dates and times) change place when reloading and just after reloading you get the error “this field can not be null” on description when you try to create a new event)
 				}}
 			>
 				<Fa
@@ -306,42 +347,6 @@
 					icon={faPlus}
 				/>
 			</button>
-			<!-- {#each events.filter((poll) => setDateToMidnight(new Date(poll.start_date)) <= selectedDate && new Date(poll.end_date) >= selectedDate) as event}
-				<div class="mt-2">
-					<a
-						class="hover:underline cursor-pointer text-xs text-center color-black dark:text-darkmodeText text-black flex justify-between items-center gap-3"
-						class:hover:bg-gray-300={event.poll}
-						href={event.poll ? `groups/${event.group_id}/polls/${event.poll}` : location.href}
-						on:click={() => {
-							handleShowEvent(event);
-						}}
-					>
-						<span class="break-all">{event.title}</span>
-						<span
-							>{(() => {
-								const startDate = new Date(event.start_date);
-								const endDate = new Date(event.end_date);
-
-								if (selectedDate.getDate() === startDate.getDate())
-									return `${$_('Start:')} ${
-										startDate.getHours() > 9 ? startDate.getHours() : '0' + startDate.getHours()
-									}:${
-										startDate.getMinutes() > 9
-											? startDate.getMinutes()
-											: '0' + startDate.getMinutes()
-									}`;
-								else if (selectedDate.getDate() === endDate.getDate())
-									return `${$_('Ends:')} ${
-										endDate.getHours() > 9 ? endDate.getHours() : '0' + endDate.getHours()
-									}:${
-										endDate.getMinutes() > 9 ? endDate.getMinutes() : '0' + endDate.getMinutes()
-									}`;
-								else return 'whole day';
-							})()}</span
-						>
-					</a>
-				</div>
-			{/each} -->
 		</div>
 
 		<div class="flex flex-col">
@@ -350,10 +355,9 @@
 					<input
 						type="checkbox"
 						id={workGroup.id.toString()}
-						value={workGroupFilter.find((_workGroup) => _workGroup === workGroup.id)}
-						on:input={() => onFilterWorkGroup(workGroup)}
+						checked={workGroupFilter.includes(workGroup.id)}
+						on:change={() => onFilterWorkGroup(workGroup)}
 					/>
-
 					<span>{workGroup.name}</span>
 				</div>
 			{/each}
@@ -428,7 +432,7 @@
 	bind:type
 	{scheduleEventCreate}
 	scheduleEventEdit={scheduleEventUpdate}
-	{scheduleEventDelete}
+	scheduleEventDelete={scheduleEventDelete}
 />
 
 <Poppup bind:poppup />
@@ -438,11 +442,6 @@
 		display: grid;
 		grid-template-columns: repeat(7, 1fr);
 		grid-template-rows: repeat(6, 1fr);
-		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved
-
-	TODO: Don't do this*/
 		height: calc(100vh - 2rem - 40px - 28px);
 	}
 </style>

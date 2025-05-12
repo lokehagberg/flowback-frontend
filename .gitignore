@@ -18,3 +18,4 @@ src/app.html
 package-lock.json
 backend.bash
 setup2.bat
+venv

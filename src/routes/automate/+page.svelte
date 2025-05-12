@@ -98,8 +98,13 @@
 
 	$: if (group) {
 		getUserInfo();
-		getDelegatePools();
-		selectedPage = 'delegate';
+		// getDelegatePools();
+		
+		const parsed = localStorage.getItem('autovote');
+		autovote = parsed == 'delegate' ? true : false;
+		
+		selectedPage = autovote ? 'delegate' : 'none';
+
 	}
 </script>
 
@@ -141,6 +146,8 @@
 							<Toggle
 								onInput={(checked) => {
 									selectedPage = checked ? 'delegate' : 'none';
+									console.log("checked", selectedPage);
+									localStorage.setItem('autovote', selectedPage);
 									if (!checked) removeAllDelegations(group);
 								}}
 								checked={autovote}

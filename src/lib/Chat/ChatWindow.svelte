@@ -18,6 +18,16 @@
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+
+	export let selectedChat: number | null,
+		selectedChatChannelId: number | null,
+		user: User,
+		selectedPage: 'direct' | 'group',
+		previewDirect: PreviewMessage[] = [],
+		previewGroup: PreviewMessage[] = [],
+		isLookingAtOlderMessages: boolean;
 
 	// User Action variables
 	let message: string = env.PUBLIC_MODE === 'DEV' ? 'a' : '',
@@ -30,15 +40,10 @@
 		},
 		messages: Message[] = [],
 		socket: WebSocket,
-		chatWindow: any;
-
-	export let selectedChat: number | null,
-		selectedChatChannelId: number | null,
-		user: User,
-		selectedPage: 'direct' | 'group',
-		previewDirect: PreviewMessage[] = [],
-		previewGroup: PreviewMessage[] = [],
-		isLookingAtOlderMessages: boolean;
+		chatWindow: any,
+		errorState = false,
+		participants: any[] = [],
+		participantsModalOpen = false;
 
 	const getRecentMesseges = async () => {
 		if (!selectedChatChannelId) return;
@@ -48,9 +53,17 @@
 			`chat/message/channel/${selectedChatChannelId}/list?order_by=created_at_desc&limit=${chatWindowLimit}`
 		);
 
-		if (res.ok) messages = json.results.reverse();
+		if (!res.ok) {
+			selectedChat = null;
+			messages = [];
+			errorState = true;
+			return;
+		}
+
+		messages = json.results.reverse();
 
 		//Temporary fix before json.next issue is fixed
+		//TODO: Fix it
 		olderMessages = json.next;
 		newerMessages = '';
 	};
@@ -86,19 +99,30 @@
 		selectedPage === 'direct' ? (previewDirect = previewDirect) : (previewGroup = previewGroup);
 
 		let channelId = selectedChat;
-		if (selectedPage === 'direct') channelId = (await getChannelId(selectedChat)).id;
+		if (selectedPage === 'direct') channelId = selectedChat;
 
 		if (!channelId) return;
 
 		if (!selectedChatChannelId) return;
 
 		const didSend = await sendMessage.sendMessage(socket, selectedChatChannelId, message, 1);
+
 		if (!didSend) status = { message: 'Could not send message', success: false };
 		else
 			messages.push({
+				id: Date.now(),
 				message,
 				user: { username: user.username, id: user.id, profile_image: user.profile_image || '' },
-				created_at: new Date().toString()
+				created_at: new Date().toString(),
+				active: true,
+				channel_id: selectedChatChannelId || selectedChat,
+				channel_origin_name: selectedPage === 'direct' ? 'user' : 'group',
+				type: 'message',
+				updated_at: new Date().toString(),
+				attachments: [],
+				channel_title: '',
+				parent: 0,
+				topic_id: 0
 			});
 
 		messages = messages;
@@ -108,6 +132,7 @@
 	};
 
 	const showOlderMessages = async () => {
+		console.log(olderMessages, 'NEEEXY');
 		const { res, json } = await fetchRequest('GET', olderMessages);
 
 		if (!res.ok) return;
@@ -167,6 +192,7 @@
 				preview = preview;
 			}
 		} else if (message.channel_id === selectedChat) {
+			//@ts-ignore
 			messages.push({
 				message: message.message,
 				user: {
@@ -185,6 +211,18 @@
 			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
 	};
 
+	const getChannelParticipants = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/${selectedChatChannelId}/participant/list`
+		);
+		if (!res.ok) {
+			console.error('Failed to fetch channel participants:', json);
+			return [];
+		}
+		participants = json.results;
+	};
+
 	onMount(() => {
 		recieveMessage();
 		correctHeightRelativeToHeader();
@@ -193,8 +231,9 @@
 
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
+	$: (selectedPage || selectedChat) && getChannelParticipants();
 
-	//Behavior is differnet when looking at older chat messages
+	//Behavior is different when looking at older chat messages
 	$: {
 		if (newerMessages) isLookingAtOlderMessages = true;
 		else isLookingAtOlderMessages = false;
@@ -224,81 +263,114 @@
 
 {#if selectedChat !== null || true}
 	<div class="flex flex-col h-full">
-	<ul
-		class="grow overflow-y-auto px-2 break-all"
-		id="chat-window"
-		bind:this={chatWindow}
-	>
-		{#if messages.length === 0}
-			<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
-		{/if}
-		{#if olderMessages}
-			<li class="text-center mt-6 mb-6">
-				<Button action={showOlderMessages}>{$_('Show older messages')}</Button>
-			</li>
-		{/if}
-
-		{#each messages as message}
-			{@const sentByUser = message.user.id.toString() === localStorage.getItem('userId') || false}
-			<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
-				<span>{message.user?.username || message.username}</span>
-				<p
-					class="p-2 rounded-xl"
-					class:bg-primary={sentByUser}
-					class:dark:bg-gray-600={sentByUser}
-					class:text-white={sentByUser}
-					class:bg-gray-300={!sentByUser}
-					class:dark:bg-gray-500={!sentByUser}
-				>
-					{message.message}
-				</p>
-				<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
-			</li>
-		{/each}
-		{#if newerMessages}
-			<li class="text-center mt-6 mb-6">
-				<Button action={showEarlierMessages} buttonStyle="secondary"
-					>{$_('Show earlier messages')}</Button
-				>
-			</li>
-		{/if}
-		<StatusMessage bind:status disableSuccess />
-	</ul>
-	<!-- <div class:invisible={!showEmoji} class="fixed">
-	</div> -->
-	<div class="border-t-2 border-t-gray-200 w-full">
-		<!-- Here the user writes a message to be sent -->
-		<div class="flex gap-1 justify-center items-center w-full mt-2" on:submit|preventDefault={postMessage}>
-			<TextArea
-				autofocus
-				label=""
-				onKeyPress={(e) => {
-					if (e.key === 'Enter' && !e.shiftKey) {
-						postMessage();
-						e.preventDefault();
-					}
-				}}
-				max={3000}
-				rows={1}
-				bind:value={message}
-				placeholder={$_('Write a message...')}
-				Class="justify-center w-full h-2rem"
-				inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
-			/>
-
-			{#if env.PUBLIC_MODE === 'DEV'}
-				<Button
-					action={() => (showEmoji = !showEmoji)}
-					Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
-				>
+		<ul class="grow overflow-y-auto px-2 break-all" id="chat-window" bind:this={chatWindow}>
+			{#if messages.length === 0 && selectedChat !== undefined && selectedChat !== 0 && selectedChat !== null}
+				<span class="self-center">{$_('Chat is currently empty, maybe say hello?')}</span>
+			{:else if selectedChat === undefined || selectedChat === null}
+				<span class="self-center">{$_('')}</span>
+			{/if}
+			{#if olderMessages}
+				<li class="text-center mt-6 mb-6">
+					<Button onClick={showOlderMessages}>{$_('Show older messages')}</Button>
+				</li>
 			{/if}
 
-			<Button type="submit" Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
-					><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+			{#each messages as message}
+				{#if message.type === 'info'}
+					<li class="px-4 py-2 max-w-[80%] text-center">
+						{message.message}
+					</li>
+				{:else}
+					{@const sentByUser =
+						message.user.id.toString() === localStorage.getItem('userId') || false}
+					<li class="px-4 py-2 max-w-[80%]" class:ml-auto={sentByUser}>
+						<span>{message.user?.username}</span>
+						<p
+							class="p-2 rounded-xl"
+							class:bg-primary={sentByUser}
+							class:text-white={sentByUser}
+							class:bg-gray-300={!sentByUser}
+							class:dark:bg-gray-600={sentByUser}
+							class:dark:bg-gray-500={!sentByUser}
+						>
+							{message.message}
+						</p>
+						<span class="text-[14px]text-gray-400 ml-3"
+							>{formatDate(message.created_at || new Date())}</span
+						>
+					</li>
+				{/if}
+			{/each}
+			{#if newerMessages}
+				<li class="text-center mt-6 mb-6">
+					<Button onClick={showEarlierMessages} buttonStyle="secondary"
+						>{$_('Show earlier messages')}</Button
+					>
+				</li>
+			{/if}
+			<StatusMessage bind:status disableSuccess />
+		</ul>
+		<!-- <div class:invisible={!showEmoji} class="fixed">
+	</div> -->
+		{#if selectedChatChannelId !== 0 && selectedChatChannelId !== undefined && selectedChatChannelId !== null}
+			<div class="border-t-2 border-t-gray-200 w-full">
+				<!-- Here the user writes a message to be sent -->
+				<form
+					class="flex gap-1 justify-center items-center w-full mt-2"
+					on:submit|preventDefault={postMessage}
 				>
-		</div>
+					<TextArea
+						autofocus
+						label=""
+						onKeyPress={(e) => {
+							if (e.key === 'Enter' && !e.shiftKey) {
+								postMessage();
+								e.preventDefault();
+							}
+						}}
+						max={3000}
+						rows={1}
+						bind:value={message}
+						placeholder={$_('Write a message...')}
+						Class="justify-center w-full h-2rem"
+						inputClass="border-0 bg-gray-100 placeholder-gray-700 pl-2 pt-1 resize-y min-h-[2rem] max-h-[6rem] overflow-auto"
+					/>
+
+					{#if env.PUBLIC_MODE === 'DEV'}
+						<Button
+							onClick={() => (showEmoji = !showEmoji)}
+							Class="rounded-full pl-3 pr-3 pt-3 pb-3 h-1/2"><Fa icon={faSmile} /></Button
+						>
+					{/if}
+
+					<Button
+						type="submit"
+						Class="bg-transparent border-none flex items-center justify-center p-3 h-1/2"
+						><Fa class="text-blue-600 text-lg" icon={faPaperPlane} /></Button
+					>
+				</form>
+			</div>
+		{/if}
 	</div>
-	</div>
+	<Button onClick={() => (participantsModalOpen = true)}>Show users</Button>
 {:else}
 	<div>{'No chat selected'}</div>
 {/if}
+
+<Modal bind:open={participantsModalOpen}>
+	<div slot="body">
+		{#if participants.length > 0}
+			<ul>
+				{#each participants as participant (participant.id)}
+					<ProfilePicture
+						displayName
+						username={participant.user.username}
+						profilePicture={participant.user.profile_image}
+					/>
+				{/each}
+			</ul>
+		{:else}
+			<p>No participants found.</p>
+		{/if}
+	</div>
+</Modal>

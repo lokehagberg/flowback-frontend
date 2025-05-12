@@ -74,7 +74,7 @@
 		loading = true;
 		const { json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?limit=${delegationLimit}&delegate=true`
+			`group/${$page.params.groupId}/users?limit=${delegationLimit}&is_delegate=true`
 		);
 		loading = false;
 		return json.results;
@@ -186,7 +186,7 @@
 		{/each}
 	</ul>
 
-	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" action={saveDelegation}
+	<Button Class="mt-4 mb-2 bg-blue-600 hover:bg-blue-800" onClick={saveDelegation}
 		>{$_('Save changes')}</Button
 	>
 {:else if loading === false}

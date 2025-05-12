@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { elipsis } from './GenericFunctions';
+	import { onMount } from 'svelte';
 
 	export let onInput: (
 			e: Event & {
@@ -10,33 +11,40 @@
 		label: string = '',
 		labels: string[] = [],
 		values: any[] = labels,
-		value = values[0],
+		value: any = values[0],
+		defaultValue = values[0],
 		Class = '',
 		classInner = '',
-		innerLabel = 'Select',
+		innerLabel: string | null = 'Select',
+		innerLabelOn: boolean = false,
 		charlimit = 30;
+
+	onMount(() => {
+		value = defaultValue;
+	});
 </script>
 
-<div class={`${Class}`}>
+<div class={`${Class} `}>
 	{#if label}
 		<label for={label}>{label}</label> <br />
 	{/if}
 	<select
-		name={label}
+		bind:value
 		on:input={(e) => {
 			onInput(e);
-			//@ts-ignore
-			// if (e?.target?.value)
-			// 	//@ts-ignore
-			// 	value = e?.target?.value;
 		}}
-		style="width:100%"
 		class={`rounded p-1 dark:bg-darkobject ${classInner}`}
-		bind:value
+		style="width:100%"
+		name={label}
 	>
-		<option value="" disabled selected>{innerLabel}</option>
-		{#each labels as label, i}
-			<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
-		{/each}
+		{#if innerLabel}
+			<option value="" disabled={!innerLabelOn} selected>{$_(innerLabel)}</option>
+		{/if}
+
+		{#if labels}
+			{#each labels as label, i}
+				<option value={values[i]} class="dark:bg-darkobject"> {elipsis(label)} </option>
+			{/each}
+		{/if}
 	</select>
 </div>

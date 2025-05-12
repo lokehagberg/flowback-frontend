@@ -10,7 +10,6 @@
 		Class = '',
 		iconSize = '5x',
 		imageString: string | null = null,
-		shouldCrop: boolean = true,
 		minimalist = false,
 		onCrop = () => {},
 		disableImagePreview = false,
@@ -22,14 +21,19 @@
 		const files: File[] = Array.from(e.target.files);
 		croppedImage = files[0];
 		imageString = URL.createObjectURL(croppedImage);
-		if (disableCropping) currentlyCropping = true;
+		if (!disableCropping) currentlyCropping = true;
 		else onCrop();
 	};
+
+	$: if (imageString !== null) {
+		// currentlyCropping = true;
+	}
 </script>
 
 <div class={`image-upload ${Class}`}>
-	<h1 class="text-left text-sm w-full">{$_(label)}</h1>
-
+	{#if label}
+		<h1 class="text-left text-sm w-full">{$_(label)}</h1>
+	{/if}
 	{#if imageString && !disableImagePreview}
 		<img
 			id="image"
@@ -59,13 +63,13 @@
 	<input
 		style="display:none"
 		type="file"
-		accept=".jpg, .jpeg, .png"
+		accept=".jpg, .jpeg, .png, .pdf, .txt"
 		on:change={(e) => onFileSelected(e)}
 		bind:this={fileinput}
 	/>
 </div>
 
-{#if currentlyCropping && shouldCrop}
+{#if currentlyCropping}
 	<CropperModal
 		confirmAction={() => {
 			currentlyCropping = false;

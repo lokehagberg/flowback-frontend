@@ -8,9 +8,10 @@
 	import DefaultBanner from '$lib/assets/default_banner_group.png';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import Description from '$lib/Poll/Description.svelte';
+	import NewDescription from '$lib/Poll/NewDescription.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import Description from '$lib/Poll/Description.svelte';
 
 	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
 
@@ -26,22 +27,18 @@
 	];
 </script>
 
-<div class="bg-white dark:bg-darkobject">
+<div class="bg-white dark:bg-darkobject w-full max-w-[120rem]">
 	<div class="relative">
 		<div class="relative">
 			<img
 				class="cover w-full"
-				src={group.cover_image
-					? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${
-							group.cover_image
-					  }`
-					: DefaultBanner}
+				src={group.cover_image ? `${env.PUBLIC_API_URL}${group.cover_image}` : DefaultBanner}
 				alt="cover"
 			/>
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<Button
-					action={() => history.back()}
+					onClick={() => history.back()}
 					Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 				>
 					<div class="text-gray-800 dark:text-gray-200">
@@ -70,7 +67,7 @@
 		<img
 			class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
 			src={group.image
-				? `${env.PUBLIC_API_URL}${env.PUBLIC_IMAGE_HAS_API === 'TRUE' ? '/api' : ''}${group.image}`
+				? `${env.PUBLIC_API_URL}${group.image}`
 				: DefaultBanner}
 			alt="profile"
 		/>
@@ -104,8 +101,8 @@
 			</div>
 		</div>
 		{#if group.description.length > 0}
-			<div class="text-xs mt-2 pb-1 grid-area-description break-all">
-				<Description limit={400} description={group.description} />
+			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
+				<NewDescription limit={2} lengthLimit={250} description={group.description} />
 			</div>
 		{/if}
 	</div>

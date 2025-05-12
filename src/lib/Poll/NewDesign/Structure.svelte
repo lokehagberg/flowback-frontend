@@ -5,10 +5,10 @@
 
 	export let poll: poll | null = null,
 		Class = '',
-		phase: Phase;
+		phase: Phase = 'area_vote';
 
 	let genericStyle =
-		'bg-white dark:bg-darkobject dark:text-darkmodeText p-6 h-[100%] h-full  shadow-md';
+		'bg-white dark:bg-darkobject dark:text-darkmodeText p-4 h-[100%] h-full rounded shadow-md';
 
 	onMount(() => {});
 </script>
@@ -21,9 +21,8 @@
 	{#if poll}
 		<Timeline
 			bind:phase
-			displayDetails={false}
 			bind:poll
-			pollType={4}
+			enableDetails={false}
 			Class={'!absolute md:!relative left-4 md:left-0'}
 		/>
 	{/if}

@@ -15,13 +15,15 @@
 	import Fa from 'svelte-fa';
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import Toggle from '$lib/Generic/Toggle.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
 		selectedTag: TagType = { active: false, id: 0, name: '', imac: 0 },
 		loading = false,
 		areYouSureModal = false,
-		poppup: poppup;
+		poppup: poppup,
+		tagDescription: string;
 
 	onMount(async () => {
 		await getTagsLocal();
@@ -36,9 +38,13 @@
 
 	const addTag = async () => {
 		loading = true;
-		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, {
+		let toSend: any = {
 			name: tagToAdd
-		});
+		};
+
+		if (tagDescription) toSend.description = tagDescription;
+
+		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, toSend);
 		if (res.ok) {
 			getTagsLocal();
 			tagToAdd = '';
@@ -69,15 +75,20 @@
 	};
 </script>
 
-<!-- TODO: Nicer design -->
 <!-- <div class="bg-white rounded shadow p-6 dark:bg-darkobject"> -->
 <Loader bind:loading>
-	<form on:submit|preventDefault={addTag} class="pb-4 flex gap-2">
-		<TextInput label="Add tag" bind:value={tagToAdd} required Class="flex-1 p-1" />
+	<form on:submit|preventDefault={addTag} class="pb-4 flex flex-col gap-2">
+		<TextInput label="Tag" max={50} bind:value={tagToAdd} required Class="flex-1" />
+		<TextArea
+			label="Description"
+			max={500}
+			bind:value={tagDescription}
+			inputClass="max-h-[15rem]"
+		/>
 		<Button
 			disabled={loading}
 			type="submit"
-			Class="w-1/5 mt-[1.65rem] h-8 flex items-center justify-center"
+			Class="w-1/5 h-8 flex items-center justify-center"
 			buttonStyle="primary-light"
 			label="Add"
 		/>
@@ -132,8 +143,12 @@
 		<span>{$_('You are removing')}: {selectedTag?.name}</span>
 	</div>
 	<div slot="footer" class="flex gap-2">
-		<Button action={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2">{$_('Yes')}</Button>
-		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+		<Button disabled={loading} onClick={() => removeTag(selectedTag)} Class="bg-red-500 w-1/2"
+			>{$_('Yes')}</Button
+		>
+		<Button disabled={loading} onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2"
+			>{$_('No')}</Button
+		>
 	</div>
 </Modal>
 

@@ -39,8 +39,6 @@ export const getComments = async (
 ) => {
 	let _api = '';
 
-	console.log(api, "id, api, offset, sortBy, searchString");
-	
 	if (api === 'poll') _api += `group/poll/${id}`;
 	else if (api === 'thread') _api += `group/thread/${id}`;
 	else if (api === 'delegate-history') _api += `group/delegate/pool/${id}`;
@@ -56,8 +54,20 @@ export const getComments = async (
 		comments: json.results?.map((comment: Comment) => {
 			comment.being_edited = false;
 			comment.being_replied = false;
+			comment.being_reported = false;
 			return comment;
 		}),
 		next: json.next
 	};
 };
+
+export async function reportComment(commentId: number, description: string,){
+	const {res,json} = await fetchRequest('POST',`report/create`,{
+		title:commentId,
+		description
+	},true)
+	console.log(res,json)
+	if(!res.ok) return {success:false,message:'Failed to report comment, try again later'}
+
+	return {success:true,message:'Comment has been reported'}
+}

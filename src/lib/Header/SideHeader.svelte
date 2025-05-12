@@ -5,6 +5,7 @@
 	import TermsOfService from '$lib/Login/TermsOfService.svelte';
 	import { goto } from '$app/navigation';
 	import { env } from '$env/dynamic/public';
+	import { UsersApi } from '$lib/api/users';
 
 	export let sideHeaderOpen = false;
 
@@ -12,7 +13,8 @@
 		open_support = false,
 		open_tools = false;
 
-	const logOut = () => {
+	const logOut = async () => {
+		await UsersApi.logout();
 		localStorage.removeItem('token');
 		localStorage.removeItem('sessionExpirationTime');
 		goto('/login');

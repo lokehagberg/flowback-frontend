@@ -4,7 +4,8 @@
 	import Fa from 'svelte-fa';
 	import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-	export let poppup: poppup | null;
+	export let poppup: poppup | null,
+		Class = '';
 
 	let show = false,
 		currentPoppup: NodeJS.Timeout;
@@ -24,13 +25,13 @@
 {#if poppup?.message}
 	<div
 		id="popup"
-		class={`bg-white dark:bg-darkobject dark:text-darkmodeText fixed bottom-5 right-5 z-50 shadow-xl flex gap-2 items-center px-4 py-2 rounded-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
+		class={`${Class} bg-white dark:bg-darkobject dark:text-darkmodeText fixed bottom-5 right-5 z-50 shadow-xl flex gap-2 items-center px-4 py-2 rounded-md opacity-0 transition-opacity duration-300 transform translate-y-3`}
 		class:show
 		hidden={!show}
 	>
-		<Fa 
-			icon={poppup.success ? faCheckCircle : faTimesCircle} 
-			color={poppup.success ? 'green' : 'red'} 
+		<Fa
+			icon={poppup.success ? faCheckCircle : faTimesCircle}
+			color={poppup.success ? 'green' : 'red'}
 		/>
 		{$_(poppup.message)}
 	</div>

@@ -6,7 +6,12 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import { _ } from 'svelte-i18n';
-	import type { StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import {
+		getPermissions,
+		getPermissionsFast,
+		getUserIsGroupAdmin,
+		type StatusMessageInfo
+	} from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
@@ -26,6 +31,8 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { onMount } from 'svelte';
+	import Select from '$lib/Generic/Select.svelte';
+	import type { WorkGroup } from '../WorkingGroups/interface';
 
 	let title = '',
 		description = '',
@@ -38,17 +45,21 @@
 		delegate_vote_end_date = new Date(),
 		vote_end_date = new Date(),
 		end_date = new Date(),
-		isPublic = true,
+		isPublic = false,
 		loading = false,
 		advancedTimeSettings = false,
 		daysBetweenPhases = 1,
 		images: File[],
-		isFF = true,
+		isFF = false,
 		pushToBlockchain = true,
 		selected_poll: pollType = 'Text Poll',
 		selectedPage: 'poll' | 'thread' =
 			$page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll',
-		tags: { id: number }[] = [];
+		tags: { id: number }[] = [],
+		workGroups: WorkGroup[] = [],
+		workGroup: number,
+		permissions: any,
+		userIsOwner = false;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -90,8 +101,11 @@
 		formData.append('poll_type', (selected_poll === 'Text Poll' ? 4 : 3).toString());
 		formData.append('dynamic', selected_poll === 'Text Poll' ? 'false' : 'true');
 		formData.append('public', isPublic.toString());
+		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('tag', tags[0]?.id?.toString() || '1');
+		if (workGroup && selected_poll === 'Date Poll' && !isPublic)
+			formData.append('work_group_id', workGroup.toString());
 
 		images.forEach((image) => {
 			formData.append('attachments', image);
@@ -115,8 +129,13 @@
 	};
 
 	const createThread = async () => {
-		let thread: { title: string; description?: string } = { title };
+		let thread: { title: string; description?: string; work_group_id?: number | null } = {
+			title
+		};
+
 		if (description) thread.description = description;
+
+		if (workGroup) thread.work_group_id = workGroup;
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -125,8 +144,10 @@
 		);
 		if (!res.ok) {
 			// poppup = { message: "Couldn't create Thread", success: false };
+			return;
 		}
-		if (res.ok) goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
+
+		goto(`groups/${$page.url.searchParams.get('id')}/thread/${json}`);
 	};
 
 	//TODO: Refactor so arbitrary number of phases can be done
@@ -156,8 +177,19 @@
 		}
 	};
 
-	onMount(() => {
+	const getWorkGroupList = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
+
+		if (!res.ok) return;
+		workGroups = json.results;
+		workGroups = workGroups.filter((workGroup) => workGroup.joined);
+	};
+
+	onMount(async () => {
 		getGroupTags();
+		getWorkGroupList();
+		permissions = await getPermissionsFast(Number(groupId));
+		userIsOwner = await getUserIsGroupAdmin(Number(groupId));
 	});
 
 	$: if (selectedPage) status = undefined;
@@ -192,8 +224,21 @@
 			{/if}
 
 			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
-			<TextArea label="Description" bind:value={description} />
-			<FileUploads bind:images />
+			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap" />
+			<FileUploads bind:files={images} disableCropping />
+
+			{#if (selectedPage === 'thread' || selected_poll === 'Date Poll') && !isPublic}
+				<Select
+					classInner="border border-gray-300"
+					label={$_('Work Group')}
+					labels={workGroups.map((workGroup) => workGroup.name)}
+					values={workGroups.map((workGroup) => workGroup.id)}
+					bind:value={workGroup}
+					innerLabelOn={true}
+					innerLabel={$_('No workgroup assigned')}
+					defaultValue=""
+				/>
+			{/if}
 
 			<!-- Time setup -->
 			{#if selectedPage === 'poll'}
@@ -229,19 +274,21 @@
 					</button>
 
 					{#if advancedTimeSettings}
-						<AdvancedTimeSettings
-							bind:selected_poll
-							bind:advancedTimeSettings
-							bind:start_date
-							bind:area_vote_end_date
-							bind:proposal_end_date
-							bind:prediction_statement_end_date
-							bind:prediction_bet_end_date
-							bind:delegate_vote_end_date
-							bind:vote_end_date
-							bind:end_date
-							bind:daysBetweenPhases
-						/>
+						{#key selected_poll}
+							<AdvancedTimeSettings
+								bind:selected_poll
+								bind:advancedTimeSettings
+								bind:start_date
+								bind:area_vote_end_date
+								bind:proposal_end_date
+								bind:prediction_statement_end_date
+								bind:prediction_bet_end_date
+								bind:delegate_vote_end_date
+								bind:vote_end_date
+								bind:end_date
+								bind:daysBetweenPhases
+							/>
+						{/key}
 					{/if}
 				</div>
 			{/if}
@@ -250,7 +297,7 @@
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 			{/if}
 
-			{#if selectedPage === 'poll'}
+			{#if selectedPage === 'poll' && (permissions?.allow_fast_forward || userIsOwner)}
 				<RadioButtons bind:Yes={isFF} label="Fast Forward?" />
 			{/if}
 

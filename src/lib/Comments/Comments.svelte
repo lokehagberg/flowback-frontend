@@ -2,7 +2,7 @@
 	import CommentPost from './CommentPost.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import type { Comment as CommentType } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
@@ -18,7 +18,7 @@
 		delegate_pool_id: null | number = null,
 		Class = '',
 		_comments: CommentType[] = [];
-
+	let interval: any;
 	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
@@ -53,11 +53,15 @@
 
 	onMount(async () => {
 		await setUpComments();
+		setUpComments();
 	});
-
+	onDestroy(() => {
+		clearInterval(interval);
+	});
 	$: if (sortBy || !sortBy || searchString) setUpComments();
 	$: if (_comments) {
 		done = false;
+		console.log('changed comments', _comments);
 	}
 </script>
 
@@ -81,9 +85,7 @@
 
 	<div class="flex flex-col gap-1 mt-2">
 		{#each _comments as comment}
-			{#key comment}
-				<Comment {delegate_pool_id} {comment} comments={_comments} {api} bind:proposals />
-			{/key}
+			<Comment {delegate_pool_id} {comment} bind:comments={_comments} {api} {proposals} />
 		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>

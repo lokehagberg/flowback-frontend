@@ -13,8 +13,9 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import { configToReadable } from '$lib/utils/configToReadable';
+	import { env } from '$env/dynamic/public';
 
-	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'notifications',
+	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' = 'profile',
 		optionsDesign =
 			'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all',
 		userConfig = {
@@ -46,7 +47,9 @@
 				voting: false
 			}
 		},
-		version = '0.1.5';
+		version = '0.1.30',
+		serverConfig: any = {},
+		reports: any = [];
 
 	const userUpdate = async () => {
 		const { res, json } = await fetchRequest('POST', 'user/update', {
@@ -54,10 +57,16 @@
 		});
 	};
 
+	const getServerConfig = async () => {
+		const { res, json } = await fetchRequest('GET', 'server/config');
+
+		if (!res.ok) return;
+
+		serverConfig = json;
+	};
+
 	const getUserConfig = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
-
-		console.log(res, json, 'JSON');
 
 		if (res.ok && json.user_config) {
 			userConfig = JSON.parse(json.user_config);
@@ -68,6 +77,14 @@
 		const { res, json } = await fetchRequest('POST', 'user/update', {
 			user_config: JSON.stringify(userConfig)
 		});
+	};
+
+	const getReportList = async () => {
+		const { res, json } = await fetchRequest('GET', 'server/reports');
+
+		if (!res.ok) return;
+
+		reports = json.results;
 	};
 
 	const a = (key1: string, key2: string = '') => {
@@ -81,6 +98,15 @@
 
 	onMount(() => {
 		getUserConfig();
+		getServerConfig();
+		getReportList();
+
+		console.log(
+			env.PUBLIC_API_URL,
+			env.PUBLIC_DISABLE_GROUP_CREATION,
+			env.PUBLIC_FLOWBACK_AI_MODULE,
+			env.PUBLIC_LOGO
+		);
 	});
 </script>
 
@@ -230,7 +256,15 @@
 						{/each}
 					</ul>
 				{:else if selectedPage === 'info'}
-					Version: {version}
+					<div>Version: {version}</div>
+					<!-- <div>Version Backend: {serverConfig.GIT_HASH}</div> -->
+
+					{#each reports as reports}
+						<div class="flex justify-between p-2 rounded hover:bg-gray-100">
+							<span>{reports?.title}</span>
+							<span>{reports?.description}</span>
+						</div>
+					{/each}
 				{/if}
 			</ul>
 		</div>

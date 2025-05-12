@@ -3,9 +3,7 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Button from '$lib/Generic/Button.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import { page } from '$app/stores';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import FileUploads from '$lib/Generic/FileUploads.svelte';
 	import type { GroupUser } from '../interface';
@@ -14,6 +12,16 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { elipsis } from '$lib/Generic/GenericFunctions';
 	import type { kanban } from './Kanban';
+	import Select from '$lib/Generic/Select.svelte';
+	import { onMount } from 'svelte';
+
+	export let type: 'home' | 'group',
+		open: boolean = false,
+		users: GroupUser[] = [],
+		kanbanEntries: kanban[],
+		workGroups: WorkGroup[] = [],
+		lane: number = 1,
+		groupId;
 
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
@@ -28,19 +36,11 @@
 			'Very low priority'
 		],
 		priority: undefined | number = 3,
-		end_date: null | string = null,
+		end_date: null | string = new Date().toISOString().slice(0, 16),
 		loading = false,
 		poppup: poppup,
 		images: File[],
-		workGroup: WorkGroup | null = null;
-
-	export let type: 'home' | 'group',
-		open: boolean = false,
-		users: GroupUser[] = [],
-		kanbanEntries: kanban[],
-		workGroups: WorkGroup[] = [],
-		lane: number = 1,
-		groupId;
+		workGroup: number;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -63,7 +63,7 @@
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
-		if (workGroup) formData.append('work_group_id', workGroup.id.toString());
+		if (workGroup) formData.append('work_group_id', workGroup.toString());
 
 		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
@@ -88,28 +88,45 @@
 			return;
 		}
 
+		console.log(
+			Number(localStorage.getItem('userId')),
+			localStorage.getItem('pfp-link') || '',
+			localStorage.getItem('userName') || ''
+		);
+
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
+		const _assignee = assignee
+			? {
+					id: assignee || 0,
+					profile_image: userAssigned?.user.profile_image || '',
+					username: userAssigned?.user.username || ''
+			  }
+			: null;
+
 		kanbanEntries.push({
-			assignee: {
-				id: assignee || 0,
-				profile_image: userAssigned?.user.profile_image || '',
-				username: userAssigned?.user.username || $_('Unassigned')
-			},
+			assignee: _assignee,
 			group: { id: 0, image: '', name: '' },
 			description,
 			lane,
 			title,
 			id: json,
-			created_by: 1,
+			created_by: {
+				id: Number(localStorage.getItem('userId')),
+				profile_image: localStorage.getItem('pfp-link') || '',
+				username: localStorage.getItem('userName') || ''
+			},
 			origin_id: 1,
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
 			end_date: end_date?.toString() || null,
 			//@ts-ignore
-			work_group: { id: workGroup?.id, name: workGroup?.name } || null,
+			work_group: {
+				id: workGroup,
+				name: workGroups.find((group) => group.id === workGroup)?.name
+			},
 			attachments: []
 		});
 
@@ -131,7 +148,8 @@
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-		workGroup = workGroups.find((group) => group.id === Number(e.target.value)) || null;
+		workGroup =
+			workGroups.find((group) => group.id === Number(e.target.value))?.id || workGroups[0]?.id;
 	};
 </script>
 
@@ -144,26 +162,29 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" required label="Title" bind:value={title} />
 				</div>
-				<TextArea Class="text-md" label="Description" bind:value={description} />
-				{#if type === 'group'}
+				<TextArea
+					Class="text-md"
+					inputClass="whitespace-pre-wrap"
+					label="Description"
+					bind:value={description}
+				/>
+
+				{#if type === 'group' && workGroups?.length > 0}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
 							{$_('Work Group')}
 						</label>
-						<select
-							style="width:100%"
-							class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject text-gray-500"
-							on:input={handleChangeWorkGroup}
-							id="work-group"
-						>
-							<option class="w-5" value={null}> {$_('Unassigned')} </option>
-
-							{#each workGroups as group}
-								<option class="w-5 text-black" value={group.id}>
-									{elipsis(group.name)}
-								</option>
-							{/each}
-						</select>
+						<Select
+							Class="w-full"
+							classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							labels={workGroups.map((group) => elipsis(group.name))}
+							values={workGroups.map((group) => group.id)}
+							bind:value={workGroup}
+							defaultValue=""
+							onInput={handleChangeWorkGroup}
+							innerLabel={$_('No workgroup assigned')}
+							innerLabelOn={true}
+						/>
 					</div>
 				{/if}
 				<div class="text-left">
@@ -182,50 +203,49 @@
 					<label for="handleChangePriority" class="block text-md pt-2">
 						{$_('Priority')}
 					</label>
-					<select
-						class="w-full rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						on:input={handleChangePriority}
-						value={priority}
-						id="handleChangePriority"
-					>
-						{#each priorities as i}
-							<option value={i}>
-								{$_(priorityText[priorityText.length - i])}
-							</option>
-						{/each}
-					</select>
+					<Select
+						Class="w-full"
+						classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						labels={priorities.map((i) => $_(priorityText[priorityText.length - i]))}
+						values={priorities}
+						bind:value={priority}
+						onInput={handleChangePriority}
+						innerLabel=""
+					/>
 					<div class="flex gap-6 justify-between mt-2 flex-col" />
+
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">
 								{$_('Assignee')}
 							</label>
-							<select
-								on:input={handleChangeAssignee}
-								class="w-full rounded p-1 border border-gray-300 text-gray-500 dark:border-gray-600 dark:bg-darkobject"
-								id="handle-change-assignee"
-							>
-								<option value={null}>{$_('Select')}</option>
-								{#each users as user}
-									<option class="text-black" value={user.user.id}>{user.user.username}</option>
-								{/each}
-							</select>
+							<Select
+								Class="w-full"
+								classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+								labels={users.map((user) => user.user.username)}
+								values={users.map((user) => user.user.id)}
+								bind:value={assignee}
+								defaultValue=""
+								onInput={handleChangeAssignee}
+								innerLabel={$_('No assignee')}
+								innerLabelOn={true}
+							/>
 						</div>
 					{/if}
 					<div class="text-left">
-						<label class="block text-md">
+						<span class="block text-md">
 							{$_('Attachments')}
-						</label>
-						<FileUploads bind:images />
+						</span>
+						<FileUploads bind:files={images} />
 					</div>
 				</div>
 			</div>
 		</Loader>
 	</div>
-	''
+
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-2">
 		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-		<Button Class="w-full py-1" buttonStyle="warning-light" action={() => (open = false)}
+		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (open = false)}
 			>{$_('kanbanEntry.Cancel', { default: 'Cancel' })}</Button
 		>
 	</div>

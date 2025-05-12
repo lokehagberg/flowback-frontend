@@ -8,6 +8,7 @@ export interface proposal {
 	poll: number;
 	blockchain_id?: number;
 	attachments: { file: string; file_name: string }[];
+	score: number;
 }
 
 export interface timeProposal {
@@ -27,6 +28,7 @@ export interface poll {
 	attachments: { file: string }[];
 	allow_fast_forward: boolean;
 	created_by: number;
+	created_at: number;
 	description: string;
 	dynamic: boolean;
 	end_date: string;
@@ -57,7 +59,12 @@ export interface poll {
 	total_proposals: number;
 	total_predictions: number;
 	pinned: boolean;
-	status: number;
+
+	// Status on calculating predictions.  1 is done, 2 is in progress, 0 is not started
+	status_prediction: 0 | 1 | 2;
+
+	// Status on calculating votes. -1 failed quorum, 0 is not started, 1 is done, 2 is in progress,
+	status: -1 | 0 | 1 | 2;
 }
 
 export interface votings {
@@ -74,6 +81,7 @@ export interface Filter {
 	search: string;
 	order_by: 'start_date_asc' | 'start_date_desc';
 	tag: number | null;
+	workgroup: number | null;
 }
 
 export type Phase =
@@ -85,24 +93,41 @@ export type Phase =
 	| 'delegate_vote'
 	| 'vote'
 	| 'result'
-	| 'prediction_vote';
+	| 'prediction_vote'
+	| 'schedule';
 
 export interface Comment {
 	author_id: number;
 	author_name: string;
 	author_profile_image: string | null;
-	parent_id?: number;
+	parent_id: number | null;
 	reply_depth: number;
 	message: string | null;
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
+	being_reported: boolean;
 	being_edited_message?: string;
 	id: number;
 	//False if comment has been deleted
 	active: boolean;
 	edited: boolean;
 	attachments: { file: string | File }[];
+	user_vote: boolean | null;
+}
+
+export interface Post {
+	created_at: string;
+	created_by: {
+		permission_id: number | null;
+		permission_name: string;
+	};
+	description: string;
+	group_joined: boolean;
+	id: number;
+	related_model: string;
+	title: string;
+	updated_at: string;
 	user_vote: boolean | null;
 }
 

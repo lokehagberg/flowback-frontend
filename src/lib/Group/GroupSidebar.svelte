@@ -1,25 +1,30 @@
 <script lang="ts">
 	import GroupSidebarButton from '$lib/Group/GroupSidebarButton.svelte';
 	import type { GroupDetails, SelectablePage } from '$lib/Group/interface';
-	import { faUserGroup } from '@fortawesome/free-solid-svg-icons/faUserGroup';
-	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
-	import { faVideoCamera } from '@fortawesome/free-solid-svg-icons/faVideoCamera';
-	import { faMailReplyAll } from '@fortawesome/free-solid-svg-icons/faMailReplyAll';
-	import { faPersonRunning } from '@fortawesome/free-solid-svg-icons/faPersonRunning';
-	import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons/faCheckToSlot';
-	import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
-	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
-	import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
-	import { faList } from '@fortawesome/free-solid-svg-icons/faList';
+	import workgroupsymbol from '$lib/assets/workgroupsymbol.svg';
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa';
+	import {
+		faPeopleGroup,
+		faUserGroup,
+		faCircleInfo,
+		faVideoCamera,
+		faMailReplyAll,
+		faPersonRunning,
+		faCheckToSlot,
+		faBars,
+		faX,
+		faCog,
+		faListCheck,
+		faPeopleCarryBox
+	} from '@fortawesome/free-solid-svg-icons';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
-	import { faCoins } from '@fortawesome/free-solid-svg-icons';
+	import { faCoins, faLink } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
@@ -79,7 +84,7 @@
 			on:click={() => (clickedExpandSidebar = true)}
 			class="bg-white dark:bg-darkobject p-6 cursor-pointer absolute shadow rounded right-0 dark:border-gray-500 border-gray-300 border-2"
 		>
-			<Fa icon={faBars} />
+			<Fa faIcon={faBars} />
 		</button>
 	{:else}
 		{#if innerWidth < 700}
@@ -87,7 +92,7 @@
 				on:click={() => (clickedExpandSidebar = false)}
 				class="bg-white dark:bg-darkobject p-6 cursor-pointer shadow rounded flex justify-around items-center"
 			>
-				<Fa icon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
+				<Fa faIcon={faX} /><span class="ml-2">{$_('Close Menu')}</span>
 			</button>
 		{/if}
 		<div class="mb-6 w-full">
@@ -103,7 +108,7 @@
 				}}
 				text="Create a post"
 				disabled={!userIsPermittedToCreatePost}
-				icon={faCheckToSlot}
+				faIcon={faCheckToSlot}
 				isSelected={false}
 				Class="text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary shadow rounded w-full"
 			/>
@@ -114,53 +119,55 @@
 				text="Flow"
 				isSelected={selectedPage === 'flow'}
 			/>
-			<GroupSidebarButton
+			<!-- <GroupSidebarButton
 				action={() => action('threads')}
 				text="Threads"
 				isSelected={selectedPage === 'threads'}
-			/>
+			/> -->
 			<!-- <GroupSidebarButton
 				action={() => action('delegation')}
 				isSelected={selectedPage === 'delegation'}
 				text="Delegation"
-				icon={faPeopleArrows}
+				faIcon={faPeopleArrows}
 			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
-				text="Work Groups"
+				text={env.PUBLIC_LOGO === 'REFORUM' ? 'Work- and local Groups' : 'Work Groups'}
 				isSelected={selectedPage === 'working-groups'}
-				icon={faUserGroup}
+				faIcon={faPeopleCarryBox}
 			/>
+			<!-- svgIcon={workgroupsymbol} -->
+
 			<!-- <GroupSidebarButton
 				action={() => action('documents')}
 				isSelected={selectedPage === 'documents'}
 				text="Documents"
-				icon={faFile}
+				faIcon={faFile}
 			/> -->
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<GroupSidebarButton
 					action={() => action('kanban')}
 					isSelected={selectedPage === 'kanban'}
-					text="Group Kanban"
-					icon={faList}
+					text="Group Tasks"
+					faIcon={faListCheck}
 				/>
 				<GroupSidebarButton
 					action={() => action('schedule')}
 					isSelected={selectedPage === 'schedule'}
 					text="Group schedule"
-					icon={faCalendarAlt}
+					faIcon={faCalendarAlt}
 				/>
 			{/if}
 			<GroupSidebarButton
 				action={() => action('members')}
 				text="Members"
-				icon={faUserGroup}
+				faIcon={faUserGroup}
 				isSelected={selectedPage === 'members'}
 			/>
 			<!-- <GroupSidebarButton
 				action={() => (action('statistics'))}
 				text="Statistics"
-				icon={faChartColumn}
+				faIcon={faChartColumn}
 				isSelected={selectedPage === 'statistics'}
 			/> -->
 			<a
@@ -168,10 +175,11 @@
 				target="_blank"
 				href={`https://meet.flowback.org/${group.jitsi_room}`}
 			>
+				<!-- TODO: Bad UX should have icon for external link -->
 				<GroupSidebarButton
 					Class="w-full"
 					text="Video Conference"
-					icon={faVideoCamera}
+					faIcon={faVideoCamera}
 					isSelected={false}
 				/></a
 			>
@@ -179,27 +187,26 @@
 				<GroupSidebarButton
 					action={() => action('about')}
 					text="About"
-					icon={faCircleInfo}
+					faIcon={faCircleInfo}
 					isSelected={selectedPage === 'about'}
 				/>
 			{/if}
 		</div>
-		{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
-			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-				{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<GroupSidebarButton
+		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
+		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+			<GroupSidebarButton
 						Class="w-full"
 						action={() => (areYouSureModal = true)}
 						text="Leave group"
-						icon={faPersonRunning}
+						faIcon={faPersonRunning}
 						isSelected={false}
 					/>
-				{:else}
+			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 					<a class="text-inherit w-full" href={`/ledger`}>
 						<GroupSidebarButton
 							Class="w-full"
 							text="Group Ledger"
-							icon={faCoins}
+							faIcon={faCoins}
 							isSelected={false}
 						/>
 					</a>
@@ -211,13 +218,13 @@
 				<GroupSidebarButton
 					action={() => action('email')}
 					text="Send Email"
-					icon={faMailReplyAll}
+					faIcon={faMailReplyAll}
 					isSelected={selectedPage === 'email'}
 				/>
 				<GroupSidebarButton
 					action={() => goto(`/groups/${$page.params.groupId}/edit`)}
 					text="Edit Group"
-					icon={faCog}
+					faIcon={faCog}
 					isSelected={false}
 				/>
 			</div>
@@ -229,8 +236,8 @@
 	<div slot="header">{$_('Are you sure?')}</div>
 	<div slot="body">{$_('You are about to leave the group!')}</div>
 	<div slot="footer">
-		<Button action={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
-		<Button action={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
+		<Button onClick={leaveGroup} Class="bg-red-500">{$_('Yes')}</Button>
+		<Button onClick={() => (areYouSureModal = false)} Class="bg-gray-600 w-1/2">{$_('No')}</Button>
 	</div>
 </Modal>
 

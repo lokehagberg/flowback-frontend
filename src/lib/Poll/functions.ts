@@ -1,5 +1,8 @@
 import { fetchRequest } from '$lib/FetchRequest';
+import { _ } from 'svelte-i18n';
 import type { Phase, poll } from './interface';
+import { writable } from 'svelte/store';
+
 
 
 export const formatDate = (dateInput: string) => {
@@ -9,7 +12,6 @@ export const formatDate = (dateInput: string) => {
 };
 
 export const getPhase = (poll: poll): Phase => {
-	console.log(poll, 'poll');
 
 	const now = new Date();
 	if (now < new Date(poll?.start_date)) return 'pre_start';
@@ -44,17 +46,16 @@ export const dateLabels = [
 	'Area voting',
 	'Proposals creation',
 	'Prediction statements creation',
-	'Prediction betting',
+	'Consequence probabilities',
 	'Delegate voting',
 	'Voting for non-delegates',
 	'Results and evaluation'
 ];
 
-export const dateLabelsDatePoll = ['Start', 'Results'];
+export const dateLabelsDatePoll = ['Hasn\'t started yet',
+	'Schedule', 'Results'];
 
 export const getPhaseUserFriendlyName = (phase: Phase) => {
-	console.log(phase, 'phase');
-
 	switch (phase) {
 		case 'pre_start':
 			return dateLabels[0];
@@ -79,6 +80,31 @@ export const getPhaseUserFriendlyName = (phase: Phase) => {
 	}
 };
 
+export const getPhaseUserFriendlyNameWithNumber = (phase: Phase) => {
+	switch (phase) {
+		case 'pre_start':
+			return `0. ${dateLabels[0]}`;
+		case 'area_vote':
+			return `1. ${dateLabels[1]}`;
+		case 'proposal':
+			return `2. ${dateLabels[2]}`;
+		case 'prediction_statement':
+			return `3. ${dateLabels[3]}`;
+		case 'prediction_bet':
+			return `4. ${dateLabels[4]}`;
+		case 'delegate_vote':
+			return `5. ${dateLabels[5]}`;
+		case 'vote':
+			return `6. ${dateLabels[6]}`;
+		case 'prediction_vote':
+			return `7. ${dateLabels[7]}`;
+		case 'result':
+			return `8. ${dateLabels[8]}`;
+		default:
+			return "";
+	}
+};
+
 //TODO: To prevent many API calls, use svelte stores to transfer information between files about groups
 export const getGroupInfo = async (id: number | string) => {
 	id = Number(id);
@@ -88,20 +114,19 @@ export const getGroupInfo = async (id: number | string) => {
 
 
 export const nextPhase = async (pollType: number, pollId: string | number, phase: Phase) => {
-	console.log(pollType, pollId, phase, "POLL INFORMATION");
 
 	if (phase === 'result' || phase === "prediction_vote") return 'prediction_vote';
 	pollId = Number(pollId);
 	let _phase: Phase = 'area_vote';
 
-	if (pollType === 3) {
+	if (pollType === 4) {
 		if (phase === 'area_vote') _phase = 'proposal';
 		else if (phase === 'proposal') _phase = 'prediction_statement';
 		else if (phase === 'prediction_statement') _phase = 'prediction_bet';
 		else if (phase === 'prediction_bet') _phase = 'delegate_vote';
 		else if (phase === 'delegate_vote') _phase = 'vote';
 		else if (phase === 'vote') _phase = 'prediction_vote';
-	} else if (pollType === 4) _phase = 'result';
+	} else if (pollType === 3) _phase = 'result';
 
 	const { res, json } = await fetchRequest(
 		'POST',
@@ -111,5 +136,20 @@ export const nextPhase = async (pollType: number, pollId: string | number, phase
 		}
 	);
 
+
 	return _phase
+};
+
+export const reportThread = async (threadId: number, description: string) => {
+    const {res, json} = await fetchRequest('POST', `report/create`, {
+        title: threadId,
+        description
+    }, true);
+    
+    if(!res.ok) {
+        return  { message: 'Failed to report thread', success: false };
+        return;
+    }
+    
+    return { message: 'Thread has been reported', success: true };
 };

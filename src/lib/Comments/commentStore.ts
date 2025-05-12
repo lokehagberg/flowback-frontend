@@ -12,7 +12,7 @@ function createCommentStore() {
         edit: (id: number, content: string) => update(comments =>
             comments.map(c => c.id === id ? { ...c, content } : c)
         ),
-        filterByProposal: (proposalTitle: number) => derived(
+        filterByProposal: (proposalTitle: string) => derived(
             { subscribe },
             $comments => $comments.filter(c => c.message?.includes(`#${proposalTitle}`))
         ),

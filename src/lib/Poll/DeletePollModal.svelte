@@ -25,8 +25,8 @@
 	</div>
 	<div slot="footer">
 		<div class="flex justify-center gap-2">
-			<Button action={deletePoll} Class="bg-red-500 w-1/2">{$_('Yes')}</Button><Button
-				action={() => (deletePollModalShow = false)}
+			<Button onClick={deletePoll} Class="bg-red-500 w-1/2">{$_('Yes')}</Button><Button
+				onClick={() => (deletePollModalShow = false)}
 				Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
 			>
 		</div>

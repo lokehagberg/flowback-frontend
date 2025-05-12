@@ -18,7 +18,7 @@ export type StatusMessageInfo = {
 
 // Makes links clickable. For comments and descriptions
 export const checkForLinks = (text: string | null, id: string) => {
-	if (text === null) return '';
+	if (text === null || typeof text !== "string") return '';
 
 	const linkPattern = /https?:\/\/[^\s]+/g;
 	const linkified = text.replace(linkPattern, (match) => {
@@ -87,21 +87,20 @@ export const getPermissions = async (groupId: number | string, permissionId: num
 		`group/${groupId}/permissions?id=${permissionId}`
 	);
 
-	console.log(res, json, "PERMISSIONS");
-
 	return json.results[0];
 };
 
 export const getPermissionsFast = async (groupId: number | string) => {
 
 	const userInfo = await getGroupUserInfo(groupId);
+
 	if (userInfo === undefined) return;
 
 	if (userInfo?.permission_id) {
 		const permissions = await getPermissions(groupId, userInfo?.permission_id);
+		console.log(permissions, groupId, userInfo?.permission_id, "PERMISSIONS FAST");
 		return permissions
 	}
-
 }
 
 export const elipsis = (label: string, charMax = 30) => {
@@ -122,4 +121,8 @@ export const getUserIsGroupAdmin = async (groupId: number | string) => {
 	) !== undefined)
 		return true
 	else return false;
+};
+
+export const commaCleanup = (api: string) => {
+	return api?.replace('%2C', ',');
 };

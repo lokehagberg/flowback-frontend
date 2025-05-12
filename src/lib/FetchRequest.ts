@@ -20,9 +20,10 @@ export async function fetchRequest(
 
 	if (needs_authorization) {
 		const token = localStorage.getItem('token');
+		const relativePath = new URL(location.href).pathname;
 
 		if (token !== null) headers.Authorization = 'Token ' + (localStorage.getItem('token') || '');
-		else goto('/login');
+		else if (relativePath !== '/login') goto('/login');
 	}
 
 	if (needs_json) {
@@ -36,17 +37,16 @@ export async function fetchRequest(
 	if (method !== 'GET') toSend.body = data;
 
 	const res = await fetch(
-		`${env.PUBLIC_API_URL || ''}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${api}`,
-		toSend
-		// api.includes(env.PUBLIC_API_URL)
-		// ? `${api}`
-		// : `${env.PUBLIC_API_URL}${
-		// 	env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''
-		// }${api}`,
+		// `${env.PUBLIC_API_URL || ''}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${api}`,
 		// toSend
+		api.includes(env.PUBLIC_API_URL)
+			? `${api}`
+			: `${env.PUBLIC_API_URL}/${api}`,
+		toSend
 	);
 
-	if (res.status === 401) goto('/login')
+	const relativePath = new URL(location.href).pathname;
+	if (res.status === 401 && relativePath !== '/login') goto('/login')
 
 	try {
 		const json = await res.json();

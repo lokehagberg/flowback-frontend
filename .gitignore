@@ -6,6 +6,8 @@ node_modules
 .env
 .env.*
 !.env.example
+!.env.dev.example
+!.env.prod.example
 .vercel
 .output
 src/lib/typescriptexperiments.ts
@@ -18,4 +20,10 @@ src/app.html
 package-lock.json
 backend.bash
 setup2.bat
+<<<<<<< HEAD
 venv
+=======
+
+venv
+measure.py
+>>>>>>> f481880679ed1e7a84d3b17ecfb71425eb0ea4f8

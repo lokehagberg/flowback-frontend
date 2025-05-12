@@ -44,7 +44,7 @@
 		<div>welcome to AI</div>
 
 		<TextInput label="AI prompt" bind:value={prompt} />
-		<Button action={getAI} />
+		<Button onClick={getAI} />
 		<div>
 			<RadioButtons2
 				Class="p-4 dark:bg-darkobject dark:text-white"
@@ -90,6 +90,6 @@
 				<Statistics labels={poll.proposals} votes={[60, 56, 60, 20, 50]} />
 			{/if}
 		</div>
-		<Button action={generatePoll}>Generate Poll</Button>
+		<Button onClick={generatePoll}>Generate Poll</Button>
 	</Loader>
 </Layout>

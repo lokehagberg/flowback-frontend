@@ -17,7 +17,8 @@
 		size = 'xl',
 		tabindex = 0,
 		selectedHref: string | null = null,
-		textClass = "";
+		textClass = '',
+		disableTextOnHover = false;
 
 	let hovering = false,
 		selectedCurrent = '',
@@ -84,7 +85,7 @@
 		</div>
 		<div
 			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
-			class:invisible={!hovering}
+			class:invisible={!hovering || disableTextOnHover}
 		>
 			{$_(text)}
 		</div>
@@ -98,16 +99,16 @@
 		aria-haspopup="true"
 		class={`flex relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class}`}
 		id={href}
+		on:load={checkIfSelected}
 	>
-		<div on:load={checkIfSelected}>
-			{#each icons as icon}
-				<Fa
-					{icon}
-					{size}
-					class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
-				/>
-			{/each}
-		</div>
+		{#each icons as icon}
+			<Fa
+				{icon}
+				{size}
+				class={`inline ${selectedPage ? 'lightgray' : hovering ? '#015BC0' : 'black'}`}
+			/>
+		{/each}
+
 		<div
 			class="text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm header-icon z-50"
 			class:invisible={!hovering}

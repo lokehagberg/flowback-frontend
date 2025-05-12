@@ -30,6 +30,11 @@
 		inviteList: invite[] = [],
 		groupMembers: GroupMembers[] = [];
 
+	$: console.log('Preview.svelte state:', { selectedPage, creatingGroup, directs, groups }); // Debug log
+
+	$: hasUnreadDirect = previewDirect.some((p) => p.notified);
+	$: hasUnreadGroup = previewGroup.some((p) => p.notified);
+
 	const setUpPreview = async () => {
 		previewDirect = await getPreview('user');
 		previewGroup = await getPreview('group');
@@ -40,7 +45,6 @@
 			'GET',
 			`chat/message/channel/preview/list?origin_name=${selectedPage}`
 		);
-
 		if (!res.ok) return [];
 		return json.results;
 	};
@@ -52,7 +56,6 @@
 
 	const getChattable = async () => {
 		if (directs.length + groups.length !== 0) return;
-
 		directs = await userList();
 		groups = await groupList();
 	};
@@ -67,72 +70,55 @@
 		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
 		if (!res.ok) return [];
 		let chatters = json.results.filter((chatter: any) => chatter.id !== user.id);
-		chatters.map(async (chatter: any) => {
-			chatter.channel_id = await getChannelId(chatter.id);
-			return chatter;
-		});
+		chatters = await Promise.all(
+			chatters.map(async (chatter: any) => {
+				chatter.channel_id = await getChannelId(chatter.id);
+				return chatter;
+			})
+		);
 		return chatters;
 	};
 
 	const clickedChatter = async (chatterId: any) => {
-		//Update when user last saw message after clicking on channel
-		updateUserData(chatterId, new Date(), new Date());
+		await updateUserData(chatterId, new Date(), new Date());
 
 		if (selectedPage === 'direct') {
 			let message = previewDirect.find((message) => message.channel_id === chatterId);
-
 			if (message) {
-				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
 				message.notified = false;
-
-				previewDirect = previewDirect;
+				previewDirect = [...previewDirect];
 			}
-
 			selectedChat = chatterId;
 			selectedChatChannelId = chatterId;
 			chatPartner.set(chatterId);
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
+			let message = previewGroup.find((message) => message.channel_id === chatterId);
 			if (message) {
-				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
 				message.notified = false;
-
-				previewGroup = previewGroup;
+				previewGroup = [...previewGroup];
 			}
-
-			// const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
-
 			selectedChat = chatterId;
 			chatPartner.set(chatterId);
 			selectedChatChannelId = chatterId;
 		}
 	};
 
-	//Puts chats with notification circle at the top
-	//Puts chats with message between
-	//Puts empty chats at the bottom
-	//Siamand is doing this, to be changed drastically
 	const sort = (chatter: Group[] | any[], preview: PreviewMessage[]) => {
-		chatter.sort((a, b) => {
-			let notifiedMsgA = preview.find((notified) => notified.channel_id === a.chat_id);
-			let notifiedMsgB = preview.find((notified) => notified.channel_id === b.chat_id);
-
-			// Handle cases where notifiedMsg might be undefined
+		return chatter.sort((a, b) => {
+			let notifiedMsgA = preview.find((notified) => notified.channel_id === (a.chat_id || a.channel_id));
+			let notifiedMsgB = preview.find((notified) => notified.channel_id === (b.chat_id || b.channel_id));
 			let notifiedA = notifiedMsgA?.notified || false;
 			let notifiedB = notifiedMsgB?.notified || false;
-
-			if (notifiedA === notifiedB) return 0; // If both are the same, they are considered equal
-			return notifiedA ? -1 : 1; // If notifiedA is true, it should come before notifiedBF
+			if (notifiedA === notifiedB) return 0;
+			return notifiedA ? -1 : 1;
 		});
-		return chatter;
 	};
 
 	const UserChatInviteList = async () => {
 		const { res, json } = await fetchRequest('GET', `user/chat/invite/list`);
 		if (!res.ok) return;
-
 		inviteList = json.results;
 	};
 
@@ -142,26 +128,20 @@
 			accept
 		});
 		if (!res.ok) return;
-
-		inviteList.map((invitee) => {
+		inviteList = inviteList.map((invitee) => {
 			if (invitee.id === invite_id) invitee.rejected = !accept;
+			return invitee;
 		});
-
-		inviteList = inviteList;
 	};
 
-	// Only for one-group flowback
 	const getWorkGroups = async () => {
 		const { res, json } = await fetchRequest('GET', 'group/1/list');
-
 		if (!res.ok) return;
-
 		workGroupList = json.results;
 	};
 
 	onMount(async () => {
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') getWorkGroups();
-		//TODO: Get this from the userinfo sveltestore
 		const { json, res } = await fetchRequest('GET', 'user');
 		user = json;
 		await UserChatInviteList();
@@ -174,8 +154,6 @@
 		});
 
 		chatPartner.subscribe((partner) => {
-			console.log(partner, 'PARTNER');
-
 			if (partner === null) return;
 			selectedPage = 'direct';
 			selectedChat = partner;
@@ -184,27 +162,35 @@
 		});
 	});
 
-	const a = async () => {
-		const { res, json } = await fetchRequest('POST', 'user/chat/update', {
-			channel_id: selectedChatChannelId,
-			title: 'chat example'
-		});
+	const updateChatTitle = async () => {
+		if (selectedChatChannelId) {
+			await fetchRequest('POST', 'user/chat/update', {
+				channel_id: selectedChatChannelId,
+				title: 'chat example'
+			});
+		}
 	};
 
 	$: groups = sort(groups, previewGroup);
-
-	$: if (selectedChatChannelId) {
-		a();
-	}
+	$: directs = sort(directs, previewDirect);
+	$: if (selectedChatChannelId) updateChatTitle();
 </script>
 
-<div class={`col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject`}>
-	<Tab
-		Class={``}
-		bind:selectedPage
-		tabs={['direct', 'group']}
-		displayNames={['Direct', 'Groups']}
-	/>
+<div class="col-start-1 col-end-2 row-start-1 row-end-2 dark:bg-darkobject">
+	<div class="flex gap-2 relative">
+		<Tab
+			Class=""
+			bind:selectedPage
+			tabs={['direct', 'group']}
+			displayNames={['Direct', 'Groups']}
+		/>
+		{#if hasUnreadDirect}
+			<span class="absolute top-0 left-0 p-1 rounded-full bg-purple-300" style="left: 50px;"></span>
+		{/if}
+		{#if hasUnreadGroup}
+			<span class="absolute top-0 left-0 p-1 rounded-full bg-blue-300" style="left: 120px;"></span>
+		{/if}
+	</div>
 </div>
 
 <div class="max-h-[100%] overflow-y-auto">
@@ -222,31 +208,27 @@
 		{#each inviteList as groupChat}
 			{#if !groupChat.rejected && groupChat?.title?.split(',')?.length > 2}
 				{#if groupChat.rejected === null}
-					<span>{$_("You've been invite to this chat:")}</span>
-
+					<span>{$_("You've been invited to this chat:")}</span>
 					<Button onClick={() => UserChatInvite(true, groupChat.id)}>{$_('Accept')}</Button>
 					<Button onClick={() => UserChatInvite(false, groupChat.id)}>{$_('Deny')}</Button>
 				{/if}
 				<button
 					class="w-full transition transition-color p-3 flex items-center gap-3 cursor-pointer dark:bg-darkobject"
-					class:bg-gray-200={selectedChat === groupChat.message_channel_id ||
-						selectedChat === groupChat.message_channel_id}
-					class:dark:bg-gray-700={selectedChat === groupChat.message_channel_id ||
-						selectedChat === groupChat.message_channel_id}
+					class:bg-gray-200={selectedChat === groupChat.message_channel_id}
+					class:dark:bg-gray-700={selectedChat === groupChat.message_channel_id}
 					class:dark:hover:bg-darkbackground={groupChat.rejected === false}
 					class:hover:bg-gray-200={groupChat.rejected === false}
 					class:active:bg-gray-500={groupChat.rejected === false}
 					on:click={() => {
 						if (groupChat.rejected === false) clickedChatter(groupChat.message_channel_id);
-						else selectedChat = null;
 					}}
 					disabled={groupChat.rejected === null}
 				>
 					<ProfilePicture username={groupChat.message_channel_name} profilePicture={null} />
 					<div class="flex flex-col max-w-[40%]">
-						<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
-							>{groupChat.message_channel_name}</span
-						>
+						<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis">
+							{groupChat.message_channel_name}
+						</span>
 						<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]" />
 					</div>
 				</button>
@@ -255,31 +237,27 @@
 	{/if}
 
 	{#each previewDirect as previewObject}
-		{#if selectedPage === 'direct' && previewObject?.channel_title?.split(',')?.length > 2}
+		{#if selectedPage === 'direct' && previewObject?.channel_title?.split(',')?.length > 2 && previewObject.target_id}
 			<button
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 				class:bg-gray-200={selectedChat === previewObject.channel_id}
 				class:dark:bg-gray-700={selectedChat === previewObject.channel_id}
-				on:click={() => {
-					clickedChatter(previewObject.channel_id);
-				}}
+				on:click={() => clickedChatter(previewObject.channel_id)}
 			>
-				{#if //@ts-ignore
-				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
-					<div class="p-1 rounded-full" class:bg-purple-300={selectedPage === 'direct'} />
+				{#if previewObject.notified}
+					<div class="p-1 rounded-full bg-purple-300" />
 				{/if}
 				<ProfilePicture
 					username={previewObject.channel_title}
 					profilePicture={previewObject.profile_image}
 				/>
 				<div class="flex flex-col max-w-[40%]">
-					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
-						>{previewObject.channel_title}</span
-					>
+					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis">
+						{previewObject.channel_title}
+					</span>
 					<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
 						{#if previewObject}
-							{previewObject.user.username}:
-							{previewObject.message}
+							{previewObject.user.username}: {previewObject.message}
 						{/if}
 					</span>
 				</div>
@@ -287,63 +265,64 @@
 		{/if}
 	{/each}
 
-	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter}
-		<!-- {chatter.id} -->
-
+	{#each selectedPage === 'direct' ? directs : env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? workGroupList : groups as chatter (chatter.id)}
 		{#if (selectedPage === 'group' && env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && chatter.joined) || env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE' || selectedPage === 'direct'}
 			{@const previewObject =
 				selectedPage === 'direct'
 					? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 					: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
-
+			{console.log('Rendering chatter:', { chatter, selectedPage, creatingGroup })}
 			<button
 				class:hidden={selectedPage === 'direct'
 					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
 					: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
-				class:bg-gray-200={selectedChat === chatter.channel_id || selectedChat === chatter.chat_id}
-				class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
-					selectedChat === chatter.chat_id}
-				on:click={() => {
-					clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id);
-				}}
+				class:bg-gray-200={selectedChat === (chatter.channel_id || chatter.chat_id)}
+				class:dark:bg-gray-700={selectedChat === (chatter.channel_id || chatter.chat_id)}
+				on:click={() => clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id)}
 			>
-				<!-- Notification Symbol -->
-				{#if //@ts-ignore
-				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
-					<div
-						class="p-1 rounded-full"
-						class:bg-blue-300={selectedPage === 'group'}
-						class:bg-purple-300={selectedPage === 'direct'}
-					/>
+				{#if previewObject?.notified}
+					<div class="p-1 rounded-full" class:bg-blue-300={selectedPage === 'group'} class:bg-purple-300={selectedPage === 'direct'} />
 				{/if}
 				<ProfilePicture
 					username={chatter.name || chatter.username}
 					profilePicture={chatter.profile_image}
 				/>
 				<div class="flex flex-col max-w-[40%]">
-					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
-						>{chatter.name || chatter.username}</span
-					>
+					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis">
+						{chatter.name || chatter.username}
+					</span>
 					<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
-						<!-- {@debug previewObject} -->
-
-						{#if previewObject}
-							{previewObject.user.username}:
-							{previewObject.message}
+						{#if previewObject && previewObject.user && previewObject.message}
+							{previewObject.user.username}: {previewObject.message}
+						{:else}
+							{' '}
 						{/if}
 					</span>
 				</div>
 			</button>
 			{#if selectedPage === 'direct' && creatingGroup}
-				<!-- For creating group chat, see CreateChatGroup.svelte -->
-				<Button
-					onClick={() => {
-						if (groupMembers.find((member) => member.id === chatter.id)) return;
-						groupMembers.push(chatter);
-						groupMembers = groupMembers;
-					}}>ADD USER</Button
-				>
+				<div>
+					<Button
+						onClick={() => {
+							console.log('ADD USER clicked for chatter:', chatter);
+							if (groupMembers.some((member) => member.id === chatter.id)) {
+								console.log('User already added:', chatter.id);
+								return;
+							}
+							const newMember = {
+								id: chatter.id,
+								username: chatter.username || chatter.name || 'Unknown',
+								profile_image: chatter.profile_image || null
+							};
+							groupMembers = [...groupMembers, newMember];
+							console.log('Added user to groupMembers:', newMember);
+							console.log('Current groupMembers:', groupMembers);
+						}}
+					>
+						ADD USER
+					</Button>
+				</div>
 			{/if}
 		{/if}
 	{/each}
@@ -354,8 +333,12 @@
 			onClick={() => {
 				creatingGroup = true;
 				selectedPage = 'direct';
-			}}>{$_('+ New Group')}</Button
+				groupMembers = []; // Reset groupMembers
+				console.log('Create Group button clicked, state updated:', { creatingGroup, selectedPage }); // Debug log
+			}}
 		>
+			{$_('+ New Group')}
+		</Button>
 	{/if}
 </div>
 

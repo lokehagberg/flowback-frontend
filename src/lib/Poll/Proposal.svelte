@@ -6,7 +6,6 @@
 	import { checkForLinks } from '$lib/Generic/GenericFunctions';
 	import {
 		faChevronRight,
-		faComment,
 		faSquareCheck,
 		faMagnifyingGlassChart
 	} from '@fortawesome/free-solid-svg-icons';
@@ -15,7 +14,6 @@
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import { commentsStore } from '$lib/Comments/commentStore';
 
 	export let proposal: proposal,
 		Class = '',
@@ -61,6 +59,10 @@
 		getPredictionCount();
 		allComments = comments;
 	});
+
+	$: if(comments) {
+		allComments = comments;
+	}
 </script>
 
 <button
@@ -103,7 +105,10 @@
 	</div>
 
 	<!-- Proposal Description -->
-	<p class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap" id={`proposal-${proposal.id}-description`}>
+	<p
+		class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap"
+		id={`proposal-${proposal.id}-description`}
+	>
 		{proposal.description}
 	</p>
 
@@ -119,24 +124,27 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{allComments.filter((comment) => comment?.message?.includes(proposal.title)).length}
+				{allComments.filter((comment) => comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())).length}
 			</button>
 
 			{#if phase !== 'proposal'}
 				<button
 					class="flex items-center"
 					on:click={() => {
+						console.log(proposal, "PROPOSAL1");
+						
 						selectedProposal = proposal;
 					}}
 				>
-					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
-					{predictionCount}
-				</button>
+				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
+				{predictionCount}
+			</button>
 			{/if}
 		</div>
-
+		
 		<button
 			on:click={() => {
+				console.log(proposal, "PROPOSAL1");
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"

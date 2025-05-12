@@ -37,7 +37,7 @@
 	const getUserInfo = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
+			`group/${group.id}/users?user_id=${localStorage.getItem('userId')}&is_delegate=true`
 		);
 
 		if (!res.ok) {
@@ -112,7 +112,7 @@
 			{$_(
 				env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE'
 					? `Sometimes we have limited time and cannot participate fully, but still want to contribute. Reforum has a number of functions to automate parts of your engagement when you cannot participate yourself.`
-					: `On this page you can become a delegate (someone who votes publicly that others can delegate their vote to), or delegate your vote temporarily to delegates in subject areas (automatically copying what they vote for in polls in the subject areas you delegate to them in, with the possibility to override their vote and vote yourself).`
+					: `Delegation means to copy the votings of a member that votes publicly (note that the member is not required to have voting rights themselves necessarily, and that such a voter is called a "delegated") automatically unless one overrides it oneself (this automatic copying is called "delegation"). One can at any time switch delegate or choose to have no delegate. Metadelegation means that a delegate can delegate their vote to another delegate. Metadelegation is not allowed in this group.`
 			)}
 		</p>
 	</div>
@@ -120,10 +120,11 @@
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 				<Select
-					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2"
+					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2 border-gray-300 rounded border"
 					labels={groups?.map((group) => group.name)}
 					bind:value={group}
 					values={groups}
+					innerLabelOn={true}
 				/>
 			{/if}
 
@@ -167,6 +168,7 @@
 					'As a delegate, you choose to publicly show everyone how you vote. However, other users can delegate their vote to you, which means that you will vote for them. '
 				)}
 				<Button onClick={() => (selectedPage = 'delegate')}>{$_('Cancel')}</Button>
+
 				{#if userIsDelegate}
 					<StopBeingDelegate
 						Class="w-full mt-3"

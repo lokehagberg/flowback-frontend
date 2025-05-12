@@ -6,7 +6,8 @@
 		faArrowUp,
 		faReply,
 		faThumbsUp,
-		faThumbsDown
+		faThumbsDown,
+		faSpinner
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
@@ -17,6 +18,10 @@
 	import { env } from '$env/dynamic/public';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
+	import TextInput from '$lib/Generic/TextInput.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -27,8 +32,12 @@
 	let userUpVote: -1 | 0 | 1 = 0,
 		poppup: poppup,
 		isVoting = false,
+		ReportCommentModalShow = false,
+		reportTitle: string,
+		reportDescription: string,
 		images: File[] = [];
 
+	let reporting = false;
 	const commentDelete = async (id: number) => {
 		let _api = `group/`;
 
@@ -51,6 +60,32 @@
 			comment.message = '[Deleted]';
 			comment.active = false;
 			console.log(comment, 'COMMNEt');
+			return comment;
+		});
+		comments = comments;
+	};
+
+	const commentReport = async (id: number, message: string) => {
+		let _api = 'report/create';
+
+		let data = {
+			title: reportTitle,
+			description: reportDescription,
+		};
+
+		const { res, json } = await fetchRequest('POST', _api, data);
+
+		if (!res.ok) {
+			poppup = { message: 'Failed to report comment', success: false };
+			return;
+		}
+
+		comments.map((comment) => {
+			if (comment.id !== id) return comment;
+
+			// comment.message = '[Reported]';
+			comment.active = false;
+			comment.being_reported = true;
 			return comment;
 		});
 		comments = comments;
@@ -112,6 +147,12 @@
 		console.log(images, 'IMAGES');
 		console.log(comment.attachments, 'comment.attachments');
 	}
+
+	console.log(
+		comment.author_id,
+		Number(localStorage.getItem('userId')),
+		Number(localStorage.getItem('userId')) !== comment.author_id
+	);
 </script>
 
 {#if comment.being_edited}
@@ -119,7 +160,7 @@
 		{delegate_pool_id}
 		bind:proposals
 		bind:comments
-		bind:images
+		bind:files={images}
 		bind:beingEdited={comment.being_edited}
 		message={comment.message || ''}
 		parent_id={comment.parent_id}
@@ -145,7 +186,10 @@
 		</div>
 		{#key comment.message}
 			{#if comment.message}
-				<div class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap" id={`comment-${comment.id}`}>
+				<div
+					class="text-md mt-1 mb-3 pl-14 break-words whitespace-pre-wrap"
+					id={`comment-${comment.id}`}
+				>
 					{comment.message}
 				</div>
 			{/if}
@@ -156,7 +200,7 @@
 		{#if comment.attachments?.length > 0}
 			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-				<!-- {@debug attachment} -->
+					<!-- {@debug attachment} -->
 					{#if typeof attachment.file === 'string' && (attachment.file
 							.slice(-3)
 							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
@@ -207,7 +251,7 @@
 					</button>
 				</div>
 				<!-- {/if} -->
-				 
+
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
@@ -215,6 +259,14 @@
 					<!-- <Fa icon={faReply} /> -->
 					{$_('Reply')}
 				</button>
+				{#if Number(localStorage.getItem('userId')) !== comment.author_id}
+					<button
+						class="flex items-center gap-1 hover:text-red-900 text-gray-600 dark:text-darkmodeText dark:hover:text-red-400 cursor-pointer transition-colors hover:underline"
+						on:click={() => (ReportCommentModalShow = true)}
+					>
+						{$_('Report')}
+					</button>
+				{/if}
 
 				{#if Number(localStorage.getItem('userId')) === comment.author_id}
 					<button
@@ -233,6 +285,23 @@
 						{$_('Edit')}
 					</button>
 				{/if}
+
+				<Modal bind:open={ReportCommentModalShow}>
+					<div slot="header">{$_('Report Comment')}</div>
+					<div class="flex flex-col gap-3" slot="body">
+						<TextInput inputClass="bg-white" required label="Title" bind:value={reportTitle} />
+						<TextArea label="Description" required bind:value={reportDescription} inputClass="whitespace-pre-wrap" />
+					</div>
+					<div slot="footer">
+						<div class="flex justify-center gap-2">
+							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Report')}</Button>
+							<Button
+								onClick={() => (ReportCommentModalShow = false)}
+								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+							>
+						</div>
+					</div>
+				</Modal>
 			</div>
 		{/if}
 	</div>
@@ -241,7 +310,7 @@
 {#if comment.being_replied}
 	<CommentPost
 		{delegate_pool_id}
-		bind:images
+		bind:files={images}
 		bind:proposals
 		bind:comments
 		bind:replying={comment.being_replied}

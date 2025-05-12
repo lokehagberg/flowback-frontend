@@ -16,7 +16,7 @@
 	<div class="w-auto max-w-xs flex flex-row items-center">
 		<p class="pr-2">{$_('Sort')}: </p>
 		<Select
-			innerLabel={$_('Select Sorting')}
+			innerLabel={null}
 			values={[
 				'created_at_asc',
 				'created_at_desc',

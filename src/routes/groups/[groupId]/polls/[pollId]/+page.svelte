@@ -99,6 +99,7 @@
 		if (display === '1') displayForm = true;
 	};
 
+	// When fast forwarding from area phase to proposal phase, get tag info in real time
 	$: if (phase === 'proposal') {
 		const a = setTimeout(() => {
 			getPollData();
@@ -110,9 +111,14 @@
 <Layout centered>
 	{#if poll}
 		{#if pollType === 4}
-			<PollHeader {poll} bind:phase displayTag={phase !== 'area_vote' && phase !== 'pre_start'} />
+			<PollHeader
+				{poll}
+				bind:phase
+				displayTag={phase !== 'area_vote' && phase !== 'pre_start'}
+				{groupUser}
+			/>
 		{:else}
-			<PollHeader {poll} bind:phase displayTag={false} />
+			<PollHeader {poll} bind:phase displayTag={false} {groupUser} />
 		{/if}
 
 		{#if pollType === 4}
@@ -144,6 +150,7 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:selectedProposal
 								bind:proposals
 								bind:comments
@@ -198,6 +205,7 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -222,7 +230,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{:else if proposalsToPredictionMarket.length === 0}
@@ -247,6 +259,7 @@
 						>
 						<div class="max-h-full overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -261,7 +274,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -285,6 +302,7 @@
 								isVoting={false}
 								bind:phase
 								bind:selectedProposal
+								bind:poll
 							/>
 						</div>
 					</div>
@@ -294,7 +312,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -312,6 +334,7 @@
 						>
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
+								bind:poll
 								bind:comments
 								bind:proposals
 								bind:phase
@@ -326,7 +349,11 @@
 								<div class="font-semibold text-primary dark:text-secondary text-lg">
 									{selectedProposal.title}
 								</div>
-								<NewDescription description={selectedProposal.description} limit={2} lengthLimit={130} />
+								<NewDescription
+									description={selectedProposal.description}
+									limit={2}
+									lengthLimit={130}
+								/>
 								<PredictionStatements bind:selectedProposal bind:phase bind:poll />
 							</div>
 						{/if}
@@ -340,7 +367,11 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left" class="h-full overflow-y-auto">
 						{#if proposals}
-							<PredictionStatements bind:phase bind:poll />
+							<PredictionStatements
+								bind:phase
+								bind:poll
+								selectedProposal={proposals.sort((_proposal) => _proposal.score)[0]}
+							/>
 						{/if}
 					</div>
 					<div slot="right"><Results bind:poll {pollType} /></div>

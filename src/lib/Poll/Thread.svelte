@@ -13,11 +13,15 @@
 	import type { Thread } from '$lib/Group/interface';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
 	import { onMount } from 'svelte';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
+	import ReportThreadModal from './ReportThreadModal.svelte';
 
 	export let isAdmin = true,
 		thread: Thread;
-
 	let threads: Thread[] = [],
+		reportThreadModalShow = false,
+		choicesOpen = false,
 		poppup: poppup;
 
 	//Launches whenever the user clicks upvote or downvote on a thread
@@ -68,6 +72,8 @@
 		thread.pinned = !thread?.pinned;
 		threads = threads;
 	};
+	let threadIsBeingReported = false;
+	let reporting = false;
 </script>
 
 <div
@@ -98,8 +104,9 @@
 			{/if}
 
 			<MultipleChoices
-				labels={[$_('Delete Thread')]}
-				functions={[]}
+				bind:choicesOpen
+				labels={[$_('Delete Thread'), $_('Report Thread')]}
+				functions={[_, () => ((reportThreadModalShow = true), (choicesOpen = false))]}
 				Class="text-black justify-self-center"
 			/>
 		</div>
@@ -150,3 +157,5 @@
 		</div>
 	</div>
 </div>
+
+<ReportThreadModal bind:reportThreadModalShow threadId={$page.params.pollId} />

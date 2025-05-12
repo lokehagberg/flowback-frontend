@@ -18,6 +18,8 @@
 	import { updateUserData } from './functions';
 	import { chatWindow as chatWindowLimit } from '../Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 
 	export let selectedChat: number | null,
 		selectedChatChannelId: number | null,
@@ -39,7 +41,9 @@
 		messages: Message[] = [],
 		socket: WebSocket,
 		chatWindow: any,
-		errorState = false;
+		errorState = false,
+		participants: any[] = [],
+		participantsModalOpen = false;
 
 	const getRecentMesseges = async () => {
 		if (!selectedChatChannelId) return;
@@ -207,6 +211,18 @@
 			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
 	};
 
+	const getChannelParticipants = async () => {
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/${selectedChatChannelId}/participant/list`
+		);
+		if (!res.ok) {
+			console.error('Failed to fetch channel participants:', json);
+			return [];
+		}
+		participants = json.results;
+	};
+
 	onMount(() => {
 		recieveMessage();
 		correctHeightRelativeToHeader();
@@ -215,6 +231,7 @@
 
 	//Whenever user has switched chat, show messages in the new chat
 	$: (selectedPage || selectedChat) && getRecentMesseges();
+	$: (selectedPage || selectedChat) && getChannelParticipants();
 
 	//Behavior is different when looking at older chat messages
 	$: {
@@ -278,7 +295,9 @@
 						>
 							{message.message}
 						</p>
-						<span class="text-[14px]text-gray-400 ml-3">{formatDate(message.created_at)}</span>
+						<span class="text-[14px]text-gray-400 ml-3"
+							>{formatDate(message.created_at || new Date())}</span
+						>
 					</li>
 				{/if}
 			{/each}
@@ -293,7 +312,7 @@
 		</ul>
 		<!-- <div class:invisible={!showEmoji} class="fixed">
 	</div> -->
-		{#if selectedChat !== 0 && selectedChat !== undefined && selectedChat !== null}
+		{#if selectedChatChannelId !== 0 && selectedChatChannelId !== undefined && selectedChatChannelId !== null}
 			<div class="border-t-2 border-t-gray-200 w-full">
 				<!-- Here the user writes a message to be sent -->
 				<form
@@ -333,6 +352,25 @@
 			</div>
 		{/if}
 	</div>
+	<Button onClick={() => (participantsModalOpen = true)}>Show users</Button>
 {:else}
 	<div>{'No chat selected'}</div>
 {/if}
+
+<Modal bind:open={participantsModalOpen}>
+	<div slot="body">
+		{#if participants.length > 0}
+			<ul>
+				{#each participants as participant (participant.id)}
+					<ProfilePicture
+						displayName
+						username={participant.user.username}
+						profilePicture={participant.user.profile_image}
+					/>
+				{/each}
+			</ul>
+		{:else}
+			<p>No participants found.</p>
+		{/if}
+	</div>
+</Modal>

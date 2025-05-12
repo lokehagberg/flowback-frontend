@@ -11,18 +11,23 @@
 	import Select from '$lib/Generic/Select.svelte';
 	import CheckboxButtons from '$lib/Generic/CheckboxButtons.svelte';
 	import { browser } from '$app/environment';
+	import { elipsis } from '$lib/Generic/GenericFunctions';
+	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
+	import { env } from '$env/dynamic/public';
 
 	export let filter: Filter,
 		handleSearch: () => void,
 		tagFiltering = false;
-	
+
 	// Add new export for content type filtering
 	export let showThreads = true;
 	export let showPolls = true;
 
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true,
-		tags: Tag[] = [];
+		tags: Tag[] = [],
+		workGroups: WorkGroup[] = [],
+		groupId = '1';
 
 	// Initialize content type state from localStorage
 	const initializeContentTypeState = () => {
@@ -54,10 +59,13 @@
 
 		// Save to localStorage
 		if (browser) {
-			localStorage.setItem('contentTypeState', JSON.stringify({
-				threads: showThreads,
-				polls: showPolls
-			}));
+			localStorage.setItem(
+				'contentTypeState',
+				JSON.stringify({
+					threads: showThreads,
+					polls: showPolls
+				})
+			);
 		}
 	};
 
@@ -86,32 +94,50 @@
 		tags = json.results;
 	};
 
+	const getWorkGroupList = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${groupId}/list`);
+
+		if (!res.ok) return;
+		workGroups = json.results.filter((group: WorkGroup) => group.joined === true);
+	};
+
 	const resetFilter = () => {
 		filter = {
 			search: '',
 			finishedSelection: 'all',
 			public: false,
 			order_by: 'start_date_desc',
-			tag: null
+			tag: null,
+			workgroup: null,
 		};
 		// Reset content type checkboxes
 		showThreads = true;
 		showPolls = true;
 		contentTypeLabels[0].checked = true;
 		contentTypeLabels[1].checked = true;
-		
+
 		// Update localStorage
 		if (browser) {
-			localStorage.setItem('contentTypeState', JSON.stringify({
-				threads: true,
-				polls: true
-			}));
+			localStorage.setItem(
+				'contentTypeState',
+				JSON.stringify({
+					threads: true,
+					polls: true
+				})
+			);
 		}
+	};
+
+	const onWorkGroupChange = (workGroupId: number) => {
+		filter.workgroup = workGroupId;
 	};
 
 	onMount(() => {
 		getTags();
+		getWorkGroupList();
 		initializeContentTypeState();
+
+		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId;
 	});
 </script>
 
@@ -126,7 +152,7 @@
 		<TextInput
 			Class="w-4/5"
 			onInput={() => (searched = false)}
-			label=''
+			label=""
 			max={null}
 			search={true}
 			placeholder={$_('Search polls')}
@@ -140,8 +166,9 @@
 			onInput={handleSort}
 			values={['start_date_desc', 'start_date_asc']}
 			labels={[$_('Newest first'), $_('Oldest first')]}
-			label={$_('Sort')}: 
+			label="{$_('Sort')}:"
 			bind:value={filter.order_by}
+			innerLabel={null}
 		/>
 
 		<CheckboxButtons
@@ -151,10 +178,36 @@
 			Class="flex items-center"
 		/>
 
+		{#if showThreads == true && showPolls == false}
+			<div class="flex flex-row gap-2 items-center">
+				<label class="block text-md whitespace-nowrap" for="work-group">
+					{$_('Work Group')}:
+				</label>
+				<select
+					style="width:100%"
+					class="rounded p-1 dark:border-gray-600 dark:bg-darkobject font-semibold"
+					on:input={(e) => {
+						//@ts-ignore
+						onWorkGroupChange(e?.target?.value);
+						handleSearch();
+					}}
+					id="work-group"
+				>
+					<option class="w-5" value={null}> {$_('All')} </option>
+
+					{#each workGroups as group}
+						<option class="w-5" value={group.id}>
+							{elipsis(group.name)}
+						</option>
+					{/each}
+				</select>
+			</div>
+		{/if}
+
 		<div class="rounded p-1">
-			<Button 
-				Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" 
-				buttonStyle="warning-light" 
+			<Button
+				Class="!p-1 border-none text-red-600 cursor-pointer hover:underline"
+				buttonStyle="warning-light"
 				onClick={resetFilter}
 			>
 				{$_('Reset Filter')}

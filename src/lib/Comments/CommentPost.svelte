@@ -23,7 +23,7 @@
 		replying = false,
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: number | null = null,
-		files: File[];
+		files: File[] = [];
 
 	let show = false,
 		showMessage = '',
@@ -66,6 +66,7 @@
 			author_name: window.localStorage.getItem('userName') || '',
 			being_edited: false,
 			being_replied: false,
+			being_reported: false,
 			score: 1,
 			edited: false,
 			attachments: files.map((file) => {

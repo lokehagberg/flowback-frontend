@@ -5,10 +5,12 @@
 	import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 	import Button from '$lib/Generic/Button.svelte';
 	import type { GroupFilter } from './interface';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let filter: GroupFilter, getGroups: () => void;
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
+	let searchQuery = filter.search || '';
 
 	const handleChangeMember = (e: any) => {
 		filter.joined = e.target.value;
@@ -16,13 +18,23 @@
 	};
 
 	const handleSearch = () => {
-		// console.log(filter)
-		// filter.search = e.target.value;
+		filter.search = searchQuery;
+		searched = true;
 		getGroups();
 	};
 
+	const handleSearchInput = () => {
+		searched = false;
+		setTimeout(() => {
+			filter.search = searchQuery;
+			getGroups();
+		}, 300);
+	};
+
 	const resetFilter = () => {
-		filter = { joined: 'all', search: '' };
+		filter.joined = 'all';
+		filter.search = searchQuery;
+		searched = true;
 		getGroups();
 	};
 </script>
@@ -34,40 +46,30 @@
 	<div class="w-full flex items-end">
 		<TextInput
 			Class="w-4/5"
-			onInput={() => {
-				searched = false;
-				handleSearch();
-			}}
+			onInput={handleSearchInput}
 			label=""
 			max={null}
 			search={true}
 			placeholder={$_('Search groups')}
-			bind:value={filter.search}
+			bind:value={searchQuery}
 		/>
-
-		<!-- <Button
-			Class={`w-7 h-7 ml-4 flex justify-center items-center ${
-				searched ? 'bg-blue-300' : 'bg-blue-600'
-			}`}
-			type="submit"
-		>
-			<Fa icon={faMagnifyingGlass} />
-		</Button> -->
 	</div>
 	<div class="flex flex-row items-center gap-1">
-    <span>{$_('Sort')}: </span>
-		<select
-			on:input={handleChangeMember}
-			class="rounded-sm m-1 p-1 border-0 font-semibold dark:border-gray-600 dark:bg-darkobject"
-		>
-			<option value="all">{$_('All')}</option>
-			<option value="member">{$_('Member')}</option>
-			<option value="not-member">{$_('Not member')}</option>
-		</select>
+		<span>{$_('Sort')}: </span>
+		<Select
+			classInner="p-1 font-semibold"
+			labels={[$_('All'), $_('Member'), $_('Not member')]}
+			values={['all', 'member', 'not-member']}
+			bind:value={filter.joined}
+			onInput={handleChangeMember}
+			innerLabel=""
+		/>
 
 		<div class="rounded-md p-1">
-			<Button Class="!p-1 border-none text-red-600 cursor-pointer hover:underline" buttonStyle="warning-light" onClick={resetFilter}
-				>{$_('Reset Filter')}</Button
+			<Button
+				Class="!p-1 border-none text-red-600 cursor-pointer hover:underline"
+				buttonStyle="warning-light"
+				onClick={resetFilter}>{$_('Reset Filter')}</Button
 			>
 		</div>
 	</div>

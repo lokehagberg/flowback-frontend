@@ -6,7 +6,7 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import Loader from '$lib/Generic/Loader.svelte';
-	import type { scheduledEvent } from './interface';
+	import type { scheduledEvent, WorkGropuSchdeuledEventCreate } from './interface';
 
 	export let showEvent = false,
 		showCreateScheduleEvent = false,
@@ -70,10 +70,14 @@
 				<p class="w-full}">{selectedEvent.meeting_link}</p>
 			</div>
 		{/if}
-		<div class="text-left mt-1 w-full">
-			<p class="font-bold">{$_('Description')}</p>
-			<p class="max-h-[25vh] overflow-scroll break-words w-full whitespace-pre-wrap">{selectedEvent.description}</p>
-		</div>
+		{#if selectedEvent.description && selectedEvent.description !== ''}
+			<div class="text-left mt-1 w-full">
+				<p class="font-bold">{$_('Description')}</p>
+				<p class="max-h-[25vh] overflow-scroll break-words w-full whitespace-pre-wrap">
+					{selectedEvent.description}
+				</p>
+			</div>
+		{/if}
 		<div class="text-left mt-1 w-full">
 			<p class="font-bold">{$_('Attachments')}</p>
 		</div>
@@ -94,7 +98,7 @@
 </Modal>
 
 <!-- Modal for creating one's own/group scheduled event -->
-<Modal Class="min-w-[400px] md:w-[700px]" bind:open={showCreateScheduleEvent}>
+<Modal Class="min-w-[400px] md:w-[700px] " bind:open={showCreateScheduleEvent}>
 	<div slot="body">
 		<Loader bind:loading>
 			<form>
@@ -104,18 +108,25 @@
 				<div class="pb-2">
 					<TextInput Class="text-md" label="Title" bind:value={selectedEvent.title} required />
 				</div>
-				<TextArea Class="text-md" inputClass="whitespace-pre-wrap" label="Description" bind:value={selectedEvent.description} />
+				<TextArea
+					Class="text-md"
+					inputClass="whitespace-pre-wrap"
+					label="Description"
+					bind:value={selectedEvent.description}
+				/>
 				{#if type === 'group'}
 					<div class="text-left">
-						<label class="block text-md">
+						<label class="block text-md py-3" for="work-group">
 							{$_('Work Group')}
+							<Select
+								Class="width:100%"
+								bind:value={selectedEvent.work_group}
+								labels={workGroups.map((group) => group.name)}
+								values={workGroups.map((group) => group.id)}
+								innerLabel={$_('No workgroup assigned')}
+								innerLabelOn={true}
+							/>
 						</label>
-						<Select
-							Class="width:100%"
-							bind:value={selectedEvent.work_group}
-							labels={workGroups.map((group) => group.name)}
-							values={workGroups.map((group) => group.id)}
-						/>
 					</div>
 				{/if}
 				<div class="w-full md:flex md:gap-4">
@@ -192,9 +203,12 @@
 						</label>
 						<Select
 							Class="width:100%"
-							bind:value={selectedEvent.work_group}
+							classInner="border-gray-300 rounded border"
 							labels={workGroups.map((group) => group.name)}
 							values={workGroups.map((group) => group.id)}
+							value={selectedEvent.work_group?.id || ''}
+							innerLabel={$_('No workgroup assigned')}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}

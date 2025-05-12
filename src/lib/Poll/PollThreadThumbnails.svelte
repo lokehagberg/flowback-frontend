@@ -33,7 +33,7 @@
 	let posts: Post[] = [];
 	let polls: poll[] = [];
 	let threads: Thread[] = [];
-	let workgroups: WorkGroup[] = [];
+	let workGroups: WorkGroup[] = [];
 	let loading = false;
 	let isAdmin = false;
 	let next = '';
@@ -45,7 +45,8 @@
 		finishedSelection: 'all',
 		public: false,
 		order_by: 'start_date_desc',
-		tag: null
+		tag: null,
+		workgroup: null,
 	};
 
 	let showThreads = true;
@@ -79,6 +80,7 @@
 				title__icontains: filter.search || undefined,
 				tag_id: filter.tag || undefined,
 				group_ids: infoToGet === 'group' ? $page.params.groupId : undefined,
+				work_group_ids: filter.workgroup,
 				public: infoToGet === 'public' ? true : undefined,
 				...(filter.finishedSelection !== 'all' && {
 					[`end_date${filter.finishedSelection === 'finished' ? '__lt' : '__gt'}`]:
@@ -124,7 +126,7 @@
 
 	async function fetchWorkGroups() {
 		const { results } = await PollsApi.getWorkGroups();
-		workgroups = results;
+		workGroups = results;
 	}
 
 	onMount(async () => {
@@ -160,28 +162,21 @@
 				<div class="bg-white dark:bg-darkobject rounded shadow p-8 mt-6">
 					{$_('No posts currently here')}
 				</div>
-			{:else}
-				{#key posts}
-					{#if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
-						{#each posts as post}
-							{#if post.related_model === 'group_thread' && showThreads}
-								<ThreadThumbnail
-									{isAdmin}
-									thread={threads.find((thread) => thread.id === post.id) || threads[0]}
-								/>
-							{:else if post.related_model === 'poll' && showPolls}
-								<PollThumbnail
-									poll={polls.find((poll) => poll.id === post.id) || polls[0]}
-									{isAdmin}
-								/>
-							{/if}
-						{/each}
-					{:else if !loading}
-						<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
-							{$_('No posts currently here')}
-						</div>
+			{:else if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
+				{#each posts as post}
+					{#if post.related_model === 'group_thread' && showThreads}
+						<ThreadThumbnail
+							{isAdmin}
+							thread={threads.find((thread) => thread.id === post.id) || threads[0]}
+						/>
+					{:else if post.related_model === 'poll' && showPolls}
+						<PollThumbnail poll={polls.find((poll) => poll.id === post.id) || polls[0]} {isAdmin} />
 					{/if}
-				{/key}
+				{/each}
+			{:else if !loading}
+				<div class="bg-white rounded shadow p-8 dark:bg-darkobject">
+					{$_('No posts currently here')}
+				</div>
 			{/if}
 		</div>
 		<Pagination

@@ -51,12 +51,14 @@
 		showEvent = false,
 		//A fix due to class struggle
 		selectedDatePosition = '0-0',
-		selectedEvent: scheduledEvent = {
+		selectedEvent = {
+			title: '',
+			description: '',
 			start_date: '',
 			end_date: '',
-			title: '',
+			meeting_link: '',
 			event_id: 0,
-			schedule_origin_name: 'group',
+			schedule_origin_name: type,
 			created_by: 0
 		},
 		deleteSelection = () => {},
@@ -80,7 +82,7 @@
 	const setUpScheduledPolls = async () => {
 		let _api = '';
 
-		if (groupId) {
+		if (type === 'group') {
 			_api = `group/${groupId}/schedule?limit=1000&`;
 
 			if (workGroupFilter.length > 0) {
@@ -93,13 +95,14 @@
 			_api = `user/schedule?limit=1000`;
 		}
 
-		console.log('hei', _api);
-
 		const { json, res } = await fetchRequest('GET', _api);
 		events = json.results;
+		console.log(events, 'events');
 	};
 
 	const scheduleEventCreate = async () => {
+		loading = true;
+
 		let API = '';
 		let payload: any = selectedEvent;
 
@@ -107,49 +110,64 @@
 		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === undefined)
 			delete payload.meeting_link;
 
-		if (selectedEvent.description === '') delete payload.description;
+		if (selectedEvent.description === '' || selectedEvent.description === null)
+			delete payload.description;
 
 		if (type === 'user') {
 			API += `user/schedule/create`;
 		} else if (type === 'group') {
 			API += `group/${$page.params.groupId || 1}/schedule/create`;
-			if (selectedEvent.work_group) payload['work_group_id'] = selectedEvent.work_group;
 		}
 
-		loading = true;
 		const { res, json } = await fetchRequest('POST', API, payload);
 
 		loading = false;
 
 		if (!res.ok) {
+			console.log(res, json);
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
-
+		// console.log(json);
+		const createdEvent = { ...selectedEvent, event_id: json.id };
+		events.push(createdEvent);
+		events = events;
+		console.log(events);
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
-		events.push(selectedEvent);
-		events = events;
+
+		selectedEvent = {
+			title: '',
+			description: '',
+			start_date: '',
+			end_date: '',
+			meeting_link: '',
+			event_id: 0,
+			schedule_origin_name: 'group' as const,
+			created_by: 0
+		};
 	};
 
 	const scheduleEventUpdate = async () => {
-		let payload: any = selectedEvent;
+		// Clone the current event so we keep its values
+		const updatedEvent = { ...selectedEvent };
 
-		if (selectedEvent.meeting_link !== '') payload['meeting_link'] = selectedEvent.meeting_link;
+		// Build payload from the cloned object
+		let payload: any = { ...updatedEvent };
 
-		if (selectedEvent.description === '' || selectedEvent.description === null)
+		if (updatedEvent.meeting_link !== '') payload['meeting_link'] = updatedEvent.meeting_link;
+
+		if (updatedEvent.description === '' || updatedEvent.description === null)
 			delete payload.description;
-		if (selectedEvent.meeting_link === '' || selectedEvent.meeting_link === null)
-			delete payload.meeting_link;
 
-		if (type === 'group' && selectedEvent.work_group)
-			payload['work_group_id'] = selectedEvent.work_group;
+		if (updatedEvent.meeting_link === '' || updatedEvent.meeting_link === null)
+			delete payload.meeting_link;
 
 		loading = true;
 
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/update` : `user/schedule/update`,
+			type === 'group' ? `group/${groupId}/schedule/update` : `user/schedule/update`,
 			payload
 		);
 
@@ -160,17 +178,32 @@
 			return;
 		}
 
-		showEditScheduleEvent = false;
-		events = events.map((event) => {
-			if (event.event_id === selectedEvent.event_id) return selectedEvent;
-			else return event;
-		});
+		// Update the events array using the temporary updatedEvent
+		events = events.map((event) =>
+			event.event_id === updatedEvent.event_id ? updatedEvent : event
+		);
+
+		// Now reset selectedEvent
+		selectedEvent = {
+			title: '',
+			description: '',
+			start_date: '',
+			end_date: '',
+			meeting_link: '',
+			event_id: 0,
+			schedule_origin_name: 'group' as const,
+			created_by: 0
+		};
 	};
 
+	showEditScheduleEvent = false;
+
 	const scheduleEventDelete = async () => {
+		console.log(groupId, 'GRUPP');
+
 		const { res, json } = await fetchRequest(
 			'POST',
-			groupId ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
+			type === 'group' ? `group/${groupId}/schedule/delete` : `user/schedule/delete`,
 			{
 				event_id: selectedEvent.event_id
 			}
@@ -191,7 +224,11 @@
 	};
 
 	const handleShowEvent = (event: scheduledEvent) => {
-		selectedEvent = event;
+		selectedEvent = {
+			...event,
+			description: event.description || '',
+			meeting_link: event.meeting_link || ''
+		};
 		showEvent = true;
 	};
 
@@ -216,6 +253,18 @@
 		setUpScheduledPolls();
 	};
 
+	// Convert time from UTC to local time
+	const formatDateToLocalTime = (date: Date): String => {
+		try {
+			const offset = date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
+			const localTime = new Date(offset).toISOString();
+			return localTime;
+		} catch (error) {
+			console.error('Error converting date to string:', error);
+			return date.toString();
+		}
+	};
+
 	onMount(async () => {
 		//Prevents "document not found" error
 		deleteSelection = () => {
@@ -235,8 +284,6 @@
 	}
 
 	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	$: console.log(selectedEvent.title, 'HELLo');
 </script>
 
 <div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
@@ -249,8 +296,8 @@
 			<button
 				on:click={() => {
 					showCreateScheduleEvent = true;
-					selectedEvent.start_date = selectedDate.toISOString().slice(0, 16);
-					selectedEvent.end_date = selectedDate.toISOString().slice(0, 16);
+					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
+					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
 				}}
 			>
 				<Fa
@@ -392,9 +439,9 @@
 		grid-template-columns: repeat(7, 1fr);
 		grid-template-rows: repeat(6, 1fr);
 		/* 100vh to stretch the calendar to the bottom, then we subtract 2 rem from the padding
-    on the header, 40px from the height of each symbol/the logo on the header, and 
-    28 px for the controlls on the calendar. This scuffed solution might need to be improved 
-	
+    on the header, 40px from the height of each symbol/the logo on the header, and
+    28 px for the controlls on the calendar. This scuffed solution might need to be improved
+
 	TODO: Don't do this*/
 		height: calc(100vh - 2rem - 40px - 28px);
 	}

@@ -81,7 +81,6 @@
 			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
 			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
 		});
-
 		await createDelegateRelation(delegate.pool_id);
 		saveDelegation();
 	};
@@ -96,11 +95,11 @@
 		delegates[
 			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
 		].isInRelation = true;
+
+		initialSetup();
 	};
 
 	const saveDelegation = async () => {
-		console.log("SAFEEEEEEEEE", tags, tags.map(({ id }) => id));
-		
 		const toSendDelegates = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)
@@ -194,7 +193,12 @@
 
 									<input
 										disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
-										on:input={() => changeDelegation(delegate, tag)}
+										on:input={() => {
+											changeDelegation(delegate, tag);
+											setTimeout(() => {
+											
+											}, 1000);
+										}}
 										type="radio"
 										name={tag.name}
 										checked={delegationTagsStructure
@@ -205,7 +209,9 @@
 							</div>
 						{/each}
 					</div>
-					<button on:click={() => clearChoice(tag)}>{$_('Clear Choice')}</button>
+					<button class="text-red-700 hover:underline" on:click={() => clearChoice(tag)}
+						>{$_('Clear Choice')}</button
+					>
 				{:else}
 					<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
 				{/if}

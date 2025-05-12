@@ -10,7 +10,12 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
-	import { checkForLinks, elipsis, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
+	import {
+		checkForLinks,
+		elipsis,
+		getUserInfo,
+		type StatusMessageInfo
+	} from '$lib/Generic/GenericFunctions';
 	import type { GroupUser } from '../interface';
 	import { onMount } from 'svelte';
 	import TimeAgo from 'javascript-time-ago';
@@ -29,7 +34,8 @@
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
 		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {},
-		workGroups: WorkGroup[] = [];
+		workGroups: WorkGroup[] = [],
+		getKanbanEntries: () => Promise<void>;
 
 	const lanes = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
 
@@ -54,7 +60,7 @@
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
 			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
 			work_group: kanban.work_group || null,
 			//@ts-ignore
 			images: kanban.attachments || []
@@ -138,6 +144,7 @@
 			};
 
 		// isEditing = false;
+		await getKanbanEntries();
 	};
 
 	// Moves the kanban entry between the lanes
@@ -215,7 +222,7 @@
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
 			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date) : null,
+			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
 			work_group: kanban.work_group || null,
 			//@ts-ignore
 			images: kanban.attachments || []
@@ -244,7 +251,7 @@
 				title: kanban.title,
 				assignee_id: kanban.assignee?.id,
 				priority: kanban.priority,
-				end_date: kanban.end_date ? new Date(kanban.end_date) : null
+				end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null
 			};
 		})();
 </script>
@@ -291,23 +298,29 @@
 	<button
 		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
 		on:click={() => {
-			if ($page.params.groupId) goto(`/user?id=${kanban.assignee.id}`);
+			if ($page.params.groupId) goto(`/user?id=${kanban?.assignee?.id}`);
 			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
 	>
-		{#if kanban?.assignee}
+		{#if kanban.origin_type === 'user'}
+			<ProfilePicture
+				username={kanban.created_by.username}
+				profilePicture={kanban.created_by.profile_image}
+				Class=""
+				size={1}
+			/>
+			{$_('My own')}
+		{:else if kanban?.assignee}
 			<ProfilePicture
 				username={kanban?.assignee?.username}
 				profilePicture={kanban?.assignee?.profile_image}
 				Class=""
-				size={20}
+				size={1}
 			/>
 
 			<div class="break-all text-xs">
 				{#if type === 'group'}
 					{kanban.assignee?.username}
-				{:else if kanban.origin_type === 'user'}
-					{$_('My own')}
 				{:else}
 					{kanban.group_name}
 				{/if}
@@ -351,7 +364,7 @@
 </button>
 
 {#if kanban.id === selectedEntry}
-	<Modal bind:open={openModal} Class="min-w-[400px] max-w-[500px] z-50">
+	<Modal bind:open={openModal} Class=" min-w-[400px] z-50">
 		<!-- <div slot="header">
 			{#if isEditing}
 				{$_('Edit Task')}
@@ -379,11 +392,13 @@
 						</div>
 
 						<Select
-							Class="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							Class="rounded border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
-							value={kanbanEdited.work_group?.id || null}
+							value={kanbanEdited.work_group?.id || ''}
 							onInput={handleChangeWorkGroup}
+							innerLabel={$_('No workgroup assigned')}
+							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
@@ -404,30 +419,31 @@
 					<div class="block text-md pt-2">
 						{$_('Priority')}
 					</div>
-					<select
-						class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						on:input={handleChangePriority}
+					<Select
+						Class="w-full"
+						classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+						labels={priorities.map((i) => priorityText[priorityText.length - i])}
+						values={priorities}
 						value={kanban?.priority}
-					>
-						{#each priorities as i}
-							<option value={i}>{priorityText[priorityText.length - i]} </option>
-						{/each}
-					</select>
+						onInput={handleChangePriority}
+						innerLabel=""
+					/>
 				</div>
 				<div class="flex gap-6 justify-between mt-2 flex-col">
 					<div class="text-left">
 						<div class="block text-md">
 							{$_('Assignee')}
 						</div>
-						<select
-							on:input={changeAssignee}
-							value={kanban?.assignee?.id}
-							class="w-full rounded p-1 border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						>
-							{#each users as user}
-								<option value={user.user.id}>{user.user.username}</option>
-							{/each}
-						</select>
+						<Select
+							Class="w-full"
+							classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
+							labels={users.map((user) => user.user.username)}
+							values={users.map((user) => user.user.id)}
+							value={kanban?.assignee?.id || ''}
+							onInput={changeAssignee}
+							innerLabel={$_('No assignee')}
+							innerLabelOn={true}
+						/>
 					</div>
 					<div class="text-left">
 						<div class="block text-md">
@@ -476,7 +492,7 @@
 									: $_('No priority')}
 							</p>
 						</div>
-						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
+						<!-- <p>{kanban?.assignee?.username || $_('Unassigned')}</p> -->
 						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 							{#each kanbanEdited.images as file}
 								<li>

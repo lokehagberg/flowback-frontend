@@ -79,6 +79,7 @@ export interface invite {
 	message_channel_id: number;
 	message_channel_name: string;
 	rejected: boolean | null;
+	title: string;
 }
 
 export interface GroupMembers {

@@ -9,8 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import { blobifyImages, type StatusMessageInfo } from '$lib/Generic/GenericFunctions';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
+	import { blobifyImages } from '$lib/Generic/GenericFunctions';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { pfpStore } from '$lib/Login/stores';
@@ -20,12 +19,12 @@
 	import History from '$lib/Group/Delegation/History.svelte';
 	import { goto } from '$app/navigation';
 	import { getStores } from '$app/stores';
-	import { delegation as delegationLimit } from '$lib/Generic/APILimits.json';
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
 	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
+	import { getUserChannelId } from '$lib/Chat/functions';
 
 	let user: User = {
 		banner_image: '',
@@ -154,6 +153,16 @@
 
 	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview;
 	else if (currentlyCroppingBanner) imageToBeCropped = bannerImagePreview;
+
+	const openChat = async (userId: number) => {
+		const channelId = await getUserChannelId(userId);
+		if (!channelId) return;
+
+		isChatOpen.set(true);
+		// Need to wait a tick for chat to open before setting partner
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		chatPartner.set(channelId);
+	};
 </script>
 
 {#if currentlyCroppingProfile || currentlyCroppingBanner}
@@ -198,7 +207,13 @@
 				</Button>
 			{/if}
 			<Button
-				onClick={() => goto($nav?.from?.url.pathname || '/')}
+				onClick={() => {
+					if (window.history.length > 1) {
+						window.history.back();
+					} else {
+						goto('/');
+					}
+				}}
 				Class="absolute left-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			>
 				<div class="text-gray-800 dark:text-gray-200">
@@ -222,23 +237,30 @@
 				</p>
 			</div>
 			<div class="dark:text-darkmodeText py-6 w-[30%]">
-				<div class="text-primary dark:text-secondary font-bold">{$_('Contact Information')}
-					<button
-						on:click={() => {
-							isChatOpen.set(true);
-							chatPartner.set(user.id);
-						}}
-						class="pl-4"
-					>
-						<Fa icon={faPaperPlane} rotate="60" />
-					</button>
-
+				<div class="text-primary dark:text-secondary font-bold">
+					{$_('Contact Information')}
+					{#await getUserChannelId(user.id) then channelId}
+						{#if channelId}
+							<button
+								on:click={() => {
+									isChatOpen.set(true);
+									chatPartner.set(channelId);
+								}}
+								Class="text-primary"
+							>
+								<Fa icon={faPaperPlane} rotate="60" />
+							</button>
+						{/if}
+					{/await}
 				</div>
-				
-				<a 
+
+				<a
 					class={``}
-					
-					href={user.website ? (user.website.startsWith('http://') || user.website.startsWith('https://') ? user.website : 'https://' + user.website) : '#'}
+					href={user.website
+						? user.website.startsWith('http://') || user.website.startsWith('https://')
+							? user.website
+							: 'https://' + user.website
+						: '#'}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -276,21 +298,21 @@
 			<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
 				<label for="file-ip-1" class="inline">
 					<!-- Profile Picture -->
-				<img
-					src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-					class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
-					alt="avatar"
-					id="avatar"
-				/>
-				<input
-					class="hidden"
-					type="file"
-					name="file-ip-1"
-					id="file-ip-1"
-					accept="image/*"
-					on:change={handleCropProfileImage}
-				/></label
-			>
+					<img
+						src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
+						class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+						alt="avatar"
+						id="avatar"
+					/>
+					<input
+						class="hidden"
+						type="file"
+						name="file-ip-1"
+						id="file-ip-1"
+						accept="image/*"
+						on:change={handleCropProfileImage}
+					/></label
+				>
 
 				<div class="flex flex-col gap-1 w-[40%]">
 					<TextInput
@@ -362,14 +384,13 @@
 					buttonStyle="warning-light"
 					onClick={() => {
 						isEditing = false;
-						profileImagePreview = oldProfileImagePreview;
+						// profileImagePreview = oldProfileImagePreview;
+						getUser();
 					}}>{$_('Cancel')}</Button
 				>
-				<Button
-				Class="flex-1"
-				buttonStyle="primary-light"
-				onClick={updateProfile}>
-				{$_('Save changes')}</Button>
+				<Button Class="flex-1" buttonStyle="primary-light" onClick={updateProfile}>
+					{$_('Save changes')}</Button
+				>
 			</div>
 		</form>
 	{/if}

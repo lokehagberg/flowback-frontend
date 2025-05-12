@@ -36,7 +36,7 @@
 	const getUserInfo = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem('userId')}&delegate=true`
+			`group/${$page.params.groupId}/users?user_id=${localStorage.getItem('userId')}&is_delegate=true`
 		);
 		if (json.results.length === 1) userIsDelegate = true;
 	};

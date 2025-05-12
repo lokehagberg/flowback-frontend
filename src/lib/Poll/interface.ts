@@ -8,6 +8,7 @@ export interface proposal {
 	poll: number;
 	blockchain_id?: number;
 	attachments: { file: string; file_name: string }[];
+	score: number;
 }
 
 export interface timeProposal {
@@ -80,6 +81,7 @@ export interface Filter {
 	search: string;
 	order_by: 'start_date_asc' | 'start_date_desc';
 	tag: number | null;
+	workgroup: number | null;
 }
 
 export type Phase =
@@ -104,6 +106,7 @@ export interface Comment {
 	score: number;
 	being_edited: boolean;
 	being_replied: boolean;
+	being_reported: boolean;
 	being_edited_message?: string;
 	id: number;
 	//False if comment has been deleted

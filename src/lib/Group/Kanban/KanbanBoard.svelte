@@ -18,7 +18,8 @@
 	import KanbanFiltering from './KanbanFiltering.svelte';
 	import { env } from '$env/dynamic/public';
 	import { page } from '$app/stores';
-
+	import { userInfo } from '$lib/Generic/GenericFunctions';
+	import type { User } from '$lib/User/interfaces';
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [],
@@ -47,11 +48,25 @@
 		if (addOrSub === 'Addition') numberOfOpen += 1;
 		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
 	};
-
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-			getGroupUsers();
-			getKanbanEntriesGroup();
+			// let users = await getGroupUsers();
+			// const user = users.find((user) => user.user.id === $userInfo.user.id);
+
+			// if (user) {
+			// 	assignee = user.user.id;
+			// }
+			// let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
+			// if (user.is_admin) {
+			// 	kanbanEntries = groupTasks;
+			// } else {
+			// 	kanbanEntries = groupTasks.filter((task) => {
+			// 		if (user.work_groups.includes(task.work_group?.name)) {
+			// 			return task;
+			// 		}
+			// 	});
+			// }
+			kanbanEntries = await getKanbanEntriesGroup();
 		} else if (type === 'home') getKanbanEntriesHome();
 	};
 
@@ -63,7 +78,7 @@
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		kanbanEntries = json.results;
+		return json.results;
 	};
 
 	const getKanbanEntriesHome = async () => {
@@ -81,9 +96,7 @@
 
 		const { json, res } = await fetchRequest('GET', api);
 		if (!res.ok) return;
-
-		users = json.results;
-		if (!assignee) assignee = users[0]?.user.id;
+		return json.results;
 	};
 
 	const getWorkGroupList = async () => {
@@ -99,10 +112,11 @@
 
 	// const handleSearch = (search: String) => {};
 
-	onMount(() => {
+	onMount(async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
 		getKanbanEntries();
 		getWorkGroupList();
+		users = await getGroupUsers();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();
@@ -145,18 +159,21 @@
 						>
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
-						{#each kanbanEntries as kanban}
-							{#if kanban.lane === i}
-								<KanbanEntry
-									bind:workGroups
-									bind:kanban
-									{users}
-									{type}
-									{removeKanbanEntry}
-									{changeNumberOfOpen}
-								/>
-							{/if}
-						{/each}
+						{#if kanbanEntries?.length > 0}
+							{#each kanbanEntries as kanban}
+								{#if kanban.lane === i}
+									<KanbanEntry
+										bind:workGroups
+										bind:kanban
+										{users}
+										{type}
+										{removeKanbanEntry}
+										{changeNumberOfOpen}
+										{getKanbanEntries}
+									/>
+								{/if}
+							{/each}
+						{/if}
 					</ul>
 					<div class="flex justify-between pt-4">
 						<button
@@ -176,4 +193,4 @@
 	</div>
 </div>
 
-<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} {workGroups} bind:lane />
+<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} bind:workGroups bind:lane />

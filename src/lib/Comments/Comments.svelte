@@ -31,18 +31,20 @@
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
-		commentsStore.set(comments);
-		// commentsStore.subscribe(commentSubscription)
-		// console.log(commentsStore, "STORE");
+		
+		commentsStore.set(_comments);
 	};
 
 	const readMore = async () => {
 		offset += pollCommentsLimit;
 		const { comments, next } = await getComments(getId(), api, offset, sortBy);
-		_comments = _comments.concat(comments);
-		_comments = await commentSetup(_comments);
-		_comments = _comments;
+		
+		const processedComments = await commentSetup(comments);
+		
+		_comments = [..._comments, ...processedComments];
 		showReadMore = next !== null;
+		
+		commentsStore.set(_comments);
 	};
 
 	const getId = () => {
@@ -53,16 +55,17 @@
 
 	onMount(async () => {
 		await setUpComments();
-		setUpComments();
+		
+		interval = setInterval(async () => {
+			await setUpComments();
+		}, 30000);
 	});
+	
 	onDestroy(() => {
 		clearInterval(interval);
 	});
-	$: if (sortBy || !sortBy || searchString) setUpComments();
-	$: if (_comments) {
-		done = false;
-		console.log('changed comments', _comments);
-	}
+	
+	$: if (sortBy || searchString) setUpComments();
 </script>
 
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
@@ -84,16 +87,21 @@
 	</div>
 
 	<div class="flex flex-col gap-1 mt-2">
-		{#each _comments as comment}
+		{#each _comments as comment (comment.id)}
 			<Comment {delegate_pool_id} {comment} bind:comments={_comments} {api} {proposals} />
 		{/each}
 		{#if showReadMore}
-			<button on:click={readMore}>{$_('Read more')}</button>
+			<button 
+				class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded mt-2 transition-colors"
+				on:click={readMore}
+			>
+				{$_('Read more')}
+			</button>
 		{/if}
 	</div>
 
 	{#if _comments.length === 0}
-		<div class="text-center">{$_('There are currently no comments')}</div>
+		<div class="text-center py-8 text-gray-500">{$_('There are currently no comments')}</div>
 	{/if}
 </div>
 

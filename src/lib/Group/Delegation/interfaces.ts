@@ -14,7 +14,7 @@ export interface Delegate {
 	is_admin: boolean;
 	permission_id: number | null;
 	permission_name: string | null;
-	user: {
+  user: {
 		banner_image: string;
 		id: number;
 		profile_image: string;
@@ -23,9 +23,14 @@ export interface Delegate {
 }
 
 export interface VoteHistory {
-	poll_id: number;
-	poll_title: string;
-	vote: null;
+  poll_id: number
+  poll_title: string
+  vote: null
+  poll_description?: string
+  subject_area?: string
+  tag_name?: string
+  historical_data?: any
+  created_at?: string
 }
 
 export interface DelegatePool {
@@ -42,5 +47,5 @@ export interface DelegateRelation {
 	delegate_pool_id: number;
 	delegates: DelegateMinimal[];
 	id: number;
-	tags: { name: string; id: number }[]
+  tags: { name: string; id: number }[]
 }

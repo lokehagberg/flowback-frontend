@@ -20,10 +20,5 @@ src/app.html
 package-lock.json
 backend.bash
 setup2.bat
-<<<<<<< HEAD
-venv
-=======
-
 venv
 measure.py
->>>>>>> f481880679ed1e7a84d3b17ecfb71425eb0ea4f8

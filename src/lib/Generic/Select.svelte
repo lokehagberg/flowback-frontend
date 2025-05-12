@@ -19,9 +19,9 @@
 		innerLabelOn: boolean = false,
 		charlimit = 30;
 
-	onMount(() => {
-		value = defaultValue;
-	});
+	// onMount(() => {
+	// 	value = defaultValue;
+	// });
 </script>
 
 <div class={`${Class} `}>

@@ -21,9 +21,9 @@
 		kanbanEntries: kanban[],
 		workGroups: WorkGroup[] = [],
 		lane: number = 1,
-		groupId;
+		groupId: string,
+		getKanbanEntries: () => Promise<void>;
 
-	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let description = '',
 		title = '',
 		assignee: number | null = null,
@@ -35,43 +35,40 @@
 			'Low priority',
 			'Very low priority'
 		],
-		priority: undefined | number = 3,
-		end_date: null | string = new Date().toISOString().slice(0, 16),
+		priority: number | undefined = 3,
+		end_date: string | null = new Date().toISOString().slice(0, 16),
 		loading = false,
 		poppup: poppup,
-		images: File[],
-		workGroup: number;
+		images: File[] = [],
+		workGroup: number | undefined;
 
 	const createKanbanEntry = async () => {
 		loading = true;
 
 		const formData = new FormData();
 
-		if (end_date) {
-			const _endDate = new Date(end_date || '');
-			const isoDate = _endDate?.toISOString();
-			const dateString = `${isoDate?.slice(
-				0,
-				10
-			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
-			if (_endDate) formData.append('end_date', dateString);
-		}
-
 		formData.append('title', title);
 		formData.append('tag', lane.toString());
 		formData.append('lane', lane.toString());
-
 		if (assignee) formData.append('assignee_id', assignee.toString());
 		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.toString());
+		if (end_date) {
+			const _endDate = new Date(end_date);
+			const isoDate = _endDate.toISOString();
+			const dateString = `${isoDate.slice(0, 10)}T${_endDate.getHours()}:${_endDate.getMinutes()}`;
+			formData.append('end_date', dateString);
+		} else {
+			formData.append('end_date', '');
+		}
 
 		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
-		// if (description !== '') formData.append('description', description);
-		if (images)
+		if (images) {
 			images.forEach((image) => {
 				formData.append('attachments', image);
 			});
+		}
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -88,18 +85,12 @@
 			return;
 		}
 
-		console.log(
-			Number(localStorage.getItem('userId')),
-			localStorage.getItem('pfp-link') || '',
-			localStorage.getItem('userName') || ''
-		);
-
 		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
 		const _assignee = assignee
 			? {
-					id: assignee || 0,
+					id: assignee,
 					profile_image: userAssigned?.user.profile_image || '',
 					username: userAssigned?.user.username || ''
 			  }
@@ -121,22 +112,29 @@
 			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
-			end_date: end_date?.toString() || null,
-			//@ts-ignore
-			work_group: {
-				id: workGroup,
-				name: workGroups.find((group) => group.id === workGroup)?.name
-			},
+			end_date: end_date || null,
+			work_group: workGroup
+				? {
+						id: workGroup,
+						name: workGroups.find((group) => group.id === workGroup)?.name || ''
+				  }
+				: undefined,
 			attachments: []
 		});
 
 		kanbanEntries = kanbanEntries;
 		open = false;
 
+		// Reset form
 		description = '';
 		title = '';
+		assignee = null;
 		priority = 3;
 		end_date = null;
+		images = [];
+		workGroup = workGroups[0]?.id || undefined;
+
+		await getKanbanEntries(); // Refresh entries immediately
 	};
 
 	const handleChangeAssignee = (e: any) => {
@@ -153,9 +151,7 @@
 	};
 </script>
 
-<!-- Creating a new Kanban or Editing a new Kanban -->
 <Modal bind:open Class="min-w-[400px] max-w-[500px]" onSubmit={createKanbanEntry}>
-	<!-- <div slot="header">{$_('Create Task')}</div> -->
 	<div slot="body">
 		<Loader bind:loading>
 			<div on:submit|preventDefault={createKanbanEntry}>
@@ -197,6 +193,7 @@
 						   {end_date ? 'text-black' : 'text-gray-500'}"
 						type="datetime-local"
 						id="end_date"
+						placeholder={$_('No end date set')}
 					/>
 				</div>
 				<div class="text-left">

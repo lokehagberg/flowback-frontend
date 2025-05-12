@@ -9,7 +9,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
-	import StatusMessage from '$lib/Generic/StatusMessage.svelte';
+  import StatusMessage from '$lib/Generic/StatusMessage.svelte';
 	import {
 		checkForLinks,
 		elipsis,
@@ -33,7 +33,7 @@
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
-		changeNumberOfOpen = (addOrSub: 'Addition' | 'Subtraction') => {},
+		changeNumberOfOpen: (addOrSub: 'Addition' | 'Subtraction') => void,
 		workGroups: WorkGroup[] = [],
 		getKanbanEntries: () => Promise<void>;
 
@@ -53,19 +53,39 @@
 		isEditing = false,
 		innerWidth: number,
 		outerWidth: number,
-		// initializes the kanban to be edited when modal is opened
 		kanbanEdited: kanbanEdited = {
 			entry_id: kanban.id,
 			description: kanban.description,
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
-			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
+			priority: kanban.priority || 3, // Default to 3 if undefined/null
+			end_date:
+				kanban.end_date && !isNaN(new Date(kanban.end_date).getTime())
+					? new Date(kanban.end_date).toISOString().slice(0, 16)
+					: null,
 			work_group: kanban.work_group || null,
-			//@ts-ignore
 			images: kanban.attachments || []
 		},
 		endDate: TimeAgo;
+
+	const initializeKanbanEdited = () => {
+		kanbanEdited = {
+			entry_id: kanban.id,
+			description: kanban.description,
+			title: kanban.title,
+			assignee_id: kanban.assignee?.id,
+			priority: kanban.priority || 3, // Ensure priority is set correctly
+			end_date:
+				kanban.end_date && !isNaN(new Date(kanban.end_date).getTime())
+					? new Date(kanban.end_date).toISOString().slice(0, 16)
+					: null,
+			work_group: kanban.work_group || null,
+			images: kanban.attachments || []
+		};
+		console.log('Initialized kanbanEdited.priority:', kanbanEdited.priority);
+	};
+
+	$: console.log('Kanban priority on modal open:', kanban.priority);
 
 	const updateKanbanContent = async () => {
 		const formData = new FormData();
@@ -83,14 +103,16 @@
 		if (kanbanEdited.work_group?.id)
 			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
-		if (kanbanEdited?.end_date) {
+		if (kanbanEdited.end_date) {
 			const _endDate = new Date(kanbanEdited.end_date);
-			const isoDate = _endDate?.toISOString();
-			const dateString = `${isoDate?.slice(
+			const isoDate = _endDate.toISOString();
+			const dateString = `${isoDate.slice(
 				0,
 				10
-			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
-			if (_endDate) formData.append('end_date', dateString);
+			)}T${_endDate.getHours()}:${_endDate.getMinutes()}`;
+			formData.append('end_date', dateString);
+		} else {
+			formData.append('end_date', '');
 		}
 
 		const { res, json } = await fetchRequest(
@@ -105,49 +127,32 @@
 			false
 		);
 
-		// loading = false;
 		isEditing = false;
 
 		if (!res.ok) {
-			// poppup = { message: 'Failed to create kanban task', success: false };
+			status = { message: 'Failed to update kanban task', success: false };
 			return;
 		}
 
 		kanban.title = kanbanEdited.title;
 		kanban.description = kanbanEdited.description;
 		kanban.priority = kanbanEdited.priority;
-
-		if (kanbanEdited.images) kanban.attachments = kanbanEdited.images;
-		else kanban.attachments = [];
-
-		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date;
-		else kanban.end_date = null;
-
-		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
-
-		if (kanbanEdited.end_date) {
-			const _endDate = new Date(kanbanEdited.end_date);
-			const isoDate = _endDate?.toISOString();
-			const dateString = `${isoDate?.slice(
-				0,
-				10
-			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
-			if (_endDate) formData.append('end_date', dateString);
-		}
+		kanban.end_date = kanbanEdited.end_date;
+		kanban.work_group = kanbanEdited.work_group;
+		kanban.attachments = kanbanEdited.images || [];
 
 		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee_id);
-		if (assignee && kanbanEdited?.assignee_id)
-			kanban.assignee = {
-				id: kanbanEdited?.assignee_id,
-				username: assignee?.user.username || '',
-				profile_image: assignee?.user.profile_image || ''
-			};
+		kanban.assignee = kanbanEdited.assignee_id
+			? {
+					id: kanbanEdited.assignee_id,
+					username: assignee?.user.username || '',
+					profile_image: assignee?.user.profile_image || ''
+			  }
+			: null;
 
-		// isEditing = false;
 		await getKanbanEntries();
 	};
 
-	// Moves the kanban entry between the lanes
 	const updateKanbanLane = async (lane: number) => {
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -164,7 +169,8 @@
 		status = statusMessageFormatter(res, json);
 		if (!res.ok) return;
 
-		kanban.lane = kanban.lane;
+		kanban.lane = lane;
+		await getKanbanEntries();
 	};
 
 	const changeAssignee = (e: any) => {
@@ -173,10 +179,9 @@
 
 	const handleChangePriority = (e: any) => {
 		kanbanEdited.priority = Number(e.target.value);
+		console.log('Selected priority:', kanbanEdited.priority);
 	};
 
-	// Delete kanban removes it from the database,
-	// remove kanban removes the displaying of the kanban.
 	const deleteKanbanEntry = async () => {
 		if (kanban.origin_type === 'group' && !$page.params.groupId) {
 			status = { message: 'Cannot remove kanban tasks from groups in My Kanban', success: false };
@@ -194,13 +199,9 @@
 		if (!res.ok) return;
 
 		removeKanbanEntry(kanban.id);
-		// showSuccessPoppup = true;
 	};
 
-	//Whenever user is at own kanban, focus on which group it's on rather than on who is assigned (which is obviously the user looking at it)
-	//Useful for the Users own personal kanban.
 	const getGroupKanbanIsFrom = async () => {
-		//TODO: detail is outdated
 		const { res, json } = await fetchRequest('GET', `group/${kanban.origin_id}/detail`);
 		kanban.group_name = json.name;
 	};
@@ -216,24 +217,14 @@
 	};
 
 	const cancelUpdateKanban = () => {
-		(kanbanEdited = {
-			entry_id: kanban.id,
-			description: kanban.description,
-			title: kanban.title,
-			assignee_id: kanban.assignee?.id,
-			priority: kanban.priority,
-			end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null,
-			work_group: kanban.work_group || null,
-			//@ts-ignore
-			images: kanban.attachments || []
-		}),
-			(openModal = false);
+		initializeKanbanEdited();
+		openModal = false;
 		isEditing = false;
 	};
 
 	onMount(async () => {
-		if (kanban?.origin_type === 'group') getGroupKanbanIsFrom();
-		if (kanban.end_date !== null) formatEndDate();
+		if (kanban?.origin_type === 'group') await getGroupKanbanIsFrom();
+		if (kanban.end_date !== null) await formatEndDate();
 	});
 
 	$: if (openModal && !isEditing)
@@ -242,18 +233,9 @@
 	$: if (openModal === true) changeNumberOfOpen('Addition');
 	else changeNumberOfOpen('Subtraction');
 
-	$: openModal &&
-		kanban.id !== selectedEntry &&
-		(() => {
-			kanbanEdited = {
-				entry_id: kanban.id,
-				description: kanban.description,
-				title: kanban.title,
-				assignee_id: kanban.assignee?.id,
-				priority: kanban.priority,
-				end_date: kanban.end_date ? new Date(kanban.end_date).toISOString().slice(0, 16) : null
-			};
-		})();
+	$: if (openModal && kanban.id === selectedEntry) {
+		initializeKanbanEdited();
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:outerWidth />
@@ -264,6 +246,7 @@
 	on:click={() => {
 		openModal = true;
 		selectedEntry = kanban.id;
+		initializeKanbanEdited(); // Call on button click
 	}}
 >
 	<div class="flex justify-between w-full items-start">
@@ -280,12 +263,6 @@
 	</div>
 	{#if kanban.end_date && endDate}
 		<div class="text-sm text-gray-700">
-			<!-- {#if new Date(kanban.end_date) < new Date()}
-				{$_('Ended')}
-			{:else}
-				{$_('Ends')}
-			{/if} -->
-
 			{new Intl.DateTimeFormat('sv-SE', {
 				weekday: 'short',
 				day: '2-digit',
@@ -333,7 +310,6 @@
 			{$_('Work Group')}: {elipsis(kanban.work_group.name || '', 20)}
 		</div>
 	{/if}
-	<!-- Arrows -->
 	{#if (type === 'group' && kanban.origin_type === 'group') || (type === 'home' && kanban.origin_type === 'user')}
 		<div class="flex justify-between mt-3 align-middle">
 			<button
@@ -341,7 +317,6 @@
 				on:click={() => {
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
-						kanban.lane -= 1;
 					}
 				}}
 			>
@@ -353,7 +328,6 @@
 				on:click={() => {
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);
-						kanban.lane += 1;
 					}
 				}}
 			>
@@ -365,14 +339,6 @@
 
 {#if kanban.id === selectedEntry}
 	<Modal bind:open={openModal} Class=" min-w-[400px] z-50">
-		<!-- <div slot="header">
-			{#if isEditing}
-				{$_('Edit Task')}
-			{:else}
-				{kanban.title}
-			{/if}
-		</div> -->
-
 		<div slot="body">
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
@@ -403,7 +369,6 @@
 					</div>
 				{/if}
 				<div class="text-left w-[300px]">
-					<!-- {#if kanban.end_date} -->
 					<div class="block text-md pt-2">
 						{$_('End date')}
 					</div>
@@ -412,8 +377,8 @@
 						bind:value={kanbanEdited.end_date}
 						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
 						   {kanbanEdited.end_date ? 'text-black' : 'text-gray-500'}"
+						placeholder={$_('No end date set')}
 					/>
-					<!-- {/if} -->
 				</div>
 				<div class="text-left">
 					<div class="block text-md pt-2">
@@ -422,9 +387,9 @@
 					<Select
 						Class="w-full"
 						classInner="border bg-white border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						labels={priorities.map((i) => priorityText[priorityText.length - i])}
+						labels={priorities.map((i) => priorityText[priorities.length - i])}
 						values={priorities}
-						value={kanban?.priority}
+						bind:value={kanbanEdited.priority}
 						onInput={handleChangePriority}
 						innerLabel=""
 					/>
@@ -488,11 +453,11 @@
 							{/if}
 							<p>
 								{kanbanEdited.priority != null
-									? priorityText[priorityText.length - kanbanEdited.priority]
+									? priorityText[priorities.length - kanbanEdited.priority]
 									: $_('No priority')}
 							</p>
 						</div>
-						<!-- <p>{kanban?.assignee?.username || $_('Unassigned')}</p> -->
+						<p>{kanban?.assignee?.username || $_('Unassigned')}</p>
 						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
 							{#each kanbanEdited.images as file}
 								<li>

@@ -148,11 +148,7 @@
 			poppup = { message: 'Failed to create event', success: false };
 			return;
 		}
-		// console.log(json);
-		const createdEvent = { ...selectedEvent, event_id: json.id };
-		events.push(createdEvent);
-		events = events;
-		console.log(events);
+
 		poppup = { message: 'Successfully created event', success: true };
 		showCreateScheduleEvent = false;
 
@@ -334,11 +330,8 @@
 						work_group: undefined
 					};
 					showCreateScheduleEvent = true;
-<<<<<<< HEAD
 					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
 					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
-=======
->>>>>>> 3862c34c (fixed the Events (at least those with the same start and end dates and times) change place when reloading and just after reloading you get the error “this field can not be null” on description when you try to create a new event)
 				}}
 			>
 				<Fa

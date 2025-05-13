@@ -86,23 +86,21 @@
 				message.timestamp = new Date().toString();
 				message.notified = false;
 
-				previewDirect = previewDirect;
+				previewDirect = [...previewDirect]; 
 			}
 
 			selectedChat = chatterId;
 			selectedChatChannelId = chatterId;
 			chatPartner.set(chatterId);
 		} else if (selectedPage === 'group') {
-			let message = previewGroup.find((message) => message.channel_id === chatterId.chat_id);
+			let message = previewGroup.find((message) => message.channel_id === chatterId);
 			if (message) {
 				//Gets rid of existing notification when clicked on new chat
 				message.timestamp = new Date().toString();
 				message.notified = false;
 
-				previewGroup = previewGroup;
+				previewGroup = [...previewGroup]; 
 			}
-
-			// const id = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? chatter.chat_id : chatter.id;
 
 			selectedChat = chatterId;
 			chatPartner.set(chatterId);
@@ -203,7 +201,10 @@
 		Class={``}
 		bind:selectedPage
 		tabs={['direct', 'group']}
-		displayNames={['Direct', 'Groups']}
+		displayNames={[
+		`Direct ${previewDirect.some(p => p.notified) ? '🟣' : ''}`, 
+		`Groups ${previewGroup.some(p => p.notified) ? '🔵' : ''}`
+	]}
 	/>
 </div>
 
@@ -255,7 +256,7 @@
 	{/if}
 
 	{#each previewDirect as previewObject}
-		{#if selectedPage === 'direct' && previewObject?.channel_title?.split(',')?.length > 2}
+		{#if selectedPage === 'direct' && previewObject && previewObject.channel_title && previewObject.channel_title.split(',').length > 2}
 			<button
 				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
 				class:bg-gray-200={selectedChat === previewObject.channel_id}
@@ -264,10 +265,9 @@
 					clickedChatter(previewObject.channel_id);
 				}}
 			>
-				{#if //@ts-ignore
-				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
-					<div class="p-1 rounded-full" class:bg-purple-300={selectedPage === 'direct'} />
-				{/if}
+			{#if previewObject.notified && (selectedChat !== previewObject.channel_id || selectedPage !== 'direct')}
+				<div class="p-2 rounded-full bg-purple-300" />
+			{/if}
 				<ProfilePicture
 					username={previewObject.channel_title}
 					profilePicture={previewObject.profile_image}
@@ -296,45 +296,44 @@
 					? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 					: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
 
-			<button
-				class:hidden={selectedPage === 'direct'
-					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
-					: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
-				class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
-				class:bg-gray-200={selectedChat === chatter.channel_id || selectedChat === chatter.chat_id}
-				class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
-					selectedChat === chatter.chat_id}
-				on:click={() => {
-					clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id);
-				}}
-			>
-				<!-- Notification Symbol -->
-				{#if //@ts-ignore
-				new Date(previewObject?.timestamp || 0) < new Date(previewObject?.updated_at || 0)}
-					<div
-						class="p-1 rounded-full"
-						class:bg-blue-300={selectedPage === 'group'}
-						class:bg-purple-300={selectedPage === 'direct'}
-					/>
-				{/if}
-				<ProfilePicture
-					username={chatter.name || chatter.username}
-					profilePicture={chatter.profile_image}
+		<button
+			class:hidden={selectedPage === 'direct'
+				? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())
+				: !chatter.name.toLowerCase().includes(chatSearch.toLowerCase())}
+			class="w-full transition transition-color p-3 flex items-center gap-3 hover:bg-gray-200 active:bg-gray-500 cursor-pointer dark:bg-darkobject dark:hover:bg-darkbackground"
+			class:bg-gray-200={selectedChat === chatter.channel_id || selectedChat === chatter.chat_id}
+			class:dark:bg-gray-700={selectedChat === chatter.channel_id ||
+				selectedChat === chatter.chat_id}
+			on:click={() => {
+				clickedChatter(selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id);
+			}}
+		>
+			<!-- Notification Symbol -->
+			{#if previewObject && previewObject.notified && (selectedChat !== (selectedPage === 'direct' ? chatter.channel_id : chatter.chat_id) || selectedPage !== (selectedPage === 'direct' ? 'direct' : 'group'))}
+				<div
+					class="p-2 rounded-full"
+					class:bg-blue-300={selectedPage === 'group'}
+					class:bg-purple-300={selectedPage === 'direct'}
 				/>
-				<div class="flex flex-col max-w-[40%]">
-					<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
-						>{chatter.name || chatter.username}</span
-					>
-					<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
+			{/if}
+			<ProfilePicture
+				username={chatter.name || chatter.username}
+				profilePicture={chatter.profile_image}
+			/>
+			<div class="flex flex-col max-w-[40%]">
+				<span class="max-w-full text-left overflow-x-hidden overflow-ellipsis"
+					>{chatter.name || chatter.username}</span
+				>
+				<span class="text-gray-400 text-sm truncate h-[20px] overflow-x-hidden max-w-[10%]">
 						<!-- {@debug previewObject} -->
 
-						{#if previewObject}
-							{previewObject.user.username}:
-							{previewObject.message}
-						{/if}
-					</span>
-				</div>
-			</button>
+					{#if previewObject}
+						{previewObject.user.username}:
+						{previewObject.message}
+					{/if}
+				</span>
+			</div>
+		</button>
 			{#if selectedPage === 'direct' && creatingGroup}
 				<!-- For creating group chat, see CreateChatGroup.svelte -->
 				<Button

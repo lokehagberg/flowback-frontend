@@ -20,13 +20,14 @@
 	import { page } from '$app/stores';
 	import { userInfo } from '$lib/Generic/GenericFunctions';
 	import type { User } from '$lib/User/interfaces';
+	import { getContext } from 'svelte';
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
 	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
 	let kanbanEntries: kanban[] = [],
 		assignee: number | null = null,
 		users: GroupUser[] = [],
 		status: StatusMessageInfo,
-		poppup: poppup,
+		poppupInstance: poppup,
 		interval: any,
 		open = false,
 		numberOfOpen = 0,
@@ -49,25 +50,29 @@
 		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
 	};
 	const getKanbanEntries = async () => {
-		if (type === 'group') {
-			// let users = await getGroupUsers();
-			// const user = users.find((user) => user.user.id === $userInfo.user.id);
-
-			// if (user) {
-			// 	assignee = user.user.id;
-			// }
-			// let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
-			// if (user.is_admin) {
-			// 	kanbanEntries = groupTasks;
-			// } else {
-			// 	kanbanEntries = groupTasks.filter((task) => {
-			// 		if (user.work_groups.includes(task.work_group?.name)) {
-			// 			return task;
-			// 		}
-			// 	});
-			// }
-			kanbanEntries = await getKanbanEntriesGroup();
-		} else if (type === 'home') getKanbanEntriesHome();
+		try {
+			if (type === 'group') {
+				const entries = await getKanbanEntriesGroup();
+				if (entries && entries.length > 0) {
+					kanbanEntries = entries.map((newEntry: kanban) => {
+						const existingEntry = kanbanEntries.find(e => e.id === newEntry.id);
+						if (existingEntry) {
+							if (existingEntry.priority !== undefined && newEntry.priority === undefined) {
+								newEntry.priority = existingEntry.priority;
+							}
+							if (existingEntry.work_group && !newEntry.work_group) {
+								newEntry.work_group = existingEntry.work_group;
+							}
+						}
+						return newEntry;
+					});
+				}
+			} else if (type === 'home') {
+				await getKanbanEntriesHome();
+			}
+		} catch (error) {
+			console.error("Error fetching kanban entries:", error);
+		}
 	};
 
 	const getKanbanEntriesGroup = async () => {
@@ -114,13 +119,13 @@
 
 	onMount(async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
-		getKanbanEntries();
-		getWorkGroupList();
+		await getKanbanEntries();
+		await getWorkGroupList();
 		users = await getGroupUsers();
 
 		interval = setInterval(() => {
 			if (numberOfOpen === 0) getKanbanEntries();
-		}, 20000);
+		}, 10000); // Reduced from 20000 to 10000 for more frequent updates
 
 		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId;
 	});
@@ -130,7 +135,7 @@
 	});
 </script>
 
-<Poppup bind:poppup />
+<Poppup bind:poppup={poppupInstance} />
 
 <div
 	class={' dark:bg-darkobject dark:text-darkmodeText p-2 pt-4 break-words md:max-w-[calc(500px*5)]' +

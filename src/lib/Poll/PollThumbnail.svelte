@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Phase, poll } from './interface';
+	import type { Phase, poll as PollType } from './interface';
 	import { page } from '$app/stores';
-	import Tag from '$lib/Group/Tag.svelte';
+	import TagComponent from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import Fa from 'svelte-fa';
 	import { fetchRequest } from '$lib/FetchRequest';
@@ -26,7 +26,8 @@
 		faComment,
 		faAlignLeft,
 		faCalendarAlt,
-		faSlash
+		faSlash,
+		faUserCheck
 	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import MultipleChoices from '$lib/Generic/MultipleChoices.svelte';
@@ -35,8 +36,9 @@
 	import Timeline from './NewDesign/Timeline.svelte';
 	import ReportPollModal from './ReportPollModal.svelte';
 	import type { Permission, Permissions } from '$lib/Group/Permissions/interface';
+	import type { DelegateRelation } from '$lib/Group/Delegation/interfaces';
 
-	export let poll: poll,
+	export let poll: PollType,
 		isAdmin = false;
 
 	let onHoverGroup = false,
@@ -47,14 +49,22 @@
 		selectedTag: number,
 		darkMode: boolean,
 		voting = true,
-		poppup: poppup,
+		currentPoppup: poppup,
 		choicesOpen = false,
 		deletePollModalShow = false,
 		reportPollModalShow = false,
 		hovering = false,
 		showGroupInfo = !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE') && !$page.params.groupId,
 		permissions: Permissions,
-		userIsOwner: boolean;
+		userIsOwner = false, 
+		delegateVote: any = null,
+		showDelegateVote = false,
+		delegateUsername: string = '';
+
+	interface Tag {
+		user_vote: boolean;
+		tags: { tag_name: string }[];
+	}
 
 	//When adminn presses the pin tack symbol, pin the poll
 	const pinPoll = async () => {
@@ -71,7 +81,7 @@
 		});
 
 		if (!res.ok) {
-			poppup = { message: 'Could not submit tag vote', success: false };
+			currentPoppup = { message: 'Could not submit tag vote', success: false };
 			return;
 		}
 
@@ -83,11 +93,49 @@
 
 		if (!res.ok) return;
 
-		let selectedTagName = json.results.find((tag: Tag) => tag.user_vote === true)?.tags[0].tag_name;
+		const tagWithUserVote = json.results.find((tag: Tag) => tag.user_vote === true);
+		
+		if (tagWithUserVote && tagWithUserVote.tags && tagWithUserVote.tags.length > 0) {
+			const selectedTagName = tagWithUserVote.tags[0].tag_name;
+			
+			if (selectedTagName && tags) {
+				const foundTag = tags.find((tag) => tag.name === selectedTagName);
+				if (foundTag) {
+					selectedTag = foundTag.id || 0;
+					voting = false;
+				}
+			}
+		}
+	};
 
-		if (selectedTagName) {
-			selectedTag = tags?.find((tag) => tag.name === selectedTagName)?.id || 0;
-			voting = false;
+	const checkDelegation = async () => {
+		if (!poll?.tag_id) return;
+		
+		try {
+			const { res, json } = await fetchRequest('GET', `group/${poll?.group_id}/delegate/relation`);
+			
+			if (!res.ok) return;
+			
+			const delegationForTag = json.results.find((relation: DelegateRelation) => 
+				relation.tags.some((tag: {id: number}) => tag.id === poll?.tag_id)
+			);
+			
+			if (!delegationForTag || !delegationForTag.delegates.length) return;
+			
+			const delegateId = delegationForTag.delegates[0].id;
+			delegateUsername = delegationForTag.delegates[0].username;
+			
+			const { res: voteRes, json: voteJson } = await fetchRequest(
+				'GET', 
+				`group/poll/${poll?.id}/votes?delegate_id=${delegateId}`
+			);
+			
+			if (!voteRes.ok || !voteJson.results.length) return;
+			
+			delegateVote = voteJson.results[0];
+			showDelegateVote = true;
+		} catch (error) {
+			console.error("Error checking delegation:", error);
 		}
 	};
 
@@ -99,7 +147,13 @@
 		}
 
 		permissions = await getPermissionsFast(Number(poll.group_id));
-		userIsOwner = await getUserIsOwner(poll?.group_id);
+		
+		const isOwner = await getUserIsOwner(poll?.group_id);
+		userIsOwner = isOwner === undefined ? false : isOwner;
+		
+		if (phase === 'vote' || phase === 'delegate_vote' || phase === 'result') {
+			await checkDelegation();
+		}
 
 		darkModeStore.subscribe((dark) => (darkMode = dark));
 	});
@@ -247,20 +301,25 @@
 			{#if poll?.allow_fast_forward}
 				<HeaderIcon Class="!p-0 !cursor-default" icon={faAnglesRight} text={'Fast Forward'} />
 			{:else}
-				<div
+				<button
 					on:mouseover={() => (hovering = true)}
 					on:mouseleave={() => (hovering = false)}
-					class="relative w-4 h-4"
+					on:focus={() => (hovering = true)}
+					on:blur={() => (hovering = false)}
+					on:keydown={(e) => e.key === 'Enter' && (hovering = !hovering)}
+					class="relative w-4 h-4 bg-transparent border-0 p-0 cursor-default"
+					aria-label={$_('No Fast Forward')}
+					title={$_('No Fast Forward')}
 				>
 					<Fa style="position:absolute" icon={faAnglesRight} />
 					<Fa style="position:absolute" icon={faSlash} rotate="90" />
-					<div
+					<span
 						class="absolute text-black p-1 bg-white mt-4 border border-gray-400 rounded text-sm z-50 w-[100px] left-[calc(50%-50px)] text-center filter opacity-80"
 						class:invisible={!hovering}
 					>
 						{$_('No Fast Forward')}
-					</div>
-				</div>
+					</span>
+				</button>
 			{/if}
 
 			<!-- Comment icon. When user clicks it leads to the comment section on the poll -->
@@ -270,13 +329,13 @@
 					? '/groups/1'
 					: `/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?section=comments`}
 			>
-				<img class="w-5" src={ChatIcon} alt="open chat" />
+				<img class="w-5" src={ChatIcon || "/placeholder.svg"} alt="open chat" />
 				<span class="inline">{poll?.total_comments}</span>
 			</a>
 
 			<!-- Tag -->
 			{#if poll?.poll_type === 4}
-				<Tag tag={{ name: poll?.tag_name, id: poll?.tag_id, active: true, imac: 0 }} />
+				<TagComponent tag={{ name: poll?.tag_name, id: poll?.tag_id, active: true, imac: 0 }} />
 			{/if}
 
 			{#if poll?.poll_type === 4}
@@ -290,6 +349,26 @@
 
 		{#if poll?.description?.length > 0}
 			<NewDescription limit={2} lengthLimit={700} description={poll?.description} Class="mt-2" />
+		{/if}
+
+		{#if showDelegateVote && delegateVote}
+			<div class="mt-2 p-2 bg-blue-50 dark:bg-blue-900 rounded-md border border-blue-200 dark:border-blue-700">
+				<div class="flex items-center gap-2 text-sm">
+					<Fa icon={faUserCheck} class="text-blue-500 dark:text-blue-300" />
+					<span class="font-medium">{$_('Your delegate')} {delegateUsername} {$_('voted on this poll')}</span>
+				</div>
+				{#if delegateVote.proposal_id}
+					<div class="mt-1 ml-6 text-sm">
+						{$_('Voted for proposal')}: <span class="font-semibold">{delegateVote.proposal_title || delegateVote.proposal_id}</span>
+					</div>
+				{/if}
+				<a 
+					href={`/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}`}
+					class="mt-1 ml-6 text-sm text-blue-600 dark:text-blue-300 hover:underline block"
+				>
+					{$_('View details')}
+				</a>
+			</div>
 		{/if}
 
 		<Timeline
@@ -416,7 +495,7 @@
 <DeletePollModal bind:deletePollModalShow pollId={poll?.id} />
 <ReportPollModal bind:reportPollModalShow pollId={$page.params.pollId} />
 
-<Poppup bind:poppup />
+<Poppup bind:poppup={currentPoppup} />
 
 <style>
 	.poll-thumbnail-shadow {

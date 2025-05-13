@@ -58,6 +58,7 @@
 			const isoDate = _endDate.toISOString();
 			const dateString = `${isoDate.slice(0, 10)}T${_endDate.getHours()}:${_endDate.getMinutes()}`;
 			formData.append('end_date', dateString);
+			console.log('Sending end_date:', dateString); // Debug log
 		} else {
 			formData.append('end_date', '');
 		}
@@ -130,11 +131,11 @@
 		title = '';
 		assignee = null;
 		priority = 3;
-		end_date = null;
+		end_date = new Date().toISOString().slice(0, 16); // Reset to current date/time
 		images = [];
 		workGroup = workGroups[0]?.id || undefined;
 
-		await getKanbanEntries(); // Refresh entries immediately
+		await getKanbanEntries();
 	};
 
 	const handleChangeAssignee = (e: any) => {

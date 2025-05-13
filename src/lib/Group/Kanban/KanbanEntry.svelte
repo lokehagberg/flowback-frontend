@@ -58,15 +58,27 @@
 			description: kanban.description,
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
-			priority: kanban.priority || 3, // Default to 3 if undefined/null
-			end_date:
-				kanban.end_date && !isNaN(new Date(kanban.end_date).getTime())
-					? new Date(kanban.end_date).toISOString().slice(0, 16)
-					: null,
+			priority: kanban.priority || 3,
+			end_date: formatDateForInput(kanban.end_date),
 			work_group: kanban.work_group || null,
 			images: kanban.attachments || []
 		},
 		endDate: TimeAgo;
+
+	// Helper function to format date for datetime-local input
+	function formatDateForInput(dateStr: string | null | undefined): string | null {
+		if (!dateStr || isNaN(new Date(dateStr).getTime())) return null;
+
+		const date = new Date(dateStr);
+		// Adjust for local timezone by using local methods
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+
+		return `${year}-${month}-${day}T${hours}:${minutes}`;
+	}
 
 	const initializeKanbanEdited = () => {
 		kanbanEdited = {
@@ -74,18 +86,15 @@
 			description: kanban.description,
 			title: kanban.title,
 			assignee_id: kanban.assignee?.id,
-			priority: kanban.priority || 3, // Ensure priority is set correctly
-			end_date:
-				kanban.end_date && !isNaN(new Date(kanban.end_date).getTime())
-					? new Date(kanban.end_date).toISOString().slice(0, 16)
-					: null,
+			priority: kanban.priority || 3,
+			end_date: formatDateForInput(kanban.end_date),
 			work_group: kanban.work_group || null,
 			images: kanban.attachments || []
 		};
-		console.log('Initialized kanbanEdited.priority:', kanbanEdited.priority);
+		console.log('Initialized kanbanEdited.end_date:', kanbanEdited.end_date);
 	};
 
-	$: console.log('Kanban priority on modal open:', kanban.priority);
+	$: console.log('Kanban end_date on modal open:', kanban.end_date);
 
 	const updateKanbanContent = async () => {
 		const formData = new FormData();
@@ -126,6 +135,8 @@
 			true,
 			false
 		);
+
+		console.log(res, json);
 
 		isEditing = false;
 
@@ -246,7 +257,7 @@
 	on:click={() => {
 		openModal = true;
 		selectedEntry = kanban.id;
-		initializeKanbanEdited(); // Call on button click
+		initializeKanbanEdited();
 	}}
 >
 	<div class="flex justify-between w-full items-start">

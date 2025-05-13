@@ -30,8 +30,6 @@
 		inviteList: invite[] = [],
 		groupMembers: GroupMembers[] = [];
 
-	$: console.log('Preview.svelte state:', { selectedPage, creatingGroup, directs, groups }); // Debug log
-
 	$: hasUnreadDirect = previewDirect.some((p) => p.notified);
 	$: hasUnreadGroup = previewGroup.some((p) => p.notified);
 
@@ -271,7 +269,6 @@
 				selectedPage === 'direct'
 					? previewDirect.find((direct) => direct.channel_id === chatter.channel_id)
 					: previewGroup.find((group) => group.channel_id === chatter.chat_id)}
-			{console.log('Rendering chatter:', { chatter, selectedPage, creatingGroup })}
 			<button
 				class:hidden={selectedPage === 'direct'
 					? !chatter.username.toLowerCase().includes(chatSearch.toLowerCase())

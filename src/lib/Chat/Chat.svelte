@@ -113,10 +113,6 @@
 	$: if (!chatOpen) {
 		chatPartner.set(0);
 	}
-
-	// Debug logging for notifications
-	$: console.log('Direct chat notifications (purple dot):', hasUnreadDirect, previewDirect);
-	$: console.log('Group chat notifications (blue dot):', hasUnreadGroup, previewGroup);
 </script>
 
 <svelte:head>

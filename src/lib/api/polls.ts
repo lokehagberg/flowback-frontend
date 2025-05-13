@@ -8,6 +8,7 @@ export class PollsApi {
    * Fetches posts based on the view context (home, group, delegate etc)
    */
   static async getPosts(infoToGet: string, params: PollsParams, delegatePoolId?: number): Promise<ApiResponse<Post>> {
+    console.log("infoToGet, delegatePoolId", infoToGet, delegatePoolId);
     const baseUrl = this.getBaseUrl(infoToGet, delegatePoolId);
     const queryParams = new URLSearchParams();
     
@@ -16,7 +17,7 @@ export class PollsApi {
         queryParams.append(key, value.toString());
       }
     });
-
+    console.log("baseUrl, queryParams", baseUrl, queryParams.toString());
     return apiClient<ApiResponse<Post>>(`${baseUrl}?${queryParams.toString()}`);
   }
 

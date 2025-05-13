@@ -10,27 +10,32 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import ThreadThumbnail from './Thread.svelte';
 	import type { Thread } from '$lib/Group/interface';
+	import Select from '$lib/Generic/Select.svelte';
 
 	export let isAdmin = true;
 
 	let threads: Thread[] = [],
 		prev = '',
 		next = '',
-		poppup: poppup,
+		poppupState: poppup,
 		searchQuery = '',
 		searched = true,
-		workGroups: any[] = [];
+		workGroups: any[] = [],
+		selectedWorkGroupId: null | number = null;
 
 	const getThreads = async () => {
 		let url = `group/thread/list?group_ids=${$page.params.groupId}&limit=${threadsLimit}&order_by=pinned,created_at_desc`;
 		if (searchQuery) {
 			url += `&title__icontains=${searchQuery}`;
 		}
+		if (selectedWorkGroupId !== null) {
+			url += `&work_group=${selectedWorkGroupId}`;
+		}
 
 		const { res, json } = await fetchRequest('GET', url);
 
 		if (!res.ok) {
-			poppup = { message: 'Could not get threads', success: false };
+			poppupState = { message: 'Could not get threads', success: false };
 			return;
 		}
 
@@ -41,6 +46,12 @@
 
 	const handleSearch = () => {
 		searched = true;
+		getThreads();
+	};
+
+	const handleWorkGroupChange = (e: Event) => {
+		const select = e.target as HTMLSelectElement;
+		selectedWorkGroupId = select.value === '' ? null : Number(select.value);
 		getThreads();
 	};
 
@@ -56,7 +67,7 @@
 		const { res, json } = await fetchRequest('POST', `group/thread/${thread.id}/vote`, { vote });
 
 		if (!res.ok) {
-			poppup = { message: 'Could not vote on thread', success: false };
+			poppupState = { message: 'Could not vote on thread', success: false };
 			return;
 		}
 
@@ -79,7 +90,7 @@
 		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/list`);
 
 		if (!res.ok) {
-			poppup = { message: 'Failed to get workgroups', success: false };
+			poppupState = { message: 'Failed to get workgroups', success: false };
 			return;
 		}
 
@@ -88,44 +99,52 @@
 
 	onMount(() => {
 		getThreads();
+		getWorkGroupList();
 	});
+	
+	$: workGroupLabels = ['All Work Groups', ...workGroups.map(wg => wg.name)];
+	$: workGroupValues = [null, ...workGroups.map(wg => wg.id)];
 </script>
 
 <div>
 	<form
-		class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex items-end w-full gap-4 mb-6"
+		class="bg-white dark:bg-darkobject dark:text-darkmodeText shadow rounded p-4 flex flex-col md:flex-row items-end w-full gap-4 mb-6"
 		on:submit|preventDefault={handleSearch}
 	>
 		<TextInput
-			Class="w-4/5"
+			Class="w-full md:w-4/5"
 			onInput={() => (searched = false)}
 			label={$_('Search')}
 			bind:value={searchQuery}
 		/>
 
-		<!-- <Button
-			Class={`w-8 h-8 ml-4 !p-1 flex justify-center items-center ${
-				searched ? 'bg-blue-300' : 'bg-blue-600'
-			}`}
-			type="submit"
-		>
-			<Fa icon={faMagnifyingGlass} />
-		</Button> -->
+		<div class="w-full md:w-1/5">
+			<Select
+				label={$_('Filter by Work Group')}
+				labels={workGroupLabels}
+				values={workGroupValues}
+				value={selectedWorkGroupId}
+				onInput={handleWorkGroupChange}
+				Class="w-full"
+			/>
+		</div>
 	</form>
 
 	{#if threads.length === 0}
 		<div
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow-lg rounded-md mb-6 text-center"
 		>
-			{$_('There are currently no threads in this group')}
+			{#if selectedWorkGroupId !== null}
+				{$_('There are currently no threads in this work group')}
+			{:else}
+				{$_('There are currently no threads in this group')}
+			{/if}
 		</div>
 	{/if}
 	{#each threads as thread}
-		{@const workGroup = workGroups.find((group) => group.id === thread.work_group)?.name}
-
-		<ThreadThumbnail {thread} {isAdmin} {workGroup} />
+		<ThreadThumbnail {thread} {isAdmin} />
 	{/each}
 	<Pagination bind:prev bind:next bind:iterable={threads} />
 </div>
 
-<Poppup bind:poppup />
+<Poppup bind:poppup={poppupState} />

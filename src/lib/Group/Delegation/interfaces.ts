@@ -1,5 +1,4 @@
 import type { GroupUser } from '$lib/User/interfaces';
-import type { DelegateMinimal, Tag } from '../interface';
 
 export interface Delegate {
 	tags: { id: number; tag_name: string; name: string; active: boolean }[];
@@ -41,11 +40,23 @@ export interface DelegatePool {
 	tags: { id: number; name: string, tag_name?: string; active?: boolean }[];
 }
 
-
 export interface DelegateRelation {
-	blockchain_id: null | number;
-	delegate_pool_id: number;
-	delegates: DelegateMinimal[];
-	id: number;
-  tags: { name: string; id: number }[]
+	id: number
+	tags: DelegationTag[]
+	delegates: {
+	  id: number
+	  username: string
+	}[]
+}
+
+export interface DelegateVote {
+	delegate_id: number
+	delegate_username?: string
+	proposal_id?: number
+	proposal_title?: string
+}
+
+export interface DelegationTag {
+	id: number
+	name?: string
 }

@@ -23,14 +23,13 @@
 	import PriorityIcons from './PriorityIcons.svelte';
 	import { goto } from '$app/navigation';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import type { kanbanEdited, kanban as KanbanType } from './Kanban';
+	import type { kanbanEdited, kanban } from './Kanban';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 	import Select from '$lib/Generic/Select.svelte';
-	import { getContext } from 'svelte';
 
-	export let kanban: KanbanType,
+	export let kanban: kanban,
 		type: 'group' | 'home',
 		users: GroupUser[],
 		removeKanbanEntry: (id: number) => void,
@@ -55,7 +54,7 @@
 		innerWidth: number,
 		outerWidth: number,
 		// initializes the kanban to be edited when modal is opened
-		kanbanEditedValue: kanbanEdited = {
+		kanbanEdited: kanbanEdited = {
 			entry_id: kanban.id,
 			description: kanban.description,
 			title: kanban.title,
@@ -69,124 +68,112 @@
 		endDate: TimeAgo;
 
 	const updateKanbanContent = async () => {
-  const formData = new FormData();
+		const formData = new FormData();
 
-  formData.append('title', kanbanEditedValue.title);
-  formData.append('tag', kanban.lane.toString());
-  formData.append('lane', kanban.lane.toString());
-  formData.append('entry_id', kanban.id.toString());
-  formData.append('description', kanbanEditedValue.description || '');
+		formData.append('title', kanbanEdited.title);
+		formData.append('tag', kanban.lane.toString());
+		formData.append('lane', kanban.lane.toString());
+		formData.append('entry_id', kanban.id.toString());
+		formData.append('description', kanbanEdited.description || '');
 
-  if (kanbanEditedValue.assignee_id !== undefined)
-    formData.append('assignee_id', kanbanEditedValue.assignee_id?.toString() || '');
-  if (kanbanEditedValue.priority !== undefined) 
-    formData.append('priority', kanbanEditedValue.priority?.toString() || '');
+		if (kanbanEdited.assignee_id)
+			formData.append('assignee_id', kanbanEdited.assignee_id.toString());
+		if (kanbanEdited.priority) formData.append('priority', kanbanEdited.priority.toString());
 
-  if (kanbanEditedValue.work_group?.id)
-    formData.append('work_group_id', kanbanEditedValue.work_group.id.toString());
+		if (kanbanEdited.work_group?.id)
+			formData.append('work_group_id', kanbanEdited.work_group.id.toString());
 
-  if (kanbanEditedValue?.end_date) {
-    const _endDate = new Date(kanbanEditedValue.end_date);
-    const isoDate = _endDate?.toISOString();
-    const dateString = `${isoDate?.slice(
-      0,
-      10
-    )}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
-    if (_endDate) formData.append('end_date', dateString);
-  }
+		if (kanbanEdited?.end_date) {
+			const _endDate = new Date(kanbanEdited.end_date);
+			const isoDate = _endDate?.toISOString();
+			const dateString = `${isoDate?.slice(
+				0,
+				10
+			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
+			if (_endDate) formData.append('end_date', dateString);
+		}
 
-  const { res, json } = await fetchRequest(
-    'POST',
-    type === 'group'
-      ? `group/${
-          env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
-        }/kanban/entry/update`
-      : 'user/kanban/entry/update',
-    formData,
-    true,
-    false
-  );
+		const { res, json } = await fetchRequest(
+			'POST',
+			type === 'group'
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
+				: 'user/kanban/entry/update',
+			formData,
+			true,
+			false
+		);
 
-  isEditing = false;
+		// loading = false;
+		isEditing = false;
 
-  if (!res.ok) {
-    status = { message: 'Failed to update kanban task', success: false };
-    return;
-  }
+		if (!res.ok) {
+			// poppup = { message: 'Failed to create kanban task', success: false };
+			return;
+		}
 
-  kanban.title = kanbanEditedValue.title;
-  kanban.description = kanbanEditedValue.description;
-  
-  kanban.priority = kanbanEditedValue.priority;
+		kanban.title = kanbanEdited.title;
+		kanban.description = kanbanEdited.description;
+		kanban.priority = kanbanEdited.priority;
 
-  if (kanbanEditedValue.images) kanban.attachments = kanbanEditedValue.images;
-  else kanban.attachments = [];
+		if (kanbanEdited.images) kanban.attachments = kanbanEdited.images;
+		else kanban.attachments = [];
 
-  if (kanbanEditedValue.end_date !== null) kanban.end_date = kanbanEditedValue.end_date;
-  else kanban.end_date = null;
+		if (kanbanEdited.end_date !== null) kanban.end_date = kanbanEdited.end_date;
+		else kanban.end_date = null;
 
-  if (kanbanEditedValue.work_group !== null) {
-    kanban.work_group = kanbanEditedValue.work_group;
-  } else {
-    kanban.work_group = undefined;
-  }
+		if (kanbanEdited.work_group !== null) kanban.work_group = kanbanEdited.work_group;
 
-  if (kanbanEditedValue.assignee_id !== undefined) {
-    const assignee = users.find((user) => user.user.id === kanbanEditedValue.assignee_id);
-    if (assignee && kanbanEditedValue.assignee_id) {
-      kanban.assignee = {
-        id: kanbanEditedValue.assignee_id,
-        username: assignee?.user.username || '',
-        profile_image: assignee?.user.profile_image || ''
-      };
-    } else if (kanbanEditedValue.assignee_id === null) {
-      kanban.assignee = null;
-    }
-  }
+		if (kanbanEdited.end_date) {
+			const _endDate = new Date(kanbanEdited.end_date);
+			const isoDate = _endDate?.toISOString();
+			const dateString = `${isoDate?.slice(
+				0,
+				10
+			)}T${_endDate?.getHours()}:${_endDate?.getMinutes()}`;
+			if (_endDate) formData.append('end_date', dateString);
+		}
 
-  await getKanbanEntries();
-  openModal = false;
-}
+		const assignee = users.find((user) => user.user.id === kanbanEdited.assignee_id);
+		if (assignee && kanbanEdited?.assignee_id)
+			kanban.assignee = {
+				id: kanbanEdited?.assignee_id,
+				username: assignee?.user.username || '',
+				profile_image: assignee?.user.profile_image || ''
+			};
+
+		// isEditing = false;
+		await getKanbanEntries();
+	};
 
 	// Moves the kanban entry between the lanes
-const updateKanbanLane = async (lane: number) => {
-  const formData = new FormData();
-  formData.append('lane', lane.toString());
-  formData.append('entry_id', kanban.id.toString());
-  
-  if (kanban.priority !== undefined && kanban.priority !== null) {
-    formData.append('priority', kanban.priority.toString());
-  }
-  
-  const { res, json } = await fetchRequest(
-    'POST',
-    kanban.origin_type === 'group'
-      ? `group/${
-          env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
-        }/kanban/entry/update`
-      : 'user/kanban/entry/update',
-    formData,
-    true,
-    false
-  );
-  
-  if (!res.ok) {
-    status = { message: 'Failed to move task', success: false };
-    return;
-  }
+	const updateKanbanLane = async (lane: number) => {
+		const { res, json } = await fetchRequest(
+			'POST',
+			kanban.origin_type === 'group'
+				? `group/${
+						env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId
+				  }/kanban/entry/update`
+				: 'user/kanban/entry/update',
+			{
+				lane,
+				entry_id: kanban.id
+			}
+		);
+		status = statusMessageFormatter(res, json);
+		if (!res.ok) return;
 
-  kanban.lane = lane;
-  
-  await getKanbanEntries();
-}
+		kanban.lane = kanban.lane;
+	};
 
 	const changeAssignee = (e: any) => {
-		kanbanEditedValue.assignee_id = Number(e.target.value);
+		kanbanEdited.assignee_id = Number(e.target.value);
 	};
 
 	const handleChangePriority = (e: any) => {
-  kanbanEditedValue.priority = Number(e.target.value);
-}
+		kanbanEdited.priority = Number(e.target.value);
+	};
 
 	// Delete kanban removes it from the database,
 	// remove kanban removes the displaying of the kanban.
@@ -224,16 +211,12 @@ const updateKanbanLane = async (lane: number) => {
 	};
 
 	const handleChangeWorkGroup = (e: any) => {
-  const selectedId = Number(e.target.value);
-  if (selectedId) {
-    kanbanEditedValue.work_group = workGroups.find((group) => group.id === selectedId) || null;
-  } else {
-    kanbanEditedValue.work_group = null;
-  }
-}
+		kanbanEdited.work_group =
+			workGroups.find((group) => group.id === Number(e.target.value)) || null;
+	};
 
 	const cancelUpdateKanban = () => {
-		(kanbanEditedValue = {
+		(kanbanEdited = {
 			entry_id: kanban.id,
 			description: kanban.description,
 			title: kanban.title,
@@ -262,7 +245,7 @@ const updateKanbanLane = async (lane: number) => {
 	$: openModal &&
 		kanban.id !== selectedEntry &&
 		(() => {
-			kanbanEditedValue = {
+			kanbanEdited = {
 				entry_id: kanban.id,
 				description: kanban.description,
 				title: kanban.title,
@@ -394,10 +377,10 @@ const updateKanbanLane = async (lane: number) => {
 			{#if isEditing}
 				<StatusMessage bind:status disableSuccess />
 				<div class="pb-2">
-					<TextInput bind:value={kanbanEditedValue.title} required label="Title" />
+					<TextInput bind:value={kanbanEdited.title} required label="Title" />
 				</div>
 				<TextArea
-					bind:value={kanbanEditedValue.description}
+					bind:value={kanbanEdited.description}
 					label="Description"
 					rows={5}
 					Class="overflow-scroll"
@@ -412,7 +395,7 @@ const updateKanbanLane = async (lane: number) => {
 							Class="rounded border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
 							labels={workGroups.map((group) => elipsis(group.name))}
 							values={workGroups.map((group) => group.id)}
-							value={kanbanEditedValue.work_group?.id || ''}
+							value={kanbanEdited.work_group?.id || ''}
 							onInput={handleChangeWorkGroup}
 							innerLabel={$_('No workgroup assigned')}
 							innerLabelOn={true}
@@ -426,9 +409,9 @@ const updateKanbanLane = async (lane: number) => {
 					</div>
 					<input
 						type="datetime-local"
-						bind:value={kanbanEditedValue.end_date}
+						bind:value={kanbanEdited.end_date}
 						class="w-full border rounded p-1 border-gray-300 dark:border-gray-600 dark:bg-darkobject
-						   {kanbanEditedValue.end_date ? 'text-black' : 'text-gray-500'}"
+						   {kanbanEdited.end_date ? 'text-black' : 'text-gray-500'}"
 					/>
 					<!-- {/if} -->
 				</div>
@@ -504,14 +487,14 @@ const updateKanbanLane = async (lane: number) => {
 								<PriorityIcons Class="ruby" priority={kanban?.priority} />
 							{/if}
 							<p>
-								{kanbanEditedValue.priority != null
-									? priorityText[priorityText.length - kanbanEditedValue.priority]
+								{kanbanEdited.priority != null
+									? priorityText[priorityText.length - kanbanEdited.priority]
 									: $_('No priority')}
 							</p>
 						</div>
 						<!-- <p>{kanban?.assignee?.username || $_('Unassigned')}</p> -->
-						{#if kanbanEditedValue.images && kanbanEditedValue.images.length > 0}
-							{#each kanbanEditedValue.images as file}
+						{#if kanbanEdited.images && kanbanEdited.images.length > 0}
+							{#each kanbanEdited.images as file}
 								<li>
 									<img
 										src={`${env.PUBLIC_API_URL}/media/${file.file}`}

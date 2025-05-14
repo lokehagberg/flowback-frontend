@@ -15,30 +15,26 @@ const createSocket = (userId: number) => {
 
 	socket = new WebSocket(link);
 
-  socket.onopen = (event) => {
+	socket.onopen = (event) => {
 		console.log('[open] Connection established');
 	};
 
-  socket.onmessage = (event) => {
-    //If it was the same, then messages sent by oneself would return which yields duplicate messeges
-    const parsedMessage = JSON.parse(event.data)
-    const messageId = parsedMessage.user.id
-
-    if (messageId !== userId) {
-      parsedMessage.received_at = new Date().toISOString()
-      messageStore.set(parsedMessage)
-    }
-  }
-
-  socket.onclose = (event) => {
-    if (event.wasClean) {
-			console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-    } else {
-			console.warn('[close] Connection died');
-  }
+	socket.onmessage = (event) => {
+		//If it was the same, then messages sent by oneself would return which yields duplicate messeges
+		const parsedMessage = JSON.parse(event.data);
+		const messageId = parsedMessage.user.id;
+		if (messageId !== userId) messageStore.set(parsedMessage);
 	};
 
-  socket.onerror = (error) => {
+	socket.onclose = (event) => {
+		if (event.wasClean) {
+			console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+		} else {
+			console.warn('[close] Connection died');
+		}
+	};
+
+	socket.onerror = (error) => {
 		console.error(`[error] ${error}`);
 	};
 
@@ -46,29 +42,29 @@ const createSocket = (userId: number) => {
 };
 
 const sendMessage = async (
-  socket: WebSocket,
-  channel_id: number,
-  message: string,
-  topic_id: number,
-  attachments_id: number | null = null,
+	socket: WebSocket,
+	channel_id: number,
+	message: string,
+	topic_id: number,
+	attachments_id: number | null = null,
 	parent_id: number | null = null
 ) => {
 
-  if (socket.readyState <= 1 && message.length > 0) {
+	if (socket.readyState <= 1 && message.length > 0) {
 		
 		
-    const res = await socket.send(
-      JSON.stringify({
-        channel_id,
-        message,
-        // topic_id,
-        // attachments_id,
-        // parent_id,
+		const res = await socket.send(
+			JSON.stringify({
+				channel_id,
+				message,
+				// topic_id,
+				// attachments_id,
+				// parent_id,
 				method: 'message_create'
 			})
 		);
-    // console.log(res, "RESULTS")
-  }
+		// console.log(res, "RESULTS")
+	}
 	return true;
 };
 

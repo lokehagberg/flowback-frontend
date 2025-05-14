@@ -158,57 +158,52 @@
 
 			if (message.channel_origin_name === 'group') {
 				handleRecieveMessage(previewGroup, message);
-				previewGroup = [...previewGroup]; 
+				previewGroup = previewGroup;
 			} else if (message.channel_origin_name === 'user') {
 				handleRecieveMessage(previewDirect, message);
-				previewDirect = [...previewDirect]; 
+				previewDirect = previewDirect;
 			}
 		});
 	};
 
 	const handleRecieveMessage = (preview: PreviewMessage[], message: Message1) => {
-		const shouldNotify = message.channel_id !== selectedChatChannelId || 
-		(message.channel_origin_name === 'group' && selectedPage !== 'group') ||
-		(message.channel_origin_name === 'user' && selectedPage !== 'direct');
-	
-	if (message.channel_id !== selectedChatChannelId) {
-		let notifiedChannel = preview.find((info) => {
-			return info.channel_id === message.channel_id;
-		});
-
-		// If no channel has started yet, start it. New chats will work like this
-		if (!notifiedChannel) {
-			preview.push({
-				created_at: message.created_at.toString(),
-				id: message.id,
-				message: message.message,
-				notified: shouldNotify,
-				profile_image: message.user.profile_image,
-				timestamp: new Date().toString(),
-				user: message.user,
-				user_id: message.user.id,
-				channel_id: message.channel_id
+		if (message.channel_id !== selectedChat) {
+			let notifiedChannel = preview.find((info) => {
+				return info.channel_id === message.channel_id;
 			});
-		} else {
-			notifiedChannel.notified = shouldNotify;
-			notifiedChannel.message = message.message;
-			notifiedChannel.created_at = message.created_at.toString();
-			notifiedChannel.updated_at = new Date().toString();
+
+			// If no channel has started yet, start it. New chats will work like this
+			if (!notifiedChannel) {
+				preview.push({
+					created_at: message.created_at.toString(),
+					id: message.id,
+					message: message.message,
+					notified: true,
+					profile_image: message.user.profile_image,
+					timestamp: new Date().toString(),
+					user: message.user,
+					user_id: message.user.id,
+					channel_id: message.channel_id
+				});
+				preview = preview;
+			} else {
+				notifiedChannel.notified = true;
+				notifiedChannel.message = message.message;
+				preview = preview;
+			}
+		} else if (message.channel_id === selectedChat) {
+			//@ts-ignore
+			messages.push({
+				message: message.message,
+				user: {
+					id: message.id,
+					username: message.user.username,
+					profile_image: message.user.profile_image
+				}
+			});
+			messages = messages;
 		}
-	} else if (message.channel_id === selectedChatChannelId) {
-		//@ts-ignore
-		messages.push({
-			message: message.message,
-			user: {
-				id: message.id,
-				username: message.user.username,
-				profile_image: message.user.profile_image
-			},
-			created_at: message.created_at.toString()
-		});
-		messages = [...messages]; 
-	}
-};
+	};
 
 	const correctHeightRelativeToHeader = () => {
 		const headerHeight = document.querySelector('#header')?.clientHeight;

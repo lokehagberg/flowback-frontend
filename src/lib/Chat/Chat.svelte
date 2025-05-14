@@ -60,27 +60,11 @@
 		// selectedChat = null;
 		// selectedPage === 'direct';
 	}
-
-	$: {
-  notifiedDirect = previewDirect
-    .filter((msg): boolean => {
-      return Boolean(msg.notified && (!selectedChat || msg.channel_id !== selectedChat || selectedPage !== 'direct'));
-    })
-    .map(msg => msg.channel_id)
-    .filter((id): id is number => id !== undefined);
-  
-  notifiedGroup = previewGroup
-    .filter((msg): boolean => {
-      return Boolean(msg.notified && (!selectedChat || msg.channel_id !== selectedChat || selectedPage !== 'group'));
-    })
-    .map(msg => msg.channel_id)
-    .filter((id): id is number => id !== undefined);
-}
 </script>
 
 <svelte:head>
 	<title>
-		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''} Chat`}
+		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
 	</title>
 </svelte:head>
 
@@ -154,13 +138,13 @@
 		chatOpen = !chatOpen;
 		isChatOpen.set(chatOpen);
 	}}
-	class="small-notification small-notification-group transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
-	class:has-direct-notification={notifiedDirect.length > 0}
-	class:has-group-notification={notifiedGroup.length > 0}
+	class:small-notification={true}
+	class:small-notification-group={true}
+	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	{#key darkMode}
 		<img
-			src={ChatIcon || "/placeholder.svg"}
+			src={ChatIcon}
 			class="text-white"
 			style="filter: {getIconFilter(true, 'white')}"
 			alt={chatOpen ? 'close chat' : 'open chat'}
@@ -170,33 +154,23 @@
 
 <style>
 	.small-notification:before {
-  position: absolute;
-  content: '';
-  top: 0;
-  right: 0;
-  background-color: rgb(167, 139, 250);
-  border-radius: 100%;
-  padding: 6px;
-  z-index: 10;
-  display: none;
-}
+		position: absolute;
+		content: '';
+		top: 0;
+		right: 0;
+		background-color: rgb(167, 139, 250);
+		border-radius: 100%;
+		padding: 10px;
+		z-index: 10;
+	}
 
-.small-notification.has-direct-notification:before {
-  display: block;
-}
-
-.small-notification-group:after {
-  position: absolute;
-  content: '';
-  top: 10px;
-  right: 0;
-  background-color: rgb(147, 197, 235);
-  border-radius: 100%;
-  padding: 6px;
-  display: none;
-}
-
-.small-notification-group.has-group-notification:after {
-  display: block;
-}
+	.small-notification-group:after {
+		position: absolute;
+		content: '';
+		top: 10px;
+		right: 0;
+		background-color: rgb(147, 197, 235);
+		border-radius: 100%;
+		padding: 10px;
+	}
 </style>

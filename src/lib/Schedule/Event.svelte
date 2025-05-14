@@ -166,14 +166,12 @@
             selectedMembers = [];
             selectedReminders = [];
         } else if (showEditScheduleEvent || showEvent) {
-			console.log(selectedEvent)
             selectedFrequency = selectedEvent.repeat_frequency && frequencyOptions.some(opt => opt.id === selectedEvent.repeat_frequency)
                 ? selectedEvent.repeat_frequency
                 : 1;
             selectedMembers = selectedEvent.assignees?.map((member: any) => {
 				return member.id
 			}) || [];
-			console.log(selectedMembers)
             selectedReminders = selectedEvent.reminders || [];
         }
     }

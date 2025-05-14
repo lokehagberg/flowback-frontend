@@ -30,7 +30,7 @@
 	const currentDate = new Date();
 
 	const getDate = (year: number, month: number, x: number, y: number) => {
-		return new Date(year, month, getDay(x, y));
+		return new Date(year, month, getDay(x, y) - 1);
 	};
 
 	const firstDayInMonthWeekday = () => {
@@ -38,7 +38,7 @@
 	};
 
 	const getDay = (x: number, y: number) => {
-		return -firstDayInMonthWeekday() + x + 7 * (y - 1);
+		return firstDayInMonthWeekday() + x + 7 * (y - 2);
 	};
 
 	const isToday = () => {
@@ -56,7 +56,8 @@
 				startDate.setHours(0);
 				startDate.setMinutes(0);
 				startDate.setSeconds(0);
-
+				if (startDate <= date && new Date(event.end_date) >= date)
+					console.log(event, date, new Date().getTimezoneOffset());
 				return startDate <= date && new Date(event.end_date) >= date;
 			})
 			.sort((a, b) => {
@@ -77,7 +78,8 @@
 <!-- The line for poll creation -->
 <button
 	on:dblclick={() => {
-		const clickedDate = new Date(year, month, getDay(x + 1, y));
+		console.log("x, y", x, y)
+		const clickedDate = new Date(year, month, getDay(x, y));
 		clickedDate.setHours(0, 0, 0, 0); // Set to midnight for consistency
 		const dateStr = formatDateForLocalInput(clickedDate);
 		selectedEvent = {

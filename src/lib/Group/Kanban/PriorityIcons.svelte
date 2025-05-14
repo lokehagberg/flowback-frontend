@@ -5,12 +5,12 @@
 	import Fa from 'svelte-fa';
 
 	export let priority: number = 3,
-	priorityText = [
-		'Very low priority',
-		'Low priority',
-		'Medium priority',
-		'High priority',
-		'Very high priority',
+		priorityText = [
+			'Very low priority',
+			'Low priority',
+			'Medium priority',
+			'High priority',
+			'Very high priority'
 		],
 		Class = '';
 </script>
@@ -36,7 +36,7 @@
 </div>
 
 <style>
-	.ruby{
-		display:ruby
+	.ruby {
+		display: ruby;
 	}
 </style>

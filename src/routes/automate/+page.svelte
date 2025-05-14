@@ -23,8 +23,6 @@
 		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
 		poppup: poppup;
 
-	const AUTO_VOTE_STORAGE_KEY = 'flowback_autovote_setting';
-
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?limit=1000&joined=true`);
 
@@ -85,73 +83,23 @@
 		const results = await Promise.all(promises);
 
 		poppup = { message: 'Removed delegations', success: true };
-		
-		saveAutoVoteSetting(false);
 	};
 
 	const getDelegatePools = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
 
-		const savedSetting = loadAutoVoteSetting();
-		if (savedSetting !== null) {
-			autovote = savedSetting;
-		} else {
-			autovote = res.ok && json.results.length > 0;
-			// Save the initial state
-			saveAutoVoteSetting(autovote);
-		}
-	};
-	
-	const saveAutoVoteSetting = (value: boolean) => {
-		try {
-			localStorage.setItem(AUTO_VOTE_STORAGE_KEY, value.toString());
-			console.log(`Auto-vote setting saved: ${value}`);
-		} catch (error) {
-			console.error('Failed to save auto-vote setting:', error);
-		}
-	};
-	
-	const loadAutoVoteSetting = (): boolean | null => {
-		try {
-			const savedValue = localStorage.getItem(AUTO_VOTE_STORAGE_KEY);
-			if (savedValue === null) return null;
-			return savedValue === 'true';
-		} catch (error) {
-			console.error('Failed to load auto-vote setting:', error);
-			return null;
-		}
-	};
-	
-	const handleAutoVoteToggle = (checked: boolean) => {
-		autovote = checked;
-		saveAutoVoteSetting(checked);
-		
-		selectedPage = checked ? 'delegate' : 'none';
-		if (!checked) removeAllDelegations(group);
-		else {
-			selectedPage = 'delegate';
-		}
+		autovote = res.ok && json.results.length > 0;
 	};
 
 	onMount(async () => {
 		await getGroups();
 		await getUserInfo();
-		
-		const savedSetting = loadAutoVoteSetting();
-		if (savedSetting !== null) {
-			autovote = savedSetting;
-			if (autovote) {
-				selectedPage = 'delegate';
-			}
-		}
 	});
 
 	$: if (group) {
 		getUserInfo();
 		getDelegatePools();
-		if (selectedPage === 'none') {
-			selectedPage = 'delegate';
-		}
+		selectedPage = 'delegate';
 	}
 </script>
 
@@ -191,7 +139,10 @@
 					<div class="flex flex-col gap-2">
 						<div class="flex flex-row gap-4 items-center">
 							<Toggle
-								onInput={handleAutoVoteToggle}
+								onInput={(checked) => {
+									selectedPage = checked ? 'delegate' : 'none';
+									if (!checked) removeAllDelegations(group);
+								}}
 								checked={autovote}
 							/>
 							{$_('Auto-vote')}

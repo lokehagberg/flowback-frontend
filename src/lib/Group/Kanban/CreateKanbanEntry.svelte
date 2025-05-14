@@ -14,8 +14,6 @@
 	import type { kanban } from './Kanban';
 	import Select from '$lib/Generic/Select.svelte';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
-	import { locale } from 'svelte-i18n';
 
 	export let type: 'home' | 'group',
 		open: boolean = false,
@@ -40,9 +38,9 @@
 		priority: undefined | number = 3,
 		end_date: null | string = new Date().toISOString().slice(0, 16),
 		loading = false,
-		_poppup: poppup,
+		poppup: poppup,
 		images: File[],
-		workGroup: number | undefined;
+		workGroup: number;
 
 	const createKanbanEntry = async () => {
 		loading = true;
@@ -64,17 +62,16 @@
 		formData.append('lane', lane.toString());
 
 		if (assignee) formData.append('assignee_id', assignee.toString());
-		if (priority !== undefined) formData.append('priority', priority.toString());
+		if (priority) formData.append('priority', priority.toString());
 		if (workGroup) formData.append('work_group_id', workGroup.toString());
 
-		description = description.trim() === '' ? get(_)('No description provided') : description;
+		description = description.trim() === '' ? $_('No description provided') : description;
 		formData.append('description', description);
-		
-		if (images && images.length > 0) {
+		// if (description !== '') formData.append('description', description);
+		if (images)
 			images.forEach((image) => {
 				formData.append('attachments', image);
 			});
-		}
 
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -87,11 +84,17 @@
 		loading = false;
 
 		if (!res.ok) {
-			_poppup = { message: 'Failed to create kanban task', success: false };
+			poppup = { message: 'Failed to create kanban task', success: false };
 			return;
 		}
 
-		_poppup = { message: 'Successfully created kanban task', success: true };
+		console.log(
+			Number(localStorage.getItem('userId')),
+			localStorage.getItem('pfp-link') || '',
+			localStorage.getItem('userName') || ''
+		);
+
+		poppup = { message: 'Successfully created kanban task', success: true };
 
 		const userAssigned = users.find((user) => assignee === user.user.id);
 		const _assignee = assignee
@@ -102,7 +105,7 @@
 			  }
 			: null;
 
-		const newEntry: kanban = {
+		kanbanEntries.push({
 			assignee: _assignee,
 			group: { id: 0, image: '', name: '' },
 			description,
@@ -114,30 +117,26 @@
 				profile_image: localStorage.getItem('pfp-link') || '',
 				username: localStorage.getItem('userName') || ''
 			},
-			origin_id: type === 'group' ? Number(groupId) : 1,
-			origin_type: type === 'group' ? 'group' : 'user' as 'group' | 'user',
+			origin_id: 1,
+			origin_type: type === 'group' ? 'group' : 'user',
 			group_name: '',
 			priority,
 			end_date: end_date?.toString() || null,
-			work_group: workGroup ? {
-			  id: workGroup,
-			  name: workGroups.find((group) => group.id === workGroup)?.name || ''
-			} : undefined,
+			//@ts-ignore
+			work_group: {
+				id: workGroup,
+				name: workGroups.find((group) => group.id === workGroup)?.name
+			},
 			attachments: []
-		  };
+		});
 
-		kanbanEntries = [...kanbanEntries, newEntry];
-		
+		kanbanEntries = kanbanEntries;
 		open = false;
 
-		// Reset form fields
 		description = '';
 		title = '';
 		priority = 3;
 		end_date = null;
-		assignee = null;
-		workGroup = undefined;
-		images = [];
 	};
 
 	const handleChangeAssignee = (e: any) => {
@@ -173,7 +172,7 @@
 				{#if type === 'group' && workGroups?.length > 0}
 					<div class="text-left">
 						<label class="block text-md" for="work-group">
-							{get(_)('Work Group')}
+							{$_('Work Group')}
 						</label>
 						<Select
 							Class="w-full"
@@ -183,14 +182,14 @@
 							bind:value={workGroup}
 							defaultValue=""
 							onInput={handleChangeWorkGroup}
-							innerLabel={get(_)('No workgroup assigned')}
+							innerLabel={$_('No workgroup assigned')}
 							innerLabelOn={true}
 						/>
 					</div>
 				{/if}
 				<div class="text-left">
 					<label class="block text-md pt-2" for="end_date">
-						{get(_)('End date')}
+						{$_('End date')}
 					</label>
 					<input
 						bind:value={end_date}
@@ -202,12 +201,12 @@
 				</div>
 				<div class="text-left">
 					<label for="handleChangePriority" class="block text-md pt-2">
-						{get(_)('Priority')}
+						{$_('Priority')}
 					</label>
 					<Select
 						Class="w-full"
 						classInner="rounded p-1 border border-gray-300 dark:border-gray-600 dark:bg-darkobject"
-						labels={priorities.map((i) => get(_)(priorityText[priorityText.length - i]))}
+						labels={priorities.map((i) => $_(priorityText[priorityText.length - i]))}
 						values={priorities}
 						bind:value={priority}
 						onInput={handleChangePriority}
@@ -218,7 +217,7 @@
 					{#if type === 'group'}
 						<div class="text-left">
 							<label class="block text-md" for="handle-change-assignee">
-								{get(_)('Assignee')}
+								{$_('Assignee')}
 							</label>
 							<Select
 								Class="w-full"
@@ -228,14 +227,14 @@
 								bind:value={assignee}
 								defaultValue=""
 								onInput={handleChangeAssignee}
-								innerLabel={get(_)('No assignee')}
+								innerLabel={$_('No assignee')}
 								innerLabelOn={true}
 							/>
 						</div>
 					{/if}
 					<div class="text-left">
 						<span class="block text-md">
-							{get(_)('Attachments')}
+							{$_('Attachments')}
 						</span>
 						<FileUploads bind:files={images} />
 					</div>
@@ -245,9 +244,9 @@
 	</div>
 
 	<div slot="footer" class="flex justify-between gap-4 mx-6 mb-2">
-		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{get(_)('Confirm')}</Button>
+		<Button Class="w-full py-1" buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
 		<Button Class="w-full py-1" buttonStyle="warning-light" onClick={() => (open = false)}
-			>{get(_)('kanbanEntry.Cancel', { default: 'Cancel' })}</Button
+			>{$_('kanbanEntry.Cancel', { default: 'Cancel' })}</Button
 		>
 	</div>
 </Modal>

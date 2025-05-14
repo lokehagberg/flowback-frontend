@@ -1,3 +1,4 @@
+<!-- The new Proposal file, <Proposal/> is depricated. TODO: Remove Proposal, renmae ProposalNew to Proposal -->
 <script lang="ts">
 	import type { Comment, Phase, proposal } from './interface';
 	import { _ } from 'svelte-i18n';
@@ -6,15 +7,13 @@
 	import {
 		faChevronRight,
 		faSquareCheck,
-		faMagnifyingGlassChart,
+		faMagnifyingGlassChart
 	} from '@fortawesome/free-solid-svg-icons';
 	import { faSquare } from '@fortawesome/free-regular-svg-icons';
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
-	import { commentsStore } from '$lib/Comments/commentStore';
-	import { getContext } from 'svelte';
 
 	export let proposal: proposal,
 		Class = '',
@@ -32,35 +31,17 @@
 
 	export const id: number = 0;
 
-	let commentCount = 0;
-	let localComments: Comment[] = [];
-
-	const getProposalHashtag = (title: string) => {
-		return `#${title.replaceAll(' ', '-')}`;
-	};
-
-	const countCommentsForProposal = (comments: Comment[], proposalTitle: string) => {
-		if (!comments || !proposalTitle) return 0;
-		
-		const hashtag = getProposalHashtag(proposalTitle);
-		return comments.filter(comment => 
-			comment.message && comment.message.includes(hashtag)
-		).length;
-	};
-
 	const filterComments = () => {
-		localComments = [...allComments];
-		
 		if (commentFilterProposalId === proposal.id) {
-			comments = [...allComments];
+			comments = allComments;
 			commentFilterProposalId = null;
 		} else {
-			const hashtag = getProposalHashtag(proposal.title);
-			const filteredComments = allComments.filter(
-				comment => comment.message && comment.message.includes(hashtag)
+			comments = allComments;
+			comments = comments.filter(
+				//@ts-ignore
+				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
 			);
-			
-			comments = [...filteredComments];
+
 			commentFilterProposalId = proposal.id;
 		}
 	};
@@ -73,38 +54,14 @@
 		predictionCount = json.results.length;
 	};
 
-	const updateCommentCount = () => {
-		commentCount = countCommentsForProposal(allComments, proposal.title);
-	};
-
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
-		
-		localComments = [...comments];
-		allComments = [...comments];
-		
-		updateCommentCount();
-		
-		const unsubscribe = commentsStore.subscribe(storeComments => {
-			if (storeComments && storeComments.length > 0) {
-				allComments = [...storeComments];
-				updateCommentCount();
-			}
-		});
-		
-		return () => {
-			unsubscribe();
-		};
+		allComments = comments;
 	});
 
-	$: if (comments) {
-		allComments = [...comments];
-		updateCommentCount();
-	}
-
-	$: if (allComments) {
-		updateCommentCount();
+	$: if(comments) {
+		allComments = comments;
 	}
 </script>
 
@@ -114,9 +71,6 @@
 	class:!bg-blue-100={selectedProposal === proposal}
 	class:border-l-2={selectedProposal === proposal}
 	class:border-primary={selectedProposal === proposal}
-	on:click={() => {
-		selectedProposal = proposal;
-	}}
 >
 	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
@@ -125,8 +79,7 @@
 			)}
 			{#if proposalInList !== -1}
 				<button
-					on:click={(e) => {
-						e.stopPropagation();
+					on:click={() => {
 						proposalsToPredictionMarket.splice(proposalInList, 1);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
@@ -135,8 +88,7 @@
 				</button>
 			{:else}
 				<button
-					on:click={(e) => {
-						e.stopPropagation();
+					on:click={() => {
 						proposalsToPredictionMarket.push(proposal);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
 					}}
@@ -164,14 +116,7 @@
 
 	<div class="flex justify-between w-full items-center">
 		<div class="flex justify-between gap-10">
-			<button 
-				class="flex items-center" 
-				on:click={(e) => {
-					e.stopPropagation();
-					filterComments();
-				}}
-				title={$_('View comments on this proposal')}
-			>
+			<button class="flex" on:click={filterComments}>
 				<img
 					src={commentSymbol}
 					alt="Comment"
@@ -179,25 +124,29 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				<span class="comment-count">{commentCount}</span>
+				{allComments.filter((comment) => comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())).length}
 			</button>
 
 			{#if phase !== 'proposal'}
 				<button
 					class="flex items-center"
-					on:click={(e) => {
-						e.stopPropagation();
+					on:click={() => {
+						console.log(proposal, "PROPOSAL1");
+						
 						selectedProposal = proposal;
 					}}
-					title={$_('View predictions for this proposal')}
 				>
-					<Fa icon={faMagnifyingGlassChart} class="mr-2 text-primary" />
-					<span>{predictionCount}</span>
-				</button>
+				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
+				{predictionCount}
+			</button>
 			{/if}
 		</div>
 		
 		<button
+			on:click={() => {
+				console.log(proposal, "PROPOSAL1");
+				selectedProposal = proposal;
+			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"
 		>
 			{$_('See More')}
@@ -235,9 +184,5 @@
 
 	.proposal {
 		transition: box-shadow 0.15s ease-in;
-	}
-	
-	.comment-count {
-		font-weight: 500;
 	}
 </style>

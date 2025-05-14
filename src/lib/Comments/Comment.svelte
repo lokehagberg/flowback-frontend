@@ -7,12 +7,7 @@
 		faReply,
 		faThumbsUp,
 		faThumbsDown,
-		faSpinner,
-		faFile,
-		faFilePdf,
-		faFileText,
-		faDownload,
-		faTimes
+		faSpinner
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
@@ -27,11 +22,6 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import { getContext } from 'svelte';
-	import { goto } from '$app/navigation';
-	import { getFileType } from './functions';
-	import { invalidateAll } from '$app/navigation';
-	import { get } from 'svelte/store';
 
 	export let comment: Comment,
 		comments: Comment[],
@@ -40,19 +30,19 @@
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
-		_poppup: poppup,
+		poppup: poppup,
 		isVoting = false,
 		ReportCommentModalShow = false,
 		reportTitle: string,
 		reportDescription: string,
-		images: (File | string)[] = [];
+		images: File[] = [];
 
 	let reporting = false;
 	const commentDelete = async (id: number) => {
 		let _api = `group/`;
 
-		if (api === 'poll') _api += `poll/${get(page).params.pollId}/`;
-		else if (api === 'thread') _api += `thread/${get(page).params.threadId}/`;
+		if (api === 'poll') _api += `poll/${$page.params.pollId}/`;
+		else if (api === 'thread') _api += `thread/${$page.params.threadId}/`;
 		else if (api === 'delegate-history') _api += `delegate/pool/${delegate_pool_id}/`;
 
 		_api += `comment/${id}/delete`;
@@ -60,7 +50,7 @@
 		const { res, json } = await fetchRequest('POST', _api);
 
 		if (!res.ok) {
-			_poppup = { message: 'Failed to delete comment', success: false };
+			poppup = { message: 'Failed to delete comment', success: false };
 			return;
 		}
 
@@ -73,7 +63,6 @@
 			return comment;
 		});
 		comments = comments;
-		invalidateAll()
 	};
 
 	const commentReport = async (id: number, message: string) => {
@@ -87,7 +76,7 @@
 		const { res, json } = await fetchRequest('POST', _api, data);
 
 		if (!res.ok) {
-			_poppup = { message: 'Failed to report comment', success: false };
+			poppup = { message: 'Failed to report comment', success: false };
 			return;
 		}
 
@@ -115,16 +104,16 @@
 		else if (_vote === 1) vote = { vote: true };
 
 		let _api = '';
-		if (api === 'poll') _api = `group/poll/${get(page).params.pollId}/comment/${comment.id}/vote`;
+		if (api === 'poll') _api = `group/poll/${$page.params.pollId}/comment/${comment.id}/vote`;
 		else if (api === 'thread')
-			_api = `group/thread/${get(page).params.threadId}/comment/${comment.id}/vote`;
+			_api = `group/thread/${$page.params.threadId}/comment/${comment.id}/vote`;
 		else if (api === 'delegate-history')
 			_api = `group/delegate/pool/${delegate_pool_id}/comment/${comment.id}/vote`;
 
 		const { res, json } = await fetchRequest('POST', _api, vote);
 
 		if (!res.ok) {
-			_poppup = { message: 'Comment vote failed', success: false };
+			poppup = { message: 'Comment vote failed', success: false };
 			return;
 		}
 
@@ -148,46 +137,10 @@
 		isVoting = false;
 	};
 
-	// Get file icon based on file type
-	const getFileIcon = (filePath: string) => {
-		const fileType = getFileType(filePath);
-		if (fileType === 'pdf') return faFilePdf;
-		if (fileType === 'txt') return faFileText;
-		return faFile;
-	};
-
-	// Get file URL for display or download
-	const getFileUrl = (filePath: string) => {
-		if (filePath.substring(0, 4) === 'blob') {
-			return filePath;
-		} else {
-			return `${env.PUBLIC_API_URL || ""}/media/${filePath}`;
-		}
-	};
-
-	// Get file name from path
-	const getFileName = (filePath: string) => {
-		const parts = filePath.split('/');
-		return parts[parts.length - 1];
-	};
-
-	// Check if file is of a specific type
-	const isFileType = (filePath: string, extensions: string[]): boolean => {
-		if (typeof filePath !== 'string') return false;
-		const ext = filePath.split('.').pop()?.toLowerCase() || '';
-		return extensions.includes(ext);
-	};
-
-	let existingAttachments = [];
-
 	onMount(() => {
 		if (comment.user_vote === null || comment.user_vote === undefined) userUpVote = 0;
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
-  
-		if (comment.attachments && comment.attachments.length > 0) {
-			existingAttachments = [...comment.attachments];
-		}
 	});
 
 	$: if (images) {
@@ -245,47 +198,33 @@
 			{comment.edited && comment.active ? $_('(edited)') : ''}
 		</div>
 		{#if comment.attachments?.length > 0}
-			<div class="pl-14 mt-1 mb-3 flex flex-wrap gap-2">
+			<div class="pl-14 mt-1 mb-3">
 				{#each comment.attachments as attachment}
-					{#if typeof attachment.file === 'string'}
-						{#if isFileType(attachment.file, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])}
-							<a
-								href={getFileUrl(attachment.file)}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-primary dark:text-secondary hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-								download={getFileName(attachment.file)}
-							>
-								<Fa icon={getFileIcon(attachment.file)} />
-								<span class="truncate max-w-[150px]">{getFileName(attachment.file)}</span>
-								<Fa icon={faDownload} class="text-xs" />
-							</a>
-						{:else}
-							<div class="relative group">
-								<img
-									src={getFileUrl(attachment.file) || "/placeholder.svg"}
-									alt="Attachment to the comment"
-									class="max-w-[200px] max-h-[200px] rounded-md object-cover"
-								/>
-								<a 
-									href={getFileUrl(attachment.file)} 
-									target="_blank" 
-									rel="noopener noreferrer"
-									class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-md"
-									download={getFileName(attachment.file)}
-								>
-									<Fa icon={faDownload} class="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-								</a>
-							</div>
-						{/if}
-					{:else if attachment.file instanceof File}
-						<div class="relative group">
-							<img
-								src={URL.createObjectURL(attachment.file) || "/placeholder.svg"}
-								alt="Attachment to the comment"
-								class="max-w-[200px] max-h-[200px] rounded-md object-cover"
-							/>
-						</div>
+					<!-- {@debug attachment} -->
+					{#if typeof attachment.file === 'string' && (attachment.file
+							.slice(-3)
+							.toLowerCase() === 'pdf' || attachment.file.slice(-3).toLowerCase() === 'txt')}
+						<a
+							href={attachment.file.substring(0, 4) === 'blob'
+								? attachment.file
+								: `${env.PUBLIC_API_URL}/media/${attachment.file}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-primary dark:text-secondary hover:underline"
+						>
+							{$_('View File')}
+						</a>
+					{:else}
+						<img
+							src={(() => {
+								if (typeof attachment.file === 'string')
+									return attachment.file.substring(0, 4) === 'blob'
+										? attachment.file
+										: `${env.PUBLIC_API_URL}/media/${attachment.file}`;
+								else return URL.createObjectURL(attachment.file);
+							})()}
+							alt="Attachment to the comment"
+						/>
 					{/if}
 				{/each}
 			</div>
@@ -299,13 +238,6 @@
 						class:text-primary={comment.user_vote === true}
 						class="flex items-center gap-1 cursor-pointer transition-colors"
 						on:click={() => commentVote(1)}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								commentVote(1);
-							}
-						}}
-						aria-label={$_('Upvote')}
 					>
 						<Fa icon={faThumbsUp} />
 					</button>
@@ -314,13 +246,6 @@
 						class:text-primary={comment.user_vote === false}
 						class="flex items-center gap-1 cursor-pointer transition-colors"
 						on:click={() => commentVote(-1)}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								commentVote(-1);
-							}
-						}}
-						aria-label={$_('Downvote')}
 					>
 						<Fa class="pl-0.5" icon={faThumbsDown} />
 					</button>
@@ -330,12 +255,6 @@
 				<button
 					class="flex items-center gap-1 hover:text-gray-900 text-gray-600 dark:text-darkmodeText dark:hover:text-gray-400 cursor-pointer transition-colors hover:underline"
 					on:click={() => (comment.being_replied = true)}
-					on:keydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							e.preventDefault();
-							comment.being_replied = true;
-						}
-					}}
 				>
 					<!-- <Fa icon={faReply} /> -->
 					{$_('Reply')}
@@ -344,12 +263,6 @@
 					<button
 						class="flex items-center gap-1 hover:text-red-900 text-gray-600 dark:text-darkmodeText dark:hover:text-red-400 cursor-pointer transition-colors hover:underline"
 						on:click={() => (ReportCommentModalShow = true)}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								ReportCommentModalShow = true;
-							}
-						}}
 					>
 						{$_('Report')}
 					</button>
@@ -359,12 +272,6 @@
 					<button
 						class="hover:text-gray-900 text-gray-600 dark:text-darkmodeText hover:dark:text-gray-400 cursor-pointer transition-colors hover:underline"
 						on:click={() => commentDelete(comment.id)}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								commentDelete(comment.id);
-							}
-						}}
 					>
 						{$_('Delete')}
 					</button>
@@ -373,29 +280,6 @@
 						on:click={() => {
 							comment.being_edited = true;
 							comment.being_edited_message = comment.message || '';
-							images = comment.attachments.map(attachment => {
-								if (typeof attachment.file === 'string') {
-									return attachment.file;
-								} else if (attachment.file instanceof File) {
-									return attachment.file;
-								}
-								return ''; 
-							});
-						}}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								comment.being_edited = true;
-								comment.being_edited_message = comment.message || '';
-								images = comment.attachments.map(attachment => {
-									if (typeof attachment.file === 'string') {
-										return attachment.file;
-									} else if (attachment.file instanceof File) {
-										return attachment.file;
-									}
-									return ''; 
-								});
-							}
 						}}
 					>
 						{$_('Edit')}
@@ -435,4 +319,4 @@
 	/>
 {/if}
 
-<Poppup bind:poppup={_poppup} />
+<Poppup bind:poppup />

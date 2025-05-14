@@ -104,22 +104,3 @@ export async function reportComment(commentId: number, description: string) {
     return { success: false, message: 'An error occurred while reporting the comment' }
   }
 }
-
-export const getFileType = (fileName: string): 'image' | 'pdf' | 'txt' | 'other' => {
-  const ext = fileName.split('.').pop()?.toLowerCase()
-
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext || '')) {
-    return 'image'
-  } else if (ext === 'pdf') {
-    return 'pdf'
-  } else if (ext === 'txt') {
-    return 'txt'
-  } else {
-    return 'other'
-  }
-}
-
-export const getFileName = (filePath: string): string => {
-  const parts = filePath.split('/')
-  return parts[parts.length - 1]
-}

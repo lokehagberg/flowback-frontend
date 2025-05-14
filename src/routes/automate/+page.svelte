@@ -98,13 +98,16 @@
 
 	$: if (group) {
 		getUserInfo();
-		// getDelegatePools();
-		
-		const parsed = localStorage.getItem('autovote');
-		autovote = parsed == 'delegate' ? true : false;
-		
-		selectedPage = autovote ? 'delegate' : 'none';
 
+		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'FALSE') {
+			getDelegatePools();
+			selectedPage = 'delegate';
+		} else {
+			const parsed = localStorage.getItem('autovote');
+			autovote = parsed == 'delegate' ? true : false;
+			
+			selectedPage = autovote ? 'delegate' : 'none';
+		}
 	}
 </script>
 
@@ -146,7 +149,6 @@
 							<Toggle
 								onInput={(checked) => {
 									selectedPage = checked ? 'delegate' : 'none';
-									console.log("checked", selectedPage);
 									localStorage.setItem('autovote', selectedPage);
 									if (!checked) removeAllDelegations(group);
 								}}

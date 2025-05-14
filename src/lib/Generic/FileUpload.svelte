@@ -14,26 +14,15 @@
 		onCrop = () => {},
 		disableImagePreview = false,
 		disableCropping = false;
-	export let acceptTypes = ".jpg, .jpeg, .png, .pdf, .txt";
 
 	let fileinput: HTMLInputElement, currentlyCropping: boolean;
 
 	const onFileSelected = (e: any) => {
 		const files: File[] = Array.from(e.target.files);
-		if (files.length > 0) {
-			croppedImage = files[0];
-			imageString = URL.createObjectURL(croppedImage);
-			if (!disableCropping && isImageFile(croppedImage.name)) {
-				currentlyCropping = true;
-			} else {
-				onCrop();
-			}
-		}
-	};
-
-	const isImageFile = (fileName: string): boolean => {
-		const ext = fileName.split('.').pop()?.toLowerCase();
-		return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext || '');
+		croppedImage = files[0];
+		imageString = URL.createObjectURL(croppedImage);
+		if (!disableCropping) currentlyCropping = true;
+		else onCrop();
 	};
 
 	$: if (imageString !== null) {
@@ -50,7 +39,7 @@
 			id="image"
 			class={`${isProfile ? 'rounded-full' : 'cover'} avatar`}
 			alt={$_(label)}
-			src={imageString || "/placeholder.svg"}
+			src={imageString}
 		/>
 	{/if}
 
@@ -74,7 +63,7 @@
 	<input
 		style="display:none"
 		type="file"
-		accept={acceptTypes}
+		accept=".jpg, .jpeg, .png, .pdf, .txt"
 		on:change={(e) => onFileSelected(e)}
 		bind:this={fileinput}
 	/>

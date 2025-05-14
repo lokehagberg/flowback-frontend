@@ -19,7 +19,7 @@
 		Class = '',
 		_comments: CommentType[] = [];
 	let interval: any;
-	let poppupData: poppup,
+	let poppup: poppup,
 		offset = 0,
 		showReadMore = true,
 		sortBy: null | string = null,
@@ -32,7 +32,6 @@
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
 		
-		// Update the comment store with all comments
 		commentsStore.set(_comments);
 	};
 
@@ -106,4 +105,4 @@
 	{/if}
 </div>
 
-<Poppup bind:poppup={poppupData} />
+<Poppup bind:poppup />

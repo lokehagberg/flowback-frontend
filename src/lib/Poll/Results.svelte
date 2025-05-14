@@ -6,20 +6,17 @@
 	import Statistics from './Statistics.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
-	import { faStar, faUserCheck } from '@fortawesome/free-solid-svg-icons';
+	import { faStar } from '@fortawesome/free-solid-svg-icons';
 	import NewDescription from './NewDescription.svelte';
-	import type { poll as pollTypeInterface } from './interface';
-	import type { DelegateRelation, DelegateVote, DelegationTag } from '../Group/Delegation/interfaces';
+	import type { poll } from './interface';
 
 	let votes: number[] = [],
-		labels: string[] = [],
-		delegateVotes: DelegateVote[] = [],
-		userDelegations: DelegateRelation[] = [];
+		labels: string[] = [];
 
 	//4 for score voting, 3 for date
 	export let pollType = 1,
 		proposals: any[] = [],
-		poll: pollTypeInterface;
+		poll: poll;
 
 	const getProposals = async () => {
 		const { json } = await fetchRequest(
@@ -64,43 +61,8 @@
 		};
 	};
 
-	const getUserDelegations = async () => {
-		if (!poll?.group_id) return;
-		
-		const { res, json } = await fetchRequest('GET', `group/${poll.group_id}/delegate/relation`);
-		if (!res.ok) return;
-		
-		userDelegations = json.results;
-		
-		if (poll.tag_id) {
-			const delegationForTag = userDelegations.find((relation: DelegateRelation) => 
-				relation.tags.some((tag: DelegationTag) => tag.id === poll.tag_id)
-			);
-			
-			if (delegationForTag && delegationForTag.delegates.length) {
-				// Get delegate votes
-				await getDelegateVotes(delegationForTag.delegates.map((d) => d.id));
-			}
-		}
-	};
-
-	const getDelegateVotes = async (delegateIds: number[]) => {
-		if (!delegateIds.length) return;
-		
-		const delegateIdsParam = delegateIds.join(',');
-		const { res, json } = await fetchRequest(
-			'GET', 
-			`group/poll/${$page.params.pollId}/votes?delegate_ids=${delegateIdsParam}`
-		);
-		
-		if (!res.ok) return;
-		
-		delegateVotes = json.results;
-	};
-
 	onMount(() => {
 		getProposals();
-		getUserDelegations();
 	});
 </script>
 
@@ -119,26 +81,6 @@
 			{#if proposals[0]?.score > 0}
 				<Statistics bind:votes bind:labels />
 			{/if}
-			
-			{#if delegateVotes.length > 0}
-				<div class="mt-4 mb-2 p-3 bg-blue-50 dark:bg-blue-900 rounded-md border border-blue-200 dark:border-blue-700">
-					<div class="flex items-center gap-2 mb-2">
-						<Fa icon={faUserCheck} class="text-blue-500 dark:text-blue-300" />
-						<span class="font-medium">{$_('Your delegate votes')}</span>
-					</div>
-					{#each delegateVotes as vote}
-						<div class="ml-6 mb-1 text-sm">
-							<span class="font-medium">{vote.delegate_username || $_('Delegate')}:</span> 
-							{#if vote.proposal_id}
-								{$_('Voted for')} <span class="font-semibold">{vote.proposal_title || proposals.find(p => p.id === vote.proposal_id)?.title || vote.proposal_id}</span>
-							{:else}
-								{$_('Did not vote')}
-							{/if}
-						</div>
-					{/each}
-				</div>
-			{/if}
-			
 			{#each proposals as proposal, i}
 				<div class="border-gray-300 border-b-2 mt-3 pb-1">
 					<span

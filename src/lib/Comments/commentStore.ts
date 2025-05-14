@@ -16,19 +16,8 @@ function createCommentStore() {
         return comments
       }),
     remove: (id: number) => update((comments) => comments.filter((c) => c.id !== id)),
-    edit: (id: number, message: string, attachments?: Array<{ file: string | File }>) => {
-      update((store) => {
-        const index = store.findIndex((comment) => comment.id === id)
-        if (index !== -1) {
-          store[index].message = message
-          store[index].edited = true
-          if (attachments) {
-            store[index].attachments = attachments
-          }
-        }
-        return store
-      })
-    },
+    edit: (id: number, content: string) =>
+      update((comments) => comments.map((c) => (c.id === id ? { ...c, message: content } : c))),
     filterByProposal: (proposalTitle: string) => {
       const hashtag = `#${proposalTitle.replaceAll(" ", "-")}`
       return derived({ subscribe }, ($comments) => $comments.filter((c) => c.message && c.message.includes(hashtag)))

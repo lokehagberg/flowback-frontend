@@ -213,7 +213,6 @@
 	{#if delegates.length > 0}
 		{#each tags as tag, index}
 			<div class="section">
-			 renting
 				<button
 					type="button"
 					class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"

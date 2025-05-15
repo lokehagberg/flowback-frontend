@@ -39,7 +39,7 @@
 			comments = allComments;
 			comments = comments.filter(
 				//@ts-ignore
-				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
+				(comment) => comment.message?.toLowerCase().includes(`${proposal.title.replaceAll(' ', '-').toLowerCase()}`)
 			);
 
 			commentFilterProposalId = proposal.id;
@@ -57,11 +57,10 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
-		allComments = comments;
 	});
 
-	$: if(comments) {
-		allComments = comments;
+	$: if (allComments) {
+		comments = allComments
 	}
 </script>
 

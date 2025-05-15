@@ -27,7 +27,7 @@
 	const getDelegateHistory = async () => {
 		loading = true;
 		console.log('history', history, delegatePool);
-		const { json, res } = await fetchRequest('GET', `group/poll/pool/${history}/votes`);
+		const { json, res } = await fetchRequest('GET', `group/poll/pool/votes?group_id=${history}`);
 		loading = false;
 		if (res.ok) {
 			votingHistory = json.results;

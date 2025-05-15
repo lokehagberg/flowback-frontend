@@ -23,7 +23,7 @@
 		selectedProposal: proposal | null = null,
 		proposalsToPredictionMarket: proposal[] = [],
 		phase: Phase,
-		comments: Comment[] = [],
+		filteredComments: Comment[] = [],
 		allComments: Comment[] = [],
 		predictionCount = 0,
 		commentFilterProposalId: number | null = null,
@@ -33,15 +33,14 @@
 
 	const filterComments = () => {
 		if (commentFilterProposalId === proposal.id) {
-			comments = allComments;
+			filteredComments = allComments;
 			commentFilterProposalId = null;
 		} else {
-			comments = allComments;
-			comments = comments.filter(
+			filteredComments = allComments;
+			filteredComments = filteredComments.filter(
 				//@ts-ignore
 				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
 			);
-
 			commentFilterProposalId = proposal.id;
 		}
 	};
@@ -57,11 +56,11 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
-		allComments = comments;
+		allComments = filteredComments;
 	});
 
-	$: if(comments) {
-		allComments = comments;
+	$: if (filteredComments) {
+	
 	}
 </script>
 
@@ -124,27 +123,29 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{allComments.filter((comment) => comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())).length}
+				{allComments.filter((comment) =>
+					comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())
+				).length}
 			</button>
 
 			{#if phase !== 'proposal'}
 				<button
 					class="flex items-center"
 					on:click={() => {
-						console.log(proposal, "PROPOSAL1");
-						
+						console.log(proposal, 'PROPOSAL1');
+
 						selectedProposal = proposal;
 					}}
 				>
-				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
-				{predictionCount}
-			</button>
+					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
+					{predictionCount}
+				</button>
 			{/if}
 		</div>
-		
+
 		<button
 			on:click={() => {
-				console.log(proposal, "PROPOSAL1");
+				console.log(proposal, 'PROPOSAL1');
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"

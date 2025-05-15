@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
-import Layout from '$lib/Generic/Layout.svelte';
+	import Layout from '$lib/Generic/Layout.svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 </script>
 

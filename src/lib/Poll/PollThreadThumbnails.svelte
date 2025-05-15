@@ -17,6 +17,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Pagination from '$lib/Generic/Pagination.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import WorkGroup from '$lib/Group/WorkingGroups/WorkGroup.svelte';
 
 	// Props
 	export let Class = '';
@@ -46,7 +47,7 @@
 		public: false,
 		order_by: 'start_date_desc',
 		tag: null,
-		workgroup: null,
+		workgroup: '0',
 	};
 
 	let showThreads = true;
@@ -69,6 +70,8 @@
 		}
 	}
 
+	$: {console.log("filter workergroup", filter.workgroup)}
+
 	async function fetchPolls() {
 		try {
 			loading = true;
@@ -89,6 +92,7 @@
 			};
 
 			const response = await PollsApi.getPosts(infoToGet, params, delegate.pool_id);
+			console.log("response.results", response.results)
 			posts = response.results;
 			next = response.next ?? '';
 			prev = response.previous ?? '';
@@ -121,6 +125,8 @@
 					? await ThreadsApi.getHomeThreads(filter.order_by)
 					: await ThreadsApi.getGroupThreads($page.params.groupId, threadIds, filter.order_by);
 			threads = response.results;
+
+			console.log("infoToGet, threadIds", infoToGet, threadIds);			
 		}
 	}
 
@@ -165,10 +171,14 @@
 			{:else if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
 				{#each posts as post}
 					{#if post.related_model === 'group_thread' && showThreads}
-						<ThreadThumbnail
-							{isAdmin}
-							thread={threads.find((thread) => thread.id === post.id) || threads[0]}
-						/>
+						{@const thread = threads.find((t) => t.id === post.id) || null}
+						
+						{#if thread && (filter?.workgroup === '0' || filter.workgroup == thread.work_group?.id)}
+							<ThreadThumbnail
+								{isAdmin}
+								{thread}
+							/>
+						{/if}
 					{:else if post.related_model === 'poll' && showPolls}
 						<PollThumbnail poll={polls.find((poll) => poll.id === post.id) || polls[0]} {isAdmin} />
 					{/if}

@@ -71,14 +71,18 @@
 			return;
 		}
 
+		// Calculate the reply_depth based on the parent comment
+		let replyDepth = 0;
+
+		const parentComment = comments.find((comment) => comment.id === parent_id);
+		replyDepth = parentComment ? parentComment.reply_depth + 1 : 0;
+
 		const newComment: Comment = {
 			id: json,
 			message,
 			attachments: files.map((file) => ({ file: URL.createObjectURL(file) })),
 			parent_id,
-			reply_depth: parent_id
-				? comments.find((comment) => comment.id === parent_id)?.reply_depth + 1 || 0
-				: 0,
+			reply_depth: replyDepth,
 			author_id: Number(window.localStorage.getItem('userId')) || 0,
 			author_name: window.localStorage.getItem('userName') || '',
 			author_profile_image: window.localStorage.getItem('pfp-link') || '',
@@ -94,31 +98,26 @@
 
 		commentsStore.add(newComment);
 
-		// Find the index where to insert the new reply
-		let insertIndex;
+		// Insert the new comment at the correct position
 		if (parent_id) {
 			// Find the last reply in the chain for this parent
 			let parentIndex = comments.findIndex((c) => c.id === parent_id);
-			let replyDepth = comments[parentIndex].reply_depth + 1;
 
 			// Find the last comment in the reply chain
-			insertIndex = parentIndex + 1;
+			let insertIndex = parentIndex + 1;
 			while (
 				insertIndex < comments.length &&
-				comments[insertIndex].reply_depth > comments[parentIndex].reply_depth
+				comments[insertIndex].reply_depth > comments[parentComment.reply_depth]
 			) {
 				insertIndex++;
 			}
 
-			newComment.reply_depth = replyDepth;
+			comments.splice(insertIndex, 0, newComment);
 		} else {
 			// If it's a top-level comment, add it to the beginning
-			insertIndex = 0;
-			newComment.reply_depth = 0;
+			comments.unshift(newComment);
 		}
 
-		// Insert the new comment at the correct position
-		comments.splice(insertIndex, 0, newComment);
 		comments = comments;
 
 		showMessage = 'Successfully posted comment';

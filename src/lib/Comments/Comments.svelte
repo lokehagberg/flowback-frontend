@@ -64,7 +64,7 @@
 
 	<div class="flex flex-col gap-1 mt-2">
 		{#each $commentsStore.filteredComments as comment}
-			<Comment   {delegate_pool_id} {comment} {api} {proposals} />
+			<Comment {delegate_pool_id} {comment} {api} {proposals} />
 		{/each}
 		{#if showReadMore}
 			<button on:click={readMore}>{$_('Read more')}</button>

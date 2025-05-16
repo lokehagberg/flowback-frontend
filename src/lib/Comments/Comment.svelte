@@ -25,12 +25,12 @@
 	import { commentsStore } from './commentStore';
 
 	export let comment: Comment,
-		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[] = [], // Give it a default empty array
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
+		comments: Comment[],
 		poppup: poppup,
 		isVoting = false,
 		ReportCommentModalShow = false,

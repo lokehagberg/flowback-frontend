@@ -102,26 +102,6 @@
 			being_edited_message: ''
 		};
 
-		// Insert the new comment at the correct position
-		if (parent_id) {
-			// Find the last reply in the chain for this parent
-			let parentIndex = comments.findIndex((c) => c.id === parent_id);
-
-			// Find the last comment in the reply chain
-			let insertIndex = parentIndex + 1;
-			while (
-				insertIndex < comments.length &&
-				comments[insertIndex].reply_depth > comments[parentComment.reply_depth]
-			) {
-				insertIndex++;
-			}
-
-			comments.splice(insertIndex, 0, newComment);
-		} else {
-			// If it's a top-level comment, add it to the beginning
-			comments.unshift(newComment);
-		}
-
 		comments = comments;
 
 		commentsStore.add(newComment);

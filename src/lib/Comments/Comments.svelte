@@ -11,7 +11,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { commentsStore } from './commentStore';
-	import type { comment } from 'postcss';
+	import type { Comment as comment} from '$lib/Poll/interface';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -27,7 +27,7 @@
 	const setUpComments = async () => {
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		
-		comments.forEach(comment => {
+		comments.forEach((comment:comment) => {
 			comment.reply_depth = getCommentDepth(comment, comments);
 		});
 
@@ -38,7 +38,7 @@
 	const readMore = async () => {
 		offset += pollCommentsLimit;
 		const { comments, next } = await getComments(getId(), api, offset, sortBy);
-		commentsStore.setAll([...commentsStore.allComments, ...comments]);
+		commentsStore.setAll([...$commentsStore.allComments, ...comments]);
 		showReadMore = next !== null;
 	};
 

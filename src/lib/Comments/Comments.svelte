@@ -17,7 +17,8 @@
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null,
 		Class = '',
-		_comments: CommentType[] = [];
+		_comments: CommentType[] = [],
+		_allComments: CommentType[] = [];
 	let interval: any;
 	let poppup: poppup,
 		offset = 0,
@@ -31,6 +32,7 @@
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
 		_comments = await commentSetup(comments);
 		showReadMore = next !== null;
+		_allComments = _comments;
 		commentsStore.set(comments);
 		// commentsStore.subscribe(commentSubscription)
 		// console.log(commentsStore, "STORE");
@@ -70,7 +72,7 @@
 		<!-- Add Comment -->
 		<CommentPost
 			bind:proposals
-			bind:comments={_comments}
+			bind:comments={_allComments}
 			parent_id={undefined}
 			{api}
 			{delegate_pool_id}

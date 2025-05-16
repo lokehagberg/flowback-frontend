@@ -20,6 +20,7 @@
 		proposalsToPredictionMarket: proposal[] = [],
 		Class = '',
 		comments: Comment[],
+		allComments: Comment[] = [],
 		poll: poll;
 
 	let voting: { score: number; proposal: number }[] = [],
@@ -222,6 +223,7 @@
 							bind:commentFilterProposalId
 							bind:selectedProposal
 							bind:comments
+							bind:allComments
 							bind:phase
 							onChange={() => {}}
 							{proposal}

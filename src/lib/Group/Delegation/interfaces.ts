@@ -23,9 +23,14 @@ export interface Delegate {
 }
 
 export interface VoteHistory {
-	poll_id: number;
-	poll_title: string;
-	vote: null;
+	poll_id: number
+  poll_title: string
+  vote: null
+  poll_description?: string
+  subject_area?: string
+  tag_name?: string
+  historical_data?: any
+  created_at?: string
 }
 
 export interface DelegatePool {

@@ -74,8 +74,11 @@
 		// Calculate the reply_depth based on the parent comment
 		let replyDepth = 0;
 
-		const parentComment = comments.find((comment) => comment.id === parent_id);
-		replyDepth = parentComment ? parentComment.reply_depth + 1 : 0;
+		const parentComment = $commentsStore.filteredComments.find(
+			(comment) => comment.id === parent_id
+		);
+
+		replyDepth = parentComment?.parent_id ? 2 : 1;
 
 		const newComment: Comment = {
 			id: json,
@@ -116,10 +119,9 @@
 			comments.unshift(newComment);
 		}
 
-		
 		comments = comments;
 
-		commentsStore.setAll(comments);
+		commentsStore.add(newComment);
 
 		showMessage = 'Successfully posted comment';
 		show = true;
@@ -185,7 +187,6 @@
 		darkModeStore.subscribe((value) => {
 			darkmode = value;
 		});
-		
 	});
 </script>
 

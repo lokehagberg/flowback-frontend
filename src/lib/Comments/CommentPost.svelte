@@ -82,8 +82,6 @@
 		if (parentComment) {
 			replyDepth = getCommentDepth(parentComment, $commentsStore.filteredComments) + 1;
 		}
-		
-
 
 		const newComment: Comment = {
 			id: json,

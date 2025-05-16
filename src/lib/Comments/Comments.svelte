@@ -5,12 +5,13 @@
 	import { onMount } from 'svelte';
 	import type { proposal } from '../Poll/interface';
 	import Comment from './Comment.svelte';
-	import { getComments } from './functions';
+	import { getCommentDepth, getComments } from './functions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 	import CommentFilter from './CommentFilter.svelte';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { commentsStore } from './commentStore';
+	import type { comment } from 'postcss';
 
 	export let proposals: proposal[] = [],
 		api: 'poll' | 'thread' | 'delegate-history',
@@ -25,6 +26,11 @@
 
 	const setUpComments = async () => {
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
+		
+		comments.forEach(comment => {
+			comment.reply_depth = getCommentDepth(comment, comments);
+		});
+
 		commentsStore.setAll(comments);
 		showReadMore = next !== null;
 	};

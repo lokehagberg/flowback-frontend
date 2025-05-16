@@ -15,6 +15,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { commentsStore } from './commentStore';
 	import { derived } from 'svelte/store';
+	import { getCommentDepth } from './functions';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -78,7 +79,11 @@
 			(comment) => comment.id === parent_id
 		);
 
-		replyDepth = parentComment?.parent_id ? 2 : 1;
+		if (parentComment) {
+			replyDepth = getCommentDepth(parentComment, $commentsStore.filteredComments) + 1;
+		}
+		
+
 
 		const newComment: Comment = {
 			id: json,

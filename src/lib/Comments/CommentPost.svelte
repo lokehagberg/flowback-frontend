@@ -14,6 +14,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import { commentsStore } from './commentStore';
+	import { derived } from 'svelte/store';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -30,7 +31,11 @@
 		showMessage = '',
 		recentlyTappedButton = '',
 		darkmode = false,
-		poppup: poppup;
+		poppup: poppup,
+		filteredProposal: proposal | null = null;
+
+	// Reactive subscription to the filtered proposal in the commentsStore
+	$: filteredProposal = $commentsStore.filterByProposal;
 
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
@@ -40,6 +45,12 @@
 
 	const commentCreate = async () => {
 		const formData = new FormData();
+
+		// Prepend the hashtag to the message if a proposal is filtered
+		if (filteredProposal) {
+			message = `#${filteredProposal.title.replaceAll(' ', '-')} ${message}`;
+		}
+
 		if (message !== '') formData.append('message', message);
 		if (parent_id) formData.append('parent_id', parent_id.toString());
 		if (files)

@@ -96,8 +96,6 @@
 			being_edited_message: ''
 		};
 
-		commentsStore.add(newComment);
-
 		// Insert the new comment at the correct position
 		if (parent_id) {
 			// Find the last reply in the chain for this parent
@@ -118,7 +116,10 @@
 			comments.unshift(newComment);
 		}
 
+		
 		comments = comments;
+
+		commentsStore.setAll(comments);
 
 		showMessage = 'Successfully posted comment';
 		show = true;
@@ -184,6 +185,7 @@
 		darkModeStore.subscribe((value) => {
 			darkmode = value;
 		});
+		
 	});
 </script>
 

@@ -41,11 +41,6 @@ function createCommentStore() {
                         comment.message?.includes(`#${proposal.title}`))
                     : store.allComments
             })),
-        getProposal: () => (
-            subscribe(store => {
-                return store.filterByProposal
-            }
-        )),
         getAll: () => {
             let allComments: Comment[] = [];
             update(store => {

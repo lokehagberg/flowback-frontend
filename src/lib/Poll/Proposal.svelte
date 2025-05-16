@@ -14,6 +14,7 @@
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import { commentsStore } from '$lib/Comments/commentStore';
 
 	export let proposal: proposal,
 		Class = '',
@@ -33,14 +34,10 @@
 
 	const filterComments = () => {
 		if (commentFilterProposalId === proposal.id) {
-			filteredComments = allComments;
+			commentsStore.filterByProposal(null);
 			commentFilterProposalId = null;
 		} else {
-			filteredComments = allComments;
-			filteredComments = filteredComments.filter(
-				//@ts-ignore
-				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
-			);
+			commentsStore.filterByProposal(proposal);
 			commentFilterProposalId = proposal.id;
 		}
 	};
@@ -53,6 +50,10 @@
 		predictionCount = json.results.length;
 	};
 
+	const getAllComments = () => {
+		return commentsStore.getAll();
+	};
+
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
@@ -60,7 +61,6 @@
 	});
 
 	$: if (filteredComments) {
-	
 	}
 </script>
 
@@ -123,7 +123,7 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{allComments.filter((comment) =>
+				{getAllComments().filter((comment) =>
 					comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())
 				).length}
 			</button>
@@ -132,8 +132,6 @@
 				<button
 					class="flex items-center"
 					on:click={() => {
-						console.log(proposal, 'PROPOSAL1');
-
 						selectedProposal = proposal;
 					}}
 				>
@@ -145,7 +143,6 @@
 
 		<button
 			on:click={() => {
-				console.log(proposal, 'PROPOSAL1');
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"

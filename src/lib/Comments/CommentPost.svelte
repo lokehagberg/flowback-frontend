@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { commentsStore } from './commentStore';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -59,26 +60,28 @@
 			return;
 		}
 
-		let newComment: Comment = {
-			user_vote: true,
-			active: true,
+		const newComment: Comment = {
+			id: json,
+			message,
+			attachments: files.map((file) => ({ file: URL.createObjectURL(file) })),
+			parent_id,
+			reply_depth: parent_id
+				? comments.find((comment) => comment.id === parent_id)?.reply_depth + 1 || 0
+				: 0,
 			author_id: Number(window.localStorage.getItem('userId')) || 0,
 			author_name: window.localStorage.getItem('userName') || '',
+			author_profile_image: window.localStorage.getItem('pfp-link') || '',
+			score: 1,
+			active: true,
+			edited: false,
 			being_edited: false,
 			being_replied: false,
 			being_reported: false,
-			score: 1,
-			edited: false,
-			attachments: files.map((file) => {
-				return { file: URL.createObjectURL(file) };
-			}),
-			message,
-			id: json,
-			parent_id,
-			author_profile_image: window.localStorage.getItem('pfp-link') || '',
-			being_edited_message: '',
-			reply_depth: comments.find((comment) => comment.id === parent_id)?.reply_depth || 0
+			user_vote: true,
+			being_edited_message: ''
 		};
+
+		commentsStore.add(newComment);
 
 		// Find the index where to insert the new reply
 		let insertIndex;

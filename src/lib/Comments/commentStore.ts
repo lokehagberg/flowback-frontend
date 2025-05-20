@@ -1,5 +1,6 @@
 import type { Comment, proposal } from '$lib/Poll/interface';
 import { writable } from 'svelte/store';
+import type Comments from './Comments.svelte';
 
 function createCommentStore() {
     const { subscribe, set, update } = writable<{
@@ -27,10 +28,10 @@ function createCommentStore() {
         add: (comment: Comment) =>
             update(store => ({
                 ...store,
-                allComments: [...store.allComments, comment],
+                allComments: insertFilteredComments(store.allComments, comment),
                 filteredComments: store.filterByProposal && comment.message?.includes(`#${store.filterByProposal.title}`)
-                    ? [...store.filteredComments, comment]
-                    : [...store.allComments, comment]
+                    ? insertFilteredComments(store.filteredComments, comment)
+                    : insertFilteredComments(store.allComments, comment)
             })),
         filterByProposal: (proposal: proposal | null) =>
             update(store => ({
@@ -56,6 +57,34 @@ function createCommentStore() {
                 filterByProposal: null
             })
     };
+}
+
+function insertFilteredComments(comments: Comment[], newComment: Comment) {
+    // Check if the comment already exists
+    const existingComment = comments.find(comment => comment.id === newComment.id);
+    if (existingComment) {
+        console.warn(`Comment with ID ${newComment.id} already exists. Skipping insertion.`);
+        return comments; // Return the original array without changes
+    }
+
+    if (newComment.parent_id) {
+        // Find the parent comment
+        const parentIndex = comments.findIndex(comment => comment.id === newComment.parent_id);
+
+        if (parentIndex !== -1) {
+            // Set the reply_depth to one more than the parent's reply_depth
+            newComment.reply_depth = comments[parentIndex].reply_depth + 1;
+
+            // Insert the new comment directly below the parent
+            comments.splice(parentIndex + 1, 0, newComment);
+        }
+    } else {
+        // If it's a top-level comment, set reply_depth to 0 and add it to the beginning
+        newComment.reply_depth = 0;
+        comments.unshift(newComment);
+    }
+
+    return comments;
 }
 
 export const commentsStore = createCommentStore();

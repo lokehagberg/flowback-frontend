@@ -13,6 +13,9 @@
 	import { onMount } from 'svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { commentsStore } from './commentStore';
+	import { derived } from 'svelte/store';
+	import { getCommentDepth } from './functions';
 
 	export let comments: Comment[] = [],
 		proposals: proposal[] = [],
@@ -29,7 +32,11 @@
 		showMessage = '',
 		recentlyTappedButton = '',
 		darkmode = false,
-		poppup: poppup;
+		poppup: poppup,
+		filteredProposal: proposal | null = null;
+
+	// Reactive subscription to the filtered proposal in the commentsStore
+	$: filteredProposal = $commentsStore.filterByProposal;
 
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
@@ -39,6 +46,12 @@
 
 	const commentCreate = async () => {
 		const formData = new FormData();
+
+		// Prepend the hashtag to the message if a proposal is filtered
+		if (filteredProposal) {
+			message = `#${filteredProposal.title.replaceAll(' ', '-')} ${message}`;
+		}
+
 		if (message !== '') formData.append('message', message);
 		if (parent_id) formData.append('parent_id', parent_id.toString());
 		if (files)
@@ -59,53 +72,39 @@
 			return;
 		}
 
-		let newComment: Comment = {
-			user_vote: true,
-			active: true,
+		// Calculate the reply_depth based on the parent comment
+		let replyDepth = 0;
+
+		const parentComment = $commentsStore.filteredComments.find(
+			(comment) => comment.id === parent_id
+		);
+
+		if (parentComment) {
+			replyDepth = getCommentDepth(parentComment, $commentsStore.filteredComments) + 1;
+		}
+
+		const newComment: Comment = {
+			id: json,
+			message,
+			attachments: files.map((file) => ({ file: URL.createObjectURL(file) })),
+			parent_id,
+			reply_depth: replyDepth,
 			author_id: Number(window.localStorage.getItem('userId')) || 0,
 			author_name: window.localStorage.getItem('userName') || '',
+			author_profile_image: window.localStorage.getItem('pfp-link') || '',
+			score: 1,
+			active: true,
+			edited: false,
 			being_edited: false,
 			being_replied: false,
 			being_reported: false,
-			score: 1,
-			edited: false,
-			attachments: files.map((file) => {
-				return { file: URL.createObjectURL(file) };
-			}),
-			message,
-			id: json,
-			parent_id,
-			author_profile_image: window.localStorage.getItem('pfp-link') || '',
-			being_edited_message: '',
-			reply_depth: comments.find((comment) => comment.id === parent_id)?.reply_depth || 0
+			user_vote: true,
+			being_edited_message: ''
 		};
 
-		// Find the index where to insert the new reply
-		let insertIndex;
-		if (parent_id) {
-			// Find the last reply in the chain for this parent
-			let parentIndex = comments.findIndex((c) => c.id === parent_id);
-			let replyDepth = comments[parentIndex].reply_depth + 1;
-
-			// Find the last comment in the reply chain
-			insertIndex = parentIndex + 1;
-			while (
-				insertIndex < comments.length &&
-				comments[insertIndex].reply_depth > comments[parentIndex].reply_depth
-			) {
-				insertIndex++;
-			}
-
-			newComment.reply_depth = replyDepth;
-		} else {
-			// If it's a top-level comment, add it to the beginning
-			insertIndex = 0;
-			newComment.reply_depth = 0;
-		}
-
-		// Insert the new comment at the correct position
-		comments.splice(insertIndex, 0, newComment);
 		comments = comments;
+
+		commentsStore.add(newComment);
 
 		showMessage = 'Successfully posted comment';
 		show = true;

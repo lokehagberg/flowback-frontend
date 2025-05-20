@@ -1,22 +1,60 @@
-import type { Comment } from '$lib/Poll/interface';
-import { writable, derived } from 'svelte/store';
+import type { Comment, proposal } from '$lib/Poll/interface';
+import { writable } from 'svelte/store';
 
 function createCommentStore() {
-    const { subscribe, set, update } = writable<Comment[]>([]);
+    const { subscribe, set, update } = writable<{
+        allComments: Comment[];
+        filteredComments: Comment[];
+        filterByProposal: proposal | null;
+    }>({
+        allComments: [],
+        filteredComments: [],
+        filterByProposal: null
+    });
 
     return {
         subscribe,
-        set,
-        add: (comment: Comment) => update(comments => [...comments, comment]),
-        remove: (id: number) => update(comments => comments.filter(c => c.id !== id)),
-        edit: (id: number, content: string) => update(comments =>
-            comments.map(c => c.id === id ? { ...c, content } : c)
-        ),
-        filterByProposal: (proposalTitle: string) => derived(
-            { subscribe },
-            $comments => $comments.filter(c => c.message?.includes(`#${proposalTitle}`))
-        ),
-        clear: () => set([])
+        setAll: (comments: Comment[]) =>
+            update(store => ({
+                ...store,
+                allComments: comments,
+                filteredComments: store.filterByProposal
+                    ? comments.filter(comment =>
+                        comment.message?.includes(`#${store.filterByProposal?.title}`)
+                    )
+                    : comments
+            })),
+        add: (comment: Comment) =>
+            update(store => ({
+                ...store,
+                allComments: [...store.allComments, comment],
+                filteredComments: store.filterByProposal && comment.message?.includes(`#${store.filterByProposal.title}`)
+                    ? [...store.filteredComments, comment]
+                    : [...store.allComments, comment]
+            })),
+        filterByProposal: (proposal: proposal | null) =>
+            update(store => ({
+                ...store,
+                filterByProposal: proposal || null,
+                filteredComments: proposal
+                    ? store.allComments.filter(comment =>
+                        comment.message?.includes(`#${proposal.title}`))
+                    : store.allComments
+            })),
+        getAll: () => {
+            let allComments: Comment[] = [];
+            update(store => {
+                allComments = store.allComments;
+                return store;
+            });
+            return allComments;
+        },
+        clear: () =>
+            set({
+                allComments: [],
+                filteredComments: [],
+                filterByProposal: null
+            })
     };
 }
 

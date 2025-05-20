@@ -14,6 +14,7 @@
 	import commentSymbol from '$lib/assets/iconComment.svg';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/stores';
+	import { commentsStore } from '$lib/Comments/commentStore';
 
 	export let proposal: proposal,
 		Class = '',
@@ -23,7 +24,7 @@
 		selectedProposal: proposal | null = null,
 		proposalsToPredictionMarket: proposal[] = [],
 		phase: Phase,
-		comments: Comment[] = [],
+		filteredComments: Comment[] = [],
 		allComments: Comment[] = [],
 		predictionCount = 0,
 		commentFilterProposalId: number | null = null,
@@ -33,15 +34,10 @@
 
 	const filterComments = () => {
 		if (commentFilterProposalId === proposal.id) {
-			comments = allComments;
+			commentsStore.filterByProposal(null);
 			commentFilterProposalId = null;
 		} else {
-			comments = allComments;
-			comments = comments.filter(
-				//@ts-ignore
-				(comment) => comment.message.includes(`#${proposal.title.replaceAll(' ', '-')}`)
-			);
-
+			commentsStore.filterByProposal(proposal);
 			commentFilterProposalId = proposal.id;
 		}
 	};
@@ -54,14 +50,17 @@
 		predictionCount = json.results.length;
 	};
 
+	const getAllComments = () => {
+		return commentsStore.getAll();
+	};
+
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
-		allComments = comments;
+		allComments = filteredComments;
 	});
 
-	$: if(comments) {
-		allComments = comments;
+	$: if (filteredComments) {
 	}
 </script>
 
@@ -124,27 +123,26 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{allComments.filter((comment) => comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())).length}
+				{getAllComments().filter((comment) =>
+					comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())
+				).length}
 			</button>
 
 			{#if phase !== 'proposal'}
 				<button
 					class="flex items-center"
 					on:click={() => {
-						console.log(proposal, "PROPOSAL1");
-						
 						selectedProposal = proposal;
 					}}
 				>
-				<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
-				{predictionCount}
-			</button>
+					<Fa icon={faMagnifyingGlassChart} class="mr-4 text-primary" size="md" />
+					{predictionCount}
+				</button>
 			{/if}
 		</div>
-		
+
 		<button
 			on:click={() => {
-				console.log(proposal, "PROPOSAL1");
 				selectedProposal = proposal;
 			}}
 			class="hover:underline cursor-pointer flex gap-2 items-baseline text-sm text-gray-700"

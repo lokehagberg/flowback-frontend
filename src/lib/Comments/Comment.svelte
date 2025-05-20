@@ -22,14 +22,15 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import { commentsStore } from './commentStore';
 
 	export let comment: Comment,
-		comments: Comment[],
 		api: 'poll' | 'thread' | 'delegate-history',
 		proposals: proposal[] = [], // Give it a default empty array
 		delegate_pool_id: number | null = null;
 
 	let userUpVote: -1 | 0 | 1 = 0,
+		comments: Comment[],
 		poppup: poppup,
 		isVoting = false,
 		ReportCommentModalShow = false,
@@ -70,7 +71,7 @@
 
 		let data = {
 			title: reportTitle,
-			description: reportDescription,
+			description: reportDescription
 		};
 
 		const { res, json } = await fetchRequest('POST', _api, data);
@@ -141,18 +142,11 @@
 		if (comment.user_vote === null || comment.user_vote === undefined) userUpVote = 0;
 		else if (comment.user_vote === true) userUpVote = 1;
 		else if (comment.user_vote === false) userUpVote = -1;
+
+		commentsStore.subscribe((store) => {
+			comments = store.allComments;
+		});
 	});
-
-	$: if (images) {
-		console.log(images, 'IMAGES');
-		console.log(comment.attachments, 'comment.attachments');
-	}
-
-	console.log(
-		comment.author_id,
-		Number(localStorage.getItem('userId')),
-		Number(localStorage.getItem('userId')) !== comment.author_id
-	);
 </script>
 
 {#if comment.being_edited}
@@ -290,14 +284,22 @@
 					<div slot="header">{$_('Report Comment')}</div>
 					<div class="flex flex-col gap-3" slot="body">
 						<TextInput inputClass="bg-white" required label="Title" bind:value={reportTitle} />
-						<TextArea label="Description" required bind:value={reportDescription} inputClass="whitespace-pre-wrap" />
+						<TextArea
+							label="Description"
+							required
+							bind:value={reportDescription}
+							inputClass="whitespace-pre-wrap"
+						/>
 					</div>
 					<div slot="footer">
 						<div class="flex justify-center gap-2">
-							<Button onClick={() => commentReport(comment.id, comment.message || '')} Class="w-1/2" buttonStyle="warning">{$_('Report')}</Button>
 							<Button
-								onClick={() => (ReportCommentModalShow = false)}
-								Class="bg-gray-400 w-1/2">{$_('Cancel')}</Button
+								onClick={() => commentReport(comment.id, comment.message || '')}
+								Class="w-1/2"
+								buttonStyle="warning">{$_('Report')}</Button
+							>
+							<Button onClick={() => (ReportCommentModalShow = false)} Class="bg-gray-400 w-1/2"
+								>{$_('Cancel')}</Button
 							>
 						</div>
 					</div>

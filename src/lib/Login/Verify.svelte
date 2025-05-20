@@ -11,12 +11,20 @@
 	import { goto } from '$app/navigation';
 	import { env } from '$env/dynamic/public';
 	import { becomeMemberOfGroup } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
+	import { onMount } from 'svelte';
 
 	let verification_code: string,
 		password: string,
 		status: StatusMessageInfo,
 		loading = false,
 		acceptedEmailNotifications = false;
+
+		onMount(() => {
+			const urlParams = new URLSearchParams(window.location.search);
+			verification_code = urlParams.get('verification_code') || '';
+			const email = urlParams.get('email') || '';
+			mailStore.set(email);
+		});
 
 	async function verifyAccount() {
 		loading = true;

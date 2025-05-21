@@ -325,7 +325,8 @@
 		<div class="flex justify-between mt-3 align-middle">
 			<button
 				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
-				on:click={() => {
+				on:click={(event) => {
+					event.stopPropagation();
 					if (kanban.lane > 1) {
 						updateKanbanLane(kanban.lane - 1);
 					}
@@ -336,7 +337,8 @@
 
 			<button
 				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
-				on:click={() => {
+				on:click={(event) => {
+					event.stopPropagation();
 					if (kanban.lane < lanes.length - 1) {
 						updateKanbanLane(kanban.lane + 1);
 					}

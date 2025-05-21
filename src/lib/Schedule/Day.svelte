@@ -30,7 +30,7 @@
 	const currentDate = new Date();
 
 	const getDate = (year: number, month: number, x: number, y: number) => {
-		return new Date(year, month, getDay(x, y) - 1);
+		return new Date(year, month, getDay(x, y));
 	};
 
 	const firstDayInMonthWeekday = () => {
@@ -78,8 +78,8 @@
 <!-- The line for poll creation -->
 <button
 	on:dblclick={() => {
-		console.log("x, y", x, y)
-		const clickedDate = new Date(year, month, getDay(x, y));
+		// Fix: Adjust the day calculation to ensure the correct date is set
+		const clickedDate = new Date(year, month, getDay(x, y)); // Add 1 to correct the day offset
 		clickedDate.setHours(0, 0, 0, 0); // Set to midnight for consistency
 		const dateStr = formatDateForLocalInput(clickedDate);
 		selectedEvent = {

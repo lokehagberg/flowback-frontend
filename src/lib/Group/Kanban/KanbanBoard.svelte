@@ -14,14 +14,14 @@
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import type { kanban } from './Kanban';
-	import type { Filter } from './Kanban.ts';
+	import type { Filter } from './Kanban';
 	import KanbanFiltering from './KanbanFiltering.svelte';
 	import { env } from '$env/dynamic/public';
 	import { page } from '$app/stores';
 	import { userInfo } from '$lib/Generic/GenericFunctions';
-	import type { User } from '$lib/User/interfaces';
+
 	const tags = ['', 'Backlog', 'To do', 'Current', 'Evaluation', 'Done'];
-	//TODO: the interfaces "kanban" and "KanbanEntry" are equivalent, make them use the same interface.
+
 	let kanbanEntries: kanban[] = [],
 		assignee: number | null = null,
 		users: GroupUser[] = [],
@@ -48,37 +48,24 @@
 		if (addOrSub === 'Addition') numberOfOpen += 1;
 		if (addOrSub === 'Subtraction') numberOfOpen -= 1;
 	};
+
 	const getKanbanEntries = async () => {
 		if (type === 'group') {
-			// let users = await getGroupUsers();
-			// const user = users.find((user) => user.user.id === $userInfo.user.id);
-
-			// if (user) {
-			// 	assignee = user.user.id;
-			// }
-			// let groupTasks = (await getKanbanEntriesGroup()) as kanban[];
-			// if (user.is_admin) {
-			// 	kanbanEntries = groupTasks;
-			// } else {
-			// 	kanbanEntries = groupTasks.filter((task) => {
-			// 		if (user.work_groups.includes(task.work_group?.name)) {
-			// 			return task;
-			// 		}
-			// 	});
-			// }
 			kanbanEntries = await getKanbanEntriesGroup();
-		} else if (type === 'home') getKanbanEntriesHome();
+		} else if (type === 'home') {
+			await getKanbanEntriesHome();
+		}
 	};
 
 	const getKanbanEntriesGroup = async () => {
 		let api = `group/${groupId}/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
 		if (filter.assignee !== null) api += `&assignee=${filter.assignee}`;
 		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
-		if (filter.workgroup) api += `&work_group_ids=${filter.workgroup}`;
+		if (filter.workgroup !== null) api += `&work_group_ids=${filter.workgroup}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		return json.results;
+		return json.results || [];
 	};
 
 	const getKanbanEntriesHome = async () => {
@@ -88,14 +75,14 @@
 		const { res, json } = await fetchRequest('GET', api);
 
 		if (!res.ok) status = statusMessageFormatter(res, json);
-		kanbanEntries = json.results;
+		kanbanEntries = json.results || [];
 	};
 
 	const getGroupUsers = async () => {
 		let api = `group/${groupId}/users?limit=${kanbanLimit}`;
 
 		const { json, res } = await fetchRequest('GET', api);
-		if (!res.ok) return;
+		if (!res.ok) return [];
 		return json.results;
 	};
 
@@ -110,16 +97,14 @@
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
 	};
 
-	// const handleSearch = (search: String) => {};
-
 	onMount(async () => {
 		assignee = Number(localStorage.getItem('userId')) || 1;
-		getKanbanEntries();
-		getWorkGroupList();
+		await getKanbanEntries();
+		await getWorkGroupList();
 		users = await getGroupUsers();
 
-		interval = setInterval(() => {
-			if (numberOfOpen === 0) getKanbanEntries();
+		interval = setInterval(async () => {
+			if (numberOfOpen === 0) await getKanbanEntries();
 		}, 20000);
 
 		groupId = env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '1' : $page.params.groupId;
@@ -139,15 +124,11 @@
 	<KanbanFiltering bind:workGroups bind:filter handleSearch={getKanbanEntries} Class="" />
 
 	<div class="flex overflow-x-auto py-3">
-		<!-- {#await promise}
-			<div>Loading...</div>
-		{:then kanbanEntries} -->
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
 					class="bg-white min-w-[160px] md:min-w-[170px] lg:min-w-[200px] max-w-[230px] p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
 				>
-					<!-- "Tag" is the name for the titles on the kanban such as "To Do" etc. -->
 					<div class="flex justify-between pb-3">
 						<span class="xl:text-md md:text-sm p-1 font-medium">{$_(_tag)}</span>
 						<button
@@ -189,8 +170,16 @@
 				</div>
 			{/if}
 		{/each}
-		<!-- {/await} -->
 	</div>
 </div>
 
-<CreateKanbanEntry {groupId} bind:open {type} bind:kanbanEntries {users} bind:workGroups bind:lane />
+<CreateKanbanEntry
+	{groupId}
+	bind:open
+	{type}
+	bind:kanbanEntries
+	{users}
+	bind:workGroups
+	bind:lane
+	{getKanbanEntries}
+/>

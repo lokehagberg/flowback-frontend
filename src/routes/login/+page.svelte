@@ -19,6 +19,15 @@
 	let email = ''
 
 	onMount(() => {
+		const params = new URLSearchParams(window.location.search);
+		const emailParam = params.get('email');
+		const verificationCode = params.get('verification_code');
+
+		if (emailParam && verificationCode) {
+			selectedPage = 'Verify';
+			return;
+		}
+
 		if (localStorage.getItem('token')) goto('/home');
 	});
 </script>

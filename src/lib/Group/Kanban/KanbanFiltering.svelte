@@ -34,7 +34,10 @@
 			Class="flex-1 placeholder-gray-600 rounded pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject"
 			inputClass="placeholder-gray-600 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
 			placeholder={$_('Search tasks')}
-			onInput={() => (searched = false)}
+			on:change={async () => {
+				searched = false;
+				await handleSearch();
+			}}
 			label=""
 			max={null}
 			search={true}

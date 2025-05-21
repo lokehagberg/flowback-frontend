@@ -35,7 +35,8 @@
 		proposalsToPredictionMarket: proposal[] = [],
 		poppup: poppup,
 		displayForm: boolean,
-		comments: Comment[] = [];
+		comments: Comment[] = [],
+		allComments: Comment[] = [];
 
 	onMount(async () => {
 		getGroupUser();
@@ -129,7 +130,9 @@
 					{formatDate(poll.start_date)}
 				</div>
 				<div class="bg-white p-6 mt-6">
+
 					<Comments bind:proposals api={'poll'} />
+
 				</div>
 
 				<!-- PHASE 1: AREA VOTE -->
@@ -137,7 +140,9 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right" class="!p-0">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -154,6 +159,7 @@
 								bind:selectedProposal
 								bind:proposals
 								bind:comments
+								bind:allComments
 								bind:phase
 								isVoting={false}
 							/>
@@ -192,7 +198,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -207,6 +215,7 @@
 							<ProposalScoreVoting
 								bind:poll
 								bind:comments
+								bind:allComments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
@@ -246,7 +255,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -261,6 +272,7 @@
 							<ProposalScoreVoting
 								bind:poll
 								bind:comments
+								bind:allComments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
@@ -284,7 +296,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -298,6 +312,7 @@
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:comments
+								bind:allComments
 								bind:proposals
 								isVoting={false}
 								bind:phase
@@ -322,7 +337,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
@@ -336,6 +353,7 @@
 							<ProposalScoreVoting
 								bind:poll
 								bind:comments
+								bind:allComments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
@@ -359,7 +377,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 				<!-- PHASE 7: RESULTS AND EVALUATION -->
@@ -376,7 +396,9 @@
 					</div>
 					<div slot="right"><Results bind:poll {pollType} /></div>
 					<div slot="bottom">
+
 						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 			{/if}

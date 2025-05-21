@@ -20,6 +20,7 @@
 		proposalsToPredictionMarket: proposal[] = [],
 		Class = '',
 		comments: Comment[],
+		allComments: Comment[] = [],
 		poll: poll;
 
 	let voting: { score: number; proposal: number }[] = [],

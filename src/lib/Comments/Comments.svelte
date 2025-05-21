@@ -17,8 +17,8 @@
 		api: 'poll' | 'thread' | 'delegate-history',
 		delegate_pool_id: null | number = null,
 		Class = '';
-
-	let offset = 0,
+	
+  let offset = 0,
 		showReadMore = true,
 		sortBy: null | string = null,
 		searchString: string = '',
@@ -59,7 +59,9 @@
 <div class={`rounded dark:text-darktext ${Class}`} id="comments">
 	<div class="border-b border-gray-300">
 		<!-- Add Comment -->
+
 		<CommentPost bind:proposals {api} {delegate_pool_id} />
+
 
 		<CommentFilter
 			bind:sortBy

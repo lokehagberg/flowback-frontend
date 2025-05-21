@@ -222,8 +222,7 @@
 							bind:proposalsToPredictionMarket
 							bind:commentFilterProposalId
 							bind:selectedProposal
-							bind:comments
-							bind:allComments
+							bind:filteredComments={comments}
 							bind:phase
 							onChange={() => {}}
 							{proposal}

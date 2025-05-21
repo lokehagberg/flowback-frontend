@@ -15,18 +15,15 @@
 	import { chatPartner, isChatOpen } from './ChatStore.svelte';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
+	import { updateUserData } from './functions';
 
 	let messages: Message[] = [],
 		chatOpen = env.PUBLIC_MODE === 'DEV' ? false : false,
 		user: User,
-		// Specifies which chat window is open
 		selectedPage: 'direct' | 'group' = 'direct',
 		selectedChat: number | null,
-		//The preview page on the left side of the chat screen
 		previewDirect: PreviewMessage[] = [],
 		previewGroup: PreviewMessage[] = [],
-		notifiedDirect: number[] = [],
-		notifiedGroup: number[] = [],
 		isLookingAtOlderMessages = false,
 		chatDiv: HTMLDivElement,
 		selectedChatChannelId: number | null,
@@ -34,12 +31,56 @@
 		creatingGroup = false,
 		groupMembers: GroupMembers[] = [];
 
+	$: hasUnreadDirect = previewDirect.some((p) => p.notified);
+	$: hasUnreadGroup = previewGroup.some((p) => p.notified);
+
+	const clearChatNotification = async (chatterId: number | null, page: 'direct' | 'group') => {
+		if (!chatterId) return;
+
+		await updateUserData(chatterId, new Date(), new Date());
+
+		if (page === 'direct') {
+			let message = previewDirect.find((message) => message.channel_id === chatterId);
+			if (message) {
+				message.timestamp = new Date().toString();
+				message.notified = false;
+				previewDirect = [...previewDirect];
+			}
+		} else if (page === 'group') {
+			let message = previewGroup.find((message) => message.channel_id === chatterId);
+			if (message) {
+				message.timestamp = new Date().toString();
+				message.notified = false;
+				previewGroup = [...previewGroup];
+			}
+		}
+	};
+
 	onMount(async () => {
 		await getUser();
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
 		darkModeStore.subscribe((dm) => (darkMode = dm));
 		isChatOpen.subscribe((open) => (chatOpen = open));
+
+		const cleanupNotifications = () => {
+			const now = new Date();
+			previewDirect = previewDirect.map((p) => {
+				if (p.notified && new Date(p.created_at).getTime() < now.getTime() - 3600000) {
+					p.notified = false;
+				}
+				return p;
+			});
+			previewGroup = previewGroup.map((p) => {
+				if (p.notified && new Date(p.created_at).getTime() < now.getTime() - 3600000) {
+					p.notified = false;
+				}
+				return p;
+			});
+		};
+
+		const interval = setInterval(cleanupNotifications, 60000);
+		return () => clearInterval(interval);
 	});
 
 	const correctMarginRelativeToHeader = () => {
@@ -47,24 +88,36 @@
 		if (_headerHeight && chatDiv) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
 	};
 
-	//TODO: Turn all these get users into one unified svelte store for fewer API calls
 	const getUser = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 		if (!res.ok) return;
 		user = json;
 	};
 
+	$: if (chatOpen && selectedChat === null && selectedChatChannelId === null) {
+		if (selectedPage === 'direct' && previewDirect.length > 0) {
+			const firstDirectChat = previewDirect[0];
+			selectedChat = firstDirectChat.channel_id;
+			selectedChatChannelId = firstDirectChat.channel_id;
+			chatPartner.set(firstDirectChat.channel_id);
+			clearChatNotification(firstDirectChat.channel_id, 'direct');
+		} else if (selectedPage === 'group' && previewGroup.length > 0) {
+			const firstGroupChat = previewGroup[0];
+			selectedChat = firstGroupChat.channel_id;
+			selectedChatChannelId = firstGroupChat.channel_id;
+			chatPartner.set(firstGroupChat.channel_id);
+			clearChatNotification(firstGroupChat.channel_id, 'group');
+		}
+	}
+
 	$: if (!chatOpen) {
-		chatPartner.set(0)
-		// if (selectedChat) updateUserData(selectedChat, null, new Date());
-		// selectedChat = null;
-		// selectedPage === 'direct';
+		chatPartner.set(0);
 	}
 </script>
 
 <svelte:head>
 	<title>
-		{`${notifiedDirect.length > 0 ? '🟣' : ''}${notifiedGroup.length > 0 ? '🔵' : ''}`}
+		{`${hasUnreadDirect ? '🟣' : ''}${hasUnreadGroup ? '🔵' : ''}`}
 	</title>
 </svelte:head>
 
@@ -73,8 +126,6 @@
 	class:invisible={!chatOpen}
 	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-40 w-full h-[100vh] !flex justify-center"
 >
-	<!-- TODO: This will link to Chat settings once that has been implemented -->
-
 	<Button
 		onClick={() => {
 			chatOpen = false;
@@ -132,14 +183,13 @@
 	</div>
 </div>
 
-<!-- Button which launches the chat, visible in bottom left corner when not in chat -->
 <button
 	on:click={() => {
 		chatOpen = !chatOpen;
 		isChatOpen.set(chatOpen);
 	}}
-	class:small-notification={true}
-	class:small-notification-group={true}
+	class:small-notification={hasUnreadDirect}
+	class:small-notification-group={hasUnreadGroup}
 	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	{#key darkMode}
@@ -169,7 +219,7 @@
 		content: '';
 		top: 10px;
 		right: 0;
-		background-color: rgb(147, 197, 235);
+		background-color: rgb(147, 197, 253);
 		border-radius: 100%;
 		padding: 10px;
 	}

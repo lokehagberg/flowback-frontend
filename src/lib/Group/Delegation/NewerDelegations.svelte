@@ -1,4 +1,3 @@
-<!-- Currently only supports one group flowback -->
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { onMount } from 'svelte';
@@ -8,6 +7,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import Fa from 'svelte-fa';
+	import { tick } from 'svelte';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
 
@@ -16,9 +16,23 @@
 
 	let tags: Tag[] = [],
 		expandedSection: any = null,
+		previousExpandedSection: any = null,
 		delegateRelations: DelegateRelation[] = [],
 		poppup: poppup,
 		delegationTagsStructure: { delegate_pool_id: number; tags: number[] }[] = [];
+
+	onMount(async () => {
+		initialSetup();
+	});
+
+	$: if (group) {
+		initialSetup();
+	}
+
+	$: if (expandedSection !== previousExpandedSection) {
+		reinitializeRadioState();
+		previousExpandedSection = expandedSection;
+	}
 
 	const setupDelegationTagStructure = () => {
 		delegationTagsStructure = delegateRelations.map(({ tags, delegate_pool_id }) => ({
@@ -41,7 +55,6 @@
 	*/
 	const getDelegatePools = async () => {
 		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
-
 		if (!res.ok) return;
 
 		delegates = json.results.map((delegatePool: any) => {
@@ -53,57 +66,99 @@
 		expandedSection = expandedSection === index ? null : index;
 	};
 
-	const getDelegateRelations = async () => {
-		const { json } = await fetchRequest('GET', `group/${group.id}/delegates?limit=1000`);
+	const reinitializeRadioState = async () => {
+		await tick(); // Ensure DOM is updated
+		delegates = [...delegates]; // Trigger reactivity
+	};
 
-		//Determines whether to show the "remove as delegate" or "add as delegate" buttons, depening on if user already has delegated or not earlier.
+	const getDelegateRelations = async () => {
+		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegates?limit=1000`);
+
+		// Determines whether to show the "remove as delegate" or "add as delegate" buttons, depending on if user already has delegated or not earlier.
 		json.results.forEach((relation: any) => {
 			delegates.map((delegate) => {
 				if (delegate.pool_id === relation.delegate_pool_id) delegate.isInRelation = true;
 				return delegate;
 			});
 		});
-		// delegateRelations = json.results;
 		delegateRelations = json.results;
+		if (res.ok) {
+			setupDelegationTagStructure();
+		}
 	};
 
 	const changeDelegation = async (delegate: Delegate, tag: Tag) => {
-		delegationTagsStructure.forEach((relation, i) => {
-			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag === tag.id);
+		// Check if a relation exists for this delegate; if not, create one
+		let relation = delegateRelations.find((r) => r.delegate_pool_id === delegate.pool_id);
+		if (!relation) {
+			relation = { delegate_pool_id: delegate.pool_id, tags: [] };
+			delegateRelations = [...delegateRelations, relation];
+		}
 
-			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
-			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag.id);
+		// Update delegationTagsStructure
+		let tagStructure = delegationTagsStructure.find((r) => r.delegate_pool_id === delegate.pool_id);
+		if (!tagStructure) {
+			tagStructure = { delegate_pool_id: delegate.pool_id, tags: [] };
+			delegationTagsStructure = [...delegationTagsStructure, tagStructure];
+		}
+
+		// Remove tag from other delegates' relations
+		delegationTagsStructure.forEach((r) => {
+			const tagIndex = r.tags.findIndex((_tag) => _tag === tag.id);
+			if (tagIndex !== -1) r.tags.splice(tagIndex, 1);
+		});
+		delegateRelations.forEach((r) => {
+			const tagIndex = r.tags.findIndex((_tag) => _tag.id === tag.id);
+			if (tagIndex !== -1) r.tags.splice(tagIndex, 1);
 		});
 
-		delegateRelations.forEach((relation, i) => {
-			const previousTagRelationIndex = relation.tags.findIndex((_tag) => _tag.id === tag.id);
+		// Add tag to the selected delegate's relation
+		if (!tagStructure.tags.includes(tag.id)) {
+			tagStructure.tags.push(tag.id);
+		}
+		if (!relation.tags.some((t) => t.id === tag.id)) {
+			relation.tags.push({ ...tag, active: true, tag_name: tag.name });
+		}
 
-			if (previousTagRelationIndex !== -1) relation.tags.splice(previousTagRelationIndex);
-			else if (relation.delegate_pool_id === delegate.pool_id) relation.tags.push(tag);
-		});
+		// Update state
+		delegationTagsStructure = [...delegationTagsStructure];
+		delegateRelations = [...delegateRelations];
+
 		await createDelegateRelation(delegate.pool_id);
-		saveDelegation();
+		await saveDelegation();
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
-		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/create`, {
+		const { json, res } = await fetchRequest('POST', `group/${group.id}/delegate/create`, {
 			delegate_pool_id
 		});
+		console.log('createDelegateRelation', res, res.ok);
+		if (!res.ok) {
+			poppup = { message: 'Failed to create delegation', success: false };
+			return;
+		}
 
-		if (!res.ok) return;
+		delegates[delegates.findIndex((d) => d.pool_id === delegate_pool_id)].isInRelation = true;
 
-		delegates[
-			delegates.findIndex((delegate) => delegate.pool_id === delegate_pool_id)
-		].isInRelation = true;
+		// Ensure a relation exists in delegateRelations
+		if (!delegateRelations.some((r) => r.delegate_pool_id === delegate_pool_id)) {
+			delegateRelations = [...delegateRelations, { delegate_pool_id, tags: [] }];
+			setupDelegationTagStructure();
+		}
 
-		initialSetup();
+		// Trigger UI update
+		reinitializeRadioState();
 	};
+
+	const updateDelegationTagsStructure = () => setupDelegationTagStructure();
 
 	const saveDelegation = async () => {
 		const toSendDelegates = delegateRelations.map(({ tags, delegate_pool_id }) => ({
 			delegate_pool_id,
 			tags: tags.map(({ id }) => id)
 		}));
+		console.log('saveDelegation delegateRelations', delegateRelations);
+		console.log('saveDelegation toSendDelegates', toSendDelegates);
 
 		const { res } = await fetchRequest(
 			'POST',
@@ -116,6 +171,9 @@
 			return;
 		}
 		poppup = { message: 'Successfully saved delegation', success: true };
+
+		// Refresh relations to ensure consistency with backend
+		await getDelegateRelations();
 	};
 
 	const clearChoice = async (tag: Tag) => {
@@ -131,9 +189,9 @@
 			});
 		});
 
-		delegationTagsStructure = delegationTagsStructure;
-		delegateRelations = delegateRelations;
-		saveDelegation();
+		delegationTagsStructure = [...delegationTagsStructure];
+		delegateRelations = [...delegateRelations];
+		await saveDelegation();
 	};
 
 	const initialSetup = async () => {
@@ -142,14 +200,6 @@
 		await getDelegateRelations();
 		setupDelegationTagStructure();
 	};
-
-	onMount(async () => {
-		initialSetup();
-	});
-
-	$: if (group) {
-		initialSetup();
-	}
 </script>
 
 <div>
@@ -157,6 +207,7 @@
 		{#each tags as tag, index}
 			<div class="section">
 				<button
+					type="button"
 					class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
 					on:click={() => toggleSection(index)}
 				>
@@ -168,38 +219,31 @@
 					</div>
 				</button>
 
-				<!-- {#if expandedSection === index}
-				 flip={expandedSection !== index}
-					<Fa icon={faChevronUp} />
-				{:else}
-					<Fa icon={faChevronDown} />
-				{/if} -->
 				{#if expandedSection === index}
-					<!-- {#if section.voters.length > 0} -->
 					<div class="voter-list">
 						{#each delegates as delegate}
 							<div class="voter-item">
 								<ProfilePicture
+									key={delegate.user.id}
 									displayName
 									username={delegate.user.username}
 									userId={delegate.user.id}
 									profilePicture={delegate.user.profile_image}
 								/>
-								<!-- {delegate.user.username} -->
-								<!-- {delegate.delegates[0]} -->
-								<!-- <span>{delegate.delegates[0]}</span> -->
+								<!-- {delegate.user.username}
+								{delegate.delegates[0]} -->
 								<span>
-									<!-- {delegate.percentage}% -->
-
 									<input
 										disabled={delegate.user.id.toString() === localStorage.getItem('userId')}
 										on:input={() => {
 											changeDelegation(delegate, tag);
 											setTimeout(() => {
-											
+												updateDelegationTagsStructure();
+												reinitializeRadioState();
 											}, 1000);
 										}}
 										type="radio"
+										key={`${tag.id}-${delegate.pool_id}`}
 										name={tag.name}
 										checked={delegationTagsStructure
 											.find((relation) => relation.delegate_pool_id === delegate.pool_id)
@@ -215,7 +259,6 @@
 				{:else}
 					<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
 				{/if}
-				<!-- {/if} -->
 			</div>
 		{/each}
 	{:else}

@@ -130,7 +130,9 @@
 					{formatDate(poll.start_date)}
 				</div>
 				<div class="bg-white p-6 mt-6">
-					<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+					<Comments bind:proposals api={'poll'} />
+
 				</div>
 
 				<!-- PHASE 1: AREA VOTE -->
@@ -138,7 +140,9 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right" class="!p-0">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -194,7 +198,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -249,7 +255,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -288,7 +296,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 
@@ -327,7 +337,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
@@ -365,7 +377,9 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 				<!-- PHASE 7: RESULTS AND EVALUATION -->
@@ -382,7 +396,9 @@
 					</div>
 					<div slot="right"><Results bind:poll {pollType} /></div>
 					<div slot="bottom">
-						<Comments bind:_comments={comments} bind:_allComments={allComments} bind:proposals api={'poll'} />
+
+						<Comments bind:proposals api={'poll'} />
+
 					</div>
 				</Structure>
 			{/if}

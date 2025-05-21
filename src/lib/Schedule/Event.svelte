@@ -291,8 +291,16 @@
 
 <!-- Modal 1: Create Event Modal -->
 {#if showCreateScheduleEvent}
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" aria-modal="true" role="dialog">
-        <div class="bg-white dark:bg-darkobject p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] modal-content">
+    <div
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        aria-modal="true"
+        role="dialog"
+        on:click={() => (showCreateScheduleEvent = false)}
+    >
+        <div
+            class="bg-white dark:bg-darkobject p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] modal-content"
+            on:click|stopPropagation
+        >
             <h2 class="text-xl mb-4">{$_('Create Event')}</h2>
             <form on:submit|preventDefault={handleSubmit}>
                 <div class="mb-4">
@@ -453,8 +461,16 @@
 
 <!-- Modal 2: Edit Event Modal -->
 {#if showEditScheduleEvent}
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" aria-modal="true" role="dialog">
-        <div class="bg-white dark:bg-darkobject p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] modal-content">
+    <div
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        aria-modal="true"
+        role="dialog"
+        on:click={() => (showEditScheduleEvent = false)}
+    >
+        <div
+            class="bg-white dark:bg-darkobject p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] modal-content"
+            on:click|stopPropagation
+        >
             <h2 class="text-xl mb-4">{$_('Edit Event')}</h2>
             <form on:submit|preventDefault={handleSubmit}>
                 <div class="mb-4">

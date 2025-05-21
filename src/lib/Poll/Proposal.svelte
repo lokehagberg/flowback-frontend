@@ -37,7 +37,9 @@
 			commentsStore.filterByProposal(null);
 			commentFilterProposalId = null;
 		} else {
+
 			commentsStore.filterByProposal(proposal);
+
 			commentFilterProposalId = proposal.id;
 		}
 	};
@@ -57,10 +59,12 @@
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
 		getPredictionCount();
+
 		allComments = filteredComments;
 	});
 
 	$: if (filteredComments) {
+
 	}
 </script>
 

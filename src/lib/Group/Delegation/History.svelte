@@ -27,7 +27,7 @@
 	const getDelegateHistory = async () => {
 		loading = true;
 		console.log('history', history, delegatePool);
-		const { json, res } = await fetchRequest('GET', `group/poll/pool/${history}/votes`);
+		const { json, res } = await fetchRequest('GET', `group/poll/pool/votes?group_id=${history}&include_details=true`);
 		loading = false;
 		if (res.ok) {
 			votingHistory = json.results;
@@ -156,15 +156,61 @@
 				{#if filteredVotingHistory.length > 0}
 					{#each filteredVotingHistory as vote}
 						<li
-							class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full flex justify-between items-center border-b last:border-b-0"
+							class="bg-white dark:bg-darkobject dark:text-darkmodeText p-3 w-full border-b last:border-b-0"
 						>
-							<button
+							<!-- <button
 								class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
 								on:click={() =>
 									goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
 							>
 								{vote.poll_title}
-							</button>
+							</button> -->
+							<div class="flex flex-col gap-2">
+								<button
+									class="w-full break-words text-left text-xl p-1 pl-0 dark:text-darkmodeText cursor-pointer hover:underline"
+									on:click={() =>
+										goto(`groups/${delegatePool.delegates[0].group_user.group_id}/polls/${vote.poll_id}`)}
+								>
+									{vote.poll_title}
+								</button>
+
+								{#if vote.poll_description}
+									<div class="text-sm text-gray-600 dark:text-gray-300 pl-1">
+										<p class="line-clamp-2">{vote.poll_description}</p>
+									</div>
+								{/if}
+
+								<div class="flex flex-wrap gap-2 pl-1">
+									{#if vote.tag_name}
+										<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+											{vote.tag_name}
+										</span>
+									{/if}
+
+									{#if vote.subject_area}
+										<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+											{vote.subject_area}
+										</span>
+									{/if}
+
+									{#if vote.created_at}
+										<span class="text-xs text-gray-500">
+											Created: {new Date(vote.created_at).toLocaleDateString()}
+										</span>
+									{/if}
+								</div>
+
+								{#if vote.historical_data}
+									<div class="mt-1 pl-1 text-sm">
+										<details>
+											<summary class="cursor-pointer text-blue-600 hover:underline">Historical IMAC</summary>
+											<div class="p-2 bg-gray-50 dark:bg-gray-800 rounded mt-1">
+												<pre class="text-xs overflow-x-auto">{JSON.stringify(vote.historical_data, null, 2)}</pre>
+											</div>
+										</details>
+									</div>
+								{/if}
+							</div>
 						</li>
 					{/each}
 				{:else}

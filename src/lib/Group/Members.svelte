@@ -335,7 +335,7 @@
 		<!-- Members List -->
 		{#if searchedUsers.length > 0}
 			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
-				<span class="font-semibold text-sm text-gray-700">{$_('All members')}</span>
+				<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText">{$_('All members')}</span>
 				{#each searchedUsers as user}
 					{@const delegationId = delegates.find(
 						(delegate) => delegate.user.id === user.user.id

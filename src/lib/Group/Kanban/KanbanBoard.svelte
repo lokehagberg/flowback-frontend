@@ -13,8 +13,7 @@
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
-	import type { kanban } from './Kanban';
-	import type { Filter } from './Kanban';
+	import type { kanban, Filter } from './Kanban';
 	import KanbanFiltering from './KanbanFiltering.svelte';
 	import { env } from '$env/dynamic/public';
 	import { page } from '$app/stores';
@@ -37,7 +36,9 @@
 		},
 		workGroups: WorkGroup[] = [],
 		lane: number = 1,
-		groupId = '1';
+		groupId = '1',
+		// Add filteredKanbanEntries to store the client-side filtered result
+		filteredKanbanEntries: kanban[] = [];
 
 	export let type: 'home' | 'group',
 		Class = '';
@@ -55,6 +56,8 @@
 		} else if (type === 'home') {
 			await getKanbanEntriesHome();
 		}
+		// Apply client-side filtering after fetching
+		filterKanbanEntries();
 	};
 
 	const getKanbanEntriesGroup = async () => {
@@ -70,7 +73,7 @@
 
 	const getKanbanEntriesHome = async () => {
 		let api = `user/kanban/entry/list?limit=${kanbanLimit}&order_by=priority_desc`;
-		if (filter.search !== '') api += `&title__icontains=${filter.search}`;
+		if (filter.search !== '') api += `&title__icontains=${filter.search}&description__icontains=${filter.search}`;
 
 		const { res, json } = await fetchRequest('GET', api);
 
@@ -95,6 +98,20 @@
 
 	const removeKanbanEntry = (id: number) => {
 		kanbanEntries = kanbanEntries.filter((entry) => entry.id !== id);
+		// Reapply filtering after removal
+		filterKanbanEntries();
+	};
+
+	// New client-side filtering function
+	const filterKanbanEntries = () => {
+		filteredKanbanEntries = kanbanEntries.filter((entry) => {
+			const matchesSearch = !filter.search || 
+				(entry.title?.toLowerCase().includes(filter.search.toLowerCase()) || 
+				 entry.description?.toLowerCase().includes(filter.search.toLowerCase()));
+			const matchesWorkgroup = !filter.workgroup || 
+				(entry.work_group?.id === filter.workgroup);
+			return matchesSearch && matchesWorkgroup;
+		});
 	};
 
 	onMount(async () => {
@@ -127,7 +144,7 @@
 		{#each tags as _tag, i}
 			{#if i !== 0}
 				<div
-					class="bg-white min-w-[160px] md:min-w-[170px] lg:min-w-[200px] max-w-[230px] p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
+					class="bg-white min-w-[160px] md:min-w[170px] lg:min-w-[200px] max-w-[230px] p-2 m-1 dark:bg-darkbackground dark:text-darkmodeText border-gray-200 rounded shadow flex flex-col"
 				>
 					<div class="flex justify-between pb-3">
 						<span class="xl:text-md md:text-sm p-1 font-medium">{$_(_tag)}</span>
@@ -140,8 +157,8 @@
 						>
 					</div>
 					<ul class="flex flex-col gap-2 flex-grow overflow-y-auto">
-						{#if kanbanEntries?.length > 0}
-							{#each kanbanEntries as kanban}
+						{#if filteredKanbanEntries?.length > 0}
+							{#each filteredKanbanEntries as kanban}
 								{#if kanban.lane === i}
 									<KanbanEntry
 										bind:workGroups

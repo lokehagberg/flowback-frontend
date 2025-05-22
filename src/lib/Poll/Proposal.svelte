@@ -64,7 +64,7 @@
 	});
 
 	$: if (filteredComments) {
-
+		
 	}
 </script>
 
@@ -127,8 +127,9 @@
 					class:saturate-0={commentFilterProposalId !== proposal.id &&
 						commentFilterProposalId !== null}
 				/>
-				{getAllComments().filter((comment) =>
-					comment?.message?.toLowerCase()?.includes(proposal.title.toLowerCase())
+				
+				{$commentsStore.allComments.filter((comment) =>
+					comment?.message?.includes(`#${proposal.title}`)
 				).length}
 			</button>
 

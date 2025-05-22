@@ -222,7 +222,7 @@
 <!-- Calendar Day Display -->
 <button
     on:dblclick={() => {
-        const clickedDate = new Date(year, month, getDay(x + 1, y));
+        const clickedDate = new Date(year, month, getDay(x, y));
         clickedDate.setHours(0, 0, 0, 0);
         const dateStr = formatDateForLocalInput(clickedDate);
         selectedEvent = {

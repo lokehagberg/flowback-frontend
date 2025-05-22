@@ -25,6 +25,7 @@
 	import type { poppup } from '$lib/Generic/Poppup';
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import { getUserChannelId } from '$lib/Chat/functions';
+	import Loader from '$lib/Generic/Loader.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -60,7 +61,8 @@
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
-		croppedImage: string;
+		croppedImage: string,
+		loading = false;
 
 	const { navigating: nav } = getStores();
 
@@ -107,6 +109,7 @@
 	};
 
 	const updateProfile = async () => {
+		loading = true;
 		const imageToSend = await blobifyImages(profileImagePreview);
 		const bannerImageToSend = await blobifyImages(bannerImagePreview);
 
@@ -121,6 +124,8 @@
 		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
 
 		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
+
+		loading = false;
 
 		if (!res.ok) {
 			const message = json.detail[Object.keys(json.detail)[0]][0] || 'Could not update profile';
@@ -276,123 +281,127 @@
 		</div>
 		<!-- Editing your own profile -->
 	{:else}
-		<!-- Banner Image -->
-		<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
-			<img
-				src={currentlyCroppingBanner ? oldBannerImagePreview : bannerImagePreview || DefaultBanner}
-				class="w-full cover transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
-				alt="banner"
-			/>
-			<input
-				class="hidden"
-				type="file"
-				id="file-ip-2"
-				accept="image/*"
-				on:change={handleCropBanner}
-			/>
-		</label>
-		<form
-			class="bg-white w-full p-8 flex flex-col items-center justify-center dark:bg-darkobject dark:text-darkmodeText"
-			on:submit|preventDefault={() => {}}
-		>
-			<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
-				<label for="file-ip-1" class="inline">
-					<!-- Profile Picture -->
-					<img
-						src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
-						class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
-						alt="avatar"
-						id="avatar"
-					/>
-					<input
-						class="hidden"
-						type="file"
-						name="file-ip-1"
-						id="file-ip-1"
-						accept="image/*"
-						on:change={handleCropProfileImage}
-					/></label
-				>
+		<Loader bind:loading>
+			<!-- Banner Image -->
+			<label for="file-ip-2" class="bg-gray-200 w-full h-[40%] cover">
+				<img
+					src={currentlyCroppingBanner
+						? oldBannerImagePreview
+						: bannerImagePreview || DefaultBanner}
+					class="w-full cover transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+					alt="banner"
+				/>
+				<input
+					class="hidden"
+					type="file"
+					id="file-ip-2"
+					accept="image/*"
+					on:change={handleCropBanner}
+				/>
+			</label>
+			<form
+				class="bg-white w-full p-8 flex flex-col items-center justify-center dark:bg-darkobject dark:text-darkmodeText"
+				on:submit|preventDefault={updateProfile}
+			>
+				<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
+					<label for="file-ip-1" class="inline">
+						<!-- Profile Picture -->
+						<img
+							src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
+							class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
+							alt="avatar"
+							id="avatar"
+						/>
+						<input
+							class="hidden"
+							type="file"
+							name="file-ip-1"
+							id="file-ip-1"
+							accept="image/*"
+							on:change={handleCropProfileImage}
+						/></label
+					>
 
-				<div class="flex flex-col gap-1 w-[40%]">
-					<TextInput
-						autofocus
-						onBlur={() => (currentlyEditing = null)}
-						label={'Name'}
-						bind:value={userEdit.username}
-						Class="p-2 text-left"
-					/>
+					<div class="flex flex-col gap-1 w-[40%]">
+						<TextInput
+							autofocus
+							onBlur={() => (currentlyEditing = null)}
+							label={'Name'}
+							bind:value={userEdit.username}
+							Class="p-2 text-left"
+						/>
 
-					<TextInput
-						autofocus
-						onBlur={() => (currentlyEditing = null)}
-						label={'Website'}
-						bind:value={userEdit.website}
-						Class="p-2 text-left"
-					/>
+						<TextInput
+							autofocus
+							onBlur={() => (currentlyEditing = null)}
+							label={'Website'}
+							bind:value={userEdit.website}
+							Class="p-2 text-left"
+						/>
 
-					<div class="wrapper">
-						<select
-							class="country-select {!valid ? 'invalid' : ''}"
-							aria-label="Default select example"
-							name="Country"
-							bind:value={selectedCountry}
-						>
-							<option value={null} hidden={selectedCountry !== null}>Please select</option>
-							{#each normalizedCountries as currentCountry (currentCountry.id)}
-								<option
-									value={currentCountry.iso2}
-									selected={currentCountry.iso2 === selectedCountry}
-									aria-selected={currentCountry.iso2 === selectedCountry}
-								>
-									{currentCountry.iso2} (+{currentCountry.dialCode})
-								</option>
-							{/each}
-						</select>
-						<TelInput
-							bind:country={selectedCountry}
-							bind:value={userEdit.contact_phone}
-							bind:valid
-							bind:detailedValue
-							class="basic-tel-input {!valid ? 'invalid' : ''}"
+						<div class="wrapper">
+							<select
+								class="country-select {!valid ? 'invalid' : ''}"
+								aria-label="Default select example"
+								name="Country"
+								bind:value={selectedCountry}
+							>
+								<option value={null} hidden={selectedCountry !== null}>Please select</option>
+								{#each normalizedCountries as currentCountry (currentCountry.id)}
+									<option
+										value={currentCountry.iso2}
+										selected={currentCountry.iso2 === selectedCountry}
+										aria-selected={currentCountry.iso2 === selectedCountry}
+									>
+										{currentCountry.iso2} (+{currentCountry.dialCode})
+									</option>
+								{/each}
+							</select>
+							<TelInput
+								bind:country={selectedCountry}
+								bind:value={userEdit.contact_phone}
+								bind:valid
+								bind:detailedValue
+								class="basic-tel-input {!valid ? 'invalid' : ''}"
+							/>
+						</div>
+
+						<TextInput
+							autofocus
+							onBlur={() => (currentlyEditing = null)}
+							label={'Mail'}
+							type="email"
+							bind:value={userEdit.contact_email}
+							Class="p-2 text-left"
+						/>
+
+						<TextArea
+							autofocus
+							onBlur={() => (currentlyEditing = null)}
+							label={'Bio'}
+							bind:value={userEdit.bio}
+							Class="p-2 text-left"
+							inputClass="whitespace-pre-wrap"
 						/>
 					</div>
-
-					<TextInput
-						autofocus
-						onBlur={() => (currentlyEditing = null)}
-						label={'Mail'}
-						type="email"
-						bind:value={userEdit.contact_email}
-						Class="p-2 text-left"
-					/>
-
-					<TextArea
-						autofocus
-						onBlur={() => (currentlyEditing = null)}
-						label={'Bio'}
-						bind:value={userEdit.bio}
-						Class="p-2 text-left"
-						inputClass="whitespace-pre-wrap"
-					/>
 				</div>
-			</div>
 
-			<div class="flex gap-2 w-[50%]">
-				<Button
-					Class="flex-1"
-					buttonStyle="warning-light"
-					onClick={() => {
-						isEditing = false;
-						// profileImagePreview = oldProfileImagePreview;
-						getUser();
-					}}>{$_('Cancel')}</Button
-				>
-				<Button Class="flex-1" buttonStyle="primary-light" onClick={updateProfile}>
-					{$_('Save changes')}</Button
-				>
-			</div>
-		</form>
+				<div class="flex gap-2 w-[50%]">
+					<Button
+						Class="flex-1"
+						buttonStyle="warning-light"
+						onClick={() => {
+							isEditing = false;
+							// profileImagePreview = oldProfileImagePreview;
+							getUser();
+						}}>{$_('Cancel')}</Button
+					>
+					<Button Class="flex-1" buttonStyle="primary-light" type="submit">
+						{$_('Save changes')}</Button
+					>
+				</div>
+			</form>
+		</Loader>
 	{/if}
 
 	{#if $page.url.searchParams.get('delegate_id')}

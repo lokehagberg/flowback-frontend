@@ -30,40 +30,60 @@
 		inviteList: invite[] = [],
 		groupMembers: GroupMembers[] = [];
 
+	// Reactive variables to track unread messages
 	$: hasUnreadDirect = previewDirect.some((p) => p.notified);
 	$: hasUnreadGroup = previewGroup.some((p) => p.notified);
 
+	// Fetch and set up preview messages
 	const setUpPreview = async () => {
 		previewDirect = await getPreview('user');
 		previewGroup = await getPreview('group');
 	};
 
+	// Fetch preview messages and set notified based on localStorage timestamps
 	const getPreview = async (selectedPage: 'user' | 'group') => {
 		const { res, json } = await fetchRequest(
 			'GET',
 			`chat/message/channel/preview/list?origin_name=${selectedPage}`
 		);
 		if (!res.ok) return [];
-		return json.results;
+
+		if (selectedPage === 'group')
+			return json.results;
+		else {
+			// Process messages to set notified based on last interaction timestamp
+			return json.results.map((message: PreviewMessage) => {
+				const timestampKey = `lastInteraction_${message.channel_id}`;
+				const lastInteraction = localStorage.getItem(timestampKey);
+				// Set notified to true if message is newer than last interaction or no interaction exists
+				message.notified = lastInteraction ? new Date(message.created_at) > new Date(lastInteraction) : false;
+				// console.log(timestampKey, new Date(message.created_at).toISOString(), new Date(lastInteraction).toISOString());
+				return message;
+			});
+		}
 	};
 
+	// Fetch channel ID for a user
 	const getChannelId = async (id: number) => {
 		const { res, json } = await fetchRequest('GET', `user/chat?target_user_ids=${id}`);
 		return json.id;
 	};
 
+	// Fetch list of chattable users and groups
 	const getChattable = async () => {
 		if (directs.length + groups.length !== 0) return;
 		directs = await userList();
 		groups = await groupList();
 	};
 
+	// Fetch list of groups
 	const groupList = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?joined=true&limit=${chatLimit}`);
 		if (!res.ok) return [];
 		return json.results;
 	};
 
+	// Fetch list of users
 	const userList = async () => {
 		const { json, res } = await fetchRequest('GET', `users?limit=${chatLimit}`);
 		if (!res.ok) return [];
@@ -77,8 +97,14 @@
 		return chatters;
 	};
 
+	// Handle chat selection and clear notifications
 	const clickedChatter = async (chatterId: any) => {
+		// Update server-side timestamp
 		await updateUserData(chatterId, new Date(), new Date());
+
+		// Update localStorage timestamp to mark chat as read
+		const timestampKey = `lastInteraction_${chatterId}`;
+		localStorage.setItem(timestampKey, new Date().toISOString());
 
 		if (selectedPage === 'direct') {
 			let message = previewDirect.find((message) => message.channel_id === chatterId);
@@ -103,6 +129,7 @@
 		}
 	};
 
+	// Sort chats by notification status
 	const sort = (chatter: Group[] | any[], preview: PreviewMessage[]) => {
 		return chatter.sort((a, b) => {
 			let notifiedMsgA = preview.find((notified) => notified.channel_id === (a.chat_id || a.channel_id));
@@ -114,12 +141,14 @@
 		});
 	};
 
+	// Fetch chat invites
 	const UserChatInviteList = async () => {
 		const { res, json } = await fetchRequest('GET', `user/chat/invite/list`);
 		if (!res.ok) return;
 		inviteList = json.results;
 	};
 
+	// Accept or reject chat invites
 	const UserChatInvite = async (accept: boolean, invite_id: number) => {
 		const { res, json } = await fetchRequest('POST', `user/chat/invite`, {
 			invite_id,
@@ -132,6 +161,7 @@
 		});
 	};
 
+	// Fetch work groups
 	const getWorkGroups = async () => {
 		const { res, json } = await fetchRequest('GET', 'group/1/list');
 		if (!res.ok) return;
@@ -144,6 +174,7 @@
 		user = json;
 		await UserChatInviteList();
 		await getChattable();
+		// Initialize preview messages with notification status
 		await setUpPreview();
 
 		workGroupsStore.subscribe((_workGroups) => {
@@ -160,6 +191,7 @@
 		});
 	});
 
+	// Update chat title
 	const updateChatTitle = async () => {
 		if (selectedChatChannelId) {
 			await fetchRequest('POST', 'user/chat/update', {

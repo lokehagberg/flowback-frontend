@@ -39,6 +39,7 @@
 		participants: any[] = [],
 		participantsModalOpen = false;
 
+	// Fetch recent messages for the selected chat
 	const getRecentMessages = async () => {
 		if (!selectedChatChannelId) return;
 		const { res, json } = await fetchRequest(
@@ -54,9 +55,15 @@
 		messages = json.results.reverse();
 		olderMessages = json.next;
 		newerMessages = '';
-		console.log(`Loaded messages for ${selectedPage} chat (channel ${selectedChatChannelId}):`, messages); // Debug log
+		// Update timestamp when viewing messages
+		const timestampKey = `lastInteraction_${selectedChatChannelId}`;
+		localStorage.setItem(timestampKey, new Date().toISOString());
+
+		// console.log("getRecentMessages timestampKey", timestampKey, localStorage.getItem(timestampKey));
+		// console.log(`Loaded messages for ${selectedPage} chat (channel ${selectedChatChannelId}):`, messages);
 	};
 
+	// Send a message and update localStorage timestamp
 	const postMessage = async () => {
 		if (!selectedChat || !selectedChatChannelId || message.length === 0 || message.match(/^\s+$/)) return;
 
@@ -117,9 +124,14 @@
 		messages = messages;
 		message = env.PUBLIC_MODE === 'DEV' ? message + 'a' : '';
 
+		// Update localStorage timestamp when sending a message
+		const timestampKey = `lastInteraction_${selectedChat}`;
+		localStorage.setItem(timestampKey, new Date().toISOString());
+
 		await updateUserData(selectedChat, new Date());
 	};
 
+	// Fetch older messages
 	const showOlderMessages = async () => {
 		if (!olderMessages) return;
 		const { res, json } = await fetchRequest('GET', olderMessages);
@@ -129,6 +141,7 @@
 		messages = json.results.reverse();
 	};
 
+	// Fetch newer messages
 	const showEarlierMessages = async () => {
 		if (!newerMessages) return;
 		const { res, json } = await fetchRequest('GET', newerMessages);
@@ -137,7 +150,8 @@
 		messages = json.results.reverse();
 	};
 
-	const handleReceiveMessage = (preview: PreviewMessage[], message: Message1) => {
+	// Handle incoming messages and set notifications
+	const handleReceiveMessage = (preview: PreviewMessage[], message: Message1) => {	
 		if (message.channel_id === selectedChatChannelId) {
 			if (messages.some((m) => m.id === message.id)) return;
 
@@ -187,6 +201,7 @@
 		}
 	};
 
+	// Subscribe to incoming messages
 	const receiveMessage = () => {
 		const unsubscribe = messageStore.subscribe((message: Message1) => {
 			if (!message || message.user.id === user.id) return;
@@ -201,12 +216,14 @@
 		return unsubscribe;
 	};
 
+	// Adjust chat window height based on header
 	const correctHeightRelativeToHeader = () => {
 		const headerHeight = document.querySelector('#header')?.clientHeight;
 		if (headerHeight && chatWindow)
 			chatWindow.style.height = `calc(100% - ${headerHeight.toString()}px)`;
 	};
 
+	// Fetch channel participants
 	const getChannelParticipants = async () => {
 		if (!selectedChatChannelId) return;
 		const { res, json } = await fetchRequest(
@@ -218,7 +235,7 @@
 			return;
 		}
 		participants = json.results;
-		console.log(`Participants for ${selectedPage} chat (channel ${selectedChatChannelId}):`, participants); // Debug log
+		// console.log(`Participants for ${selectedPage} chat (channel ${selectedChatChannelId}):`, participants);
 	};
 
 	let unsubscribeMessageStore: () => void;
@@ -234,6 +251,7 @@
 		window.removeEventListener('resize', correctHeightRelativeToHeader);
 	});
 
+	// Reactive updates
 	$: (selectedPage || selectedChatChannelId) && getRecentMessages();
 	$: (selectedPage || selectedChatChannelId) && getChannelParticipants();
 	$: isLookingAtOlderMessages = !!newerMessages;

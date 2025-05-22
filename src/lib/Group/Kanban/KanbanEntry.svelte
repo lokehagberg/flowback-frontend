@@ -273,7 +273,7 @@
 		</div>
 	</div>
 	{#if kanban.end_date && endDate}
-		<div class="text-sm text-gray-700">
+		<div class="text-sm text-gray-700 dark:text-darkmodeText">
 			{new Intl.DateTimeFormat('sv-SE', {
 				weekday: 'short',
 				day: '2-digit',
@@ -336,7 +336,7 @@
 			</button>
 
 			<button
-				class="cursor-pointer hover:text-gray-400 px-3 py-0.5 transition-all"
+				class="cursor-pointer hover:dark:text-darkmodeText  hover:text-gray-400 px-3 py-0.5 transition-all"
 				on:click={(event) => {
 					event.stopPropagation();
 					if (kanban.lane < lanes.length - 1) {

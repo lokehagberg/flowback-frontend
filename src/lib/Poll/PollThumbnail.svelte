@@ -139,7 +139,9 @@
 						on:error={(e) => onThumbnailError(e, DefaultBanner)}
 						alt={'Poll Thumbnail'}
 					/>
-					<span class="break-all text-sm text-gray-700 dark:text-darkmodeText">{poll?.group_name}</span>
+					<span class="break-all text-sm text-gray-700 dark:text-darkmodeText"
+						>{poll?.group_name}</span
+					>
 				</a>
 
 				<div class="flex gap-4 items-baseline">
@@ -270,7 +272,12 @@
 					? '/groups/1'
 					: `/groups/${poll?.group_id || $page.params.groupId}/polls/${poll?.id}?section=comments`}
 			>
-				<img class="w-5" src={ChatIcon} alt="open chat" />
+				<img
+					class="w-5"
+					src={ChatIcon}
+					alt="open chat"
+					style:filter={darkMode ? 'brightness(0) invert(1)' : 'none'}
+				/>
 				<span class="inline">{poll?.total_comments}</span>
 			</a>
 

@@ -181,7 +181,7 @@
 								lane = i;
 							}}
 						>
-							<span class="text-gray-600">+ {$_('Add a task')}</span>
+							<span class="text-gray-600 dark:text-darkmodeText">+ {$_('Add a task')}</span>
 						</button>
 					</div>
 				</div>

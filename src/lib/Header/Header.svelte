@@ -4,10 +4,10 @@
 	import Reforum from '$lib/assets/ReforumTransparent.png';
 	import DefaultPFP from '$lib/assets/abstract-user-flat-4.svg';
 	import SideHeader from './SideHeader.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
-	import { changeDarkMode } from '$lib/Generic/DarkMode';
+	import { darkModeStore, initializeDarkMode, toggleDarkMode } from '$lib/Generic/DarkMode';
 	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
 	import {
@@ -15,24 +15,17 @@
 		faCoins,
 		faHouse,
 		faMoon,
-		faUserFriends,
 		faPeopleGroup,
 		faArrowsSpin,
-		faCog,
 		faPeopleArrows,
 		faListCheck
 	} from '@fortawesome/free-solid-svg-icons';
 	import Sun from './Sun.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import CalendarIcon from '$lib/assets/Date_range_fill.svg';
-	import HomeIcon from '$lib/assets/Home_fill.svg';
-	import KanbanIcon from '$lib/assets/kanbanzoomedin.svg';
-	import AutomationIcon from '$lib/assets/Rectangle 4202.svg';
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
-		darkMode: boolean = false,
 		isAdmin = false,
 		ledgerExists = true,
 		selectedHref = '';
@@ -43,36 +36,26 @@
 			setPfP();
 		}
 
-		ensureDarkMode();
+		initializeDarkMode(); // Ensure background color is set correctly
 
-		pfpStore.subscribe((s) => {
+		pfpStore.subscribe(() => {
 			getProfileImage();
 		});
+	});
+
+	onDestroy(() => {
+		profileImage = null;
+		clearProfileImage(); // Ensure profile image is cleared on component destroy
 	});
 
 	const setPfP = () => {
 		if (!profileImage) getProfileImage();
 		else {
 			const pfpLink = localStorage.getItem('pfp-link');
-			console.log(typeof pfpLink, 'PFPLINK');
 
 			if (pfpLink !== 'null') profileImage = pfpLink;
 			else profileImage = null;
 		}
-	};
-
-	const ensureDarkMode = () => {
-		if (localStorage.getItem('theme') === 'light') {
-			darkMode = false;
-			return;
-		} else if (localStorage.getItem('theme') === 'dark') {
-			darkMode = true;
-			return;
-		}
-
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			darkMode = true;
-		} else darkMode = false;
 	};
 
 	const getProfileImage = async () => {
@@ -98,6 +81,11 @@
 			if (admins.find((admin: GroupUser) => admin.user.id === userId)) isAdmin = true;
 		}
 	};
+
+	const clearProfileImage = () => {
+		localStorage.removeItem('pfp-link');
+		profileImage = null;
+	};
 </script>
 
 <header
@@ -115,7 +103,6 @@
 	>
 	<div class="!flex justify-between md:w-[80%]">
 		<nav class="flex items-baseline p-6 justify-evenly md:justify-center md:gap-[10%] w-[70%]">
-			
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<HeaderIcon disableTextOnHover icon={faHouse} text="Home" href="home" bind:selectedHref />
 				<!-- <HeaderIcon disableTextOnHover icon={faGlobeEurope} text="Public" href="public" /> -->
@@ -186,14 +173,10 @@
 			<div class="mr-5 flex gap-4 items-center">
 				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
-					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
-					on:keydown={() => {}}
-					on:click={() => {
-						changeDarkMode(darkMode ? 'light' : 'dark');
-						darkMode = !darkMode;
-					}}
+					title={`Enable ${$darkModeStore ? 'lightmode' : 'darkmode'}`}
+					on:click={toggleDarkMode}
 				>
-					{#if darkMode}
+					{#if $darkModeStore}
 						<Sun />
 					{:else}
 						<Fa icon={faMoon} size={'1.3x'} />
@@ -202,13 +185,15 @@
 				<Notifications />
 			</div>
 			<button id="side-header" on:click={() => (sideHeaderOpen = !sideHeaderOpen)}>
-				<img
-					src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
-					class={`w-8 h-8 rounded-full cursor-pointer ${
-						sideHeaderOpen && 'border-blue-500 border-4'
-					}`}
-					alt="default pfp"
-				/>
+				{#key profileImage}
+					<img
+						src={profileImage ? `${env.PUBLIC_API_URL}${profileImage}` : DefaultPFP}
+						class={`w-8 h-8 rounded-full cursor-pointer ${
+							sideHeaderOpen && 'border-blue-500 border-4'
+						}`}
+						alt="default pfp"
+					/>
+				{/key}
 			</button>
 		</div>
 	</div>

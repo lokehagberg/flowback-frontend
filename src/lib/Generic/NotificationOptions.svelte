@@ -7,6 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import SuccessPoppup from './SuccessPoppup.svelte';
 	import { page } from '$app/stores';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 
 	export let notificationOpen = false,
 		categories: string[],
@@ -96,11 +97,13 @@
 		}}
 		on:keydown
 	>
-		<Fa
-			class={'hover:cursor-pointer hover:text-primary dark:text-secondary'}
-			icon={faBell}
-			size={'1.2x'}
-		/>
+		{#key darkModeStore}
+			<Fa
+				class={'hover:cursor-pointer hover:text-primary dark:text-secondary'}
+				icon={faBell}
+				size={'1.2x'}
+			/>
+		{/key}
 	</button>
 
 	{#if notificationOpen && categories}

@@ -31,14 +31,25 @@
 		creatingGroup = false,
 		groupMembers: GroupMembers[] = [];
 
+	// Reactive variables to track unread messages
 	$: hasUnreadDirect = previewDirect.some((p) => p.notified);
 	$: hasUnreadGroup = previewGroup.some((p) => p.notified);
 
+	// Clear notification and update localStorage timestamp when a chat is opened
 	const clearChatNotification = async (chatterId: number | null, page: 'direct' | 'group') => {
 		if (!chatterId) return;
 
+		// Store the current timestamp in localStorage to mark the chat as read
+		const timestampKey = `lastInteraction_${chatterId}`;
+		const now = new Date().toISOString();
+		localStorage.setItem(timestampKey, now);
+
+		// console.log("clear timestampKey", localStorage.getItem(timestampKey));
+
+		// Update server-side timestamp
 		await updateUserData(chatterId, new Date(), new Date());
 
+		// Clear notification for direct messages
 		if (page === 'direct') {
 			let message = previewDirect.find((message) => message.channel_id === chatterId);
 			if (message) {
@@ -46,6 +57,7 @@
 				message.notified = false;
 				previewDirect = [...previewDirect];
 			}
+		// Clear notification for group messages
 		} else if (page === 'group') {
 			let message = previewGroup.find((message) => message.channel_id === chatterId);
 			if (message) {
@@ -57,12 +69,17 @@
 	};
 
 	onMount(async () => {
+		// Fetch user data on component mount
 		await getUser();
+		// Adjust chat window margin based on header height
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
+		// Subscribe to dark mode changes
 		darkModeStore.subscribe((dm) => (darkMode = dm));
+		// Subscribe to chat open state
 		isChatOpen.subscribe((open) => (chatOpen = open));
 
+		// Periodically clean up notifications older than 1 hour
 		const cleanupNotifications = () => {
 			const now = new Date();
 			previewDirect = previewDirect.map((p) => {
@@ -83,33 +100,39 @@
 		return () => clearInterval(interval);
 	});
 
+	// Adjust chat window margin dynamically
 	const correctMarginRelativeToHeader = () => {
 		const _headerHeight = document.querySelector('#header')?.clientHeight;
 		if (_headerHeight && chatDiv) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
 	};
 
+	// Fetch current user data
 	const getUser = async () => {
 		const { res, json } = await fetchRequest('GET', 'user');
 		if (!res.ok) return;
 		user = json;
 	};
 
+	// Automatically select the first chat when the chat window opens
 	$: if (chatOpen && selectedChat === null && selectedChatChannelId === null) {
 		if (selectedPage === 'direct' && previewDirect.length > 0) {
 			const firstDirectChat = previewDirect[0];
 			selectedChat = firstDirectChat.channel_id;
 			selectedChatChannelId = firstDirectChat.channel_id;
 			chatPartner.set(firstDirectChat.channel_id);
+			// Clear notification and update timestamp for the selected chat
 			clearChatNotification(firstDirectChat.channel_id, 'direct');
 		} else if (selectedPage === 'group' && previewGroup.length > 0) {
 			const firstGroupChat = previewGroup[0];
 			selectedChat = firstGroupChat.channel_id;
 			selectedChatChannelId = firstGroupChat.channel_id;
 			chatPartner.set(firstGroupChat.channel_id);
+			// Clear notification and update timestamp for the selected chat
 			clearChatNotification(firstGroupChat.channel_id, 'group');
 		}
 	}
 
+	// Reset chat partner when chat is closed
 	$: if (!chatOpen) {
 		chatPartner.set(0);
 	}
@@ -192,11 +215,11 @@
 	class:small-notification-group={hasUnreadGroup}
 	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
-	{#key darkMode}
+	{#key $darkModeStore}
 		<img
 			src={ChatIcon}
 			class="text-white"
-			style="filter: {getIconFilter(true, 'white')}"
+			style="filter: {getIconFilter(true, 'white', $darkModeStore)}"
 			alt={chatOpen ? 'close chat' : 'open chat'}
 		/>
 	{/key}

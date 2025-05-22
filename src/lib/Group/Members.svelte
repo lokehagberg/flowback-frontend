@@ -304,7 +304,7 @@
 		<!-- Invites -->
 		{#if usersAskingForInvite.length > 0}
 			<div class="w-full p-4 flex-col gap-6 shadow rounded bg-white p-2 mb-4 dark:bg-darkobject">
-				<span class="font-semibold text-sm text-gray-700">{$_('Users requesting invite')}</span>
+				<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText">{$_('Users requesting invite')}</span>
 				{#each usersAskingForInvite as user}
 					{#if user.external === true}
 						<div

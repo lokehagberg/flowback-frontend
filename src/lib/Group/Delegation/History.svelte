@@ -114,7 +114,7 @@
 <Loader bind:loading>
 	<div class="w-screen bg-[#faf5ff] pt-4">
 		<div class="w-full max-w-screen-md mx-auto p-4 bg-white rounded shadow mb-4">
-			<span class="font-semibold text-sm text-gray-700 pb-2">{$_('Delegate history for')} {user?.username}</span>
+			<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText pb-2">{$_('Delegate history for')} {user?.username}</span>
 			<form
 				class="w-full dark:bg-darkobject dark:text-darkmodeText flex flex-1 items-end gap-4"
 				on:input|preventDefault={() => searchVotes(searchVoteQuery)}

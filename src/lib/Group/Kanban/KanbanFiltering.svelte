@@ -31,8 +31,8 @@
 >
 	<div class="w-full flex items-end gap-4">
 		<TextInput
-			Class="flex-1 placeholder-gray-600 rounded pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject"
-			inputClass="placeholder-gray-600 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject"
+			Class="flex-1 placeholder-gray-600 rounded pr-6 text-gray-500 bg-gray-100 dark:bg-darkobject dark:text-darkmodeText"
+			inputClass="placeholder-gray-600 text-gray-500 border-0 bg-gray-100 dark:bg-darkobject dark:text-darkmodeText"
 			placeholder={$_('Search tasks')}
 			on:change={async () => {
 				searched = false;
@@ -49,7 +49,7 @@
 			</label>
 			<select
 				style="width:100%"
-				class="rounded p-1 dark:border-gray-600 dark:bg-darkobject text-gray-700 font-semibold"
+				class="rounded p-1 dark:border-gray-600 dark:bg-darkobject text-gray-700 dark:text-darkmodeText font-semibold"
 				on:change={(e) => onWorkGroupChange(e.target.value)}
 				id="work-group"
 			>

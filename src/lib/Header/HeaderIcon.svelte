@@ -8,6 +8,7 @@
 	import { page } from '$app/stores';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
+	import { get } from 'svelte/store';
 
 	export let icon: IconDefinition | string = faCircle,
 		icons: (IconDefinition | string)[] = [faCircle],
@@ -23,7 +24,7 @@
 	let hovering = false,
 		selectedCurrent = '',
 		selectedPage = false,
-		darkMode = false;
+		darkMode = get(darkModeStore);
 
 	$: selectedPage = selectedHref === href;
 
@@ -45,6 +46,7 @@
 	});
 
 	$: if ($page.url.pathname) checkIfSelected();
+	$: darkMode = get(darkModeStore);
 </script>
 
 {#if href}
@@ -56,7 +58,7 @@
 		on:click={handleClick}
 		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
-		class={`relative w-14 ${Class}`}
+		class={`relative w-14 ${Class} ${darkMode ? 'text-white' : ''}`}
 		id={href}
 		{tabindex}
 	>
@@ -97,7 +99,9 @@
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		aria-haspopup="true"
-		class={`flex relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class}`}
+		class={`flex relative cursor-pointer ${selectedPage ? 'active-icon' : ''} ${Class} ${
+			darkMode ? 'text-white' : ''
+		}`}
 		id={href}
 		on:load={checkIfSelected}
 	>

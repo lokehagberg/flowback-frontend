@@ -9,7 +9,8 @@
 	import TimeAgo from 'javascript-time-ago';
 	import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 	import { goto } from '$app/navigation';
-	import {notifications as notificationLimit} from '$lib/Generic/APILimits.json';
+	import { notifications as notificationLimit } from '$lib/Generic/APILimits.json';
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 
 	let notifications: notification[],
 		hovered: number[] = [];
@@ -88,7 +89,7 @@
 	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 >
-	<Fa icon={faBell} size={'1.3x'} />
+	<Fa icon={faBell} color={$darkModeStore ? 'white' : 'black'} size={'1.3x'} />
 	<div
 		class:hidden={notifications?.length === 0 || notifications?.length === undefined}
 		class="w-[2em] h-[2em] flex items-center justify-center rounded-full absolute -top-1.5 -right-1.5 text-[10px] text-white bg-secondary"

@@ -7,7 +7,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Notifications from './Notifications.svelte';
-	import { changeDarkMode } from '$lib/Generic/DarkMode';
+	import { darkModeStore, initializeDarkMode, toggleDarkMode } from '$lib/Generic/DarkMode';
 	import type { Group, GroupUser } from '$lib/Group/interface';
 	import { pfpStore } from '$lib/Login/stores';
 	import {
@@ -26,7 +26,6 @@
 
 	let sideHeaderOpen = false,
 		profileImage: string | null = DefaultPFP,
-		darkMode: boolean = false,
 		isAdmin = false,
 		ledgerExists = true,
 		selectedHref = '';
@@ -37,9 +36,9 @@
 			setPfP();
 		}
 
-		ensureDarkMode();
+		initializeDarkMode(); // Ensure background color is set correctly
 
-		pfpStore.subscribe((s) => {
+		pfpStore.subscribe(() => {
 			getProfileImage();
 		});
 	});
@@ -57,20 +56,6 @@
 			if (pfpLink !== 'null') profileImage = pfpLink;
 			else profileImage = null;
 		}
-	};
-
-	const ensureDarkMode = () => {
-		if (localStorage.getItem('theme') === 'light') {
-			darkMode = false;
-			return;
-		} else if (localStorage.getItem('theme') === 'dark') {
-			darkMode = true;
-			return;
-		}
-
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			darkMode = true;
-		} else darkMode = false;
 	};
 
 	const getProfileImage = async () => {
@@ -188,14 +173,10 @@
 			<div class="mr-5 flex gap-4 items-center">
 				<button
 					class="dark:text-darkmodeText cursor-pointer pl-2"
-					title={`Enable ${darkMode ? 'lightmode' : 'darkmode'}`}
-					on:keydown={() => {}}
-					on:click={() => {
-						changeDarkMode(darkMode ? 'light' : 'dark');
-						darkMode = !darkMode;
-					}}
+					title={`Enable ${$darkModeStore ? 'lightmode' : 'darkmode'}`}
+					on:click={toggleDarkMode}
 				>
-					{#if darkMode}
+					{#if $darkModeStore}
 						<Sun />
 					{:else}
 						<Fa icon={faMoon} size={'1.3x'} />

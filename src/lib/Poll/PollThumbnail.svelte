@@ -139,7 +139,7 @@
 						on:error={(e) => onThumbnailError(e, DefaultBanner)}
 						alt={'Poll Thumbnail'}
 					/>
-					<span class="break-all text-sm text-gray-700">{poll?.group_name}</span>
+					<span class="break-all text-sm text-gray-700 dark:text-darkmodeText">{poll?.group_name}</span>
 				</a>
 
 				<div class="flex gap-4 items-baseline">

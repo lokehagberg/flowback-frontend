@@ -1,8 +1,50 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export const darkModeStore = writable(false)
-let darkMode = false;
-darkModeStore.subscribe(mode => darkMode = mode)
+export const darkModeStore = writable(false);
+
+export const initializeDarkMode = () => {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'light') {
+        darkModeStore.set(false);
+        document.documentElement.classList.remove('dark');
+        document.body.classList.add('bg-purple-50');
+        document.body.classList.remove('bg-darkbackground');
+    } else if (theme === 'dark') {
+        darkModeStore.set(true);
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('bg-darkbackground');
+        document.body.classList.remove('bg-purple-50');
+    } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        darkModeStore.set(prefersDark);
+        if (prefersDark) {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('bg-darkbackground');
+            document.body.classList.remove('bg-purple-50');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.body.classList.add('bg-purple-50');
+            document.body.classList.remove('bg-darkbackground');
+        }
+    }
+};
+
+export const toggleDarkMode = () => {
+    darkModeStore.update((current) => {
+        const newMode = !current;
+        localStorage.setItem('theme', newMode ? 'dark' : 'light');
+        if (newMode) {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('bg-darkbackground');
+            document.body.classList.remove('bg-purple-50');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.body.classList.add('bg-purple-50');
+            document.body.classList.remove('bg-darkbackground');
+        }
+        return newMode;
+    });
+};
 
 export const TriggerDarkMode = () => {
     if (
@@ -30,7 +72,7 @@ export const changeDarkMode = (changeTo: 'light' | 'dark') => {
     darkModeStore.set(changeTo === 'dark')
 }
 
-export const getIconFilter = (isSelected: boolean, color: 'white' | 'blue' = 'blue') => {
+export const getIconFilter = (isSelected: boolean, color: 'white' | 'blue' = 'blue', darkMode: boolean) => {
 
     if (color === 'blue')
         if (darkMode) {

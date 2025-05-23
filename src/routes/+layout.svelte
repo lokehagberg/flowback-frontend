@@ -19,8 +19,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { workGroupsStore } from '$lib/Group/WorkingGroups/interface';
 	import LogBackInModal from '$lib/Generic/LogBackInModal.svelte';
-	import { addDateOffset } from '$lib/Generic/Dates';
-	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	export const prerender = true;
 
@@ -140,8 +138,9 @@
 	};
 
 	const setUserGroupInfo = async () => {
-		console.log("HLLO?");
-		
+		if (!$page.params.groupId) return;
+		if ($userGroupInfo?.group_id === Number($page.params.groupId)) return;
+
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/users?id=${localStorage.getItem('userId')}`

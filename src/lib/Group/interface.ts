@@ -71,8 +71,8 @@ export interface Group {
 	joined: boolean;
 	name: string;
 	public: boolean;
-	pending_join:boolean;
-	pending_invite:boolean;
+	pending_join: boolean;
+	pending_invite: boolean;
 }
 
 export interface GroupDetails {
@@ -116,7 +116,8 @@ export const userGroupInfo = writable({
 	permission_name: '',
 	profile_image: null,
 	user_id: 0,
-	username: ''
+	username: '',
+	group_id: 0
 });
 
 export const userIdStore = writable(0);

@@ -3,11 +3,13 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { userGroupInfo } from '$lib/Group/interface';
+	import type { Phase } from './interface';
 
 	export let onSelection = (pos: number | null) => {},
 		lineWidth = 0,
 		score: number | null = null,
-		delegateScore: number | null = null;
+		delegateScore: number | null = null,
+		phase: Phase;
 
 	const maxScore = 5;
 	const snapPoints = Array.from({ length: maxScore + 1 }, (_, i) => i); // [0,1,2,3,4,5]
@@ -57,15 +59,15 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg relative"
-	class:draggable={$userGroupInfo.delegate}
+	class:draggable={($userGroupInfo.delegate && phase === 'delegate_vote') ||
+		(!$userGroupInfo.delegate && phase === 'vote')}
 	on:mousedown={onMouseDown}
-	style="background-color: {isOverridden ? '#fbcfe8' : '#e5e7eb'};"
 >
 	<div id="track-container" class="p-1 relative w-full h-3 bg-purple-200 rounded-full">
 		<!-- Active bar -->
 		<div
 			class="absolute top-0 left-0 h-full"
-			style="width: {lineWidth}%; background-color: {isOverridden ? '#ec4899' : '#a78bfa'};"
+			style="width: {lineWidth}%; background-color: {isOverridden ? '#a78bfa' : '#BBBBBB'};"
 		/>
 
 		{#each snapPoints as point, index}

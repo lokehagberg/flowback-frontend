@@ -9,7 +9,7 @@
 	import Poppup from '$lib/Generic/Poppup.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import VotingSlider from './VotingSlider.svelte';
-	
+
 	export let proposals: proposal[],
 		selectedProposal: proposal | null = null,
 		phase: Phase,
@@ -172,6 +172,7 @@
 									{score}
 									delegateScore={delegateVoting.find((vote) => vote.proposal === proposal.id)
 										?.score}
+									bind:phase
 								/>
 							{/if}
 						</Proposal>

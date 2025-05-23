@@ -2,11 +2,14 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { userGroupInfo } from '$lib/Group/interface';
+	import type { Phase } from './interface';
 
 	export let onSelection = (pos: number | null) => {},
 		lineWidth = 0,
 		score: number | null = null,
-		isVoting; // Add this new prop
+		delegateScore: number | null = null,
+		phase: Phase;
 
 	const maxScore = 5;
 	const snapPoints = Array.from({ length: maxScore + 1 }, (_, i) => i); // [0,1,2,3,4,5]
@@ -50,18 +53,21 @@
 	};
 
 	$: score !== null ? snapToSnapPoint(score) : snapToSnapPoint(0);
+	$: isOverridden = delegateScore !== null && score !== null && score !== delegateScore;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg draggable relative"
+	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg relative"
+	class:draggable={($userGroupInfo.delegate && phase === 'delegate_vote') ||
+		(!$userGroupInfo.delegate && phase === 'vote')}
 	on:mousedown={onMouseDown}
 >
 	<div id="track-container" class="p-1 relative w-full h-3 bg-purple-200 rounded-full">
 		<!-- Active bar -->
 		<div
-			class="absolute top-0 left-0 h-full bg-purple-500 rounded-full"
-			style="width: {lineWidth}%;"
+			class="absolute top-0 left-0 h-full"
+			style="width: {lineWidth}%; background-color: {isOverridden ? '#a78bfa' : '#BBBBBB'};"
 		/>
 
 		{#each snapPoints as point, index}
@@ -98,7 +104,7 @@
 					class="absolute -top-6 z-30 text-sm bg-white px-1 py-0.5 rounded shadow -translate-x-1/2"
 					style="left: {(currentSnapPosition / maxScore) * 100}%"
 				>
-					{#if isVoting}
+					{#if $userGroupInfo.delegate}
 						{currentSnapPosition}
 					{:else}
 						{currentSnapPosition * 20}%
@@ -120,7 +126,7 @@
 			onSelection(null);
 		}}
 	>
-		{$_(isVoting ? 'Clear vote' : 'Clear probability')}
+		{$_($userGroupInfo.delegate ? 'Clear vote' : 'Clear probability')}
 	</Button>
 </div>
 

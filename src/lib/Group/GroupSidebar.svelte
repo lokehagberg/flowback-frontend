@@ -28,10 +28,11 @@
 	import { goto } from '$app/navigation';
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
-	import { getPermissionsFast, getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import { getPermissionsFast } from '$lib/Generic/GenericFunctions';
 	import Permissions from './Permissions/Permissions.svelte';
 	import type { poppup } from '$lib/Generic/Poppup';
 	import Poppup from '$lib/Generic/Poppup.svelte';
+	import { userGroupInfo, type GroupUser } from '$lib/Group/interface';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -39,7 +40,6 @@
 
 	let innerWidth = 0,
 		clickedExpandSidebar = false,
-		userIsOwner = false,
 		areYouSureModal = false,
 		userIsPermittedToCreatePost = false,
 		poppup: poppup;
@@ -59,11 +59,10 @@
 	};
 
 	onMount(async () => {
-		userIsOwner = await getUserIsGroupAdmin($page.params.groupId);
-
 		const permission: Permissions = await getPermissionsFast($page.params.groupId);
 		userIsPermittedToCreatePost =
-			(permission !== undefined && permission !== null && permission.create_poll) || userIsOwner;
+			(permission !== undefined && permission !== null && permission.create_poll) ||
+			$userGroupInfo.is_admin;
 	});
 
 	//@ts-ignore
@@ -193,15 +192,15 @@
 			{/if}
 		</div>
 		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
-			<GroupSidebarButton
-						Class="w-full"
-						action={() => (areYouSureModal = true)}
-						text="Leave group"
-						faIcon={faPersonRunning}
-						isSelected={false}
-					/>
-			{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
+			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+				<GroupSidebarButton
+					Class="w-full"
+					action={() => (areYouSureModal = true)}
+					text="Leave group"
+					faIcon={faPersonRunning}
+					isSelected={false}
+				/>
+				{#if env.PUBLIC_FLOWBACK_LEDGER_MODULE === 'TRUE'}
 					<a class="text-inherit w-full" href={`/ledger`}>
 						<GroupSidebarButton
 							Class="w-full"
@@ -213,7 +212,7 @@
 				{/if}
 			</div>
 		{/if}
-		{#if userIsOwner}
+		{#if $userGroupInfo.is_admin}
 			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
 				<GroupSidebarButton
 					action={() => action('email')}

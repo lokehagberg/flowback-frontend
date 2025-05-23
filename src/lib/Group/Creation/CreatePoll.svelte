@@ -9,7 +9,6 @@
 	import {
 		getPermissions,
 		getPermissionsFast,
-		getUserIsGroupAdmin,
 		type StatusMessageInfo
 	} from '$lib/Generic/GenericFunctions';
 	import Loader from '$lib/Generic/Loader.svelte';
@@ -33,6 +32,7 @@
 	import { onMount } from 'svelte';
 	import Select from '$lib/Generic/Select.svelte';
 	import type { WorkGroup } from '../WorkingGroups/interface';
+	import { userGroupInfo } from '$lib/Group/interface';
 
 	let title = '',
 		description = '',
@@ -58,8 +58,7 @@
 		tags: { id: number }[] = [],
 		workGroups: WorkGroup[] = [],
 		workGroup: number,
-		permissions: any,
-		userIsOwner = false;
+		permissions: any;
 
 	const groupId = $page.url.searchParams.get('id');
 
@@ -189,7 +188,6 @@
 		getGroupTags();
 		getWorkGroupList();
 		permissions = await getPermissionsFast(Number(groupId));
-		userIsOwner = await getUserIsGroupAdmin(Number(groupId));
 	});
 
 	$: if (selectedPage) status = undefined;
@@ -297,7 +295,7 @@
 				<RadioButtons bind:Yes={isPublic} label="Public?" />
 			{/if}
 
-			{#if selectedPage === 'poll' && (permissions?.allow_fast_forward || userIsOwner)}
+			{#if selectedPage === 'poll' && (permissions?.allow_fast_forward || $userGroupInfo.is_admin)}
 				<RadioButtons bind:Yes={isFF} label="Fast Forward?" />
 			{/if}
 

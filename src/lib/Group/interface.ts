@@ -71,8 +71,8 @@ export interface Group {
 	joined: boolean;
 	name: string;
 	public: boolean;
-	pending_join:boolean;
-	pending_invite:boolean;
+	pending_join: boolean;
+	pending_invite: boolean;
 }
 
 export interface GroupDetails {
@@ -107,11 +107,6 @@ export interface groupUser extends User {
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
-/*
-	"userGroupInfo" is unused at the moment due to it not working. 
-	TODO: Make it into a typescript class with derivable stores 
-	Reference: https://javascript.plainenglish.io/writing-a-svelte-store-with-typescript-22fa1c901a4 
-*/
 export const userGroupInfo = writable({
 	banner_image: '',
 	delegate: false,
@@ -121,13 +116,10 @@ export const userGroupInfo = writable({
 	permission_name: '',
 	profile_image: null,
 	user_id: 0,
-	username: ''
+	username: '',
+	group_id: 0
 });
 
-/*
-	This works though
-*/
-export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
 
 export interface Thread {

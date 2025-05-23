@@ -100,7 +100,6 @@
 		if (display === '1') displayForm = true;
 	};
 
-
 	// When fast forwarding from area phase to proposal phase, get tag info in real time
 	$: if (phase === 'proposal') {
 		const a = setTimeout(() => {
@@ -152,13 +151,10 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
-								bind:poll
 								bind:selectedProposal
 								bind:proposals
 								bind:comments
-								bind:allComments
 								bind:phase
-								isVoting={false}
 							/>
 						</div>
 						<Button
@@ -208,14 +204,11 @@
 						>
 						<div class="max-h-[80%] overflow-y-auto">
 							<ProposalScoreVoting
-								bind:poll
 								bind:comments
-								bind:allComments
 								bind:proposals
 								bind:phase
 								bind:selectedProposal
 								bind:proposalsToPredictionMarket
-								isVoting={false}
 							/>
 						</div>
 						<Button
@@ -263,13 +256,10 @@
 						>
 						<div class="max-h-full overflow-y-auto">
 							<ProposalScoreVoting
-								bind:poll
 								bind:comments
-								bind:allComments
+								bind:phase	
 								bind:proposals
-								bind:phase
 								bind:selectedProposal
-								isVoting={false}
 							/>
 						</div>
 					</div>
@@ -303,12 +293,9 @@
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
 								bind:comments
-								bind:allComments
+								
 								bind:proposals
-								isVoting={false}
 								bind:phase
-								bind:selectedProposal
-								bind:poll
 							/>
 						</div>
 					</div>
@@ -340,13 +327,10 @@
 						>
 						<div class="max-h-[90%] overflow-y-auto">
 							<ProposalScoreVoting
-								bind:poll
 								bind:comments
-								bind:allComments
 								bind:proposals
-								bind:phase
 								bind:selectedProposal
-								isVoting={false}
+								bind:phase
 							/>
 						</div>
 					</div>

@@ -1,11 +1,7 @@
 <script lang="ts">
 	import GroupHeader from '$lib/Group/GroupHeader.svelte';
-	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
-	import {
-		type GroupDetails,
-		type SelectablePage
-	} from '$lib/Group/interface';
+	import { type GroupDetails, type SelectablePage } from '$lib/Group/interface';
 	import Delegation from '$lib/Group/Delegation/Delegation.svelte';
 	import GroupSidebar from '$lib/Group/GroupSidebar.svelte';
 	import Layout from '$lib/Generic/Layout.svelte';
@@ -24,7 +20,6 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import Schedule from '$lib/Schedule/Schedule.svelte';
 	import Threads from '$lib/Poll/Threads.svelte';
-	import { pushState } from '$app/navigation';
 	import WorkGroups from '$lib/Group/WorkingGroups/WorkGroups.svelte';
 	import { env } from '$env/dynamic/public';
 	import PollThreadThumbnails from '$lib/Poll/PollThreadThumbnails.svelte';

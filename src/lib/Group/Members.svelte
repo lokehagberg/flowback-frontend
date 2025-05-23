@@ -25,7 +25,6 @@
 	import { chatPartner, isChatOpen } from '$lib/Chat/ChatStore.svelte';
 	import type { Delegate } from './Delegation/interfaces';
 	import Select from '$lib/Generic/Select.svelte';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
 	import { getUserChannelId } from '$lib/Chat/functions';
 
 	let users: GroupUser[] = [],

@@ -17,7 +17,7 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
-	import { getUserIsGroupAdmin } from '$lib/Generic/GenericFunctions';
+	import { userGroupInfo } from '$lib/Group/interface';
 	import Loader from '$lib/Generic/Loader.svelte';
 
 	let workGroups: WorkingGroupType[] = [],
@@ -38,7 +38,6 @@
 		open = false,
 		search: string,
 		invites: WorkGroupInvite[] = [],
-		isAdmin = false,
 		loading = true;
 
 	const getWorkingGroupList = async () => {
@@ -127,7 +126,6 @@
 		await getWorkingGroupList();
 
 		getWorkGroupInvite();
-		isAdmin = await getUserIsGroupAdmin($page.params.groupId);
 		loading = false;
 	});
 
@@ -153,7 +151,7 @@
 		/>
 	</div>
 
-	{#if isAdmin}
+	{#if $userGroupInfo.is_admin}
 		<Button onClick={() => (open = true)} Class="w-10 h-10 flex items-center justify-center">
 			<Fa icon={faPlus} class="text-lg" />
 		</Button>
@@ -161,7 +159,8 @@
 </div>
 
 <Loader bind:loading>
-	{#if isAdmin && invites?.length > 0}
+	{#if $userGroupInfo.is_admin}
+		&& invites?.length > 0}
 		<div class="flex flex-col gap-4 mt-4">
 			{#key invites}
 				{#each invites as invite}
@@ -191,7 +190,6 @@
 				bind:workGroup={workingGroup}
 				{workGroups}
 				{handleRemoveGroup}
-				bind:isAdmin
 			/>
 		{/each}
 	</div>

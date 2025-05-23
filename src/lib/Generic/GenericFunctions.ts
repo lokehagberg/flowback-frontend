@@ -107,22 +107,6 @@ export const elipsis = (label: string, charMax = 30) => {
 	return label.length > charMax ? label.substring(0, charMax) + '...' : label
 }
 
-// Returns true if user is admin in the given group, false otherwise.
-// TODO: Make sure that as the user navigates the site, between different groups, that there will be dynamic loading of it's group user information. Right now the code is a mess! 
-export const getUserIsGroupAdmin = async (groupId: number | string) => {
-	const userData = await fetchRequest('GET', 'user');
-	const groupAdmins = await fetchRequest(
-		'GET',
-		`group/${groupId}/users?is_admin=true`
-	);
-
-	if (groupAdmins.json.results.find(
-		(user: any) => user.user.id === userData.json.id && user.is_admin
-	) !== undefined)
-		return true
-	else return false;
-};
-
 export const commaCleanup = (api: string) => {
 	return api?.replace('%2C', ',');
 };

@@ -100,6 +100,7 @@
 		if (display === '1') displayForm = true;
 	};
 
+
 	// When fast forwarding from area phase to proposal phase, get tag info in real time
 	$: if (phase === 'proposal') {
 		const a = setTimeout(() => {
@@ -130,9 +131,7 @@
 					{formatDate(poll.start_date)}
 				</div>
 				<div class="bg-white p-6 mt-6">
-
 					<Comments bind:proposals api={'poll'} />
-
 				</div>
 
 				<!-- PHASE 1: AREA VOTE -->
@@ -140,9 +139,7 @@
 				<Structure bind:phase bind:poll>
 					<div slot="left"><AreaVote /></div>
 					<div slot="right" class="!p-0">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 
@@ -198,9 +195,7 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 
@@ -255,9 +250,7 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 
@@ -296,9 +289,7 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 
@@ -337,9 +328,7 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 				<!-- PHASE 6: NON-DELEGATE VOTING -->
@@ -377,9 +366,7 @@
 						{/if}
 					</div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 				<!-- PHASE 7: RESULTS AND EVALUATION -->
@@ -396,9 +383,7 @@
 					</div>
 					<div slot="right"><Results bind:poll {pollType} /></div>
 					<div slot="bottom">
-
 						<Comments bind:proposals api={'poll'} />
-
 					</div>
 				</Structure>
 			{/if}

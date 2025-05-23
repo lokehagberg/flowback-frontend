@@ -28,7 +28,8 @@
 		poppup: poppup,
 		commentFilterProposalId: number | null = null,
 		delegateRelations: any[] = [],
-		delegates: any[] = [];
+		delegates: any[] = [],
+		delegateVoting: { score: number; proposal: number }[] = [];
 
 	onMount(async () => {
 		await getProposals();
@@ -102,52 +103,23 @@
 	};
 
 	const getDelegateVotes = async () => {
-		const user: groupUser = await getGroupUserInfo($page.params.groupId);
-
-		await getDelegatePools();
-		await getDelegateRelations();
-		const delegate = delegateRelations.find((relation) =>
-			relation.tags.find((tag: any) => tag.id === poll.tag_id)
-		);
-		console.log(user, delegate, delegateRelations, 'USER');
-		// {
-		// 	await fetchRequest(
-		// 	'GET',
-		// 	`group/${$page.params.groupId}/delegate/pools`
-		// );
-
-		// }
-
-		const { json } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'GET',
-			`group/poll/pool/${delegate.delegate_pool_id}/votes?poll_id=${$page.params.pollId}`
+			`group/poll/pool/votes?group_id=${$page.params.groupId}&poll_id=${$page.params.pollId}`
 		);
 
-		if (!json?.results || json?.results?.length === 0) return;
+		if (!res.ok) {
+			console.error('Error fetching votes:', json.detail);
+			return;
+		}
 
-		const votes = json.results[0].vote;
+		delegateVoting = json.results[0].vote.map((vote: any) => ({
+			score: vote.raw_score,
+			proposal: vote.proposal_id
+		}));
 
-		voting.forEach((proposal) => {
-			votes.forEach((vote: any) => {
-				if (proposal.proposal === vote.proposal_id) {
-					proposal.score = vote.raw_score;
-					console.log(proposal, vote, 'proposal.score = vote.raw_score');
-				}
-			});
-		});
-
-		voting = voting;
-
-		// voting = voting.map((vote) => ({
-		// 	score: (vote.score = json.results.find((v:any) => {
-		// 		console.log(vote, v, 'VOTINGÖÖ');
-		// 		//@ts-ignore
-		// 		(score: { score: number; proposal: number }) => score.proposal_id === vote.proposal_id;
-		// 	})?.raw_score),
-		// 	proposal: vote.proposal
-		// }));
-
-		// voting = voting;
+		voting = delegateVoting
+		
 	};
 
 	const delegateVote = async () => {
@@ -204,8 +176,6 @@
 	};
 
 	const changingVote = (score: number | string, proposalId: number) => {
-		//@ts-ignore
-		// let newScore = e?.target?.value;
 		const i = voting.findIndex((vote) => vote.proposal === proposalId);
 		voting[i].score = Number(score);
 		voting = voting;
@@ -241,6 +211,7 @@
 									}}
 									{score}
 									isVoting={true}
+									delegateScore={delegateVoting.find((vote) => vote.proposal === proposal.id)?.score}
 								/>
 							{/if}
 						</Proposal>

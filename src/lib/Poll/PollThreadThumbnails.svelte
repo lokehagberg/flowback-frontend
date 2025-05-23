@@ -129,6 +129,28 @@
 		workGroups = results;
 	}
 
+	function matchesFilter(post: Post): boolean {
+		// Find the corresponding thread (only needed for workgroup filtering on threads)
+		const thread =
+		post.related_model === 'group_thread'
+			? threads.find((t) => t.id === post.id)
+			: null;
+
+		// Check search filter (applies to both polls and threads, case-insensitive search on title)
+		const matchesSearch =
+		!filter.search ||
+		post.title?.toLowerCase().includes(filter.search.toLowerCase());
+
+		// Check workgroup filter (only for threads, skipped if both showThreads and showPolls are true)
+		const matchesWorkgroup =
+		post.related_model !== 'group_thread' || // Skip workgroup filter for polls
+		(showThreads && showPolls) || // Skip workgroup filter if both showThreads and showPolls are true
+		!filter.workgroup || // If no workgroup filter, show all threads
+		(thread && thread.work_group?.id === Number(filter.workgroup)); // Match thread workgroup
+
+		return matchesSearch && matchesWorkgroup;
+	}
+
 	onMount(async () => {
 		await fetchPolls();
 
@@ -164,12 +186,12 @@
 				</div>
 			{:else if posts?.length > 0 && (polls.length > 0 || threads.length > 0)}
 				{#each posts as post}
-					{#if post.related_model === 'group_thread' && showThreads}
+					{#if post.related_model === 'group_thread' && showThreads && matchesFilter(post)}
 						<ThreadThumbnail
 							{isAdmin}
 							thread={threads.find((thread) => thread.id === post.id) || threads[0]}
 						/>
-					{:else if post.related_model === 'poll' && showPolls}
+					{:else if post.related_model === 'poll' && showPolls && matchesFilter(post)}
 						<PollThumbnail poll={polls.find((poll) => poll.id === post.id) || polls[0]} {isAdmin} />
 					{/if}
 				{/each}

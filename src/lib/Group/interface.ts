@@ -107,11 +107,6 @@ export interface groupUser extends User {
 
 export type SelectablePages = 'Members' | 'Pending Invites' | 'Invite';
 
-/*
-	"userGroupInfo" is unused at the moment due to it not working. 
-	TODO: Make it into a typescript class with derivable stores 
-	Reference: https://javascript.plainenglish.io/writing-a-svelte-store-with-typescript-22fa1c901a4 
-*/
 export const userGroupInfo = writable({
 	banner_image: '',
 	delegate: false,
@@ -124,10 +119,6 @@ export const userGroupInfo = writable({
 	username: ''
 });
 
-/*
-	This works though
-*/
-export const userIsDelegateStore = writable(false);
 export const userIdStore = writable(0);
 
 export interface Thread {

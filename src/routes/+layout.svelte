@@ -11,7 +11,7 @@
 	} from '$lib/Generic/GenericFunctions';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import type { GroupUser } from '$lib/Group/interface';
+	import { userGroupInfo, type GroupUser } from '$lib/Group/interface';
 	import type { Permission } from '$lib/Group/Permissions/interface';
 	import Chat from '$lib/Chat/Chat.svelte';
 	import { _ } from 'svelte-i18n';
@@ -20,6 +20,7 @@
 	import { workGroupsStore } from '$lib/Group/WorkingGroups/interface';
 	import LogBackInModal from '$lib/Generic/LogBackInModal.svelte';
 	import { addDateOffset } from '$lib/Generic/Dates';
+	import { statusMessageFormatter } from '$lib/Generic/StatusMessage';
 
 	export const prerender = true;
 
@@ -138,6 +139,17 @@
 		}
 	};
 
+	const setUserGroupInfo = async () => {
+		console.log("HLLO?");
+		
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/users?id=${localStorage.getItem('userId')}`
+		);
+		if (!res.ok) return;
+		userGroupInfo.set(json.results[0]);
+	};
+
 	beforeNavigate(() => {
 		scrolledY = $page.params.pollId;
 	});
@@ -154,6 +166,7 @@
 		}, 200);
 
 		checkSessionExpiration();
+		setUserGroupInfo();
 	});
 
 	//Initialize Translation, which should happen before any lifecycle hooks.

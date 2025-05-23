@@ -3,7 +3,6 @@
 	import PollThumbnails from '$lib/Poll/PollThumbnails.svelte';
 	import Members from '$lib/Group/Members.svelte';
 	import {
-		userIsDelegateStore,
 		type GroupDetails,
 		type SelectablePage
 	} from '$lib/Group/interface';
@@ -51,16 +50,7 @@
 	onMount(() => {
 		loading = true;
 		getGroupInfo();
-		setUserGroupInfo();
 	});
-
-	const setUserGroupInfo = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/users?id=${1}`);
-		if (!res.ok) return;
-		userIsDelegateStore.set(json.results[0].delegate);
-		statusMessageFormatter(res, json);
-		loading = false;
-	};
 
 	const getGroupInfo = async () => {
 		//TODO: detail is outdated

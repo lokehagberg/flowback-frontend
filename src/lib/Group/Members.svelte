@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import TextInput from '$lib/Generic/TextInput.svelte';
-	import type { GroupUser, SelectablePages, User } from './interface';
+	import { userGroupInfo, type GroupUser, type SelectablePages, type User } from './interface';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
@@ -40,8 +40,8 @@
 		showInvite = false,
 		searched = false,
 		delegates: Delegate[] = [],
-		removeUserModalShow = false,
-		userIsAdmin = false;
+		removeUserModalShow = false;
+
 
 	let sortOrder: 'a-z' | 'z-a' = 'a-z';  // Default to a-z sort
 
@@ -50,7 +50,6 @@
 		getInvitesList();
 		searchUsers('');
 		getDelegatePools();
-		userIsAdmin = await getUserIsGroupAdmin($page.params.groupId);
 
 		//Does this one even do anything?
 		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
@@ -303,7 +302,7 @@
 
 		<!-- Invites -->
 		{#if usersAskingForInvite.length > 0}
-			<div class="w-full p-4 flex-col gap-6 shadow rounded bg-white p-2 mb-4 dark:bg-darkobject">
+			<div class="w-full flex-col gap-6 shadow rounded bg-white p-2 mb-4 dark:bg-darkobject">
 				<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText">{$_('Users requesting invite')}</span>
 				{#each usersAskingForInvite as user}
 					{#if user.external === true}
@@ -380,7 +379,7 @@
 									</button>
 								{/if}
 							{/await}
-							{#if userIsAdmin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
+							{#if $userGroupInfo.is_admin && user.user.id !== (Number(localStorage.getItem('userId')) || 0)}
 								<Button
 									Class="w-10 h-10 flex items-center justify-center pl-6 bg-transparent"
 									onClick={() => (removeUserModalShow = true)}

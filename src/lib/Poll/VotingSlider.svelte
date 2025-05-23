@@ -26,6 +26,8 @@
 	};
 
 	const onMouseDown = (event: MouseEvent) => {
+		if (!isVoting) return;
+		
 		const container = (event.target as HTMLElement).closest('#track-container') as HTMLElement;
 		if (!container) return;
 
@@ -56,7 +58,8 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg draggable relative"
+	class="w-full bg-white dark:bg-darkobject py-3 px-1 rounded-lg relative"
+	class:draggable={isVoting}
 	on:mousedown={onMouseDown}
 	style="background-color: {isOverridden ? '#fbcfe8' : '#e5e7eb'};"
 >

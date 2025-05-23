@@ -11,7 +11,7 @@
 	import VotingSlider from './VotingSlider.svelte';
 	import { getGroupUserInfo } from '$lib/Generic/GenericFunctions';
 
-	import type { groupUser } from '$lib/Group/interface';
+	import { userGroupInfo, type groupUser } from '$lib/Group/interface';
 
 	export let proposals: proposal[],
 		isVoting: boolean = false,
@@ -70,7 +70,11 @@
 			proposal: vote.proposal
 		}));
 		voting = voting;
+
+
 	};
+
+
 
 	const getDelegatePools = async () => {
 		const { json, res } = await fetchRequest(
@@ -119,7 +123,7 @@
 		}));
 
 		voting = delegateVoting
-		
+		console.log($userGroupInfo, "STORE");
 	};
 
 	const delegateVote = async () => {
@@ -210,7 +214,7 @@
 										else if (phase === 'vote') vote();
 									}}
 									{score}
-									isVoting={true}
+									{isVoting}
 									delegateScore={delegateVoting.find((vote) => vote.proposal === proposal.id)?.score}
 								/>
 							{/if}

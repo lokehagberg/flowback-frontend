@@ -4,10 +4,22 @@ services:
     build: .
     ports:
       - ${PORT:-3000}:${PORT:-3000}
-      # - ${PORT:-5173}:${PORT:-5173}
+    # 5173:5173
+    # - ${PORT:-5173}:${PORT:-5173}
     env_file:
       - .env
     # volumes:
     #   - ./src:/usr/src/app/src
-    #   - .:/app
-      
+    # - .:/app
+    develop:
+      watch: 
+        - path: .
+          target: /usr/src/app
+          action: sync
+        - path: ./docker-compose.yaml
+          target: /usr/src/app
+          action: rebuild
+        - path: ./Dockerfile
+          target: /usr/src/app
+          action: rebuild
+

@@ -6,7 +6,7 @@
         "comment": "What even is this? TODO: fix later",
         "dev1000": "vite dev --port 1000",
         "dev2000": "vite dev --port 2000",
-        "dev3000": "vite dev --port 3000",
+        "dev3000": "vite dev --port 3000 --host",
         "dev4000": "vite dev --port 4000",
         "dev5000": "vite dev --port 5000",
         "build": "vite build",

@@ -275,6 +275,7 @@
 					</ul>
 				{:else if selectedPage === 'info'}
 					<div>{$_('Frontend version')}: {version}</div>
+					Test
 					<div>{$_('Backend version')}: {serverConfig.VERSION}</div>
 				{:else if selectedPage === 'reports'}
 					{#if reports?.length > 0}

@@ -154,7 +154,7 @@
 	id="kanban-board"
 	class={'dark:bg-darkobject dark:text-darkmodeText p-2 pt-4 break-words' + Class}
 >
-	<!-- <KanbanFiltering bind:workGroups bind:filter handleSearch={getKanbanEntries} Class="" /> -->
+	<KanbanFiltering bind:workGroups bind:filter handleSearch={getKanbanEntries} Class="" />
 	<div class="flex overflow-x-auto py-3">
 		{#each tags as _tag, i}
 			{#if i !== 0}

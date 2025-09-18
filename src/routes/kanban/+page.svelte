@@ -17,7 +17,7 @@
 	<div class="relative w-full">
 		<Button
 			onClick={() => history.back()}
-			Class="fixed p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+			Class="z-[60] fixed p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
 			id="back-button"
 		>
 			<div class="text-gray-800 dark:text-gray-200">

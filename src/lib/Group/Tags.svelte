@@ -20,7 +20,6 @@
 		selectedTag: TagType = { active: false, id: 0, name: '', imac: 0 },
 		loading = false,
 		areYouSureModal = false,
-		 
 		tagDescription: string;
 
 	onMount(async () => {
@@ -30,7 +29,7 @@
 	const getTagsLocal = async () => {
 		loading = true;
 		tags = await getTags($page.params.groupId);
-		if (!tags) ErrorHandlerStore.set({ message: 'Could not get poppups', success: false })
+		if (!tags) ErrorHandlerStore.set({ message: 'Could not get poppups', success: false });
 		loading = false;
 	};
 
@@ -43,10 +42,18 @@
 		if (tagDescription) toSend.description = tagDescription;
 
 		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/tag/create`, toSend);
-		if (res.ok) {
-			getTagsLocal();
-			tagToAdd = '';
-		} else loading = false;
+
+		loading = false;
+
+		if (!res.ok) {
+			ErrorHandlerStore.set({ message: 'Could not add tag', success: false });
+			return;
+		}
+
+		getTagsLocal();
+		tagToAdd = '';
+		tagDescription = '';
+		ErrorHandlerStore.set({ message: 'Successfully added tag', success: true });
 	};
 
 	const removeTag = async (tag: TagType) => {
@@ -149,5 +156,3 @@
 		>
 	</div>
 </Modal>
-
- 

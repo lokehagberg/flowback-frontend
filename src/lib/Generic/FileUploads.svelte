@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faUpload, faTimes, faPlus, faPaperclip } from '@fortawesome/free-solid-svg-icons';
+	import { faTimes, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 	import FileUpload from './FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';

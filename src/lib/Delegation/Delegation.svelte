@@ -16,15 +16,17 @@
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { userStore } from '$lib/User/interfaces';
 	import { setUserGroupPermissionInfo } from '$lib/Group/functions';
+	import type { Permissions } from '$lib/Group/Permissions/interface';
+	import { getPermissionsFast } from '$lib/Generic/GenericFunctions';
 
 	let group: Group,
 		groups: Group[],
-		userIsDelegate = false,
 		groupUser: GroupUser,
 		autovote = false,
 		loading = false,
 		delegates: Delegate[] = [],
-		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none';
+		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
+		userPermissions: Permissions;
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest('GET', `group/list?limit=1000&joined=true`);
@@ -44,7 +46,7 @@
 	const getUserInfo = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${group.id}/users?user_id=${$userStore?.id || -1}&is_delegate=true`
+			`group/${group.id}/users?user_id=${$userStore?.id || -1}`
 		);
 
 		if (!res.ok) {
@@ -52,22 +54,21 @@
 			return;
 		}
 
-		if (json?.results?.length === 1) userIsDelegate = true;
-		else userIsDelegate = false;
+		groupUser = json?.results[0];
 	};
 
 	/*
 	 	Makes the currently logged in user into a delegate(pool)
 	 */
 	const createDelegationPool = async () => {
-		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/pool/create`, {});
+		const { res, json } = await fetchRequest('POST', `group/${group.id}/delegate/pool/create`, {});
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({ message: 'Could not create delegation pool', success: false });
 			return;
 		}
 
-		userIsDelegate = true;
+		groupUser.delegate_pool_id = json;
 	};
 
 	const removeAllDelegations = async (group: Group) => {
@@ -88,17 +89,18 @@
 		autovote = res.ok && json?.results.length > 0;
 	};
 
-	const userPermission = async () => {
-		// groupUserPermissionStore.set(await setUserGroupPermissionInfo($groupUserStore));
+	const getPermission = async () => {
+		if (!group) return;
+
+		loading = true;
+		userPermissions = await getPermissionsFast(group.id);
+		groupUserPermissionStore.set(userPermissions);
+		loading = false;
 	};
 
-	onMount(async () => {
-		await getGroups();
+	const onGroupSelectionChange = async () => {
 		await getUserInfo();
-	});
-
-	$: if (group) {
-		getUserInfo();
+		await getPermission();
 
 		if (env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE') {
 			getDelegatePools();
@@ -109,11 +111,21 @@
 
 			selectedPage = autovote ? 'delegate' : 'none';
 		}
-	}
+	};
+
+	onMount(async () => {
+		await getGroups();
+		await getUserInfo();
+		await getPermission();
+	});
+
+	// Troggers whenever the user changes the group to delegate in, as seen in the select box
+	$: if (group) onGroupSelectionChange();
 </script>
 
 <Layout centered>
 	<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-full text-left">
+		
 		<h1 class="text-xl font-semibold text-primary dark:text-secondary text-left">
 			{$_(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? 'Automate' : 'Manage Delegations')}
 		</h1>
@@ -137,6 +149,7 @@
 		</Button>
 		<div class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]">
 			{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
+			You are {userPermissions?.allow_vote || groupUser?.is_admin ? '' : 'not'} allowed to vote in this group: 
 				<Select
 					classInner="w-full bg-white dark:bg-darkobject dark:text-darkmodeText p-2 border-gray-300 rounded border"
 					labels={groups?.map((group) => group.name)}
@@ -149,7 +162,7 @@
 			{/if}
 
 			<div class="flex flex-col gap-4 my-4">
-				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && !userIsDelegate}
+				{#if env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && !groupUser?.delegate_pool_id}
 					<!-- <li><input type="checkbox" /> {$_('Auto-choose meeting times')}</li> -->
 					<div class="mt-3">
 						<div class="flex justify-between">
@@ -190,11 +203,11 @@
 				)}
 				<Button onClick={() => (selectedPage = 'delegate')}>{$_('Cancel')}</Button>
 
-				{#if userIsDelegate}
+				{#if groupUser?.delegate_pool_id !== null}
 					<StopBeingDelegate
 						Class="w-full mt-3"
 						bind:delegates
-						bind:userIsDelegate
+						bind:groupUser
 						groupId={group.id}
 						bind:loading
 					/>
@@ -205,7 +218,7 @@
 				{/if}
 			{:else if selectedPage === 'delegate'}
 				{#if group?.id}
-					{#if userIsDelegate}
+					{#if groupUser?.delegate_pool_id}
 						{$_('You cannot delegate as a delegate')}
 					{:else}
 						<Delegations bind:group bind:delegates />

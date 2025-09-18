@@ -236,7 +236,7 @@
 
 <svelte:window bind:innerWidth bind:outerWidth />
 
-<button
+<div
 	class="text-left bg-gray-50 dark:bg-darkobject dark:text-darkmodeText rounded shadow hover:bg-gray-200 dark:hover:brightness-125 p-2 border"
 	in:fade
 	on:click={() => {
@@ -244,6 +244,9 @@
 		selectedEntry = kanban.id;
 		initializeKanbanEdited();
 	}}
+	role="button"
+	tabindex="0"
+	on:keydown
 >
 	<div class="flex justify-between w-full items-start">
 		<div class="text-primary dark:text-secondary text-left font-semibold pb-1 line-clamp-2">
@@ -269,11 +272,14 @@
 		</div>
 	{/if}
 	<div
-		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline inline-flex"
+		class="mt-2 gap-2 items-center text-sm cursor-pointer hover:underline"
 		on:click={() => {
 			if ($page.params.groupId) goto(`/user?id=${kanban?.assignee?.id}`);
 			else if (kanban.origin_type === 'group') goto(`/groups/${kanban.origin_id}?page=kanban`);
 		}}
+		role="button"
+		tabindex="0"
+		on:keydown
 	>
 		{#if kanban.origin_type === 'user'}
 			<ProfilePicture
@@ -288,18 +294,12 @@
 
 			{#if kanban?.assignee}
 				<ProfilePicture
-					username={kanban?.assignee?.username}
+					username={filter.type === 'group' ? kanban?.assignee?.username : kanban.group_name}
 					profilePicture={kanban?.assignee?.profile_image}
 					Class=""
 					size={1}
+					displayName
 				/>
-				<div class="break-word text-xs">
-					{#if filter.type === 'group'}
-						{kanban.assignee?.username}
-					{:else}
-						{kanban.group_name}
-					{/if}
-				</div>
 			{/if}
 		{/if}
 	</div>
@@ -336,7 +336,7 @@
 			</button>
 		</div>
 	{/if}
-</button>
+</div>
 
 {#if kanban.id === selectedEntry}
 	<Modal

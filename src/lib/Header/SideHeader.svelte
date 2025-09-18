@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { env } from '$env/dynamic/public';
 	import { UsersApi } from '$lib/api/users';
+	import { chatOpenStore } from '$lib/Chat/functions';
 
 	export let sideHeaderOpen = false;
 
@@ -39,9 +40,18 @@
 	let navs = [
 		{
 			title: 'User Profile',
-			action: () => goto('/user')
+			action: () => {
+				chatOpenStore.set(false);
+				goto('/user');
+			}
 		},
-		{ title: 'Settings', action: () => goto('/user/settings') },
+		{
+			title: 'Settings',
+			action: () => {
+				chatOpenStore.set(false);
+				goto('/user/settings');
+			}
+		},
 		{ title: 'TOS', action: () => (open_tos = true) },
 		{ title: 'Log Out', action: logOut }
 	];

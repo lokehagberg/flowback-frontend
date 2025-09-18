@@ -115,21 +115,29 @@ export async function predictionProbability(page: any) {
     await page.locator('div').filter({ hasText: 'See More' }).nth(0).click();
 
     await page.getByRole('button', { name: 'See More' }).nth(1).click();
+    await page.waitForTimeout(300);
     await page.locator('#track-container > div:nth-child(3)').click();
+    await page.waitForTimeout(300);
     await expect(page.getByText('Probability successfully sent')).toBeVisible();
     await page.locator('#track-container > div:nth-child(5)').click();
+    await page.waitForTimeout(300);
     await page.getByRole('button', { name: 'See More' }).nth(0).click();
     await expect(page.locator('#track-container')).toBeVisible();
-
+    await page.waitForTimeout(300);
+    
     await page.locator('#track-container > div').nth(5).click();
     await expect(page.getByText('Probability successfully sent').nth(0)).toBeVisible();
+    await page.waitForTimeout(300);
     await page.getByRole('button', { name: 'See More' }).nth(1).click();
+    await page.waitForTimeout(300);
     // await expect(page.locator('#track-container > div:nth-child(8)')).toBeVisible();
     // await page.waitForTimeout(200);
     // await page.locator('#track-container > div:nth-child(6)').click();
     await page.locator('#track-container > div:nth-child(5)').click();
+    await page.waitForTimeout(300);
     await page.getByRole('button', { name: 'Clear probability' }).click();
     await page.locator('#track-container > div:nth-child(4)').click();
+    await page.waitForTimeout(300);
     await expect(page.getByText('Probability successfully sent').nth(0)).toBeVisible();
 
 }

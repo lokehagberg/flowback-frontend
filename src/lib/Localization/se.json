@@ -733,5 +733,9 @@
     "Failed to unsubscribe": "Misslyckades att avsluta prenumeration",
     "Subscribed": "Prenumererad",
     "Unsubscribed": "Avslutat prenumeration",
-    "Could not create Poll": "Kunde inte skapa omröstning"
+    "Could not create Poll": "Kunde inte skapa omröstning",
+    "Could not add tag": "Kunde inte lägga till ämnesområde",
+    "Successfully added tag": "Lyckades lägga till ämnesområde",
+    "You are allowed to vote in this group": "Du har tillåtelse att rösta i denna grupp",
+    "You are not allowed to vote in this group": "Du har inte tillåtelse att rösta i denna grupp"
 }

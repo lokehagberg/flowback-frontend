@@ -4,8 +4,9 @@
 	import { _ } from 'svelte-i18n';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import type { Delegate } from './interfaces';
+	import type { GroupUser } from '../interface';
 
-	export let userIsDelegate: boolean,
+	export let groupUser: GroupUser,
 		loading: boolean,
 		groupId: number,
 		delegates: Delegate[],
@@ -14,7 +15,7 @@
 	const deleteDelegation = async () => {
 		await deleteDelegationPool();
 		getDelegatePools();
-		userIsDelegate = false;
+		groupUser.delegate_pool_id = null;
 	};
 
 	/*
@@ -27,7 +28,7 @@
 
 		if (!res.ok) return;
 
-		userIsDelegate = false;
+		groupUser.delegate_pool_id = null;
 		// userIsDelegateStore.update((value) => (value = false));
 	};
 

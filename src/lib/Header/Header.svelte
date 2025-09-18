@@ -21,6 +21,7 @@
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
+	import { chatOpenStore } from '$lib/Chat/functions';
 
 	let sideHeaderOpen = false,
 		selectedHref = '';
@@ -32,6 +33,7 @@
 >
 	<a
 		href={env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' ? '/groups/1' : '/home'}
+		on:click={() => chatOpenStore.set(false)}
 		class="md:w-auto flex justify-center md:flex-none"
 		><img
 			src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}

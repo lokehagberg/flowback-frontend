@@ -69,8 +69,7 @@
 	};
 
 	const createPoll = async () => {
-		console.log(start_date.toISOString(), "STRING");
-		
+		console.log(start_date.toISOString(), 'STRING');
 
 		loading = true;
 		const formData = new FormData();
@@ -215,17 +214,16 @@
 	// $: if (selectedPage) ErrorHandlerStore.set(undefined;
 </script>
 
-<button
-	class="fixed top-8 left-4 z-10 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-	on:click={goBack}
->
-	<Fa icon={faArrowLeft} />
-</button>
-
 <form
 	on:submit|preventDefault={() => (selectedPage === 'poll' ? createPoll() : createThread())}
 	class="relative md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
 >
+	<button
+		class="absolute -left-12 bg-white dark:bg-darkobject p-3 rounded shadow z-50 hover:bg-gray-100 active:bg-gray-200 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+		on:click={goBack}
+	>
+		<Fa icon={faArrowLeft} />
+	</button>
 	<Loader {loading}>
 		<div class="bg-white dark:bg-darkobject p-6 shadow-xl flex flex-col gap-3 rounded">
 			<Tab displayNames={['Poll', 'Thread']} tabs={['poll', 'thread']} bind:selectedPage />

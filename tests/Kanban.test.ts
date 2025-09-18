@@ -71,7 +71,7 @@ test('Kanban-Edit', async ({ page }) => {
   const doneLane = await page.locator('#Done-kanban-lane');
   await page.waitForTimeout(1000);
 
-  const kanbanEntry = page.locator('#Done-kanban-lane > ul > button').first();
+  const kanbanEntry = page.locator('#Done-kanban-lane > ul > div').first();
   await expect(kanbanEntry).toBeVisible();
 
   await kanbanEntry.click();
@@ -116,7 +116,7 @@ test('Kanban-Delete', async ({ page }) => {
   const doneLane = await page.locator('#Done-kanban-lane');
   await page.waitForTimeout(1000);
 
-  const kanbanEntry = page.locator('#Done-kanban-lane > ul > button').first();
+  const kanbanEntry = page.locator('#Done-kanban-lane > ul > div').first();
   await expect(kanbanEntry).toBeVisible();
 
   await kanbanEntry.click();

@@ -8,10 +8,10 @@ export async function newWindow() {
 }
 
 export async function login(page: any, {
-    email = process.env.E2E_EMAIL ?? 'a@a.se',
-    password = process.env.E2E_PASSWORD ?? 'a',
+    email = process.env.E2E_EMAIL ?? 'flowback@flowback.org',
+    password = process.env.E2E_PASSWORD ?? 'flowbacco',
 } = {}) {
-    await page.goto('/login');
+    await page.goto('https://immr.flowback.org/login');
     await expect(page.locator('#login-page')).toBeVisible();
     await page.waitForTimeout(700);
 
@@ -19,7 +19,7 @@ export async function login(page: any, {
     await page.fill('input[name="password"]', password);
     await page.click('button[type="submit"]');
 
-    await expect(page).toHaveURL('/home?chatOpen=false');
+    await expect(page).toHaveURL('https://immr.flowback.org/home?chatOpen=false');
 
     if (await page.getByRole('button', { name: 'Ok' }).isVisible()) {
         await page.getByRole('button', { name: 'Ok' }).click();

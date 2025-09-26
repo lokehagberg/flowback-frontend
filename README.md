@@ -1,7 +1,7 @@
 # Setting up the project
 
 This project requires [node and npm](https://nodejs.org) and
-currently supports node version v22.9.0.
+currently supports node version v24.8.0.
 
 To run the frontend you will need to set up both the [frontend](#set-up-the-frontend) and the [backend](#set-up-the-backend).
 

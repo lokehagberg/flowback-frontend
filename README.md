@@ -13,7 +13,7 @@ git clone https://github.com/lokehagberg/flowback-frontend.git
 
 #Then you install the dependencies
 cd flowback-frontend
-npm install
+npm ci
 ```
 
 ### Environment variables

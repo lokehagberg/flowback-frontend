@@ -37,13 +37,13 @@
 
 <div
 	id="login-page"
-	class="dark:bg-darkbackground bg-purple-50 min-h-[110vh] flex flex-col items-center"
+	class="dark:!bg-darkbackground bg-purple-50 min-h-[110vh] flex flex-col items-center"
 >
 	<div class="mt-16">
 		<img
 			src={env.PUBLIC_LOGO === 'REFORUM' ? Reforum : Logo}
+			alt={env.PUBLIC_LOGO === 'REFORUM' ? "Reforum Logo" : "Flowback Logo"}
 			class="w-[300px]"
-			alt="flowback logo"
 		/>
 	</div>
 	<div
@@ -65,7 +65,7 @@
 			{:else if selectedPage === 'ForgotPassword'}
 				<ForgotPassword bind:selectedPage bind:email />
 			{:else if selectedPage === 'NewPassword'}
-				<NewPassword bind:email />
+				<NewPassword  />
 			{/if}
 		</div>
 	</div>

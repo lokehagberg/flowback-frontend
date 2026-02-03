@@ -1,494 +1,453 @@
-<!-- Schedule.svelte -->
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
-	import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
-	import Fa from 'svelte-fa';
+	import { Calendar } from '@fullcalendar/core';
 	import { _ } from 'svelte-i18n';
+	import { onMount } from 'svelte';
+	import dayGridPlugin from '@fullcalendar/daygrid';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import type { Filter, scheduledEvent } from '$lib/Schedule/interface';
-	import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-	import { page } from '$app/stores';
-	import Day from './Day.svelte';
-	import type { Group } from '$lib/Group/interface';
-	import type { WorkGroup } from '$lib/Group/WorkingGroups/interface';
-	import Button from '$lib/Generic/Button.svelte';
+	import timeGridPlugin from '@fullcalendar/timegrid';
+	import listPlugin from '@fullcalendar/list';
+	import multiMonthPlugin from '@fullcalendar/multimonth';
+	import interactionPlugin from '@fullcalendar/interaction';
+	import Modal from '$lib/Generic/Modal.svelte';
+	import {
+		ScheduleItem2Default,
+		type Schedule,
+		type ScheduleItem2
+	} from '$lib/Schedule/interface';
+	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { elipsis } from '$lib/Generic/GenericFunctions';
-	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
-	import Event from './Event.svelte';
+	import TextArea from '$lib/Generic/TextArea.svelte';
+	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
+	import AdvancedFiltering from '$lib/Generic/AdvancedFiltering.svelte';
 	import Select from '$lib/Generic/Select.svelte';
+	import { deepCopy, toDatetimeLocal } from '$lib/Generic/GenericFunctions';
+	import GroupSelection from '$lib/Generic/GroupSelection.svelte';
 
-	export let Class = '',
-		type: 'user' | 'group';
+	let open = $state(false),
+		events: ScheduleItem2[] = $state([]),
+		selectedEvent: ScheduleItem2 = $state(ScheduleItem2Default),
+		editingEvent: ScheduleItem2 = $state(ScheduleItem2Default),
+		//TODO get rid of groupid and use groupIds only
+		groupId: null | number = $state(null),
+		groupIds: number[] = $state([]),
+		workgroupIds: number[] = $state([]),
+		userChecked = $state(false),
+		selectedWorkgroupId: number | null = $state(null),
+		selectedGroupId: number | null = $state(null),
+		calendar: Calendar,
+		selectedStartDate: string = $state(''),
+		selectedEndDate: string = $state('');
 
-	const months = [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec'
-	];
+	const scheduleEventList = async () => {
+		let schedules: Schedule[] = [];
+		// Before getting events, we need to get all schedules for the user, groups and workgroups
+		// because events are tied to schedules.
 
-	const currentDate = new Date();
+		// Get user schedule
+		if (userChecked) {
+			let api = `schedule/list?limit=50&origin_name=user`;
 
-	let month = currentDate.getMonth(),
-		year = currentDate.getFullYear(),
-		selectedDate = new Date(),
-		events: scheduledEvent[] = [],
-		loading = false,
-		showCreateScheduleEvent = false,
-		showEditScheduleEvent = false,
-		showEvent = false,
-		selectedDatePosition = '0-0',
-		selectedEvent: scheduledEvent = {
-			title: '',
-			description: '',
-			start_date: '',
-			end_date: '',
-			meeting_link: '',
-			event_id: 0,
-			schedule_origin_name: type,
-			created_by: 0,
-			work_group: undefined,
-			assignee_ids: [],
-			reminders: [],
-			repeat_frequency: 0
-		},
-		deleteSelection = () => {},
-		advancedTimeSettingsDates: Date[] = [],
-		notActivated = true,
-		groupList: Group[] = [],
-		workGroups: WorkGroup[] = [],
-		workGroupFilter: number[] = [],
-		filter: Filter = {
-			assignee: null,
-			group: $page.url.searchParams.get('groupId'),
-			search: '',
-			type: 'group',
-			workgroup: null
-		};
-
-	const resetSelectedEvent = () => {
-		selectedEvent = {
-			title: '',
-			description: '',
-			start_date: '',
-			end_date: '',
-			meeting_link: '',
-			event_id: 0,
-			schedule_origin_name: type,
-			created_by: 0,
-			work_group: undefined,
-			assignee_ids: [],
-			reminders: [],
-			repeat_frequency: 0
-		};
-	};
-
-	const updateMonth = () => {
-		if (month === 12) {
-			year += 1;
-			month = 0;
+			const { res, json } = await fetchRequest('GET', api);
+			schedules.push(json.results ?? []);
 		}
-		if (month === -1) {
-			year -= 1;
-			month = 11;
+
+		// Get group schedules
+		if (groupIds.length > 0) {
+			let api = `schedule/list?limit=50&`;
+			api += `origin_ids=${groupIds.join(',')}&origin_name=group`;
+
+			const { res, json } = await fetchRequest('GET', api);
+			schedules.push(json.results ?? []);
+		}
+
+		// Get workgroup schedules
+		if (workgroupIds.length > 0) {
+			let api = `schedule/list?limit=50&origin_ids=${workgroupIds.join(',')}&origin_name=workgroup`;
+			const { res, json } = await fetchRequest('GET', api);
+			schedules.push(json.results ?? []);
+		}
+
+		if (schedules.length === 0) {
+			events = [];
+			return;
+		}
+		schedules = schedules.flat(1);
+
+		// Finally, get the events from every schedule
+		{
+			let api = `schedule/event/list?limit=50&schedule_ids=${schedules.map((s) => s.id).join(',')}`;
+			const { res, json } = await fetchRequest('GET', api);
+
+			events = json.results ?? [];
+			events = events.map((e) =>
+				e.schedule_origin_name === 'workgroup'
+					? {
+							...e,
+							workgroup_id: e.schedule_origin_id
+						}
+					: e
+			);
 		}
 	};
 
-	const setUpScheduledPolls = async () => {
-		let _api = '';
+	const getAPI = (type = '') => {
+		let api = '';
+		if (selectedWorkgroupId !== null)
+			api += `group/workgroup/${selectedWorkgroupId}/schedule/event/${type}`;
+		else if (selectedGroupId !== null)
+			api += `group/${selectedGroupId}/schedule/event/${type}`;
+		else api += `user/schedule/event/${type}`;
 
-		if (filter.type === 'group') {
-			_api = `group/${filter.group}/schedule?limit=1000&`;
-			if (workGroupFilter.length > 0) {
-				_api += 'work_group_ids=';
-				workGroupFilter.forEach((groupId) => {
-					_api += `${groupId},`;
+		return api;
+	};
+
+	const scheduleEventCreate = async () => {
+		let api = getAPI('create');
+
+		const { res, json } = await fetchRequest('POST', api, {
+			title: editingEvent.title,
+			description: editingEvent.description,
+			start_date: new Date(selectedStartDate).toISOString(),
+			end_date: new Date(selectedEndDate).toISOString(),
+			repeat_frequency: editingEvent.repeat_frequency,
+			meeting_link: editingEvent.meeting_link
+		});
+
+		if (!res.ok) {
+			//@ts-ignore
+			if (res.status === 403) {
+				ErrorHandlerStore.set({
+					message: 'You do not have permission to create events for this group',
+					success: false
 				});
+				return;
 			}
-		} else {
-			_api = `user/schedule?limit=1000`;
-		}
 
-		const { json, res } = await fetchRequest('GET', _api);
-		events = json?.results?.sort((a: scheduledEvent, b: scheduledEvent) => {
-			const dateA = new Date(a.start_date).getTime();
-			const dateB = new Date(b.start_date).getTime();
-			return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
-		});
-	};
-
-	const scheduleEventCreate = async (newEvent: scheduledEvent) => {
-		loading = true;
-
-		let API = '';
-		let payload: any = {
-			title: newEvent.title,
-			start_date: newEvent.start_date,
-			end_date: newEvent.end_date
-		};
-
-		if (newEvent.description) payload.description = newEvent.description;
-		if (newEvent.meeting_link) payload.meeting_link = newEvent.meeting_link;
-		if (newEvent.repeat_frequency) payload.repeat_frequency = newEvent.repeat_frequency;
-		if (newEvent.reminders) payload.reminders = [newEvent.reminders];
-
-		if (filter.type === 'group') {
-			payload.group_id = parseInt(filter.group ?? '1');
-			if (newEvent.work_group) payload.work_group_id = newEvent.work_group.id;
-			if (newEvent.assignee_ids?.length) payload.assignee_ids = newEvent.assignee_ids;
-			API = `group/${filter.group}/schedule/create`;
-		} else {
-			API = `user/schedule/create`;
-		}
-
-		const { res, json } = await fetchRequest('POST', API, payload);
-
-		loading = false;
-
-		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to create event', success: false });
-			return;
-		}
-
-		ErrorHandlerStore.set({ message: 'Successfully created event', success: true });
-		showCreateScheduleEvent = false;
-
-		const createdEvent: scheduledEvent = {
-			...newEvent,
-			event_id: json.event_id,
-			schedule_origin_name: type,
-			created_by: newEvent.created_by || 0,
-			work_group: newEvent.work_group || undefined,
-			assignee_ids: newEvent.assignee_ids || [],
-			reminders: newEvent.reminders || [],
-			repeat_frequency: newEvent.repeat_frequency || 0
-		};
-
-		events = [...events, createdEvent]?.sort((a, b) => {
-			const dateA = new Date(a.start_date).getTime();
-			const dateB = new Date(b.start_date).getTime();
-			return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
-		});
-
-		await setUpScheduledPolls();
-		resetSelectedEvent();
-	};
-
-	const scheduleEventUpdate = async (updatedEvent: scheduledEvent) => {
-		loading = true;
-
-		let payload: any = {
-			event_id: updatedEvent.event_id,
-			title: updatedEvent.title,
-			start_date: updatedEvent.start_date,
-			end_date: updatedEvent.end_date
-		};
-
-		if (updatedEvent.description) payload.description = updatedEvent.description;
-		if (updatedEvent.meeting_link) payload.meeting_link = updatedEvent.meeting_link;
-		if (updatedEvent.repeat_frequency) payload.repeat_frequency = updatedEvent.repeat_frequency;
-		if (updatedEvent.reminders) payload.reminders = updatedEvent.reminders;
-
-		if (type === 'group') {
-			if (updatedEvent.work_group) payload.work_group = updatedEvent.work_group;
-			if (updatedEvent.assignee_ids?.length) payload.assignee_ids = updatedEvent.assignee_ids;
-		}
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			type === 'group' ? `group/${filter.group}/schedule/update` : `user/schedule/update`,
-			payload
-		);
-
-		loading = false;
-
-		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to update event', success: false });
-			return;
-		}
-
-		ErrorHandlerStore.set({ message: 'Event successfully updated', success: true });
-
-		events = events
-			.map((event) => (event.event_id === updatedEvent.event_id ? { ...updatedEvent } : event))
-			?.sort((a, b) => {
-				const dateA = new Date(a.start_date).getTime();
-				const dateB = new Date(b.start_date).getTime();
-				return dateA === dateB ? a.event_id - b.event_id : dateA - dateB;
+			ErrorHandlerStore.set({
+				message: 'Failed to create event',
+				success: false
 			});
-		resetSelectedEvent();
-		showEditScheduleEvent = false;
-
-		await setUpScheduledPolls();
-	};
-
-	const scheduleEventDelete = async (eventId: number) => {
-		loading = true;
-
-		const { res, json } = await fetchRequest(
-			'POST',
-			type === 'group' ? `group/${filter.group}/schedule/delete` : `user/schedule/delete`,
-			{ event_id: eventId }
-		);
-
-		loading = false;
-
-		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to delete event', success: false });
 			return;
 		}
 
-		ErrorHandlerStore.set({ message: 'Event deleted', success: true });
-		events = events.filter((event) => event.event_id !== eventId);
-		showEvent = false;
-		resetSelectedEvent();
+		ErrorHandlerStore.set({
+			message: 'Successfully created event',
+			success: true
+		});
 
-		await setUpScheduledPolls();
+		selectedEvent = ScheduleItem2Default;
+		open = false;
 	};
 
-	const getGroups = async () => {
-		loading = true;
-		let urlFilter = '&joined=true';
+	const scheduleEventUpdate = async () => {
+		let api = getAPI('update');
 
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/list?limit=${groupMembersLimit}` + urlFilter
+		const { res, json } = await fetchRequest('POST', api, {
+			...editingEvent,
+			event_id: selectedEvent.id,
+			start_date: selectedStartDate,
+			end_date: selectedEndDate
+		});
+
+		if (!res.ok) {
+			ErrorHandlerStore.set({
+				message: 'Failed to edit event',
+				success: false
+			});
+			return;
+		}
+
+		ErrorHandlerStore.set({
+			message: 'Successfully edited event',
+			success: true
+		});
+
+		selectedEvent = ScheduleItem2Default;
+		open = false;
+	};
+
+	const ScheduleEventDelete = async (event_id: number) => {
+		let api = getAPI('delete');
+
+		const { res, json } = await fetchRequest('POST', api, {
+			event_id
+		});
+
+		if (!res.ok) {
+			ErrorHandlerStore.set({
+				message: 'Failed to delete event',
+				success: false
+			});
+			return;
+		}
+
+		ErrorHandlerStore.set({
+			message: 'Successfully deleted event',
+			success: true
+		});
+
+		events = events.filter((e) => e.id !== event_id);
+		open = false;
+		return;
+	};
+
+	// Read documentation for this calendar module: https://fullcalendar.io/
+	const renderCalendar = () => {
+		let calendarEl = document.getElementById('calendar-2');
+		if (!calendarEl) return;
+
+		calendar = new Calendar(calendarEl, {
+			plugins: [
+				dayGridPlugin,
+				interactionPlugin,
+				timeGridPlugin,
+				listPlugin,
+				multiMonthPlugin
+			],
+			initialView: 'dayGridMonth',
+			// TODO: Rework the calculation so these calculations don't need to be rerun at header changes
+			height: 'calc(100vh - 2rem - 40px - 28px)',
+			headerToolbar: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'addEventButton'
+				// 'dayGridMonth, timeGridDay, listWeek, multiMonthYear, dayGridYear, timeGridWeek'
+			},
+			windowResize: () => {
+				renderCalendar();
+				calendar?.addEventSource(distributeEvents());
+			},
+
+			selectable: true,
+			// selectMirror: true,
+			select: (selectionInfo) => {
+				open = true;
+				selectedEvent = ScheduleItem2Default;
+				selectedStartDate = toDatetimeLocal(selectionInfo.start);
+				selectedEndDate = toDatetimeLocal(selectionInfo.end);
+			},
+
+			customButtons: {
+				addEventButton: {
+					text: '+',
+					click: () => {
+						open = true;
+					}
+				}
+			},
+
+			//@ts-ignore
+			events: distributeEvents(),
+			eventClick: (info) => {
+				open = true;
+				selectedEvent =
+					events.find((e) => e.id.toString() === info.event.id) ??
+					selectedEvent;
+				editingEvent = deepCopy(selectedEvent);
+
+				//@ts-ignore
+				selectedStartDate = toDatetimeLocal(info.event.start);
+
+				if (info.event.end)
+					//@ts-ignore
+					selectedEndDate = toDatetimeLocal(info.event.end);
+				else selectedEndDate = selectedStartDate;
+			},
+			eventDrop: (info) => {
+				selectedEvent =
+					events.find((e) => e.id.toString() === info.event.id) ??
+					selectedEvent;
+
+				//@ts-ignore
+				selectedStartDate = toDatetimeLocal(info.event.start);
+
+				if (info.event.end)
+					//@ts-ignore
+					selectedEndDate = toDatetimeLocal(info.event.end);
+				else selectedEndDate = selectedStartDate;
+
+				scheduleEventUpdate();
+				scheduleEventList();
+			},
+			eventResize: (info) => {
+				selectedEvent.title = info.event.title;
+				selectedEvent.id = Number(info.event.id);
+
+				//@ts-ignore
+				selectedStartDate = toDatetimeLocal(info.event.start);
+
+				if (info.event.end)
+					//@ts-ignore
+					selectedEndDate = toDatetimeLocal(info.event.end);
+				else selectedEndDate = selectedStartDate;
+
+				scheduleEventUpdate();
+			},
+			dayMaxEventRows: 3,
+			eventInteractive: true,
+			eventClassNames: 'cursor-pointer',
+			editable: true,
+			eventStartEditable: true,
+			eventResizableFromStart: true,
+			eventDurationEditable: true
+		});
+		calendar.render();
+	};
+
+	const distributeEvents = () => {
+		let _events = [];
+
+		events.forEach((event) => {
+			// Daily Frequency
+			if (event.repeat_frequency === 1) {
+				for (let i = 1; i < 42; i++) {
+					let date = new Date(
+						new Date(event.start_date).setDate(
+							new Date(event.start_date).getDate() + i
+						)
+					);
+
+					_events.push({
+						...event,
+						start: date,
+						end: date,
+						allDay: true
+					});
+				}
+
+				// Weekly Frequency
+			} else if (event.repeat_frequency === 2) {
+				for (let i = 0; i < 6; i++) {
+					let date = new Date(
+						new Date(event.start_date).setDate(
+							new Date(event.start_date).getDate() + i * 7
+						)
+					);
+
+					_events.push({
+						...event,
+						start: date,
+						end: date,
+						allDay: true
+					});
+				}
+			} else
+				_events.push({
+					...event,
+					start: event.start_date,
+					end: event.end_date,
+					allDay: true
+				});
+		});
+
+		_events.push(
+			events.map((event) => ({
+				...event,
+				start: event.start_date,
+				end: event.end_date,
+				allDay: true
+			}))
 		);
 
-		if (!res.ok) return;
-
-		groupList = json?.results
-			.reverse()
-			?.sort((group1: any, group2: any) => +group2.joined - +group1.joined);
-
-		loading = false;
-	};
-
-	const getWorkGroupList = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${filter.group}/list`);
-		if (!res.ok) return;
-		workGroups = json?.results.filter((group: WorkGroup) => group.joined === true);
-	};
-
-	const formatDateToLocalTime = (date: Date): string => {
-		try {
-			const offset = date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
-			return new Date(offset).toISOString();
-		} catch (error) {
-			console.error('Error converting date to string:', error);
-			return date.toString();
-		}
+		return _events;
 	};
 
 	onMount(async () => {
-		deleteSelection = () => {
-			document.getElementById(selectedDatePosition)?.classList.remove('selected');
-		};
+		groupId =
+			Number(new URLSearchParams(document.location.search).get('groupId')) ??
+			null;
+		if (groupId) groupIds = [...groupIds, groupId];
+		else userChecked = true;
 
-		const groupId = $page.url.searchParams.get('groupId') ?? null;
-		if (groupId) {
-			filter.group = groupId;
-			filter.type = 'group';
-		} else {
-			filter.type = 'home';
-		}
-
-		setUpScheduledPolls();
-		getGroups();
-		getWorkGroupList();
+		await scheduleEventList();
+		renderCalendar();
 	});
 
-	$: month && year && deleteSelection();
-	$: month && updateMonth();
+	$effect(() => {
+		// Rerendering the calendar leads to issues with event changes changing the month one is one, instead we do this
+		if (events) {
+			calendar?.removeAllEvents();
+			calendar?.addEventSource(distributeEvents());
+		}
+	});
 
-	$: if (showCreateScheduleEvent && notActivated) {
-		notActivated = false;
-	}
-
-	$: if (!showCreateScheduleEvent) notActivated = true;
-
-	$: filter && setUpScheduledPolls();
-	$: filter.group && getWorkGroupList();
+	$effect(() => {
+		// Track all filter dependencies, but only call scheduleEventList once
+		workgroupIds;
+		groupIds;
+		userChecked;
+		scheduleEventList();
+	});
 </script>
 
-<div class={`flex bg-white dark:bg-darkobject dark:text-darkmodeText ${Class}`}>
-	<div class="border-right-2 border-black p-4 pl-6 pr-6 w-1/4">
-		<Button
-			onClick={() => history.back()}
-			Class="p-3 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
-		>
-			<div class="text-gray-800 dark:text-gray-200">
-				<Fa icon={faArrowLeft} />
-			</div>
-		</Button>
+<AdvancedFiltering bind:groupIds bind:workgroupIds bind:userChecked />
 
-		<div>
-			{$_('Scheduled events for')}
-			{selectedDate.getDate()}/{selectedDate.getMonth() + 1}
-			{selectedDate.getFullYear()}
-		</div>
-
-		<div class="pt-3 pb-3">
-			<button
-				on:click={() => {
-					const dateStr = selectedDate.toISOString().slice(0, 16);
-					selectedEvent = {
-						start_date: dateStr,
-						end_date: dateStr,
-						title: '',
-						description: '',
-						meeting_link: '',
-						event_id: 0,
-						schedule_origin_name: 'group',
-						created_by: 0,
-						work_group: undefined
-					};
-					showCreateScheduleEvent = true;
-					selectedEvent.start_date = formatDateToLocalTime(selectedDate).slice(0, 16);
-					selectedEvent.end_date = formatDateToLocalTime(selectedDate).slice(0, 16);
-				}}
-			>
-				<Fa
-					class="ml-auto mr-auto hover:bg-gray-200 dark:hover:bg-slate-700 transition p-3 cursor-pointer rounded"
-					size="3x"
-					icon={faPlus}
-				/>
-			</button>
-		</div>
-	</div>
-
-	<div class="w-full">
-		<div class="flex">
-			<div class="flex items-center select-none">
-				<button
-					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => year--}
-				>
-					<Fa icon={faChevronLeft} size="1.5x" />
-				</button>
-				<div class="text-xl text-center w-16">{year}</div>
-				<button
-					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => year++}
-				>
-					<Fa icon={faChevronRight} size="1.5x" />
-				</button>
-			</div>
-
-			<div class="flex items-center ml-6 select-none">
-				<button
-					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => month--}
-				>
-					<Fa icon={faChevronLeft} size="1.5x" />
-				</button>
-				<div class="w-10 text-center">{$_(months[month])}</div>
-				<button
-					class="cursor-pointer rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
-					on:click={() => month++}
-				>
-					<Fa icon={faChevronRight} size="1.5x" />
-				</button>
-			</div>
-
-			<div class="flex items-center justify-center gap-16 ml-6 px-2">
-				<Select
-					labels={['home', 'group']}
-					values={['home', 'group']}
-					bind:value={filter.type}
-					label="Select Type"
-					disableFirstChoice
-				/>
-
-				{#if filter.type === 'group'}
-					<div class="flex flex-row flex-1 gap-2 items-center">
-						<label class="block text-md whitespace-nowrap" for="group">
-							{$_('Group')}:
-						</label>
-						<select
-							style="width:100%"
-							class="rounded p-1 dark:border-gray-600 dark:bg-darkobject text-gray-700 dark:text-darkmodeText font-semibold"
-							on:change={(e) => (filter.group = e?.target?.value)}
-							id="group"
-						>
-							<option value={null}>{$_('None')}</option>
-							{#each groupList as group}
-								<option value={group.id}>{elipsis(group.name)}</option>
-							{/each}
-						</select>
-					</div>
-					<div class="flex flex-row flex-1 gap-2 items-center">
-						<label class="block text-md whitespace-nowrap" for="work-group">
-							{$_('Work Group')}:
-						</label>
-						<select
-							style="width:100%"
-							class="rounded p-1 dark:border-gray-600 dark:bg-darkobject text-gray-700 dark:text-darkmodeText font-semibold"
-							on:change={(e) => (filter.workgroup = e?.target?.value)}
-							id="work-group"
-						>
-							<option value="">{$_('All')}</option>
-							{#each workGroups as group}
-								<option value={group.id}>{elipsis(group.name)}</option>
-							{/each}
-						</select>
-					</div>
-				{/if}
-			</div>
-		</div>
-		<div id="calendar" class="calendar w-full">
-			{#each [1, 2, 3, 4, 5, 6] as y}
-				{#each [1, 2, 3, 4, 5, 6, 7] as x}
-					<Day
-						bind:showCreateScheduleEvent
-						bind:advancedTimeSettingsDates
-						bind:selectedDatePosition
-						bind:selectedEvent
-						bind:selectedDate
-						bind:showEvent
-						bind:events
-						bind:month
-						bind:year
-						{x}
-						{y}
-					/>
-				{/each}
-			{/each}
-		</div>
-	</div>
+<div class="flex justify-center w-full">
+	<div class="w-full bg-white dark:bg-darkbackground" id="calendar-2"></div>
 </div>
 
-<Event
-	bind:showCreateScheduleEvent
-	bind:showEditScheduleEvent
-	bind:selectedEvent
-	bind:showEvent
-	bind:type
-	bind:events
-	bind:workGroups
-	{scheduleEventCreate}
-	scheduleEventEdit={scheduleEventUpdate}
-	{scheduleEventDelete}
-	{month}
-	{year}
-/>
+<!-- Modal for displaying, creating and editing schedule events -->
+<Modal
+	bind:open
+	buttons={[
+		{
+			label: 'Submit',
+			onClick: async () => {
+				selectedEvent.schedule_id === 0
+					? await scheduleEventCreate()
+					: await scheduleEventUpdate();
+				scheduleEventList();
+			},
+			type: 'default',
+			submit: true
+		},
+		{
+			label: 'Delete',
+			onClick: () => ScheduleEventDelete(selectedEvent.id),
+			type: 'warning',
+			class: selectedEvent.id ? 'visible' : 'invisible'
+		}
+	]}
+	onClose={() => {
+		selectedEvent = ScheduleItem2Default;
+		scheduleEventList();
+	}}
+	stopAtPropagation={false}
+>
+	<div slot="header">
+		{#if editingEvent.schedule_id === 0}
+			<span>{$_('Create an Event')}</span>
+		{:else if editingEvent.schedule_id !== 0}
+			<span>{$_('Edit Event ')}{editingEvent.title}</span>
+			<NotificationOptions
+				type="event"
+				id={editingEvent.id}
+				api={`schedule/${editingEvent.schedule_id}/event/subscribe`}
+				labels={['subsc']}
+				categories={['subsc']}
+			/>
+		{/if}
+	</div>
 
-<style>
-	.calendar {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		grid-template-rows: repeat(6, 1fr);
-		height: calc(100vh - 2rem - 40px - 28px);
-	}
-</style>
+	<div slot="body">
+		<div role="form">
+			<TextInput label="Title" bind:value={editingEvent.title} />
+			<TextArea label="Description" bind:value={editingEvent.description} />
+
+			<input type="datetime-local" bind:value={selectedStartDate} />
+			<input type="datetime-local" bind:value={selectedEndDate} />
+
+			<Select
+				disableFirstChoice
+				labels={['One-off', 'Daily', 'Weekly', 'Monthly', 'Yearly']}
+				values={[null, 1, 2, 3, 4]}
+				bind:value={editingEvent.repeat_frequency}
+			/>
+
+			<GroupSelection bind:selectedGroupId bind:selectedWorkgroupId />
+
+			<TextInput label="Meeting Link" bind:value={editingEvent.meeting_link} />
+			<!-- <TextInput label="Tag" bind:value={selectedEvent.tag_name} /> -->
+		</div>
+	</div>
+</Modal>

@@ -13,8 +13,7 @@
 	let email: string,
 		loading = false,
 		acceptedToS = false,
-		usernameError: string = '',
-		errorHandler: any;
+		usernameError: string = '';
 
 	export let selectedPage: string;
 

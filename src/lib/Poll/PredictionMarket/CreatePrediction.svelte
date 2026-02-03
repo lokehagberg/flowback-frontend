@@ -10,7 +10,11 @@
 	import type { poll, proposal } from '../interface';
 	import Question from '$lib/Generic/Question.svelte';
 	import { maxDatePickerYear } from '$lib/Generic/DateFormatter';
-	import { predictionStatementsStore, type PredictionBet, type PredictionStatement } from './interfaces';
+	import {
+		predictionStatementsStore,
+		type PredictionBet,
+		type PredictionStatement
+	} from './interfaces';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { createPrediction as createPredictionBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
@@ -38,7 +42,6 @@
 			end_date: new Date(new Date(poll.end_date).getTime() + 1 * 60 * 1000)
 		},
 		bets: PredictionBet[] = [],
-		 
 		pushingToBlockchain = true;
 
 	const getPredictionBets = async () => {
@@ -188,25 +191,27 @@
 	</div>
 </div>
 
-{#key proposalsToPredictionMarket}
-	{#if proposalsToPredictionMarket}
-		<div class="flex flex-col gap-2">
-			<span>{$_('If implemented')}</span>
-			{#each proposalsToPredictionMarket as proposal, i}
-				{#if i !== 0} {$_('OR')} {/if}
-				<div class="flex justify-between">
-					<span class="p-0.5 border border-gray-300 rounded w-full">{proposal.title}</span>
-					<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>
-						<Fa icon={faX} color="red" />
-					</button>
-				</div>
-			{/each}
-		</div>
-	{/if}
-{/key}
+<Loader bind:loading Class="!static pt-3">
+	<form on:submit|preventDefault={createPredictionStatement} class="flex flex-col h-full">
+		{#if proposalsToPredictionMarket}
+			<div class="flex flex-col gap-2">
+				<span>{$_('If implemented')}</span>
+				{#each proposalsToPredictionMarket as proposal, i}
+					{#if i !== 0}
+						{$_('OR')}
+					{/if}
+					<div class="flex justify-between">
+						<span class="p-0.5 border border-gray-300 rounded w-full max-w-full overflow-auto"
+							>{proposal.title}</span
+						>
+						<button class="p-2" type="button" on:click={() => removeProposal(proposal)}>
+							<Fa icon={faX} color="red" />
+						</button>
+					</div>
+				{/each}
+			</div>
+		{/if}
 
-<Loader bind:loading Class="!static h-full pt-3">
-	<form on:submit|preventDefault={createPredictionStatement} class="h-full">
 		<TextInput required label="Title" bind:value={newPredictionStatement.title} />
 		<div class="mt-3">
 			<TextArea
@@ -227,7 +232,7 @@
 			/>
 		</div>
 
-		<div class="flex gap-2 absolute bottom-0 w-full">
+    <div class="flex gap-2 mt-auto pt-4">
 			<Button type="submit" buttonStyle="primary-light" Class="w-full mt-5">{$_('Submit')}</Button>
 			<Button
 				type="button"
@@ -241,5 +246,3 @@
 		</div>
 	</form>
 </Loader>
-
- 

@@ -3,9 +3,11 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { GroupMembers } from './interfaces';
-	
 	import { userStore } from '$lib/User/interfaces';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
+	import UserSearch from '$lib/Generic/UserSearch.svelte';
+	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
+	import { chatPartnerStore } from './functions';
 
 	export let creatingGroup: boolean,
 		groupMembers: GroupMembers[] = [];
@@ -28,6 +30,8 @@
 		creatingGroup = false;
 		groupMembers = [];
 		ErrorHandlerStore.set({ message: 'Successfully created group chat', success: true });
+
+		chatPartnerStore.set(json.id);
 	};
 
 	const cancelGroupChatCreate = () => {
@@ -40,11 +44,27 @@
 	<!-- <TextInput autofocus required bind:value={name} label="Chatgroup Name" /> -->
 
 	{$_('Members')}
-	<div>
+	<ul>
 		{#each groupMembers as member}
-			{member.username}
+			<ProfilePicture displayName profilePicture={member.profile_image} {...member} />
 		{/each}
-	</div>
+	</ul>
+
+	<UserSearch showSelf={false}>
+		<div slot="action" let:item>
+			<Button
+				type="button"
+				onClick={() => {
+					if (groupMembers.some((member) => member.id === item.id)) {
+						return;
+					}
+					// @ts-ignore
+					groupMembers.push(item);
+					groupMembers = groupMembers;
+				}}>{$_('chat.add')}</Button
+			>
+		</div>
+	</UserSearch>
 
 	<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
 	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}>{$_('Cancel')}</Button>

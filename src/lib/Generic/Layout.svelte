@@ -1,3 +1,4 @@
+<!-- TODO: Remove this file, move all functionality to +layout.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Cookies from './Cookies.svelte';
@@ -11,7 +12,9 @@
 	});
 </script>
 
-<div class={`${centered ? 'flex justify-center flex-col items-center' : ''} ${Class}`}>
+<div
+	class={`${centered ? 'flex justify-center flex-col items-center' : ''} ${Class}`}
+>
 	<slot />
 </div>
 

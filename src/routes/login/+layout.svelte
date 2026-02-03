@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 
+	export const prerender = true;
+
 	let mounted = false;
 
 	onMount(() => {

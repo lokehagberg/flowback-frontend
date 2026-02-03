@@ -50,7 +50,7 @@
 					setTimeout(() => {
 						popupQueue.update((q) => {
 							const newQueue = q.filter((p) => p.id !== id);
-							console.log('Removed popup with ID:', id, 'New queue:', newQueue); // Debug log
+							// console.log('Removed popup with ID:', id, 'New queue:', newQueue); // Debug log
 							return newQueue;
 						});
 					}, 300); // Transition duration

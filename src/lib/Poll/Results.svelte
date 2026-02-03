@@ -8,22 +8,30 @@
 	import Fa from 'svelte-fa';
 	import { faStar } from '@fortawesome/free-solid-svg-icons';
 	import NewDescription from './NewDescription.svelte';
-	import type { poll } from './interface';
-
-	let votes: number[] = [],
-		labels: string[] = [];
+	import type { poll, proposal } from './interface';
+	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 
 	//4 for score voting, 3 for date
 	export let pollType = 1,
 		proposals: any[] = [],
 		poll: poll,
-		getPollData = () => {};
+		getPollData = () => {},
+		selectedProposal: proposal | null = null;
+
+	let votes: number[] = [],
+		labels: string[] = [],
+		noVotes = false;
 
 	const getProposals = async () => {
-		const { json } = await fetchRequest(
+		const { res, json } = await fetchRequest(
 			'GET',
 			`group/poll/${$page.params.pollId}/proposals?limit=1000&order_by=score_desc`
 		);
+
+		if (!res.ok) {
+			ErrorHandlerStore.set({ message: 'Failed to get proposals', success: false });
+			return;
+		}
 
 		if (pollType === 4) proposals = json?.results;
 		else if (pollType === 3)
@@ -36,8 +44,9 @@
 				}
 			];
 
-		votes = proposals.map((proposal) => proposal.score) || [];
-		labels = proposals.map((proposal) => proposal.title) || [];
+		votes = proposals.map((proposal) => proposal.score) ?? [];
+		labels = proposals.map((proposal) => proposal.title) ?? [];
+		selectedProposal = proposals[0];
 	};
 
 	const formatDateTime = (dateString: string) => {
@@ -61,11 +70,12 @@
 		};
 	};
 
-	onMount(() => {
-		getProposals();
+	onMount(async () => {
+		await getProposals();
+		noVotes = checkIfNoVotes();
 		let k = 0;
 
-		if (poll?.status === 2 || poll?.status === 0) {
+		if (poll?.status === 2) {
 			let time = setInterval(() => {
 				if (poll.status === -1 || poll.status === 1 || k === 15) clearInterval(time);
 				getProposals();
@@ -74,28 +84,45 @@
 			}, 1000);
 		}
 	});
+
+	//Checks the edge-case where no one with voting rights voted or delegated
+	const checkIfNoVotes = () => {
+		let totalVotes = 0;
+		proposals.forEach((proposal) => {
+			totalVotes += proposal.score;
+		});
+
+		return totalVotes === 0;
+	};
 </script>
 
-<div class="w-full">
+<div class="w-full flex flex-col">
 	<span class="text-primary dark:text-secondary font-semibold text-xl text-center block py-2"
 		>{$_('Results')}</span
 	>
 
 	{#if pollType === 4}
-		{#if poll?.status === 2 || poll?.status === 0}
+		<!-- Conditional is split up to let poll status 0 both display text and list of proposals -->
+		{#if poll?.status === 2}
 			{$_('Calculating results...')}
+		{:else if noVotes}
+			{$_('There is no winning proposal because every proposal got zero votes')}
 		{:else if poll?.status === -1}
 			{$_('Vote calculation failed')}
-		{:else if poll?.status === 1}
+		{/if}
+
+		{#if poll?.status === 1 || poll?.status === 0}
 			<!-- If the winner has atleast one point, display statistics (otherwise it looks empty) -->
 			{#if proposals[0]?.score > 0}
 				<Statistics bind:votes bind:labels />
 			{/if}
 			{#each proposals as proposal, i}
-				<div class="border-gray-300 border-b-2 mt-3 pb-1">
+				<div class="border-gray-300 border-b-2 mt-3 pb-1 overflow-auto max-w-full">
 					<span
 						class="text-primary dark:text-secondary font-semibold flex items-center gap-1 break-words"
-						>{#if i === 0} <Fa icon={faStar} color="orange" /> {/if}
+						>{#if i === 0 && !noVotes}
+							<Fa icon={faStar} color="orange" />
+						{/if}
 						{proposal.title}</span
 					>
 					<NewDescription description={proposal.description} limit={2} lengthLimit={100} />

@@ -8,7 +8,6 @@
 	import { getCommentDepth, getComments } from './functions';
 	import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 	import CommentFilter from './CommentFilter.svelte';
-	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import { commentsStore } from './commentStore';
 	import type { Comment as comment } from '$lib/Poll/interface';
 
@@ -21,7 +20,7 @@
 		showReadMore = true,
 		sortBy: null | string = null,
 		searchString: string = '',
-		errorHandler: any;
+		selectedProposals: number[] = [];
 
 	const setUpComments = async () => {
 		const { comments, next } = await getComments(getId(), api, offset, sortBy, searchString);
@@ -51,7 +50,7 @@
 		await setUpComments();
 	});
 
-	$: if (sortBy || searchString) setUpComments();
+	$: if (sortBy || searchString || selectedProposals) setUpComments();
 </script>
 
 <div class={`rounded dark:text-darktext min-h-[200px] ${Class}`} id="comments">
@@ -61,10 +60,11 @@
 		<CommentPost bind:proposals {api} {delegate_pool_id} />
 
 		<CommentFilter
+			Class="flex flex-row-reverse items-center justify-end mb-2 gap-8"
 			bind:sortBy
 			bind:searchString
-			Class="flex flex-row-reverse items-center justify-end mb-2 gap-8"
 			bind:proposals
+			bind:selectedProposals
 		/>
 	</div>
 
@@ -77,11 +77,9 @@
 		{/if}
 	</div>
 
-	{#if $commentsStore.filteredComments.length === 0}
+	{#if $commentsStore?.filteredComments?.length === 0}
 		<div class="text-center mt-6 dark:text-darkmodeText">
 			{$_('There are currently no comments')}
 		</div>
 	{/if}
 </div>
-
- 

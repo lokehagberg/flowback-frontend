@@ -1,3 +1,5 @@
+// TODO: Delete the entire API folder
+
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { env } from '$env/dynamic/public';

@@ -17,7 +17,6 @@ src/lib/assets/Default_pfp.png
 /.src/app.html
 ./src/app.html
 src/app.html
-package-lock.json
 backend.bash
 setup2.bat
 venv
@@ -25,3 +24,5 @@ measure.py
 test-results
 /test-results
 ./test-results
+tests/Post.test.ts-snapshots
+tests/screenshots

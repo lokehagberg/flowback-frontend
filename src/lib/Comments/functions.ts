@@ -1,18 +1,6 @@
-import { checkForLinks } from '$lib/Generic/GenericFunctions';
 import type { Comment } from '$lib/Poll/interface';
 import { pollComments as pollCommentsLimit } from '../Generic/APILimits.json';
 import { fetchRequest } from '$lib/FetchRequest';
-
-export const commentSetup = async (comments: Comment[]) => {
-	if (!comments) return [];
-
-	comments?.map((comment) => (comment.reply_depth = getCommentDepth(comment, comments)));
-	comments?.forEach((comment) => {
-		checkForLinks(comment.message, `comment-${comment.id}`);
-	});
-
-	return comments;
-};
 
 //Uses recursion
 export const getCommentDepth = (comment: Comment, comments: Comment[]): number => {

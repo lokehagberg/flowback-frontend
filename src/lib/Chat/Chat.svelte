@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { groupStore, workgroupStore } from '$lib/Group/Kanban/Kanban';
 	import ChatWindow from './ChatWindow.svelte';
 	import Preview from './Preview.svelte';
 	import { onMount } from 'svelte';
@@ -9,106 +10,90 @@
 	import { faCog } from '@fortawesome/free-solid-svg-icons';
 	import ChatIcon from '$lib/assets/Chat_fill.svg';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
-	import { chatPartnerStore, chatOpenStore } from './functions';
+	import {
+		chatOpenStore,
+		fixDirectMessageChannelName,
+		previewStore,
+		chatPartnerStore
+	} from './functions';
 	import { goto } from '$app/navigation';
 	import CreateChatGroup from '$lib/Chat/CreateChatGroup.svelte';
 	import CrossButton from '$lib/Generic/CrossButton.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
+	import { userStore } from '$lib/User/interfaces';
 
 	let chatOpen = false,
 		selectedPage: 'direct' | 'group' = 'direct',
-		selectedChat: number | null,
-		previewDirect: PreviewMessage[] = [],
 		isLookingAtOlderMessages = false,
 		chatDiv: HTMLDivElement,
-		selectedChatChannelId: number | null,
 		creatingGroup = false,
-		groupMembers: GroupMembers[] = [];
+		groupMembers: GroupMembers[] = [],
+		notification = false;
 
 	// Fetch preview messages and set notified based on localStorage timestamps
 	const getPreview = async () => {
-		const { res, json } = await fetchRequest('GET', `chat/message/channel/preview/list`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`chat/message/channel/preview/list`
+		);
 		if (!res.ok) return [];
 
-		previewDirect = json?.results;
+		let previews = json?.results.map((preview: PreviewMessage) => {
+			return {
+				...preview,
+				recent_message: {
+					...preview.recent_message,
+					notified:
+						// Makes sure that messages are notified whenever most recent message is before last click
+						// @ts-ignore
+						preview.recent_message === null ||
+						new Date(preview.timestamp) >
+							new Date(preview.recent_message?.created_at) ||
+						preview.recent_message?.user.id === $userStore?.id
+				}
+			};
+		});
+
+		$previewStore = previews;
+
+		fixDirectMessageChannelName(json?.results, $userStore?.id);
 	};
 
-	// Adjust chat window margin dynamically
+	// Adjust chat window based on the header
 	const correctMarginRelativeToHeader = () => {
 		const _headerHeight = document.querySelector('#header')?.clientHeight;
-		if (_headerHeight && chatDiv) chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
-	};
-
-	// Clear notification and update localStorage timestamp when a chat is opened
-	const clearChatNotification = async (chatterId: number | null) => {
-		if (!chatterId) return;
-
-		// Clear notification for messages
-		let message = previewDirect.find((message) => message.channel_id === chatterId);
-		if (message) {
-			message.timestamp = new Date().toString();
-			message.notified = false;
-			previewDirect = [...previewDirect];
-		}
+		if (_headerHeight && chatDiv)
+			chatDiv.style.marginTop = `${_headerHeight.toString()}px`;
 	};
 
 	onMount(async () => {
 		// Adjust chat window margin based on header height
+		// TODO: Make better (CSS Only perhaps)
 		correctMarginRelativeToHeader();
 		window.addEventListener('resize', correctMarginRelativeToHeader);
+
 		// Subscribe to chat open state
 		chatOpenStore.subscribe((open) => (chatOpen = open));
 		getPreview();
-		window.addEventListener('popstate', () => {
-			let url = new URL(window.location.toString());
-			if (url.searchParams.get('chatOpen') === 'true') chatOpen = true;
-			else chatOpen = false;
-		});
+
+		groupStore.subscribe(() => getPreview());
+		workgroupStore.subscribe(() => getPreview());
 	});
 
-	// Reactive variables to track unread messages
-	$: displayNotification = previewDirect.some((p) => p.notified);
-
-	//Handles the chatOpen=true in the URL for correct "going back in history" behaviour
-	$: (() => {
-		const url = new URL(window.location.toString());
-		url.searchParams.set('chatOpen', chatOpen.toString());
-		window.history.pushState({}, '', url);
-	})();
-
-	// Automatically select the first chat when the chat window opens
-	//TODO Make it work
-	$: if (
-		chatOpen &&
-		selectedChat === null &&
-		selectedChatChannelId === null &&
-		previewDirect.length > 0
-	) {
-		const firstDirectChat = previewDirect[0];
-		selectedChat = firstDirectChat.channel_id || null;
-		// selectedChatChannelId = firstDirectChat.channel_id || null;
-		chatPartnerStore.set(firstDirectChat.channel_id || -1);
-		// Clear notification and update timestamp for the selected chat
-		clearChatNotification(firstDirectChat.channel_id || -1);
-	}
-
-	// Reset chat partner when chat is closed
-	// TODO fix issues with this
-	$: if (!chatOpen) {
-		chatPartnerStore.set(0);
-	}
+	// Display purple notification circle whenever there is a message that hasn't been seen.
+	$: notification = $previewStore.some((p) => !p.recent_message?.notified);
 </script>
 
 <svelte:head>
 	<title>
-		{`${displayNotification ? '🟣' : ''}`}
+		{`${notification ? '🟣' : ''}`}
 	</title>
 </svelte:head>
 
 <div
 	bind:this={chatDiv}
 	class:invisible={!chatOpen}
-	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-50 w-full h-[100vh] flex flex-col items-center"
+	class="bg-background dark:bg-darkbackground dark:text-darkmodeText fixed z-[50] w-[100vw] h-[100vh] flex flex-col items-center"
 >
 	<div class="w-full flex justify-between mr-6">
 		<Button
@@ -119,12 +104,16 @@
 			}}
 			Class="px-6 my-3 dark:bg-darkbackground hover:brightness-95 active:brightness-90"
 		>
-			<div class="text-gray-800 dark:text-gray-200">
+			<div
+				class={`top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white`}
+			>
 				<Fa icon={faCog} />
 			</div>
 		</Button>
 
-		<Button Class="px-6 my-3 dark:bg-darkbackground hover:brightness-95 active:brightness-90" />
+		<Button
+			Class="px-6 my-3 dark:bg-darkbackground hover:brightness-95 active:brightness-90"
+		/>
 		<CrossButton
 			action={() => {
 				chatOpen = false;
@@ -132,29 +121,20 @@
 			}}
 		/>
 	</div>
+
 	<div class="flex w-full gap-6 max-w-[1200px] h-[80vh]">
-		<div class="bg-white w-[40%] overflow-y-auto flex-grow ml-6 dark:bg-darkobject p-2">
+		<div
+			class="bg-white w-[40%] overflow-y-auto flex-grow ml-6 dark:bg-darkobject p-2"
+		>
 			{#key creatingGroup}
-				<Preview
-					bind:selectedChat
-					bind:previewDirect
-					bind:selectedChatChannelId
-					bind:creatingGroup
-					bind:groupMembers
-				/>
+				<Preview bind:creatingGroup bind:groupMembers />
 			{/key}
 		</div>
 		<div class="bg-white w-[60%] flex-grow mr-6 dark:bg-darkobject p-2">
 			{#if creatingGroup}
 				<CreateChatGroup bind:creatingGroup bind:groupMembers />
 			{:else}
-				<ChatWindow
-					bind:selectedChat
-					bind:selectedChatChannelId
-					bind:selectedPage
-					bind:previewDirect
-					bind:isLookingAtOlderMessages
-				/>
+				<ChatWindow bind:selectedPage bind:isLookingAtOlderMessages />
 			{/if}
 		</div>
 	</div>
@@ -165,7 +145,7 @@
 		chatOpen = !chatOpen;
 		chatOpenStore.set(chatOpen);
 	}}
-	class:small-notification={displayNotification}
+	class:small-notification={notification}
 	class="dark:text-white transition-all fixed z-50 bg-white dark:bg-darkobject shadow-md border p-5 bottom-6 ml-5 rounded-full cursor-pointer hover:shadow-xl hover:border-gray-400 active:shadow-2xl active:p-6"
 >
 	<img

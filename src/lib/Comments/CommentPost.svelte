@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
@@ -6,15 +7,12 @@
 	import { page } from '$app/stores';
 	import type { Comment } from '../Poll/interface';
 	import type { proposal } from '../Poll/interface';
-	import FileUploads from '$lib/Generic/FileUploads.svelte';
+	import FileUploads from '$lib/Generic/File/FileUploads.svelte';
 	import Fa from 'svelte-fa';
 	import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-	import { darkModeStore } from '$lib/Generic/DarkMode';
-	import { onMount } from 'svelte';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import { commentsStore } from './commentStore';
 	import { getCommentDepth } from './functions';
-	import { onDestroy } from 'svelte';
 	import { userStore } from '$lib/User/interfaces';
 
 	export let comments: Comment[] = [],
@@ -31,8 +29,6 @@
 	let show = false,
 		showMessage = '',
 		recentlyTappedButton = '',
-		darkmode = false,
-		 
 		filteredProposal: proposal | null = null;
 
 	// Reactive subscription to the filtered proposal in the commentsStore
@@ -41,7 +37,8 @@
 	const getId = () => {
 		if (api === 'poll') return `poll/${$page.params.pollId}`;
 		else if (api === 'thread') return `thread/${$page.params.threadId}`;
-		else if (api === 'delegate-history') return `delegate/pool/${delegate_pool_id}`;
+		else if (api === 'delegate-history')
+			return `delegate/pool/${delegate_pool_id}`;
 	};
 
 	const commentCreate = async () => {
@@ -68,19 +65,48 @@
 		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to post comment', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to post comment',
+				success: false
+			});
 			return;
 		}
 
 		// Calculate the reply_depth based on the parent comment
+
+		const id = json;
+		getNewComment(id);
+	};
+
+	const getNewComment = async (id: number) => {
 		let replyDepth = 0;
 
-		const parentComment = $commentsStore.filteredComments.find(
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${getId()}/comment/list?id=${id}`
+		);
+
+		if (res.ok) {
+			const newComment = json.results[0];
+			commentsStore.add(newComment);
+			comments = comments;
+			showMessage = 'Successfully posted comment';
+			show = true;
+			message = '';
+			replying = false;
+
+			subscribeToReplies();
+
+			return;
+		}
+
+		const parentComment = $commentsStore.allComments.find(
 			(comment) => comment.id === parent_id
 		);
 
 		if (parentComment) {
-			replyDepth = getCommentDepth(parentComment, $commentsStore.filteredComments) + 1;
+			replyDepth =
+				getCommentDepth(parentComment, $commentsStore.allComments) + 1;
 		}
 
 		const newComment: Comment = {
@@ -118,7 +144,10 @@
 		const formData = new FormData();
 
 		if (message === '' && files.length === 0) {
-			ErrorHandlerStore.set({ message: 'Cannot create empty comment', success: false });
+			ErrorHandlerStore.set({
+				message: 'Cannot create empty comment',
+				success: false
+			});
 			return;
 		}
 
@@ -140,7 +169,10 @@
 		beingEdited = false;
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to edit comment', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to edit comment',
+				success: false
+			});
 			return;
 		}
 
@@ -161,33 +193,20 @@
 
 	//TODO: Optimize so that this doesn't fire every time a comment is made
 	const subscribeToReplies = async () => {
-		const { res, json } = await fetchRequest('POST', `group/${getId()}/notification/subscribe`, {
-			tags: ['comment_self']
-		});
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${getId()}/notification/subscribe`,
+			{
+				tags: ['comment_self']
+			}
+		);
 	};
-
-	const handleKeyDown = (event: KeyboardEvent) => {
-		// Check for a specific key, e.g., the "k" key:
-		if (event.ctrlKey && event.key === 'Enter' && message.trim() !== '') {
-			beingEdited ? commentUpdate() : commentCreate();
-		}
-	};
-
-	onMount(() => {
-		document.addEventListener('keydown', handleKeyDown);
-		darkModeStore.subscribe((value) => {
-			darkmode = value;
-		});
-	});
-
-	onDestroy(() => {
-		// document.removeEventListener('keydown', handleKeyDown);
-	});
 </script>
 
 <form
 	class="relative"
-	on:submit|preventDefault={() => (beingEdited ? commentUpdate() : commentCreate())}
+	on:submit|preventDefault={() =>
+		beingEdited ? commentUpdate() : commentCreate()}
 >
 	<!-- When # typed, show proposals to be tagged -->
 	<div
@@ -196,7 +215,9 @@
 	>
 		{#if proposals?.length > 0 && api === 'poll'}
 			<div class="max-h-30 overflow-y-auto">
-				<div class="px-4 py-2 font-semibold text-sm text-gray-600 border-b border-gray-200">
+				<div
+					class="px-4 py-2 font-semibold text-sm text-gray-600 border-b border-gray-200"
+				>
 					{$_('All proposals')}
 				</div>
 				<ul class="divide-y divide-gray-200">
@@ -220,6 +241,7 @@
 	</div>
 	<div class="flex">
 		<div class="flex flex-grow">
+			<!-- TODO: Fix so there's dynamic sizing of the number of rows instead of fixed at 6 or 3 -->
 			<TextArea
 				label=""
 				bind:value={message}
@@ -229,6 +251,7 @@
 				placeholder={$_('Write a comment...')}
 				displayMax={false}
 				id="textarea-comment"
+				rows={beingEdited && message.length > 50 ? 6 : 3}
 			/>
 		</div>
 		<div class="flex ml-2 items-start">
@@ -240,14 +263,16 @@
 			/>
 			<div class="p-2 m-auto">
 				<Button
-					Class=" bg-white dark:bg-darkbackground hover:!brightness-100 dark:hover:!bg-gray-700 hover:bg-gray-100"
+					Class="submit-button bg-white dark:bg-darkbackground hover:!brightness-100 dark:hover:!bg-gray-700 hover:bg-gray-100"
 					type="submit"
 					label=""
-					><Fa icon={faPaperPlane} color={darkmode ? 'white' : 'black'} class="text-lg" /></Button
+					><Fa
+						icon={faPaperPlane}
+						color={$darkModeStore ? 'white' : 'black'}
+						class="text-lg"
+					/></Button
 				>
 			</div>
 		</div>
 	</div>
 </form>
-
- 

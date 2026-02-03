@@ -1,49 +1,38 @@
 <script lang="ts">
-	// import { Pie } from 'svelte-chartjs';
-
-	// import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
+	import Pie from 'chart.js/auto';
 	import { onMount } from 'svelte';
 
 	export let labels = ['1'],
 		votes = [1];
 
 	let data = {
-			labels: [],
-			datasets: [
-				{
-					data: [],
-					backgroundColor: ['#0157BE', '#9333EA', '#93C5FD', '#D8B4FE']
-				}
-			],
-			options: {
-				responsive: false
-				// onResize: () => {
-				// 	console.log('HI');
-				// }
+		labels,
+		datasets: [
+			{
+				data: votes,
+				backgroundColor: ['#0157BE', '#9333EA', '#93C5FD', '#D8B4FE']
 			}
-		},
-		chart: any;
+		],
+		options: {
+			responsive: false
+		}
+	};
 
-	onMount(() => {
-		updateChart();
+	onMount(async () => {
+		setupChart();
 	});
 
-	// ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
-
-	const updateChart = () => {
-		labels.forEach((label) => {
-			chart?.data?.labels?.push(label);
+	const setupChart = () => {
+		new Pie(document.getElementById('pie-results') as HTMLCanvasElement, {
+			type: 'pie',
+			data,
+			options: {
+				responsive: false
+			}
 		});
-
-		console.log(votes);
-		votes.forEach((vote) => {
-			chart?.data?.datasets[0]?.data.push(vote);
-		});
-
-		chart.update();
 	};
 </script>
 
 <div class=" m-auto">
-	<!-- <Pie bind:chart bind:data options={{ responsive: true }} /> -->
+	<canvas id="pie-results" />
 </div>

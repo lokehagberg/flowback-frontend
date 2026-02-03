@@ -1,4 +1,8 @@
 {
     "Welcome to Flowback": "Welcome to Flowback",
-    "Timeline": "Phase"
+    "Timeline": "Phase",
+    "channelJoin": "User {user} joined the channel",
+    "chat": {
+        "add":"Add Me!"
+    }
 }

@@ -26,7 +26,12 @@
 	import { removeGroupMembership } from '$lib/Blockchain_v1_Ethereum/javascript/rightToVote';
 	import { env } from '$env/dynamic/public';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { groupUserStore, groupUserPermissionStore } from '$lib/Group/interface';
+	import {
+		groupUserStore,
+		groupUserPermissionStore
+	} from '$lib/Group/interface';
+	import { groupStore } from '$lib/Group/Kanban/Kanban';
+	import { chatPartnerStore } from '$lib/Chat/functions';
 
 	export let selectedPage: SelectablePage = 'flow',
 		group: GroupDetails,
@@ -34,15 +39,20 @@
 
 	let innerWidth = 0,
 		clickedExpandSidebar = false,
-		areYouSureModal = false,
-		errorHandler: any;
+		areYouSureModal = false;
 
 	const leaveGroup = async () => {
-		const { res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/leave`);
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/leave`
+		);
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({
-				message: json.detail[0] || json.detail || 'An error occurred while leaving the group',
+				message:
+					json.detail[0] ||
+					json.detail ||
+					'An error occurred while leaving the group',
 				success: false
 			});
 			return;
@@ -51,6 +61,8 @@
 		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 			removeGroupMembership(Number($page.params.groupId));
 
+		groupStore.set($groupStore.filter((g) => g.id !== group.id));
+		chatPartnerStore.set(0);
 		goto('/home');
 	};
 
@@ -92,7 +104,10 @@
 		<div class="mb-6 w-full">
 			<GroupSidebarButton
 				action={() => {
-					if ($groupUserPermissionStore?.create_poll || $groupUserStore?.is_admin)
+					if (
+						$groupUserPermissionStore?.create_poll ||
+						$groupUserStore?.is_admin
+					)
 						goto(
 							`/createpoll?id=${$page.params.groupId}&type=${
 								selectedPage === 'threads' ? 'thread' : 'poll'
@@ -105,10 +120,11 @@
 						});
 				}}
 				text="Create a post"
-				disabled={!$groupUserPermissionStore?.create_poll && !$groupUserStore?.is_admin}
+				disabled={!$groupUserPermissionStore?.create_poll &&
+					!$groupUserStore?.is_admin}
 				faIcon={faCheckToSlot}
 				isSelected={false}
-				Class="text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary dark:saturate-50 shadow rounded w-full"
+				Class="relative  text-white hover:!bg-blue-800 active:!bg-blue-900 bg-primary dark:saturate-50 shadow rounded w-full"
 			/>
 		</div>
 		<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col">
@@ -130,7 +146,9 @@
 			/> -->
 			<GroupSidebarButton
 				action={() => action('working-groups')}
-				text={env.PUBLIC_LOGO === 'REFORUM' ? 'Work- and local Groups' : 'Work Groups'}
+				text={env.PUBLIC_LOGO === 'REFORUM'
+					? 'Work- and local Groups'
+					: 'Work Groups'}
 				isSelected={selectedPage === 'working-groups'}
 				faIcon={faPeopleCarryBox}
 			/>
@@ -199,7 +217,9 @@
 			{/if}
 		</div>
 		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+			<div
+				class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6"
+			>
 				<GroupSidebarButton
 					Class="w-full"
 					action={() => (areYouSureModal = true)}
@@ -220,7 +240,9 @@
 			</div>
 		{/if}
 		{#if $groupUserStore?.is_admin}
-			<div class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6">
+			<div
+				class="bg-white dark:bg-darkobject shadow rounded flex flex-col mt-6"
+			>
 				<GroupSidebarButton
 					action={() => action('email')}
 					text="Send Email"
@@ -250,5 +272,3 @@
 	<div slot="header">{$_('Are you sure?')}</div>
 	<div slot="body">{$_('You are about to leave the group!')}</div>
 </Modal>
-
- 

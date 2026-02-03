@@ -1,25 +1,39 @@
 services:
-  flowback-frontend:
-    restart: unless-stopped
-    build: .
-    ports:
-      - ${PORT:-3000}:${PORT:-3000}
-    # 5173:5173
-    # - ${PORT:-5173}:${PORT:-5173}
-    env_file:
-      - .env
-    # volumes:
-    #   - ./src:/usr/src/app/src
-    # - .:/app
-    develop:
-      watch: 
-        - path: .
-          target: /usr/src/app
-          action: sync
-        - path: ./docker-compose.yaml
-          target: /usr/src/app
-          action: rebuild
-        - path: ./Dockerfile
-          target: /usr/src/app
-          action: rebuild
+    flowback-frontend:
+        restart: unless-stopped
+        build: .
+        command: sh -c "npm run dev -- --host 0.0.0.0 --port $PORT"
+        ports:
+            - ${PORT:-3000}:${PORT:-3000}
+        env_file:
+            - .env
+        develop:
 
+            watch:
+                - path: .
+                  target: /usr/src/app
+                  action: sync
+                - path: ./docker-compose.yaml
+                  target: /usr/src/app
+                  action: rebuild
+                - path: ./Dockerfile
+                  target: /usr/src/app
+                  action: rebuild
+
+          # TODO:: Fix healthcheck
+        # healthcheck:
+        #     test: ['CMD', 'curl', '-f', 'http://localhost:${PORT:-3000}/']
+        #     interval: 4s
+        #     timeout: 4s
+        #     retries: 5
+        #     start_period: 5s
+        volumes:
+            - ./src:/home/node/app/src
+            - ./static:/home/node/app/static
+            - ./vite.config.js:/home/node/app/vite.config.js
+            - ./tsconfig.json:/home/node/app/tsconfig.json
+            - ./svelte.config.js:/home/node/app/svelte.config.js
+            - ./:/app
+            - /app/node_modules
+
+# TODO: Have a production setting (either in Dockerfile or in docker-compose, set in .env)

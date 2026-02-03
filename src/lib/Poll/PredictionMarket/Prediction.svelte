@@ -11,7 +11,6 @@
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import { onMount } from 'svelte';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { createPredictionBet as createPredictionBetBlockchain } from '$lib/Blockchain_v1_Ethereum/javascript/predictionsBlockchain';
 	import VotingSlider from '../VotingSlider.svelte';
 	import { env } from '$env/dynamic/public';
 
@@ -22,8 +21,7 @@
 		Class = '';
 
 	let score: null | number = null,
-		showDetails = false,
-		errorHandler: any;
+		showDetails = false;
 
 	function hasEndDatePassed(): boolean {
 		const currentDateTime = new Date();
@@ -45,11 +43,18 @@
 		loading = false;
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to send probability', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to send probability',
+				success: false
+			});
 			return;
 		}
 
-		ErrorHandlerStore.set({ message: 'Probability successfully sent', success: true, show: true });
+		ErrorHandlerStore.set({
+			message: 'Probability successfully sent',
+			success: true,
+			show: true
+		});
 	};
 
 	const predictionBetDelete = async () => {
@@ -62,12 +67,18 @@
 
 		loading = false;
 
-		if (!res.ok) {			
-			ErrorHandlerStore.set({ message: 'Failed to change probability', success: false });
+		if (!res.ok) {
+			ErrorHandlerStore.set({
+				message: 'Failed to change probability',
+				success: false
+			});
 			return;
 		}
-		
-		ErrorHandlerStore.set({ message: 'Probability successfully sent', success: true });
+
+		ErrorHandlerStore.set({
+			message: 'Probability successfully sent',
+			success: true
+		});
 	};
 
 	const createEvaluation = async (vote: boolean) => {
@@ -77,12 +88,15 @@
 			{ vote }
 		);
 
-		if (!res.ok) {			
+		if (!res.ok) {
 			ErrorHandlerStore.set({ message: 'Evaluation failed', success: false });
 			return;
 		}
-		
-		ErrorHandlerStore.set({ message: 'Successfully evaluated consequence', success: true });
+
+		ErrorHandlerStore.set({
+			message: 'Successfully evaluated consequence',
+			success: true
+		});
 		prediction.user_prediction_statement_vote = vote;
 	};
 
@@ -93,7 +107,10 @@
 		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Something went wrong', success: false });
+			ErrorHandlerStore.set({
+				message: 'Something went wrong',
+				success: false
+			});
 			return;
 		}
 
@@ -110,11 +127,17 @@
 		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Something went wrong', success: false });
+			ErrorHandlerStore.set({
+				message: 'Something went wrong',
+				success: false
+			});
 			return;
 		}
-				
-		ErrorHandlerStore.set({ message: 'Successfully evaluated consequence', success: true });
+
+		ErrorHandlerStore.set({
+			message: 'Successfully evaluated consequence',
+			success: true
+		});
 
 		prediction.user_prediction_statement_vote = vote;
 	};
@@ -139,7 +162,7 @@
 		)
 			// createPredictionBetBlockchain(poll.blockchain_id, prediction.blockchain_id, score);
 
-		score = Number(newScore);
+			score = Number(newScore);
 	};
 
 	$: buttonsEnabled = hasEndDatePassed();
@@ -180,8 +203,8 @@
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(true)
 						: prediction.user_prediction_statement_vote === true
-						? deleteEvaluation()
-						: changeEvaluation(true)}
+							? deleteEvaluation()
+							: changeEvaluation(true)}
 				Class={`w-12 px-4 py-1 border-2 
 				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
 				${
@@ -189,12 +212,13 @@
 						? 'bg-green-600 text-white border-green-600'
 						: 'hover:bg-green-100 border-green-600 text-green-800'
 				}`}
-				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faCheck}
 					class={`${
-						prediction.user_prediction_statement_vote === true ? 'text-white' : 'text-green-700'
+						prediction.user_prediction_statement_vote === true
+							? 'text-white'
+							: 'text-green-700'
 					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
@@ -203,8 +227,8 @@
 					prediction.user_prediction_statement_vote === null
 						? createEvaluation(false)
 						: prediction.user_prediction_statement_vote === false
-						? deleteEvaluation()
-						: changeEvaluation(false)}
+							? deleteEvaluation()
+							: changeEvaluation(false)}
 				Class={`w-12 px-4 py-1 ml-2 border-2 
 				${!buttonsEnabled ? 'disabled hover:!bg-transparent' : ''}
 				${
@@ -212,12 +236,13 @@
 						? 'bg-red-700 text-white border-red-700'
 						: 'hover:bg-red-100 border-red-500 text-red-600'
 				}`}
-				disabled={!buttonsEnabled}
 			>
 				<Fa
 					icon={faX}
 					class={`${
-						prediction.user_prediction_statement_vote === false ? 'text-white' : 'text-red-600'
+						prediction.user_prediction_statement_vote === false
+							? 'text-white'
+							: 'text-red-600'
 					} ${!buttonsEnabled ? '!text-gray-300' : ''}`}
 				/>
 			</Button>
@@ -227,10 +252,16 @@
 
 <Modal bind:open={showDetails}>
 	<div slot="body">
-		<div class="break-words whitespace-pre-wrap">{prediction.description}</div>
+		<div class="break-words whitespace-pre-wrap max-w-[300px]">
+			{prediction.description}
+		</div>
 		<ul>
 			{#each prediction.segments as proposal}
-				<li>{proposal.proposal_title} is {proposal.is_true ? 'Implemented' : 'Not Implemented'}</li>
+				<li>
+					{proposal.proposal_title} is {proposal.is_true
+						? 'Implemented'
+						: 'Not Implemented'}
+				</li>
 			{/each}
 		</ul>
 		<div>{$_('Deadline')}: {formatDate(prediction.end_date.toString())}</div>
@@ -239,5 +270,3 @@
 		{/if}
 	</div>
 </Modal>
-
- 

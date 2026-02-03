@@ -5,27 +5,24 @@
 	import type { GroupFilter } from './interface';
 	import Select from '$lib/Generic/Select.svelte';
 
-	export let filter: GroupFilter, getGroups: () => void;
+	export let filter: GroupFilter;
 	//Aesthethics only, changes the UI when searching would lead to different results.
 	let searched = true;
 	let searchQuery = filter.search || '';
 
 	const handleChangeMember = (e: any) => {
 		filter.joined = e.target.value;
-		getGroups();
 	};
 
 	const handleSearch = () => {
 		filter.search = searchQuery;
 		searched = true;
-		getGroups();
 	};
 
 	const handleSearchInput = () => {
 		searched = false;
 		setTimeout(() => {
 			filter.search = searchQuery;
-			getGroups();
 		}, 300);
 	};
 
@@ -34,12 +31,10 @@
 		filter.search = '';
 		searchQuery = '';
 		searched = true;
-		getGroups();
 	};
 
 	$: if (searchQuery === '') {
 		filter.search = searchQuery;
-		getGroups();
 		searched = false;
 	}
 </script>

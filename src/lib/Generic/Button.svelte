@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	export let onClick = () => {},
+	export let onClick = (e: any) => {},
 		Class = '',
 		buttonStyle: buttonstyles = 'primary',
 		type: buttontypes = 'button',
@@ -38,8 +38,8 @@
 <button
 	{id}
 	{type}
-	on:click={() => {
-		onClick();
+	on:click={(e) => {
+		onClick(e);
 	}}
 	class={`text-center dark:saturate-[60%] transition-colors duration-50 ${
 		Class.includes('bg-') ? '' : 'bg-primary'

@@ -2,7 +2,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import FIleUpload from '$lib/Generic/FileUpload.svelte';
+	import FIleUpload from '$lib/Generic/File/FileUpload.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
@@ -17,6 +17,7 @@
 	import { env } from '$env/dynamic/public';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
+	import { chatPartnerStore } from '$lib/Chat/functions';
 
 	export let Class = '';
 
@@ -29,11 +30,11 @@
 		publicGroup = true,
 		hiddenGroup = true,
 		loading = false,
-		 
 		oldGroup: any;
 
 	//This page also supports the edit of groups
-	const groupToEdit = $page.url.searchParams.get('group') || $page.params.groupId;
+	const groupToEdit =
+		$page.url.searchParams.get('group') || $page.params.groupId;
 
 	let DeleteGroupModalShow = false;
 
@@ -54,25 +55,33 @@
 		formData.append('hide_poll_users', hiddenGroup.toString());
 
 		if (image) formData.append('image', await blobifyImages(image));
-		if (coverImage) formData.append('cover_image', await blobifyImages(coverImage));
+		if (coverImage)
+			formData.append('cover_image', await blobifyImages(coverImage));
 
 		let api = groupToEdit ? `group/${groupToEdit}/update` : 'group/create';
-		const { res, json } = await fetchRequest('POST', api, formData, true, false);
+		const { res, json } = await fetchRequest(
+			'POST',
+			api,
+			formData,
+			true,
+			false
+		);
 
 		loading = false;
 		if (!res.ok) {
 			ErrorHandlerStore.set({
-				message:
-					json.detail[0] || json.detail || groupToEdit
-						? 'Could not update group'
-						: 'Could not create group',
+				message: groupToEdit
+					? 'Could not update group'
+					: 'Could not create group',
 				success: false
 			});
 			return;
 		}
 
 		ErrorHandlerStore.set({
-			message: groupToEdit ? 'Successfully updated group' : 'Successfully created group',
+			message: groupToEdit
+				? 'Successfully updated group'
+				: 'Successfully created group',
 			success: true
 		});
 
@@ -82,7 +91,8 @@
 				name: 'Uncategorised'
 			});
 
-			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(blockchain_id);
+			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
+				becomeMemberOfGroup(blockchain_id);
 			goto(`/groups/${json}`);
 		}
 	};
@@ -91,24 +101,32 @@
 		const { res } = await fetchRequest('POST', `group/${groupToEdit}/delete`);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Could not delete group', success: false });
+			ErrorHandlerStore.set({
+				message: 'Could not delete group',
+				success: false
+			});
 			return;
 		}
 
 		//Rederict to group
 		if (res.ok) goto('/groups');
+		chatPartnerStore.set(0);
 	};
 
 	const getGroupToEdit = async () => {
 		//TODO: detail is outdated
-		const { res, json } = await fetchRequest('GET', `group/${groupToEdit}/detail`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${groupToEdit}/detail`
+		);
 		name = json.name;
 		description = json.description;
 		useInvite = !json.direct_join;
 		publicGroup = json.public;
 
 		if (json.image) image = `${env.PUBLIC_API_URL}${json.image}`;
-		if (json.cover_image) coverImage = `${env.PUBLIC_API_URL}${json.cover_image}`;
+		if (json.cover_image)
+			coverImage = `${env.PUBLIC_API_URL}${json.cover_image}`;
 
 		oldGroup = { ...json, image, coverImage };
 	};
@@ -122,7 +140,10 @@
 		if (oldGroup.image) image = oldGroup.image;
 		if (oldGroup.cover_image) coverImage = oldGroup.coverImage;
 
-		ErrorHandlerStore.set({ message: 'Successfully reverted edits', success: true });
+		ErrorHandlerStore.set({
+			message: 'Successfully reverted edits',
+			success: true
+		});
 	};
 
 	onMount(() => {
@@ -151,10 +172,23 @@
 			{/if}
 
 			<TextInput label="Title" bind:value={name} required />
-			<TextArea label="Description" bind:value={description} inputClass="whitespace-pre-wrap" />
+			<TextArea
+				label="Description"
+				bind:value={description}
+				inputClass="whitespace-pre-wrap"
+			/>
 
-			<FIleUpload icon={faUser} isProfile bind:imageString={image} label="Upload Image" />
-			<FIleUpload icon={faFileImage} bind:imageString={coverImage} label="Upload Banner" />
+			<FIleUpload
+				icon={faUser}
+				isProfile
+				bind:imageString={image}
+				label="Upload Image"
+			/>
+			<FIleUpload
+				icon={faFileImage}
+				bind:imageString={coverImage}
+				label="Upload Banner"
+			/>
 
 			{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
 				<RadioButtons
@@ -175,10 +209,12 @@
 				/>
 			{/if}
 
-			 
-
 			<div class="flex gap-4">
-				<Button type="submit" disabled={loading} buttonStyle="primary" Class="w-1/2"
+				<Button
+					type="submit"
+					disabled={loading}
+					buttonStyle="primary"
+					Class="w-1/2"
 					><div class="flex justify-center gap-3 items-center">
 						{$_(groupToEdit ? 'Update' : 'Create')}
 					</div>
@@ -203,24 +239,33 @@
 						Class="max-w-[400px]"
 						buttons={[
 							{ label: 'Yes', type: 'warning', onClick: deleteGroup },
-							{ label: 'Cancel', type: 'default', onClick: () => (DeleteGroupModalShow = false) }
+							{
+								label: 'Cancel',
+								type: 'default',
+								onClick: () => (DeleteGroupModalShow = false)
+							}
 						]}
 					>
 						<div slot="header">{$_('Deleting group')}</div>
-						<div slot="body">{$_('Are you sure you want to delete this group?')}</div>
+						<div slot="body">
+							{$_('Are you sure you want to delete this group?')}
+						</div>
 					</Modal>
-					<Button buttonStyle="warning" Class="w-1/2" onClick={() => (DeleteGroupModalShow = true)}
+					<Button
+						buttonStyle="warning"
+						Class="w-1/2"
+						onClick={() => (DeleteGroupModalShow = true)}
 						>{$_('Delete Group')}</Button
 					>
 				{/if}
 				{#if !groupToEdit && !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-					<Button buttonStyle="default" Class="w-1/2" onClick={() => goto(`/groups`)}
-						>{$_('Cancel')}</Button
+					<Button
+						buttonStyle="default"
+						Class="w-1/2"
+						onClick={() => goto(`/groups`)}>{$_('Cancel')}</Button
 					>
 				{/if}
 			</div>
 		</div>
 	</Loader>
 </form>
-
- 

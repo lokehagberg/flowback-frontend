@@ -9,11 +9,13 @@
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import type { Group } from '../interface';
 
 	export let selectedPage: 'assign' | 'create' | 'list', selectedRole: any;
 
 	let roles: Permissions[] = [],
-		showDeleteModal = false;
+		showDeleteModal = false,
+		group: Group | undefined;
 
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
@@ -38,8 +40,16 @@
 		roles = roles.filter((role) => role.id !== permission_id);
 	};
 
-	onMount(() => {
+	// TODO: Make into a store that can be accessed anywhere in the group
+	const getGroupInfo = async () => {
+		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/detail`);
+		if (!res.ok) return;
+		return json;
+	};
+
+	onMount(async () => {
 		getRoleList();
+		group = await getGroupInfo();
 	});
 </script>
 
@@ -52,13 +62,15 @@
 					selectedPage = 'create';
 				}}>{role.role_name}</button
 			>
-			<Button
-				onClick={() => (showDeleteModal = true)}
-				Class="p-2 text-lg cursor-pointer bg-white dark:bg-darkobject"
-				id={"delete-permission-button " + role.role_name}
-			>
-				<Fa class="text-red-500" icon={faTrash} />
-			</Button>
+			{#if role.id !== group?.default_permission}
+				<Button
+					onClick={() => (showDeleteModal = true)}
+					Class="p-2 text-lg cursor-pointer bg-white dark:bg-darkobject"
+					id={'delete-permission-button ' + role.role_name}
+				>
+					<Fa class="text-red-500" icon={faTrash} />
+				</Button>
+			{/if}
 		</li>
 
 		{#if showDeleteModal}

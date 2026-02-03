@@ -11,10 +11,11 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { permissions as permissionsLimit } from '../../Generic/APILimits.json';
 	import Button from '$lib/Generic/Button.svelte';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
+	import { goto } from '$app/navigation';
 
 	let roles: GroupUser[] = [],
-		users: GroupUser[] = [],
-		errorHandler: any;
+		users: GroupUser[] = [];
 
 	const getRoleList = async () => {
 		const { res, json } = await fetchRequest(
@@ -33,11 +34,18 @@
 	};
 
 	const updateUserRoles = async (roleId: number, userId: number, is_admin: boolean) => {
-		const { json } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
+		const { json, res } = await fetchRequest('POST', `group/${$page.params.groupId}/user/update`, {
 			target_user_id: userId,
 			permission: roleId,
 			is_admin
 		});
+
+		if (!res.ok) {
+			ErrorHandlerStore.set({ message: 'Failed to update permission', success: false });
+			return;
+		}
+
+		ErrorHandlerStore.set({ message: 'Successfully updated permission', success: true });
 
 		//@ts-ignore
 		users.find((user) => user.user.id === userId)!.permission_name = roles.find(
@@ -74,30 +82,33 @@
 	{#each users as user}
 		<li class=" p-3 w-full border-b-2 border-gray-200">
 			<div class="flex items-center">
-				<div class="flex">
+				<button class="flex" on:click={() => goto(`/user?id=${user.user.id}`)}>
 					<ProfilePicture
 						username={user.user.username}
 						profilePicture={user.user.profile_image}
 						displayName
 					/>
-				</div>
+				</button>
 				<div class="ml-6 flex gap-2 flex-wrap mt-4">
-					<Tag tag={{ active: true, id: 1, name: user.permission_name }} displayImac={false} />
+					<Tag
+						Class="!cursor-default"
+						tag={{ active: true, id: 1, name: user.permission_name }}
+						displayImac={false}
+					/>
 					{#if user?.is_admin}
 						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
 							{$_('Admin')}
 						</div>
 					{/if}
 				</div>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
+				<button
 					class:selected={selected === user.user.id}
 					class="faPlus ml-auto cursor-pointer"
 					on:click={() => (selected === user.user.id ? (selected = -1) : (selected = user.user.id))}
-					on:keydown
+					id={`plus-${user.user.username}`}
 				>
 					<Fa icon={faPlus} size="lg" />
-				</div>
+				</button>
 				{#if !user.is_admin}
 					<Button onClick={() => makeAdmin(user)}>{$_('Make admin')}</Button>
 				{/if}
@@ -107,20 +118,22 @@
 				class:hidden={selected !== user.user.id}
 			>
 				<h1 class="text-xl">{user.user.username}</h1>
+				<!-- TODO: Add user search (and tag search too?) -->
 				<!-- <TextInput label="Search" /> -->
 				<ul class="mt-6 flex flex-wrap items-center">
 					{#each roles as role}
-						<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-						<li
-							class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-							on:click={() => updateUserRoles(role.id, user.user.id, user.is_admin)}
-							on:keydown
-						>
-							<Tag
-								tag={{ active: true, id: 1, name: role.role_name }}
-								Class={`cursor-pointer ${user.user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
-								displayImac={false}
-							/>
+						<li>
+							<button
+								class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
+								on:click={() => updateUserRoles(role.id, user.user.id, user.is_admin)}
+							>
+								<Tag
+									tag={{ active: true, id: 1, name: role.role_name ?? '' }}
+									Class={`${user.user.id === role.id ? 'bg-blue-300' : 'bg-blue-600'}`}
+									displayImac={false}
+									id={`permission-${idfy(role.role_name ?? '')}-${idfy(user.user.username)}`}
+								/>
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -128,5 +141,3 @@
 		</li>
 	{/each}
 </ul>
-
- 

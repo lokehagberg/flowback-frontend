@@ -10,7 +10,7 @@
 	import Fa from 'svelte-fa';
 	import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
-	import { groupMembers as groupMembersLimit } from '../Generic/APILimits.json';
+	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import { env } from '$env/dynamic/public';
 	import { faPaperPlane, faRunning } from '@fortawesome/free-solid-svg-icons';
@@ -18,9 +18,10 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { chatPartnerStore, chatOpenStore } from '$lib/Chat/functions';
-	import type { Delegate } from './Delegation/interfaces';
 	import Select from '$lib/Generic/Select.svelte';
 	import { getUserChannelId } from '$lib/Chat/functions';
+	import UserSearch from '$lib/Generic/UserSearch.svelte';
+	import type { Permissions } from './Permissions/interface';
 
 	let users: GroupUser[] = [],
 		usersAskingForInvite: any[] = [],
@@ -29,12 +30,11 @@
 		searchInvitationQuery = '',
 		searchedInvitationUsers: User[] = [],
 		searchedUsers: GroupUser[] = [],
-		 
-		showInvite = false,
 		searched = false,
-		delegates: Delegate[] = [],
 		removeUserModalShow = false,
-		adminFilter: 'All' | 'Admin' | 'Member' = 'All';
+		adminFilter: 'All' | 'Admin' | 'Member' = 'All',
+		permissions: Permissions[] = [],
+		roleFilter: number | null = null;
 
 	let sortOrder: 'a-z' | 'z-a' = 'a-z'; // Default to a-z sort
 
@@ -42,14 +42,12 @@
 		getUsers();
 		getInvitesList();
 		searchUsers('');
-		getDelegatePools();
-
+		getPermissions();
 		//Does this one even do anything?
-		fetchRequest('GET', `group/${$page.params.groupId}/invites`);
+		// fetchRequest('GET', `group/${$page.params.groupId}/invites`);
 	});
 
 	const getUsers = async () => {
-		const token = localStorage.getItem('token') || '';
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}&is_admin=${adminFilter}`
@@ -58,19 +56,12 @@
 		loading = false;
 	};
 
-	const searchUser = async (username: string) => {
-		//TODO: Search users
-		//This code can be used to not show every user unless the user has typed in something
-		if (username === '') {
-			searchedInvitationUsers = [];
-			return;
-		}
-
-		const { json } = await fetchRequest('GET', `users?username=${username}`);
-		searchedInvitationUsers = json?.results;
-	};
-
 	const searchUsers = async (username: string) => {
+		let query = `?limit=${groupMembersLimit}&username__icontains=${username}`;
+
+		if (adminFilter === 'Admin') query += '&is_admin=true';
+		else if (adminFilter === 'Member') query += '&is_admin=false';
+
 		const { json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/users?limit=${groupMembersLimit}&username__icontains=${username}`
@@ -81,30 +72,44 @@
 		// Apply sorting based on sortOrder (always sort)
 		if (sortOrder === 'a-z') {
 			searchedUsers = searchedUsers.sort((a, b) =>
-				a.user.username.toLowerCase().localeCompare(b.user.username.toLowerCase())
+				a.user.username
+					.toLowerCase()
+					.localeCompare(b.user.username.toLowerCase())
 			);
 		} else if (sortOrder === 'z-a') {
 			searchedUsers = searchedUsers.sort((a, b) =>
-				b.user.username.toLowerCase().localeCompare(a.user.username.toLowerCase())
+				b.user.username
+					.toLowerCase()
+					.localeCompare(a.user.username.toLowerCase())
 			);
 		}
 	};
 
 	const getInvitesList = async () => {
-		const { res, json } = await fetchRequest('GET', `group/${$page.params.groupId}/invites`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/invites`
+		);
 		if (res.ok) usersAskingForInvite = json?.results;
 		// else poppup = { message: "Couldn't get invites list", success: false };
 	};
 
 	const inviteUser = async (userId: number) => {
 		loading = true;
-		const { res, json } = await fetchRequest('POST', `group/${$page.params.groupId}/invite`, {
-			to: userId
-		});
+		const { res, json } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/invite`,
+			{
+				to: userId
+			}
+		);
 
 		loading = false;
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: "Couldn't get invites list", success: false });
+			ErrorHandlerStore.set({
+				message: "Couldn't get invites list",
+				success: false
+			});
 			return;
 		}
 
@@ -126,10 +131,15 @@
 			}
 		);
 
-		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+		usersAskingForInvite = usersAskingForInvite.filter(
+			(user) => user.id !== userId
+		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: "Couldn't accept user invite", success: false });
+			ErrorHandlerStore.set({
+				message: "Couldn't accept user invite",
+				success: false
+			});
 			return;
 		}
 
@@ -147,43 +157,43 @@
 			}
 		);
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: "Couldn't reject user invite", success: false });
+			ErrorHandlerStore.set({
+				message: "Couldn't reject user invite",
+				success: false
+			});
 			return;
 		}
 
-		usersAskingForInvite = usersAskingForInvite.filter((user) => user.id !== userId);
+		usersAskingForInvite = usersAskingForInvite.filter(
+			(user) => user.id !== userId
+		);
 		await getInvitesList();
 	};
 
-	/*
-		Temporary fix to make each delegate pool be associated with one user.
-		TODO: Implement delegate pool feature in the front end (Figma design first)
-	*/
-	const getDelegatePools = async () => {
-		const { json, res } = await fetchRequest(
-			'GET',
-			`group/${$page.params.groupId}/delegate/pools?limit=1000`
+	const userRemove = async (userToRemove: number) => {
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${$page.params.groupId}/user/delete`,
+			{
+				target_user_id: userToRemove
+			}
 		);
 
-		if (!res.ok) return;
-
-		delegates = json?.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
-		});
-	};
-
-	const userRemove = async (userToRemove: number) => {
-		const { res } = await fetchRequest('POST', `group/${$page.params.groupId}/user/delete`, {
-			target_user_id: userToRemove
-		});
-
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: $_('Failed to remove user'), success: false });
+			ErrorHandlerStore.set({
+				message: $_('Failed to remove user'),
+				success: false
+			});
 			return;
 		}
 
-		ErrorHandlerStore.set({ message: $_('Successfully removed user'), success: true });
-		searchedUsers = searchedUsers.filter((user) => user.user.id !== userToRemove);
+		ErrorHandlerStore.set({
+			message: $_('Successfully removed user'),
+			success: true
+		});
+		searchedUsers = searchedUsers.filter(
+			(user) => user.user.id !== userToRemove
+		);
 		removeUserModalShow = false;
 		await getUsers();
 	};
@@ -191,6 +201,15 @@
 	const resetFilter = () => {
 		sortOrder = 'a-z'; // Reset to default a-z sort instead of null
 		searchUsers(searchUserQuery);
+	};
+
+	const getPermissions = async () => {
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${$page.params.groupId}/permissions?limit=1000`
+		);
+		if (!res.ok) return;
+		permissions = json.results;
 	};
 </script>
 
@@ -225,16 +244,27 @@
 							onInput={() => searchUsers(searchUserQuery)}
 						/>
 
-						<!-- TODO: Fix functionality for filtering -->
 						<span class="pl-4">{$_('Role')}: </span>
 						<Select
 							classInner="p-1 font-semibold"
-							labels={[$_('Admin'), $_('Member')]}
-							values={[$_('Admin'), $_('Member')]}
-							value={''}
+							labels={[$_('All'), $_('Admin'), $_('Member')]}
+							values={['All', 'Admin', 'Member']}
+							bind:value={adminFilter}
 							onInput={() => searchUsers(searchUserQuery)}
-							innerLabel="All"
-							innerLabelOn={true}
+							disableFirstChoice
+						/>
+
+						<span class="pl-4">{$_('Role')}: </span>
+						<Select
+							classInner="p-1 font-semibold"
+							labels={[
+								'All',
+								...permissions.map((permission) => permission.role_name)
+							]}
+							values={[null, ...permissions.map((permission) => permission.id)]}
+							bind:value={roleFilter}
+							onInput={() => searchUsers(searchUserQuery)}
+							disableFirstChoice
 						/>
 
 						<div class="rounded-md p-1">
@@ -251,7 +281,9 @@
 
 		<!-- Invites -->
 		{#if usersAskingForInvite.length > 0}
-			<div class="w-full flex-col gap-6 shadow rounded bg-white p-2 dark:bg-darkobject">
+			<div
+				class="w-full flex-col gap-6 shadow rounded bg-white p-2 dark:bg-darkobject"
+			>
 				<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText"
 					>{$_('Users requesting invite')}</span
 				>
@@ -269,12 +301,14 @@
 							<Button
 								Class="mr-4 px-2"
 								buttonStyle="primary-light"
-								onClick={() => acceptInviteUser(user.user)}>{$_('Accept')}</Button
+								onClick={() => acceptInviteUser(user.user)}
+								>{$_('Accept')}</Button
 							>
 							<Button
 								Class="px-2"
 								buttonStyle="warning-light"
-								onClick={() => denyInviteUser(user.user)}>{$_('Decline')}</Button
+								onClick={() => denyInviteUser(user.user)}
+								>{$_('Decline')}</Button
 							>
 						</div>
 					{/if}
@@ -283,136 +317,110 @@
 		{/if}
 
 		{#if !(env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE')}
-			<div
-				class="p-4 shadow w-full bg-white dark:bg-darkobject flex items-center hover:bg-gray-100 dark:hover:bg-darkmodeObject transition-colors"
-			>
-				<button on:click={() => (showInvite = true)} class="flex items-center gap-4 w-full">
-					<ProfilePicture />
-					<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">+ Invite user</div>
+			<UserSearch>
+				<button
+					slot="action"
+					let:item
+					class="ml-2 cursor-pointer"
+					on:click={() => inviteUser(item.id)}
+				>
+					<Fa size="2x" icon={faEnvelope} />
 				</button>
-			</div>
+			</UserSearch>
 		{/if}
 
 		<!-- Members List -->
 		{#if searchedUsers.length > 0}
-			<div class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject">
+			<div
+				class="w-full p-4 flex flex-col gap-6 bg-white rounded shadow dark:bg-darkobject"
+			>
 				<span class="font-semibold text-sm text-gray-700 dark:text-darkmodeText"
 					>{$_('All members')}</span
 				>
 				{#each searchedUsers as user}
-					{@const delegationId = delegates.find(
-						(delegate) => delegate.user.id === user.user.id
-					)?.pool_id}
-					<div class="flex items-center">
-						<button
-							on:click={() =>
-								goto(
-									`/user?id=${user.user.id}&delegate_id=${delegationId || ''}&group_id=${
-										$page.params.groupId
-									}&is_admin=${adminFilter}`
-								)}
-							Class="w-[30%]"
-						>
-							<ProfilePicture
-								Class=""
-								username={user.user.username}
-								profilePicture={user.user.profile_image}
-								displayName
-							/>
-						</button>
+					{#if ((user.is_admin && adminFilter === 'Admin') || (!user.is_admin && adminFilter === 'Member') || adminFilter === 'All') && (user.permission_id === roleFilter || roleFilter === null)}
+						<div class="flex items-center">
+							<button
+								on:click={() =>
+									goto(
+										`/user?id=${user.user.id}&delegate_id=${user.delegate_pool_id || ''}&group_id=${
+											$page.params.groupId
+										}&is_admin=${adminFilter}`
+									)}
+								Class="w-[30%]"
+							>
+								<ProfilePicture
+									Class=""
+									username={user.user.username}
+									profilePicture={user.user.profile_image}
+									displayName
+								/>
+							</button>
 
-						{#if user.delegate_pool_id !== null}
-							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
-								{$_('Delegate')}
-							</div>
-						{/if}
-						{#if user?.is_admin}
-							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2">
-								{$_('Admin')}
-							</div>
-						{/if}
-						<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
-							{user.permission_name}
-						</div>
-						<div class="flex gap-2 right-6 absolute">
-							{#await getUserChannelId(user.user.id) then channelId}
-								{#if channelId}
-									<button
-										on:click={() => {
-											chatOpenStore.set(true);
-											chatPartnerStore.set(channelId);
-										}}
-										Class="text-primary"
-									>
-										<Fa icon={faPaperPlane} rotate="60" />
-									</button>
-								{/if}
-							{/await}
-							{#if $groupUserStore?.is_admin && user.user.id !== ($userStore?.id || -1)}
-								<Button
-									Class="w-10 h-10 flex items-center justify-center pl-6 bg-transparent"
-									onClick={() => (removeUserModalShow = true)}
+							{#if user.delegate_pool_id !== null}
+								<div
+									class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2"
 								>
-									<Fa size="lg" class="text-red-500" icon={faRunning} />
-								</Button>
-								<Modal
-									bind:open={removeUserModalShow}
-									Class="w-80 max-w-[400px]"
-									buttons={[
-										{ label: 'Yes', type: 'warning', onClick: () => userRemove(user.user.id) },
-										{ label: 'No', type: 'default', onClick: () => (removeUserModalShow = false) }
-									]}
-								>
-									<div slot="header">{$_('Kick ') + user.user.username + '?'}</div>
-								</Modal>
+									{$_('Delegate')}
+								</div>
 							{/if}
+							{#if user?.is_admin}
+								<div
+									class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700 mr-2"
+								>
+									{$_('Admin')}
+								</div>
+							{/if}
+							<div class="bg-gray-300 px-2 py-0.5 rounded-lg dark:bg-gray-700">
+								{user.permission_name}
+							</div>
+							<div class="flex gap-2 right-6 absolute">
+								{#await getUserChannelId(user.user.id) then channelId}
+									{#if channelId}
+										<button
+											on:click={() => {
+												chatOpenStore.set(true);
+												chatPartnerStore.set(channelId);
+											}}
+											Class="text-primary"
+										>
+											<Fa icon={faPaperPlane} rotate="60" />
+										</button>
+									{/if}
+								{/await}
+								{#if $groupUserStore?.is_admin && user.user.id !== ($userStore?.id || -1)}
+									<Button
+										Class="w-10 h-10 flex items-center justify-center pl-6 bg-transparent"
+										onClick={() => (removeUserModalShow = true)}
+									>
+										<Fa size="lg" class="text-red-500" icon={faRunning} />
+									</Button>
+									<Modal
+										bind:open={removeUserModalShow}
+										Class="w-80 max-w-[400px]"
+										buttons={[
+											{
+												label: 'Yes',
+												type: 'warning',
+												onClick: () => userRemove(user.user.id)
+											},
+											{
+												label: 'No',
+												type: 'default',
+												onClick: () => (removeUserModalShow = false)
+											}
+										]}
+									>
+										<div slot="header">
+											{$_('Kick ') + user.user.username + '?'}
+										</div>
+									</Modal>
+								{/if}
+							</div>
 						</div>
-					</div>
+					{/if}
 				{/each}
 			</div>
 		{/if}
 	</div>
 </Loader>
-
-<Modal bind:open={showInvite}>
-	<div slot="body">
-		<!-- Inviting -->
-		<div class="w-full bg-white dark:bg-darkobject">
-			<TextInput
-				onInput={() => searchUser(searchInvitationQuery)}
-				bind:value={searchInvitationQuery}
-				label={$_('User to invite')}
-				placeholder="Username"
-			/>
-			<ul>
-				{#each searchedInvitationUsers as searchedUser}
-					<li
-						class="text-black flex justify-between bg-white p-2 w-full mt-6 dark:bg-darkobject dark:text-darkmodeText"
-					>
-						<div class="flex">
-							<ProfilePicture
-								displayName
-								username={searchedUser.username}
-								profilePicture={searchedUser.profile_image}
-							/>
-						</div>
-
-						<div class="flex">
-							<div
-								class="ml-2 cursor-pointer"
-								on:click={() => inviteUser(searchedUser.id)}
-								on:keydown
-								tabindex="0"
-								role="button"
-							>
-								<Fa size="2x" icon={faEnvelope} />
-							</div>
-						</div>
-					</li>
-				{/each}
-			</ul>
-		</div>
-	</div>
-</Modal>
-
- 

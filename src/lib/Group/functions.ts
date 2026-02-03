@@ -26,6 +26,7 @@ export const getTags = async (
 
 export const setUserGroupPermissionInfo = async (user: GroupUser | null) => {
 	if (!user) return;
+	if (!user.group_id) return;
 
 	if (user.is_admin) {
 		const permissionInfo = {

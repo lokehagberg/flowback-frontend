@@ -5,10 +5,11 @@
 	import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { darkModeStore, getIconFilter } from '$lib/Generic/DarkMode';
 	import { chatOpenStore } from '$lib/Chat/functions';
+	import { goto } from '$app/navigation';
 
 	export let icon: IconDefinition | string = faCircle,
 		icons: (IconDefinition | string)[] = [faCircle],
@@ -24,41 +25,42 @@
 	let hovering = false,
 		selectedPage = false;
 
-
 	$: selectedPage = selectedHref === href;
 
 	const handleClick = () => {
 		selectedHref = href;
+		goto(href === '/' ? window.location.href : '/' + href);
+		// Closes chat if clicking one of the Header symbol
 		chatOpenStore.set(false);
 	};
 
-	const checkIfSelected = () => {
+	const checkSelectedPage = () => {
 		selectedPage = window.location.pathname === '/' + href;
 	};
 
 	if (icons.length === 1) icons[0] = icon;
 
 	onMount(() => {
-		checkIfSelected();
+		checkSelectedPage();
 	});
 
-	$: if ($page.url.pathname) checkIfSelected();
+	$: if (page.url.pathname) checkSelectedPage();
 </script>
 
 {#if href}
-	<a
+	<!-- href={href === '/' ? window.location.href : '/' + href} -->
+	<button
 		on:mouseover={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}
 		on:focus={() => (hovering = true)}
 		on:blur={() => (hovering = false)}
 		on:click={handleClick}
-		href={href === '/' ? window.location.href : '/' + href}
 		class:active-icon={selectedPage}
 		class={`relative w-14 ${Class} ${$darkModeStore ? 'text-white' : ''}`}
 		id={href}
 		{tabindex}
 	>
-		<div on:load={checkIfSelected} class="flex flex-col items-center">
+		<div on:load={checkSelectedPage} class="flex flex-col items-center">
 			{#key $darkModeStore}
 				{#each icons as icon}
 					{#if typeof icon === 'string'}
@@ -87,8 +89,10 @@
 		>
 			{$_(text)}
 		</div>
-	</a>
+	</button>
 {:else}
+	<!-- These are typically applied on pollthumbnail and threadthumbnail -->
+
 	<button
 		on:mouseover={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}
@@ -99,7 +103,7 @@
 			$darkModeStore ? 'text-white' : ''
 		}`}
 		id={href}
-		on:load={checkIfSelected}
+		on:load={checkSelectedPage}
 	>
 		{#each icons as icon}
 			<Fa
@@ -121,7 +125,6 @@
 <style>
 	.header-icon {
 		position: absolute;
-		width: 100px;
 		left: calc(50% - 50px);
 		text-align: center;
 		filter: opacity(0.8);

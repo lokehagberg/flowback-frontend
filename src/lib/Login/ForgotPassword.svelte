@@ -7,8 +7,7 @@
 
 	import TextInput from '../Generic/TextInput.svelte';
 
-	export let selectedPage: string;
-	export let email: string;
+	export let selectedPage: string = "", email: string = "";
 
 	let loading = false;
 
@@ -16,7 +15,7 @@
 		loading = true;
 		const { res, json } = await fetchRequest('POST', 'forgot_password', { email }, false);
 		loading = false;
-		if (res.ok) selectedPage = 'NewPassword';
+		if (res.ok) selectedPage = 'GotMail';
 		else ErrorHandlerStore.set(statusMessageFormatter(res, json));
 	};
 </script>

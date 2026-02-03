@@ -8,68 +8,93 @@
 	import type { Group, GroupFilter } from '$lib/Group/interface';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
-	import { groupMembers as groupMembersLimit } from '$lib/Generic/APILimits.json';
+	import { groups as groupsLimit } from '$lib/Generic/APILimits.json';
 	import { env } from '$env/dynamic/public';
 	import { goto } from '$app/navigation';
+	import { lazyLoading } from '$lib/Generic/GenericFunctions';
 
 	let groupList: Group[] = [],
-  
 		filter: GroupFilter = { joined: 'all', search: '' },
-		loading = false;
+		loading = false,
+		next: string | undefined | null;
 
 	onMount(() => {
-		if (env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' && location.href.includes('/groups'))
+		if (
+			env.PUBLIC_ONE_GROUP_FLOWBACK === 'TRUE' &&
+			location.href.includes('/groups')
+		)
 			goto('/home');
 		getGroups();
 	});
 
+	$: if (filter) {
+		next = undefined;
+		getGroups();
+	}
+
 	const getGroups = async () => {
-		loading = true;
-		let urlFilter =
-			filter.joined === 'member'
-				? '&joined=true'
-				: filter.joined === 'not-member'
-				? '&joined=false'
-				: '';
+		// Initially entering group or when searching
+		if (next === undefined) {
+			let urlFilter = '';
 
-		urlFilter = `${urlFilter}&name__icontains=${filter.search}`;
+			if (filter.joined === 'member') urlFilter += '&joined=true';
+			else if (filter.joined === 'not-member') urlFilter += '&joined=false';
 
-		const { res, json } = await fetchRequest(
-			'GET',
-			`group/list?limit=${groupMembersLimit}` + urlFilter
-		);
+			urlFilter = `${urlFilter}&name__icontains=${filter.search}`;
 
-		if (!res.ok) return;
+			loading = true;
 
-		groupList = json?.results
-			.reverse()
-			.sort((group1: any, group2: any) => +group2.joined - +group1.joined);
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/list?limit=${groupsLimit}` + urlFilter
+			);
+			loading = false;
 
-		loading = false;
+			if (!res.ok) return;
+
+			next = json.next;
+			groupList = json?.results;
+		}
+		// The backend returns next as null when it has reached the end of what can be queried
+		// In that case, do nothing
+		else if (next === null) return;
+		// Lastly, when scrolling, do lazy loading
+		else {
+			loading = true;
+			const { res, json } = await fetchRequest('GET', next);
+
+			loading = false;
+			if (!res.ok) return;
+
+			next = json.next;
+			groupList = [...groupList, ...json.results];
+		}
 	};
 </script>
+
+<svelte:window onscroll={() => lazyLoading(getGroups)} />
 
 <svelte:head>
 	<title>Groups</title>
 </svelte:head>
 
 <Layout centered>
-	<!-- TODO: design of statusmessage is off -->
 	<Loader bind:loading Class="w-full flex flex-col items-center">
-		<div id="groups-list" class="max-w-[1000px] flex flex-col items-center mt-6 gap-6 mb-6 w-full">
+		<div
+			id="groups-list"
+			class="max-w-[1000px] flex flex-col items-center mt-6 gap-6 mb-6 w-full"
+		>
 			{#if !(env.PUBLIC_DISABLE_GROUP_CREATION === 'TRUE')}
 				<Button href="creategroup" Class="w-[90%] md:w-[40%] rounded-2xl"
 					>{$_('Create Group')}</Button
 				>
 			{/if}
 
-			<GroupFiltering bind:filter {getGroups} />
+			<GroupFiltering bind:filter />
 
-			{#if groupList}
-				{#each groupList as group}
-					<GroupThumbnail {group} />
-				{/each}
-			{/if}
+			{#each groupList as group}
+				<GroupThumbnail bind:group />
+			{/each}
 		</div>
 	</Loader>
 </Layout>

@@ -7,7 +7,7 @@
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { _ } from 'svelte-i18n';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { Permissions } from './interface';
 
 	export let selectedRole: any, selectedPage: 'assign' | 'create' | 'list';
@@ -106,7 +106,13 @@
 			return;
 		}
 
+		roleName = '';
+		for (let i = 0; i < rolePerms.length; i++) {
+			rolePerms[i] = false;
+		}
+
 		ErrorHandlerStore.set({ message: 'Successfully created role', success: true });
+
 	};
 
 	const permissionUpdate = async () => {
@@ -146,7 +152,6 @@
 
 		ErrorHandlerStore.set({ message: 'Successfully updated role', success: true });
 		selectedRole = undefined;
-		selectedPage = 'list';
 	};
 
 	const transformIntoRolePermType = (permissions: Permissions) => {
@@ -173,6 +178,11 @@
 
 	onMount(() => {
 		if (selectedRole) transformIntoRolePermType(selectedRole);
+	});
+
+	onDestroy(() => {
+		roleName = '';
+		selectedRole = undefined;
 	});
 </script>
 

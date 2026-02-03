@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Button from '$lib/Generic/Button.svelte';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import { _ } from 'svelte-i18n';
 	import TextInput from '$lib/Generic/TextInput.svelte';
@@ -17,7 +16,6 @@
 
 	let title: string,
 		description: string,
-		 
 		loading = false;
 
 	const reportPoll = async () => {
@@ -57,7 +55,9 @@
 
 		ErrorHandlerStore.set({
 			message:
-				post_type === 'poll' ? 'Poll reported successfully.' : 'Thread reported successfully.',
+				post_type === 'poll'
+					? 'Poll reported successfully.'
+					: 'Thread reported successfully.',
 			success: true
 		});
 		reportModalShow = false;
@@ -71,14 +71,25 @@
 	Class="max-w-[500px]"
 	buttons={[
 		{ label: 'Report', type: 'warning', onClick: reportPoll },
-		{ label: 'Cancel', type: 'default', onClick: () => (reportModalShow = false) }
+		{
+			label: 'Cancel',
+			type: 'default',
+			onClick: () => (reportModalShow = false)
+		}
 	]}
 >
 	>
-	<div slot="header">{post_type === 'poll' ? $_('Report Poll') : $_('Report Thread')}</div>
+	<div slot="header">
+		{post_type === 'poll' ? $_('Report Poll') : $_('Report Thread')}
+	</div>
 	<div class="flex flex-col gap-3" slot="body">
 		<Loader bind:loading>
-			<TextInput inputClass="bg-white" required label="Title" bind:value={title} />
+			<TextInput
+				inputClass="bg-white"
+				required
+				label="Title"
+				bind:value={title}
+			/>
 
 			<TextArea
 				label="Description"
@@ -98,5 +109,3 @@
 		</div>
 	</div> -->
 </Modal>
-
- 

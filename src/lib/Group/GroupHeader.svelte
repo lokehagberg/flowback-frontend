@@ -13,26 +13,39 @@
 	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 
-	export let selectedPage: SelectablePage, group: GroupDetails, memberCount: number;
+	export let selectedPage: SelectablePage,
+		group: GroupDetails,
+		memberCount: number;
 
 	//https://docs.flowback.org/#notification-categories
 	const groupNotificationCategories = [
 		'group',
-		'members',
-		'delegate',
-		//invite,
-		'poll',
+		'group_user',
 		'kanban',
-		'schedule'
+		'poll',
+		'thread'
+	];
+
+	const groupNotificationCategoriesReadable = [
+		'Group',
+		'Group User',
+		'Kanban',
+		'Polls',
+		'Threads'
 	];
 </script>
 
-<div id="group-header" class="bg-white dark:bg-darkobject w-full max-w-[120rem]">
+<div
+	id="group-header"
+	class="bg-white dark:bg-darkobject w-full max-w-[120rem]"
+>
 	<div class="relative">
 		<div class="relative">
 			<img
 				class="cover w-full"
-				src={group.cover_image ? `${env.PUBLIC_API_URL}${group.cover_image}` : DefaultBanner}
+				src={group.cover_image
+					? `${env.PUBLIC_API_URL}${group.cover_image}`
+					: DefaultBanner}
 				alt="cover"
 			/>
 
@@ -49,16 +62,16 @@
 
 			<Button
 				hoverEffect={false}
-				Class="absolute right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject"
+				Class="absolute z-[40] right-0 top-0 p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject"
 			>
 				<NotificationOptions
 					hoverEffect={false}
 					type="group"
-					api={`group/${$page.params.groupId}`}
+					api={`group/${$page.params.groupId}/notification/subscribe`}
 					id={Number($page.params.groupId)}
 					categories={groupNotificationCategories}
-					labels={groupNotificationCategories}
-					Class="text-gray-800 dark:text-gray-200"
+					labels={groupNotificationCategoriesReadable}
+					Class="text-gray-800 dark:text-gray-200 z-100 relative"
 					ClassOpen="-left-[90px]"
 				/>
 			</Button>
@@ -66,16 +79,17 @@
 
 		<img
 			class="h-36 w-36 absolute -bottom-12 left-[10%] md:left-[12%] profile rounded-full"
-			src={group.image
-				? `${env.PUBLIC_API_URL}${group.image}`
-				: DefaultBanner}
+			src={group.image ? `${env.PUBLIC_API_URL}${group.image}` : DefaultBanner}
 			alt="profile"
 		/>
 	</div>
 
 	<div class="dark:bg-darkobject dark:text-darkmodeText w-[55%] mx-auto py-4">
 		<div class="">
-			<div class="flex align-baseline items-baseline relative" id="notifications-list-group">
+			<div
+				class="flex align-baseline items-baseline relative"
+				id="notifications-list-group"
+			>
 				<button
 					class="text-xl hover:text-gray-800 dark:hover:text-gray-400 cursor-pointer"
 					id="group-header-title"
@@ -103,7 +117,11 @@
 		</div>
 		{#if group.description.length > 0}
 			<div class="text-xs mt-2 pb-1 grid-area-description break-words">
-				<NewDescription limit={2} lengthLimit={250} description={group.description} />
+				<NewDescription
+					limit={2}
+					lengthLimit={250}
+					description={group.description}
+				/>
 			</div>
 		{/if}
 	</div>

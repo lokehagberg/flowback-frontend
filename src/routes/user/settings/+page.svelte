@@ -17,8 +17,50 @@
 	import type { report } from '$lib/Generic/interfaces';
 	import { linkToPost } from '$lib/Generic/GenericFunctions';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { goto } from '$app/navigation';
 
-	let selectedPage: 'profile' | 'notifications' | 'poll-process' | 'info' | 'reports' = 'profile',
+	type PageType =
+		| 'profile'
+		| 'notifications'
+		| 'poll-process'
+		| 'info'
+		| 'reports';
+
+	interface SettingsPage {
+		page: PageType;
+		icon: any;
+		text: string;
+	}
+
+	const sidebarItems: SettingsPage[] = [
+		{
+			page: 'profile',
+			icon: faUser,
+			text: 'User Profile'
+		},
+		{
+			page: 'notifications',
+			icon: faBell,
+			text: 'Notifications'
+		},
+		{
+			page: 'poll-process',
+			icon: faPieChart,
+			text: 'Poll Process'
+		},
+		{
+			page: 'info',
+			icon: faInfo,
+			text: 'Information'
+		},
+		{
+			page: 'reports',
+			icon: faWarning,
+			text: 'Reports'
+		}
+	];
+
+	let selectedPage: PageType = 'profile',
 		optionsDesign =
 			'flex items-center gap-3 w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 transition-all',
 		userConfig = {
@@ -52,7 +94,7 @@
 		},
 		reports: report[] = [],
 		serverConfig: any = {},
-		version = '23',
+		version = '67',
 		open = false,
 		selectedRepport: report = {
 			description: '',
@@ -122,67 +164,30 @@
 			<div class="flex items-center mb-4 gap-4">
 				<button
 					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
-					on:click={() => history.back()}
+					on:click={() => goto('/home')}
 				>
 					<Fa icon={faArrowLeft} />
 				</button>
-				<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold">
+				<h1
+					class="text-xl text-left text-primary dark:text-secondary font-semibold"
+				>
 					{$_('Settings')}
 				</h1>
 			</div>
 
-			<!-- TODO: Put an #each here for iterating over the buttons for cleanup and easier maintainability -->
 			<div class="mt-4">
-				<button
-					on:click={() => (selectedPage = 'profile')}
-					class={`${optionsDesign}`}
-					class:bg-gray-100={selectedPage === 'profile'}
-					class:dark:bg-gray-800={selectedPage === 'profile'}
-					class:border-l-2={selectedPage === 'profile'}
-					class:border-primary={selectedPage === 'profile'}
-				>
-					<Fa icon={faUser} class="w-5 h-5" />{$_('User Profile')}
-				</button>
-				<button
-					on:click={() => (selectedPage = 'notifications')}
-					class={`${optionsDesign}`}
-					class:bg-gray-100={selectedPage === 'notifications'}
-					class:dark:bg-gray-800={selectedPage === 'notifications'}
-					class:border-l-2={selectedPage === 'notifications'}
-					class:border-primary={selectedPage === 'notifications'}
-				>
-					<Fa icon={faBell} class="w-5 h-5" />{$_('Notifications')}
-				</button>
-				<button
-					on:click={() => (selectedPage = 'poll-process')}
-					class={`${optionsDesign}`}
-					class:bg-gray-100={selectedPage === 'poll-process'}
-					class:dark:bg-gray-800={selectedPage === 'poll-process'}
-					class:border-l-2={selectedPage === 'poll-process'}
-					class:border-primary={selectedPage === 'poll-process'}
-				>
-					<Fa icon={faPieChart} class="w-5 h-5" />{$_('Poll Process')}
-				</button>
-				<button
-					on:click={() => (selectedPage = 'info')}
-					class={`${optionsDesign}`}
-					class:bg-gray-100={selectedPage === 'info'}
-					class:dark:bg-gray-800={selectedPage === 'info'}
-					class:border-l-2={selectedPage === 'info'}
-					class:border-primary={selectedPage === 'info'}
-				>
-					<Fa icon={faInfo} class="w-5 h-5" />{$_('Information')}
-				</button>
-				<button
-					on:click={() => (selectedPage = 'reports')}
-					class={`${optionsDesign}`}
-					class:bg-gray-100={selectedPage === 'reports'}
-					class:dark:bg-gray-800={selectedPage === 'reports'}
-					class:border-l-2={selectedPage === 'reports'}
-					class:border-primary={selectedPage === 'reports'}
-				>
-					<Fa icon={faWarning} class="w-5 h-5" />{$_('Reports')}
-				</button>
+				{#each sidebarItems as item}
+					<button
+						on:click={() => (selectedPage = item.page)}
+						class={optionsDesign}
+						class:bg-gray-100={selectedPage === item.page}
+						class:dark:bg-gray-800={selectedPage === item.page}
+						class:border-l-2={selectedPage === item.page}
+						class:border-primary={selectedPage === item.page}
+					>
+						<Fa icon={item.icon} class="w-5 h-5" />{$_(item.text)}
+					</button>
+				{/each}
 			</div>
 		</div>
 		<div
@@ -190,7 +195,9 @@
 		>
 			<ul class="flex flex-col">
 				{#if selectedPage === 'profile'}
-					<li class="text-lg text-primary dark:text-secondary font-semibold mb-3">
+					<li
+						class="text-lg text-primary dark:text-secondary font-semibold mb-3"
+					>
 						{$_('General')}
 					</li>
 					<RadioButtons2
@@ -212,7 +219,9 @@
 					/>
 
 					<div class="pt-4">
-						<div class="cursor-pointer hover:underline">{$_('Give me all my data')}</div>
+						<div class="cursor-pointer hover:underline">
+							{$_('Give me all my data')}
+						</div>
 						<div class="text-red-600 cursor-pointer hover:underline mt-2">
 							{$_('Delete account')}
 						</div>
@@ -220,13 +229,16 @@
 				{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
 					{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
 						<li>
-							<span class="text-lg text-primary dark:text-secondary font-semibold"
+							<span
+								class="text-lg text-primary dark:text-secondary font-semibold"
 								>{configToReadable(key1)}</span
 							>
 							<ul class="pl-4 pt-2">
 								<span class="my-4">{$_('Notify me when')}...</span>
 								{#each Object.entries(settings) as [key2, setting]}
-									<li class="flex justify-between p-2 rounded hover:bg-gray-100">
+									<li
+										class="flex justify-between p-2 rounded hover:bg-gray-100"
+									>
 										<span>{$_(configToReadable(key2))}</span>
 										<input
 											on:change={saveUserConfig}
@@ -275,7 +287,6 @@
 					</ul>
 				{:else if selectedPage === 'info'}
 					<div>{$_('Frontend version')}: {version}</div>
-					Test
 					<div>{$_('Backend version')}: {serverConfig.VERSION}</div>
 				{:else if selectedPage === 'reports'}
 					{#if reports?.length > 0}
@@ -304,16 +315,25 @@
 <Modal bind:open>
 	<div slot="header">{$_('Report Details')}</div>
 	<div slot="body" class="flex flex-col gap-2">
-		<span>{selectedRepport?.post_title}</span>
-		<span>{selectedRepport?.post_description}</span>
-		<span>{selectedRepport?.title}</span>
-		<span>{selectedRepport?.description}</span>
-		<a
-			href={`${linkToPost(
-				selectedRepport.post_id,
-				selectedRepport.group_id,
-				selectedRepport.post_type
-			)}`}>goto</a
-		>
+		{#await fetchRequest('GET', selectedRepport.post_type === 'poll' ? `home/polls?group_ids=${selectedRepport.group_id}&id=${selectedRepport.post_id}` : `group/thread/list?group_ids=${selectedRepport.group_id}&id=${selectedRepport.post_id}`) then { res, json }}
+			{#if res.ok}
+				{@const post = json?.results[0]}
+
+				<span>{post?.title}</span>
+				<span>{post?.description}</span>
+			{/if}
+			<span>{selectedRepport?.title}</span>
+			<span>{selectedRepport?.description}</span>
+			<button
+				on:click={() =>
+					goto(
+						`${linkToPost(
+							selectedRepport.post_id,
+							selectedRepport.group_id,
+							selectedRepport.post_type
+						)}`
+					)}>goto</button
+			>
+		{/await}
 	</div>
 </Modal>

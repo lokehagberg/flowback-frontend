@@ -14,17 +14,20 @@
 	import CropperModal from '$lib/Generic/Cropper/CropperModal.svelte';
 	import { env } from '$env/dynamic/public';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft, faPen, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-	import History from '$lib/Group/Delegation/History.svelte';
+	import {
+		faArrowLeft,
+		faPen,
+		faPaperPlane
+	} from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
-	import { getStores } from '$app/stores';
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
-	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
+	import type { DetailedValue, CountryCode } from 'svelte-tel-input/types';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { chatPartnerStore, chatOpenStore } from '$lib/Chat/functions';
+	import { chatOpenStore, chatPartnerStore } from '$lib/Chat/functions';
 	import { getUserChannelId } from '$lib/Chat/functions';
 	import Loader from '$lib/Generic/Loader.svelte';
 	import { userStore } from '$lib/User/interfaces';
+	import History from '../../lib/Delegation/History.svelte';
 
 	let user: User = {
 		banner_image: '',
@@ -54,28 +57,20 @@
 		isEditing = false,
 		profileImagePreview = DefaultPFP,
 		bannerImagePreview = '',
-		currentlyEditing: null | 'bio' | 'web' | 'name' | 'phone' | 'email' = null,
-		 
 		currentlyCroppingProfile: boolean = false,
 		currentlyCroppingBanner = false,
 		oldProfileImagePreview = '',
 		oldBannerImagePreview = '',
 		croppedImage: string,
-		loading = false;
+		loading = false,
+		// Any Country Code Alpha-2 (ISO 3166)
+		selectedCountry: CountryCode | null = 'SE',
+		// Validity
+		valid = true,
+		// Optional - Extended details about the parsed phone number
+		detailedValue: DetailedValue | null = null;
 
-	const { navigating: nav } = getStores();
-
-	// Any Country Code Alpha-2 (ISO 3166)
-	let selectedCountry: CountryCode | null = 'SE';
-
-	// You must use E164 number format. It's guarantee the parsing and storing consistency.
-	let value: E164Number | null = '';
-
-	// Validity
-	let valid = true;
-
-	// Optional - Extended details about the parsed phone number
-	let detailedValue: DetailedValue | null = null;
+	const blankSymbol = '___';
 
 	onMount(() => {
 		getUser();
@@ -87,47 +82,78 @@
 		if (!userId) isUser = true;
 		else isUser = userId === ($userStore?.id || -1).toString();
 
-		const { res, json } = await fetchRequest('GET', isUser ? 'user' : `users?id=${userId}`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			isUser ? 'user' : `users?id=${userId}`
+		);
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Could not fetch user', success: false });
+			ErrorHandlerStore.set({
+				message: 'Could not fetch user',
+				success: false
+			});
 			return;
 		}
 		user = isUser ? json : json?.results[0];
 		userEdit = user;
 
-		if (userEdit.bio === null) userEdit.bio = '';
-		if (userEdit.website === null) userEdit.website = '';
+		if (userEdit.bio === null || userEdit.bio === blankSymbol)
+			userEdit.bio = '';
+		if (userEdit.website === null || userEdit.website === blankSymbol)
+			userEdit.website = '';
 
-		if (user.profile_image) profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
-		if (user.banner_image) bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
+		if (user.profile_image)
+			profileImagePreview = `${env.PUBLIC_API_URL}${user.profile_image}`;
+		if (user.banner_image)
+			bannerImagePreview = `${env.PUBLIC_API_URL}${user.banner_image}`;
 
-		if (!user.contact_email) userEdit.contact_email = '';
-		if (!user.contact_phone) userEdit.contact_phone = '';
+		if (!user.contact_email || userEdit.contact_email === 'a@a.com')
+			userEdit.contact_email = '';
+		if (!user.contact_phone || userEdit.contact_phone === '+4646464646')
+			userEdit.contact_phone = '';
 
 		document.title = `${user.username}'s profile`;
 	};
 
-	const updateProfile = async () => {
+	const editUser = async () => {
 		loading = true;
 		const imageToSend = await blobifyImages(profileImagePreview);
 		const bannerImageToSend = await blobifyImages(bannerImagePreview);
 
 		const formData = new FormData();
 		formData.append('username', userEdit.username);
-		formData.append('bio', userEdit.bio || '');
-		formData.append('website', userEdit.website || '');
-		formData.append('contact_email', userEdit.contact_email || '');
-		formData.append('contact_phone', userEdit.contact_phone || '');
+		formData.append('bio', userEdit.bio === '' ? blankSymbol : userEdit.bio);
+		formData.append(
+			'website',
+			userEdit.website === '' ? blankSymbol : userEdit.website
+		);
+		formData.append(
+			'contact_email',
+			userEdit.contact_email === '' ? `a@a.com` : userEdit.contact_email
+		);
+		formData.append(
+			'contact_phone',
+			userEdit.contact_phone === '' ? `+4646464646` : userEdit.contact_phone
+		);
 
-		if (bannerImagePreview !== '') formData.append('banner_image', bannerImageToSend);
-		if (profileImagePreview !== DefaultPFP) formData.append('profile_image', imageToSend);
+		if (bannerImagePreview !== '')
+			formData.append('banner_image', bannerImageToSend);
+		if (profileImagePreview !== DefaultPFP)
+			formData.append('profile_image', imageToSend);
 
-		const { res, json } = await fetchRequest('POST', `user/update`, formData, true, false);
+		const { res, json } = await fetchRequest(
+			'POST',
+			`user/update`,
+			formData,
+			true,
+			false
+		);
 
 		loading = false;
 
 		if (!res.ok) {
-			const message = json.detail[Object.keys(json.detail)[0]][0] || 'Could not update profile';
+			const message =
+				json.detail[Object.keys(json.detail)[0]][0] ||
+				'Could not update profile';
 
 			ErrorHandlerStore.set({ message, success: false });
 			return;
@@ -137,22 +163,27 @@
 		const updatedUser = await getUserInfo();
 		userStore.set(updatedUser);
 		user = updatedUser;
-		
+
 		isEditing = false;
-		ErrorHandlerStore.set({ message: 'Profile successfully updated', success: true });
+		ErrorHandlerStore.set({
+			message: 'Profile successfully updated',
+			success: true
+		});
 	};
 
 	const handleCropProfileImage = async (e: any) => {
 		//Type string, for preview image
 		oldProfileImagePreview = profileImagePreview;
-		if (e.target.files.length > 0) profileImagePreview = URL.createObjectURL(e.target.files[0]);
+		if (e.target.files.length > 0)
+			profileImagePreview = URL.createObjectURL(e.target.files[0]);
 		currentlyCroppingProfile = true;
 	};
 
 	const handleCropBanner = async (e: any) => {
 		//Type string, for preview image
 		oldBannerImagePreview = bannerImagePreview;
-		if (e.target.files.length > 0) bannerImagePreview = URL.createObjectURL(e.target.files[0]);
+		if (e.target.files.length > 0)
+			bannerImagePreview = URL.createObjectURL(e.target.files[0]);
 		currentlyCroppingBanner = true;
 	};
 
@@ -160,16 +191,6 @@
 
 	$: if (currentlyCroppingProfile) imageToBeCropped = profileImagePreview;
 	else if (currentlyCroppingBanner) imageToBeCropped = bannerImagePreview;
-
-	const openChat = async (userId: number) => {
-		const channelId = await getUserChannelId(userId);
-		if (!channelId) return;
-
-		chatOpenStore.set(true);
-		// Need to wait a tick for chat to open before setting partner
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		chatPartnerStore.set(channelId);
-	};
 </script>
 
 {#if currentlyCroppingProfile || currentlyCroppingBanner}
@@ -228,7 +249,6 @@
 					</div>
 				</Button>
 			{/if}
-			
 		</div>
 		<div class="flex justify-around w-full max-w-[850px]">
 			<img
@@ -237,12 +257,16 @@
 				alt="avatar"
 				id="avatar"
 			/>
-			<div class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6 px-4">
-				<div class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words">
+			<div
+				class="z-0 dark:bg-darkobject dark:text-darkmodeText w-[60%] py-6 px-4"
+			>
+				<div
+					class="text-xl text-primary dark:text-secondary font-bold max-w-[600px] break-words"
+				>
 					{user.username}
 				</div>
 				<p class=" whitespace-pre-wrap">
-					{user.bio || $_('This user has no bio')}
+					{user.bio === blankSymbol ? $_('This user has no bio') : user.bio}
 				</p>
 			</div>
 			<div class="dark:text-darkmodeText py-6 w-[30%]">
@@ -263,23 +287,35 @@
 					{/await}
 				</div>
 
-				<a
-					class={``}
-					href={user.website
-						? user.website.startsWith('http://') || user.website.startsWith('https://')
+				{#if user.website && user.website !== blankSymbol && user.website !== ''}
+					<a
+						href={user.website.startsWith('http://') ||
+						user.website.startsWith('https://')
 							? user.website
-							: 'https://' + user.website
-						: '#'}
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					{$_('Website')}: {user.website || ''}
-				</a>
+							: 'https://' + user.website}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{$_('Website')}:
+						{user.website}
+					</a>
+				{:else}
+					<span>
+						{$_('Website')}:
+						{$_('None provided')}
+					</span>
+				{/if}
 				<p class="">
-					{$_('Phone number')}: {user.contact_phone || $_('None provided')}
+					{$_('Phone number')}: {user.contact_phone === '+4646464646' ||
+					user.contact_phone === ''
+						? $_('None provided')
+						: user.contact_phone}
 				</p>
 				<p class="">
-					{$_('E-mail')}: {user.contact_email || $_('None provided')}
+					{$_('E-mail')}: {user.contact_email === 'a@a.com' ||
+					user.contact_email === ''
+						? $_('None provided')
+						: user.contact_email}
 				</p>
 			</div>
 		</div>
@@ -305,13 +341,17 @@
 			</label>
 			<form
 				class="bg-white w-full p-8 flex flex-col items-center justify-center dark:bg-darkobject dark:text-darkmodeText"
-				on:submit|preventDefault={updateProfile}
+				on:submit|preventDefault={editUser}
 			>
-				<div class="flex flex-row items-center justify-center gap-6 pb-6 w-full">
+				<div
+					class="flex flex-row items-center justify-center gap-6 pb-6 w-full"
+				>
 					<label for="file-ip-1" class="inline">
 						<!-- Profile Picture -->
 						<img
-							src={currentlyCroppingProfile ? oldProfileImagePreview : profileImagePreview}
+							src={currentlyCroppingProfile
+								? oldProfileImagePreview
+								: profileImagePreview}
 							class="mt-6 h-36 w-36 inline rounded-full border border-gray-300 transition-all filter hover:grayscale-[70%] hover:bg-gray-200 dark:bg-darkobject dark:hover:brightness-[120%] backdrop-grayscale"
 							alt="avatar"
 							id="avatar"
@@ -350,7 +390,9 @@
 								name="Country"
 								bind:value={selectedCountry}
 							>
-								<option value={null} hidden={selectedCountry !== null}>Please select</option>
+								<option value={null} hidden={selectedCountry !== null}
+									>Please select</option
+								>
 								{#each normalizedCountries as currentCountry (currentCountry.id)}
 									<option
 										value={currentCountry.iso2}
@@ -409,7 +451,10 @@
 	{/if}
 
 	{#if $page.url.searchParams.get('delegate_id')}
-		<History history={Number($page.url.searchParams.get('delegate_id'))} groupId={1} />
+		<History
+			history={Number($page.url.searchParams.get('delegate_id'))}
+			groupId={Number($page.url.searchParams.get('group_id'))}
+		/>
 	{/if}
 </Layout>
 

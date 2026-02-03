@@ -23,7 +23,6 @@
 
 	let userUpVote: -1 | 0 | 1 = 0,
 		comments: Comment[],
-		 
 		isVoting = false,
 		ReportCommentModalShow = false,
 		reportTitle: string,
@@ -312,5 +311,3 @@
 		{api}
 	/>
 {/if}
-
- 

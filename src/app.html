@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link rel="preload" href="./app.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Flowback</title>
-    %sveltekit.head%
-</head>
+		<!-- Fixes issue where elements flash white on (hard) reload -->
+		<script>
+			(function () {
+				try {
+					let theme = localStorage.getItem('theme');
+					let prefersDark = window?.matchMedia('(prefers-color-scheme: dark)').matches;
+					let shouldDark = theme === 'dark' || (!theme && prefersDark);
 
+					if (shouldDark) document.documentElement.classList.add('dark');
+					else document.documentElement.classList.remove('dark');
+				} catch (e) {
+					/* ignore */
+				}
+			})();
+		</script>
 
-<body>
-    <div>%sveltekit.body%</div>
-</body>
+		<title>Flowback</title>
+		%sveltekit.head%
+	</head>
 
+	<!-- Resolves "Flash Of Unstyled Content" issue. At root, the file +layout.svelte at onMount removes the invisibility once all the CSS has loaded -->
+	<body style="visibility: hidden">
+		<div>%sveltekit.body%</div>
+	</body>
 </html>

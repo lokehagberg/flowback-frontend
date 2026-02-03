@@ -17,7 +17,9 @@
 		innerLabelOn: boolean = false,
 		charlimit = 30,
 		disableFirstChoice = false,
-		id: string = '';
+		id: string = '',
+		disabled = false,
+		innerLabelValue: any = '';
 
 	// onMount(() => {
 	// 	value = defaultValue;
@@ -30,6 +32,9 @@
 	{/if}
 	<select
 		bind:value
+		{disabled}
+		class:dark:text-gray-500={disabled}
+		class:text-gray-400={disabled}
 		on:input={(e) => {
 			onInput(e);
 		}}
@@ -39,12 +44,16 @@
 		{id}
 	>
 		{#if innerLabel}
-			<option value="" disabled={disableFirstChoice} selected>{$_(innerLabel)}</option>
+			<option value={innerLabelValue} disabled={disableFirstChoice} selected
+				>{$_(innerLabel)}</option
+			>
 		{/if}
 
 		{#if labels}
 			{#each labels as label, i}
-				<option value={values[i]} class="dark:bg-darkobject"> {elipsis($_(label))} </option>
+				<option value={values[i]} class="dark:bg-darkobject">
+					{elipsis($_(label))}
+				</option>
 			{/each}
 		{/if}
 	</select>

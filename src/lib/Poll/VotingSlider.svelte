@@ -9,13 +9,13 @@
 		score: number | null = null,
 		phase: Phase,
 		disabled = false,
-		style: 'purple' | 'gray' = 'purple';
+		style: 'purple' | 'gray' = 'purple',
+		maxScore = 5,
+		dragLinePosition: number | null = null,
+		currentSnapPosition: number | null = null,
+		id = '';
 
-	const maxScore = 5;
 	const snapPoints = Array.from({ length: maxScore + 1 }, (_, i) => i); // [0,1,2,3,4,5]
-
-	let dragLinePosition: number | null = null;
-	let currentSnapPosition: number | null = null;
 
 	const snapToSnapPoint = (value: number) => {
 		const nearestSnap = snapPoints.reduce((prev, curr) =>
@@ -29,7 +29,7 @@
 
 	const onMouseDown = (e: MouseEvent) => {
 		const onMouseMove = (e: MouseEvent) => {
-			const container = (e.target as HTMLElement).closest('#track-container') as HTMLElement;
+			const container = (e.target as HTMLElement).closest(`#track-container-${id}`) as HTMLElement;
 			if (!container) return;
 
 			const rect = container.getBoundingClientRect();
@@ -60,7 +60,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="w-full bg-white dark:bg-darkobject rounded-lg relative"
+	class="w-full bg-white dark:bg-darkobject rounded-lg relative disabled"
 	class:opacity-50={disabled}
 	class:draggable={!disabled &&
 		(($groupUserStore?.delegate_pool_id && phase === 'delegate_vote') ||
@@ -71,12 +71,16 @@
 	class:cursor-grab={!disabled}
 	class:cursor-not-allowed={disabled}
 >
-	<div id="track-container" class=" relative w-full h-3 bg-purple-200 rounded-full">
+	<div
+		id={`track-container-${id}`}
+		style={`color: ${style}`}
+		class="{disabled ? 'disabled' : ''} relative w-full h-3 bg-purple-200 rounded-full"
+	>
 		<!-- Active bar -->
 		<div
 			class="absolute top-0 left-0 h-full"
-			class:!dark:bg-gray-500={style === 'gray'}
-			class:!bg-gray-300={style === 'gray'}
+			class:!dark:bg-gray-500={style === 'gray' || disabled}
+			class:!bg-gray-300={style === 'gray' || disabled}
 			style="width: {lineWidth}%; background-color: {true ? '#a78bfa' : '#BBBBBB'};"
 		/>
 
@@ -92,12 +96,12 @@
 				style="left: {index === 0
 					? '2px'
 					: index === snapPoints.length - 1
-					? 'calc(100% - 2px)'
-					: (point / maxScore) * 100 + '%'}; transform: {index === 0
+						? 'calc(100% - 2px)'
+						: (point / maxScore) * 100 + '%'}; transform: {index === 0
 					? 'translateY(-50%)'
 					: index === snapPoints.length - 1
-					? 'translate(-100%, -50%)'
-					: 'translate(-50%, -50%)'}"
+						? 'translate(-100%, -50%)'
+						: 'translate(-50%, -50%)'}"
 			/>
 		{/each}
 

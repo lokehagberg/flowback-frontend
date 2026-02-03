@@ -3,22 +3,28 @@
 	import TextInput from '$lib/Generic/TextInput.svelte';
 	import type { proposal } from '$lib/Poll/interface';
 	import { _ } from 'svelte-i18n';
-	import { commentsStore } from './commentStore';
+	import { commentsStore, filterByTags } from './commentStore';
 	import Modal from '$lib/Generic/Modal.svelte';
 	import Button from '$lib/Generic/Button.svelte';
+	import { page } from '$app/stores';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
 
 	export let sortBy: string | null = null,
 		Class = '',
 		searchString: string = '',
-		proposals: proposal[] = [];
+		proposals: proposal[] = [],
+		selectedProposals: number[] = [];
 
-	let selectedProposals: number[] = [],
-		displayProposalsModal = false;
+	let displayProposalsModal = false;
 
-	$: if (selectedProposals.length === 0) commentsStore.filterByProposal(null);
+	$: if (selectedProposals.length === 0)
+		commentsStore.update((store) => ({
+			allComments: store.allComments,
+			filterByProposal: null,
+			filteredComments: store.allComments
+		}));
 	else {
-		const _proposals = proposals.filter((p) => selectedProposals.includes(p.id));
-		commentsStore.filterByProposals(_proposals, 'or');
+		filterByTags(proposals, selectedProposals, $page.params.pollId ?? '');
 	}
 </script>
 
@@ -70,10 +76,11 @@
 					<input
 						type="checkbox"
 						name="proposals"
-						id={`${proposal.id}`}
+						id={`${idfy(proposal.title)}`}
 						value={proposal.id}
 						bind:group={selectedProposals}
 					/>
+					<!-- on:input={filterByTags} -->
 					<label class="text-left" for={`proposal-${proposal.id}`}>{proposal.title}</label>
 				</div>
 			{/each}

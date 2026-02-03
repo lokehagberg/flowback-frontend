@@ -13,10 +13,13 @@
 	import { env } from '$env/dynamic/public';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
+	import { groupStore } from './Kanban/Kanban';
+	import { chatPartnerStore } from '$lib/Chat/functions';
 
-	export let group: Group;
+	let { group = $bindable() }: { group: Group } = $props();
 
-	let areYouSureModal = false;
+	let areYouSureModal = $state(false);
 
 	const goToGroup = (e: event) => {
 		if (e.target.id === 'group-join-button') return; // Prevent navigation when clicking the join button
@@ -24,12 +27,10 @@
 		if (group.joined) goto(`/groups/${group.id}`);
 	};
 
-	const subscribeToGroup = async () => {
-		const { res, json } = await fetchRequest('POST', 'notification/group');
-	};
-
 	const joinGroup = async (directJoin: boolean) => {
-		const { res } = await fetchRequest('POST', `group/${group.id}/join`, { to: group.id });
+		const { res } = await fetchRequest('POST', `group/${group.id}/join`, {
+			to: group.id
+		});
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({
@@ -44,7 +45,11 @@
 			ErrorHandlerStore.set({ message: 'Pending invite', success: true });
 		} else group.joined = !group.joined;
 
-		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') becomeMemberOfGroup(group.blockchain_id);
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			becomeMemberOfGroup(group.blockchain_id);
+
+		//TODO: Edit groupStore instead of appending dupliucate groups
+		groupStore.set([...$groupStore, group]);
 	};
 
 	const leaveGroup = async () => {
@@ -52,56 +57,62 @@
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({
-				message: json.detail[0] || json.detail || 'An error occurred while leaving the group',
+				message:
+					json.detail[0] ||
+					json.detail ||
+					'An error occurred while leaving the group',
 				success: false
 			});
 			return;
 		}
 
-		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE') removeGroupMembership(group.id);
+		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
+			removeGroupMembership(group.id);
 		areYouSureModal = false;
 		group.joined = false;
 		group.pending_join = false;
+		groupStore.set($groupStore.filter((g) => g.id !== group.id));
+		chatPartnerStore.set(0);
 	};
 </script>
 
-<div
+<button
 	id={group.name.toLowerCase().replaceAll(' ', '-')}
 	class={`w-4/6 md:w-2/5 max-w-[650px] bg-white relative shadow-md dark:bg-darkobject dark:text-darkmodeText text-center ${
 		group.joined && 'cursor-pointer hover:shadow-xl vote-thumbnail'
 	} transition-shadow rounded-2xl`}
-	on:click={goToGroup}
+	onclick={goToGroup}
 >
 	{#if group.joined}
 		<img
 			src={`${env.PUBLIC_API_URL}${group.cover_image}`}
 			class="cover rounded-t-2xl w-full"
 			alt="cover"
-			on:error={(e) => onThumbnailError(e, DefaultBanner)}
+			onerror={(e) => onThumbnailError(e, DefaultBanner)}
 		/>
 	{:else}
 		<img
 			src={`${env.PUBLIC_API_URL}${group.cover_image}`}
 			class="cover rounded-t-2xl w-full"
 			alt="cover"
-			on:error={(e) => onThumbnailError(e, DefaultBanner)}
+			onerror={(e) => onThumbnailError(e, DefaultBanner)}
 		/>
 	{/if}
 	<img
 		src={`${env.PUBLIC_API_URL}${group.image}`}
 		class="bg-white rounded-full w-[100px] h-[100px] absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
-		on:error={(e) => onThumbnailError(e, DefaultBanner)}
+		onerror={(e) => onThumbnailError(e, DefaultBanner)}
 		alt="profile"
 	/>
 
-	<div on:click={goToGroup}>
-		<h1 class="text-2xl p-4 mt-10 text-center break-words">
-			{group.name}
-		</h1>
-	</div>
+	<h1 class="text-2xl p-4 mt-10 text-center break-words">
+		{group.name}
+	</h1>
 
 	{#if group.description.length > 0}
-		<div class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-words">
+		<div
+			class="my-2 mx-auto w-[85%] min-w-72 grid-area-description break-words"
+		>
 			<p class="line-clamp-2">{group.description}</p>
 		</div>
 	{/if}
@@ -111,22 +122,27 @@
 			<Button
 				disabled={group.pending_join}
 				Class="hover:bg-blue-800 bg-blue-600"
-				onClick={() => {
+				onClick={(e) => {
+					// Prevents the button click from triggering the goToGroup function
+					e.stopPropagation();
+
 					if (group.joined) {
 						areYouSureModal = true;
 					} else {
 						joinGroup(group.direct_join);
 					}
 				}}
-				id="group-join-button"
+				id={`join-${idfy(group.name)}`}
 			>
-				{$_(group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join')}
+				{$_(
+					group.joined ? 'Leave' : group.direct_join ? 'Join' : 'Ask to join'
+				)}
 			</Button>
 		{:else}
 			{$_('Request sent')}
 		{/if}
 	</div>
-</div>
+</button>
 
 <Modal
 	bind:open={areYouSureModal}

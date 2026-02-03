@@ -16,10 +16,6 @@ export class ProposalsApi {
     return apiClient<ApiResponse<timeProposal>>(`group/poll/${pollId}/proposals?limit=10000`);
   }
 
-  static async getVotes(pollId: string): Promise<ApiResponse<ProposalVote>> {
-    return apiClient<ApiResponse<ProposalVote>>(`group/poll/${pollId}/proposal/votes?limit=10000`);
-  }
-
   static async createProposal(pollId: string, data: CreateProposalData): Promise<number> {
     const response = await apiClient<number>(`group/poll/${pollId}/proposal/create`, {
       method: 'POST',

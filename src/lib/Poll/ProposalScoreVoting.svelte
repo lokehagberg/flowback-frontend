@@ -8,8 +8,12 @@
 	import { onMount } from 'svelte';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import VotingSlider from './VotingSlider.svelte';
-	import { groupUserStore, groupUserPermissionStore } from '$lib/Group/interface';
+	import {
+		groupUserStore,
+		groupUserPermissionStore
+	} from '$lib/Group/interface';
 	import Button from '$lib/Generic/Button.svelte';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
 
 	export let proposals: proposal[],
 		selectedProposal: proposal | null = null,
@@ -32,6 +36,8 @@
 			proposal: proposal.id
 		}));
 
+		delegateVoting = voting;
+
 		if (phase === 'delegate_vote' || phase === 'vote' || phase === 'result') {
 			await getDelegateVotes();
 		}
@@ -40,6 +46,7 @@
 			await getVotes();
 		}
 
+		// TODO: Remove "needsReload" while making sure things reload properly
 		needsReload++;
 	});
 
@@ -67,7 +74,8 @@
 
 		voting = voting.map((vote) => ({
 			score: (vote.score = json?.results?.find(
-				(score: { score: number; proposal: number }) => score.proposal === vote.proposal
+				(score: { score: number; proposal: number }) =>
+					score.proposal === vote.proposal
 			).raw_score),
 			proposal: vote.proposal
 		}));
@@ -83,23 +91,33 @@
 		);
 
 		if (!res.ok) {
-			console.error('Error fetching votes:', json.detail);
+			ErrorHandlerStore.set({
+				message: 'Failed to get delegate votes',
+				success: false
+			});
 			return;
 		}
 
-		delegateVoting = json?.results[0]?.vote.map((vote: any) => ({
-			score: vote.raw_score,
-			proposal: vote.proposal_id
-		}));
-
-		if (phase === 'delegate_vote')
-			voting = json?.results[0]?.vote.map((vote: any) => ({
+		if (json?.results[0]?.vote?.length > 0) {
+			delegateVoting = json?.results[0]?.vote.map((vote: any) => ({
 				score: vote.raw_score,
 				proposal: vote.proposal_id
 			}));
 
+			// Makes it so users vote matches their delegates vote
+			voting = json?.results[0]?.vote.map((vote: any) => ({
+				score: vote.raw_score,
+				proposal: vote.proposal_id
+			}));
+		}
 		voting = voting;
 		delegateVoting = delegateVoting;
+	};
+
+	const handleSliderClick = async (pos: any, proposal: proposal) => {
+		changingVote(pos, proposal.id);
+		if (phase === 'delegate_vote') delegateVote();
+		else if (phase === 'vote') vote();
 	};
 
 	// Voting as a delegate
@@ -160,7 +178,9 @@
 		if (!voting) return;
 
 		if (phase === 'delegate_vote') {
-			const i = delegateVoting?.findIndex((vote) => vote.proposal === proposalId);
+			const i = delegateVoting?.findIndex(
+				(vote) => vote.proposal === proposalId
+			);
 			delegateVoting[i].score = Number(score);
 			delegateVoting = delegateVoting;
 		} else if (phase === 'vote') {
@@ -173,19 +193,14 @@
 	};
 
 	const getScore = (proposal: proposal) => {
-		console.log(
-			delegateVoting,
-			'VOTING',
-			proposal,
-			delegateVoting?.find((vote) => vote.proposal === proposal.id)
-		);
 		if (phase === 'delegate_vote')
-			return delegateVoting?.find((vote) => vote.proposal === proposal.id)?.score ?? 0;
+			return (
+				delegateVoting?.find((vote) => vote.proposal === proposal.id)?.score ??
+				0
+			);
 		else if (phase === 'vote')
 			return voting?.find((vote) => vote.proposal === proposal.id)?.score ?? 0;
 	};
-
-	$: console.log(voting, delegateVoting, 'VOTE');
 </script>
 
 <div class={`box-border ${Class}`}>
@@ -197,31 +212,27 @@
 						<Proposal
 							bind:proposalsToPredictionMarket
 							bind:commentFilterProposalId
+							bind:proposals
 							bind:selectedProposal
-							bind:filteredComments={comments}
 							bind:phase
+							bind:filteredComments={comments}
 							{proposal}
 						>
 							{#if phase === 'delegate_vote' || phase === 'vote'}
 								{@const score = getScore(proposal)}
+								{@const disabled =
+									(phase === 'delegate_vote' &&
+										$groupUserStore?.delegate_pool_id === null) ||
+									(phase === 'vote' && !$groupUserPermissionStore?.allow_vote)}
 
 								{#key voting || delegateVoting}
 									<VotingSlider
 										bind:phase
-										onSelection={(pos) => {
-											//@ts-ignore
-											changingVote(pos, proposal.id);
-											if (phase === 'delegate_vote') delegateVote();
-											else if (phase === 'vote') vote();
-										}}
-										disabled={(phase === 'delegate_vote' &&
-											$groupUserStore?.delegate_pool_id === null) ||
-											(phase === 'vote' && !$groupUserPermissionStore?.allow_vote)}
+										onSelection={(pos) => handleSliderClick(pos, proposal)}
+										style={disabled ? 'gray' : 'purple'}
+										id={`${idfy(proposal.title)}`}
 										{score}
-										style={(() => {
-											if (phase === 'vote' && voting === delegateVoting) return 'gray';
-											else return 'purple';
-										})()}
+										{disabled}
 									/>
 								{/key}
 							{/if}
@@ -229,10 +240,17 @@
 							{#if phase === 'vote' && $groupUserPermissionStore?.allow_vote}
 								<Button
 									onClick={() => {
-										const dVote = delegateVoting.find((vote) => vote.proposal === proposal.id);
+										const dVote = delegateVoting.find(
+											(vote) => vote.proposal === proposal.id
+										);
 										if (dVote) changingVote(dVote.score, dVote.proposal);
 										vote();
-									}}>{$_('Reset to delegate votes')}</Button
+									}}
+									>{$_(
+										$groupUserStore?.delegate_pool_id
+											? 'Reset to my delegate delegate votes'
+											: 'Reset to delegate votes'
+									)}</Button
 								>
 							{/if}
 						</Proposal>

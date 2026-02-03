@@ -24,7 +24,6 @@
 
 	const expandableTextArea = () => {
 		const textarea = document.getElementById(`textarea`);
-		console.log(textarea);
 
 		if (!textarea) return;
 

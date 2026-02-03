@@ -14,6 +14,7 @@
 	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
 
 	let tags: TagType[] = [],
 		tagToAdd = '',
@@ -28,8 +29,8 @@
 
 	const getTagsLocal = async () => {
 		loading = true;
-		tags = await getTags($page.params.groupId);
-		if (!tags) ErrorHandlerStore.set({ message: 'Could not get poppups', success: false });
+		tags = await getTags($page.params.groupId ?? '');
+		if (!tags) ErrorHandlerStore.set({ message: 'Could not get tags', success: false });
 		loading = false;
 	};
 
@@ -101,7 +102,7 @@
 	<div class="flex flex-col justify-between gap-2 py-2">
 		{#each tags as tag}
 			<!-- <div class="md:w-1/2 lg:w-1/3 xl:w-1/4 p-3"> -->
-			<div class="flex justify-between items-center">
+			<div id={idfy(tag.name)} class="flex justify-between items-center">
 				<p>{tag?.name}</p>
 				<!-- <Tag {tag} Class={tag.active ? '' : 'bg-blue-200'} /> -->
 				<div class="flex gap-2 items-center ml-auto">

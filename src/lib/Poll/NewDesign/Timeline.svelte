@@ -85,7 +85,7 @@
 
 <div class={`relative flex flex-col items-center ${Class}`}>
 	{#if displayTimelinePhase}
-		<div class="text-center dark:text-darkmodeText">
+		<div id="poll-timeline" class="text-center dark:text-darkmodeText">
 			<span class="font-semibold text-primary dark:text-secondary">
 				{$_('Current')}:
 			</span>
@@ -97,11 +97,11 @@
 
 	{#if displayTimeline}
 		<div
-			class={`mt-4 flex justify-between rounded-md 
-			${horizontal ? '' : 'gap-20'}
-			${horizontal ? 'flex-row' : 'flex-col'}
-			${horizontal ? 'w-full' : 'w-4'}
-			${horizontal ? 'max-h-4' : 'max-w-4'}
+			class={`m-4 flex justify-between rounded-md
+				${horizontal ? '' : 'gap-20'}
+				${horizontal ? 'flex-row' : 'flex-col mx-auto'}
+				${horizontal ? 'mx-4 w-[calc(100%-4rem)]' : 'm-4'}
+				${horizontal ? 'max-h-4' : 'max-w-4'}
 			`}
 			style={`background: linear-gradient(${
 				horizontal ? '90deg' : '180deg'
@@ -116,7 +116,7 @@
 						: faCircle}
 
 				<HeaderIcon
-					Class="cursor-default"
+					Class="!cursor-default"
 					size="1x"
 					text={`${i + 1}. ${$_(dateLabels[i + 1])}: ${datesArray[i]}`}
 					{icon}
@@ -126,26 +126,26 @@
 		</div>
 	{/if}
 	{#if enableDetails && displayDetails}
+		<button
+			class="hover:underline flex items-center gap-1 text-xs"
+			on:click={() => (displayDetails = false)}
+		>
+			<Fa icon={faDownLong} flip />
+			{$_('Time details')}
+		</button>
 		<ul class="p-2">
-			<button
-				class="hover:underline flex items-center gap-2 cursor-pointer"
-				on:click={() => (displayDetails = false)}
-			>
-				<Fa icon={faDownLong} flip />
-				{$_('Time details')}
-			</button>
 			{#each dateLabels as label, i}
 				{#if i !== 0}
-					<li class="flex justify-between flex-col md:flex-row text-center">
+					<li class="border-b md:border-b-0 flex justify-between flex-col md:flex-row text-center">
 						<div class="mb-4 md:mb-0">{$_(label)}:</div>
-						<div class="mb-4 md:mb-0">{datesArray[i - 1]} CET</div>
+						<div class="mb-4 md:mb-0">{datesArray[i - 1]}</div>
 					</li>
 				{/if}
 			{/each}
 		</ul>
 	{:else if enableDetails}
 		<button
-			class="hover:underline flex items-center gap-1 cursor-pointer text-xs"
+			class="hover:underline flex items-center gap-1 text-xs"
 			on:click={() => (displayDetails = true)}
 		>
 			<Fa icon={faDownLong} />

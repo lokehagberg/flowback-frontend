@@ -30,12 +30,26 @@ body {
 	margin: 0;
 	/* background: var(--darkmode-background-color); */
 
+  /* Disables pull-to-refresh and overscroll glow effect.
+     Still keeps swipe navigations. */
+	/* overflow-x: hidden; */
+	/* overflow-y: scroll; */
+	/* overscroll-behavior-y: none; */
+	height:100%;
+	overflow-y:auto;
+
+	/* Scuffed solution for hindering a scrollbar from showing when clicking on header sidebar (i.e clicking one's profile picture in the top right) */
+	overflow-x:hidden;
+	/* overflow: scroll; */
 }
 
+html.dark {
+  color-scheme: dark;
+}
 
 html {
-	overflow-x: hidden;
-	overflow-y: scroll
+	height:100%;
+	/* overflow:hidden */
 }
 
 body::before {

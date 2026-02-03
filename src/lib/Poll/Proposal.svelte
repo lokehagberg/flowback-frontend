@@ -11,14 +11,17 @@
 	import { faSquare } from '@fortawesome/free-regular-svg-icons';
 	import Fa from 'svelte-fa';
 	import commentSymbol from '$lib/assets/iconComment.svg';
-	import { commentsStore } from '$lib/Comments/commentStore';
+	import { commentsStore, filterByTags } from '$lib/Comments/commentStore';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { predictionStatementsStore } from './PredictionMarket/interfaces';
+	import { idfy } from '$lib/Generic/GenericFunctions2';
+	import { page } from '$app/stores';
 
 	export let proposal: proposal,
 		Class = '',
 		selectedProposal: proposal | null = null,
 		proposalsToPredictionMarket: proposal[] = [],
+		proposals: proposal[] = [],
 		phase: Phase,
 		filteredComments: Comment[] = [],
 		allComments: Comment[] = [],
@@ -27,33 +30,31 @@
 	export const id: number = 0;
 
 	const handleClickedCommentSymbol = () => {
+		if (commentFilterProposalId === proposal.id) {
+			commentsStore.update((store) => ({
+				allComments: store.allComments,
+				filterByProposal: null,
+				filteredComments: store.allComments
+			}));
+			commentFilterProposalId = null;
+			return;
+		}
+
+		filterByTags(proposals, [proposal.id], $page.params.pollId ?? '');
+		commentFilterProposalId = proposal.id;
 		// Scroll to the comments section
 		const comments = document.getElementById('comments');
+		
 		scrollTo({
 			top: comments?.offsetTop,
 			behavior: 'smooth'
 		});
-
-		//Filtering comments by proposal
-		if (commentFilterProposalId === proposal.id) {
-			commentsStore.filterByProposal(null);
-			commentFilterProposalId = null;
-		} else {
-			commentsStore.filterByProposal(proposal);
-
-			commentFilterProposalId = proposal.id;
-		}
 	};
 
 	onMount(() => {
 		checkForLinks(proposal.description, `proposal-${proposal.id}-description`);
-		// getPredictionCount();
-
 		allComments = filteredComments;
 	});
-
-	$: if (filteredComments) {
-	}
 </script>
 
 <div
@@ -63,14 +64,17 @@
 	class:!bg-slate-700={selectedProposal === proposal && $darkModeStore}
 	class:border-l-2={selectedProposal === proposal}
 	class:border-primary={selectedProposal === proposal}
+	id={`${idfy(proposal.title)}`}
 >
 	<div class="flex gap-2 items-center">
 		{#if phase === 'prediction_statement'}
 			{@const proposalInList = proposalsToPredictionMarket.findIndex(
 				(prop) => prop.id === proposal.id
 			)}
+			<!-- Javascript returns -1 if index not found -->
 			{#if proposalInList !== -1}
 				<button
+					id={`${idfy(proposal.title)}-selected`}
 					on:click={() => {
 						proposalsToPredictionMarket.splice(proposalInList, 1);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
@@ -80,6 +84,7 @@
 				</button>
 			{:else}
 				<button
+					id={`${idfy(proposal.title)}-selection`}
 					on:click={() => {
 						proposalsToPredictionMarket.push(proposal);
 						proposalsToPredictionMarket = proposalsToPredictionMarket;
@@ -91,14 +96,13 @@
 		{/if}
 		<!-- Proposal Title -->
 		<span
-			class="text-md text-primary dark:text-secondary font-semibold align-text-top text-left break-words"
+			class="text-md max-w-[300px] elipsis text-primary dark:text-secondary font-semibold align-text-top text-left break-words"
 			>{proposal.title}</span
 		>
 	</div>
-
 	<!-- Proposal Description -->
 	<p
-		class="elipsis text-sm text-left my-1 break-words whitespace-pre-wrap"
+		class="elipsis max-w-[300px] text-sm text-left my-1 break-words whitespace-pre-wrap"
 		id={`proposal-${proposal.id}-description`}
 	>
 		{proposal.description}
@@ -113,8 +117,7 @@
 					src={commentSymbol}
 					alt="Comment"
 					class="w-6 h-6 mr-2"
-					class:saturate-0={commentFilterProposalId !== proposal.id &&
-						commentFilterProposalId !== null}
+					class:saturate-0={commentFilterProposalId !== proposal.id}
 				/>
 
 				{$commentsStore.allComments.filter((comment) =>

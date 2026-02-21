@@ -38,7 +38,7 @@
 		loading = true;
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/${page.params.groupId}/poll/proposal/kpi/combined?proposal_ids=${proposal.id}`
+			`group/${page.params.groupId}/poll/proposal/kpi/list?proposal_ids=${proposal.id}`
 		);
 		loading = false;
 

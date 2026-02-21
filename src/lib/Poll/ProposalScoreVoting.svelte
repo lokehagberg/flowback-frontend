@@ -259,7 +259,7 @@
 											)}
 										</button>
 										<button
-											class="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors cursor-pointer"
+											class="flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors cursor-pointer"
 											on:click={() => {
 												handleSliderClick(null, proposal);
 											}}

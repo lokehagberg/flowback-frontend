@@ -60,7 +60,7 @@
 		<CommentPost bind:proposals {api} {delegate_pool_id} />
 
 		<CommentFilter
-			Class="flex flex-row-reverse items-center justify-end mb-2 gap-8"
+			Class="flex flex-row items-center justify-start mb-2 gap-3 py-2"
 			bind:sortBy
 			bind:searchString
 			bind:proposals

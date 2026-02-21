@@ -5,7 +5,8 @@
 	import { _ } from 'svelte-i18n';
 	import { commentsStore, filterByTags } from './commentStore';
 	import Modal from '$lib/Generic/Modal.svelte';
-	import Button from '$lib/Generic/Button.svelte';
+	import Fa from 'svelte-fa';
+	import { faFilter } from '@fortawesome/free-solid-svg-icons';
 	import { page } from '$app/stores';
 	import { idfy } from '$lib/Generic/GenericFunctions2';
 
@@ -68,9 +69,13 @@
 		/>
 
 		{#if proposals?.length > 0}
-			<Button onClick={() => (displayProposalsModal = true)} Class="ml-2"
-				>{$_('Filter by Proposal')}</Button
+			<button
+				type="button"
+				class="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+				on:click={() => (displayProposalsModal = true)}
 			>
+				{$_('Filter by Proposal')}
+			</button>
 		{/if}
 	</div>
 </div>

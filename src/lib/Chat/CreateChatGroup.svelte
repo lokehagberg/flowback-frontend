@@ -8,20 +8,26 @@
 	import UserSearch from '$lib/Generic/UserSearch.svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { chatPartnerStore } from './functions';
+	import TextInput from '$lib/Generic/TextInput.svelte';
 
 	export let creatingGroup: boolean,
 		groupMembers: GroupMembers[] = [];
 
+	let title = '';
+
 	const groupChatCreate = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`user/chat?target_user_ids=${$userStore?.id || -1}&${groupMembers
+			`user/chat?title=${title}&target_user_ids=${$userStore?.id || -1}&${groupMembers
 				.map((member) => `target_user_ids=${member.id}`)
 				.join('&')}`
 		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to created group chat', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to created group chat',
+				success: false
+			});
 			return;
 		}
 
@@ -29,7 +35,10 @@
 		//TODO: Redo the poppup system to have a poppup queue that's always rendered and which is accessed via svelte store
 		creatingGroup = false;
 		groupMembers = [];
-		ErrorHandlerStore.set({ message: 'Successfully created group chat', success: true });
+		ErrorHandlerStore.set({
+			message: 'Successfully created group chat',
+			success: true
+		});
 
 		chatPartnerStore.set(json.id);
 	};
@@ -41,12 +50,16 @@
 </script>
 
 <form on:submit={groupChatCreate}>
-	<!-- <TextInput autofocus required bind:value={name} label="Chatgroup Name" /> -->
+	<TextInput autofocus required bind:value={title} label="Chatgroup Name" />
 
 	{$_('Members')}
 	<ul>
 		{#each groupMembers as member}
-			<ProfilePicture displayName profilePicture={member.profile_image} {...member} />
+			<ProfilePicture
+				displayName
+				profilePicture={member.profile_image}
+				{...member}
+			/>
 		{/each}
 	</ul>
 
@@ -67,5 +80,7 @@
 	</UserSearch>
 
 	<Button buttonStyle="primary-light" type="submit">{$_('Confirm')}</Button>
-	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}>{$_('Cancel')}</Button>
+	<Button buttonStyle="warning-light" onClick={cancelGroupChatCreate}
+		>{$_('Cancel')}</Button
+	>
 </form>

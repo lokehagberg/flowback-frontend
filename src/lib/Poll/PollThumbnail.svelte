@@ -378,9 +378,3 @@
 	post_description={poll.description}
 	bind:reportModalShow={reportPollModalShow}
 />
-
-<style>
-	.poll-thumbnail-shadow {
-		box-shadow: 0 0 5px rgb(203, 203, 203);
-	}
-</style>

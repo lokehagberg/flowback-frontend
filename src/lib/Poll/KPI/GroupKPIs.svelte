@@ -17,6 +17,7 @@
 		description: string;
 		active: boolean;
 		values: number[];
+		id: number;
 	}
 
 	let kpis: KPI[] = $state([]),
@@ -48,10 +49,7 @@
 		e.preventDefault();
 		loading = true;
 
-		const values = kpiValues
-			.split(',')
-			.map((v) => parseInt(v.trim()))
-			.filter((v) => !isNaN(v));
+		const values = kpiValues.split(',');
 
 		let toSend: any = {
 			name: kpiName,
@@ -82,10 +80,7 @@
 
 	const removeKPI = async (kpi: KPI) => {
 		loading = true;
-		const { res } = await fetchRequest(
-			'POST',
-			`group/${page.params.groupId}/kpi/delete`
-		);
+		const { res } = await fetchRequest('POST', `group/kpi/${kpi.id}/delete`);
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({
@@ -101,11 +96,9 @@
 
 	const toggleKPI = async (kpi: KPI) => {
 		loading = true;
-		const { res } = await fetchRequest(
-			'POST',
-			`group/${page.params.groupId}/kpi/update`,
-			{ active: kpi.active }
-		);
+		const { res } = await fetchRequest('POST', `group/kpi/${kpi.id}/update`, {
+			active: !kpi.active
+		});
 
 		loading = false;
 

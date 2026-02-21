@@ -24,7 +24,7 @@
 	$: gridClass = `
 		${Class} 
 		${poll ? 'poll-grid' : 'poll-grid-no-timeline'} 
-		p-3 md:p-6 lg:p-12 max-w-[1200px] w-full gap-4 lg:gap-6 
+		py-6 px-3 md:px-6 lg:px-12 max-w-[1200px] w-full gap-4 lg:gap-6 
 		${$isMobile ? 'flex flex-col' : 'grid'}
 	`;
 

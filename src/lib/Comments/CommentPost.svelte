@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { fetchRequest } from '$lib/FetchRequest';
-	import Button from '$lib/Generic/Button.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
@@ -254,25 +253,23 @@
 				rows={beingEdited && message.length > 50 ? 6 : 3}
 			/>
 		</div>
-		<div class="flex ml-2 items-start">
+		<div class="flex gap-1 items-center ml-3 pt-1">
 			<FileUploads
 				bind:files
 				minimalist
 				disableCropping
-				Class="content-center p-2 rounded dark:hover:bg-gray-700 hover:bg-gray-100 h-10"
+				Class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
 			/>
-			<div class="p-2 m-auto">
-				<Button
-					Class="submit-button bg-white dark:bg-darkbackground hover:!brightness-100 dark:hover:!bg-gray-700 hover:bg-gray-100"
-					type="submit"
-					label=""
-					><Fa
-						icon={faPaperPlane}
-						color={$darkModeStore ? 'white' : 'black'}
-						class="text-lg"
-					/></Button
-				>
-			</div>
+			<button
+				type="submit"
+				class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+			>
+				<Fa
+					icon={faPaperPlane}
+					color={$darkModeStore ? 'white' : 'black'}
+					class="text-lg"
+				/>
+			</button>
 		</div>
 	</div>
 </form>

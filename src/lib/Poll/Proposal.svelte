@@ -16,6 +16,7 @@
 	import { predictionStatementsStore } from './PredictionMarket/interfaces';
 	import { idfy } from '$lib/Generic/GenericFunctions2';
 	import { page } from '$app/stores';
+	import { env } from '$env/dynamic/public';
 
 	export let proposal: proposal,
 		Class = '',
@@ -61,8 +62,8 @@
 	class={`dark:bg-darkobject bg-white w-full py-3 px-4 transition-all rounded-lg
 	 border border-gray-200 dark:border-gray-700 ${Class}`}
 	class:!bg-blue-100={selectedProposal === proposal && !$darkModeStore}
-	class:!bg-slate-700={selectedProposal === proposal && $darkModeStore}
-	class:border-l-2={selectedProposal === proposal}
+	class:!bg-blue-950={selectedProposal === proposal && $darkModeStore}
+	class:border-l-4={selectedProposal === proposal}
 	class:border-primary={selectedProposal === proposal}
 	id={`${idfy(proposal.title)}`}
 >
@@ -127,7 +128,7 @@
 				).length}
 			</button>
 
-			{#if phase !== 'proposal'}
+			{#if phase !== 'proposal' && env.PUBLIC_POLL_VERSION === '1'}
 				<button
 					class="flex items-center"
 					on:click={() => {

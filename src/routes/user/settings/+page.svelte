@@ -17,6 +17,7 @@
 	import type { report } from '$lib/Generic/interfaces';
 	import { linkToPost } from '$lib/Generic/GenericFunctions';
 	import Modal from '$lib/Generic/Modal.svelte';
+	import Button from '$lib/Generic/Button.svelte';
 	import { goto } from '$app/navigation';
 
 	type PageType =
@@ -94,7 +95,7 @@
 		},
 		reports: report[] = [],
 		serverConfig: any = {},
-		version = '69',
+		version = '70',
 		open = false,
 		selectedRepport: report = {
 			description: '',
@@ -103,7 +104,8 @@
 			post_type: 'poll',
 			post_title: '',
 			post_description: '',
-			title: ''
+			title: '',
+			admin_action: 'nothing'
 		};
 
 	const userUpdate = async () => {
@@ -289,22 +291,43 @@
 					<div>{$_('Frontend version')}: {version}</div>
 					<div>{$_('Backend version')}: {serverConfig.VERSION}</div>
 				{:else if selectedPage === 'reports'}
+					<span
+						class="text-lg text-primary dark:text-secondary font-semibold mb-1"
+						>{$_('Reports')}</span
+					>
 					{#if reports?.length > 0}
-						<span>{$_('Reports')}</span>
-						{#each reports as report}
-							<button
-								on:click={() => {
-									selectedRepport = report;
-									open = true;
-								}}
-								class="flex justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-							>
-								<span>{report?.title}</span>
-								<span>{report?.description}</span>
-							</button>
-						{/each}
+						<div class="flex flex-col gap-2 mt-2">
+							{#each reports as report}
+								<button
+									on:click={() => {
+										selectedRepport = report;
+										open = true;
+									}}
+									class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-left transition-colors w-full"
+								>
+									<Fa
+										icon={faWarning}
+										class="text-yellow-500 mt-0.5 flex-shrink-0"
+									/>
+									<div class="min-w-0">
+										<div
+											class="font-medium text-gray-800 dark:text-darkmodeText truncate"
+										>
+											{report?.title}
+										</div>
+										<div
+											class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1"
+										>
+											{report?.description}
+										</div>
+									</div>
+								</button>
+							{/each}
+						</div>
 					{:else}
-						{$_('There are currently no reports')}
+						<p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+							{$_('There are currently no reports')}
+						</p>
 					{/if}
 				{/if}
 			</ul>
@@ -312,28 +335,95 @@
 	</div>
 </Layout>
 
-<Modal bind:open>
-	<div slot="header">{$_('Report Details')}</div>
-	<div slot="body" class="flex flex-col gap-2">
+<Modal bind:open Class="max-w-[520px]">
+	<div slot="header" class="flex items-center gap-2">
+		<Fa icon={faWarning} class="text-yellow-500" />
+		<span>{$_('Report Details')}</span>
+	</div>
+	<div slot="body" class="flex flex-col gap-4 text-left">
+		<!-- Report info -->
+		<div
+			class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-800"
+		>
+			<div
+				class="text-xs font-semibold uppercase tracking-wide text-yellow-700 dark:text-yellow-400 mb-2"
+			>
+				{$_('Report')}
+			</div>
+			<div class="font-semibold text-gray-800 dark:text-darkmodeText">
+				{selectedRepport?.title || $_('No title')}
+			</div>
+			{#if selectedRepport?.description}
+				<div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+					{selectedRepport.description}
+				</div>
+			{/if}
+		</div>
+
+		<!-- Post type badge -->
+		<div class="flex items-center gap-2">
+			<span
+				class="px-2 py-0.5 text-xs rounded-full font-medium"
+				class:bg-blue-100={selectedRepport.post_type === 'poll'}
+				class:text-blue-700={selectedRepport.post_type === 'poll'}
+				class:bg-purple-100={selectedRepport.post_type === 'thread'}
+				class:text-purple-700={selectedRepport.post_type === 'thread'}
+			>
+				{selectedRepport.post_type === 'poll' ? $_('Poll') : $_('Thread')}
+			</span>
+		</div>
+
+		<div
+			class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700"
+		>
+			<div
+				class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2"
+			>
+				{$_('Admin Action')}
+			</div>
+			{selectedRepport.admin_action}
+		</div>
+		<!-- Reported post details -->
 		{#await fetchRequest('GET', selectedRepport.post_type === 'poll' ? `home/polls?group_ids=${selectedRepport.group_id}&id=${selectedRepport.post_id}` : `group/thread/list?group_ids=${selectedRepport.group_id}&id=${selectedRepport.post_id}`) then { res, json }}
 			{#if res.ok}
 				{@const post = json?.results[0]}
-
-				<span>{post?.title}</span>
-				<span>{post?.description}</span>
+				{#if post}
+					<div
+						class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700"
+					>
+						<div
+							class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2"
+						>
+							{$_('Reported Post')}
+						</div>
+						<div class="font-medium text-gray-800 dark:text-darkmodeText">
+							{post?.title}
+						</div>
+						{#if post?.description}
+							<div
+								class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-3"
+							>
+								{post.description}
+							</div>
+						{/if}
+					</div>
+				{/if}
 			{/if}
-			<span>{selectedRepport?.title}</span>
-			<span>{selectedRepport?.description}</span>
-			<button
-				on:click={() =>
-					goto(
-						`${linkToPost(
-							selectedRepport.post_id,
-							selectedRepport.group_id,
-							selectedRepport.post_type
-						)}`
-					)}>goto</button
-			>
 		{/await}
+
+		<!-- View Post button -->
+		<Button
+			Class="w-full"
+			onClick={() =>
+				goto(
+					`${linkToPost(
+						selectedRepport.post_id,
+						selectedRepport.group_id,
+						selectedRepport.post_type
+					)}`
+				)}
+		>
+			{$_('View Post')}
+		</Button>
 	</div>
 </Modal>

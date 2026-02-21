@@ -50,7 +50,7 @@
 		work_group_ids=${filter.workgroup}&
 		public=${infoToGet === InfoToGet.public ? 'true' : ''}&
 		created_at__gt=${filter.from}&
-		created_at__lt=${filter.to}&status=${filter.status}
+		created_at__lt=${filter.to}
     `;
 
 		// When first time loading, or when first time changing the filter, next is undefined.
@@ -136,8 +136,15 @@
 			!filter.workgroup || // If no workgroup filter, show all threads
 			(thread && thread.work_group?.id === Number(filter.workgroup)); // Match thread workgroup
 
-		// return false;
-		return (matchesSearch && matchesWorkgroup) || false;
+		const matchesStatus =
+			!filter.status || // Show anything if no status selected
+			(post.related_model === 'poll' &&
+				//@ts-ignore
+				((filter.status === 'finished' && post.status === 1) ||
+					//@ts-ignore
+					(filter.status === 'ongoing' && post.status === 0)));
+
+		return (matchesSearch && matchesWorkgroup && matchesStatus) || false;
 	};
 
 	onMount(async () => {

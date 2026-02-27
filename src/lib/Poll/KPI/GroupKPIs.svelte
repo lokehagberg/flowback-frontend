@@ -10,7 +10,6 @@
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
 	import Fa from 'svelte-fa';
-	import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 	interface KPI {
 		name: string;
@@ -162,16 +161,6 @@
 				</div>
 				<div class="flex gap-2 items-center ml-auto">
 					<Toggle bind:checked={kpi.active} onInput={() => toggleKPI(kpi)} />
-					<button
-						class="text-red-500 p-2 pl-4 text-lg cursor-pointer"
-						disabled={loading}
-						onclick={() => {
-							areYouSureModal = true;
-							selectedKPI = kpi;
-						}}
-					>
-						<Fa icon={faTrash} />
-					</button>
 				</div>
 			</div>
 		{/each}

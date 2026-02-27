@@ -27,3 +27,18 @@ test-results
 tests/Post.test.ts-snapshots
 tests/screenshots
 .vscode
+
+# Foundry (Blockchain_v2_CrossChain)
+src/lib/Blockchain_v2_CrossChain/out/
+src/lib/Blockchain_v2_CrossChain/cache/
+src/lib/Blockchain_v2_CrossChain/broadcast/
+src/lib/Blockchain_v2_CrossChain/.env
+
+# Foundry deps (do not commit)
+src/lib/Blockchain_v2_CrossChain/lib/
+src/lib/Blockchain_v1_Ethereum/lib/
+src/lib/Blockchain_v1_Ethereum/foundry.lock
+
+# Do not commit V1 foundry workspace (optional noise)
+src/lib/Blockchain_v1_Ethereum/foundry.toml
+src/lib/Blockchain_v1_Ethereum/script/

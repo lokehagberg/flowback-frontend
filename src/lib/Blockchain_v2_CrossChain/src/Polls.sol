@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {PollsBridge} from "./PollsBridge.sol";
 import {RightToVote} from "./RightToVote.sol";
 import {Delegations} from "./Delegations.sol";
 import {PollHelpers} from "./PollHelpers.sol";
 import {ProposalHelpers} from "./ProposalHelpers.sol";
-import {Predictions} from "./Predictions.sol";
-import {PredictionHelpers} from "./PredictionHelpers.sol";
-import {PredictionBetHelpers} from "./PredictionBetHelpers.sol";
 import {PredictionBets} from "./PredictionBets.sol";
 import "forge-std/console.sol";
-
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title Polls Contract
@@ -65,14 +60,10 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  *   specified chain after poll finalization.
  */
 contract Polls is
-    Ownable,
     RightToVote,
     Delegations,
     PollHelpers,
     ProposalHelpers,
-    PredictionHelpers,
-    Predictions,
-    PredictionBetHelpers,
     PredictionBets
 {
     // -------------------- Events --------------------
@@ -98,6 +89,10 @@ contract Polls is
         require(msg.sender == metaTxHandler, "P_UnauthorizedMetaTx");
         _;
     }
+
+    constructor(address initialOwner)
+        PredictionBets(initialOwner)
+    {}
 
     // -------------------- External Functions --------------------
 

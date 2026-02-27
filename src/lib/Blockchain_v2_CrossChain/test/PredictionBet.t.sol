@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity ^0.8.30;
 
 import {Test, console} from "forge-std/Test.sol";
 
 import "forge-std/Vm.sol";
 import "src/Polls.sol";
+import {PredictionBets} from "src/PredictionBets.sol";
 
-contract PredictionBetTest is Test, Polls {
+contract PredictionBetTest is Test {
     Polls public testPolls; // Instance of the Polls contract
 
     uint256 pollStartDate = 1708672110; // Start date for the poll
@@ -17,7 +18,7 @@ contract PredictionBetTest is Test, Polls {
 
     // Function to set up the testing environment
     function setUp() public {
-        testPolls = new Polls(); // Deploy a new instance of the Polls contract
+        testPolls = new Polls(address(this)); // Deploy a new instance of the Polls contract
         console.log("Polls contract deployed");
     }
 
@@ -51,7 +52,7 @@ contract PredictionBetTest is Test, Polls {
 
         // Set expected event parameters
         vm.expectEmit(true, true, true, true); // Prepare to capture the full event
-        emit PredictionBetCreated(1, true, 9); // Match parameters with actual event
+        emit PredictionBets.PredictionBetCreated(1, true, 9); // Match parameters with actual event
 
         console.log("Placing prediction bet for poll ID 1, proposal ID 0, prediction ID 1...");
         testPolls.placePredictionBet(1, proposalId, predictionId, 9, true); // Place prediction bet with consistent IDs

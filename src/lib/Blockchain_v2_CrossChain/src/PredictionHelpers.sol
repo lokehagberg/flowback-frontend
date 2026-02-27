@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {PollHelpers} from "./PollHelpers.sol";
 import {ProposalHelpers} from "./ProposalHelpers.sol";
@@ -30,6 +30,10 @@ contract PredictionHelpers is PollHelpers, ProposalHelpers {
 
     /// @notice Mapping from a proposal ID to an array of predictions related to that proposal.
     mapping(uint256 => Prediction[]) public predictions;
+
+    constructor(address initialOwner)
+        ProposalHelpers(initialOwner)
+    {}
 
     // -------------------- Internal Functions --------------------
 

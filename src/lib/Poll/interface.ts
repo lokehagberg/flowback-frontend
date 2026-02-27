@@ -137,6 +137,7 @@ export interface Post {
   title: string;
   updated_at: string;
   user_vote: boolean | null;
+  active: boolean;
 }
 
 export interface CommentEdited { }

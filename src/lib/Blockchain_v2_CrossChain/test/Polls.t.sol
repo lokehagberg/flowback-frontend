@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity ^0.8.30;
 
 import {SharedErrors} from "../src/SharedErrors.sol";
 import {Polls} from "../src/Polls.sol";
@@ -26,7 +26,8 @@ contract PollsTest is Test {
 
     address public USER1 = address(0x1);
     address public USER2 = address(0x2);
-    address public owner = address(0x1234);
+   //address public owner = address(0x1234);
+    address public owner;
 
     event VoteSubmitted(uint256 indexed pollId, address indexed voter, uint256 votesForProposal);
 
@@ -46,6 +47,7 @@ contract PollsTest is Test {
 
         // Set up Polls and MetaTxHandler
         testPolls = Polls(address(baseDeploy.polls()));
+        owner = testPolls.owner();
         metaTxHandler = new MetaTxHandler(address(testPolls));
 
         vm.startPrank(owner);

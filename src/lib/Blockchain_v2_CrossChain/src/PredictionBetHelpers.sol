@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {PollHelpers} from "./PollHelpers.sol";
 import {ProposalHelpers} from "./ProposalHelpers.sol";
@@ -32,4 +32,8 @@ contract PredictionBetHelpers is PollHelpers, ProposalHelpers, PredictionHelpers
     // -------------------- STATE VARIABLES --------------------
     /// @notice Maps a poll ID to an array of PredictionBet structures representing all bets made in that poll.
     mapping(uint256 => mapping(uint256 => PredictionBet[])) public predictionBets;
+
+    constructor(address initialOwner)
+        PredictionHelpers(initialOwner)
+    {}
 }

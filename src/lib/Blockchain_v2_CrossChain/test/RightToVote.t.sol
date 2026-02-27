@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: CPL-3.0
-pragma solidity 0.8.18;
+pragma solidity ^0.8.30;
 
 import "forge-std/Test.sol";
 import "src/Polls.sol";
 import "forge-std/Vm.sol";
 
-contract RightToVoteTest is Test, Polls {
+contract RightToVoteTest is Test {
     Polls public testPolls; // Instance of the Polls contract for testing
     address user1 = address(0x1); // Address for user1
     address user2 = address(0x2); // Address for user2
 
     function setUp() public {
         // Set up the test environment before each test
-        testPolls = new Polls(); // Deploy a new instance of the Polls contract
+        testPolls = new Polls(address(this)); // Deploy a new instance of the Polls contract
     }
 
     function run() public {

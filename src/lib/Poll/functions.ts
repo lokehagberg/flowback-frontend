@@ -1,7 +1,14 @@
 import { fetchRequest } from '$lib/FetchRequest';
 import { _ } from 'svelte-i18n';
+import {
+  groupUserStore,
+  groupUserPermissionStore
+} from '$lib/Group/interface';
+import { get } from 'svelte/store';
 import type { Phase, poll } from './interface';
 import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
+import type { Permissions } from '$lib/Group/Permissions/interface';
+import type { GroupUser } from '$lib/Group/interface';
 
 export const formatDate = (dateInput: string) => {
   const date = new Date(dateInput);
@@ -86,22 +93,18 @@ export const getPhaseUserFriendlyNameWithNumber = (phase: Phase, poll_type: numb
     switch (phase) {
       case 'pre_start':
         return `0. ${dateLabels[0]}`;
-      case 'area_vote':
-        return `1. ${dateLabels[1]}`;
       case 'proposal':
         return `2. ${dateLabels[2]}`;
-      case 'prediction_statement':
-        return `3. ${dateLabels[3]}`;
       case 'prediction_bet':
-        return `4. ${dateLabels[4]}`;
+        return `3. ${dateLabels[3]}`;
       case 'delegate_vote':
-        return `5. ${dateLabels[5]}`;
+        return `3. ${dateLabels[5]}`;
       case 'vote':
-        return `6. ${dateLabels[6]}`;
+        return `4. ${dateLabels[6]}`;
       case 'prediction_vote':
-        return `7. ${dateLabels[7]}`;
+        return `5. ${dateLabels[7]}`;
       case 'result':
-        return `8. ${dateLabels[8]}`;
+        return `6. ${dateLabels[8]}`;
       default:
         return "";
     }
@@ -169,4 +172,26 @@ export const nextPhase = async (poll: poll, phase: Phase) => {
 export const imacFormatting = (imac: number | string) => {
   imac = Number(imac)
   return `${(imac * 100).toFixed(0)}%`
+}
+
+export const getMultipleOptions = (phase: Phase, poll: poll, functions: any[], fast_forward: any) => {
+
+  const options = {
+    labels: [get(_)('Delete Poll'), get(_)('Report Poll')],
+    functions
+  }
+
+  const canFastForward = phase !== 'result' &&
+    phase !== 'prediction_vote' &&
+    poll?.allow_fast_forward &&
+    (get(groupUserPermissionStore).poll_fast_forward ||
+      get(groupUserStore)?.is_admin)
+
+
+  if (canFastForward) {
+    options.labels.push(get(_)('Fast Forward'))
+    options.functions.push(fast_forward)
+  }
+
+  return options;
 }

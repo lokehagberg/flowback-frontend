@@ -221,19 +221,15 @@
 			<!-- Phase -->
 			<div class="text-sm font-semibold text-primary dark:text-secondary">
 				{$_('Current phase')}
+
 				{$_(getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type))}
 			</div>
 		</div>
 	{/snippet}
 
-	<Timeline
-		bind:phase
-		bind:poll
-		enableDetails
-		displayTimelinePhase={false}
-		Class={'w-full md:!relative'}
-		horizontal
-	/>
+	{#key phase}
+		<Timeline bind:phase bind:poll enableDetails={false} horizontal />
+	{/key}
 
 	<div class="!mt-4">
 		<!-- For text polls -->

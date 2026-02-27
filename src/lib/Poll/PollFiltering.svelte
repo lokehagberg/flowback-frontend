@@ -15,6 +15,7 @@
 	import { homePolls as homePollsLimit } from '../Generic/APILimits.json';
 	import { InfoToGet, type Filter } from './interface';
 
+	// TODO: Have filter thread and filter poll part of filter instead of it's own separate thing.
 	export let filter: Filter,
 		handleSearch: () => void = () => {},
 		infoToGet: InfoToGet,

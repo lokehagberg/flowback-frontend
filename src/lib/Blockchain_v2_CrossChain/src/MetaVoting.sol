@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ProposalHelpers.sol"; 
@@ -38,7 +38,7 @@ contract MetaVoting is Ownable {
     event VoteCastMeta(uint256 indexed pollId, uint256 indexed proposalId, address indexed voter);
 
     // -------------------- Constructor --------------------
-    constructor(address _proposalHelpersContract) {
+    constructor(address _proposalHelpersContract) Ownable(msg.sender) {
         relayer = msg.sender; // Set the contract deployer as the initial relayer
         proposalHelpersContract = ProposalHelpers(_proposalHelpersContract); // Initialize with ProposalHelpers contract
     }

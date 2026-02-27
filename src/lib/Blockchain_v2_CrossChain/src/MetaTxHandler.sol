@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {Polls} from "./Polls.sol";
 import "forge-std/console.sol";
@@ -40,7 +40,7 @@ contract MetaTxHandler is Ownable {
     }
 
     // -------------------- Constructor --------------------
-    constructor(address _pollsContract) {
+    constructor(address _pollsContract) Ownable(msg.sender) {
         pollsContract = Polls(_pollsContract);
         relayer = msg.sender; // Initially set the deployer as the relayer
     }

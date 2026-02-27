@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {Script, console} from "forge-std/Script.sol";
 import {PollsBridge} from "../src/PollsBridge.sol";
@@ -14,6 +14,7 @@ import {PredictionBets} from "../src/PredictionBets.sol";
 import {SharedErrors} from "../src/SharedErrors.sol";
 import {Polls} from "../src/Polls.sol";
 import {MetaVoting} from "../src/MetaVoting.sol";
+import {MetaTxHandler} from "../src/MetaTxHandler.sol";
 
 contract Base_deploy is Script {
     Polls public polls;
@@ -29,10 +30,13 @@ contract Base_deploy is Script {
     PredictionBets public predictionBets;
 
     function run() external {
-        address deployer = address(0x1234); // Define a deployer address
+        //address deployer = address(0x1234); // Define a deployer address
+        uint256 pk = vm.envUint("PRIVATE_KEY");
+        address deployer = vm.addr(pk);
 
         // Start broadcasting transactions to deploy contracts
-        vm.startBroadcast();
+        //vm.startBroadcast();
+        vm.startBroadcast(pk);
 
         console.log("Deploying PollsBridge contract...");
         pollsBridge = new PollsBridge();
@@ -47,48 +51,53 @@ contract Base_deploy is Script {
         console.log("Deployed Delegations at:", address(delegations));
 
         console.log("Deploying PollHelpers contract...");
-        pollHelpers = new PollHelpers();
+        pollHelpers = new PollHelpers(deployer);
         console.log("Deployed PollHelpers at:", address(pollHelpers));
 
         console.log("Deploying ProposalHelpers contract...");
-        proposalHelpers = new ProposalHelpers();
+        proposalHelpers = new ProposalHelpers(deployer);
         console.log("Deployed ProposalHelpers at:", address(proposalHelpers));
 
         console.log("Deploying Predictions contract...");
-        predictions = new Predictions();
+        predictions = new Predictions(deployer);
         console.log("Deployed Predictions at:", address(predictions));
 
         console.log("Deploying PredictionHelpers contract...");
-        predictionHelpers = new PredictionHelpers();
+        predictionHelpers = new PredictionHelpers(deployer);
         console.log("Deployed PredictionHelpers at:", address(predictionHelpers));
 
         console.log("Deploying PredictionBetHelpers contract...");
-        predictionBetHelpers = new PredictionBetHelpers();
+        predictionBetHelpers = new PredictionBetHelpers(deployer);
         console.log("Deployed PredictionBetHelpers at:", address(predictionBetHelpers));
 
         console.log("Deploying PredictionBets contract...");
-        predictionBets = new PredictionBets();
+        predictionBets = new PredictionBets(deployer);
         console.log("Deployed PredictionBets at:", address(predictionBets));
 
         // Deploy Polls contract
         console.log("Deploying Polls contract...");
-        polls = new Polls();
+        polls = new Polls(deployer);
         console.log("Deployed Polls at:", address(polls));
 
-        // Deploy MetaVoting contract
+        console.log("Deploying MetaTxHandler contract...");
+        MetaTxHandler metaTxHandler = new MetaTxHandler(address(polls));
+        console.log("Deployed MetaTxHandler at:", address(metaTxHandler));
+
+        // Deploy MetaVoting contract (must use proposalHelpers: MetaVoting calls recordMetaVote on ProposalHelpers)
         console.log("Deploying MetaVoting contract...");
-        metaVoting = new MetaVoting(address(pollHelpers));
+        metaVoting = new MetaVoting(address(proposalHelpers));
         console.log("Deployed MetaVoting at:", address(metaVoting));
 
-        // Set MetaVoting in PollHelpers
-        console.log("Setting MetaVoting in PollHelpers...");
-        pollHelpers.setMetaVoting(address(metaVoting));
+        // Set MetaVoting in ProposalHelpers (required for recordMetaVote's only-MetaVoting check)
+        console.log("Setting MetaVoting in ProposalHelpers...");
+        proposalHelpers.setMetaVoting(address(metaVoting));
 
         // Set bridge contract in Polls
         console.log("Setting bridge contract in Polls...");
         polls.setBridgeContract(address(pollsBridge));
 
-        // Set relayer for MetaVoting
+        // Relayer: constructor already sets relayer = deployer; setRelayer(deployer) is redundant.
+        // To use MetaTxHandler for meta-tx, deploy it then call metaVoting.setRelayer(metaTxHandlerAddress).
         console.log("Setting relayer for MetaVoting...");
         metaVoting.setRelayer(deployer);
 

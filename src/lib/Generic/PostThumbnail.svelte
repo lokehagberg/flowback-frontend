@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import { page } from '$app/state';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
@@ -34,7 +34,11 @@
 
 	let reportModalShow = $state(false),
 		deleteModalShow = $state(false),
-		choicesOpen = $state(false);
+		choicesOpen = $state(false),
+		multipleChoices = $state({
+			labels: [],
+			functions: []
+		});
 
 	//When adminn presses the pin tack symbol, pin the post
 	const pinPost = async (_post: Thread | poll) => {
@@ -51,6 +55,14 @@
 		_post.pinned = !_post?.pinned;
 		post = { ..._post };
 	};
+
+	onMount(() => {
+		//@ts-ignore
+		if (post?.fast_forward)
+			multipleChoices = {
+				labels: [$_('Fast Forward Poll'), $_('Repo')]
+			};
+	});
 </script>
 
 <div

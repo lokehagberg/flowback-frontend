@@ -29,6 +29,7 @@
 	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { isMobile } from '$lib/utils/isMobile';
+	import { getMultipleOptions } from '$lib/Poll/functions';
 
 	export let poll: poll,
 		displayTag = false,
@@ -39,7 +40,8 @@
 		reportPollModalShow = false,
 		choicesOpen = false,
 		source = new URLSearchParams(window.location.search).get('source'),
-		tag: TagType;
+		tag: TagType,
+		multipleChoices = { labels: [], functions: [] };
 
 	const getTag = async () => {
 		const { json, res } = await fetchRequest(
@@ -54,6 +56,21 @@
 
 	onMount(() => {
 		getTag();
+		multipleChoices = getMultipleOptions(
+			phase,
+			poll,
+			[
+				() => {
+					deletePollModalShow = true;
+					choicesOpen = false;
+				},
+				() => {
+					reportPollModalShow = true;
+					choicesOpen = false;
+				}
+			],
+			async () => (phase = await nextPhase(poll, phase))
+		);
 	});
 
 	$: pictureSize = $isMobile ? 2 : 1;
@@ -99,20 +116,8 @@
 
 		<MultipleChoices
 			bind:choicesOpen
-			labels={phase !== 'result' &&
-			phase !== 'prediction_vote' &&
-			poll?.allow_fast_forward &&
-			($groupUserPermissionStore?.poll_fast_forward ||
-				$groupUserStore?.is_admin)
-				? [$_('Delete Poll'), $_('Report Poll'), $_('Fast Forward')]
-				: [$_('Delete Poll'), $_('Report Poll')]}
-			functions={[
-				() => ((deletePollModalShow = true), (choicesOpen = false)),
-				() => ((reportPollModalShow = true), (choicesOpen = false)),
-				...($groupUserStore?.is_admin
-					? [async () => (phase = await nextPhase(poll, phase))]
-					: [])
-			]}
+			labels={multipleChoices.labels}
+			functions={multipleChoices.functions}
 			ClassInner="-translate-x-3/4"
 			id="poll-header-multiple-choices"
 		/>

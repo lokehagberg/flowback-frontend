@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {PollHelpers} from "./PollHelpers.sol";
 import {SharedErrors} from "./SharedErrors.sol";
@@ -34,6 +34,7 @@ contract ProposalHelpers is PollHelpers {
     event ProposalUpdated(uint256 pollId, uint256 proposalId, uint256 newVoteCount, uint256 newScore);
     event VoteCast(address indexed voter, uint256 indexed pollId, uint256 indexed proposalId);
 
+    constructor(address initialOwner) PollHelpers(initialOwner) {}
 
         // -------------------- External Functions --------------------
 

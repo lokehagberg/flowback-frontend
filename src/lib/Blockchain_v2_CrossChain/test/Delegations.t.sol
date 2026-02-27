@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity ^0.8.30;
 
 import {Test, console} from "forge-std/Test.sol";
 import {Delegations} from "../src/Delegations.sol";
 import {Polls} from "../src/Polls.sol";
 
-contract DelegationsTest is Test, Delegations, Polls {
+contract DelegationsTest is Test {
     Polls public testPolls;
     address user1 = address(0x1);
     address user2 = address(0x2);
@@ -13,7 +13,7 @@ contract DelegationsTest is Test, Delegations, Polls {
 
     // Initialize the Polls contract
     function setUp() public {
-        testPolls = new Polls();
+        testPolls = new Polls(address(this));
     }
 
     // A modifier to make user1 both a group member and a delegate before running the test
@@ -46,7 +46,7 @@ contract DelegationsTest is Test, Delegations, Polls {
         vm.startPrank(user1); // Set the caller to user1
         testPolls.becomeMemberOfGroup(_groupId); // User1 becomes a group member
         vm.expectEmit(true, true, false, true); // Expect the NewDelegate event to be emitted
-        emit NewDelegate(user1, _groupId, 0, new address[](0), 1); // Emit the NewDelegate event with the expected parameters
+        emit Delegations.NewDelegate(user1, _groupId, 0, new address[](0), 1); // Emit the NewDelegate event with the expected parameters
         testPolls.becomeDelegate(_groupId); // User1 becomes a delegate for the group
         vm.stopPrank(); // Stop user1's prank state
     }
@@ -107,7 +107,7 @@ contract DelegationsTest is Test, Delegations, Polls {
         console.log("Has User2 delegated to User1:", hasDelegated); // Log delegation status
 
         vm.expectEmit(true, true, true, true); // Expect emit for DelegationRemoved event
-        emit DelegationRemoved(user2, user1, _groupId); // Emit DelegationRemoved event
+        emit Delegations.DelegationRemoved(user2, user1, _groupId); // Emit DelegationRemoved event
 
         console.log("User2 is attempting to remove delegation from User1..."); // Log removal attempt
         testPolls.removeDelegation(user1, _groupId); // User2 removes delegation to User1
@@ -153,7 +153,7 @@ contract DelegationsTest is Test, Delegations, Polls {
         testPolls.becomeDelegate(_groupId); // User1 becomes a delegate for the group
 
         vm.expectEmit(true, true, false, true); // Expect the DelegateResignation event to be emitted
-        emit DelegateResignation(user1, _groupId); // Prepare to emit the event
+        emit Delegations.DelegateResignation(user1, _groupId); // Prepare to emit the event
         testPolls.resignAsDelegate(_groupId); // User1 resigns as delegate
         vm.stopPrank(); // Stop user1's prank state
     }

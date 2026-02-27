@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import {PollHelpers} from "./PollHelpers.sol";
 import {ProposalHelpers} from "./ProposalHelpers.sol";
@@ -24,6 +24,49 @@ contract PredictionBets is PollHelpers, ProposalHelpers, PredictionHelpers, Pred
      */
     event PredictionBetCreated(uint256 indexed predictionId, bool bet, uint256 likelihood);
 
+    // -------------------- Prediction Events --------------------
+    event PredictionCreated(
+        uint256 indexed pollId,
+        uint256 indexed proposalId,
+        uint256 indexed predictionId,
+        string prediction
+    );
+
+    // -------------------- Prediction External Functions --------------------
+    function createPrediction(uint256 _pollId, uint256 _proposalId, string memory _prediction) external {
+        // Ensure the proposal exists
+        requireProposalToExist(_pollId, _proposalId);
+
+        // Access the proposal and increment the prediction count
+        Proposal storage proposal = proposals[_pollId][_proposalId];
+        proposal.predictionCount++; // Increment prediction count by one
+
+        uint256 _predictionId = proposal.predictionCount; // Set prediction ID
+
+        // Add the prediction to the list of predictions for this proposal
+        predictions[_proposalId].push(
+            Prediction({
+                pollId: _pollId,
+                proposalId: _proposalId,
+                predictionId: _predictionId,
+                prediction: _prediction
+            })
+        );
+
+        emit PredictionCreated(_pollId, _proposalId, _predictionId, _prediction);
+    }
+
+    function getPredictions(uint256 _pollId, uint256 _proposalId) external view returns (Prediction[] memory) {
+        // Ensure proposal exists
+        requireProposalToExist(_pollId, _proposalId);
+
+        // Return the list of predictions for the given proposal
+        return predictions[_proposalId];
+    }
+
+    constructor(address initialOwner)
+        PredictionBetHelpers(initialOwner)
+    {}
 
     // -------------------- Modifiers --------------------
     /**

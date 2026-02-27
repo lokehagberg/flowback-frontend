@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity ^0.8.30;
 
 import {Test, console} from "forge-std/Test.sol";
 import "forge-std/Vm.sol";
@@ -8,7 +8,7 @@ import "../src/Polls.sol"; // Importing the Polls contract to inherit from
 import "../src/Predictions.sol";
 import {SharedErrors} from "../src/SharedErrors.sol";
 
-contract PredictionTest is Test, Polls {
+contract PredictionTest is Test {
     Polls public testPolls;
     uint256 pollStartDate = 1708672110;
     uint256 proposalEndDate = 1708672110 + 1 days;
@@ -17,7 +17,7 @@ contract PredictionTest is Test, Polls {
     uint256 endDate = 1708672110 + 4 days;
 
     function setUp() public {
-        testPolls = new Polls();
+        testPolls = new Polls(address(this));
         console.log("Setup complete, testPolls deployed at:", address(testPolls));
     }
 
@@ -32,7 +32,7 @@ contract PredictionTest is Test, Polls {
         createPoll();
         testPolls.addProposal(1, "new proposal");
 
-        vm.expectRevert(abi.encodeWithSelector(SH_ProposalDoesNotExist.selector, 1, 1)); // Ensure selector matches contract
+        vm.expectRevert(abi.encodeWithSelector(SharedErrors.SH_ProposalDoesNotExist.selector, 1, 1)); // Ensure selector matches contract
         testPolls.createPrediction(1, 1, "pred");
         testPolls.addProposal(1, "new proposal");
         testPolls.createPrediction(1, 1, "predone");
@@ -49,7 +49,7 @@ contract PredictionTest is Test, Polls {
     function testGetPredictions() public {
         // Expect revert if proposal does not exist
         console.log("Expecting SH_ProposalDoesNotExist revert for non-existing proposal.");
-        vm.expectRevert(abi.encodeWithSelector(SH_ProposalDoesNotExist.selector, 1, 1));
+        vm.expectRevert(abi.encodeWithSelector(SharedErrors.SH_ProposalDoesNotExist.selector, 1, 1));
         testPolls.getPredictions(1, 1);
 
         // Create poll

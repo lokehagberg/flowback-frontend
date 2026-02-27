@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.30;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "lib/forge-std/src/console.sol";
@@ -90,6 +90,8 @@ contract PollHelpers is SharedErrors, Ownable {
     // -------------------- Events --------------------
     event PollCreated(uint256 indexed pollId, string title, bool storeOnEthereum);
     event DelegateVoteCast(address indexed delegateVoter, uint256 indexed pollId);
+
+    constructor(address initialOwner) Ownable(initialOwner) {}
 
     // -------------------- External Functions --------------------
     /**

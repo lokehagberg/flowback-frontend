@@ -6,7 +6,8 @@
 	import { _ } from 'svelte-i18n';
 	import {
 		dateLabels as dateLabelsTextPoll,
-		dateLabelsDatePoll
+		dateLabelsDatePoll,
+		getPhaseUserFriendlyNameWithNumber
 	} from '../functions';
 	import {
 		faCircle,
@@ -94,8 +95,7 @@
 				{$_('Current')}:
 			</span>
 			{$_('Phase')}
-			{currentPhaseIndex + 1}.
-			{$_(dateLabels[currentPhaseIndex + 1])}
+			{$_(getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type))}
 		</div>
 	{/if}
 

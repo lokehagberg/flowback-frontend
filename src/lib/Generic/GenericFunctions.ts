@@ -12,7 +12,7 @@ groupUserStore.subscribe((value) => {
 });
 
 //Hack to create a deep copy of an object
-export const deepCopy = (object: object) => {
+export const deepCopy: <T>(object: T) => T = (object) => {
   return JSON.parse(JSON.stringify(object));
 };
 

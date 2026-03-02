@@ -34,7 +34,7 @@
 	const getPreview = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`chat/message/channel/preview/list`
+			`chat/message/channel/preview/list?order_by=timestamp`
 		);
 		if (!res.ok) return [];
 
@@ -81,7 +81,9 @@
 	});
 
 	// Display purple notification circle whenever there is a message that hasn't been seen.
-	$: notification = $previewStore.some((p) => !p.recent_message?.notified);
+	$: notification = $previewStore.some(
+		(p) => p.recent_message?.notified === false
+	);
 </script>
 
 <svelte:head>

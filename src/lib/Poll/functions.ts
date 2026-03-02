@@ -48,12 +48,15 @@ export const getPhase = (poll: poll): Phase => {
 // Labels for the circles on the timeline
 export const dateLabels = [
   'Start Date',
+  'Area voting',
   'Proposals creation',
+  'Prediction statements creation',
+  'Consequence probabilities',
   'Predictions',
   'Delegate voting',
   'Voting for non-delegates',
   'Results and evaluation'
-];
+]
 
 const dateLabelsDate = [
   'Date Voting',
@@ -68,7 +71,7 @@ export const getPhaseUserFriendlyName = (phase: Phase) => {
     case 'pre_start':
       return dateLabels[0];
     case 'area_vote':
-      return dateLabels[1];
+      return dateLabels[2];
     case 'proposal':
       return dateLabels[2];
     case 'prediction_statement':
@@ -102,7 +105,7 @@ export const getPhaseUserFriendlyNameWithNumber = (phase: Phase, poll_type: numb
       case 'vote':
         return `4. ${dateLabels[6]}`;
       case 'prediction_vote':
-        return `5. ${dateLabels[7]}`;
+        return `5. ${dateLabels[8]}`;
       case 'result':
         return `6. ${dateLabels[8]}`;
       default:

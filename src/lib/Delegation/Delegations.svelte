@@ -15,7 +15,7 @@
 		delegates: Delegate[] = [];
 
 	let tags: Tag[] = [],
-		expandedSection: any = null,
+		expandedSection: any = true,
 		delegateRelations: DelegateRelation[] = [],
 		loading = false;
 
@@ -49,24 +49,36 @@
 	const getGroupTags = async () => {
 		// TODO: What happends when limit has been reached?
 		// Potential fix here and at other places: Max number of tags per group?
-		const { res, json } = await fetchRequest('GET', `group/${group.id}/tags?limit=1000`);
+		const { res, json } = await fetchRequest(
+			'GET',
+			`group/${group.id}/tags?limit=1000`
+		);
 		if (!res.ok) return;
 		tags = json?.results;
 	};
 
 	const getDelegates = async () => {
-		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegate/pools?limit=1000`);
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${group.id}/delegate/pools?limit=1000`
+		);
 		if (!res.ok) return;
 
 		// Temporary fix to make each delegate pool be associated with one user.
 		// TODO: Remove pools in the backend
 		delegates = json?.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+			return {
+				...delegatePool.delegates[0].group_user,
+				pool_id: delegatePool.id
+			};
 		});
 	};
 
 	const getDelegateRelations = async () => {
-		const { json, res } = await fetchRequest('GET', `group/${group.id}/delegates?limit=1000`);
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${group.id}/delegates?limit=1000`
+		);
 
 		if (!res.ok) return;
 
@@ -74,9 +86,13 @@
 	};
 
 	const createDelegateRelation = async (delegate_pool_id: number) => {
-		const { json, res } = await fetchRequest('POST', `group/${group.id}/delegate/create`, {
-			delegate_pool_id
-		});
+		const { json, res } = await fetchRequest(
+			'POST',
+			`group/${group.id}/delegate/create`,
+			{
+				delegate_pool_id
+			}
+		);
 	};
 
 	// When a user clicks on a tag they want to delegate to, delegate to that tag
@@ -98,20 +114,34 @@
 				action === 'add'
 					? [...relation.tags.map((_tag) => _tag.id), tag]
 					: // If remove, filter it away
-						[...relation.tags.filter((_tag) => _tag.id !== tag).map((_tag) => _tag.id)]
+						[
+							...relation.tags
+								.filter((_tag) => _tag.id !== tag)
+								.map((_tag) => _tag.id)
+						]
 		};
 
-		const { res } = await fetchRequest('POST', `group/${group.id}/delegate/update`, payload);
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${group.id}/delegate/update`,
+			payload
+		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: 'Failed to save new delegation', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to save new delegation',
+				success: false
+			});
 			return;
 		}
 
 		// Because of scuffness in the code, saveDelegation is called twice, once to remove an earlier delegation and once more to add the new one.
 		// As such, two messages appear if we don't do this.
 		if (successMessage)
-			ErrorHandlerStore.set({ message: 'Successfully saved delegation', success: true });
+			ErrorHandlerStore.set({
+				message: 'Successfully saved delegation',
+				success: true
+			});
 	};
 
 	const notificationSubscribe = async (pool_id: number) => {
@@ -124,27 +154,41 @@
 			}
 		);
 	};
+
+	const clearChoice = async (tag: Tag) => {
+		const delegateRelationToRemove = delegateRelations.find((relation) =>
+			relation.tags.find((_tag) => _tag.id === tag.id)
+		);
+
+		if (delegateRelationToRemove) {
+			await saveDelegation(
+				delegateRelationToRemove.delegate_pool_id,
+				tag.id,
+				'remove'
+			);
+			groupDelegationSetup();
+		}
+	};
 </script>
 
 <Loader bind:loading>
 	<div>
 		{#if delegates.length > 0}
 			{#each tags as tag, index}
-				<div class="section">
-					<button
-						type="button"
-						class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
-						on:click={() => (expandedSection = expandedSection === index ? null : index)}
-					>
-						<span class="break-word text-left">{tag.name}</span>
+				{#if index === 0}
+					<div class="section">
+						<div
+							class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
+						>
+							<span class="break-word text-left">{$_('Delegates')}</span>
 
-						<!-- Always use chevron-down and rotate when expanded -->
-						<div class="chevron {expandedSection === index ? 'expanded' : ''}">
-							<Fa icon={faChevronDown} />
+							<!-- Always use chevron-down and rotate when expanded -->
+							<div
+								class="chevron {expandedSection === index ? 'expanded' : ''}"
+							></div>
 						</div>
-					</button>
 
-					{#if expandedSection === index}
+						<!-- {#if expandedSection === index} -->
 						<div class="voter-list">
 							{#each delegates as delegate}
 								<div class="voter-item">
@@ -158,8 +202,9 @@
 
 									<span>
 										<input
-											disabled={delegates.find((delegate) => delegate.user.id === $userStore?.id) &&
-												delegate.user.id !== $userStore?.id}
+											disabled={delegates.find(
+												(delegate) => delegate.user.id === $userStore?.id
+											) && delegate.user.id !== $userStore?.id}
 											on:input={async () => {
 												loading = true;
 												await createDelegateRelation(delegate.pool_id);
@@ -173,7 +218,10 @@
 											type="radio"
 											name={tag.name}
 											checked={delegateRelations
-												.find((relation) => relation.delegate_pool_id === delegate.pool_id)
+												.find(
+													(relation) =>
+														relation.delegate_pool_id === delegate.pool_id
+												)
 												?.tags.find((_tag) => _tag.id === tag.id) !== undefined}
 										/>
 									</span>
@@ -182,21 +230,15 @@
 						</div>
 						<button
 							class="text-red-700 hover:underline"
-							on:click={async () => {
-								const delegateRelationToRemove = delegateRelations.find((relation) =>
-									relation.tags.find((_tag) => _tag.id === tag.id)
-								);
-
-								if (delegateRelationToRemove) {
-									await saveDelegation(delegateRelationToRemove.delegate_pool_id, tag.id, 'remove');
-									groupDelegationSetup();
-								}
-							}}>{$_('Clear Choice')}</button
+							on:click={() => clearChoice(tag)}
 						>
-					{:else}
+							{$_('Clear Choice')}</button
+						>
+						<!-- {:else} -->
 						<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
-					{/if}
-				</div>
+						<!-- {/if} -->
+					</div>
+				{/if}
 			{/each}
 		{:else}
 			<span>{$_('There are currently no delegates for this group')}</span>

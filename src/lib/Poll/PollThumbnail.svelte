@@ -10,7 +10,8 @@
 	import {
 		getPhase,
 		getPhaseUserFriendlyNameWithNumber,
-		imacFormatting
+		imacFormatting,
+		nextPhase
 	} from './functions';
 	import { getPermissionsFast } from '$lib/Generic/GenericFunctions';
 	import Select from '$lib/Generic/Select.svelte';
@@ -147,7 +148,11 @@
 	});
 </script>
 
-<PostThumbnail post={poll} api="poll">
+<PostThumbnail
+	post={poll}
+	api="poll"
+	fast_forward={async () => (phase = await nextPhase(poll, phase))}
+>
 	{#snippet icons()}
 		<div class="flex gap-4 my-2 items-center">
 			<!-- Poll Type Icons -->

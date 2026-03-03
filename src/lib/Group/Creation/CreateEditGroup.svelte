@@ -69,12 +69,18 @@
 
 		loading = false;
 		if (!res.ok) {
-			ErrorHandlerStore.set({
-				message: groupToEdit
-					? 'Could not update group'
-					: 'Could not create group',
-				success: false
-			});
+			if (json.detail.name[0] === 'group with same name already exists.')
+				ErrorHandlerStore.set({
+					message: 'Group with this name already exists',
+					success: false
+				});
+			else
+				ErrorHandlerStore.set({
+					message: groupToEdit
+						? 'Could not update group'
+						: 'Could not create group',
+					success: false
+				});
 			return;
 		}
 

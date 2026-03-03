@@ -107,7 +107,7 @@
 		loading = false;
 		if (!res.ok) {
 			ErrorHandlerStore.set({
-				message: "Couldn't get invites list",
+				message: "Couldn't send invite",
 				success: false
 			});
 			return;

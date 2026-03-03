@@ -649,6 +649,7 @@
   "Vote calculation failed": "Röstberäkning misslyckades",
   "Pending invite": "Väntande inbjudan",
   "Couldn't accept user invite": "Kunde inte acceptera användarens förfråga",
+  "Couldn't send invite": "Kunde inte skicka inbjudan",
   "No assignee": "Ingen uppdragstagare",
   "Kick ": "Sparka ",
   "Request sent": "Förfrågan har skickats",

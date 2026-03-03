@@ -5,9 +5,9 @@
 	import type { Delegate, DelegateRelation } from './interfaces';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
-	import Fa from 'svelte-fa';
-	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import { _ } from 'svelte-i18n';
+	import Fa from 'svelte-fa';
+	import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
 	import { userStore } from '$lib/User/interfaces';
 	import Loader from '$lib/Generic/Loader.svelte';
 
@@ -17,7 +17,8 @@
 	let tags: Tag[] = [],
 		expandedSection: any = true,
 		delegateRelations: DelegateRelation[] = [],
-		loading = false;
+		loading = false,
+		pendingCheck: Record<string, number | null> = {};
 
 	onMount(async () => {
 		groupDelegationSetup();
@@ -161,11 +162,15 @@
 		);
 
 		if (delegateRelationToRemove) {
+			pendingCheck[tag.name] = null;
+			pendingCheck = pendingCheck;
 			await saveDelegation(
 				delegateRelationToRemove.delegate_pool_id,
 				tag.id,
 				'remove'
 			);
+			delete pendingCheck[tag.name];
+			pendingCheck = pendingCheck;
 			groupDelegationSetup();
 		}
 	};
@@ -176,22 +181,22 @@
 		{#if delegates.length > 0}
 			{#each tags as tag, index}
 				{#if index === 0}
-					<div class="section">
-						<div
-							class="transition-all flex text-primary dark:text-secondary justify-between w-full section-title"
-						>
-							<span class="break-word text-left">{$_('Delegates')}</span>
+					<div>
+						<span class="text-primary dark:text-secondary font-medium">{$_('Delegates')}</span>
 
-							<!-- Always use chevron-down and rotate when expanded -->
-							<div
-								class="chevron {expandedSection === index ? 'expanded' : ''}"
-							></div>
-						</div>
-
-						<!-- {#if expandedSection === index} -->
-						<div class="voter-list">
+						<div class="flex flex-col gap-2 mt-2">
 							{#each delegates as delegate}
-								<div class="voter-item">
+								{@const isChecked = tag.name in pendingCheck
+									? pendingCheck[tag.name] === delegate.pool_id
+									: delegateRelations
+										.find(r => r.delegate_pool_id === delegate.pool_id)
+										?.tags.find(_tag => _tag.id === tag.id) !== undefined}
+								<label
+									class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors
+										{isChecked
+											? 'bg-primary/5 border-primary/30 dark:bg-primary/10 dark:border-primary/40'
+											: 'border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-darkbackground'}"
+								>
 									<ProfilePicture
 										displayName
 										username={delegate.user.username}
@@ -199,44 +204,45 @@
 										profilePicture={delegate.user.profile_image}
 										href={`/user?id=${delegate.user.id}&delegate_id=${delegate.id}&group_id=${group.id}&is_admin=${delegate.is_admin}`}
 									/>
-
-									<span>
+									<div class="flex items-center gap-3 shrink-0">
+										<a
+											href={`/user?id=${delegate.user.id}&delegate_id=${delegate.id}&group_id=${group.id}&is_admin=${delegate.is_admin}`}
+											class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary dark:hover:text-secondary transition-colors px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+											on:click|stopPropagation
+										>
+											<Fa icon={faClockRotateLeft} />
+											<span>{$_('History')}</span>
+										</a>
 										<input
-											disabled={delegates.find(
-												(delegate) => delegate.user.id === $userStore?.id
-											) && delegate.user.id !== $userStore?.id}
+											disabled={delegates.find(d => d.user.id === $userStore?.id) && delegate.user.id !== $userStore?.id}
 											on:input={async () => {
+												pendingCheck[tag.name] = delegate.pool_id;
+												pendingCheck = pendingCheck;
 												loading = true;
 												await createDelegateRelation(delegate.pool_id);
 												await getDelegateRelations();
 												await updateDelgation(delegate, tag);
 												await notificationSubscribe(delegate.pool_id);
-												// Refresh relations to ensure consistency with backend
 												await getDelegateRelations();
+												delete pendingCheck[tag.name];
+												pendingCheck = pendingCheck;
 												loading = false;
 											}}
 											type="radio"
 											name={tag.name}
-											checked={delegateRelations
-												.find(
-													(relation) =>
-														relation.delegate_pool_id === delegate.pool_id
-												)
-												?.tags.find((_tag) => _tag.id === tag.id) !== undefined}
+											checked={isChecked}
+											class="accent-primary w-4 h-4"
 										/>
-									</span>
-								</div>
+									</div>
+								</label>
 							{/each}
 						</div>
 						<button
-							class="text-red-700 hover:underline"
+							class="text-xs text-red-400 hover:text-red-600 hover:underline transition-colors mt-2"
 							on:click={() => clearChoice(tag)}
 						>
-							{$_('Clear Choice')}</button
-						>
-						<!-- {:else} -->
-						<!-- <div class="voter-list">Inga rekommenderade väljare.</div> -->
-						<!-- {/if} -->
+							{$_('Clear Choice')}
+						</button>
 					</div>
 				{/if}
 			{/each}
@@ -245,38 +251,3 @@
 		{/if}
 	</div>
 </Loader>
-
-<style>
-	.section {
-		margin-bottom: 1rem;
-		border-bottom: 1px solid #ccc;
-	}
-	.section-title {
-		cursor: pointer;
-		font-size: 1.2rem;
-		padding: 0.5rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.voter-list {
-		padding-left: 1rem;
-	}
-	.voter-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0.5rem;
-	}
-	.voter-item input[type='radio'] {
-		margin-left: 0.5rem;
-	}
-
-	.chevron {
-		transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-	}
-
-	.expanded {
-		transform: rotate(180deg);
-	}
-</style>

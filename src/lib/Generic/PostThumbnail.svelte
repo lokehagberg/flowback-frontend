@@ -24,12 +24,14 @@
 		post,
 		children,
 		icons,
-		api = 'poll'
+		api = 'poll',
+		fast_forward = () => {}
 	}: {
 		post: Thread | poll;
 		children?: Snippet;
 		icons?: Snippet;
 		api?: 'thread' | 'poll';
+		fast_forward?: () => void;
 	} = $props();
 
 	let reportModalShow = $state(false),
@@ -114,16 +116,34 @@
 						</button>
 					{/if}
 
-					<MultipleChoices
-						bind:choicesOpen
-						labels={[$_('Delete Post'), $_('Report Post')]}
-						functions={[
-							() => (deleteModalShow = true),
-							() => ((reportModalShow = true), (choicesOpen = false))
-						]}
-						Class="text-black justify-self-center"
-						ClassInner="-translate-x-2/3 md:translate-x-0"
-					/>
+					{#if api === 'poll'}
+						<MultipleChoices
+							bind:choicesOpen
+							labels={[
+								$_('Delete Post'),
+								$_('Report Post'),
+								$_('Fast Forward')
+							]}
+							functions={[
+								() => (deleteModalShow = true),
+								() => ((reportModalShow = true), (choicesOpen = false)),
+								() => fast_forward()
+							]}
+							Class="text-black justify-self-center"
+							ClassInner="-translate-x-2/3 md:translate-x-0"
+						/>
+					{:else}
+						<MultipleChoices
+							bind:choicesOpen
+							labels={[$_('Delete Post'), $_('Report Post')]}
+							functions={[
+								() => (deleteModalShow = true),
+								() => ((reportModalShow = true), (choicesOpen = false))
+							]}
+							Class="text-black justify-self-center"
+							ClassInner="-translate-x-2/3 md:translate-x-0"
+						/>
+					{/if}
 				</div>
 			{/if}
 		</div>

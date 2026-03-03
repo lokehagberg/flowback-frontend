@@ -17,7 +17,7 @@
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
-	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faUserShield } from '@fortawesome/free-solid-svg-icons';
 	import { userStore } from '$lib/User/interfaces';
 	import type { Permissions } from '$lib/Group/Permissions/interface';
 	import { getPermissionsFast } from '$lib/Generic/GenericFunctions';
@@ -243,11 +243,15 @@
 						</p>
 					</div>
 				{/if}
-				<Button
-					Class="w-full mt-3"
-					onClick={() => (selectedPage = 'become-delegate')}
-					buttonStyle="primary-light">{$_('Become delegate')}</Button
-				>
+				<div class="mt-4 p-4 rounded-xl border border-dashed border-gray-200 dark:border-gray-600 flex flex-col gap-2">
+					<p class="text-xs text-gray-400 dark:text-gray-500">
+						{$_('Want to represent others in votes?')}
+					</p>
+					<Button
+						Class="w-full"
+						onClick={() => (selectedPage = 'become-delegate')}
+						buttonStyle="primary-light">{$_('Become delegate')}</Button>
+				</div>
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
 			</div>
 		</div>
@@ -255,28 +259,41 @@
 			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow w-[50%]"
 		>
 			{#if selectedPage === 'become-delegate'}
-				{$_(
-					'As a delegate, you choose to publicly show everyone how you vote. However, other users can delegate their vote to you, which means that you will vote for them. '
-				)}
-				<Button onClick={() => (selectedPage = 'delegate')}
-					>{$_('Cancel')}</Button
-				>
+				<div class="flex flex-col gap-5">
+					<div class="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700">
+						<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+							<Fa icon={faUserShield} />
+						</div>
+						<div>
+							<h2 class="font-semibold text-gray-800 dark:text-darkmodeText">{$_('Become a Delegate')}</h2>
+							<p class="text-xs text-gray-400">{$_('Vote publicly on behalf of others')}</p>
+						</div>
+					</div>
 
-				{#if groupUser?.delegate_pool_id !== null}
-					<StopBeingDelegate
-						Class="w-full mt-3"
-						bind:delegates
-						bind:groupUser
-						groupId={group.id}
-						bind:loading
-					/>
-				{:else}
-					<Button
-						Class="w-full mt-3"
-						onClick={createDelegationPool}
-						buttonStyle="primary-light">{$_('Become delegate')}</Button
+					<p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+						{$_('As a delegate, you choose to publicly show everyone how you vote. Other users can delegate their vote to you, meaning you vote on their behalf.')}
+					</p>
+
+					{#if groupUser?.delegate_pool_id !== null}
+						<StopBeingDelegate
+							bind:delegates
+							bind:groupUser
+							groupId={group.id}
+							bind:loading
+						/>
+					{:else}
+						<Button Class="w-full" onClick={createDelegationPool} buttonStyle="primary-light">
+							{$_('Become delegate')}
+						</Button>
+					{/if}
+
+					<button
+						class="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors text-center"
+						onclick={() => (selectedPage = 'delegate')}
 					>
-				{/if}
+						{$_('Cancel')}
+					</button>
+				</div>
 			{:else if selectedPage === 'delegate' && group?.id}
 				<Delegations bind:group bind:delegates />
 			{/if}

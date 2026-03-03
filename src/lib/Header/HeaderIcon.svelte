@@ -67,7 +67,7 @@
 					{#if typeof icon === 'string'}
 						<img
 							class={`w-${size}`}
-							style="filter: {getIconFilter(selectedPage)}"
+							style="filter: {getIconFilter(selectedPage, 'blue', $darkModeStore)}"
 							src={icon}
 							alt="icon"
 						/>
@@ -138,20 +138,13 @@
 
 	.active-icon::after {
 		content: '';
-		position: absolute;
+	  position: absolute;
 		bottom: -1.5rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: 4rem;
 		height: 2px;
 		background-color: var(--primary);
-	}
-
-	@media (max-width: 768px) {
-		.active-icon::after {
-			top: -2.2rem;
-			bottom: auto;
-		}
 	}
 
 	/* Add smooth transition for color changes */

@@ -24,7 +24,10 @@
 	*/
 	const deleteDelegationPool = async () => {
 		loading = true;
-		const { res } = await fetchRequest('POST', `group/${groupId}/delegate/pool/delete`);
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${groupId}/delegate/pool/delete`
+		);
 		loading = false;
 
 		if (!res.ok) return;
@@ -38,9 +41,13 @@
 
 		// Create delegation relation to oneself
 		{
-			const { json, res } = await fetchRequest('POST', `group/${groupId}/delegate/create`, {
-				delegate_pool_id: groupUser.delegate_pool_id
-			});
+			const { json, res } = await fetchRequest(
+				'POST',
+				`group/${groupId}/delegate/create`,
+				{
+					delegate_pool_id: groupUser.delegate_pool_id
+				}
+			);
 
 			if (!res.ok) loading = false;
 		}
@@ -49,10 +56,16 @@
 		{
 			// TODO: What happends when limit has been reached?
 			// Potential fix here and at other places: Max number of tags per group?
-			const { res, json } = await fetchRequest('GET', `group/${groupId}/tags?limit=1000`);
+			const { res, json } = await fetchRequest(
+				'GET',
+				`group/${groupId}/tags?limit=1000`
+			);
 
 			if (!res.ok) {
-				ErrorHandlerStore.set({ message: "Couldn't create self-delegation", success: false });
+				ErrorHandlerStore.set({
+					message: "Couldn't create self-delegation",
+					success: false
+				});
 				loading = false;
 				return;
 			}
@@ -62,19 +75,29 @@
 
 		// Update delegation to self with all tags
 		{
-			const { res } = await fetchRequest('POST', `group/${groupId}/delegate/update`, {
-				tags,
-				delegate_pool_id: groupUser.delegate_pool_id
-			});
+			const { res } = await fetchRequest(
+				'POST',
+				`group/${groupId}/delegate/update`,
+				{
+					tags,
+					delegate_pool_id: groupUser.delegate_pool_id
+				}
+			);
 
 			if (!res.ok) {
-				ErrorHandlerStore.set({ message: "Couldn't create self-delegation", success: false });
+				ErrorHandlerStore.set({
+					message: "Couldn't create self-delegation",
+					success: false
+				});
 				loading = false;
 				return;
 			}
 		}
 
-		ErrorHandlerStore.set({ message: 'Successfully self-delegated', success: true });
+		ErrorHandlerStore.set({
+			message: 'Successfully self-delegated',
+			success: true
+		});
 		loading = false;
 	};
 
@@ -84,21 +107,62 @@
 	*/
 	const getDelegatePools = async () => {
 		loading = true;
-		const { json, res } = await fetchRequest('GET', `group/${groupId}/delegate/pools?limit=1000`);
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${groupId}/delegate/pools?limit=1000`
+		);
 
 		if (!res.ok) {
-			ErrorHandlerStore.set({ message: "Couldn't get delegation pools", success: false });
+			ErrorHandlerStore.set({
+				message: "Couldn't get delegation pools",
+				success: false
+			});
 			return;
 		}
 
 		delegates = json?.results.map((delegatePool: any) => {
-			return { ...delegatePool.delegates[0].group_user, pool_id: delegatePool.id };
+			return {
+				...delegatePool.delegates[0].group_user,
+				pool_id: delegatePool.id
+			};
 		});
 
 		loading = false;
 	};
 </script>
 
-<Button Class={`bg-red-500 ${Class}`} onClick={deleteDelegation}>{$_('Stop being delegate')}</Button
->
-<Button onClick={selfDelegate}>{'Self-Delegate'}</Button>
+<div class="flex flex-col gap-3 {Class}">
+	<!-- Self-delegate -->
+	<div
+		class="p-4 rounded-xl bg-gray-50 dark:bg-darkbackground border border-gray-200 dark:border-gray-700 flex items-center justify-between gap-3"
+	>
+		<div>
+			<p class="text-sm font-medium text-gray-700 dark:text-darkmodeText">
+				{$_('Self-Delegate')}
+			</p>
+			<p class="text-xs text-gray-400 mt-0.5">
+				{$_('Vote automatically as yourself')}
+			</p>
+		</div>
+		<Button onClick={selfDelegate} buttonStyle="primary-light"
+			>{$_('Apply')}</Button
+		>
+	</div>
+
+	<!-- Stop being delegate (destructive) -->
+	<div
+		class="p-4 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/40 flex items-center justify-between gap-3"
+	>
+		<div>
+			<p class="text-sm font-medium text-red-700 dark:text-red-400">
+				{$_('Stop being delegate')}
+			</p>
+			<p class="text-xs text-red-400/80 mt-0.5">
+				{$_('Remove your delegate status from this group')}
+			</p>
+		</div>
+		<Button onClick={deleteDelegation} buttonStyle="warning"
+			>{$_('Leave')}</Button
+		>
+	</div>
+</div>

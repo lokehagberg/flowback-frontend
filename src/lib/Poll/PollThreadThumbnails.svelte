@@ -43,18 +43,15 @@
 		showPolls = true;
 
 	const getParams = () => {
-		let api_params = `
-		group_ids=${page.params.groupId ?? ''}&
-		order_by=created_at_desc&
-		limit=${pollThumbnailsLimit}&
-		title__icontains=${filter.search ?? ''}&
-		tag_id=${filter.tag ?? ''}&
-		work_group_ids=${filter.workgroup}&
-		public=${infoToGet === InfoToGet.public ? 'true' : ''}&
-		created_at__gt=${filter.from}&
-		created_at__lt=${filter.to}`;
+		let api_params = `group_ids=${page.params.groupId ?? ''}&limit=${pollThumbnailsLimit}&order_by=${filter.order_by}`;
 
-		if (filter.status) api_params += `&status=${filter.status}`;
+		if (filter.search)    api_params += `&title__icontains=${filter.search}`;
+		if (filter.tag)       api_params += `&tag_id=${filter.tag}`;
+		if (filter.workgroup) api_params += `&work_group_ids=${filter.workgroup}`;
+		if (infoToGet === InfoToGet.public) api_params += `&public=true`;
+		if (filter.from)      api_params += `&created_at__gt=${filter.from}`;
+		if (filter.to)        api_params += `&created_at__lt=${filter.to}`;
+		if (filter.status)    api_params += `&status=${filter.status}`;
 
 		return api_params;
 	};

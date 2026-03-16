@@ -41,7 +41,7 @@
 		if (next === undefined) {
 			const { res, json } = await fetchRequest(
 				'GET',
-				`chat/message/channel/preview/list?order_by=timestamp&limit=20`
+				`chat/message/channel/preview/list?order_by=-timestamp&limit=20`
 			);
 			if (!res.ok) return;
 

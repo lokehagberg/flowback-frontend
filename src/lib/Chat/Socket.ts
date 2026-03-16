@@ -64,7 +64,7 @@ const createSocket = (userId: number) => {
         },
       };
 
-      return [...previews, newPreview];
+      return [newPreview, ...previews];
     })
   };
 

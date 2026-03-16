@@ -227,7 +227,7 @@
 			<div class="text-sm font-semibold text-primary dark:text-secondary">
 				{$_('Current phase')}
 
-				{$_(getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type))}
+				{getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type)}
 			</div>
 		</div>
 	{/snippet}

@@ -178,7 +178,7 @@
 				channel_id: message.channel_id,
 				channel_origin_name: message.channel_origin_name,
 				type: message.type,
-				updated_at: message.updated_at.toString(),
+				updated_at: message.updated_at?.toString() ?? '',
 				attachments: [],
 				channel_title: '',
 				parent: message.parent,
@@ -265,8 +265,8 @@
 		preview.channel_title = title;
 
 		$previewStore = [
-			...$previewStore.filter((p) => p.channel_id !== preview.channel_id),
-			preview
+			preview,
+			...$previewStore.filter((p) => p.channel_id !== preview.channel_id)
 		];
 	};
 
@@ -429,9 +429,16 @@
 		{:else}
 			<p>{$_('No participants found.')}</p>
 		{/if}
-		<form on:submit|preventDefault={changeName}>
-			<TextInput autofocus required bind:value={title} label="Chatgroup Name" />
-			<Button type="submit">Submit</Button>
-		</form>
+		{#if preview?.channel_origin_name === 'user_group'}
+			<form on:submit|preventDefault={changeName}>
+				<TextInput
+					autofocus
+					required
+					bind:value={title}
+					label="Chatgroup Name"
+				/>
+				<Button type="submit">Submit</Button>
+			</form>
+		{/if}
 	</div>
 </Modal>

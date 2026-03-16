@@ -84,9 +84,7 @@
 	</div>
 
 	<div class="flex w-full gap-6 max-w-[1200px] h-[80vh]">
-		<div
-			class="bg-white w-[40%] flex-grow ml-6 dark:bg-darkobject p-2"
-		>
+		<div class="bg-white w-[40%] flex-grow ml-6 dark:bg-darkobject p-2">
 			{#key creatingGroup}
 				<Preview bind:creatingGroup bind:groupMembers />
 			{/key}

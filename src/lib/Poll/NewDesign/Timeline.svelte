@@ -4,11 +4,8 @@
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
-	import {
-		dateLabels as dateLabelsTextPoll,
-		dateLabelsDatePoll,
-		getPhaseUserFriendlyNameWithNumber
-	} from '../functions';
+	import { dateLabelsDatePoll, getPhaseUserFriendlyNameWithNumber } from '../functions';
+	import { TEXT_POLL_PHASE_CONFIG } from '../phases';
 	import {
 		faCircle,
 		faCircleCheck,
@@ -27,8 +24,7 @@
 
 	let datesArray: string[] = [],
 		displayDetails = false,
-		dateLabels =
-			poll?.poll_type === 4 ? dateLabelsTextPoll : dateLabelsDatePoll,
+		dateLabels: string[] = [],
 		currentPhaseIndex: number,
 		fraction: number,
 		datePlacement: number[] = [];
@@ -38,24 +34,21 @@
 		dates = [];
 
 		if (poll?.poll_type === 4) {
-			dates = [
-				new Date(poll?.start_date),
-				new Date(poll?.proposal_end_date),
-				new Date(poll?.prediction_bet_end_date),
-				new Date(poll?.delegate_vote_end_date),
-				new Date(poll?.end_date)
-			];
+			const timelinePhases = TEXT_POLL_PHASE_CONFIG.filter(p => p.showInTimeline);
 
-			//TODO: Refactor so this works by making it easy for varying number of phases.
-			if (phase === 'pre_start') currentPhaseIndex = 0;
-			else if (phase === 'proposal') currentPhaseIndex = 1;
-			else if (phase === 'prediction_bet') currentPhaseIndex = 2;
-			else if (phase === 'delegate_vote') currentPhaseIndex = 3;
-			else if (phase === 'vote') currentPhaseIndex = 4;
-			else if (phase === 'result' || phase === 'prediction_vote')
-				currentPhaseIndex = 5;
+			dates = timelinePhases.map(p => new Date(poll[p.endDateField!] as string));
+
+			dateLabels = timelinePhases.map((p) => {
+				const configIdx = TEXT_POLL_PHASE_CONFIG.findIndex(c => c.key === p.key);
+				return TEXT_POLL_PHASE_CONFIG[configIdx + 1]?.label ?? p.label;
+			});
+
+			const now = new Date();
+			currentPhaseIndex = dates.filter(d => d <= now).length;
+			if (phase === 'result' || phase === 'prediction_vote') currentPhaseIndex = dates.length;
 		} else if (poll?.poll_type === 3) {
 			dates = [new Date(poll?.start_date), new Date(poll?.end_date)];
+			dateLabels = [dateLabelsDatePoll[1], dateLabelsDatePoll[2]];
 
 			//TODO: Refactor so this works by making it easy for varying number of phases.
 			if (dates[1] > new Date()) {
@@ -66,12 +59,6 @@
 		}
 
 		fraction = currentPhaseIndex / dates.length;
-
-		// Scuffed solution for text polls to look good.
-		// TODO: Refactor so this works by making it easy for varying number of phases with the same display for all.
-		if (poll?.poll_type === 4) {
-			fraction *= 1.3;
-		}
 
 		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
@@ -95,7 +82,7 @@
 				{$_('Current')}:
 			</span>
 			{$_('Phase')}
-			{$_(getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type))}
+			{getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type)}
 		</div>
 	{/if}
 
@@ -122,7 +109,7 @@
 				<HeaderIcon
 					Class="!cursor-default"
 					size="1x"
-					text={`${i + 1}. ${$_(dateLabels[i + 1])}: ${datesArray[i]}`}
+					text={`${i + 1}. ${$_(dateLabels[i])}: ${datesArray[i]}`}
 					{icon}
 				/>
 				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
@@ -138,15 +125,13 @@
 			{$_('Time details')}
 		</button>
 		<ul class="p-2">
-			{#each dateLabels as label, i}
-				{#if i !== 0}
-					<li
-						class="border-b md:border-b-0 flex justify-between flex-col md:flex-row text-center"
-					>
-						<div class="mb-4 md:mb-0">{$_(label)}:</div>
-						<div class="mb-4 md:mb-0">{datesArray[i - 1]}</div>
-					</li>
-				{/if}
+			{#each datesArray as date, i}
+				<li
+					class="border-b md:border-b-0 flex justify-between flex-col md:flex-row text-center"
+				>
+					<div class="mb-4 md:mb-0">{$_(dateLabels[i])}:</div>
+					<div class="mb-4 md:mb-0">{date}</div>
+				</li>
 			{/each}
 		</ul>
 	{:else if enableDetails}

@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Fa from 'svelte-fa';
+	import Button from '$lib/Generic/Button.svelte';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 	import { Calendar } from '@fullcalendar/core';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
@@ -380,7 +383,18 @@
 	});
 </script>
 
-<AdvancedFiltering bind:groupIds bind:workgroupIds bind:userChecked />
+<div class="flex">
+	<Button
+		onClick={() => history.back()}
+		Class=" max-h-[3rem] p-3 m-4 transition-all bg-gray-200 dark:bg-darkobject hover:brightness-95 active:brightness-90"
+		id="back-button"
+	>
+		<div class="text-gray-800 dark:text-gray-200">
+			<Fa icon={faArrowLeft} />
+		</div>
+	</Button>
+	<AdvancedFiltering bind:groupIds bind:workgroupIds bind:userChecked />
+</div>
 
 <div class="flex justify-center w-full">
 	<div class="w-full bg-white dark:bg-darkbackground" id="calendar-2"></div>

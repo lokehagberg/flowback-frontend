@@ -1,13 +1,16 @@
+<!-- TODO: Refactor this file, simplify, make extendible (open-close principle maybe) -->
 <script lang="ts">
 	import { formatDate } from '$lib/Generic/DateFormatter';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import { faDownLong } from '@fortawesome/free-solid-svg-icons/faDownLong';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
-	import { dateLabelsDatePoll, getPhaseUserFriendlyNameWithNumber } from '../functions';
-	import { TEXT_POLL_PHASE_CONFIG } from '../phases';
 	import {
-		faCircle,
+		DATE_POLL_PHASE_CONFIG,
+		TEXT_POLL_PHASE_CONFIG,
+		type PollPhaseConfig
+	} from '../phases';
+	import {
 		faCircleCheck,
 		faCircleExclamation
 	} from '@fortawesome/free-solid-svg-icons';
@@ -24,41 +27,24 @@
 
 	let datesArray: string[] = [],
 		displayDetails = false,
-		dateLabels: string[] = [],
 		currentPhaseIndex: number,
 		fraction: number,
-		datePlacement: number[] = [];
+		datePlacement: number[] = [],
+		pollPhases: PollPhaseConfig[] = [];
 
 	const setupDates = () => {
-		//Code has been setup to make it really easy to add or remove dates. Perhaps expand on that?
-		dates = [];
+		currentPhaseIndex = 0;
 
-		if (poll?.poll_type === 4) {
-			const timelinePhases = TEXT_POLL_PHASE_CONFIG.filter(p => p.showInTimeline);
+		// TEXT POLL
+		if (poll?.poll_type === 4) pollPhases = TEXT_POLL_PHASE_CONFIG;
+		// DATE POLL
+		else if (poll?.poll_type === 3) pollPhases = DATE_POLL_PHASE_CONFIG;
 
-			dates = timelinePhases.map(p => new Date(poll[p.endDateField!] as string));
+		currentPhaseIndex = pollPhases.find((p) => p.phase === phase)?.id ?? 5;
+		dates = pollPhases.map((p) => new Date(poll[p.endDateField] as string));
 
-			dateLabels = timelinePhases.map((p) => {
-				const configIdx = TEXT_POLL_PHASE_CONFIG.findIndex(c => c.key === p.key);
-				return TEXT_POLL_PHASE_CONFIG[configIdx + 1]?.label ?? p.label;
-			});
-
-			const now = new Date();
-			currentPhaseIndex = dates.filter(d => d <= now).length;
-			if (phase === 'result' || phase === 'prediction_vote') currentPhaseIndex = dates.length;
-		} else if (poll?.poll_type === 3) {
-			dates = [new Date(poll?.start_date), new Date(poll?.end_date)];
-			dateLabels = [dateLabelsDatePoll[1], dateLabelsDatePoll[2]];
-
-			//TODO: Refactor so this works by making it easy for varying number of phases.
-			if (dates[1] > new Date()) {
-				currentPhaseIndex = 0;
-			} else {
-				currentPhaseIndex = 1;
-			}
-		}
-
-		fraction = currentPhaseIndex / dates.length;
+		// Timeline isn't needed for polls with 1 phase, so this shouldn't be an issue
+		fraction = currentPhaseIndex / (pollPhases.length - 1);
 
 		let totalTime = dates[dates.length - 1].getTime() - dates[0].getTime();
 
@@ -82,7 +68,7 @@
 				{$_('Current')}:
 			</span>
 			{$_('Phase')}
-			{getPhaseUserFriendlyNameWithNumber(phase, poll.poll_type)}
+			{pollPhases.find((p) => p.id === currentPhaseIndex)?.label}
 		</div>
 	{/if}
 
@@ -99,23 +85,23 @@
 			}, rgba(189, 208, 255, 1) ${fraction * 100 - 2}%, rgba(191, 191, 191, 1) ${fraction * 100}%`}
 		>
 			{#each datePlacement as date, i}
-				{@const icon =
-					i === currentPhaseIndex
-						? faCircleExclamation
-						: dates[i] <= new Date()
-							? faCircleCheck
-							: faCircle}
+				<!-- Exclamation for current phase, check for finished phases, defaults to unfilled circle for future polls -->
+				{@const icon = (() => {
+					if (i === currentPhaseIndex) return faCircleExclamation;
+					else if (i < currentPhaseIndex) return faCircleCheck;
+				})()}
 
 				<HeaderIcon
 					Class="!cursor-default"
 					size="1x"
-					text={`${i + 1}. ${$_(dateLabels[i])}: ${datesArray[i]}`}
+					text={`${i + 1}. ${$_(pollPhases[i].label)}${i !== 5 ? `: ${datesArray[i]}` : ''}`}
 					{icon}
 				/>
-				<!-- color={`${dates[i] <= new Date() ? '#015BC0' : ''}`} -->
 			{/each}
 		</div>
 	{/if}
+
+	<!-- TODO: Fix for thumbnails -->
 	{#if enableDetails && displayDetails}
 		<button
 			class="hover:underline flex items-center gap-1 text-xs"
@@ -129,7 +115,7 @@
 				<li
 					class="border-b md:border-b-0 flex justify-between flex-col md:flex-row text-center"
 				>
-					<div class="mb-4 md:mb-0">{$_(dateLabels[i])}:</div>
+					<div class="mb-4 md:mb-0">{$_(pollPhases[i].label)}:</div>
 					<div class="mb-4 md:mb-0">{date}</div>
 				</li>
 			{/each}

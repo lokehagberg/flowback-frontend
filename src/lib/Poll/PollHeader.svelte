@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Phase, poll } from './interface';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Tag from '$lib/Group/Tag.svelte';
 	import HeaderIcon from '$lib/Header/HeaderIcon.svelte';
 	import NotificationOptions from '$lib/Generic/NotificationOptions.svelte';
@@ -26,22 +26,28 @@
 	import DeletePostModal from './DeletePostModal.svelte';
 	import { fetchRequest } from '$lib/FetchRequest';
 	import type { Tag as TagType } from '$lib/Group/interface';
-	import { onMount } from 'svelte';
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { isMobile } from '$lib/utils/isMobile';
 	import { getMultipleOptions } from '$lib/Poll/functions';
 
-	export let poll: poll,
+	let {
+		poll,
 		displayTag = false,
-		phase: Phase,
-		pollType: 3 | 4 = 3;
+		phase = $bindable(),
+		pollType = 3
+	}: {
+		poll: poll;
+		displayTag?: boolean;
+		phase: Phase;
+		pollType?: 3 | 4;
+	} = $props();
 
-	let deletePollModalShow = false,
-		reportPollModalShow = false,
-		choicesOpen = false,
-		source = new URLSearchParams(window.location.search).get('source'),
-		tag: TagType,
-		multipleChoices = { labels: [], functions: [] };
+	let deletePollModalShow = $state(false),
+		reportPollModalShow = $state(false),
+		choicesOpen = $state(false),
+		tag: TagType | undefined = $state(undefined);
+
+	const source = new URLSearchParams(window.location.search).get('source');
 
 	const getTag = async () => {
 		const { json, res } = await fetchRequest(
@@ -54,9 +60,13 @@
 		tag = json.results[0];
 	};
 
-	onMount(() => {
-		getTag();
-		multipleChoices = getMultipleOptions(
+	$effect(() => {
+		if (poll) getTag();
+	});
+
+	let pictureSize = $derived($isMobile ? 2 : 1);
+	let multipleChoices = $derived(
+		getMultipleOptions(
 			phase,
 			poll,
 			[
@@ -69,12 +79,11 @@
 					choicesOpen = false;
 				}
 			],
-			async () => (phase = await nextPhase(poll, phase))
-		);
-	});
-
-	$: pictureSize = $isMobile ? 2 : 1;
-	$: poll && getTag();
+			async () => (phase = await nextPhase(poll, phase)),
+			$groupUserPermissionStore,
+			$groupUserStore
+		)
+	);
 </script>
 
 <div
@@ -82,10 +91,10 @@
 >
 	<button
 		class="cursor-pointer dark:bg-darkobject dark:text-darkmodeText px-4 mt-1"
-		on:click={() => {
+		onclick={() => {
 			if (source === 'home') goto('/home');
 			else if (source === 'group')
-				goto(`/groups/${$page.params.groupId}?page=flow`);
+				goto(`/groups/${page.params.groupId}?page=flow`);
 			else if (
 				source === 'delegate-history' ||
 				source === 'notification' ||
@@ -126,7 +135,7 @@
 	<div class="flex gap-4 items-center grid-area-items border-b py-4">
 		{#if env.PUBLIC_ONE_GROUP_FLOWBACK !== 'TRUE'}
 			<a
-				href={`/groups/${$page.params.groupId}`}
+				href={`/groups/${page.params.groupId}`}
 				class:hover:underline={poll?.group_joined}
 				class="text-black dark:text-darkmodeText"
 			>
@@ -218,7 +227,7 @@
 
 <DeletePostModal
 	bind:deleteModalShow={deletePollModalShow}
-	postId={$page.params.pollId ?? ''}
+	postId={page.params.pollId ?? ''}
 />
 
 <ReportPostModal

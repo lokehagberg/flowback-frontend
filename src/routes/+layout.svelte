@@ -200,7 +200,7 @@
 
 <main class="min-h-[100vh] pb-[15vh] md:pb-0">
 	{#if showUI}
-		<Chat />
+		<!-- <Chat /> -->
 		<Header />
 	{/if}
 

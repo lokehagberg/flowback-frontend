@@ -26,6 +26,7 @@ export interface timeProposal {
 }
 
 export interface poll {
+  phase: string;
   attachments: { file: string }[];
   allow_fast_forward: boolean;
   created_by: GroupUser;

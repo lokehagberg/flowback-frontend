@@ -163,49 +163,6 @@
 										</div>
 									{/if}
 
-									<div class="flex flex-wrap gap-2 pl-1">
-										{#if voteHistory?.poll.tag_name}
-											<span
-												class="text-xs bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full"
-											>
-												{voteHistory?.poll.tag_name}
-											</span>
-										{/if}
-
-										<!-- {#if voteHistory?.created_at}
-											<span class="text-xs text-gray-500 dark:text-gray-400">
-												Created: {new Date(voteHistory?.created_at).toLocaleDateString()}
-											</span>
-										{/if} -->
-									</div>
-
-									<!-- {#if voteHistory?.historical_data}
-										<div class="mt-1 pl-1 text-sm">
-											<details>
-												<summary
-													class="cursor-pointer text-blue-600 dark:text-blue-400 hover:underline"
-												>
-													{$_('Historical IMAC')}
-												</summary>
-												<div class="p-2 bg-gray-50 dark:bg-gray-800 rounded mt-1">
-													<pre class="text-xs overflow-x-auto text-gray-900 dark:text-gray-300">
-													{JSON.stringify(voteHistory.historical_data, null, 2)}
-												</pre>
-												</div>
-											</details>
-										</div>
-									{/if} -->
-
-									<div>
-										{$_('Area:')}
-										{voteHistory.poll.tag_name ?? ''}
-									</div>
-
-									<div>
-										{$_('Historical IMAC:')}
-										{voteHistory.poll.interval_mean_absolute_correctness ??
-											'Was not calculated at the time'}
-									</div>
 									{#each voteHistory.vote as vote}
 										{@const predictionsForProp = predictions.filter((p) =>
 											p.segments.find((s) => s.proposal_id === vote.proposal_id)

@@ -9,7 +9,6 @@
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import TextArea from '$lib/Generic/TextArea.svelte';
 	import Toggle from '$lib/Generic/Toggle.svelte';
-	import Fa from 'svelte-fa';
 
 	interface KPI {
 		name: string;

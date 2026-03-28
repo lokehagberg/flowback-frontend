@@ -500,7 +500,7 @@
 				</Structure>
 
 				<!-- PHASE 7/5: RESULTS AND EVALUATION -->
-			{:else if phase === 'result' || phase === 'prediction_vote'}
+			{:else if phase === 'result'}
 				<Structure bind:phase bind:poll bind:resetScroll showBoth>
 					<div slot="left" class="h-full overflow-y-auto">
 						{#if selectedProposal}
@@ -518,7 +518,7 @@
 
 			<!-- Date Poll -->
 		{:else if pollType === 3}
-			{#if phase === 'result' || phase === 'prediction_vote'}
+			{#if phase === 'result'}
 				<Structure bind:phase bind:poll showBoth>
 					<div slot="left" class="w-full">
 						<Results bind:poll {getPollData} {pollType} />

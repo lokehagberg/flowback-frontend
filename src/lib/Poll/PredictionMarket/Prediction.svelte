@@ -196,7 +196,7 @@
 
 	<!-- PHASE 7: RESULTS AND EVALUATION -->
 
-	{#if phase === 'result' || phase === 'prediction_vote'}
+	{#if phase === 'result'}
 		<div class="flex justify-end mb-3">
 			<Button
 				onClick={() =>

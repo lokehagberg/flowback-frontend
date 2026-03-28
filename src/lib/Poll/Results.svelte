@@ -38,14 +38,17 @@
 			return;
 		}
 
-		if (pollType === 4) proposals = json?.results;
+		let _proposals = json?.results;
+		if (_proposals.length === 0) return;
+
+		if (pollType === 4) proposals = _proposals;
+		//Only one proposal wins in date poll
 		else if (pollType === 3)
-			//Only one proposal wins in date poll
 			proposals = [
 				{
-					id: json?.results[0].id,
-					title: formatDate(json?.results[0].start_date),
-					description: formatDate(json?.results[0].end_date)
+					id: _proposals[0].id,
+					title: formatDate(_proposals[0].start_date),
+					description: formatDate(_proposals[0].end_date)
 				}
 			];
 

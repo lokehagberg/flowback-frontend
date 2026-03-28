@@ -94,7 +94,7 @@
 	{:else if userInGroup}
 		<div class="flex flex-col items-center">
 			<GroupHeader bind:selectedPage {group} {memberCount} />
-			<div class="flex justify-center gap-6 mt-12">
+			<div class="flex justify-center gap-6 mt-6">
 				<main
 					class={`w-[70vw] max-w-[800px] 
 				`}

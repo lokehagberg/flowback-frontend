@@ -4,7 +4,6 @@
 	import { fetchRequest } from '$lib/FetchRequest';
 	import FIleUpload from '$lib/Generic/File/FileUpload.svelte';
 	import TextArea from '$lib/Generic/TextArea.svelte';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { _ } from 'svelte-i18n';
 	import { blobifyImages } from '$lib/Generic/GenericFunctions';
@@ -19,26 +18,31 @@
 	import RadioButtons from '$lib/Generic/RadioButtons.svelte';
 	import { chatPartnerStore } from '$lib/Chat/functions';
 
-	export let Class = '';
+	let { Class = '' } = $props();
 
-	//This file is used for both creating and editing groups
-	let name: string,
-		description: string,
-		image: string,
-		coverImage: string,
-		useInvite = false,
-		publicGroup = true,
-		hiddenGroup = true,
-		loading = false,
-		oldGroup: any;
+	let name = $state(''),
+		description = $state(''),
+		image = $state(''),
+		coverImage = $state(''),
+		useInvite = $state(false),
+		publicGroup = $state(true),
+		hiddenGroup = $state(true),
+		loading = $state(false),
+		oldGroup = $state<any>(null),
+		DeleteGroupModalShow = $state(false);
 
-	//This page also supports the edit of groups
-	const groupToEdit =
-		$page.url.searchParams.get('group') || $page.params.groupId;
+	const groupToEdit = $derived(
+		$page.url.searchParams.get('group') || $page.params.groupId
+	);
 
-	let DeleteGroupModalShow = false;
+	$effect(() => {
+		if (!publicGroup) useInvite = true;
+	});
 
-	//This function is also used for group editing
+	$effect(() => {
+		if (groupToEdit) getGroupToEdit();
+	});
+
 	const createEditGroup = async () => {
 		loading = true;
 		const formData = new FormData();
@@ -46,7 +50,6 @@
 		//This must be less than or equal to 2147483647, I forgot why
 		const blockchain_id = Math.floor(Math.random() * 2147483647);
 
-		//Formdata used to transfer images
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('direct_join', (!useInvite).toString());
@@ -92,11 +95,9 @@
 		});
 
 		if (!groupToEdit) {
-			// Create a default tag for the group
-			const { res } = await fetchRequest('POST', `group/${json}/tag/create`, {
+			await fetchRequest('POST', `group/${json}/tag/create`, {
 				name: 'Uncategorised'
 			});
-
 			if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE')
 				becomeMemberOfGroup(blockchain_id);
 			goto(`/groups/${json}`);
@@ -114,7 +115,6 @@
 			return;
 		}
 
-		//Rederict to group
 		if (res.ok) goto('/groups');
 		chatPartnerStore.set(0);
 	};
@@ -137,7 +137,7 @@
 		oldGroup = { ...json, image, coverImage };
 	};
 
-	const resetEdits = async () => {
+	const resetEdits = () => {
 		name = oldGroup.name;
 		description = oldGroup.description;
 		useInvite = !oldGroup.direct_join;
@@ -151,16 +151,6 @@
 			success: true
 		});
 	};
-
-	onMount(() => {
-		if (groupToEdit) {
-			getGroupToEdit();
-		}
-	});
-
-	$: if (!publicGroup) {
-		useInvite = true;
-	}
 </script>
 
 <svelte:head>
@@ -168,7 +158,10 @@
 </svelte:head>
 
 <form
-	on:submit|preventDefault={createEditGroup}
+	onsubmit={(e) => {
+		e.preventDefault();
+		createEditGroup();
+	}}
 	class={`dark:text-darkmodeText bg-white dark:bg-darkobject ${Class}`}
 >
 	<Loader bind:loading>
@@ -221,7 +214,8 @@
 					disabled={loading}
 					buttonStyle="primary"
 					Class="w-1/2"
-					><div class="flex justify-center gap-3 items-center">
+				>
+					<div class="flex justify-center gap-3 items-center">
 						{$_(groupToEdit ? 'Update' : 'Create')}
 					</div>
 				</Button>
@@ -234,7 +228,8 @@
 							oldGroup?.image === image &&
 							oldGroup?.coverImage === coverImage}
 						Class="w-1/2"
-						><div class="flex justify-center gap-3 items-center">
+					>
+						<div class="flex justify-center gap-3 items-center">
 							{$_('Reset')}
 						</div>
 					</Button>

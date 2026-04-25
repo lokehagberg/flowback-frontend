@@ -27,6 +27,7 @@ test-results
 tests/Post.test.ts-snapshots
 tests/screenshots
 .vscode
+.codex
 
 # Foundry (Blockchain_v2_CrossChain)
 src/lib/Blockchain_v2_CrossChain/out/

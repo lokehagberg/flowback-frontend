@@ -29,6 +29,7 @@
 	import ProfilePicture from '$lib/Generic/ProfilePicture.svelte';
 	import { isMobile } from '$lib/utils/isMobile';
 	import { getMultipleOptions } from '$lib/Poll/functions';
+	import { onMount } from 'svelte';
 
 	let {
 		poll,
@@ -45,7 +46,33 @@
 	let deletePollModalShow = $state(false),
 		reportPollModalShow = $state(false),
 		choicesOpen = $state(false),
-		tag: TagType | undefined = $state(undefined);
+		tag: TagType | undefined = $state(undefined),
+		disableNextPhase = $state(false);
+
+	let pictureSize = $derived($isMobile ? 2 : 1);
+	let multipleChoices = $derived(
+		getMultipleOptions(
+			phase,
+			poll,
+			[
+				() => {
+					deletePollModalShow = true;
+					choicesOpen = false;
+				},
+				() => {
+					reportPollModalShow = true;
+					choicesOpen = false;
+				}
+			],
+			async () => {
+				if (disableNextPhase) return;
+				disableNextPhase = true;
+				phase = await nextPhase(poll, phase);
+			},
+			$groupUserPermissionStore,
+			$groupUserStore
+		)
+	);
 
 	const source = new URLSearchParams(window.location.search).get('source');
 
@@ -64,26 +91,9 @@
 		if (poll) getTag();
 	});
 
-	let pictureSize = $derived($isMobile ? 2 : 1);
-	let multipleChoices = $derived(
-		getMultipleOptions(
-			phase,
-			poll,
-			[
-				() => {
-					deletePollModalShow = true;
-					choicesOpen = false;
-				},
-				() => {
-					reportPollModalShow = true;
-					choicesOpen = false;
-				}
-			],
-			async () => (phase = await nextPhase(poll, phase)),
-			$groupUserPermissionStore,
-			$groupUserStore
-		)
-	);
+	$effect(() => {
+		if (phase) disableNextPhase = false;
+	});
 </script>
 
 <div

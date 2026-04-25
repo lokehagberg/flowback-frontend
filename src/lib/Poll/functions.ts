@@ -35,7 +35,7 @@ export const getPhaseUserFriendlyName = (phase: Phase) =>
   TEXT_POLL_PHASE_CONFIG.find(p => p.phase === phase)?.label ?? '';
 
 // TODO: REMOVE
-export const getPhaseUserFriendlyNameWithNumber = (phase: Phase, poll_type: number = 4) => {
+export const getPhaseUserFriendlyNameWithNumber = (phase: Phase, poll_type = 4) => {
   if (poll_type === 4) {
     const idx = TEXT_POLL_PHASE_CONFIG.findIndex(p => p.phase === phase);
     const label = TEXT_POLL_PHASE_CONFIG[idx]?.label ?? '';
@@ -61,6 +61,7 @@ export const getGroupInfo = async (id: number | string) => {
 };
 
 
+// Fast Forward, fast_forward. 
 export const nextPhase = async (poll: poll, phase: Phase) => {
   let _phase: Phase = 'pre_start';
 
@@ -72,7 +73,6 @@ export const nextPhase = async (poll: poll, phase: Phase) => {
 
   // Date Poll
   else if (poll.poll_type === 3) _phase = 'result';
-
 
   const { res, json } = await fetchRequest(
     'POST',

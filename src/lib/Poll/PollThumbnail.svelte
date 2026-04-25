@@ -47,7 +47,8 @@
 		deletePollModalShow = $state(false),
 		reportPollModalShow = $state(false),
 		hovering = $state(false),
-		permissions: Permissions | null = $state(null);
+		permissions: Permissions | null = $state(null),
+		disableNextPhase = $state(false);
 
 	const submitTagVote = async (tag: number) => {
 		const { json, res } = await fetchRequest(
@@ -124,12 +125,20 @@
 						]
 					: [new Date(poll?.start_date), new Date(poll?.end_date)];
 	});
+
+	$effect(() => {
+		if (phase) disableNextPhase = false;
+	});
 </script>
 
 <PostThumbnail
 	post={poll}
 	api="poll"
-	fast_forward={async () => (phase = await nextPhase(poll, phase))}
+	fast_forward={async () => {
+		if (disableNextPhase) return;
+		disableNextPhase = true;
+		phase = await nextPhase(poll, phase);
+	}}
 >
 	{#snippet icons()}
 		<div class="flex gap-4 my-2 items-center">

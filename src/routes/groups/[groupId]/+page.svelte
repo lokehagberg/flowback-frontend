@@ -131,7 +131,7 @@
 					{:else if selectedPage === 'perms'}
 						<Permissions />
 					{:else if selectedPage === 'schedule'}
-						<Schedule type="group" />
+						<Schedule />
 					{:else if selectedPage === 'working-groups'}
 						<WorkGroups />
 					{/if}

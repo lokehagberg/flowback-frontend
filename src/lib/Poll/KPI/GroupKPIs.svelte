@@ -132,7 +132,7 @@
 			inputClass="max-h-[15rem]"
 		/>
 		<TextInput
-			label="Values (comma-separated integers)"
+			label="Values (comma-separated values)"
 			bind:value={kpiValues}
 			required
 			Class="flex-1"

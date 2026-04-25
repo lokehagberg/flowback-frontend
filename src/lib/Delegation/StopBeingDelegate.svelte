@@ -5,6 +5,7 @@
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import type { Delegate } from './interfaces';
 	import type { GroupUser } from '$lib/Group/interface';
+	import { onMount } from 'svelte';
 
 	export let groupUser: GroupUser,
 		loading: boolean,
@@ -13,10 +14,41 @@
 		Class = '',
 		tags: number[] = [];
 
+	let selfDelegated = false;
+
+	const getSelfDelegationStatus = async () => {
+		if (!groupUser?.delegate_pool_id) {
+			selfDelegated = false;
+			return;
+		}
+
+		const { json, res } = await fetchRequest(
+			'GET',
+			`group/${groupId}/delegates?limit=1000`
+		);
+
+		if (!res.ok) return;
+
+		selfDelegated = json?.results.some(
+			(relation: { delegate_pool_id: number; tags: { id: number }[] }) =>
+				relation.delegate_pool_id === groupUser.delegate_pool_id &&
+				relation.tags.length > 0
+		);
+	};
+
+	onMount(() => {
+		getSelfDelegationStatus();
+	});
+
+	$: if (groupId && groupUser?.delegate_pool_id) {
+		getSelfDelegationStatus();
+	}
+
 	const deleteDelegation = async () => {
 		await deleteDelegationPool();
-		getDelegatePools();
+		await getDelegatePools();
 		groupUser.delegate_pool_id = null;
+		selfDelegated = false;
 	};
 
 	/*
@@ -37,11 +69,13 @@
 	};
 
 	const selfDelegate = async () => {
+		if (loading || selfDelegated) return;
+
 		loading = true;
 
 		// Create delegation relation to oneself
 		{
-			const { json, res } = await fetchRequest(
+			const { res } = await fetchRequest(
 				'POST',
 				`group/${groupId}/delegate/create`,
 				{
@@ -49,7 +83,10 @@
 				}
 			);
 
-			if (!res.ok) loading = false;
+			if (!res.ok) {
+				loading = false;
+				return;
+			}
 		}
 
 		// Get Group Tags
@@ -98,6 +135,7 @@
 			message: 'Successfully self-delegated',
 			success: true
 		});
+		selfDelegated = true;
 		loading = false;
 	};
 
@@ -117,6 +155,7 @@
 				message: "Couldn't get delegation pools",
 				success: false
 			});
+			loading = false;
 			return;
 		}
 
@@ -145,7 +184,8 @@
 			</p>
 		</div>
 		<Button onClick={selfDelegate} buttonStyle="primary-light"
-			>{$_('Apply')}</Button
+			disabled={loading || selfDelegated}
+			>{$_(selfDelegated ? 'Applied' : 'Apply')}</Button
 		>
 	</div>
 

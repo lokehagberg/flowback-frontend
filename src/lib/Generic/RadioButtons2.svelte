@@ -14,6 +14,7 @@
 		value: T | null = null,
 		Class = '',
 		centering = false,
+		labelClass: string = '',
 		ClassInner = '',
 		icons: null | IconDefinition[] = null,
 		radioSide: 'left' | 'right' = 'left',
@@ -38,7 +39,7 @@
 </script>
 
 <div class={Class}>
-	<p class="text-left">{$_(label)}</p>
+<p class={`text-left ${labelClass}`}>{$_(label)}</p>
 	<div class={`mt-2 ${centering && 'flex justify-center gap-2'}`}>
 		<fieldset
 			class:flex={horizontal}

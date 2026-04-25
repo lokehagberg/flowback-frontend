@@ -202,7 +202,7 @@
 										username={delegate.user.username}
 										userId={delegate.user.id}
 										profilePicture={delegate.user.profile_image}
-										href={`/user?id=${delegate.user.id}&delegate_id=${delegate.id}&group_id=${group.id}&is_admin=${delegate.is_admin}`}
+										href={`/user?id=${delegate.user.id}`}
 									/>
 									<div class="flex items-center gap-3 shrink-0">
 										<a

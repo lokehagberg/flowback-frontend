@@ -191,6 +191,7 @@
 									: delegateRelations
 										.find(r => r.delegate_pool_id === delegate.pool_id)
 										?.tags.find(_tag => _tag.id === tag.id) !== undefined}
+										
 								<label
 									class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors
 										{isChecked
@@ -202,7 +203,8 @@
 										username={delegate.user.username}
 										userId={delegate.user.id}
 										profilePicture={delegate.user.profile_image}
-										href={`/user?id=${delegate.user.id}`}
+                    href={`/user?id=${delegate.user.id}`}
+                    Class="hover:opacity-80 hover:text-primary dark:hover:text-secondary transition-all duration-150"
 									/>
 									<div class="flex items-center gap-3 shrink-0">
 										<a

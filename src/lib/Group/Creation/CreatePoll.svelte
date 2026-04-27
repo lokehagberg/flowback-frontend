@@ -196,7 +196,7 @@
 		e.preventDefault();
 		selectedPage === 'poll' ? createPoll() : createThread();
 	}}
-	class="relative md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
+	class="relative w-3/4 md:w-2/3 max-w-[800px] dark:text-darkmodeText my-6"
 >
 	<button
 		class="absolute -left-12 bg-white dark:bg-darkobject p-3 rounded shadow z-40 hover:bg-gray-100 active:bg-gray-200 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"

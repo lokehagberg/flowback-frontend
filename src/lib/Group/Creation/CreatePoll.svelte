@@ -26,6 +26,7 @@
 	import { groupUserStore } from '$lib/Group/interface';
 	import type { pollType } from './interface';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
+	import { POLL_TYPE } from '$lib/Poll/pollType';
 
 	let title = $state(''),
 		description = $state(''),
@@ -35,7 +36,7 @@
 		images: File[] = $state([]),
 		isFF = $state(false),
 		pushToBlockchain = $state(true),
-		selectedPoll: pollType = $state('Text Poll'),
+		selectedPoll: pollType = $state('Score Poll'),
 		selectedPage: 'poll' | 'thread' = $state(
 			$page.url.searchParams.get('type') === 'thread' ? 'thread' : 'poll'
 		),
@@ -71,7 +72,7 @@
 		formData.append('title', title);
 		formData.append('description', description);
 		formData.append('start_date', times[0].toISOString());
-		if (selectedPoll === 'Text Poll') {
+		if (selectedPoll === 'Score Poll') {
 			formData.append('proposal_end_date', times[1].toISOString());
 			formData.append('prediction_bet_end_date', times[2].toISOString());
 			formData.append('delegate_vote_end_date', times[3].toISOString());
@@ -83,9 +84,15 @@
 		formData.append('allow_fast_forward', isFF.toString());
 		formData.append(
 			'poll_type',
-			(selectedPoll === 'Text Poll' ? 4 : 3).toString()
+			(selectedPoll === 'Score Poll'
+				? POLL_TYPE.SCORE
+				: POLL_TYPE.SCHEDULE
+			).toString()
 		);
-		formData.append('dynamic', selectedPoll === 'Text Poll' ? 'false' : 'true');
+		formData.append(
+			'dynamic',
+			selectedPoll === 'Score Poll' ? 'false' : 'true'
+		);
 		formData.append('public', isPublic.toString());
 		formData.append('pinned', 'false');
 		formData.append('version', '2');
@@ -185,7 +192,7 @@
 
 	$effect(() => {
 		times =
-			selectedPoll === 'Text Poll'
+			selectedPoll === 'Score Poll'
 				? new Array(6).fill(new Date())
 				: new Array(2).fill(new Date());
 	});
@@ -223,8 +230,8 @@
 					label="Poll Content"
 					ClassInner="mr-2 flex gap-2 items-center"
 					horizontal
-					labels={['Text Poll', 'Date Poll']}
-					values={['Text Poll', 'Date Poll']}
+					labels={['Score Poll', 'Date Poll']}
+					values={['Score Poll', 'Date Poll']}
 					icons={[faAlignLeft, faCalendarAlt]}
 					bind:value={selectedPoll}
 				/>

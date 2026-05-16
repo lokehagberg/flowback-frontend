@@ -78,6 +78,7 @@
 
 	const getWorkingGroupList = async () => {
 		if (!$page.params.groupId) return;
+		console.log($page.params.groupId);
 		const { res, json } = await fetchRequest(
 			'GET',
 			`group/${$page.params.groupId}/list?limit=100&order_by=name_asc`
@@ -200,7 +201,7 @@
 
 <main class="min-h-[100vh] pb-[15vh] md:pb-0">
 	{#if showUI}
-		<!-- <Chat /> -->
+		<Chat />
 		<Header />
 	{/if}
 

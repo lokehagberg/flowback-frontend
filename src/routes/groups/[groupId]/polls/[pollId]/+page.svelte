@@ -28,9 +28,15 @@
 	import KPIVoting from '$lib/Poll/KPI/KPIVoting.svelte';
 	import KPIEvaluation from '$lib/Poll/KPI/KPIEvaluation.svelte';
 	import CombinedKPIBet from '$lib/Poll/KPI/CombinedKPIBet.svelte';
+	import {
+		POLL_TYPE,
+		isSchedulePoll,
+		isScorePoll,
+		type PollType
+	} from '$lib/Poll/pollType';
 
 	let poll: poll | null = $state(null),
-		pollType = $state(1),
+		pollType: PollType = $state(POLL_TYPE.SCORE),
 		finished: boolean = $state(false),
 		phase: Phase = $state('pre_start'),
 		proposals: proposal[] = $state([]),
@@ -141,7 +147,7 @@
 
 <Layout centered>
 	{#if poll}
-		{#if pollType === 4}
+		{#if isScorePoll(pollType)}
 			<PollHeader
 				{poll}
 				bind:phase
@@ -152,7 +158,7 @@
 		{/if}
 
 		<!-- Normal Poll -->
-		{#if pollType === 4}
+		{#if isScorePoll(pollType)}
 			<!-- PHASE 0: PRE-START -->
 			{#if phase === 'pre_start'}
 				<div
@@ -517,7 +523,7 @@
 			{/if}
 
 			<!-- Date Poll -->
-		{:else if pollType === 3}
+		{:else if isSchedulePoll(pollType)}
 			{#if phase === 'result'}
 				<Structure bind:phase bind:poll showBoth>
 					<div slot="left" class="w-full">

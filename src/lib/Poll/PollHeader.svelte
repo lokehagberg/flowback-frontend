@@ -30,17 +30,23 @@
 	import { isMobile } from '$lib/utils/isMobile';
 	import { getMultipleOptions } from '$lib/Poll/functions';
 	import { onMount } from 'svelte';
+	import {
+		POLL_TYPE,
+		isSchedulePoll,
+		isScorePoll,
+		type PollType
+	} from './pollType';
 
 	let {
 		poll,
 		displayTag = false,
 		phase = $bindable(),
-		pollType = 3
+		pollType = POLL_TYPE.SCHEDULE
 	}: {
 		poll: poll;
 		displayTag?: boolean;
 		phase: Phase;
-		pollType?: 3 | 4;
+		pollType?: PollType;
 	} = $props();
 
 	let deletePollModalShow = $state(false),
@@ -167,7 +173,7 @@
 				{/if}
 			</div>
 
-			{#if pollType === 4}
+			{#if isScorePoll(pollType)}
 				<div>
 					{$_('Current phase')}:
 					{$_(getPhaseUserFriendlyName(phase))}
@@ -184,13 +190,13 @@
 				)}
 			{/if}
 
-			{#if poll?.poll_type === 4}
+			{#if isScorePoll(poll?.poll_type)}
 				<HeaderIcon
 					Class="cursor-default"
 					icon={faAlignLeft}
-					text={'Text Poll'}
+					text={'Score Poll'}
 				/>
-			{:else if poll?.poll_type === 3}
+			{:else if isSchedulePoll(poll?.poll_type)}
 				<HeaderIcon
 					Class="cursor-default"
 					icon={faCalendarAlt}

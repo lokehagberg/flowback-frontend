@@ -1,4 +1,5 @@
 import type { GroupUser } from "$lib/User/interfaces";
+import type { PollType } from './pollType';
 
 export interface proposal {
   title: string;
@@ -37,7 +38,7 @@ export interface poll {
   finished: boolean;
   id: number;
   participants: number;
-  poll_type: number;
+  poll_type: PollType;
   result: boolean;
   start_date: string;
   tag_id: number;

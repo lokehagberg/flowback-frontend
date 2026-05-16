@@ -6,8 +6,8 @@
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import {
-		DATE_POLL_PHASE_CONFIG,
-		TEXT_POLL_PHASE_CONFIG,
+		SCHEDULE_POLL_PHASE_CONFIG,
+		SCORE_POLL_PHASE_CONFIG,
 		type PollPhaseConfig
 	} from '../phases';
 	import {
@@ -15,6 +15,7 @@
 		faCircleExclamation
 	} from '@fortawesome/free-solid-svg-icons';
 	import type { Phase, poll } from '../interface';
+	import { isSchedulePoll, isScorePoll } from '../pollType';
 
 	export let enableDetails = false,
 		displayTimeline = true,
@@ -35,13 +36,15 @@
 	const setupDates = () => {
 		currentPhaseIndex = 0;
 
-		// TEXT POLL
-		if (poll?.poll_type === 4) pollPhases = TEXT_POLL_PHASE_CONFIG;
-		// DATE POLL
-		else if (poll?.poll_type === 3) pollPhases = DATE_POLL_PHASE_CONFIG;
+		if (isScorePoll(poll?.poll_type)) pollPhases = SCORE_POLL_PHASE_CONFIG;
+		else if (isSchedulePoll(poll?.poll_type))
+			pollPhases = SCHEDULE_POLL_PHASE_CONFIG;
+		else return;
 
 		currentPhaseIndex = pollPhases.find((p) => p.phase === phase)?.id ?? 5;
 		dates = pollPhases.map((p) => new Date(poll[p.endDateField] as string));
+
+		if (dates.length === 0) return;
 
 		// Timeline isn't needed for polls with 1 phase, so this shouldn't be an issue
 		fraction = currentPhaseIndex / (pollPhases.length - 1);

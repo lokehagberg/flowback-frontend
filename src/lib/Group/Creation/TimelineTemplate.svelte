@@ -9,6 +9,7 @@
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';	
 	import Fa from 'svelte-fa';
 	import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+	import type { PollType } from '$lib/Poll/pollType';
 
 	export let area_vote_time_delta: number,
 		proposal_time_delta: number,
@@ -17,7 +18,7 @@
 		delegate_vote_time_delta: number,
 		vote_time_delta: number,
 		end_time_delta: number,
-		poll_type: 3 | 4,
+		poll_type: PollType,
 		handleSelectTemplate = (template: template) => {};
 
 	let name: string,

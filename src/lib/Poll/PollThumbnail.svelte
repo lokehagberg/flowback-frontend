@@ -34,6 +34,7 @@
 	import DeletePostModal from './DeletePostModal.svelte';
 	import PostThumbnail from '$lib/Generic/PostThumbnail.svelte';
 	import { env } from '$env/dynamic/public';
+	import { isSchedulePoll, isScorePoll } from './pollType';
 
 	let { poll }: { poll: poll } = $props();
 
@@ -112,18 +113,17 @@
 
 	$effect(() => {
 		if (poll)
-			dates =
-				poll?.poll_type === 4
-					? [
-							new Date(poll?.start_date),
-							new Date(poll?.area_vote_end_date),
-							new Date(poll?.proposal_end_date),
-							new Date(poll?.prediction_statement_end_date),
-							new Date(poll?.prediction_bet_end_date),
-							new Date(poll?.delegate_vote_end_date),
-							new Date(poll?.end_date)
-						]
-					: [new Date(poll?.start_date), new Date(poll?.end_date)];
+			dates = isScorePoll(poll?.poll_type)
+				? [
+						new Date(poll?.start_date),
+						new Date(poll?.area_vote_end_date),
+						new Date(poll?.proposal_end_date),
+						new Date(poll?.prediction_statement_end_date),
+						new Date(poll?.prediction_bet_end_date),
+						new Date(poll?.delegate_vote_end_date),
+						new Date(poll?.end_date)
+					]
+				: [new Date(poll?.start_date), new Date(poll?.end_date)];
 	});
 
 	$effect(() => {
@@ -143,13 +143,13 @@
 	{#snippet icons()}
 		<div class="flex gap-4 my-2 items-center">
 			<!-- Poll Type Icons -->
-			{#if poll?.poll_type === 4}
+			{#if isScorePoll(poll?.poll_type)}
 				<HeaderIcon
 					Class="!p-0 !cursor-default"
 					icon={faAlignLeft}
-					text={'Text Poll'}
+					text={'Score Poll'}
 				/>
-			{:else if poll?.poll_type === 3}
+			{:else if isSchedulePoll(poll?.poll_type)}
 				<HeaderIcon
 					Class="!p-0 !cursor-default"
 					icon={faCalendarAlt}
@@ -200,7 +200,7 @@
 			{/if}
 
 			<!-- Poll tag -->
-			{#if poll?.poll_type === 4 && tag.name !== '' && env.PUBLIC_POLL_VERSION === '1'}
+			{#if isScorePoll(poll?.poll_type) && tag.name !== '' && env.PUBLIC_POLL_VERSION === '1'}
 				<Tag Class="cursor-default" bind:tag />
 			{/if}
 
@@ -223,7 +223,7 @@
 
 	<div class="!mt-4">
 		<!-- For text polls -->
-		{#if poll?.poll_type === 4 && poll?.group_joined}
+		{#if isScorePoll(poll?.poll_type) && poll?.group_joined}
 			<!-- PHASE 1: AREA VOTE -->
 			{#if phase === 'area_vote'}
 				<form

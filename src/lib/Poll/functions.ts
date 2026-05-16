@@ -6,7 +6,8 @@ import {
 } from '$lib/Group/interface';
 import { get } from 'svelte/store';
 import type { Phase, poll } from './interface';
-import { DATE_POLL_PHASE_CONFIG, TEXT_POLL_PHASE_CONFIG } from './phases';
+import { isSchedulePoll, isScorePoll, type PollType, POLL_TYPE } from './pollType';
+import { SCHEDULE_POLL_PHASE_CONFIG, SCORE_POLL_PHASE_CONFIG } from './phases';
 import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 
 export const formatDate = (dateInput: string) => {
@@ -28,19 +29,22 @@ export const getPhase = (poll: poll): Phase => {
 };
 
 // TODO: REMOVE
-export const dateLabels = TEXT_POLL_PHASE_CONFIG.filter(p => p.endDateField !== null).map(p => p.label);
+export const dateLabels = SCORE_POLL_PHASE_CONFIG.filter(p => p.endDateField !== null).map(p => p.label);
 
 // TODO: REMOVE
 export const getPhaseUserFriendlyName = (phase: Phase) =>
-  TEXT_POLL_PHASE_CONFIG.find(p => p.phase === phase)?.label ?? '';
+  SCORE_POLL_PHASE_CONFIG.find(p => p.phase === phase)?.label ?? '';
 
 // TODO: REMOVE
-export const getPhaseUserFriendlyNameWithNumber = (phase: Phase, poll_type = 4) => {
-  if (poll_type === 4) {
-    const idx = TEXT_POLL_PHASE_CONFIG.findIndex(p => p.phase === phase);
-    const label = TEXT_POLL_PHASE_CONFIG[idx]?.label ?? '';
+export const getPhaseUserFriendlyNameWithNumber = (
+  phase: Phase,
+  poll_type: PollType = POLL_TYPE.SCORE
+) => {
+  if (isScorePoll(poll_type)) {
+    const idx = SCORE_POLL_PHASE_CONFIG.findIndex(p => p.phase === phase);
+    const label = SCORE_POLL_PHASE_CONFIG[idx]?.label ?? '';
     return label ? `${idx + 1}. ${label}` : '';
-  } else if (poll_type === 3) {
+  } else if (isSchedulePoll(poll_type)) {
     switch (phase) {
       case 'area_vote':
         return '1. Date Voting';
@@ -65,14 +69,15 @@ export const getGroupInfo = async (id: number | string) => {
 export const nextPhase = async (poll: poll, phase: Phase) => {
   let _phase: Phase = 'pre_start';
 
-  if (poll.poll_type === 4) {
-    const idx = TEXT_POLL_PHASE_CONFIG.findIndex(p => p.phase === phase);
-    const next = TEXT_POLL_PHASE_CONFIG[idx + 1];
+  if (isScorePoll(poll.poll_type)) {
+    const idx = SCORE_POLL_PHASE_CONFIG.findIndex(p => p.phase === phase);
+    const next = SCORE_POLL_PHASE_CONFIG[idx + 1];
     _phase = next?.phase;
   }
 
-  // Date Poll
-  else if (poll.poll_type === 3) _phase = 'result';
+  else if (isSchedulePoll(poll.poll_type)) {
+    _phase = SCHEDULE_POLL_PHASE_CONFIG[1]?.phase ?? 'result';
+  }
 
   const { res, json } = await fetchRequest(
     'POST',

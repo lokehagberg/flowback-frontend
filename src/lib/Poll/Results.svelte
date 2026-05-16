@@ -10,9 +10,14 @@
 	import NewDescription from './NewDescription.svelte';
 	import type { poll, proposal } from './interface';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
+	import {
+		POLL_TYPE,
+		isSchedulePoll,
+		isScorePoll,
+		type PollType
+	} from './pollType';
 
-	//4 for score voting, 3 for date
-	export let pollType = 1,
+	export let pollType: PollType = POLL_TYPE.SCORE,
 		proposals: any[] = [],
 		poll: poll,
 		getPollData = () => {},
@@ -41,9 +46,9 @@
 		let _proposals = json?.results;
 		if (_proposals.length === 0) return;
 
-		if (pollType === 4) proposals = _proposals;
+		if (isScorePoll(pollType)) proposals = _proposals;
 		//Only one proposal wins in date poll
-		else if (pollType === 3)
+		else if (isSchedulePoll(pollType))
 			proposals = [
 				{
 					id: _proposals[0].id,
@@ -120,7 +125,7 @@
 		>{$_('Results')}</span
 	>
 
-	{#if pollType === 4}
+	{#if isScorePoll(pollType)}
 		<!-- Conditional is split up to let poll status 0 both display text and list of proposals -->
 		{#if poll?.status === 2}
 			{$_('Calculating results...')}
@@ -160,7 +165,7 @@
 				</div>
 			{/each}
 		{/if}
-	{:else if pollType === 3}
+	{:else if isSchedulePoll(pollType)}
 		<div class="flex flex-col items-center justify-center h-full gap-4 mt-10">
 			{#if proposals.length > 0}
 				<Fa icon={faStar} color="orange" class="text-5xl" />

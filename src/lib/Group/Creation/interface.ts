@@ -1,3 +1,5 @@
+import type { PollType } from '$lib/Poll/pollType';
+
 export type template = {
 	id: number;
 	created_by_group_user?: {
@@ -12,7 +14,7 @@ export type template = {
 		group_image: string
 	};
 	name: string
-	poll_type: number;
+	poll_type: PollType;
 	poll_is_dynamic: boolean;
 	area_vote_time_delta: number;
 	proposal_time_delta: number;
@@ -23,4 +25,4 @@ export type template = {
 	end_time_delta: number;
 };
 
-export type pollType = 'Text Poll' | 'Date Poll' 
+export type pollType = 'Score Poll' | 'Date Poll'

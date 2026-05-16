@@ -1,5 +1,6 @@
 import type { GroupUser } from '$lib/User/interfaces';
 import type { DelegateMinimal } from '$lib/Group/interface';
+import type { PollType } from '$lib/Poll/pollType';
 
 export interface Delegate {
 	tags: { id: number; tag_name: string; name: string; active: boolean }[];
@@ -42,7 +43,7 @@ export interface VoteHistory {
 		hide_poll_users: boolean;
 		title: string;
 		description: string;
-		poll_type: number;
+		poll_type: PollType;
 		allow_fast_forward: boolean;
 		public: boolean;
 		start_date: string; // ISO 8601 date string

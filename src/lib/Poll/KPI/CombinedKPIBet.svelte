@@ -7,6 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import type { CombinedBet } from './interface';
+	import { kpiPercentages } from './percentages';
 
 	let { proposal }: { proposal: proposal } = $props();
 
@@ -66,10 +67,7 @@
 			</span>
 
 			{#each Object.entries(groupedBets) as [kpiId, group], kpiIndex}
-				{@const maxBet = Math.max(
-					...group.bets.map((b) => Number(b.combined_bet) || 0),
-					0.01
-				)}
+				{@const percentages = kpiPercentages(group.bets.map((bet) => bet.combined_bet))}
 				<div
 					class="flex flex-col gap-3 p-4 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-800/40 kpi-card"
 					style="animation-delay: {kpiIndex * 80}ms"
@@ -89,11 +87,10 @@
 
 					<div class="flex flex-col gap-1.5">
 						{#each group.bets as bet, i}
-							<!-- TODO: Only one const needed -->
-							{@const betValue = Number(bet.combined_bet) || 0}
-							{@const barWidth = (betValue / maxBet) * 100}
+							{@const percentage = percentages[i] ?? 0}
 							<div
 								class="flex items-center gap-3 w-full kpi-row"
+								id={`kpi-bet-value-${bet.value}`}
 								style="animation-delay: {kpiIndex * 80 + i * 40}ms"
 							>
 								<span
@@ -111,16 +108,13 @@
 												{bet.outcome
 												? 'bg-gradient-to-r from-emerald-400 to-emerald-500 dark:from-emerald-500 dark:to-emerald-400'
 												: 'bg-gradient-to-r from-purple-400 to-purple-500 dark:from-purple-500 dark:to-purple-400'}"
-											style="width: {betValue.toFixed(1) * 100}%"
+											style="width: {percentage}%"
 										></div>
 										<span
-											class="absolute inset-0 flex items-center text-xs font-semibold tabular-nums
-												{barWidth > 25 ? 'text-white px-3' : 'text-purple-700 dark:text-purple-200'}"
-											style="padding-left: {barWidth > 25
-												? '0.75rem'
-												: `max(${barWidth}% + 0.5rem, 3rem)`}"
+											class="absolute inset-0 flex items-center px-3 text-xs font-semibold tabular-nums
+												{percentage > 25 ? 'text-white' : 'text-purple-700 dark:text-purple-200'}"
 										>
-											{betValue.toFixed(1) * 100}%
+											{percentage.toFixed(1)}%
 										</span>
 									{:else}
 										<span

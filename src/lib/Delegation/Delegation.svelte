@@ -22,6 +22,7 @@
 	import type { Permissions } from '$lib/Group/Permissions/interface';
 	import { getPermissionsFast } from '$lib/Generic/GenericFunctions';
 	import TextInput from '$lib/Generic/TextInput.svelte';
+	import { delegation as groupsLimit } from '$lib/Generic/APILimits.json';
 
 	let group: Group,
 		groups: Group[],
@@ -31,12 +32,18 @@
 		delegates: Delegate[] = [],
 		selectedPage: 'become-delegate' | 'delegate' | 'none' = 'none',
 		userPermissions: Permissions,
-		search = '';
+		search = '',
+		searchTimeout: ReturnType<typeof setTimeout>;
+
+	const getGroupsDebounced = () => {
+		clearTimeout(searchTimeout);
+		searchTimeout = setTimeout(() => getGroups(), 300);
+	};
 
 	const getGroups = async () => {
 		const { res, json } = await fetchRequest(
 			'GET',
-			`group/list?limit=1000&joined=true&name__icontains=${search}`
+			`group/list?limit=${groupsLimit}&joined=true&name__icontains=${search}`
 		);
 
 		if (!res.ok) {
@@ -194,8 +201,8 @@
 				<div class="w-full flex items-end">
 					<TextInput
 						Class="w-4/5"
-						onInput={() => getGroups()}
-						label=""
+						onInput={getGroupsDebounced}
+						label="Search Groups"
 						placeholder={$_('Search groups')}
 						bind:value={search}
 					/>
@@ -243,14 +250,17 @@
 						</p>
 					</div>
 				{/if}
-				<div class="mt-4 p-4 rounded-xl border border-dashed border-gray-200 dark:border-gray-600 flex flex-col gap-2">
+				<div
+					class="mt-4 p-4 rounded-xl border border-dashed border-gray-200 dark:border-gray-600 flex flex-col gap-2"
+				>
 					<p class="text-xs text-gray-400 dark:text-gray-500">
 						{$_('Want to represent others in votes?')}
 					</p>
 					<Button
 						Class="w-full"
 						onClick={() => (selectedPage = 'become-delegate')}
-						buttonStyle="primary-light">{$_('Become delegate')}</Button>
+						buttonStyle="primary-light">{$_('Become delegate')}</Button
+					>
 				</div>
 				<!-- <li><input type="checkbox" /> {$_('Smart secretary')}</li> -->
 			</div>
@@ -260,18 +270,28 @@
 		>
 			{#if selectedPage === 'become-delegate'}
 				<div class="flex flex-col gap-5">
-					<div class="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700">
-						<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+					<div
+						class="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700"
+					>
+						<div
+							class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+						>
 							<Fa icon={faUserShield} />
 						</div>
 						<div>
-							<h2 class="font-semibold text-gray-800 dark:text-darkmodeText">{$_('Become a Delegate')}</h2>
-							<p class="text-xs text-gray-400">{$_('Vote publicly on behalf of others')}</p>
+							<h2 class="font-semibold text-gray-800 dark:text-darkmodeText">
+								{$_('Become a Delegate')}
+							</h2>
+							<p class="text-xs text-gray-400">
+								{$_('Vote publicly on behalf of others')}
+							</p>
 						</div>
 					</div>
 
 					<p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-						{$_('As a delegate, you choose to publicly show everyone how you vote. Other users can delegate their vote to you, meaning you vote on their behalf.')}
+						{$_(
+							'As a delegate, you choose to publicly show everyone how you vote. Other users can delegate their vote to you, meaning you vote on their behalf.'
+						)}
 					</p>
 
 					{#if groupUser?.delegate_pool_id !== null}
@@ -282,8 +302,12 @@
 							bind:loading
 						/>
 					{:else}
-						<Button Class="w-full" onClick={createDelegationPool} buttonStyle="primary-light">
-							{$_('Become delegate')}
+						<Button
+							Class="w-full"
+							onClick={createDelegationPool}
+							buttonStyle="primary-light"
+						>
+							{$_('Confirm')}
 						</Button>
 					{/if}
 

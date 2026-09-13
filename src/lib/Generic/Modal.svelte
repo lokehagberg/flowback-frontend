@@ -5,16 +5,18 @@
 	import type { ModalButton } from './interfaces';
 	//TODO: Make the design nicer and larger, make it draggable, add more options
 
-	export let open = false,
+	let {
+		open = $bindable(false),
 		Class = '',
 		onOpen = () => {},
 		onClose = () => {},
 		onSubmit = () => {},
-		buttons: ModalButton[] = [],
+		buttons = [] as ModalButton[],
 		id = 'popup-modal',
-		stopAtPropagation = true;
+		stopAtPropagation = true
+	} = $props();
 
-	let modal: HTMLDivElement | undefined, escEvent;
+	let modal: HTMLDivElement | undefined;
 
 	const closeModal = (event: MouseEvent | KeyboardEvent) => {
 		event.stopPropagation();
@@ -22,7 +24,7 @@
 		hideScrollbar(false);
 	};
 
-	const stopPropagation = (event: MouseEvent) => {
+	const handleInnerClick = (event: MouseEvent) => {
 		event.stopPropagation();
 		if (stopAtPropagation) onCloseModal();
 	};
@@ -46,27 +48,31 @@
 		onClose();
 	};
 
-	$: if (open) onOpenModal();
+	$effect(() => {
+		if (open) onOpenModal();
+	});
 
-	$: if (!open) onClose();
+	$effect(() => {
+		if (!open) onClose();
+	});
 </script>
 
 <div
 	id="overlay"
 	class="overlay"
 	class:hidden={!open}
-	on:click={closeModal}
+	onclick={closeModal}
 	tabindex="-1"
-	on:keydown
+	onkeydown={() => {}}
 	role="button"
 >
 	<div
 		{id}
 		class={`w-[80%] !cursor-default max-h-[80vh] mt-10 dark:bg-darkbackground bg-white overflow-y-auto overflow-x-hidden border
 		border-gray-300 rounded shadow-xl fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50 max-w-[400px] ${Class}`}
-		on:click={stopPropagation}
+		onclick={handleInnerClick}
 		tabindex="0"
-		on:keydown
+		onkeydown={() => {}}
 		role="button"
 		bind:this={modal}
 	>
@@ -77,7 +83,7 @@
 				<CrossButton action={() => (open = false)} />
 			</div>
 			{#if onSubmit !== (() => {})}
-				<form on:submit|preventDefault={onSubmit}>
+				<form onsubmit={(e) => { e.preventDefault(); onSubmit(); }}>
 					<div class="p-6 text-center break-word">
 						<slot name="body" />
 					</div>

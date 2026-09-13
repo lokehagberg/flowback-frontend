@@ -93,6 +93,7 @@ export interface invite {
   id: number;
   message_channel_id: number;
   message_channel_name: string;
+  message_channel_origin: string;
   rejected: boolean | null;
   title: string;
 }

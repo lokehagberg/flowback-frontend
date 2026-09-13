@@ -19,6 +19,8 @@
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import { setUserGroupPermissionInfo } from '$lib/Group/functions';
 	import { workgroupStore } from '$lib/Group/Kanban/Kanban';
+	import TopHeader from '$lib/Header/TopHeader.svelte';
+	import { isMobile } from '$lib/utils/isMobile';
 
 	let showUI = false,
 		scrolledY = '',
@@ -167,6 +169,9 @@
 	initializeLocalization();
 
 	onMount(async () => {
+		document.body.classList.remove('invisible');
+		document.body.style.visibility = 'visible';
+
 		await setUserInfo();
 		await setUserGroupInfo();
 		groupUserPermissionStore.set(
@@ -193,14 +198,14 @@
 				success: _errorhandler.success
 			});
 		});
-
-		document.body.classList.remove('invisible');
-		document.body.style.visibility = 'visible';
 	});
 </script>
 
-<main class="min-h-[100vh] pb-[15vh] md:pb-0">
+<main class="min-h-[100vh] pb-[15vh] md:pb">
 	{#if showUI}
+		{#if $isMobile}
+			<TopHeader />
+		{/if}
 		<Chat />
 		<Header />
 	{/if}

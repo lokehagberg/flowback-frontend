@@ -36,7 +36,7 @@
 	};
 
 	//Both verifies and logs in
-	async function verifyAccount() {
+	const verifyAccount = async () => {
 		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',
@@ -53,14 +53,27 @@
 				json?.detail[0] === 'Not found.' ||
 				json?.detail[0] === 'Verification code has already been used.'
 			)
-				ErrorHandlerStore.set({ message: 'Wrong verification code', success: false });
+				ErrorHandlerStore.set({
+					message: 'Wrong verification code',
+					success: false
+				});
 			else if (json?.detail?.non_field_errors)
-				ErrorHandlerStore.set({ message: json?.detail?.non_field_errors[0], success: false });
+				ErrorHandlerStore.set({
+					message: json?.detail?.non_field_errors[0],
+					success: false
+				});
 			else if (json?.detail?.username)
-				ErrorHandlerStore.set({ message: json?.detail?.username[0], success: false });
+				ErrorHandlerStore.set({
+					message: json?.detail?.username[0],
+					success: false
+				});
 			else if (json?.detail[0] === 'Email already registered')
 				ErrorHandlerStore.set({ message: json?.detail[0], success: false });
-			else ErrorHandlerStore.set({ message: 'Something went wrong', success: false });
+			else
+				ErrorHandlerStore.set({
+					message: 'Something went wrong',
+					success: false
+				});
 
 			return;
 		}
@@ -68,7 +81,7 @@
 		//Done with account registration, redirect
 		ErrorHandlerStore.set({ message: 'Success', success: true });
 
-		localStorage.setItem('token', json.token);
+		localStorage.setItem('token', json?.token ?? json);
 
 		loading = true;
 
@@ -96,7 +109,7 @@
 
 		loading = false;
 		goto('/home');
-	}
+	};
 
 	const getVerificationCodeFromURL = () => {
 		verification_code = $page.url.searchParams.get('verification_code') || '';
@@ -114,13 +127,25 @@
 </script>
 
 <Loader bind:loading>
-	<form class="gap-6 p-6 mb-4 flex flex-col items-center" on:submit|preventDefault={verifyAccount}>
+	<form
+		class="gap-6 p-6 mb-4 flex flex-col items-center"
+		on:submit|preventDefault={verifyAccount}
+	>
 		{#if !$page.url.searchParams.get('verification_code')}
-			<TextInput label={'Verification Code'} bind:value={verification_code} required />
+			<TextInput
+				label={'Verification Code'}
+				bind:value={verification_code}
+				required
+			/>
 		{/if}
 
 		<TextInput label={'Username'} bind:value={username} required />
-		<TextInput label={'Choose a Password'} bind:value={password} type={'password'} required />
+		<TextInput
+			label={'Choose a Password'}
+			bind:value={password}
+			type={'password'}
+			required
+		/>
 		<RadioButtons
 			label="Do you want to receive Email Notifications?"
 			centering={true}

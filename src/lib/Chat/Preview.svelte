@@ -92,15 +92,14 @@
 
 	type Props = {
 		creatingGroup: boolean;
-		inviteList?: invite[];
 		groupMembers?: GroupMembers[];
 	};
 
-	let {
-		creatingGroup = $bindable(),
-		inviteList = [],
-		groupMembers = []
-	}: Props = $props();
+	let { creatingGroup = $bindable(), groupMembers = [] }: Props = $props();
+
+	// Local reactive state (a prop with a fallback value is not reactive when
+	// reassigned, which left invites stale after accepting/denying them).
+	let inviteList: invite[] = $state([]);
 
 	// Handle chat selection and clear notifications
 	const clickedChatter = async (chatterId: any) => {
@@ -235,12 +234,12 @@
 		<!-- <Button onClick={newDM}>New DM</Button> -->
 	</div>
 
-	{#if inviteList?.some((g) => !g.rejected && g?.title?.split(',')?.length > 2)}
+	{#if inviteList?.some((g) => !g.rejected && g?.message_channel_origin === 'user_group')}
 		<p class="text-xs text-gray-400 px-3 pt-2">{$_('Invites')}</p>
 	{/if}
 	{#if inviteList}
 		{#each inviteList as groupChat}
-			{#if !groupChat.rejected && groupChat?.title?.split(',')?.length > 2}
+			{#if !groupChat.rejected && groupChat?.message_channel_origin === 'user_group'}
 				{#if groupChat.rejected === null}
 					<span>{$_("You've been invited to this chat:")}</span>
 					<Button onClick={() => UserChatInvite(true, groupChat.id)}

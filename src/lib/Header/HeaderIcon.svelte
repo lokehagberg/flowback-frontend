@@ -126,7 +126,10 @@
 <style>
 	.header-icon {
 		position: absolute;
-		left: calc(50% - 50px);
+		left: 50%;
+		transform: translateX(-50%);
+		width: max-content;
+		max-width: 220px;
 		text-align: center;
 		filter: opacity(0.8);
 	}

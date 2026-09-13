@@ -19,7 +19,11 @@
 	import type { kanbanEdited, kanban } from './Kanban';
 	import type { WorkGroup } from '../WorkingGroups/interface';
 	import { env } from '$env/dynamic/public';
-	import { faArrowLeft, faArrowRight, faCalendar } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faArrowLeft,
+		faArrowRight,
+		faCalendar
+	} from '@fortawesome/free-solid-svg-icons';
 	import Select from '$lib/Generic/Select.svelte';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
 	import FileUploads from '$lib/Generic/File/FileUploads.svelte';
@@ -35,7 +39,14 @@
 	let users: GroupUser[] = [];
 
 	const lanes = ['', 'Backlog', 'To do', 'In progress', 'Evaluation', 'Done'];
-	const laneColors = ['', '#9CA3AF', '#60A5FA', '#A78BFA', '#FBBF24', '#34D399'];
+	const laneColors = [
+		'',
+		'#9CA3AF',
+		'#60A5FA',
+		'#A78BFA',
+		'#FBBF24',
+		'#34D399'
+	];
 
 	const priorityBorderColors: Record<number, string> = {
 		1: '#9CA3AF',
@@ -72,8 +83,8 @@
 		},
 		images: File[],
 		endDate: TimeAgo,
-		selectedWorkgroupId: null | Number = null,
-		selectedGroupId: null | Number = null;
+		selectedWorkgroupId: null | number = null,
+		selectedGroupId: null | number = null;
 
 	// Helper function to format date for datetime-local input
 	function formatDateForInput(
@@ -217,6 +228,7 @@
 		}
 
 		removeKanbanEntry(kanban.id);
+		openModal = false;
 	};
 
 	const formatEndDate = async () => {
@@ -263,16 +275,22 @@
 <svelte:window bind:innerWidth bind:outerWidth />
 
 <div
-	class="text-left bg-white dark:bg-darkobject dark:text-darkmodeText rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 border-l-4 p-3 cursor-grab active:cursor-grabbing {isDragging ? 'opacity-50' : ''}"
+	class="text-left bg-white dark:bg-darkobject dark:text-darkmodeText rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 border-l-4 p-3 cursor-grab active:cursor-grabbing {isDragging
+		? 'opacity-50'
+		: ''}"
 	style="border-left-color: {priorityBorderColors[kanban.priority ?? 3]}"
 	in:fade
 	draggable="true"
 	on:dragstart={(e) => {
 		e.dataTransfer?.setData('text/plain', kanban.id.toString());
 		if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
-		setTimeout(() => { isDragging = true; }, 0);
+		setTimeout(() => {
+			isDragging = true;
+		}, 0);
 	}}
-	on:dragend={() => { isDragging = false; }}
+	on:dragend={() => {
+		isDragging = false;
+	}}
 	on:click={() => {
 		openModal = true;
 		selectedEntry = kanban.id;
@@ -492,7 +510,9 @@
 						{#if kanban.priority}
 							<span
 								class="text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1"
-								style="color: {priorityBorderColors[kanban.priority]}; border-color: {priorityBorderColors[kanban.priority]}"
+								style="color: {priorityBorderColors[
+									kanban.priority
+								]}; border-color: {priorityBorderColors[kanban.priority]}"
 							>
 								<PriorityIcons priority={kanban.priority} />
 								{priorityText[priorities.length - kanban.priority]}
@@ -533,7 +553,9 @@
 							{$_('Due Date')}
 						</p>
 						{#if kanban.end_date}
-							<p class="text-sm font-medium text-gray-800 dark:text-darkmodeText">
+							<p
+								class="text-sm font-medium text-gray-800 dark:text-darkmodeText"
+							>
 								{new Intl.DateTimeFormat(navigator?.language, {
 									weekday: 'short',
 									day: '2-digit',
@@ -573,7 +595,9 @@
 					</div>
 
 					{#if kanban.origin_type === 'group'}
-						<div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 text-left">
+						<div
+							class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 text-left"
+						>
 							<p
 								class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1"
 							>
@@ -587,13 +611,17 @@
 							</button>
 						</div>
 
-						<div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 text-left">
+						<div
+							class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 text-left"
+						>
 							<p
 								class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1"
 							>
 								{$_('Work Group')}
 							</p>
-							<p class="text-sm font-medium text-gray-800 dark:text-darkmodeText">
+							<p
+								class="text-sm font-medium text-gray-800 dark:text-darkmodeText"
+							>
 								{kanban.work_group?.name ?? $_('None')}
 							</p>
 						</div>

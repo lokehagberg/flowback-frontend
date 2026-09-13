@@ -241,6 +241,7 @@
 				inputClass="bg-white"
 				required
 				label="Title"
+				max={200}
 				bind:value={title}
 			/>
 			<TextArea

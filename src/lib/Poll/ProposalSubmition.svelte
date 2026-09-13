@@ -31,7 +31,11 @@
 		loading = true;
 
 		let blockchain_id;
-		if (env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' && blockchain && poll.blockchain_id)
+		if (
+			env.PUBLIC_BLOCKCHAIN_INTEGRATION === 'TRUE' &&
+			blockchain &&
+			poll.blockchain_id
+		)
 			blockchain_id = await proposalCreateBlockchain(poll.blockchain_id, title);
 
 		let proposal: any = { title, description };
@@ -55,11 +59,17 @@
 
 		if (!res.ok) {
 			loading = false;
-			ErrorHandlerStore.set({ message: 'Failed to add proposal', success: false });
+			ErrorHandlerStore.set({
+				message: 'Failed to add proposal',
+				success: false
+			});
 			return;
 		}
 
-		ErrorHandlerStore.set({ message: 'Successfully added proposal', success: true });
+		ErrorHandlerStore.set({
+			message: 'Successfully added proposal',
+			success: true
+		});
 
 		let created_by = await getUserInfo();
 		loading = false;
@@ -103,7 +113,8 @@
 	<Loader bind:loading>
 		<div class="max-h-[80%] overflow-y-auto">
 			<div class="flex flex-col space-y-2">
-				<span class="block text-left text-md text-primary dark:text-secondary font-semibold"
+				<span
+					class="block text-left text-md text-primary dark:text-secondary font-semibold"
 					>{$_('Create a Proposal')}</span
 				>
 				<TextInput required label="Title" bind:value={title} />
@@ -113,6 +124,7 @@
 					areaClass="max-h-[12rem] resize-y"
 					label="Description"
 					bind:value={description}
+					id={'proposal-textarea'}
 				/>
 			</div>
 

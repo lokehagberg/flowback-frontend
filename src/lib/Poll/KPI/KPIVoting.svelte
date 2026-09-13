@@ -29,7 +29,7 @@
 			return;
 		}
 
-		kpis = json ?? [];
+		kpis = (json ?? []).filter((kpi: KPI) => kpi.active);
 	};
 
 	const getProposalKPIs = async () => {
@@ -50,20 +50,25 @@
 		kpiProbabilities = json.results ?? [];
 	};
 
-	const editProposalKPI = async (kpi: KPI, value: number, index: number) => {
+	const editProposalKPI = async (kpi: KPI, value: number, selectedValue: string) => {
+		const weights = kpi.values.map((v) =>
+			v === 'other'
+				? 0
+				: v === selectedValue
+					? value
+					: (kpiProbabilities.find((p) => p.kpi_id === kpi.id && p.value === v)?.weight ?? 0)
+		);
+		const otherIndex = kpi.values.indexOf('other');
+		if (otherIndex !== -1) {
+			weights[otherIndex] = Math.max(0, 100 - weights.reduce((sum, weight) => sum + weight, 0));
+		}
 		const { res } = await fetchRequest(
 			'POST',
 			`group/poll/proposal/${proposal.id}/kpi/bet`,
 			{
 				kpi_id: kpi.id,
 				values: kpi.values,
-				weights: kpi.values.map((v, i) =>
-					i === index
-						? value
-						: (kpiProbabilities.find(
-								(p) => p.kpi_id === kpi.id && p.value === v
-							)?.weight ?? 0)
-				)
+				weights
 			}
 		);
 
@@ -91,7 +96,7 @@
 				{$_('KPIs')}
 			</span>
 			{#each kpis as kpi, kpiIndex}
-				{@const totalWeight = kpi.values.reduce(
+				{@const totalWeight = kpi.values.filter((v) => v !== 'other').reduce(
 					(sum, v) =>
 						sum +
 						(kpiProbabilities.find((p) => p.kpi_id === kpi.id && p.value === v)
@@ -99,6 +104,7 @@
 					0
 				)}
 				{@const overAllocated = totalWeight > 100}
+				{@const otherWeight = Math.max(0, 100 - totalWeight)}
 				<div
 					class="flex flex-col gap-3 p-4 rounded-xl kpi-card transition-colors duration-300
 						{overAllocated
@@ -134,7 +140,7 @@
 					{/if}
 
 					<div class="flex flex-col gap-2">
-						{#each kpi.values as value, i}
+						{#each kpi.values.filter((v) => v !== 'other') as value, i}
 							{@const weight =
 								kpiProbabilities.find(
 									(_kpi) => _kpi.kpi_id === kpi.id && _kpi.value === value
@@ -158,7 +164,7 @@
 										const fraction = (xWithinElement / rect.width) * 100;
 
 										const weight = Math.round(fraction / 5) * 5; // Round to nearest 5%
-										editProposalKPI(kpi, weight, i);
+										editProposalKPI(kpi, weight, value);
 									}}
 								>
 									<div
@@ -184,6 +190,38 @@
 								</button>
 							</div>
 						{/each}
+						<div
+							aria-label="Other, remaining probability"
+							class="flex items-center gap-3 w-full opacity-70 cursor-not-allowed kpi-row"
+							style="animation-delay: {kpiIndex * 80 + kpi.values.length * 50}ms"
+						>
+							<span
+								class="text-sm font-semibold w-8 text-right tabular-nums text-purple-700 dark:text-purple-300 shrink-0"
+							>
+								{$_('Other')}
+							</span>
+							<div
+								class="flex-1 h-10 bg-purple-100/60 dark:bg-purple-900/20 rounded-lg overflow-hidden relative"
+							>
+								<div
+									class="h-full rounded-lg bg-gradient-to-r from-purple-300 to-purple-400 dark:from-purple-700 dark:to-purple-600 transition-all duration-300 ease-out"
+									style="width: {otherWeight}%"
+								></div>
+								{#if otherWeight > 0}
+									<span
+										class="absolute inset-0 flex items-center px-3 text-xs font-semibold tabular-nums {otherWeight >
+										15
+											? 'text-white'
+											: 'text-purple-700 dark:text-purple-200'} transition-opacity duration-200"
+										style="padding-left: {otherWeight > 15
+											? '0.75rem'
+											: Math.max(otherWeight, 2).toString() + '%'}"
+									>
+										{otherWeight}%
+									</span>
+								{/if}
+							</div>
+						</div>
 					</div>
 				</div>
 			{/each}

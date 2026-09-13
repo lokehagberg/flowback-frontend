@@ -6,16 +6,15 @@ export async function fetchRequest(
   method: 'GET' | 'POST',
   api: string,
   data: any = null,
-  needs_authorization: boolean = true,
-  needs_json: boolean = true,
-  trailingBackslash: boolean = false
+  needs_authorization = true,
+  needs_json = true
 ) {
   if (method === 'GET' && data !== null)
     console.error(
       "Method 'GET' does not take any data, use query parameters instead. For example: /api?id=5"
     );
 
-  let headers: any = {};
+  const headers: any = {};
 
   if (!browser) return { res: { ok: false }, json: {} };
 
@@ -33,7 +32,7 @@ export async function fetchRequest(
     data = JSON.stringify(data);
   }
 
-  let toSend: RequestInit = { method, headers };
+  const toSend: RequestInit = { method, headers };
 
   if (method !== 'GET') toSend.body = data;
 
@@ -41,8 +40,8 @@ export async function fetchRequest(
     // `${env.PUBLIC_API_URL || ''}/${env.PUBLIC_HAS_API === 'TRUE' ? 'api/' : ''}${api}`,
     // toSend
     api.includes(env.PUBLIC_API_URL)
-      ? `${api}${trailingBackslash ? '/' : ''}`
-      : `${env.PUBLIC_API_URL}/${api}${trailingBackslash ? '/' : ''}`,
+      ? api
+      : `${env.PUBLIC_API_URL}/${api}`,
     toSend
   );
 

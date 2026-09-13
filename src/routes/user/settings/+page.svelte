@@ -99,7 +99,7 @@
 		},
 		reports: report[] = [],
 		serverConfig: any = {},
-		version = '76',
+		version = '77',
 		open = false,
 		selectedRepport: report = {
 			description: '',
@@ -146,7 +146,7 @@
 		reports = json?.results;
 	};
 
-	const a = (key1: string, key2: string = '') => {
+	const a = (key1: string, key2 = '') => {
 		if (key2 === '') {
 			//@ts-ignore
 			return userConfig.pollSettings[key1];
@@ -159,32 +159,41 @@
 		getUserConfig();
 		getServerConfig();
 		getReportList();
+
+		window.addEventListener('popstate', () => {
+			selectedPage = null;
+		});
 	});
 </script>
 
 <Layout centered>
-	<div class={$isMobile ? "flex flex-col w-full h-screen" : "flex mt-6 gap-6"}>
+	<div class={$isMobile ? 'flex flex-col w-full h-screen' : 'flex mt-6 gap-6'}>
 		<div
-			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow	
-			{$isMobile ? "h-full" : "w-[300px] h-[800px] rounded border"}"
+			class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow
+			{$isMobile ? 'h-full' : 'w-[300px] h-[800px] rounded border'}"
 			class:hidden={$isMobile && selectedPage}
 		>
-			<div class={$isMobile ? "grid grid-cols-3 w-full pb-4 border-b border-gray-200 dark:border-gray-70" : "flex items-center mb-4 gap-4"}>
+			<div class={$isMobile ? 'hidden' : 'flex items-center mb-4 gap-4'}>
 				<button
 					class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
 					on:click={() => goto('/home')}
 				>
 					<Fa icon={faArrowLeft} />
 				</button>
-				<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold text-center">
+				<h1
+					class="text-xl text-left text-primary dark:text-secondary font-semibold text-center"
+				>
 					{$_('Settings')}
 				</h1>
 			</div>
-	 		{#if !$isMobile || !selectedPage}
+			{#if !$isMobile || !selectedPage}
 				<div class="mt-4">
 					{#each sidebarItems as item}
 						<button
-							on:click={() => (selectedPage = item.page)}
+							on:click={() => {
+								selectedPage = item.page;
+								history.pushState({}, '');
+							}}
 							class={optionsDesign}
 							class:bg-gray-100={selectedPage === item.page}
 							class:dark:bg-gray-800={selectedPage === item.page}
@@ -201,27 +210,12 @@
 		{#if !$isMobile || selectedPage}
 			<div
 				class="bg-white dark:bg-darkobject dark:text-darkmodeText p-6 shadow
-				{$isMobile ? "h-full" : "w-[450px] rounded border"}"
+				{$isMobile ? 'h-full' : 'w-[450px] rounded border'}"
 			>
-			 	{#if $isMobile}
-					<div class="grid grid-cols-3 w-full pb-4 mb-6 border-b border-gray-200 dark:border-gray-70">
-						<button
-							class="text-gray-600 hover:text-primary dark:text-secondary transition-colors"
-							on:click={() => {
-									selectedPage = null;
-							}}
-						>
-							<Fa icon={faArrowLeft} />
-						</button>
-						<h1 class="text-xl text-left text-primary dark:text-secondary font-semibold text-center">
-							{$_(sidebarItems.find(i => i.page === selectedPage)?.text || 'Settings')}
-						</h1>
-					</div>
-				{/if}
 				<ul class="flex flex-col h-full">
 					{#if selectedPage === 'profile'}
 						<li
-							class= "text-lg text-primary dark:text-secondary font-semibold mb-3"
+							class="text-lg text-primary dark:text-secondary font-semibold mb-3"
 						>
 							{$_('General')}
 						</li>
@@ -246,12 +240,9 @@
 						/>
 
 						{#if $isMobile}
-							<div class="flex items-center justify-between my-4 ">
+							<div class="flex items-center justify-between my-4">
 								<span>{$_('Dark Mode')}</span>
-								<Toggle
-										checked={$darkModeStore}
-										onInput={toggleDarkMode}
-								/>
+								<Toggle checked={$darkModeStore} onInput={toggleDarkMode} />
 							</div>
 						{/if}
 
@@ -265,46 +256,50 @@
 						</div>
 					{:else if selectedPage === 'notifications' && userConfig?.notificationSettings}
 						{#each Object.entries(userConfig.notificationSettings) as [key1, settings]}
-								<span
-									class="text-lg text-primary dark:text-secondary font-semibold mb-3"
-									>{$_(configToReadable(key1))}</span
-								>
-								<span 
-									class="mb-2 block text-gray-600 dark:text-gray-400"
-									>{$_('Notify me when')}...</span
-								>
-								<ul class="mb-6">
-									{#each Object.entries(settings) as [key2, setting]}
-										<li
-											class="flex justify-between p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-										>
-											<span>{$_(configToReadable(key2))}</span>
-											<input
-												on:change={saveUserConfig}
-												value={userConfig.pollSettings}
-												type="checkbox"
-												on:input={(e) => {
+							<span
+								class="text-lg text-primary dark:text-secondary font-semibold mb-3"
+								>{$_(configToReadable(key1))}</span
+							>
+							<span class="mb-2 block text-gray-600 dark:text-gray-400"
+								>{$_('Notify me when')}...</span
+							>
+							<ul class="mb-6">
+								{#each Object.entries(settings) as [key2, setting]}
+									<li
+										class="flex justify-between p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+									>
+										<span>{$_(configToReadable(key2))}</span>
+										<input
+											on:change={saveUserConfig}
+											value={userConfig.pollSettings}
+											type="checkbox"
+											on:input={(e) => {
+												//@ts-ignore
+												userConfig.notificationSettings[key1][key2] =
 													//@ts-ignore
-													userConfig.notificationSettings[key1][key2] =
-														//@ts-ignore
-														e.target.checked;
+													e.target.checked;
 
-													userUpdate();
-												}}
-												checked={a(key1, key2)}
-											/>
-										</li>
-									{/each}
-								</ul>
+												userUpdate();
+											}}
+											checked={a(key1, key2)}
+										/>
+									</li>
+								{/each}
+							</ul>
 						{/each}
 					{:else if selectedPage === 'poll-process' && userConfig?.pollSettings}
-						<span class="text-lg text-primary dark:text-secondary font-semibold mb-3"
+						<span
+							class="text-lg text-primary dark:text-secondary font-semibold mb-3"
 							>{$_('Poll Phases')}</span
 						>
-						<div class="mb-2 text-gray-600 dark:text-gray-400">{$_('Select the phases you want to participate in')}</div>
+						<div class="mb-2 text-gray-600 dark:text-gray-400">
+							{$_('Select the phases you want to participate in')}
+						</div>
 						<ul class="gap-2">
 							{#each Object.entries(userConfig.pollSettings) as [key, setting]}
-								<li class="flex justify-between p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+								<li
+									class="flex justify-between p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+								>
 									<span>{$_(configToReadable(key))}</span>
 									<input
 										type="checkbox"
@@ -464,3 +459,4 @@
 		</Button>
 	</div>
 </Modal>
+

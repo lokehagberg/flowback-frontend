@@ -68,6 +68,10 @@
 
 		if (query === '') {
 			filteredVotingHistory = [...votingHistory];
+		} else {
+			filteredVotingHistory = votingHistory.filter(
+				(v) => v.poll.title?.toLowerCase().includes(query.toLowerCase())
+			);
 		}
 	};
 

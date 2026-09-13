@@ -17,7 +17,7 @@
 
 	export let selectedPage: string;
 
-	async function registerAccount() {
+	const registerAccount = async () => {
 		if (!acceptedToS) {
 			ErrorHandlerStore.set({
 				message: 'You must accept terms of service to register',
@@ -32,7 +32,12 @@
 		}
 
 		loading = true;
-		const { res, json } = await fetchRequest('POST', 'register', { email }, false);
+		const { res, json } = await fetchRequest(
+			'POST',
+			'register',
+			{ email },
+			false
+		);
 		loading = false;
 
 		if (!res.ok) {
@@ -52,7 +57,7 @@
 
 		if (!(env.PUBLIC_EMAIL_REGISTRATION === 'FALSE')) selectedPage = 'GotMail';
 		else selectedPage = 'Verify';
-	}
+	};
 </script>
 
 <Loader bind:loading>

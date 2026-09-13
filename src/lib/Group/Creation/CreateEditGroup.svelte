@@ -105,7 +105,11 @@
 	};
 
 	const deleteGroup = async () => {
-		const { res } = await fetchRequest('POST', `group/${groupToEdit}/delete`);
+		const { res } = await fetchRequest(
+			'POST',
+			`group/${groupToEdit}/delete`,
+			{}
+		);
 
 		if (!res.ok) {
 			ErrorHandlerStore.set({

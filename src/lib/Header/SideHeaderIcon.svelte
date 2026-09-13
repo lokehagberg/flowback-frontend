@@ -4,20 +4,22 @@
 	import { env } from '$env/dynamic/public';
 	import { onThumbnailError } from '$lib/Generic/GenericFunctions';
 
-	export let sideHeaderOpen = false;
+	export let sideHeaderOpen = false,
+		Class = '';
 </script>
 
 <button
-  id="side-header"
-  aria-label="Side Header Toggle"
-  on:click={() => (sideHeaderOpen = !sideHeaderOpen)}
+	id="side-header-icon"
+	aria-label="Side Header Toggle"
+	class={Class}
+	on:click|stopPropagation={() => (sideHeaderOpen = !sideHeaderOpen)}
 >
-  <img
-    src={$userStore?.profile_image
-      ? `${env.PUBLIC_API_URL}${$userStore?.profile_image}`
-      : DefaultPFP}
-    class={`w-8 rounded-full cursor-pointer ${sideHeaderOpen && 'ring-blue-500'}`}
-    alt="default pfp"
-    on:error={(e) => onThumbnailError(e, DefaultPFP)}
-  />
+	<img
+		src={$userStore?.profile_image
+			? `${env.PUBLIC_API_URL}${$userStore?.profile_image}`
+			: DefaultPFP}
+		class={`w-8 rounded-full cursor-pointer ${sideHeaderOpen && 'ring-blue-500'}`}
+		alt="default pfp"
+		on:error={(e) => onThumbnailError(e, DefaultPFP)}
+	/>
 </button>

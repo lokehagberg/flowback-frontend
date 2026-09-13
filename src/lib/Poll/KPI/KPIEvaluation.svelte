@@ -29,7 +29,7 @@
 			return;
 		}
 
-		kpis = json ?? [];
+		kpis = (json ?? []).filter((kpi: KPI) => kpi.active);
 	};
 
 	const getKPIVoteList = async () => {
@@ -48,7 +48,7 @@
 		kpiEvaluations = json.results ?? [];
 	};
 
-	const evaluateKPI = async (kpi: KPI, value: number) => {
+	const evaluateKPI = async (kpi: KPI, value: string) => {
 		loading = true;
 		const { res, json } = await fetchRequest(
 			'POST',

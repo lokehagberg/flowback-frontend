@@ -49,4 +49,10 @@ const createChatPartnerStore = () => {
 
 export const chatPartnerStore = createChatPartnerStore();
 
+// Reset the selected chat partner whenever the chat window closes, so
+// reopening it starts fresh like it never had a partner selected.
+chatOpenStore.subscribe((open) => {
+    if (!open) chatPartnerStore.set(0);
+});
+
 export const previewStore = writable<PreviewMessage[]>([]);

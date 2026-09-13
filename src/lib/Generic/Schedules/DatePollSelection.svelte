@@ -7,6 +7,7 @@
 		faChevronLeft,
 		faChevronRight
 	} from '@fortawesome/free-solid-svg-icons';
+	import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/state';
@@ -240,87 +241,113 @@
 	} else {
 		noChanges = false;
 	}
+
+	$: maxScore = Math.max(...proposals.map((p) => p.preliminary_score ?? 0), 1);
+
+	const isToday = (date: Date) => date.toDateString() === new Date().toDateString();
 </script>
 
 <Loader bind:loading>
-	<div class={`sticky ${results ? 'md:-top-[1rem]' : 'top-0 md:top-[5.5rem]'}`}>
+	<div class="overflow-x-auto">
 		<div
-			class="dark:bg-darkobject dark:text-darkmodeText bg-white flex items-center justify-between mt-4 py-5 px-6 md:py-1 md:px-4"
+			class={`sticky z-20 ${results ? 'md:-top-[1rem]' : 'top-0 md:top-[5.5rem]'}`}
 		>
-			<button on:click={prevWeek}><Fa icon={faChevronLeft} /></button>
-			{currentMonth}
-			{currentYear}
-			<button on:click={nextWeek}><Fa icon={faChevronRight} /></button>
-		</div>
-		<div
-			class="dark:bg-darkobject dark:text-darkmodeText bg-white grid grid-cols-8 text-center border-b border-gray-300 py-1"
-		>
-			<div></div>
-			{#each weekDates as date, i}
-				<div class="flex flex-col items-center {$isMobile ? 'text-xs' : ''}">
-					<div class="font-semibold pt-2">{date.getDate()}</div>
-					<div class="text-gray-600">{$_(weekdays[i])}</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-	<div
-		class="grid w-full text-sm text-center"
-		style={`grid-template-columns: repeat(${x + 1}, 1fr); grid-template-rows: repeat(${y}, 1fr);`}
-		id="weekView"
-	>
-		{#each gridDates as row, j}
 			<div
-				class="bg-primary text-white flex justify-center items-center px-0.5
-				{$isMobile ? 'text-xs' : ''}"
+				class="dark:bg-darkobject dark:text-darkmodeText bg-white flex items-center justify-between mt-4 py-3 px-4 md:py-2"
 			>
-				{j}:00
-			</div>
-			{#each row as date, i}
-				{@const proposal = proposals.find(
-					(p) => new Date(p.start_date).getTime() === date.getTime()
-				)}
-
 				<button
-					class={`bg-white dark:bg-darkobject border h-12 w-full ${results ? 'cursor-default' : 'cursor-pointer'}`}
-					on:click={() => {
-						if (!results) toggleDate(date);
-					}}
+					class="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+					on:click={prevWeek}
+					aria-label={$_('Previous week')}><Fa icon={faChevronLeft} /></button
 				>
-					{#if proposal?.preliminary_score && proposal?.preliminary_score > 0}
-						{@const score = (() => {
-							// This function allows for real-time updating
-							// as the user is clicking on the dates.
-							let s = proposal?.preliminary_score;
+				<span class="font-semibold">{currentMonth} {currentYear}</span>
+				<button
+					class="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+					on:click={nextWeek}
+					aria-label={$_('Next week')}><Fa icon={faChevronRight} /></button
+				>
+			</div>
+			<div
+				class="dark:bg-darkobject dark:text-darkmodeText bg-white grid text-center border-b border-gray-200 dark:border-gray-700/60 py-1"
+				style={`grid-template-columns: minmax(3rem, 1fr) repeat(${x}, minmax(3.5rem, 1fr)); min-width: ${(x + 1) * 3.5}rem`}
+			>
+				<div class="sticky left-0 bg-white dark:bg-darkobject"></div>
+				{#each weekDates as date, i}
+					<div
+						class="flex flex-col items-center py-1 {$isMobile ? 'text-xs' : ''}
+						{isToday(date) ? 'text-accent dark:text-accent-secondary font-bold' : ''}"
+					>
+						<div class="font-semibold">{date.getDate()}</div>
+						<div class="text-gray-500 dark:text-gray-400">{$_(weekdays[i])}</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+		<div
+			class="grid w-full text-sm text-center"
+			style={`grid-template-columns: minmax(3rem, 1fr) repeat(${x}, minmax(3.5rem, 1fr)); grid-template-rows: repeat(${y}, 1fr); min-width: ${(x + 1) * 3.5}rem`}
+			id="weekView"
+		>
+			{#each gridDates as row, j}
+				<div
+					class="sticky left-0 z-10 bg-primary text-white flex justify-center items-center px-0.5
+					{$isMobile ? 'text-xs' : ''}"
+				>
+					{j}:00
+				</div>
+				{#each row as date, i}
+					{@const proposal = proposals.find(
+						(p) => new Date(p.start_date).getTime() === date.getTime()
+					)}
+					{@const isSelected = !!selectedDates.find(
+						(_date) => _date.date.getTime() === date?.getTime()
+					)}
+					{@const score = (() => {
+						// This function allows for real-time updating
+						// as the user is clicking on the dates.
+						let s = proposal?.preliminary_score ?? 0;
 
-							if (
-								savedDates.find((s) => s.date.valueOf() === date.valueOf()) &&
-								!selectedDates.find((s) => s.date.valueOf() === date.valueOf())
-							)
-								s -= 1;
-							else if (
-								!savedDates.find((s) => s.date.valueOf() === date.valueOf()) &&
-								selectedDates.find((s) => s.date.valueOf() === date.valueOf())
-							)
-								s += 1;
+						if (
+							savedDates.find((s) => s.date.valueOf() === date.valueOf()) &&
+							!selectedDates.find((s) => s.date.valueOf() === date.valueOf())
+						)
+							s -= 1;
+						else if (
+							!savedDates.find((s) => s.date.valueOf() === date.valueOf()) &&
+							selectedDates.find((s) => s.date.valueOf() === date.valueOf())
+						)
+							s += 1;
 
-							return s;
-						})()}
+						return s;
+					})()}
+					{@const heat = score > 0 ? 0.12 + 0.5 * (score / maxScore) : 0}
+
+					<button
+						class={`relative bg-white dark:bg-darkobject border border-gray-200 dark:border-gray-700/60 h-12 w-full transition-colors ${results ? 'cursor-default' : 'cursor-pointer hover:brightness-[0.97] dark:hover:brightness-110'}`}
+						style={heat > 0 ? `background-color: rgba(1, 91, 192, ${heat})` : ''}
+						on:click={() => {
+							if (!results) toggleDate(date);
+						}}
+					>
 						{#if score > 0}
-							{score}
+							<span
+								class="absolute top-0.5 right-0.5 min-w-[1.1rem] rounded-full bg-primary px-1 text-[10px] font-semibold leading-[1.1rem] text-white"
+							>
+								{score}
+							</span>
 						{/if}
-					{/if}
 
-					{#if selectedDates.find((_date) => _date.date.getTime() === date?.getTime())}
-						<div
-							class="bg-green-600 w-full flex items-center justify-center h-full"
-						></div>
-					{:else}
-						<slot {i} {j} />
-					{/if}
-				</button>
+						{#if isSelected}
+							<span class="absolute inset-0 flex items-center justify-center">
+								<Fa icon={faCheck} class="text-accent dark:text-accent-secondary" />
+							</span>
+						{:else}
+							<slot {i} {j} />
+						{/if}
+					</button>
+				{/each}
 			{/each}
-		{/each}
+		</div>
 	</div>
 	<div class="p-4 border-t flex gap-4 bg-white dark:bg-darkobject">
 		{#if !results}

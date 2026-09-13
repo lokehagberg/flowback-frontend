@@ -123,21 +123,9 @@
 			return;
 		}
 
-		method === 'add'
-			? notifications.push({
-					channel_category: category,
-					channel_sender_id: id,
-					channel_sender_type: type
-				})
-			: (notifications = notifications.filter(
-					(notification) => notification.channel_category !== category
-				));
-
 		if (method === 'add')
 			ErrorHandlerStore.set({ message: 'Subscribed', success: true });
 		else ErrorHandlerStore.set({ message: 'Unsubscribed', success: true });
-
-		notifications = notifications;
 	};
 
 	const subscribeToAll = async () => {
@@ -177,6 +165,7 @@
 <div class={`${Class} notifications-clickable-region relative z-100 `}>
 	<button
 		type="button"
+		id={`notification-bell-${type}`}
 		class={``}
 		onclick={() => {
 			notificationOpen = !notificationOpen;

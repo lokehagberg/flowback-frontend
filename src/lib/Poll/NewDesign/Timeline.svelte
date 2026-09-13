@@ -55,7 +55,9 @@
 			// Date placement on Timeline
 			const toDateTime = date.getTime() - dates[0].getTime();
 			datePlacement[i] = (100 * toDateTime) / totalTime;
-			datesArray[i] = formatDate(date.toString());
+			datesArray[i] = poll[pollPhases[i].endDateField]
+				? formatDate(date.toString())
+				: '-';
 		});
 	};
 
@@ -113,13 +115,11 @@
 			<Fa icon={faDownLong} flip />
 			{$_('Time details')}
 		</button>
-		<ul class="p-2">
+		<ul class="p-2 grid grid-cols-1 md:grid-cols-[auto_auto] gap-x-4 gap-y-2">
 			{#each datesArray as date, i}
-				<li
-					class="border-b md:border-b-0 flex justify-between flex-col md:flex-row text-center"
-				>
-					<div class="mb-4 md:mb-0">{$_(pollPhases[i].label)}:</div>
-					<div class="mb-4 md:mb-0">{date}</div>
+				<li class="contents">
+					<div>{$_(pollPhases[i].label)}:</div>
+					<div>{date}</div>
 				</li>
 			{/each}
 		</ul>

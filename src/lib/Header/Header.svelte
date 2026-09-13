@@ -29,10 +29,11 @@
 	onNavigate(() => {
 		selectedHref = window.location.pathname.slice(1);
 	});
+
 </script>
 
 <header
-	class="md:sticky md:top-0 fixed bottom-0 w-full z-[60] md:flex justify-between flex-row items-center px-5 bg-white select-none dark:bg-darkobject top-shadow shadow"
+	class="md:sticky md:top-0 fixed bottom-0 w-full z-[100] md:flex justify-between flex-row items-center px-5 bg-white select-none dark:bg-darkobject top-shadow shadow"
 	id="header"
 >
 	<a
@@ -117,12 +118,6 @@
 					href="delegations"
 					bind:selectedHref
 				/>
-			{/if}
-
-			{#if $isMobile}
-				<div class="flex flex-shrink-0">
-					<SideHeaderIcon bind:sideHeaderOpen />
-				</div>
 			{/if}
 		</nav>
 

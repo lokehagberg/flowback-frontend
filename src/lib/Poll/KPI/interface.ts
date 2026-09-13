@@ -6,7 +6,7 @@ export interface KPI {
   name: string;
   description: string;
   active: boolean;
-  values: number[];
+  values: string[];
 }
 
 export interface KPIBetProposal {
@@ -16,7 +16,7 @@ export interface KPIBetProposal {
   kpi_id: number;
   kpi_name: string;
   kpi_description: string;
-  value: number;
+  value: string;
   weight: number;
 }
 
@@ -25,7 +25,7 @@ export interface KPIEvaluation {
   kpi_id: number;
   kpi_name: string;
   kpi_description: string;
-  vote: number;
+  vote: string;
   proposal: proposal;
   created_by: GroupUser;
 }
@@ -36,7 +36,7 @@ export interface CombinedBet {
   kpi_id: number;
   kpi_name: string;
   kpi_description: string | null;
-  value: number;
+  value: string;
   combined_bet: string | null;
   outcome: boolean;
 }

@@ -11,8 +11,7 @@
 	import { notifications as notificationLimit } from '$lib/Generic/APILimits.json';
 	import { darkModeStore } from '$lib/Generic/DarkMode';
 	import { ErrorHandlerStore } from '$lib/Generic/ErrorHandlerStore';
-	import { isMobile } from '$lib/utils/isMobile'
-	
+	import { isMobile } from '$lib/utils/isMobile';
 
 	let notifications: notification[],
 		timeAgo: TimeAgo,
@@ -83,7 +82,7 @@
 				return;
 			case 'poll_comment':
 				await goto(
-					`/groups/${notification.data.group_id}/thread/${notification.data.thread_id}?section=comments&source=notification`
+					`/groups/${notification.data.group_id}/polls/${notification.data.poll_id}?section=comments&source=notification`
 				);
 				return;
 			case 'thread':
@@ -94,7 +93,7 @@
 			case 'thread_comment':
 				// TODO: Fix scuffed solution with channel_data by changing data in backend probably group models.py
 				await goto(
-					`/groups/${notification.data.group_id}/thread/${notification.channel_data.thread_id}?section=comments&source=notification`
+					`/groups/${notification.data.group_id}/thread/${notification.data.thread_id}?section=comments&source=notification`
 				);
 				return;
 			case 'group_user':
@@ -127,7 +126,11 @@
 	class="small-notification relative cursor-pointer"
 	on:click={() => (notificationsOpen = !notificationsOpen)}
 >
-	<Fa icon={faBell} color={$darkModeStore ? 'white' : 'black'} size={$isMobile ? '1.5x' : '1.3x'} />
+	<Fa
+		icon={faBell}
+		color={$darkModeStore ? 'white' : 'black'}
+		size={$isMobile ? '1.5x' : '1.3x'}
+	/>
 	<div
 		class:hidden={!notifications ||
 			notifications?.filter((n) => !n.read)?.length === 0}
@@ -141,7 +144,9 @@
 {#if notificationsOpen}
 	<ul
 		class="max-h-[90vh] overflow-y-scroll absolute right-0 bg-white dark:bg-darkobject dark:text-darkmodeText select-none shadow z-[60]
-		{$isMobile ? 'slide-animation-mobile bottom-full' : 'slide-animation bottom-auto top-full'}"
+		{$isMobile
+			? 'slide-animation-mobile bottom-full'
+			: 'slide-animation bottom-auto top-full'}"
 		id="notifications-list"
 	>
 		<button

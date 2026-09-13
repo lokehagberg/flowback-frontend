@@ -23,7 +23,6 @@
 			'login',
 			{ username, password },
 			false,
-			true,
 			true
 		);
 		loading = false;
